@@ -1,0 +1,3407 @@
+{
+  "note": "Literal route extractor; router.use, aliases/arrays, inline guards and factory routes require manual review. Raw guard citations included separately.",
+  "routes": [
+    {
+      "file": "admin-alertas.ts",
+      "line": 8,
+      "method": "GET",
+      "endpoint": "/admin/alertas",
+      "guards": [],
+      "otherGuard": ",\n  requireSession,\n  requireRole(\"ADMIN\"),"
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 134,
+      "method": "GET",
+      "endpoint": "/admin/dashboard/realtime",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 171,
+      "method": "GET",
+      "endpoint": "/admin/dashboard/realtime/pendientes",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 191,
+      "method": "GET",
+      "endpoint": "/admin/dashboard/realtime/desglose",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 222,
+      "method": "GET",
+      "endpoint": "/admin/cortes",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 237,
+      "method": "GET",
+      "endpoint": "/admin/diferencias",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 253,
+      "method": "GET",
+      "endpoint": "/admin/cuentas-destino",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 265,
+      "method": "GET",
+      "endpoint": "/admin/cuentas-destino/:cuentaDestino/movimientos",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 340,
+      "method": "GET",
+      "endpoint": "/admin/cuadre-fiscal",
+      "guards": [],
+      "otherGuard": ", requireRole(\"ADMIN\", \"CONTADOR\", \"SISTEMAS\"),"
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 369,
+      "method": "POST",
+      "endpoint": "/admin/cuadre-fiscal/confirmaciones",
+      "guards": [],
+      "otherGuard": ", requireRole(\"ADMIN\", \"CONTADOR\"),"
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 370,
+      "method": "POST",
+      "endpoint": "/admin/cuadre-fiscal/diferencias",
+      "guards": [],
+      "otherGuard": ", requireRole(\"ADMIN\", \"CONTADOR\"),"
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 371,
+      "method": "POST",
+      "endpoint": "/admin/cuadre-fiscal/diferencias/:id/resolver",
+      "guards": [],
+      "otherGuard": ", requireRole(\"ADMIN\"),"
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 390,
+      "method": "GET",
+      "endpoint": "/admin/comparacion-tiendas",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 437,
+      "method": "GET",
+      "endpoint": "/admin/cortes/export.xlsx",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 441,
+      "method": "GET",
+      "endpoint": "/admin/cortes/export.pdf",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 466,
+      "method": "GET",
+      "endpoint": "/admin/cuentas-destino/export.xlsx",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 470,
+      "method": "GET",
+      "endpoint": "/admin/cuentas-destino/:cuentaDestino/movimientos/export.xlsx",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 514,
+      "method": "GET",
+      "endpoint": "/admin/cuentas-destino/export.pdf",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 525,
+      "method": "GET",
+      "endpoint": "/admin/cortes/:id",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 542,
+      "method": "GET",
+      "endpoint": "/admin/cortes/:id/export.xlsx",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "admin-analytics.ts",
+      "line": 576,
+      "method": "GET",
+      "endpoint": "/admin/cortes/:id/export.pdf",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "auditoria.ts",
+      "line": 26,
+      "method": "GET",
+      "endpoint": "/auditoria",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "auditoria.ts",
+      "line": 38,
+      "method": "GET",
+      "endpoint": "/auditoria/export.xlsx",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "auditoria.ts",
+      "line": 79,
+      "method": "GET",
+      "endpoint": "/auditoria/:id",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "auditorias-inventario.ts",
+      "line": 109,
+      "method": "GET",
+      "endpoint": "/inventario/auditorias/sitios",
+      "guards": [
+        {
+          "module": "auditoria_inventario",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"auditoria_inventario\", \"ver\"),\n  requireOperationalRole,"
+    },
+    {
+      "file": "auditorias-inventario.ts",
+      "line": 137,
+      "method": "GET",
+      "endpoint": "/inventario/auditorias",
+      "guards": [
+        {
+          "module": "auditoria_inventario",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"auditoria_inventario\", \"ver\"),\n  requireOperationalRole,"
+    },
+    {
+      "file": "auditorias-inventario.ts",
+      "line": 162,
+      "method": "POST",
+      "endpoint": "/inventario/auditorias",
+      "guards": [
+        {
+          "module": "auditoria_inventario",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"auditoria_inventario\", \"crear\"),\n  requireOperationalRole,"
+    },
+    {
+      "file": "auditorias-inventario.ts",
+      "line": 190,
+      "method": "GET",
+      "endpoint": "/inventario/auditorias/:id",
+      "guards": [
+        {
+          "module": "auditoria_inventario",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"auditoria_inventario\", \"ver\"),\n  requireOperationalRole,"
+    },
+    {
+      "file": "auditorias-inventario.ts",
+      "line": 214,
+      "method": "POST",
+      "endpoint": "/inventario/auditorias/:id/escaneos",
+      "guards": [
+        {
+          "module": "auditoria_inventario",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"auditoria_inventario\", \"editar\"),\n  requireOperationalRole,"
+    },
+    {
+      "file": "auditorias-inventario.ts",
+      "line": 251,
+      "method": "POST",
+      "endpoint": "/inventario/auditorias/:id/${action}",
+      "guards": [
+        {
+          "module": "auditoria_inventario",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n    requireSession,\n    requierePermiso(\"auditoria_inventario\", \"editar\"),\n    requireOperationalRole,"
+    },
+    {
+      "file": "auditorias-inventario.ts",
+      "line": 295,
+      "method": "POST",
+      "endpoint": "/inventario/auditorias/:id/confirmar",
+      "guards": [
+        {
+          "module": "auditoria_inventario",
+          "action": "autorizar"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"auditoria_inventario\", \"autorizar\"),\n  requireOperationalRole,"
+    },
+    {
+      "file": "auditorias-inventario.ts",
+      "line": 329,
+      "method": "POST",
+      "endpoint": "/inventario/auditorias/:id/sobrantes/resolver",
+      "guards": [
+        {
+          "module": "auditoria_inventario",
+          "action": "autorizar"
+        }
+      ],
+      "otherGuard": ", requireSession, requierePermiso(\"auditoria_inventario\", \"autorizar\"), requireDecisionAdmin,"
+    },
+    {
+      "file": "auditorias-inventario.ts",
+      "line": 346,
+      "method": "GET",
+      "endpoint": "/inventario/rollos/:id/reactivacion-faltante",
+      "guards": [
+        {
+          "module": "inventario",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ", requireSession, requierePermiso(\"inventario\", \"ver\"), requireDecisionAdmin,"
+    },
+    {
+      "file": "auditorias-inventario.ts",
+      "line": 357,
+      "method": "POST",
+      "endpoint": "/inventario/rollos/:id/reactivacion-faltante",
+      "guards": [
+        {
+          "module": "auditoria_inventario",
+          "action": "autorizar"
+        }
+      ],
+      "otherGuard": ", requireSession, requierePermiso(\"auditoria_inventario\", \"autorizar\"), requireDecisionAdmin,"
+    },
+    {
+      "file": "auth.ts",
+      "line": 34,
+      "method": "POST",
+      "endpoint": "/auth/login",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "auth.ts",
+      "line": 161,
+      "method": "GET",
+      "endpoint": "/auth/me",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "auth.ts",
+      "line": 170,
+      "method": "POST",
+      "endpoint": "/auth/logout",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "caja-ventas.ts",
+      "line": 23,
+      "method": "GET",
+      "endpoint": "/caja/tiendas/:ubicacionId/ventas/global",
+      "guards": [
+        {
+          "module": "resumen_caja",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"resumen_caja\", \"ver\"),"
+    },
+    {
+      "file": "caja-ventas.ts",
+      "line": 62,
+      "method": "GET",
+      "endpoint": "/caja/tiendas/:ubicacionId/ventas",
+      "guards": [
+        {
+          "module": "resumen_caja",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"resumen_caja\", \"ver\"),"
+    },
+    {
+      "file": "camionetas.ts",
+      "line": 51,
+      "method": "GET",
+      "endpoint": "/camionetas",
+      "guards": [
+        {
+          "module": "camionetas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"camionetas\", \"ver\"),"
+    },
+    {
+      "file": "camionetas.ts",
+      "line": 65,
+      "method": "POST",
+      "endpoint": "/camionetas",
+      "guards": [],
+      "otherGuard": ", ...requiereGestorCamionetas(\"crear\"),"
+    },
+    {
+      "file": "camionetas.ts",
+      "line": 101,
+      "method": "GET",
+      "endpoint": "/camionetas/:id",
+      "guards": [
+        {
+          "module": "camionetas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"camionetas\", \"ver\"),"
+    },
+    {
+      "file": "camionetas.ts",
+      "line": 111,
+      "method": "PATCH",
+      "endpoint": "/camionetas/:id",
+      "guards": [],
+      "otherGuard": ", ...requiereGestorCamionetas(\"editar\"),"
+    },
+    {
+      "file": "choferes.ts",
+      "line": 58,
+      "method": "GET",
+      "endpoint": "/choferes",
+      "guards": [
+        {
+          "module": "choferes",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"choferes\", \"ver\"),"
+    },
+    {
+      "file": "choferes.ts",
+      "line": 82,
+      "method": "POST",
+      "endpoint": "/choferes",
+      "guards": [],
+      "otherGuard": ",\n  ...requiereGestorChoferes(\"crear\"),"
+    },
+    {
+      "file": "choferes.ts",
+      "line": 125,
+      "method": "GET",
+      "endpoint": "/choferes/:id",
+      "guards": [
+        {
+          "module": "choferes",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"choferes\", \"ver\"),"
+    },
+    {
+      "file": "choferes.ts",
+      "line": 151,
+      "method": "PATCH",
+      "endpoint": "/choferes/:id",
+      "guards": [],
+      "otherGuard": ",\n  ...requiereGestorChoferes(\"editar\"),"
+    },
+    {
+      "file": "cliente-documentos.ts",
+      "line": 40,
+      "method": "GET",
+      "endpoint": "/clientes/:id/documentos",
+      "guards": [
+        {
+          "module": "clientes",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes\", \"ver\"),\n  requireRole(\"ADMIN\"),"
+    },
+    {
+      "file": "cliente-documentos.ts",
+      "line": 64,
+      "method": "POST",
+      "endpoint": "/clientes/:id/documentos/:lado",
+      "guards": [
+        {
+          "module": "clientes",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes\", \"editar\"),\n  requireRole(\"ADMIN\"),\n  raw,"
+    },
+    {
+      "file": "cliente-documentos.ts",
+      "line": 155,
+      "method": "GET",
+      "endpoint": "/cliente-documentos/:publicId/ver",
+      "guards": [
+        {
+          "module": "clientes",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"clientes\", \"ver\"), requireRole(\"ADMIN\"),"
+    },
+    {
+      "file": "cliente-documentos.ts",
+      "line": 156,
+      "method": "GET",
+      "endpoint": "/cliente-documentos/:publicId/descargar",
+      "guards": [
+        {
+          "module": "clientes",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"clientes\", \"ver\"), requireRole(\"ADMIN\"),"
+    },
+    {
+      "file": "clientes-admin.ts",
+      "line": 29,
+      "method": "GET",
+      "endpoint": "/clientes/incobrables",
+      "guards": [],
+      "otherGuard": ",\n  requireRole(\"ADMIN\"),"
+    },
+    {
+      "file": "clientes-admin.ts",
+      "line": 66,
+      "method": "POST",
+      "endpoint": "/clientes/:id/baja",
+      "guards": [
+        {
+          "module": "clientes",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes\", \"editar\"),"
+    },
+    {
+      "file": "clientes-admin.ts",
+      "line": 293,
+      "method": "POST",
+      "endpoint": "/clientes/:id/reactivar",
+      "guards": [
+        {
+          "module": "clientes",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes\", \"editar\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 128,
+      "method": "GET",
+      "endpoint": "/clientes/analitica.xlsx",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "clientes.ts",
+      "line": 613,
+      "method": "GET",
+      "endpoint": "/clientes/resumen",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 633,
+      "method": "GET",
+      "endpoint": "/clientes",
+      "guards": [
+        {
+          "module": "clientes",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 681,
+      "method": "POST",
+      "endpoint": "/clientes",
+      "guards": [
+        {
+          "module": "clientes",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes\", \"crear\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 794,
+      "method": "GET",
+      "endpoint": "/clientes/cartera",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 811,
+      "method": "GET",
+      "endpoint": "/clientes/analitica",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 921,
+      "method": "GET",
+      "endpoint": "/clientes/analitica.xlsx",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 961,
+      "method": "GET",
+      "endpoint": "/clientes/cartera.xlsx",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 984,
+      "method": "GET",
+      "endpoint": "/clientes/cartera.pdf",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 1005,
+      "method": "GET",
+      "endpoint": "/clientes/comportamiento-pago",
+      "guards": [
+        {
+          "module": "clientes_credito",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_credito\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 1015,
+      "method": "GET",
+      "endpoint": "/clientes/:id/comportamiento-pago",
+      "guards": [
+        {
+          "module": "clientes_credito",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_credito\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 1028,
+      "method": "GET",
+      "endpoint": "/clientes/:id",
+      "guards": [
+        {
+          "module": "clientes",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 1077,
+      "method": "PATCH",
+      "endpoint": "/clientes/:id",
+      "guards": [
+        {
+          "module": "clientes",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes\", \"editar\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 1187,
+      "method": "GET",
+      "endpoint": "/clientes/:id/credito",
+      "guards": [
+        {
+          "module": "clientes_credito",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_credito\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 1257,
+      "method": "PATCH",
+      "endpoint": "/clientes/:id/credito",
+      "guards": [
+        {
+          "module": "clientes_credito",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_credito\", \"editar\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 1316,
+      "method": "GET",
+      "endpoint": "/clientes/:id/precios",
+      "guards": [
+        {
+          "module": "clientes_precios",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_precios\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 1397,
+      "method": "GET",
+      "endpoint": "/clientes/:id/estado-cuenta",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 1541,
+      "method": "GET",
+      "endpoint": "/clientes/:id/estado-cuenta/imprimir",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 1586,
+      "method": "GET",
+      "endpoint": "/clientes/:id/estado-cuenta.xlsx",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 1634,
+      "method": "GET",
+      "endpoint": "/clientes/:id/estado-cuenta.pdf",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 1685,
+      "method": "GET",
+      "endpoint": "/clientes/:id/compras",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 1740,
+      "method": "GET",
+      "endpoint": "/clientes/:id/analitica",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 1817,
+      "method": "GET",
+      "endpoint": "/clientes/:id/estadisticas",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 1885,
+      "method": "GET",
+      "endpoint": "/clientes/:id/pagos",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 1932,
+      "method": "GET",
+      "endpoint": "/clientes/:id/notas/:ticketId",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 2012,
+      "method": "GET",
+      "endpoint": "/clientes/:id/pagos/:pagoId",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 2051,
+      "method": "POST",
+      "endpoint": "/clientes/:id/notas/:ticketId/reimprimir",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 2106,
+      "method": "POST",
+      "endpoint": "/clientes/:id/pagos/vista-previa",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  legacyPaymentCaptureGuard(),\n  requierePermiso(\"clientes_finanzas\", \"crear\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 2163,
+      "method": "POST",
+      "endpoint": "/clientes/:id/pagos",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  legacyPaymentCaptureGuard(),\n  requierePermiso(\"clientes_finanzas\", \"crear\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 2370,
+      "method": "POST",
+      "endpoint": "/clientes/:id/pagos/:pagoId/reversar",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "autorizar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"autorizar\"),"
+    },
+    {
+      "file": "clientes.ts",
+      "line": 2470,
+      "method": "POST",
+      "endpoint": "/clientes/:id/ajustes",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "autorizar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"clientes_finanzas\", \"autorizar\"),"
+    },
+    {
+      "file": "contenedores.ts",
+      "line": 93,
+      "method": "GET",
+      "endpoint": "/contenedores/catalogos",
+      "guards": [
+        {
+          "module": "contenedores",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"contenedores\", \"ver\"),"
+    },
+    {
+      "file": "contenedores.ts",
+      "line": 148,
+      "method": "GET",
+      "endpoint": "/contenedores",
+      "guards": [
+        {
+          "module": "contenedores",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"contenedores\", \"ver\"),"
+    },
+    {
+      "file": "contenedores.ts",
+      "line": 173,
+      "method": "POST",
+      "endpoint": "/contenedores",
+      "guards": [
+        {
+          "module": "contenedores",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"contenedores\", \"crear\"),"
+    },
+    {
+      "file": "contenedores.ts",
+      "line": 199,
+      "method": "GET",
+      "endpoint": "/contenedores/resumen",
+      "guards": [
+        {
+          "module": "contenedores",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"contenedores\", \"ver\"),"
+    },
+    {
+      "file": "contenedores.ts",
+      "line": 229,
+      "method": "GET",
+      "endpoint": "/contenedores/disponibles-entrada",
+      "guards": [
+        {
+          "module": "entradas",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"entradas\", \"crear\"),"
+    },
+    {
+      "file": "contenedores.ts",
+      "line": 257,
+      "method": "GET",
+      "endpoint": "/contenedores/:id",
+      "guards": [
+        {
+          "module": "contenedores",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"contenedores\", \"ver\"),"
+    },
+    {
+      "file": "contenedores.ts",
+      "line": 281,
+      "method": "PATCH",
+      "endpoint": "/contenedores/:id",
+      "guards": [
+        {
+          "module": "contenedores",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"contenedores\", \"editar\"),"
+    },
+    {
+      "file": "contenedores.ts",
+      "line": 305,
+      "method": "POST",
+      "endpoint": "/contenedores/:id/cancelar",
+      "guards": [
+        {
+          "module": "contenedores",
+          "action": "autorizar"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"contenedores\", \"autorizar\"),"
+    },
+    {
+      "file": "contenedores.ts",
+      "line": 382,
+      "method": "GET",
+      "endpoint": "/contenedores/export.xlsx",
+      "guards": [
+        {
+          "module": "contenedores",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"contenedores\", \"ver\"),"
+    },
+    {
+      "file": "contenedores.ts",
+      "line": 425,
+      "method": "GET",
+      "endpoint": "/contenedores/export.pdf",
+      "guards": [
+        {
+          "module": "contenedores",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"contenedores\", \"ver\"),"
+    },
+    {
+      "file": "credit-evidence.ts",
+      "line": 26,
+      "method": "GET",
+      "endpoint": "/clientes/:clienteId/evidencia-credito",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"clientes_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "credit-evidence.ts",
+      "line": 71,
+      "method": "POST",
+      "endpoint": "/clientes/:clienteId/atribuciones-credito",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        },
+        {
+          "module": "clientes_finanzas",
+          "action": "autorizar"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requireRole(\"ADMIN\", \"SUPERVISOR\"),\n  requierePermiso(\"clientes_finanzas\", \"ver\"),\n  requierePermiso(\"clientes_finanzas\", \"autorizar\"),"
+    },
+    {
+      "file": "credit-refunds.ts",
+      "line": 11,
+      "method": "GET",
+      "endpoint": "/clientes/:id/devoluciones-credito/opciones",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "ver"
+        },
+        {
+          "module": "clientes_finanzas",
+          "action": "autorizar"
+        }
+      ],
+      "otherGuard": ", requireSession,\n  requierePermiso(\"clientes_finanzas\", \"ver\"),\n  requierePermiso(\"clientes_finanzas\", \"autorizar\"),"
+    },
+    {
+      "file": "credit-refunds.ts",
+      "line": 66,
+      "method": "POST",
+      "endpoint": "/clientes/:id/devoluciones-credito",
+      "guards": [
+        {
+          "module": "clientes_finanzas",
+          "action": "autorizar"
+        }
+      ],
+      "otherGuard": ", requireSession,\n  requierePermiso(\"clientes_finanzas\", \"autorizar\"),"
+    },
+    {
+      "file": "dashboard.ts",
+      "line": 12,
+      "method": "GET",
+      "endpoint": "/dashboard",
+      "guards": [
+        {
+          "module": "dashboard",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"dashboard\", \"ver\"),"
+    },
+    {
+      "file": "e11.ts",
+      "line": 65,
+      "method": "GET",
+      "endpoint": "/e11/identidad",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 66,
+      "method": "GET",
+      "endpoint": "/e11/operaciones/:actorId/:accion/:uuidOriginal",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 70,
+      "method": "POST",
+      "endpoint": "/e11/operaciones/:actorId/:accion/:uuidOriginal/resolucion",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 74,
+      "method": "GET",
+      "endpoint": "/e11/usuarios/:usuarioId/perfil",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 79,
+      "method": "PUT",
+      "endpoint": "/e11/usuarios/:usuarioId/perfil",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 81,
+      "method": "GET",
+      "endpoint": "/e11/usuarios/:usuarioId/perfil/historial",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 86,
+      "method": "GET",
+      "endpoint": "/e11/fiscal/clientes",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 90,
+      "method": "GET",
+      "endpoint": "/e11/fiscal/ventas",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 96,
+      "method": "GET",
+      "endpoint": "/e11/fiscal/facturas/:facturaId",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 103,
+      "method": "GET",
+      "endpoint": "/e11/finanzas/clientes",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 107,
+      "method": "GET",
+      "endpoint": "/e11/finanzas/clientes/:clienteId/notas",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 111,
+      "method": "GET",
+      "endpoint": "/e11/finanzas/clientes/:clienteId/estado-cuenta",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 116,
+      "method": "GET",
+      "endpoint": "/e11/conciliaciones",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 121,
+      "method": "POST",
+      "endpoint": "/e11/conciliaciones",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 123,
+      "method": "GET",
+      "endpoint": "/e11/conciliaciones/:id",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 125,
+      "method": "GET",
+      "endpoint": "/e11/conciliaciones/:id/ventas",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 130,
+      "method": "POST",
+      "endpoint": "/e11/conciliaciones/:id/decisiones",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 132,
+      "method": "GET",
+      "endpoint": "/e11/a/preparaciones",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 136,
+      "method": "GET",
+      "endpoint": "/e11/a/preparaciones/:cobroId",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e11.ts",
+      "line": 138,
+      "method": "POST",
+      "endpoint": "/e11/a/preparaciones/:cobroId",
+      "guards": [],
+      "otherGuard": ", endpoint"
+    },
+    {
+      "file": "e3-collections.ts",
+      "line": 25,
+      "method": "GET",
+      "endpoint": "/caja/abonos-e3/contexto",
+      "guards": [],
+      "otherGuard": ", gate, deps.authenticate, deps.permission(\"caja_abonos\", \"crear\"),"
+    },
+    {
+      "file": "e3-collections.ts",
+      "line": 49,
+      "method": "POST",
+      "endpoint": "${base}/vista-previa",
+      "guards": [],
+      "otherGuard": ", gate, deps.authenticate, deps.permission(module, \"crear\"), action(origin, false));\n    router.post(base, gate, deps.authenticate, deps.permission(module, \"crear\"), action(origin, true));\n  }\n  router.get"
+    },
+    {
+      "file": "e3-collections.ts",
+      "line": 70,
+      "method": "GET",
+      "endpoint": "/clientes/:id/recibos-e3",
+      "guards": [],
+      "otherGuard": ", gate, deps.authenticate, deps.admin, list);\n  router.get(\"/caja/recibos-e3\", gate, deps.authenticate, deps.admin, list);\n  router.post"
+    },
+    {
+      "file": "e5.ts",
+      "line": 49,
+      "method": "GET",
+      "endpoint": "/e5/disponibilidad",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "e5.ts",
+      "line": 55,
+      "method": "GET",
+      "endpoint": "/e5/contexto",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "e5.ts",
+      "line": 66,
+      "method": "GET",
+      "endpoint": "/e5/cobros",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "e5.ts",
+      "line": 69,
+      "method": "GET",
+      "endpoint": "/e5/avisos",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "e5.ts",
+      "line": 75,
+      "method": "GET",
+      "endpoint": "/e5/cobros/:id",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "e5.ts",
+      "line": 78,
+      "method": "POST",
+      "endpoint": "/e5/cobros/vista-previa",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "e5.ts",
+      "line": 92,
+      "method": "POST",
+      "endpoint": "/e5/cobros",
+      "guards": [],
+      "otherGuard": ", command(\"RECIBIR\"));\nrouter.post(\"/e5/cobros/:id/propuestas\", command(\"PROPONER\"));\nrouter.post(\"/e5/cobros/:id/autorizar\", command(\"AUTORIZAR\"));\nrouter.post(\"/e5/cobros/:id/rechazar\", command(\"RECHAZAR\"));\nrouter.post(\"/e5/cobros/:id/devolver\", command(\"DEVOLVER\"));\nrouter.get"
+    },
+    {
+      "file": "e5.ts",
+      "line": 100,
+      "method": "GET",
+      "endpoint": "/e5/cobros/:id/documentos/:documentoId",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "e5.ts",
+      "line": 103,
+      "method": "POST",
+      "endpoint": "/e5/cobros/:id/documentos/:documentoId/impresiones",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "e7.ts",
+      "line": 28,
+      "method": "GET",
+      "endpoint": "/e7/disponibilidad",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "e7.ts",
+      "line": 48,
+      "method": "GET",
+      "endpoint": "/e7/atribucion",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "e7.ts",
+      "line": 66,
+      "method": "GET",
+      "endpoint": "/e7/clientes/:clienteId/exportacion",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "e9.ts",
+      "line": 26,
+      "method": "GET",
+      "endpoint": "/e9/disponibilidad",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "e9.ts",
+      "line": 33,
+      "method": "GET",
+      "endpoint": "/e9/entregas",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "e9.ts",
+      "line": 41,
+      "method": "GET",
+      "endpoint": "/e9/entregas/:id",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "e9.ts",
+      "line": 53,
+      "method": "POST",
+      "endpoint": "/e9/entregas",
+      "guards": [],
+      "otherGuard": ", command(\"ENVIAR\"));\nrouter.post(\"/e9/entregas/:id/conteos\", command(\"CONTAR\"));\nrouter.post(\"/e9/entregas/:id/autorizar\", command(\"AUTORIZAR\"));\nrouter.post(\"/e9/entregas/:id/investigacion/cierre\", command(\"CERRAR\"));\nrouter.use"
+    },
+    {
+      "file": "equipos.ts",
+      "line": 206,
+      "method": "GET",
+      "endpoint": "/equipos",
+      "guards": [
+        {
+          "module": "equipos",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"equipos\", \"ver\"),"
+    },
+    {
+      "file": "equipos.ts",
+      "line": 240,
+      "method": "GET",
+      "endpoint": "/equipos/ubicaciones",
+      "guards": [
+        {
+          "module": "equipos",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"equipos\", \"ver\"),"
+    },
+    {
+      "file": "equipos.ts",
+      "line": 274,
+      "method": "POST",
+      "endpoint": "/equipos",
+      "guards": [
+        {
+          "module": "equipos",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"equipos\", \"crear\"),"
+    },
+    {
+      "file": "equipos.ts",
+      "line": 350,
+      "method": "PATCH",
+      "endpoint": "/equipos/:id",
+      "guards": [
+        {
+          "module": "equipos",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"equipos\", \"editar\"),"
+    },
+    {
+      "file": "equipos.ts",
+      "line": 468,
+      "method": "PATCH",
+      "endpoint": "/equipos/:id/checklist/:itemKey",
+      "guards": [
+        {
+          "module": "equipos",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"equipos\", \"editar\"),"
+    },
+    {
+      "file": "etiquetas.ts",
+      "line": 180,
+      "method": "GET",
+      "endpoint": "/etiquetas/rollos",
+      "guards": [
+        {
+          "module": "etiquetas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"etiquetas\", \"ver\"),"
+    },
+    {
+      "file": "etiquetas.ts",
+      "line": 265,
+      "method": "GET",
+      "endpoint": "/etiquetas/rollos/:id",
+      "guards": [
+        {
+          "module": "etiquetas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"etiquetas\", \"ver\"),"
+    },
+    {
+      "file": "etiquetas.ts",
+      "line": 322,
+      "method": "POST",
+      "endpoint": "/etiquetas/rollos/:id/revisar",
+      "guards": [
+        {
+          "module": "etiquetas",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"etiquetas\", \"editar\"),"
+    },
+    {
+      "file": "etiquetas.ts",
+      "line": 506,
+      "method": "GET",
+      "endpoint": "/etiquetas/rollos/:id/revisiones",
+      "guards": [
+        {
+          "module": "etiquetas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"etiquetas\", \"ver\"),"
+    },
+    {
+      "file": "etiquetas.ts",
+      "line": 558,
+      "method": "POST",
+      "endpoint": "/etiquetas/reimpresiones",
+      "guards": [
+        {
+          "module": "etiquetas",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"etiquetas\", \"crear\"),"
+    },
+    {
+      "file": "etiquetas.ts",
+      "line": 675,
+      "method": "GET",
+      "endpoint": "/etiquetas/historial",
+      "guards": [],
+      "otherGuard": ", requireSession,"
+    },
+    {
+      "file": "etiquetas.ts",
+      "line": 704,
+      "method": "GET",
+      "endpoint": "/etiquetas/historial/export.xlsx",
+      "guards": [],
+      "otherGuard": ", requireSession,"
+    },
+    {
+      "file": "etiquetas.ts",
+      "line": 734,
+      "method": "GET",
+      "endpoint": "/etiquetas/alertas/count",
+      "guards": [],
+      "otherGuard": ", requireSession,"
+    },
+    {
+      "file": "fondo.ts",
+      "line": 99,
+      "method": "GET",
+      "endpoint": "/fondo",
+      "guards": [],
+      "otherGuard": ", handle"
+    },
+    {
+      "file": "fondo.ts",
+      "line": 104,
+      "method": "GET",
+      "endpoint": "/fondo/movimientos",
+      "guards": [],
+      "otherGuard": ", handle"
+    },
+    {
+      "file": "fondo.ts",
+      "line": 109,
+      "method": "GET",
+      "endpoint": "/fondo/movimientos/:id",
+      "guards": [],
+      "otherGuard": ", handle"
+    },
+    {
+      "file": "fondo.ts",
+      "line": 117,
+      "method": "POST",
+      "endpoint": "/fondo/movimientos",
+      "guards": [],
+      "otherGuard": ", handle"
+    },
+    {
+      "file": "fondo.ts",
+      "line": 123,
+      "method": "POST",
+      "endpoint": "/fondo/movimientos/:id/inverso",
+      "guards": [],
+      "otherGuard": ", handle"
+    },
+    {
+      "file": "fondo.ts",
+      "line": 134,
+      "method": "GET",
+      "endpoint": "/fondo/arqueos",
+      "guards": [],
+      "otherGuard": ", handle"
+    },
+    {
+      "file": "fondo.ts",
+      "line": 138,
+      "method": "GET",
+      "endpoint": "/fondo/arqueos/:id",
+      "guards": [],
+      "otherGuard": ", handle"
+    },
+    {
+      "file": "fondo.ts",
+      "line": 144,
+      "method": "POST",
+      "endpoint": "/fondo/arqueos",
+      "guards": [],
+      "otherGuard": ", handle"
+    },
+    {
+      "file": "fondo.ts",
+      "line": 150,
+      "method": "GET",
+      "endpoint": "/fondo/exportar",
+      "guards": [],
+      "otherGuard": ", handle"
+    },
+    {
+      "file": "health.ts",
+      "line": 6,
+      "method": "GET",
+      "endpoint": "/healthz",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "inventario.ts",
+      "line": 142,
+      "method": "GET",
+      "endpoint": "/inventario/rollos/:id/remate",
+      "guards": [
+        {
+          "module": "inventario",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ", requireSession, requierePermiso(\"inventario\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 212,
+      "method": "GET",
+      "endpoint": "/inventario/fecha-servidor",
+      "guards": [],
+      "otherGuard": ", (_req, res): void => {\n  const now = new Date();\n  res.json(\n    GetFechaServidorResponse.parse({\n      fecha: now.toISOString(),\n      zonaHoraria: \"America/Mexico_City\",\n    }),\n  );\n});\n\n// ── Helper types ──────────────────────────────────────────────────────────────\n\ntype MovimientoRow = {\n  id: number;\n  rolloId: number;\n  productoId: number;\n  ubicacionId: number;\n  tipo: string;\n  motivoSalidaExtraordinaria: \"MERMA\" | \"ROBO\" | \"MUESTRA\" | null;\n  cantidad: string;\n  saldoPosterior: string;\n  documentoTipo: string | null;\n  documentoId: string | null;\n  documentoRuta: string | null;\n  documentoEtiqueta: string | null;\n  /** Owning client ID for a live MOVIMIENTO_CREDITO document reference. */\n  documentoClienteId: number | null;\n  movimientoOrigenId: number | null;\n  usuarioId: number;\n  justificacion: string | null;\n  revisado: boolean;\n  revisadoPor: number | null;\n  revisadoAt: string | null;\n  uuidCliente: string | null;\n  createdAt: string;\n};\n\ntype MovimientoDetalle = {\n  id: number;\n  rolloId: number;\n  serie: string | null;\n  productoId: number;\n  skuProducto: string | null;\n  ubicacionId: number;\n  nombreUbicacion: string | null;\n  tipo: string;\n  cantidad: string;\n  saldoPosterior: string;\n  documentoTipo: string | null;\n  documentoId: string | null;\n  movimientoOrigenId: number | null;\n  usuarioId: number;\n  motivoSalidaExtraordinaria: \"MERMA\" | \"ROBO\" | \"MUESTRA\" | null;\n  justificacion: string | null;\n  revisado: boolean;\n  createdAt: string;\n};\n\nfunction serializeMovimiento(\n  mov: typeof movimientosTable.$inferSelect,\n  document: { label: string | null; route: string | null },\n  documentoClienteId: number | null = null,\n): MovimientoRow {\n  return {\n    id: Number(mov.id),\n    rolloId: mov.rolloId,\n    productoId: mov.productoId,\n    ubicacionId: mov.ubicacionId,\n    tipo: mov.tipo,\n    motivoSalidaExtraordinaria: mov.motivoSalidaExtraordinaria ?? null,\n    cantidad: mov.cantidad,\n    saldoPosterior: mov.saldoPosterior,\n    documentoTipo: mov.documentoTipo ?? null,\n    documentoId: mov.documentoId ?? null,\n    documentoRuta: document.route,\n    documentoEtiqueta: document.label,\n    documentoClienteId,\n    movimientoOrigenId: mov.movimientoOrigenId ?? null,\n    usuarioId: mov.usuarioId,\n    justificacion: mov.justificacion ?? null,\n    revisado: mov.revisado,\n    revisadoPor: mov.revisadoPor ?? null,\n    revisadoAt: mov.revisadoAt?.toISOString() ?? null,\n    uuidCliente: mov.uuidCliente ?? null,\n    createdAt: mov.createdAt.toISOString(),\n  };\n}\n\nasync function enrichMovimiento(\n  mov: typeof movimientosTable.$inferSelect,\n): Promise<MovimientoRow> {\n  const context = await loadMovementDocumentContext([mov]);\n  return serializeMovimiento(\n    mov,\n    context.documents[0] ?? { label: null, route: null },\n    context.references[0]?.tipo === \"MOVIMIENTO_CREDITO\" &&\n      context.references[0]?.id\n      ? (context.creditMovementMap.get(Number(context.references[0].id))?.clienteId ??\n        null)\n      : null,\n  );\n}\n\nasync function enrichMovimientos(\n  movimientos: readonly (typeof movimientosTable.$inferSelect)[],\n): Promise<MovimientoRow[]> {\n  const context = await loadMovementDocumentContext(movimientos);\n  return movimientos.map"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 535,
+      "method": "GET",
+      "endpoint": "/inventario/salidas-extraordinarias",
+      "guards": [
+        {
+          "module": "salidas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"salidas\", \"ver\"),\n  requiereAdmin,"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 638,
+      "method": "POST",
+      "endpoint": "/inventario/salidas-extraordinarias",
+      "guards": [
+        {
+          "module": "salidas",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"salidas\", \"crear\"),\n  requiereAdmin,"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 677,
+      "method": "POST",
+      "endpoint": "/inventario/salidas-extraordinarias/:movimientoId/revertir",
+      "guards": [
+        {
+          "module": "salidas",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"salidas\", \"editar\"),\n  requiereAdmin,"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 767,
+      "method": "POST",
+      "endpoint": "/inventario/entradas",
+      "guards": [
+        {
+          "module": "entradas",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"entradas\", \"crear\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 969,
+      "method": "GET",
+      "endpoint": "/inventario/entradas",
+      "guards": [
+        {
+          "module": "entradas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"entradas\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 1108,
+      "method": "GET",
+      "endpoint": "/inventario/entradas/catalogos",
+      "guards": [
+        {
+          "module": "entradas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"entradas\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 1148,
+      "method": "GET",
+      "endpoint": "/inventario/entradas/pendientes-costo/count",
+      "guards": [
+        {
+          "module": "entradas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"entradas\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 1169,
+      "method": "GET",
+      "endpoint": "/inventario/entradas/pendientes-costo",
+      "guards": [
+        {
+          "module": "entradas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"entradas\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 1234,
+      "method": "POST",
+      "endpoint": "/inventario/entradas/:id/costos",
+      "guards": [
+        {
+          "module": "entradas",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"entradas\", \"editar\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 1274,
+      "method": "GET",
+      "endpoint": "/inventario/entradas/:id",
+      "guards": [
+        {
+          "module": "entradas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"entradas\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 1328,
+      "method": "POST",
+      "endpoint": "/inventario/rollos/:id/activar",
+      "guards": [
+        {
+          "module": "entradas",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"entradas\", \"editar\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 1387,
+      "method": "POST",
+      "endpoint": "/inventario/rollos/:id/vender",
+      "guards": [
+        {
+          "module": "pos",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"pos\", \"crear\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 1452,
+      "method": "POST",
+      "endpoint": "/inventario/rollos/:id/ajustar",
+      "guards": [
+        {
+          "module": "ajustes",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"ajustes\", \"crear\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 1511,
+      "method": "POST",
+      "endpoint": "/inventario/rollos/:id/revertir",
+      "guards": [
+        {
+          "module": "ajustes",
+          "action": "autorizar"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"ajustes\", \"autorizar\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 1594,
+      "method": "GET",
+      "endpoint": "/inventario/rollos/:id",
+      "guards": [
+        {
+          "module": "inventario",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"inventario\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 1636,
+      "method": "GET",
+      "endpoint": "/inventario/movimientos/:id",
+      "guards": [
+        {
+          "module": "movimientos",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"movimientos\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 1667,
+      "method": "PATCH",
+      "endpoint": "/inventario/rollos/:id/piso",
+      "guards": [
+        {
+          "module": "inventario",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"inventario\", \"editar\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 1711,
+      "method": "GET",
+      "endpoint": "/inventario/rollos",
+      "guards": [
+        {
+          "module": "inventario",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"inventario\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 1838,
+      "method": "GET",
+      "endpoint": "/inventario/ubicaciones",
+      "guards": [
+        {
+          "module": "inventario",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"inventario\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 1873,
+      "method": "GET",
+      "endpoint": "/inventario/existencias/agrupadas",
+      "guards": [
+        {
+          "module": "inventario",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"inventario\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 1974,
+      "method": "GET",
+      "endpoint": "/inventario/existencias",
+      "guards": [
+        {
+          "module": "inventario",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"inventario\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 2111,
+      "method": "GET",
+      "endpoint": "/inventario/kardex",
+      "guards": [
+        {
+          "module": "movimientos",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"movimientos\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 2155,
+      "method": "GET",
+      "endpoint": "/inventario/kardex/agrupado",
+      "guards": [
+        {
+          "module": "movimientos",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"movimientos\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 2195,
+      "method": "GET",
+      "endpoint": "/inventario/kardex/filtros",
+      "guards": [
+        {
+          "module": "movimientos",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"movimientos\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 2227,
+      "method": "GET",
+      "endpoint": "/inventario/kardex/exportar",
+      "guards": [
+        {
+          "module": "movimientos",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"movimientos\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 2328,
+      "method": "GET",
+      "endpoint": "/inventario/ajustes/pendientes",
+      "guards": [
+        {
+          "module": "ajustes",
+          "action": "autorizar"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"ajustes\", \"autorizar\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 2367,
+      "method": "POST",
+      "endpoint": "/inventario/ajustes/:id/revisar",
+      "guards": [
+        {
+          "module": "ajustes",
+          "action": "autorizar"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"ajustes\", \"autorizar\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 2422,
+      "method": "GET",
+      "endpoint": "/inventario/conciliacion",
+      "guards": [
+        {
+          "module": "conciliacion",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"conciliacion\", \"ver\"),"
+    },
+    {
+      "file": "inventario.ts",
+      "line": 2453,
+      "method": "POST",
+      "endpoint": "/inventario/conciliacion/recalcular",
+      "guards": [
+        {
+          "module": "conciliacion",
+          "action": "autorizar"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"conciliacion\", \"autorizar\"),"
+    },
+    {
+      "file": "locations.ts",
+      "line": 37,
+      "method": "GET",
+      "endpoint": "/locations",
+      "guards": [
+        {
+          "module": "ubicaciones",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"ubicaciones\", \"ver\"),"
+    },
+    {
+      "file": "locations.ts",
+      "line": 71,
+      "method": "POST",
+      "endpoint": "/locations",
+      "guards": [
+        {
+          "module": "ubicaciones",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"ubicaciones\", \"crear\"),"
+    },
+    {
+      "file": "locations.ts",
+      "line": 111,
+      "method": "PATCH",
+      "endpoint": "/locations/:id",
+      "guards": [
+        {
+          "module": "ubicaciones",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"ubicaciones\", \"editar\"),"
+    },
+    {
+      "file": "locations.ts",
+      "line": 187,
+      "method": "GET",
+      "endpoint": "/locations/:id/pisos",
+      "guards": [
+        {
+          "module": "ubicaciones",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"ubicaciones\", \"ver\"),"
+    },
+    {
+      "file": "locations.ts",
+      "line": 205,
+      "method": "POST",
+      "endpoint": "/locations/:id/pisos",
+      "guards": [
+        {
+          "module": "ubicaciones",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"ubicaciones\", \"crear\"),"
+    },
+    {
+      "file": "locations.ts",
+      "line": 234,
+      "method": "PATCH",
+      "endpoint": "/locations/:id/pisos/:pisoId",
+      "guards": [
+        {
+          "module": "ubicaciones",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"ubicaciones\", \"editar\"),"
+    },
+    {
+      "file": "notificaciones.ts",
+      "line": 219,
+      "method": "GET",
+      "endpoint": "/notificaciones/feed",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "notificaciones.ts",
+      "line": 488,
+      "method": "GET",
+      "endpoint": "/notificaciones",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "notificaciones.ts",
+      "line": 664,
+      "method": "GET",
+      "endpoint": "/notificaciones/no-leidas/count",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "notificaciones.ts",
+      "line": 674,
+      "method": "POST",
+      "endpoint": "/notificaciones/leer-todas",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "notificaciones.ts",
+      "line": 700,
+      "method": "POST",
+      "endpoint": "/notificaciones/:tipo/:id/leer",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "pagos-dirigidos.ts",
+      "line": 264,
+      "method": "GET",
+      "endpoint": "/pagos-dirigidos",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "pagos-dirigidos.ts",
+      "line": 303,
+      "method": "POST",
+      "endpoint": "/pagos-dirigidos",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "pagos-dirigidos.ts",
+      "line": 413,
+      "method": "POST",
+      "endpoint": "/pagos-dirigidos/:id/aprobar",
+      "guards": [],
+      "otherGuard": ", requireRole(\"ADMIN\"),"
+    },
+    {
+      "file": "pagos-dirigidos.ts",
+      "line": 493,
+      "method": "POST",
+      "endpoint": "/pagos-dirigidos/:id/rechazar",
+      "guards": [],
+      "otherGuard": ", requireRole(\"ADMIN\"),"
+    },
+    {
+      "file": "permisos.ts",
+      "line": 58,
+      "method": "GET",
+      "endpoint": "/permisos/roles",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "permisos.ts",
+      "line": 74,
+      "method": "PUT",
+      "endpoint": "/permisos/roles/:rol/:modulo",
+      "guards": [
+        {
+          "module": "permisos",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"permisos\", \"editar\"),"
+    },
+    {
+      "file": "permisos.ts",
+      "line": 261,
+      "method": "GET",
+      "endpoint": "/permisos/usuarios/:id",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "permisos.ts",
+      "line": 307,
+      "method": "PUT",
+      "endpoint": "/permisos/usuarios/:id/:modulo",
+      "guards": [
+        {
+          "module": "permisos",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"permisos\", \"editar\"),"
+    },
+    {
+      "file": "permisos.ts",
+      "line": 484,
+      "method": "DELETE",
+      "endpoint": "/permisos/usuarios/:id/:modulo",
+      "guards": [
+        {
+          "module": "permisos",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"permisos\", \"editar\"),"
+    },
+    {
+      "file": "permisos.ts",
+      "line": 604,
+      "method": "GET",
+      "endpoint": "/permisos/preview/:id",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "pos.ts",
+      "line": 307,
+      "method": "GET",
+      "endpoint": "/pos/buscar",
+      "guards": [
+        {
+          "module": "pos",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"pos\", \"ver\"),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 322,
+      "method": "GET",
+      "endpoint": "/pos/clientes/:clienteId/credito-disponible",
+      "guards": [
+        {
+          "module": "pos",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"pos\", \"crear\"),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 366,
+      "method": "POST",
+      "endpoint": "/pos/validar-precio",
+      "guards": [
+        {
+          "module": "pos",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"pos\", \"crear\"),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 387,
+      "method": "POST",
+      "endpoint": "/tickets",
+      "guards": [
+        {
+          "module": "pos",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"pos\", \"crear\"),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 459,
+      "method": "GET",
+      "endpoint": "/tickets",
+      "guards": [],
+      "otherGuard": ",\n  requiereAlguno([\n    { modulo: \"pos\", accion: \"ver\" },\n    { modulo: \"cobros_pagos\", accion: \"ver\" },\n  ]),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 559,
+      "method": "GET",
+      "endpoint": "/tickets/pendientes",
+      "guards": [],
+      "otherGuard": ",\n  requiereAlguno([\n    { modulo: \"pos\", accion: \"ver\" },\n    { modulo: \"cobros_pagos\", accion: \"ver\" },\n  ]),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 595,
+      "method": "GET",
+      "endpoint": "/caja/tickets",
+      "guards": [
+        {
+          "module": "cobros_pagos",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"cobros_pagos\", \"ver\"),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 627,
+      "method": "GET",
+      "endpoint": "/tickets/:id/documento-impresion",
+      "guards": [],
+      "otherGuard": ",\n  requiereLecturaTicket,"
+    },
+    {
+      "file": "pos.ts",
+      "line": 649,
+      "method": "GET",
+      "endpoint": "/tickets/:id",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "pos.ts",
+      "line": 695,
+      "method": "POST",
+      "endpoint": "/tickets/:id/cancelar",
+      "guards": [
+        {
+          "module": "pos",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"pos\", \"crear\"),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 750,
+      "method": "POST",
+      "endpoint": "/tickets/:id/cobrar",
+      "guards": [
+        {
+          "module": "cobros_pagos",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"cobros_pagos\", \"crear\"),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 812,
+      "method": "POST",
+      "endpoint": "/tickets/:id/autorizar",
+      "guards": [
+        {
+          "module": "cobros_pagos",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"cobros_pagos\", \"crear\"),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 833,
+      "method": "GET",
+      "endpoint": "/tickets/:id/autorizar",
+      "guards": [
+        {
+          "module": "cobros_pagos",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"cobros_pagos\", \"ver\"),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 926,
+      "method": "GET",
+      "endpoint": "/sesiones-caja/actual",
+      "guards": [
+        {
+          "module": "cobros_pagos",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"cobros_pagos\", \"ver\"),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 973,
+      "method": "GET",
+      "endpoint": "/sesiones-caja",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "pos.ts",
+      "line": 992,
+      "method": "POST",
+      "endpoint": "/sesiones-caja/abrir",
+      "guards": [
+        {
+          "module": "cortes",
+          "action": "ver"
+        },
+        {
+          "module": "cortes",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"cortes\", \"ver\"),\n  requierePermiso(\"cortes\", \"crear\"),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 1017,
+      "method": "GET",
+      "endpoint": "/sesiones-caja/:id/corte",
+      "guards": [
+        {
+          "module": "cortes",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"cortes\", \"ver\"),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 1036,
+      "method": "POST",
+      "endpoint": "/sesiones-caja/:id/cerrar",
+      "guards": [
+        {
+          "module": "cortes",
+          "action": "ver"
+        },
+        {
+          "module": "cortes",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"cortes\", \"ver\"),\n  requierePermiso(\"cortes\", \"crear\"),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 1065,
+      "method": "GET",
+      "endpoint": "/sesiones-caja/:id/salidas-dinero",
+      "guards": [],
+      "otherGuard": ",\n  e4CashOutPermission(\"ver\", requierePermiso),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 1079,
+      "method": "POST",
+      "endpoint": "/sesiones-caja/:id/salidas-dinero",
+      "guards": [],
+      "otherGuard": ",\n  e4CashOutPermission(\"ver\", requierePermiso),\n  e4CashOutPermission(\"crear\", requierePermiso),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 1106,
+      "method": "POST",
+      "endpoint": "/sesiones-caja/:id/salidas-dinero/:salidaId/revision",
+      "guards": [
+        {
+          "module": "cortes",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"cortes\", \"ver\"),"
+    },
+    {
+      "file": "pos.ts",
+      "line": 1122,
+      "method": "GET",
+      "endpoint": "/caja/proveedores-activos",
+      "guards": [],
+      "otherGuard": ",\n  e4CashOutPermission(\"ver\", requierePermiso),"
+    },
+    {
+      "file": "precios.ts",
+      "line": 181,
+      "method": "GET",
+      "endpoint": "/precios",
+      "guards": [
+        {
+          "module": "precios",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"precios\", \"ver\"),"
+    },
+    {
+      "file": "precios.ts",
+      "line": 206,
+      "method": "GET",
+      "endpoint": "/precios/:id",
+      "guards": [
+        {
+          "module": "precios",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"precios\", \"ver\"),"
+    },
+    {
+      "file": "precios.ts",
+      "line": 224,
+      "method": "POST",
+      "endpoint": "/precios/:id/cambiar",
+      "guards": [
+        {
+          "module": "precios",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"precios\", \"editar\"),"
+    },
+    {
+      "file": "precios.ts",
+      "line": 277,
+      "method": "POST",
+      "endpoint": "/precios/cambiar-masivo",
+      "guards": [
+        {
+          "module": "precios",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"precios\", \"editar\"),"
+    },
+    {
+      "file": "precios.ts",
+      "line": 373,
+      "method": "PATCH",
+      "endpoint": "/precios/:id/venta-por-metro",
+      "guards": [
+        {
+          "module": "precios",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"precios\", \"editar\"),"
+    },
+    {
+      "file": "productos.ts",
+      "line": 304,
+      "method": "GET",
+      "endpoint": "/productos",
+      "guards": [
+        {
+          "module": "productos",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"productos\", \"ver\"),"
+    },
+    {
+      "file": "productos.ts",
+      "line": 344,
+      "method": "POST",
+      "endpoint": "/productos",
+      "guards": [
+        {
+          "module": "productos",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"productos\", \"crear\"),"
+    },
+    {
+      "file": "productos.ts",
+      "line": 473,
+      "method": "POST",
+      "endpoint": "/productos/import/preview",
+      "guards": [
+        {
+          "module": "productos",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"productos\", \"crear\"),"
+    },
+    {
+      "file": "productos.ts",
+      "line": 530,
+      "method": "POST",
+      "endpoint": "/productos/import/confirm",
+      "guards": [
+        {
+          "module": "productos",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"productos\", \"crear\"),"
+    },
+    {
+      "file": "productos.ts",
+      "line": 658,
+      "method": "GET",
+      "endpoint": "/productos/:id",
+      "guards": [
+        {
+          "module": "productos",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"productos\", \"ver\"),"
+    },
+    {
+      "file": "productos.ts",
+      "line": 766,
+      "method": "PATCH",
+      "endpoint": "/productos/:id",
+      "guards": [
+        {
+          "module": "productos",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"productos\", \"editar\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 128,
+      "method": "GET",
+      "endpoint": "/proveedores/resumen",
+      "guards": [
+        {
+          "module": "proveedores_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 141,
+      "method": "POST",
+      "endpoint": "/proveedores/:id/pagos/preview",
+      "guards": [
+        {
+          "module": "proveedores_finanzas",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores_finanzas\", \"crear\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 167,
+      "method": "GET",
+      "endpoint": "/proveedores/analitica-global",
+      "guards": [
+        {
+          "module": "proveedores_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 179,
+      "method": "GET",
+      "endpoint": "/proveedores/historial-compras",
+      "guards": [
+        {
+          "module": "proveedores",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores\", \"ver\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 230,
+      "method": "GET",
+      "endpoint": "/proveedores",
+      "guards": [
+        {
+          "module": "proveedores",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores\", \"ver\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 292,
+      "method": "POST",
+      "endpoint": "/proveedores",
+      "guards": [
+        {
+          "module": "proveedores",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores\", \"crear\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 338,
+      "method": "GET",
+      "endpoint": "/proveedores/:id",
+      "guards": [
+        {
+          "module": "proveedores",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores\", \"ver\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 369,
+      "method": "PATCH",
+      "endpoint": "/proveedores/:id",
+      "guards": [
+        {
+          "module": "proveedores",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores\", \"editar\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 452,
+      "method": "GET",
+      "endpoint": "/proveedores/:id/compras",
+      "guards": [
+        {
+          "module": "proveedores_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 516,
+      "method": "GET",
+      "endpoint": "/proveedores/:id/pagos",
+      "guards": [
+        {
+          "module": "proveedores_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 579,
+      "method": "GET",
+      "endpoint": "/proveedores/:id/estado-cuenta",
+      "guards": [
+        {
+          "module": "proveedores_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 624,
+      "method": "GET",
+      "endpoint": "/proveedores/:id/pagos/efectivo-opciones",
+      "guards": [
+        {
+          "module": "proveedores_finanzas",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"proveedores_finanzas\", \"crear\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 631,
+      "method": "POST",
+      "endpoint": "/proveedores/:id/pagos",
+      "guards": [
+        {
+          "module": "proveedores_finanzas",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores_finanzas\", \"crear\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 747,
+      "method": "POST",
+      "endpoint": "/proveedores/:id/ajustes",
+      "guards": [
+        {
+          "module": "proveedores_finanzas",
+          "action": "autorizar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores_finanzas\", \"autorizar\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 818,
+      "method": "POST",
+      "endpoint": "/proveedores/:id/pagos/:pagoId/reversar",
+      "guards": [
+        {
+          "module": "proveedores_finanzas",
+          "action": "autorizar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores_finanzas\", \"autorizar\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 857,
+      "method": "GET",
+      "endpoint": "/proveedores/:id/compras/:compraId",
+      "guards": [
+        {
+          "module": "proveedores_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 903,
+      "method": "GET",
+      "endpoint": "/proveedores/:id/pagos/:pagoId",
+      "guards": [
+        {
+          "module": "proveedores_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 943,
+      "method": "GET",
+      "endpoint": "/proveedores/:id/estadisticas",
+      "guards": [
+        {
+          "module": "proveedores_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 1002,
+      "method": "GET",
+      "endpoint": "/proveedores/:id/utilidad",
+      "guards": [
+        {
+          "module": "proveedores_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "proveedores.ts",
+      "line": 1107,
+      "method": "GET",
+      "endpoint": "/proveedores/:id/exportar",
+      "guards": [
+        {
+          "module": "proveedores_finanzas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+    },
+    {
+      "file": "purga.ts",
+      "line": 22,
+      "method": "GET",
+      "endpoint": "/purga/:entidad/:id/preflight",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "purga.ts",
+      "line": 40,
+      "method": "DELETE",
+      "endpoint": "/purga/:entidad/:id",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "reportes.ts",
+      "line": 73,
+      "method": "GET",
+      "endpoint": "/reportes/catalogos",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "reportes.ts",
+      "line": 90,
+      "method": "GET",
+      "endpoint": "/reportes/que-comprar/evidencia",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "reportes.ts",
+      "line": 121,
+      "method": "GET",
+      "endpoint": "/reportes/:seccion",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "reportes.ts",
+      "line": 130,
+      "method": "GET",
+      "endpoint": "/reportes/:seccion/export.xlsx",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "reportes.ts",
+      "line": 160,
+      "method": "GET",
+      "endpoint": "/reportes/:seccion/export.pdf",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "reportes.ts",
+      "line": 309,
+      "method": "GET",
+      "endpoint": "/reportes/vistas/:vista/export.xlsx",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "reportes.ts",
+      "line": 356,
+      "method": "GET",
+      "endpoint": "/reportes/vistas/:vista/export.pdf",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "salidas.ts",
+      "line": 98,
+      "method": "POST",
+      "endpoint": "/salidas/venta-cliente",
+      "guards": [
+        {
+          "module": "salidas",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ", requireSession, requierePermiso(\"salidas\", \"crear\"),"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 107,
+      "method": "GET",
+      "endpoint": "/salidas/venta-cliente/pendientes",
+      "guards": [
+        {
+          "module": "salidas_venta",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ", requireSession, requierePermiso(\"salidas_venta\", \"ver\"),"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 130,
+      "method": "POST",
+      "endpoint": "/salidas/venta-cliente/generar-venta",
+      "guards": [
+        {
+          "module": "salidas_venta",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ", requireSession, requierePermiso(\"salidas_venta\", \"crear\"),"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 204,
+      "method": "GET",
+      "endpoint": "/salidas/ubicaciones",
+      "guards": [
+        {
+          "module": "salidas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"salidas\", \"ver\"),"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 232,
+      "method": "GET",
+      "endpoint": "/salidas/venta-cliente/verificar-autorizacion",
+      "guards": [],
+      "otherGuard": ", requireSession,"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 257,
+      "method": "POST",
+      "endpoint": "/salidas/:id/entregar",
+      "guards": [],
+      "otherGuard": ", requireSession,"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 468,
+      "method": "GET",
+      "endpoint": "/salidas",
+      "guards": [
+        {
+          "module": "salidas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"salidas\", \"ver\"),"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 537,
+      "method": "GET",
+      "endpoint": "/salidas/borrador",
+      "guards": [
+        {
+          "module": "salidas",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"salidas\", \"crear\"),"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 567,
+      "method": "POST",
+      "endpoint": "/salidas/mostrador",
+      "guards": [
+        {
+          "module": "salidas",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"salidas\", \"crear\"),"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 609,
+      "method": "POST",
+      "endpoint": "/salidas/borrador/rollos",
+      "guards": [
+        {
+          "module": "salidas",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"salidas\", \"crear\"),"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 643,
+      "method": "GET",
+      "endpoint": "/salidas/exportar",
+      "guards": [
+        {
+          "module": "salidas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"salidas\", \"ver\"),"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 707,
+      "method": "GET",
+      "endpoint": "/salidas/recepcion",
+      "guards": [],
+      "otherGuard": ",\n  requireSession,"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 734,
+      "method": "GET",
+      "endpoint": "/salidas/recepcion/:id",
+      "guards": [],
+      "otherGuard": ",\n  requireSession,"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 768,
+      "method": "GET",
+      "endpoint": "/salidas/:id",
+      "guards": [],
+      "otherGuard": ",\n  requireSession,"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 794,
+      "method": "GET",
+      "endpoint": "/salidas/:id/documento",
+      "guards": [
+        {
+          "module": "salidas",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"salidas\", \"ver\"),"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 816,
+      "method": "DELETE",
+      "endpoint": "/salidas/:id/rollos/:rolloId",
+      "guards": [
+        {
+          "module": "salidas",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"salidas\", \"crear\"),"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 838,
+      "method": "POST",
+      "endpoint": "/salidas/:id/enviar",
+      "guards": [
+        {
+          "module": "salidas",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"salidas\", \"crear\"),"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 866,
+      "method": "POST",
+      "endpoint": "/salidas/:id/recibir",
+      "guards": [
+        {
+          "module": "salidas",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"salidas\", \"crear\"),"
+    },
+    {
+      "file": "salidas.ts",
+      "line": 899,
+      "method": "POST",
+      "endpoint": "/salidas/:id/cancelar",
+      "guards": [
+        {
+          "module": "salidas",
+          "action": "autorizar"
+        }
+      ],
+      "otherGuard": ",\n  requireSession,\n  requierePermiso(\"salidas\", \"autorizar\"),"
+    },
+    {
+      "file": "stock-minimos.ts",
+      "line": 104,
+      "method": "GET",
+      "endpoint": "/stock-minimos/config",
+      "guards": [
+        {
+          "module": "inventario",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"inventario\", \"ver\"),"
+    },
+    {
+      "file": "stock-minimos.ts",
+      "line": 126,
+      "method": "PATCH",
+      "endpoint": "/stock-minimos/config",
+      "guards": [
+        {
+          "module": "inventario",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"inventario\", \"editar\"),"
+    },
+    {
+      "file": "stock-minimos.ts",
+      "line": 159,
+      "method": "GET",
+      "endpoint": "/stock-minimos",
+      "guards": [
+        {
+          "module": "inventario",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"inventario\", \"ver\"),"
+    },
+    {
+      "file": "stock-minimos.ts",
+      "line": 185,
+      "method": "PUT",
+      "endpoint": "/stock-minimos/:productoId",
+      "guards": [
+        {
+          "module": "inventario",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ",\n  requierePermiso(\"inventario\", \"editar\"),"
+    },
+    {
+      "file": "users.ts",
+      "line": 104,
+      "method": "GET",
+      "endpoint": "/users",
+      "guards": [],
+      "otherGuard": ","
+    },
+    {
+      "file": "users.ts",
+      "line": 120,
+      "method": "POST",
+      "endpoint": "/users",
+      "guards": [
+        {
+          "module": "usuarios",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"usuarios\", \"crear\"),"
+    },
+    {
+      "file": "users.ts",
+      "line": 196,
+      "method": "PATCH",
+      "endpoint": "/users/:id",
+      "guards": [
+        {
+          "module": "usuarios",
+          "action": "editar"
+        }
+      ],
+      "otherGuard": ", requierePermiso(\"usuarios\", \"editar\"),"
+    },
+    {
+      "file": "viajes.ts",
+      "line": 90,
+      "method": "GET",
+      "endpoint": "/viajes/catalogo-operativo",
+      "guards": [
+        {
+          "module": "viajes",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ", requireSession, requierePermiso(\"viajes\", \"ver\"),"
+    },
+    {
+      "file": "viajes.ts",
+      "line": 101,
+      "method": "GET",
+      "endpoint": "/viajes/elegibles",
+      "guards": [
+        {
+          "module": "viajes",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ", requireSession, requierePermiso(\"viajes\", \"crear\"),"
+    },
+    {
+      "file": "viajes.ts",
+      "line": 120,
+      "method": "POST",
+      "endpoint": "/viajes",
+      "guards": [
+        {
+          "module": "viajes",
+          "action": "crear"
+        }
+      ],
+      "otherGuard": ", requireSession, requierePermiso(\"viajes\", \"crear\"),"
+    },
+    {
+      "file": "viajes.ts",
+      "line": 159,
+      "method": "GET",
+      "endpoint": "/viajes",
+      "guards": [
+        {
+          "module": "viajes",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ", requireSession, requierePermiso(\"viajes\", \"ver\"),"
+    },
+    {
+      "file": "viajes.ts",
+      "line": 174,
+      "method": "GET",
+      "endpoint": "/viajes/:id",
+      "guards": [
+        {
+          "module": "viajes",
+          "action": "ver"
+        }
+      ],
+      "otherGuard": ", requireSession, requierePermiso(\"viajes\", \"ver\"),"
+    }
+  ]
+}

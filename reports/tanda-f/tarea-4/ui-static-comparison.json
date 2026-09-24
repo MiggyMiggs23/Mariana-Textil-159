@@ -1,0 +1,6866 @@
+{
+  "kind": "static actual helper evaluation; NOT browser control visibility",
+  "sha256": "fe114a81529e8c6b45d08f581cc8dcde837938a6a78f2e02de06a8bc52b80e4e",
+  "comparisons": [
+    {
+      "role": "ADMIN",
+      "module": "marcar_remate",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "marcar_remate",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "marcar_remate",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "marcar_remate",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "dashboard",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "dashboard",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "dashboard",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "dashboard",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "pos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "pos",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "pos",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "pos",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "entradas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "entradas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "entradas",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "entradas",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "salidas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "salidas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "salidas",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "salidas",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "movimientos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "movimientos",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "movimientos",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "movimientos",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "etiquetas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "etiquetas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "etiquetas",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "etiquetas",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "inventario",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "inventario",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "inventario",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "inventario",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "auditoria_inventario",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "auditoria_inventario",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "auditoria_inventario",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "auditoria_inventario",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "productos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "productos",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "productos",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "productos",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "precios",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "precios",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "precios",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "precios",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "ajustes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "ajustes",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "ajustes",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "ajustes",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes_credito",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes_credito",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes_credito",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes_credito",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes_precios",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes_precios",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes_precios",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes_precios",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes_finanzas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes_finanzas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes_finanzas",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes_finanzas",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "caja_abonos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "caja_abonos",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "caja_abonos",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "caja_abonos",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes_recapturas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes_recapturas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes_recapturas",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "clientes_recapturas",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "proveedores",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "proveedores",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "proveedores",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "proveedores",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "proveedores_finanzas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "proveedores_finanzas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "proveedores_finanzas",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "proveedores_finanzas",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "contenedores",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "contenedores",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "contenedores",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "contenedores",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "ubicaciones",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "ubicaciones",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "ubicaciones",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "ubicaciones",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "usuarios",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "usuarios",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "usuarios",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "usuarios",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "permisos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "permisos",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "permisos",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "permisos",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "resumen_caja",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "resumen_caja",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "resumen_caja",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "resumen_caja",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "cortes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "cortes",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "cortes",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "cortes",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "cobros_pagos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "cobros_pagos",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "cobros_pagos",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "cobros_pagos",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "reportes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "reportes",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "reportes",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "reportes",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "conciliacion",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "conciliacion",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "conciliacion",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "conciliacion",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "auditoria",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "auditoria",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "auditoria",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "auditoria",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "camionetas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "camionetas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "camionetas",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "camionetas",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "choferes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "choferes",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "choferes",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "choferes",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "viajes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "viajes",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "viajes",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "viajes",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "salidas_venta",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "salidas_venta",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "salidas_venta",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "salidas_venta",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "equipos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "equipos",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "equipos",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "ADMIN",
+      "module": "equipos",
+      "action": "autorizar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "TERMINAL",
+      "module": "marcar_remate",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "marcar_remate",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "marcar_remate",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "marcar_remate",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "dashboard",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "TERMINAL",
+      "module": "dashboard",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "dashboard",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "dashboard",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "pos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "TERMINAL",
+      "module": "pos",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "TERMINAL",
+      "module": "pos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "pos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "entradas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "entradas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "entradas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "entradas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "salidas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "TERMINAL",
+      "module": "salidas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "salidas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "salidas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "movimientos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "movimientos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "movimientos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "movimientos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "etiquetas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "etiquetas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "etiquetas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "etiquetas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "inventario",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "TERMINAL",
+      "module": "inventario",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "inventario",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "inventario",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "auditoria_inventario",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "auditoria_inventario",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "auditoria_inventario",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "auditoria_inventario",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "productos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "TERMINAL",
+      "module": "productos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "productos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "productos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "precios",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "precios",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "precios",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "precios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "ajustes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "ajustes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "ajustes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "ajustes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes_credito",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes_credito",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes_credito",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes_credito",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes_precios",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes_precios",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes_precios",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes_precios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes_finanzas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes_finanzas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes_finanzas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes_finanzas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "caja_abonos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "caja_abonos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "caja_abonos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "caja_abonos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes_recapturas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes_recapturas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes_recapturas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "clientes_recapturas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "proveedores",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "proveedores",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "proveedores",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "proveedores",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "proveedores_finanzas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "proveedores_finanzas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "proveedores_finanzas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "proveedores_finanzas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "contenedores",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "contenedores",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "contenedores",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "contenedores",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "ubicaciones",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "ubicaciones",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "ubicaciones",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "ubicaciones",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "usuarios",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "usuarios",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "usuarios",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "usuarios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "permisos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "permisos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "permisos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "permisos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "resumen_caja",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "resumen_caja",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "resumen_caja",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "resumen_caja",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "cortes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "cortes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "cortes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "cortes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "cobros_pagos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "cobros_pagos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "cobros_pagos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "cobros_pagos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "reportes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "reportes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "reportes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "reportes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "conciliacion",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "conciliacion",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "conciliacion",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "conciliacion",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "auditoria",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "auditoria",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "auditoria",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "auditoria",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "camionetas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "camionetas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "camionetas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "camionetas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "choferes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "choferes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "choferes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "choferes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "viajes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "viajes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "viajes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "viajes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "salidas_venta",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "salidas_venta",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "salidas_venta",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "salidas_venta",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "equipos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "equipos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "equipos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "TERMINAL",
+      "module": "equipos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "marcar_remate",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "marcar_remate",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "marcar_remate",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "marcar_remate",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "dashboard",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "dashboard",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "dashboard",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "dashboard",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "pos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "pos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "pos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "pos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "entradas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "entradas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "entradas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "entradas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "salidas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "salidas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "salidas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "salidas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "movimientos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "movimientos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "movimientos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "movimientos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "etiquetas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "etiquetas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "etiquetas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "etiquetas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "inventario",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "inventario",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "inventario",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "inventario",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "auditoria_inventario",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "auditoria_inventario",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "auditoria_inventario",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "auditoria_inventario",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "productos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "productos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "productos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "productos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "precios",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "precios",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "precios",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "precios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "ajustes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "ajustes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "ajustes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "ajustes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes_credito",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes_credito",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes_credito",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes_credito",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes_precios",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes_precios",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes_precios",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes_precios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes_finanzas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes_finanzas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes_finanzas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes_finanzas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "caja_abonos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "caja_abonos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "caja_abonos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "caja_abonos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes_recapturas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes_recapturas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes_recapturas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "clientes_recapturas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "proveedores",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "proveedores",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "proveedores",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "proveedores",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "proveedores_finanzas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "proveedores_finanzas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "proveedores_finanzas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "proveedores_finanzas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "contenedores",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "contenedores",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "contenedores",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "contenedores",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "ubicaciones",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "ubicaciones",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "ubicaciones",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "ubicaciones",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "usuarios",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "usuarios",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "usuarios",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "usuarios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "permisos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "permisos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "permisos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "permisos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "resumen_caja",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "resumen_caja",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "resumen_caja",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "resumen_caja",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "cortes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "cortes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "cortes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "cortes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "cobros_pagos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "CAJA",
+      "module": "cobros_pagos",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "CAJA",
+      "module": "cobros_pagos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "cobros_pagos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "reportes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "reportes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "reportes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "reportes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "conciliacion",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "conciliacion",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "conciliacion",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "conciliacion",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "auditoria",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "auditoria",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "auditoria",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "auditoria",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "camionetas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "camionetas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "camionetas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "camionetas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "choferes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "choferes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "choferes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "choferes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "viajes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "viajes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "viajes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "viajes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "salidas_venta",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "salidas_venta",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "salidas_venta",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "salidas_venta",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "equipos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "equipos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "equipos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CAJA",
+      "module": "equipos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "marcar_remate",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "marcar_remate",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "marcar_remate",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "marcar_remate",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "dashboard",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "dashboard",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "dashboard",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "dashboard",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "pos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "pos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "pos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "pos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "entradas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "entradas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "entradas",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "entradas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "salidas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "salidas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "salidas",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "salidas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "movimientos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "movimientos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "movimientos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "movimientos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "etiquetas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "etiquetas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "etiquetas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "etiquetas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "inventario",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "inventario",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "inventario",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "inventario",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "auditoria_inventario",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "auditoria_inventario",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "auditoria_inventario",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "auditoria_inventario",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "productos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "productos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "productos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "productos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "precios",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "precios",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "precios",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "precios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "ajustes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "ajustes",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "ajustes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "ajustes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes_credito",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes_credito",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes_credito",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes_credito",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes_precios",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes_precios",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes_precios",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes_precios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes_finanzas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes_finanzas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes_finanzas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes_finanzas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "caja_abonos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "caja_abonos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "caja_abonos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "caja_abonos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes_recapturas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes_recapturas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes_recapturas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "clientes_recapturas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "proveedores",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "proveedores",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "proveedores",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "proveedores",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "proveedores_finanzas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "proveedores_finanzas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "proveedores_finanzas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "proveedores_finanzas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "contenedores",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "contenedores",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "contenedores",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "contenedores",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "ubicaciones",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "ubicaciones",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "ubicaciones",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "ubicaciones",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "usuarios",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "usuarios",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "usuarios",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "usuarios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "permisos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "permisos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "permisos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "permisos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "resumen_caja",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "resumen_caja",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "resumen_caja",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "resumen_caja",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "cortes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "cortes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "cortes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "cortes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "cobros_pagos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "cobros_pagos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "cobros_pagos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "cobros_pagos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "reportes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "reportes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "reportes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "reportes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "conciliacion",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "conciliacion",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "conciliacion",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "conciliacion",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "auditoria",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "auditoria",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "auditoria",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "auditoria",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "camionetas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "camionetas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "camionetas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "camionetas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "choferes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "choferes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "choferes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "choferes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "viajes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "viajes",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "viajes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "viajes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "salidas_venta",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "salidas_venta",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "salidas_venta",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "salidas_venta",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "equipos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "equipos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "equipos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SUPERVISOR",
+      "module": "equipos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "marcar_remate",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "marcar_remate",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "marcar_remate",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "marcar_remate",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "dashboard",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "BODEGA",
+      "module": "dashboard",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "dashboard",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "dashboard",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "pos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "pos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "pos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "pos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "entradas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "BODEGA",
+      "module": "entradas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "BODEGA",
+      "module": "entradas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "entradas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "salidas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "BODEGA",
+      "module": "salidas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "BODEGA",
+      "module": "salidas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "salidas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "movimientos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "BODEGA",
+      "module": "movimientos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "movimientos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "movimientos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "etiquetas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "BODEGA",
+      "module": "etiquetas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "BODEGA",
+      "module": "etiquetas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "etiquetas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "inventario",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "BODEGA",
+      "module": "inventario",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "inventario",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "inventario",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "auditoria_inventario",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "BODEGA",
+      "module": "auditoria_inventario",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "BODEGA",
+      "module": "auditoria_inventario",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "BODEGA",
+      "module": "auditoria_inventario",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "productos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "productos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "productos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "productos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "precios",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "precios",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "precios",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "precios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "ajustes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "BODEGA",
+      "module": "ajustes",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "BODEGA",
+      "module": "ajustes",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "BODEGA",
+      "module": "ajustes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes_credito",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes_credito",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes_credito",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes_credito",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes_precios",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes_precios",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes_precios",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes_precios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes_finanzas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes_finanzas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes_finanzas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes_finanzas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "caja_abonos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "caja_abonos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "caja_abonos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "caja_abonos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes_recapturas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes_recapturas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes_recapturas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "clientes_recapturas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "proveedores",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "proveedores",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "proveedores",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "proveedores",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "proveedores_finanzas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "proveedores_finanzas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "proveedores_finanzas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "proveedores_finanzas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "contenedores",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "contenedores",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "contenedores",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "contenedores",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "ubicaciones",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "ubicaciones",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "ubicaciones",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "ubicaciones",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "usuarios",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "usuarios",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "usuarios",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "usuarios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "permisos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "permisos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "permisos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "permisos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "resumen_caja",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "resumen_caja",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "resumen_caja",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "resumen_caja",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "cortes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "cortes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "cortes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "cortes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "cobros_pagos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "cobros_pagos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "cobros_pagos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "cobros_pagos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "reportes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "reportes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "reportes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "reportes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "conciliacion",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "conciliacion",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "conciliacion",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "conciliacion",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "auditoria",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "auditoria",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "auditoria",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "auditoria",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "camionetas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "camionetas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "camionetas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "camionetas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "choferes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "choferes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "choferes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "choferes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "viajes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "viajes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "viajes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "viajes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "salidas_venta",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "salidas_venta",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "salidas_venta",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "salidas_venta",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "equipos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "equipos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "equipos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "BODEGA",
+      "module": "equipos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "marcar_remate",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "marcar_remate",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "marcar_remate",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "marcar_remate",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "dashboard",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "dashboard",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "dashboard",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "dashboard",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "pos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "pos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "pos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "pos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "entradas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "entradas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "entradas",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "entradas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "salidas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "salidas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "salidas",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "salidas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "movimientos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "movimientos",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "movimientos",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "movimientos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "etiquetas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "etiquetas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "etiquetas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "etiquetas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "inventario",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "inventario",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "inventario",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "inventario",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "auditoria_inventario",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "auditoria_inventario",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "auditoria_inventario",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "auditoria_inventario",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "productos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "productos",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "productos",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "productos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "precios",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "precios",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "precios",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "precios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "ajustes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "ajustes",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "ajustes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "ajustes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes_credito",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes_credito",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes_credito",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes_credito",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes_precios",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes_precios",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes_precios",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes_precios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes_finanzas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes_finanzas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes_finanzas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes_finanzas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "caja_abonos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "caja_abonos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "caja_abonos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "caja_abonos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes_recapturas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes_recapturas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes_recapturas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "clientes_recapturas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "proveedores",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "proveedores",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "proveedores",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "proveedores",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "proveedores_finanzas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "proveedores_finanzas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "proveedores_finanzas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "proveedores_finanzas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "contenedores",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "contenedores",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "contenedores",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "contenedores",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "ubicaciones",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "ubicaciones",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "ubicaciones",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "ubicaciones",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "usuarios",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "usuarios",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "usuarios",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "usuarios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "permisos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "permisos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "permisos",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "permisos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "resumen_caja",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "resumen_caja",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "resumen_caja",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "resumen_caja",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "cortes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "cortes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "cortes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "cortes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "cobros_pagos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "cobros_pagos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "cobros_pagos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "cobros_pagos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "reportes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "reportes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "reportes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "reportes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "conciliacion",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "conciliacion",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "conciliacion",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "conciliacion",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "auditoria",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "auditoria",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "auditoria",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "auditoria",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "camionetas",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "camionetas",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "camionetas",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "camionetas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "choferes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "choferes",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "choferes",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "choferes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "viajes",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "viajes",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "viajes",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "viajes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "salidas_venta",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "salidas_venta",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "salidas_venta",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "salidas_venta",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "equipos",
+      "action": "ver",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "equipos",
+      "action": "crear",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "equipos",
+      "action": "editar",
+      "matrix": true,
+      "uiStatic": true
+    },
+    {
+      "role": "SISTEMAS",
+      "module": "equipos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "marcar_remate",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "marcar_remate",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "marcar_remate",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "marcar_remate",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "dashboard",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "dashboard",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "dashboard",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "dashboard",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "pos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "pos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "pos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "pos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "entradas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "entradas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "entradas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "entradas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "salidas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "salidas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "salidas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "salidas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "movimientos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "movimientos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "movimientos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "movimientos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "etiquetas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "etiquetas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "etiquetas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "etiquetas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "inventario",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "inventario",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "inventario",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "inventario",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "auditoria_inventario",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "auditoria_inventario",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "auditoria_inventario",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "auditoria_inventario",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "productos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "productos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "productos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "productos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "precios",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "precios",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "precios",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "precios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "ajustes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "ajustes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "ajustes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "ajustes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes_credito",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes_credito",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes_credito",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes_credito",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes_precios",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes_precios",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes_precios",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes_precios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes_finanzas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes_finanzas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes_finanzas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes_finanzas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "caja_abonos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "caja_abonos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "caja_abonos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "caja_abonos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes_recapturas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes_recapturas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes_recapturas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "clientes_recapturas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "proveedores",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "proveedores",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "proveedores",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "proveedores",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "proveedores_finanzas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "proveedores_finanzas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "proveedores_finanzas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "proveedores_finanzas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "contenedores",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "contenedores",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "contenedores",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "contenedores",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "ubicaciones",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "ubicaciones",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "ubicaciones",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "ubicaciones",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "usuarios",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "usuarios",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "usuarios",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "usuarios",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "permisos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "permisos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "permisos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "permisos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "resumen_caja",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "resumen_caja",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "resumen_caja",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "resumen_caja",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "cortes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "cortes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "cortes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "cortes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "cobros_pagos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "cobros_pagos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "cobros_pagos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "cobros_pagos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "reportes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "reportes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "reportes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "reportes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "conciliacion",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "conciliacion",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "conciliacion",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "conciliacion",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "auditoria",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "auditoria",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "auditoria",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "auditoria",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "camionetas",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "camionetas",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "camionetas",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "camionetas",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "choferes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "choferes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "choferes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "choferes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "viajes",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "viajes",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "viajes",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "viajes",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "salidas_venta",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "salidas_venta",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "salidas_venta",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "salidas_venta",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "equipos",
+      "action": "ver",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "equipos",
+      "action": "crear",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "equipos",
+      "action": "editar",
+      "matrix": false,
+      "uiStatic": false
+    },
+    {
+      "role": "CONTADOR",
+      "module": "equipos",
+      "action": "autorizar",
+      "matrix": false,
+      "uiStatic": false
+    }
+  ]
+}

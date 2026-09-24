@@ -1,0 +1,280 @@
+[
+  {
+    "module": "dashboard",
+    "action": "ver",
+    "method": "GET",
+    "url": "/dashboard",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "productos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/productos",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "precios",
+    "action": "ver",
+    "method": "GET",
+    "url": "/precios",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "clientes",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "clientes_credito",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/8/credito",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "clientes_precios",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/8/precios",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "clientes_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/8/estado-cuenta",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "proveedores",
+    "action": "ver",
+    "method": "GET",
+    "url": "/proveedores",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "proveedores_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/proveedores/226/estado-cuenta",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "ubicaciones",
+    "action": "ver",
+    "method": "GET",
+    "url": "/locations",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "usuarios",
+    "action": "ver",
+    "method": "GET",
+    "url": "/users",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "permisos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/permisos/roles",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "inventario",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/existencias",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "auditoria",
+    "action": "ver",
+    "method": "GET",
+    "url": "/auditoria",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "contenedores",
+    "action": "ver",
+    "method": "GET",
+    "url": "/contenedores",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "camionetas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/camionetas",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "choferes",
+    "action": "ver",
+    "method": "GET",
+    "url": "/choferes",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "viajes",
+    "action": "ver",
+    "method": "GET",
+    "url": "/viajes",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "equipos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/equipos",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "pos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/tickets",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "entradas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/entradas",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "salidas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/salidas",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "movimientos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/movimientos",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "conciliacion",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/conciliacion",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "reportes",
+    "action": "ver",
+    "method": "GET",
+    "url": "/reportes",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "resumen_caja",
+    "action": "ver",
+    "method": "GET",
+    "url": "/caja/tickets",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "productos",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/productos/2078",
+    "body": {
+      "nombre": "TANDA F DENIED PRODUCT EDIT"
+    },
+    "validation": "Existing synthetic fixture IDs; named fields verified against route/schema. Not positive-control executed."
+  },
+  {
+    "module": "clientes",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/clientes/8",
+    "body": {
+      "nombre": "TANDA F DENIED CLIENT EDIT"
+    },
+    "validation": "Existing synthetic fixture IDs; named fields verified against route/schema. Not positive-control executed."
+  },
+  {
+    "module": "proveedores",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/proveedores/226",
+    "body": {
+      "nombre": "TANDA F DENIED SUPPLIER EDIT"
+    },
+    "validation": "Existing synthetic fixture IDs; named fields verified against route/schema. Not positive-control executed."
+  },
+  {
+    "module": "ubicaciones",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/locations/836",
+    "body": {
+      "nombre": "TANDA F DENIED LOCATION EDIT"
+    },
+    "validation": "Existing synthetic fixture IDs; named fields verified against route/schema. Not positive-control executed."
+  },
+  {
+    "module": "clientes_credito",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/clientes/8/credito",
+    "body": {
+      "limiteCredito": 5001,
+      "diasCredito": 30
+    },
+    "validation": "Existing synthetic fixture IDs; named fields verified against route/schema. Not positive-control executed."
+  },
+  {
+    "module": "precios",
+    "action": "editar",
+    "method": "POST",
+    "url": "/precios/2078/cambiar",
+    "body": {
+      "precioListaNuevo": "151.00",
+      "motivo": "TANDA F DENIED PRICE EDIT",
+      "modoPrecio": "ROLLO"
+    },
+    "validation": "Existing synthetic fixture IDs; named fields verified against route/schema. Not positive-control executed."
+  },
+  {
+    "module": "clientes",
+    "action": "crear",
+    "method": "POST",
+    "url": "/clientes",
+    "body": {
+      "nombre": "TANDA F DENIED CREATE CLIENT"
+    },
+    "validation": "Named fields verified against schema; positive-control not executed."
+  },
+  {
+    "module": "proveedores",
+    "action": "crear",
+    "method": "POST",
+    "url": "/proveedores",
+    "body": {
+      "nombre": "TANDA F DENIED CREATE SUPPLIER",
+      "tipo": "NACIONAL"
+    },
+    "validation": "Named fields verified against schema; positive-control not executed."
+  },
+  {
+    "module": "ubicaciones",
+    "action": "crear",
+    "method": "POST",
+    "url": "/locations",
+    "body": {
+      "nombre": "TANDA F DENIED CREATE SITE",
+      "tipo": "TIENDA",
+      "iniciales": "TFD"
+    },
+    "validation": "Named fields verified against schema; positive-control not executed."
+  }
+]

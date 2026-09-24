@@ -1,0 +1,1422 @@
+[
+  {
+    "file": "admin-alertas.ts",
+    "line": 3,
+    "text": "import { requireRole, requireSession } from \"../middlewares/auth\";"
+  },
+  {
+    "file": "admin-alertas.ts",
+    "line": 11,
+    "text": "requireRole(\"ADMIN\"),"
+  },
+  {
+    "file": "admin-analytics.ts",
+    "line": 40,
+    "text": "import { requireRole, requireSession } from \"../middlewares/auth\";"
+  },
+  {
+    "file": "admin-analytics.ts",
+    "line": 88,
+    "text": "requireRole(\"ADMIN\", \"CONTADOR\", \"SISTEMAS\")(req, res, next);"
+  },
+  {
+    "file": "admin-analytics.ts",
+    "line": 91,
+    "text": "requireRole(\"ADMIN\")(req, res, next);"
+  },
+  {
+    "file": "admin-analytics.ts",
+    "line": 340,
+    "text": "router.get(\"/admin/cuadre-fiscal\", requireRole(\"ADMIN\", \"CONTADOR\", \"SISTEMAS\"), async (req, res, next): Promise<void> => {"
+  },
+  {
+    "file": "admin-analytics.ts",
+    "line": 369,
+    "text": "router.post(\"/admin/cuadre-fiscal/confirmaciones\", requireRole(\"ADMIN\", \"CONTADOR\"), async (req, res, next): Promise<void> => { try { await createFiscalRecord(req,res,CreateAdminCuadreFiscalConfirmacionBody.parse(req.body),\"CONFIRMACION\"); } catch(error) { if(!badInput(error,res)) next(error); } });"
+  },
+  {
+    "file": "admin-analytics.ts",
+    "line": 370,
+    "text": "router.post(\"/admin/cuadre-fiscal/diferencias\", requireRole(\"ADMIN\", \"CONTADOR\"), async (req, res, next): Promise<void> => { try { await createFiscalRecord(req,res,CreateAdminCuadreFiscalDiferenciaBody.parse(req.body),\"DIFERENCIA\"); } catch(error) { if(!badInput(error,res)) next(error); } });"
+  },
+  {
+    "file": "admin-analytics.ts",
+    "line": 371,
+    "text": "router.post(\"/admin/cuadre-fiscal/diferencias/:id/resolver\", requireRole(\"ADMIN\"), async (req, res, next): Promise<void> => {"
+  },
+  {
+    "file": "auditoria.ts",
+    "line": 16,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "auditoria.ts",
+    "line": 23,
+    "text": "requierePermiso(\"auditoria\", \"ver\"),"
+  },
+  {
+    "file": "auditorias-inventario.ts",
+    "line": 38,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "auditorias-inventario.ts",
+    "line": 112,
+    "text": "requierePermiso(\"auditoria_inventario\", \"ver\"),"
+  },
+  {
+    "file": "auditorias-inventario.ts",
+    "line": 140,
+    "text": "requierePermiso(\"auditoria_inventario\", \"ver\"),"
+  },
+  {
+    "file": "auditorias-inventario.ts",
+    "line": 165,
+    "text": "requierePermiso(\"auditoria_inventario\", \"crear\"),"
+  },
+  {
+    "file": "auditorias-inventario.ts",
+    "line": 193,
+    "text": "requierePermiso(\"auditoria_inventario\", \"ver\"),"
+  },
+  {
+    "file": "auditorias-inventario.ts",
+    "line": 217,
+    "text": "requierePermiso(\"auditoria_inventario\", \"editar\"),"
+  },
+  {
+    "file": "auditorias-inventario.ts",
+    "line": 254,
+    "text": "requierePermiso(\"auditoria_inventario\", \"editar\"),"
+  },
+  {
+    "file": "auditorias-inventario.ts",
+    "line": 298,
+    "text": "requierePermiso(\"auditoria_inventario\", \"autorizar\"),"
+  },
+  {
+    "file": "auditorias-inventario.ts",
+    "line": 329,
+    "text": "router.post(\"/auditorias/:id/sobrantes/resolver\", requireSession, requierePermiso(\"auditoria_inventario\", \"autorizar\"), requireDecisionAdmin,"
+  },
+  {
+    "file": "auditorias-inventario.ts",
+    "line": 346,
+    "text": "router.get(\"/rollos/:id/reactivacion-faltante\", requireSession, requierePermiso(\"inventario\", \"ver\"), requireDecisionAdmin,"
+  },
+  {
+    "file": "auditorias-inventario.ts",
+    "line": 357,
+    "text": "router.post(\"/rollos/:id/reactivacion-faltante\", requireSession, requierePermiso(\"auditoria_inventario\", \"autorizar\"), requireDecisionAdmin,"
+  },
+  {
+    "file": "caja-ventas.ts",
+    "line": 17,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "caja-ventas.ts",
+    "line": 26,
+    "text": "requierePermiso(\"resumen_caja\", \"ver\"),"
+  },
+  {
+    "file": "caja-ventas.ts",
+    "line": 65,
+    "text": "requierePermiso(\"resumen_caja\", \"ver\"),"
+  },
+  {
+    "file": "camionetas.ts",
+    "line": 12,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "camionetas.ts",
+    "line": 38,
+    "text": "requierePermiso(\"camionetas\", action),"
+  },
+  {
+    "file": "camionetas.ts",
+    "line": 51,
+    "text": "router.get(\"/camionetas\", requierePermiso(\"camionetas\", \"ver\"), async (req, res, next): Promise<void> => {"
+  },
+  {
+    "file": "camionetas.ts",
+    "line": 101,
+    "text": "router.get(\"/camionetas/:id\", requierePermiso(\"camionetas\", \"ver\"), async (req, res, next): Promise<void> => {"
+  },
+  {
+    "file": "choferes.ts",
+    "line": 18,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "choferes.ts",
+    "line": 40,
+    "text": "requierePermiso(\"choferes\", action),"
+  },
+  {
+    "file": "choferes.ts",
+    "line": 60,
+    "text": "requierePermiso(\"choferes\", \"ver\"),"
+  },
+  {
+    "file": "choferes.ts",
+    "line": 127,
+    "text": "requierePermiso(\"choferes\", \"ver\"),"
+  },
+  {
+    "file": "cliente-documentos.ts",
+    "line": 11,
+    "text": "import { requireRole, requireSession } from \"../middlewares/auth\";"
+  },
+  {
+    "file": "cliente-documentos.ts",
+    "line": 12,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "cliente-documentos.ts",
+    "line": 42,
+    "text": "requierePermiso(\"clientes\", \"ver\"),"
+  },
+  {
+    "file": "cliente-documentos.ts",
+    "line": 43,
+    "text": "requireRole(\"ADMIN\"),"
+  },
+  {
+    "file": "cliente-documentos.ts",
+    "line": 66,
+    "text": "requierePermiso(\"clientes\", \"editar\"),"
+  },
+  {
+    "file": "cliente-documentos.ts",
+    "line": 67,
+    "text": "requireRole(\"ADMIN\"),"
+  },
+  {
+    "file": "cliente-documentos.ts",
+    "line": 155,
+    "text": "router.get(\"/cliente-documentos/:publicId/ver\", requierePermiso(\"clientes\", \"ver\"), requireRole(\"ADMIN\"), (req, res, next) => void serve(req, res, next, false));"
+  },
+  {
+    "file": "cliente-documentos.ts",
+    "line": 156,
+    "text": "router.get(\"/cliente-documentos/:publicId/descargar\", requierePermiso(\"clientes\", \"ver\"), requireRole(\"ADMIN\"), (req, res, next) => void serve(req, res, next, true));"
+  },
+  {
+    "file": "clientes-admin.ts",
+    "line": 7,
+    "text": "import { requireRole, requireSession } from \"../middlewares/auth\";"
+  },
+  {
+    "file": "clientes-admin.ts",
+    "line": 8,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "clientes-admin.ts",
+    "line": 31,
+    "text": "requireRole(\"ADMIN\"),"
+  },
+  {
+    "file": "clientes-admin.ts",
+    "line": 68,
+    "text": "requierePermiso(\"clientes\", \"editar\"),"
+  },
+  {
+    "file": "clientes-admin.ts",
+    "line": 295,
+    "text": "requierePermiso(\"clientes\", \"editar\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 43,
+    "text": "import { requierePermiso, resolvePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 615,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 635,
+    "text": "requierePermiso(\"clientes\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 642,
+    "text": "const permiso = await resolvePermiso("
+  },
+  {
+    "file": "clientes.ts",
+    "line": 683,
+    "text": "requierePermiso(\"clientes\", \"crear\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 796,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 813,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 923,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 963,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 986,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1007,
+    "text": "requierePermiso(\"clientes_credito\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1017,
+    "text": "requierePermiso(\"clientes_credito\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1030,
+    "text": "requierePermiso(\"clientes\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1053,
+    "text": "const permiso = await resolvePermiso("
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1079,
+    "text": "requierePermiso(\"clientes\", \"editar\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1189,
+    "text": "requierePermiso(\"clientes_credito\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1259,
+    "text": "requierePermiso(\"clientes_credito\", \"editar\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1318,
+    "text": "requierePermiso(\"clientes_precios\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1399,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1543,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1588,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1636,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1687,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1742,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1819,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1887,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 1934,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 2014,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 2053,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 2109,
+    "text": "requierePermiso(\"clientes_finanzas\", \"crear\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 2166,
+    "text": "requierePermiso(\"clientes_finanzas\", \"crear\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 2372,
+    "text": "requierePermiso(\"clientes_finanzas\", \"autorizar\"),"
+  },
+  {
+    "file": "clientes.ts",
+    "line": 2472,
+    "text": "requierePermiso(\"clientes_finanzas\", \"autorizar\"),"
+  },
+  {
+    "file": "contenedores.ts",
+    "line": 32,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "contenedores.ts",
+    "line": 96,
+    "text": "requierePermiso(\"contenedores\", \"ver\"),"
+  },
+  {
+    "file": "contenedores.ts",
+    "line": 151,
+    "text": "requierePermiso(\"contenedores\", \"ver\"),"
+  },
+  {
+    "file": "contenedores.ts",
+    "line": 176,
+    "text": "requierePermiso(\"contenedores\", \"crear\"),"
+  },
+  {
+    "file": "contenedores.ts",
+    "line": 202,
+    "text": "requierePermiso(\"contenedores\", \"ver\"),"
+  },
+  {
+    "file": "contenedores.ts",
+    "line": 232,
+    "text": "requierePermiso(\"entradas\", \"crear\"),"
+  },
+  {
+    "file": "contenedores.ts",
+    "line": 260,
+    "text": "requierePermiso(\"contenedores\", \"ver\"),"
+  },
+  {
+    "file": "contenedores.ts",
+    "line": 284,
+    "text": "requierePermiso(\"contenedores\", \"editar\"),"
+  },
+  {
+    "file": "contenedores.ts",
+    "line": 308,
+    "text": "requierePermiso(\"contenedores\", \"autorizar\"),"
+  },
+  {
+    "file": "contenedores.ts",
+    "line": 385,
+    "text": "requierePermiso(\"contenedores\", \"ver\"),"
+  },
+  {
+    "file": "contenedores.ts",
+    "line": 428,
+    "text": "requierePermiso(\"contenedores\", \"ver\"),"
+  },
+  {
+    "file": "credit-evidence.ts",
+    "line": 3,
+    "text": "import { requireRole, requireSession } from \"../middlewares/auth\";"
+  },
+  {
+    "file": "credit-evidence.ts",
+    "line": 4,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "credit-evidence.ts",
+    "line": 29,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "credit-evidence.ts",
+    "line": 74,
+    "text": "requireRole(\"ADMIN\", \"SUPERVISOR\"),"
+  },
+  {
+    "file": "credit-evidence.ts",
+    "line": 75,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "credit-evidence.ts",
+    "line": 76,
+    "text": "requierePermiso(\"clientes_finanzas\", \"autorizar\"),"
+  },
+  {
+    "file": "credit-refunds.options.safe.test.ts",
+    "line": 64,
+    "text": "\"../lib/permisos\": { requierePermiso(module: string, action: string) {"
+  },
+  {
+    "file": "credit-refunds.ts",
+    "line": 5,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "credit-refunds.ts",
+    "line": 12,
+    "text": "requierePermiso(\"clientes_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "credit-refunds.ts",
+    "line": 13,
+    "text": "requierePermiso(\"clientes_finanzas\", \"autorizar\"), async (req, res, next) => {"
+  },
+  {
+    "file": "credit-refunds.ts",
+    "line": 67,
+    "text": "requierePermiso(\"clientes_finanzas\", \"autorizar\"), async (req, res, next) => {"
+  },
+  {
+    "file": "dashboard.ts",
+    "line": 6,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "dashboard.ts",
+    "line": 15,
+    "text": "requierePermiso(\"dashboard\", \"ver\"),"
+  },
+  {
+    "file": "e1-customer-mutations.offline.test.ts",
+    "line": 145,
+    "text": "default: {}, requireSession: () => undefined, requireRole: () => () => undefined,"
+  },
+  {
+    "file": "e1-customer-mutations.offline.test.ts",
+    "line": 146,
+    "text": "requierePermiso: () => () => undefined, resolvePermiso: async () => ({ puedeCrear: true }),"
+  },
+  {
+    "file": "e5.ts",
+    "line": 6,
+    "text": "import { resolvePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "e5.ts",
+    "line": 21,
+    "text": "resolvePermiso(user.id, user.rol, \"caja_abonos\"), resolvePermiso(user.id, user.rol, \"clientes_finanzas\"),"
+  },
+  {
+    "file": "e9.ts",
+    "line": 5,
+    "text": "import { resolvePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "e9.ts",
+    "line": 18,
+    "text": "const permission = await resolvePermiso(user.id, user.rol, \"cortes\");"
+  },
+  {
+    "file": "equipos.ts",
+    "line": 29,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "equipos.ts",
+    "line": 208,
+    "text": "requierePermiso(\"equipos\", \"ver\"),"
+  },
+  {
+    "file": "equipos.ts",
+    "line": 242,
+    "text": "requierePermiso(\"equipos\", \"ver\"),"
+  },
+  {
+    "file": "equipos.ts",
+    "line": 276,
+    "text": "requierePermiso(\"equipos\", \"crear\"),"
+  },
+  {
+    "file": "equipos.ts",
+    "line": 352,
+    "text": "requierePermiso(\"equipos\", \"editar\"),"
+  },
+  {
+    "file": "equipos.ts",
+    "line": 470,
+    "text": "requierePermiso(\"equipos\", \"editar\"),"
+  },
+  {
+    "file": "etiquetas.ts",
+    "line": 9,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "etiquetas.ts",
+    "line": 183,
+    "text": "requierePermiso(\"etiquetas\", \"ver\"),"
+  },
+  {
+    "file": "etiquetas.ts",
+    "line": 268,
+    "text": "requierePermiso(\"etiquetas\", \"ver\"),"
+  },
+  {
+    "file": "etiquetas.ts",
+    "line": 325,
+    "text": "requierePermiso(\"etiquetas\", \"editar\"),"
+  },
+  {
+    "file": "etiquetas.ts",
+    "line": 509,
+    "text": "requierePermiso(\"etiquetas\", \"ver\"),"
+  },
+  {
+    "file": "etiquetas.ts",
+    "line": 561,
+    "text": "requierePermiso(\"etiquetas\", \"crear\"),"
+  },
+  {
+    "file": "index.ts",
+    "line": 36,
+    "text": "import { requireRole, requireSession } from \"../middlewares/auth\";"
+  },
+  {
+    "file": "index.ts",
+    "line": 40,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "index.ts",
+    "line": 60,
+    "text": "authenticate: requireSession, permission: requierePermiso, admin: requireRole(\"ADMIN\"),"
+  },
+  {
+    "file": "index.ts",
+    "line": 97,
+    "text": "authorizeAdmin: [requireSession, requireRole(\"ADMIN\")],"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 105,
+    "text": "import { requiereAdmin, requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 142,
+    "text": "inventarioRouter.get(\"/rollos/:id/remate\", requireSession, requierePermiso(\"inventario\", \"ver\"), async (req, res, next) => {"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 538,
+    "text": "requierePermiso(\"salidas\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 539,
+    "text": "requiereAdmin,"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 641,
+    "text": "requierePermiso(\"salidas\", \"crear\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 642,
+    "text": "requiereAdmin,"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 680,
+    "text": "requierePermiso(\"salidas\", \"editar\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 681,
+    "text": "requiereAdmin,"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 770,
+    "text": "requierePermiso(\"entradas\", \"crear\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 972,
+    "text": "requierePermiso(\"entradas\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 1111,
+    "text": "requierePermiso(\"entradas\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 1151,
+    "text": "requierePermiso(\"entradas\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 1172,
+    "text": "requierePermiso(\"entradas\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 1237,
+    "text": "requierePermiso(\"entradas\", \"editar\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 1277,
+    "text": "requierePermiso(\"entradas\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 1331,
+    "text": "requierePermiso(\"entradas\", \"editar\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 1390,
+    "text": "requierePermiso(\"pos\", \"crear\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 1455,
+    "text": "requierePermiso(\"ajustes\", \"crear\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 1514,
+    "text": "requierePermiso(\"ajustes\", \"autorizar\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 1597,
+    "text": "requierePermiso(\"inventario\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 1639,
+    "text": "requierePermiso(\"movimientos\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 1670,
+    "text": "requierePermiso(\"inventario\", \"editar\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 1714,
+    "text": "requierePermiso(\"inventario\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 1841,
+    "text": "requierePermiso(\"inventario\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 1876,
+    "text": "requierePermiso(\"inventario\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 1977,
+    "text": "requierePermiso(\"inventario\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 2114,
+    "text": "requierePermiso(\"movimientos\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 2158,
+    "text": "requierePermiso(\"movimientos\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 2198,
+    "text": "requierePermiso(\"movimientos\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 2230,
+    "text": "requierePermiso(\"movimientos\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 2331,
+    "text": "requierePermiso(\"ajustes\", \"autorizar\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 2370,
+    "text": "requierePermiso(\"ajustes\", \"autorizar\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 2425,
+    "text": "requierePermiso(\"conciliacion\", \"ver\"),"
+  },
+  {
+    "file": "inventario.ts",
+    "line": 2456,
+    "text": "requierePermiso(\"conciliacion\", \"autorizar\"),"
+  },
+  {
+    "file": "locations.ts",
+    "line": 27,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "locations.ts",
+    "line": 39,
+    "text": "requierePermiso(\"ubicaciones\", \"ver\"),"
+  },
+  {
+    "file": "locations.ts",
+    "line": 73,
+    "text": "requierePermiso(\"ubicaciones\", \"crear\"),"
+  },
+  {
+    "file": "locations.ts",
+    "line": 111,
+    "text": "router.patch(\"/locations/:id\", requierePermiso(\"ubicaciones\", \"editar\"), async (req, res): Promise<void> => {"
+  },
+  {
+    "file": "locations.ts",
+    "line": 187,
+    "text": "router.get(\"/locations/:id/pisos\", requierePermiso(\"ubicaciones\", \"ver\"), async (req, res): Promise<void> => {"
+  },
+  {
+    "file": "locations.ts",
+    "line": 205,
+    "text": "router.post(\"/locations/:id/pisos\", requierePermiso(\"ubicaciones\", \"crear\"), async (req, res): Promise<void> => {"
+  },
+  {
+    "file": "locations.ts",
+    "line": 234,
+    "text": "router.patch(\"/locations/:id/pisos/:pisoId\", requierePermiso(\"ubicaciones\", \"editar\"), async (req, res): Promise<void> => {"
+  },
+  {
+    "file": "pagos-dirigidos.ts",
+    "line": 23,
+    "text": "import { requireRole, requireSession } from \"../middlewares/auth\";"
+  },
+  {
+    "file": "pagos-dirigidos.ts",
+    "line": 24,
+    "text": "import { resolvePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "pagos-dirigidos.ts",
+    "line": 275,
+    "text": "resolvePermiso(req.auth!.user.id, req.auth!.user.rol, \"clientes_finanzas\"),"
+  },
+  {
+    "file": "pagos-dirigidos.ts",
+    "line": 276,
+    "text": "resolvePermiso(req.auth!.user.id, req.auth!.user.rol, \"proveedores_finanzas\"),"
+  },
+  {
+    "file": "pagos-dirigidos.ts",
+    "line": 316,
+    "text": "const permission = await resolvePermiso(req.auth!.user.id, req.auth!.user.rol, data.tipo === \"CLIENTE\" ? \"clientes_finanzas\" : \"proveedores_finanzas\");"
+  },
+  {
+    "file": "pagos-dirigidos.ts",
+    "line": 413,
+    "text": "router.post(\"/pagos-dirigidos/:id/aprobar\", requireRole(\"ADMIN\"), async (req, res, next): Promise<void> => {"
+  },
+  {
+    "file": "pagos-dirigidos.ts",
+    "line": 493,
+    "text": "router.post(\"/pagos-dirigidos/:id/rechazar\", requireRole(\"ADMIN\"), async (req, res, next): Promise<void> => {"
+  },
+  {
+    "file": "permisos.ts",
+    "line": 23,
+    "text": "requierePermiso,"
+  },
+  {
+    "file": "permisos.ts",
+    "line": 26,
+    "text": "resolvePermiso,"
+  },
+  {
+    "file": "permisos.ts",
+    "line": 33,
+    "text": "router.use(\"/permisos\", requireSession, requierePermiso(\"permisos\", \"ver\"));"
+  },
+  {
+    "file": "permisos.ts",
+    "line": 76,
+    "text": "requierePermiso(\"permisos\", \"editar\"),"
+  },
+  {
+    "file": "permisos.ts",
+    "line": 137,
+    "text": "const actorPermission = await resolvePermiso("
+  },
+  {
+    "file": "permisos.ts",
+    "line": 309,
+    "text": "requierePermiso(\"permisos\", \"editar\"),"
+  },
+  {
+    "file": "permisos.ts",
+    "line": 486,
+    "text": "requierePermiso(\"permisos\", \"editar\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 70,
+    "text": "requierePermiso,"
+  },
+  {
+    "file": "pos.ts",
+    "line": 71,
+    "text": "resolvePermiso,"
+  },
+  {
+    "file": "pos.ts",
+    "line": 207,
+    "text": "const permission = await resolvePermiso("
+  },
+  {
+    "file": "pos.ts",
+    "line": 309,
+    "text": "requierePermiso(\"pos\", \"ver\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 324,
+    "text": "requierePermiso(\"pos\", \"crear\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 368,
+    "text": "requierePermiso(\"pos\", \"crear\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 389,
+    "text": "requierePermiso(\"pos\", \"crear\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 597,
+    "text": "requierePermiso(\"cobros_pagos\", \"ver\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 662,
+    "text": "resolvePermiso(auth.user.id, auth.user.rol, \"pos\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 663,
+    "text": "resolvePermiso(auth.user.id, auth.user.rol, \"cobros_pagos\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 664,
+    "text": "resolvePermiso(auth.user.id, auth.user.rol, \"salidas_venta\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 665,
+    "text": "resolvePermiso(auth.user.id, auth.user.rol, \"salidas\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 697,
+    "text": "requierePermiso(\"pos\", \"crear\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 752,
+    "text": "requierePermiso(\"cobros_pagos\", \"crear\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 814,
+    "text": "requierePermiso(\"cobros_pagos\", \"crear\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 835,
+    "text": "requierePermiso(\"cobros_pagos\", \"ver\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 928,
+    "text": "requierePermiso(\"cobros_pagos\", \"ver\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 994,
+    "text": "requierePermiso(\"cortes\", \"ver\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 995,
+    "text": "requierePermiso(\"cortes\", \"crear\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 1019,
+    "text": "requierePermiso(\"cortes\", \"ver\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 1038,
+    "text": "requierePermiso(\"cortes\", \"ver\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 1039,
+    "text": "requierePermiso(\"cortes\", \"crear\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 1067,
+    "text": "e4CashOutPermission(\"ver\", requierePermiso),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 1081,
+    "text": "e4CashOutPermission(\"ver\", requierePermiso),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 1082,
+    "text": "e4CashOutPermission(\"crear\", requierePermiso),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 1108,
+    "text": "requierePermiso(\"cortes\", \"ver\"),"
+  },
+  {
+    "file": "pos.ts",
+    "line": 1124,
+    "text": "e4CashOutPermission(\"ver\", requierePermiso),"
+  },
+  {
+    "file": "precios.ts",
+    "line": 30,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "precios.ts",
+    "line": 181,
+    "text": "router.get(\"/precios\", requierePermiso(\"precios\", \"ver\"), async (req, res): Promise<void> => {"
+  },
+  {
+    "file": "precios.ts",
+    "line": 206,
+    "text": "router.get(\"/precios/:id\", requierePermiso(\"precios\", \"ver\"), async (req, res): Promise<void> => {"
+  },
+  {
+    "file": "precios.ts",
+    "line": 224,
+    "text": "router.post(\"/precios/:id/cambiar\", requierePermiso(\"precios\", \"editar\"), async (req, res): Promise<void> => {"
+  },
+  {
+    "file": "precios.ts",
+    "line": 277,
+    "text": "router.post(\"/precios/cambiar-masivo\", requierePermiso(\"precios\", \"editar\"), async (req, res): Promise<void> => {"
+  },
+  {
+    "file": "precios.ts",
+    "line": 373,
+    "text": "router.patch(\"/precios/:id/venta-por-metro\", requierePermiso(\"precios\", \"editar\"), async (req, res): Promise<void> => {"
+  },
+  {
+    "file": "productos.ts",
+    "line": 37,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "productos.ts",
+    "line": 304,
+    "text": "router.get(\"/productos\", requierePermiso(\"productos\", \"ver\"), async (req, res): Promise<void> => {"
+  },
+  {
+    "file": "productos.ts",
+    "line": 346,
+    "text": "requierePermiso(\"productos\", \"crear\"),"
+  },
+  {
+    "file": "productos.ts",
+    "line": 475,
+    "text": "requierePermiso(\"productos\", \"crear\"),"
+  },
+  {
+    "file": "productos.ts",
+    "line": 532,
+    "text": "requierePermiso(\"productos\", \"crear\"),"
+  },
+  {
+    "file": "productos.ts",
+    "line": 658,
+    "text": "router.get(\"/productos/:id\", requierePermiso(\"productos\", \"ver\"), async (req, res): Promise<void> => {"
+  },
+  {
+    "file": "productos.ts",
+    "line": 768,
+    "text": "requierePermiso(\"productos\", \"editar\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 44,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 45,
+    "text": "import { resolvePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 130,
+    "text": "requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 143,
+    "text": "requierePermiso(\"proveedores_finanzas\", \"crear\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 169,
+    "text": "requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 181,
+    "text": "requierePermiso(\"proveedores\", \"ver\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 232,
+    "text": "requierePermiso(\"proveedores\", \"ver\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 238,
+    "text": "const finanzasPerm = await resolvePermiso("
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 294,
+    "text": "requierePermiso(\"proveedores\", \"crear\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 340,
+    "text": "requierePermiso(\"proveedores\", \"ver\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 371,
+    "text": "requierePermiso(\"proveedores\", \"editar\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 454,
+    "text": "requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 518,
+    "text": "requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 581,
+    "text": "requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 624,
+    "text": "router.get(\"/proveedores/:id/pagos/efectivo-opciones\", requierePermiso(\"proveedores_finanzas\", \"crear\"), async (req, res, next): Promise<void> => {"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 633,
+    "text": "requierePermiso(\"proveedores_finanzas\", \"crear\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 749,
+    "text": "requierePermiso(\"proveedores_finanzas\", \"autorizar\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 820,
+    "text": "requierePermiso(\"proveedores_finanzas\", \"autorizar\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 859,
+    "text": "requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 905,
+    "text": "requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 945,
+    "text": "requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 1004,
+    "text": "requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "proveedores.ts",
+    "line": 1109,
+    "text": "requierePermiso(\"proveedores_finanzas\", \"ver\"),"
+  },
+  {
+    "file": "purga.ts",
+    "line": 9,
+    "text": "import { requireRole, requireSession } from \"../middlewares/auth\";"
+  },
+  {
+    "file": "purga.ts",
+    "line": 20,
+    "text": "router.use(\"/purga\", requireSession, requireRole(\"ADMIN\"));"
+  },
+  {
+    "file": "reportes.ts",
+    "line": 9,
+    "text": "import { requireRole, requireSession, type AuthContext } from \"../middlewares/auth\";"
+  },
+  {
+    "file": "reportes.ts",
+    "line": 10,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "reportes.ts",
+    "line": 23,
+    "text": "router.use(\"/reportes\", requireSession, requierePermiso(\"reportes\", \"ver\"));"
+  },
+  {
+    "file": "reportes.ts",
+    "line": 32,
+    "text": "export const controlOperativoRoleGate = requireRole(\"ADMIN\");"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 45,
+    "text": "import { requierePermiso, resolvePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 98,
+    "text": "router.post(\"/salidas/venta-cliente\", requireSession, requierePermiso(\"salidas\", \"crear\"), async (req, res, next) => {"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 107,
+    "text": "router.get(\"/salidas/venta-cliente/pendientes\", requireSession, requierePermiso(\"salidas_venta\", \"ver\"), async (req, res, next) => {"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 130,
+    "text": "router.post(\"/salidas/venta-cliente/generar-venta\", requireSession, requierePermiso(\"salidas_venta\", \"crear\"), async (req, res, next) => {"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 207,
+    "text": "requierePermiso(\"salidas\", \"ver\"),"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 243,
+    "text": "resolvePermiso(auth.user.id, auth.user.rol, \"salidas_venta\"),"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 244,
+    "text": "resolvePermiso(auth.user.id, auth.user.rol, \"salidas\"),"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 264,
+    "text": "const permiso = await resolvePermiso(auth.user.id, auth.user.rol, \"salidas\");"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 471,
+    "text": "requierePermiso(\"salidas\", \"ver\"),"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 540,
+    "text": "requierePermiso(\"salidas\", \"crear\"),"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 570,
+    "text": "requierePermiso(\"salidas\", \"crear\"),"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 612,
+    "text": "requierePermiso(\"salidas\", \"crear\"),"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 646,
+    "text": "requierePermiso(\"salidas\", \"ver\"),"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 778,
+    "text": "resolvePermiso(auth.user.id, auth.user.rol, \"salidas\"),"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 779,
+    "text": "resolvePermiso(auth.user.id, auth.user.rol, \"salidas_venta\"),"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 797,
+    "text": "requierePermiso(\"salidas\", \"ver\"),"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 819,
+    "text": "requierePermiso(\"salidas\", \"crear\"),"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 841,
+    "text": "requierePermiso(\"salidas\", \"crear\"),"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 869,
+    "text": "requierePermiso(\"salidas\", \"crear\"),"
+  },
+  {
+    "file": "salidas.ts",
+    "line": 902,
+    "text": "requierePermiso(\"salidas\", \"autorizar\"),"
+  },
+  {
+    "file": "stock-minimos.ts",
+    "line": 5,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "stock-minimos.ts",
+    "line": 106,
+    "text": "requierePermiso(\"inventario\", \"ver\"),"
+  },
+  {
+    "file": "stock-minimos.ts",
+    "line": 128,
+    "text": "requierePermiso(\"inventario\", \"editar\"),"
+  },
+  {
+    "file": "stock-minimos.ts",
+    "line": 161,
+    "text": "requierePermiso(\"inventario\", \"ver\"),"
+  },
+  {
+    "file": "stock-minimos.ts",
+    "line": 187,
+    "text": "requierePermiso(\"inventario\", \"editar\"),"
+  },
+  {
+    "file": "users.ts",
+    "line": 25,
+    "text": "import { hasAdminRecoveryAccount, requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "users.ts",
+    "line": 34,
+    "text": "router.use(\"/users\", requireSession, requierePermiso(\"usuarios\", \"ver\"));"
+  },
+  {
+    "file": "users.ts",
+    "line": 120,
+    "text": "router.post(\"/users\", requierePermiso(\"usuarios\", \"crear\"), async (req, res): Promise<void> => {"
+  },
+  {
+    "file": "users.ts",
+    "line": 196,
+    "text": "router.patch(\"/users/:id\", requierePermiso(\"usuarios\", \"editar\"), async (req, res): Promise<void> => {"
+  },
+  {
+    "file": "viajes.ts",
+    "line": 10,
+    "text": "import { requierePermiso } from \"../lib/permisos\";"
+  },
+  {
+    "file": "viajes.ts",
+    "line": 90,
+    "text": "router.get(\"/viajes/catalogo-operativo\", requireSession, requierePermiso(\"viajes\", \"ver\"), async (req, res, next) => {"
+  },
+  {
+    "file": "viajes.ts",
+    "line": 101,
+    "text": "router.get(\"/viajes/elegibles\", requireSession, requierePermiso(\"viajes\", \"crear\"), async (req, res, next) => {"
+  },
+  {
+    "file": "viajes.ts",
+    "line": 120,
+    "text": "router.post(\"/viajes\", requireSession, requierePermiso(\"viajes\", \"crear\"), async (req, res, next): Promise<void> => {"
+  },
+  {
+    "file": "viajes.ts",
+    "line": 159,
+    "text": "router.get(\"/viajes\", requireSession, requierePermiso(\"viajes\", \"ver\"), async (req, res, next) => {"
+  },
+  {
+    "file": "viajes.ts",
+    "line": 174,
+    "text": "router.get(\"/viajes/:id\", requireSession, requierePermiso(\"viajes\", \"ver\"), async (req, res, next) => {"
+  }
+]

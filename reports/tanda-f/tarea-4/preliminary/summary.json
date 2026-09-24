@@ -1,0 +1,30 @@
+{
+  "roles": [
+    "ADMIN",
+    "TERMINAL",
+    "CAJA",
+    "SUPERVISOR",
+    "BODEGA",
+    "SISTEMAS",
+    "CONTADOR"
+  ],
+  "matrixCells": 980,
+  "staticUiMismatches": 0,
+  "attempts": 148,
+  "statuses": {
+    "200": 2,
+    "403": 144,
+    "404": 2
+  },
+  "writeAttempts": 40,
+  "changedTables": [],
+  "coverage": {
+    "GAP_NOT_PROBED": 574,
+    "DENIED_OBSERVED": 144,
+    "REVIEW": 4
+  },
+  "excludedFromRowDigests": [
+    "sesiones"
+  ],
+  "limitation": "No browser interaction; no positive mutation controls; sequences/external side effects not fingerprinted; route inventory lexical not exhaustive."
+}

@@ -1,0 +1,700 @@
+[
+  {
+    "module": "dashboard",
+    "action": "ver",
+    "method": "GET",
+    "url": "/dashboard",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "productos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/productos",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "precios",
+    "action": "ver",
+    "method": "GET",
+    "url": "/precios",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "clientes",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "clientes_credito",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/8/credito",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "clientes_precios",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/8/precios",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "clientes_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/8/estado-cuenta",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "proveedores",
+    "action": "ver",
+    "method": "GET",
+    "url": "/proveedores",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "proveedores_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/proveedores/226/estado-cuenta",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "ubicaciones",
+    "action": "ver",
+    "method": "GET",
+    "url": "/locations",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "usuarios",
+    "action": "ver",
+    "method": "GET",
+    "url": "/users",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "permisos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/permisos/roles",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "inventario",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/existencias",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "auditoria",
+    "action": "ver",
+    "method": "GET",
+    "url": "/auditoria",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "contenedores",
+    "action": "ver",
+    "method": "GET",
+    "url": "/contenedores",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "camionetas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/camionetas",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "choferes",
+    "action": "ver",
+    "method": "GET",
+    "url": "/choferes",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "viajes",
+    "action": "ver",
+    "method": "GET",
+    "url": "/viajes",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "equipos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/equipos",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "pos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/pos/buscar?q=994000001",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "entradas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/entradas",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "salidas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/salidas",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "movimientos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/kardex?productoId=2078&ubicacionId=836",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "conciliacion",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/conciliacion",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "reportes",
+    "action": "ver",
+    "method": "GET",
+    "url": "/reportes",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "resumen_caja",
+    "action": "ver",
+    "method": "GET",
+    "url": "/caja/tiendas/836/ventas",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "cobros_pagos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/caja/tickets",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "cortes",
+    "action": "ver",
+    "method": "GET",
+    "url": "/sesiones-caja/46/corte",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "etiquetas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/etiquetas/rollos/6233",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "auditoria_inventario",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/auditorias",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "salidas_venta",
+    "action": "ver",
+    "method": "GET",
+    "url": "/salidas/venta-cliente/pendientes",
+    "validation": "No request body; fixture IDs where needed. Exact route/status recorded, 404 never counted as denial."
+  },
+  {
+    "module": "auditoria_inventario",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/auditorias/sitios",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "inventario",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/rollos/6233/reactivacion-faltante",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "resumen_caja",
+    "action": "ver",
+    "method": "GET",
+    "url": "/caja/tiendas/836/ventas/global",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "clientes",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/8/documentos",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "clientes_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/resumen",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "clientes_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/cartera",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "clientes_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/analitica",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "clientes_credito",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/comportamiento-pago",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "clientes_credito",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/8/comportamiento-pago",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "clientes",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/8",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "clientes_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/8/compras",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "clientes_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/8/analitica",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "clientes_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/8/estadisticas",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "clientes_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/8/pagos",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "contenedores",
+    "action": "ver",
+    "method": "GET",
+    "url": "/contenedores/catalogos",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "contenedores",
+    "action": "ver",
+    "method": "GET",
+    "url": "/contenedores/resumen",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "entradas",
+    "action": "crear",
+    "method": "GET",
+    "url": "/contenedores/disponibles-entrada",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "clientes_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/clientes/8/evidencia-credito",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "equipos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/equipos/ubicaciones",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "etiquetas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/etiquetas/rollos",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "etiquetas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/etiquetas/rollos/6233/revisiones",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "inventario",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/rollos/6233/remate",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "salidas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/salidas-extraordinarias",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "entradas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/entradas/catalogos",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "entradas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/entradas/pendientes-costo/count",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "entradas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/entradas/pendientes-costo",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "entradas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/entradas/468",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "inventario",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/rollos/6233",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "movimientos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/movimientos/7370",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "inventario",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/rollos",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "inventario",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/ubicaciones",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "inventario",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/existencias/agrupadas",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "movimientos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/kardex/agrupado",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "movimientos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/inventario/kardex/filtros",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "ajustes",
+    "action": "autorizar",
+    "method": "GET",
+    "url": "/inventario/ajustes/pendientes",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "ubicaciones",
+    "action": "ver",
+    "method": "GET",
+    "url": "/locations/836/pisos",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "pos",
+    "action": "crear",
+    "method": "GET",
+    "url": "/pos/clientes/8/credito-disponible",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "cobros_pagos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/sesiones-caja/actual",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "precios",
+    "action": "ver",
+    "method": "GET",
+    "url": "/precios/2078",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "productos",
+    "action": "ver",
+    "method": "GET",
+    "url": "/productos/2078",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "proveedores_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/proveedores/resumen",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "proveedores_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/proveedores/analitica-global",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "proveedores",
+    "action": "ver",
+    "method": "GET",
+    "url": "/proveedores/historial-compras",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "proveedores",
+    "action": "ver",
+    "method": "GET",
+    "url": "/proveedores/226",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "proveedores_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/proveedores/226/compras",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "proveedores_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/proveedores/226/pagos",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "proveedores_finanzas",
+    "action": "crear",
+    "method": "GET",
+    "url": "/proveedores/226/pagos/efectivo-opciones",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "proveedores_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/proveedores/226/estadisticas",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "proveedores_finanzas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/proveedores/226/utilidad",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "salidas",
+    "action": "ver",
+    "method": "GET",
+    "url": "/salidas/ubicaciones",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "salidas",
+    "action": "crear",
+    "method": "GET",
+    "url": "/salidas/borrador",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "inventario",
+    "action": "ver",
+    "method": "GET",
+    "url": "/stock-minimos/config",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "inventario",
+    "action": "ver",
+    "method": "GET",
+    "url": "/stock-minimos",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "viajes",
+    "action": "ver",
+    "method": "GET",
+    "url": "/viajes/catalogo-operativo",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "viajes",
+    "action": "crear",
+    "method": "GET",
+    "url": "/viajes/elegibles",
+    "validation": "Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps."
+  },
+  {
+    "module": "productos",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/productos/2078",
+    "body": {
+      "nombre": "TANDA F DENIED PRODUCT EDIT"
+    },
+    "validation": "Existing synthetic fixture IDs; named fields verified against route/schema. Not positive-control executed."
+  },
+  {
+    "module": "clientes",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/clientes/8",
+    "body": {
+      "nombre": "TANDA F DENIED CLIENT EDIT"
+    },
+    "validation": "Existing synthetic fixture IDs; named fields verified against route/schema. Not positive-control executed."
+  },
+  {
+    "module": "proveedores",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/proveedores/226",
+    "body": {
+      "nombre": "TANDA F DENIED SUPPLIER EDIT"
+    },
+    "validation": "Existing synthetic fixture IDs; named fields verified against route/schema. Not positive-control executed."
+  },
+  {
+    "module": "ubicaciones",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/locations/836",
+    "body": {
+      "nombre": "TANDA F DENIED LOCATION EDIT"
+    },
+    "validation": "Existing synthetic fixture IDs; named fields verified against route/schema. Not positive-control executed."
+  },
+  {
+    "module": "clientes_credito",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/clientes/8/credito",
+    "body": {
+      "limiteCredito": 5001,
+      "diasCredito": 30
+    },
+    "validation": "Existing synthetic fixture IDs; named fields verified against route/schema. Not positive-control executed."
+  },
+  {
+    "module": "precios",
+    "action": "editar",
+    "method": "POST",
+    "url": "/precios/2078/cambiar",
+    "body": {
+      "precioListaNuevo": "151.00",
+      "motivo": "TANDA F DENIED PRICE EDIT",
+      "modoPrecio": "ROLLO"
+    },
+    "validation": "Existing synthetic fixture IDs; named fields verified against route/schema. Not positive-control executed."
+  },
+  {
+    "module": "clientes",
+    "action": "crear",
+    "method": "POST",
+    "url": "/clientes",
+    "body": {
+      "nombre": "TANDA F DENIED CREATE CLIENT"
+    },
+    "validation": "Named fields verified against schema; positive-control not executed."
+  },
+  {
+    "module": "proveedores",
+    "action": "crear",
+    "method": "POST",
+    "url": "/proveedores",
+    "body": {
+      "nombre": "TANDA F DENIED CREATE SUPPLIER",
+      "tipo": "NACIONAL"
+    },
+    "validation": "Named fields verified against schema; positive-control not executed."
+  },
+  {
+    "module": "ubicaciones",
+    "action": "crear",
+    "method": "POST",
+    "url": "/locations",
+    "body": {
+      "nombre": "TANDA F DENIED CREATE SITE",
+      "tipo": "TIENDA",
+      "iniciales": "TFD"
+    },
+    "validation": "Named fields verified against schema; positive-control not executed."
+  }
+]

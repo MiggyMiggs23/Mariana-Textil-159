@@ -1,0 +1,1759 @@
+{
+  "admin": {
+    "role": "ADMIN",
+    "id": 234,
+    "permissions": [
+      {
+        "modulo": "marcar_remate",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "dashboard",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "pos",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "entradas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "salidas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "movimientos",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "etiquetas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "inventario",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "auditoria_inventario",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "productos",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "precios",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "ajustes",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "clientes",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "clientes_credito",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "clientes_precios",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "clientes_finanzas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "caja_abonos",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "clientes_recapturas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "proveedores",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "proveedores_finanzas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "contenedores",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "ubicaciones",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "usuarios",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "permisos",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "resumen_caja",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "cortes",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "cobros_pagos",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "reportes",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "conciliacion",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "auditoria",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "camionetas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "choferes",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "viajes",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "salidas_venta",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      },
+      {
+        "modulo": "equipos",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": true
+      }
+    ]
+  },
+  "terminal": {
+    "role": "TERMINAL",
+    "id": 235,
+    "permissions": [
+      {
+        "modulo": "marcar_remate",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "dashboard",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "pos",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "entradas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "salidas",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "movimientos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "etiquetas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "inventario",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "auditoria_inventario",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "productos",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "precios",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "ajustes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_credito",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_precios",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_finanzas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "caja_abonos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_recapturas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "proveedores",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "proveedores_finanzas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "contenedores",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "ubicaciones",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "usuarios",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "permisos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "resumen_caja",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "cortes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "cobros_pagos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "reportes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "conciliacion",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "auditoria",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "camionetas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "choferes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "viajes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "salidas_venta",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "equipos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      }
+    ]
+  },
+  "caja": {
+    "role": "CAJA",
+    "id": 236,
+    "permissions": [
+      {
+        "modulo": "marcar_remate",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "dashboard",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "pos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "entradas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "salidas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "movimientos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "etiquetas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "inventario",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "auditoria_inventario",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "productos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "precios",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "ajustes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_credito",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_precios",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_finanzas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "caja_abonos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_recapturas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "proveedores",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "proveedores_finanzas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "contenedores",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "ubicaciones",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "usuarios",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "permisos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "resumen_caja",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "cortes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "cobros_pagos",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "reportes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "conciliacion",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "auditoria",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "camionetas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "choferes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "viajes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "salidas_venta",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "equipos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      }
+    ]
+  },
+  "supervisor": {
+    "role": "SUPERVISOR",
+    "id": 237,
+    "permissions": [
+      {
+        "modulo": "marcar_remate",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "dashboard",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "pos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "entradas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "salidas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "movimientos",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "etiquetas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "inventario",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "auditoria_inventario",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "productos",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "precios",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "ajustes",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_credito",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_precios",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_finanzas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "caja_abonos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_recapturas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "proveedores",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "proveedores_finanzas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "contenedores",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "ubicaciones",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "usuarios",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "permisos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "resumen_caja",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "cortes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "cobros_pagos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "reportes",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "conciliacion",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "auditoria",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "camionetas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "choferes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "viajes",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "salidas_venta",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "equipos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      }
+    ]
+  },
+  "bodega": {
+    "role": "BODEGA",
+    "id": 238,
+    "permissions": [
+      {
+        "modulo": "marcar_remate",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "dashboard",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "pos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "entradas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "salidas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "movimientos",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "etiquetas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "inventario",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "auditoria_inventario",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "productos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "precios",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "ajustes",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_credito",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_precios",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_finanzas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "caja_abonos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_recapturas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "proveedores",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "proveedores_finanzas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "contenedores",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "ubicaciones",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "usuarios",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "permisos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "resumen_caja",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "cortes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "cobros_pagos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "reportes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "conciliacion",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "auditoria",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "camionetas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "choferes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "viajes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "salidas_venta",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "equipos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      }
+    ]
+  },
+  "sistemas": {
+    "role": "SISTEMAS",
+    "id": 239,
+    "permissions": [
+      {
+        "modulo": "marcar_remate",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "dashboard",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "pos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "entradas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "salidas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "movimientos",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "etiquetas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "inventario",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "auditoria_inventario",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "productos",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "precios",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "ajustes",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_credito",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_precios",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_finanzas",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "caja_abonos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_recapturas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "proveedores",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "proveedores_finanzas",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "contenedores",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "ubicaciones",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "usuarios",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "permisos",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "resumen_caja",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "cortes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "cobros_pagos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "reportes",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "conciliacion",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "auditoria",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "camionetas",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "choferes",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "viajes",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "salidas_venta",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "equipos",
+        "puedeVer": true,
+        "puedeCrear": true,
+        "puedeEditar": true,
+        "puedeAutorizar": false
+      }
+    ]
+  },
+  "contador": {
+    "role": "CONTADOR",
+    "id": 240,
+    "permissions": [
+      {
+        "modulo": "marcar_remate",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "dashboard",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "pos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "entradas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "salidas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "movimientos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "etiquetas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "inventario",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "auditoria_inventario",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "productos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "precios",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "ajustes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_credito",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_precios",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_finanzas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "caja_abonos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "clientes_recapturas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "proveedores",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "proveedores_finanzas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "contenedores",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "ubicaciones",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "usuarios",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "permisos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "resumen_caja",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "cortes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "cobros_pagos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "reportes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "conciliacion",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "auditoria",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "camionetas",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "choferes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "viajes",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "salidas_venta",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      },
+      {
+        "modulo": "equipos",
+        "puedeVer": false,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      }
+    ]
+  }
+}

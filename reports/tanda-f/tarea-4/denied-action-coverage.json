@@ -1,0 +1,5778 @@
+[
+  {
+    "role": "TERMINAL",
+    "module": "marcar_remate",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "marcar_remate",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "marcar_remate",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "marcar_remate",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "dashboard",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "dashboard",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "dashboard",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "pos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "pos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "entradas",
+    "action": "ver",
+    "attempts": 5,
+    "denials": 5,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "entradas",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "entradas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "entradas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "salidas",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "salidas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "salidas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "movimientos",
+    "action": "ver",
+    "attempts": 4,
+    "denials": 4,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "movimientos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "movimientos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "movimientos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "etiquetas",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "etiquetas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "etiquetas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "etiquetas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "inventario",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "inventario",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "inventario",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "auditoria_inventario",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "auditoria_inventario",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "auditoria_inventario",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "productos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "productos",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "productos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "precios",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "precios",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "precios",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "precios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "ajustes",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "ajustes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "ajustes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "ajustes",
+    "action": "autorizar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes_credito",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes_credito",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes_credito",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes_precios",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes_precios",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes_precios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes_finanzas",
+    "action": "ver",
+    "attempts": 9,
+    "denials": 9,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes_finanzas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes_finanzas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "caja_abonos",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "caja_abonos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "caja_abonos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "caja_abonos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes_recapturas",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes_recapturas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes_recapturas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes_recapturas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "proveedores",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "proveedores",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "proveedores",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "proveedores",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "proveedores_finanzas",
+    "action": "ver",
+    "attempts": 7,
+    "denials": 7,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "proveedores_finanzas",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "proveedores_finanzas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "proveedores_finanzas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "contenedores",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "contenedores",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "contenedores",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "contenedores",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "ubicaciones",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "ubicaciones",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "ubicaciones",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "ubicaciones",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "usuarios",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "usuarios",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "usuarios",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "usuarios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "permisos",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "permisos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "permisos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "permisos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "resumen_caja",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "resumen_caja",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "resumen_caja",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "resumen_caja",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "cortes",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "cortes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "cortes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "cortes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "cobros_pagos",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "cobros_pagos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "cobros_pagos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "cobros_pagos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "reportes",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "reportes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "reportes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "reportes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "conciliacion",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "conciliacion",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "conciliacion",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "conciliacion",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "auditoria",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "auditoria",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "auditoria",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "auditoria",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "camionetas",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "camionetas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "camionetas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "camionetas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "choferes",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "choferes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "choferes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "choferes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "viajes",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "viajes",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "viajes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "viajes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "salidas_venta",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "salidas_venta",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "salidas_venta",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "salidas_venta",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "equipos",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "equipos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "equipos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "equipos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "marcar_remate",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "marcar_remate",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "marcar_remate",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "marcar_remate",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "dashboard",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "dashboard",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "dashboard",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "dashboard",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "pos",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "pos",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "pos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "pos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "entradas",
+    "action": "ver",
+    "attempts": 5,
+    "denials": 5,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "entradas",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "entradas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "entradas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "salidas",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "salidas",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "salidas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "salidas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "movimientos",
+    "action": "ver",
+    "attempts": 4,
+    "denials": 4,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "movimientos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "movimientos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "movimientos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "etiquetas",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "etiquetas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "etiquetas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "etiquetas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "inventario",
+    "action": "ver",
+    "attempts": 9,
+    "denials": 9,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "inventario",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "inventario",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "inventario",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "auditoria_inventario",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "auditoria_inventario",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "auditoria_inventario",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "productos",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "productos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "productos",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "productos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "precios",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "precios",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "precios",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "precios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "ajustes",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "ajustes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "ajustes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "ajustes",
+    "action": "autorizar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_credito",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_credito",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_credito",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_credito",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_precios",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_precios",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_precios",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_precios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_finanzas",
+    "action": "ver",
+    "attempts": 9,
+    "denials": 9,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_finanzas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_finanzas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "caja_abonos",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "caja_abonos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "caja_abonos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "caja_abonos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_recapturas",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_recapturas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_recapturas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_recapturas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "proveedores",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "proveedores",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "proveedores",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "proveedores",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "proveedores_finanzas",
+    "action": "ver",
+    "attempts": 7,
+    "denials": 7,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "proveedores_finanzas",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "proveedores_finanzas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "proveedores_finanzas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "contenedores",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "contenedores",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "contenedores",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "contenedores",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "ubicaciones",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "ubicaciones",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "ubicaciones",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "ubicaciones",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "usuarios",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "usuarios",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "usuarios",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "usuarios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "permisos",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "permisos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "permisos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "permisos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "resumen_caja",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "resumen_caja",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "resumen_caja",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "resumen_caja",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "cortes",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "cortes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "cortes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "cortes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "cobros_pagos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "cobros_pagos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "reportes",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "reportes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "reportes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "reportes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "conciliacion",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "conciliacion",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "conciliacion",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "conciliacion",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "auditoria",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "auditoria",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "auditoria",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "auditoria",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "camionetas",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "camionetas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "camionetas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "camionetas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "choferes",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "choferes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "choferes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "choferes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "viajes",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "viajes",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "viajes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "viajes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "salidas_venta",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "salidas_venta",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "salidas_venta",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "salidas_venta",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "equipos",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CAJA",
+    "module": "equipos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "equipos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CAJA",
+    "module": "equipos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "marcar_remate",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "marcar_remate",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "marcar_remate",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "marcar_remate",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "dashboard",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "dashboard",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "dashboard",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "pos",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "pos",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "pos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "pos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "entradas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "salidas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "movimientos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "movimientos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "movimientos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "etiquetas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "etiquetas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "inventario",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "inventario",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "inventario",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "productos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "productos",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "productos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "precios",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "precios",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "precios",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "precios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "ajustes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "ajustes",
+    "action": "autorizar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_credito",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_credito",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_credito",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_credito",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_precios",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_precios",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_precios",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_precios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_finanzas",
+    "action": "ver",
+    "attempts": 9,
+    "denials": 9,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_finanzas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_finanzas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "caja_abonos",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "caja_abonos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "caja_abonos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "caja_abonos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_recapturas",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_recapturas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_recapturas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_recapturas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "proveedores",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "proveedores_finanzas",
+    "action": "ver",
+    "attempts": 7,
+    "denials": 7,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "proveedores_finanzas",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "proveedores_finanzas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "proveedores_finanzas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "contenedores",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "ubicaciones",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "ubicaciones",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "ubicaciones",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "ubicaciones",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "usuarios",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "usuarios",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "usuarios",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "usuarios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "permisos",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "permisos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "permisos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "permisos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "resumen_caja",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "resumen_caja",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "resumen_caja",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "resumen_caja",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "cortes",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "cortes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "cortes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "cortes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "cobros_pagos",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "cobros_pagos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "cobros_pagos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "cobros_pagos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "reportes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "reportes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "reportes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "conciliacion",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "conciliacion",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "conciliacion",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "conciliacion",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "auditoria",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "auditoria",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "auditoria",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "auditoria",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "camionetas",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "camionetas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "camionetas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "camionetas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "choferes",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "choferes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "choferes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "choferes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "viajes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "viajes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "salidas_venta",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "salidas_venta",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "salidas_venta",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "salidas_venta",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "equipos",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "equipos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "equipos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "equipos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "marcar_remate",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "marcar_remate",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "marcar_remate",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "marcar_remate",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "dashboard",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "dashboard",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "dashboard",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "pos",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "pos",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "pos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "pos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "entradas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "entradas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "salidas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "salidas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "movimientos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "movimientos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "movimientos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "etiquetas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "etiquetas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "inventario",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "inventario",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "inventario",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "productos",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "productos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "productos",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "productos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "precios",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "precios",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "precios",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "precios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "ajustes",
+    "action": "autorizar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_credito",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_credito",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_credito",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_credito",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_precios",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_precios",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_precios",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_precios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_finanzas",
+    "action": "ver",
+    "attempts": 9,
+    "denials": 9,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_finanzas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_finanzas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "caja_abonos",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "caja_abonos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "caja_abonos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "caja_abonos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_recapturas",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_recapturas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_recapturas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_recapturas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "proveedores",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "proveedores",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "proveedores",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "proveedores",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "proveedores_finanzas",
+    "action": "ver",
+    "attempts": 7,
+    "denials": 7,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "proveedores_finanzas",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "proveedores_finanzas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "proveedores_finanzas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "contenedores",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "contenedores",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "contenedores",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "contenedores",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "ubicaciones",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "ubicaciones",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "ubicaciones",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "ubicaciones",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "usuarios",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "usuarios",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "usuarios",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "usuarios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "permisos",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "permisos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "permisos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "permisos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "resumen_caja",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "resumen_caja",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "resumen_caja",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "resumen_caja",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "cortes",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "cortes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "cortes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "cortes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "cobros_pagos",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "cobros_pagos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "cobros_pagos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "cobros_pagos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "reportes",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "reportes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "reportes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "reportes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "conciliacion",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "conciliacion",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "conciliacion",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "conciliacion",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "auditoria",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "auditoria",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "auditoria",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "auditoria",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "camionetas",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "camionetas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "camionetas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "camionetas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "choferes",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "choferes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "choferes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "choferes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "viajes",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "viajes",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "viajes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "viajes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "salidas_venta",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "salidas_venta",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "salidas_venta",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "salidas_venta",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "equipos",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "equipos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "equipos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "BODEGA",
+    "module": "equipos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "marcar_remate",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "marcar_remate",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "marcar_remate",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "marcar_remate",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "dashboard",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "dashboard",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "dashboard",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "pos",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "pos",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "pos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "pos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "entradas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "salidas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "movimientos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "etiquetas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "etiquetas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "inventario",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "inventario",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "inventario",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "productos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "precios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "ajustes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "ajustes",
+    "action": "autorizar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "clientes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "clientes_credito",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "clientes_credito",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "clientes_credito",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "clientes_precios",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "clientes_precios",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "clientes_precios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "clientes_finanzas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "clientes_finanzas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "caja_abonos",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "caja_abonos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "caja_abonos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "caja_abonos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "clientes_recapturas",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "clientes_recapturas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "clientes_recapturas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "clientes_recapturas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "proveedores",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "proveedores_finanzas",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "proveedores_finanzas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "proveedores_finanzas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "contenedores",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "ubicaciones",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "usuarios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "permisos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "permisos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "resumen_caja",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "resumen_caja",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "resumen_caja",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "resumen_caja",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "cortes",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "cortes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "cortes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "cortes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "cobros_pagos",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "cobros_pagos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "cobros_pagos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "cobros_pagos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "reportes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "reportes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "reportes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "conciliacion",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "conciliacion",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "auditoria",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "auditoria",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "auditoria",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "camionetas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "choferes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "viajes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "salidas_venta",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "salidas_venta",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "salidas_venta",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "salidas_venta",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "equipos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "marcar_remate",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "marcar_remate",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "marcar_remate",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "marcar_remate",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "dashboard",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "dashboard",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "dashboard",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "dashboard",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "pos",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "pos",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "pos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "pos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "entradas",
+    "action": "ver",
+    "attempts": 5,
+    "denials": 5,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "entradas",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "entradas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "entradas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "salidas",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "salidas",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "salidas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "salidas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "movimientos",
+    "action": "ver",
+    "attempts": 4,
+    "denials": 4,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "movimientos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "movimientos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "movimientos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "etiquetas",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "etiquetas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "etiquetas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "etiquetas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "inventario",
+    "action": "ver",
+    "attempts": 9,
+    "denials": 9,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "inventario",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "inventario",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "inventario",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "auditoria_inventario",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "auditoria_inventario",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "auditoria_inventario",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "productos",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "productos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "productos",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "productos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "precios",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "precios",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "precios",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "precios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "ajustes",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "ajustes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "ajustes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "ajustes",
+    "action": "autorizar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_credito",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_credito",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_credito",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_credito",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_precios",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_precios",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_precios",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_precios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_finanzas",
+    "action": "ver",
+    "attempts": 9,
+    "denials": 9,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_finanzas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_finanzas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "caja_abonos",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "caja_abonos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "caja_abonos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "caja_abonos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_recapturas",
+    "action": "ver",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_recapturas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_recapturas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_recapturas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "proveedores",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "proveedores",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "proveedores",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "proveedores",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "proveedores_finanzas",
+    "action": "ver",
+    "attempts": 7,
+    "denials": 7,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "proveedores_finanzas",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "proveedores_finanzas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "proveedores_finanzas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "contenedores",
+    "action": "ver",
+    "attempts": 3,
+    "denials": 3,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "contenedores",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "contenedores",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "contenedores",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "ubicaciones",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "ubicaciones",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "ubicaciones",
+    "action": "editar",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "ubicaciones",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "usuarios",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "usuarios",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "usuarios",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "usuarios",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "permisos",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "permisos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "permisos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "permisos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "resumen_caja",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "resumen_caja",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "resumen_caja",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "resumen_caja",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "cortes",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "cortes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "cortes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "cortes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "cobros_pagos",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "cobros_pagos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "cobros_pagos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "cobros_pagos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "reportes",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "reportes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "reportes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "reportes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "conciliacion",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "conciliacion",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "conciliacion",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "conciliacion",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "auditoria",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "auditoria",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "auditoria",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "auditoria",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "camionetas",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "camionetas",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "camionetas",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "camionetas",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "choferes",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "choferes",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "choferes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "choferes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "viajes",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "viajes",
+    "action": "crear",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "viajes",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "viajes",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "salidas_venta",
+    "action": "ver",
+    "attempts": 1,
+    "denials": 1,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "salidas_venta",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "salidas_venta",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "salidas_venta",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "equipos",
+    "action": "ver",
+    "attempts": 2,
+    "denials": 2,
+    "status": "DENIED_OBSERVED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "equipos",
+    "action": "crear",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "equipos",
+    "action": "editar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "equipos",
+    "action": "autorizar",
+    "attempts": 0,
+    "denials": 0,
+    "status": "GAP_NOT_PROBED"
+  }
+]
