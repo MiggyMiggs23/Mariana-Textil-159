@@ -16,6 +16,16 @@ El operador conecta exclusivamente localhost55442/tanda_ga_inventory como postgr
 
 Comando runner: `MAIN_READY=yes INVENTORY_PHASE=check INVENTORY_HANDOFF=.local/tanda-g-ampliada/inventory-handoff.json node reports/tanda-g-ampliada/tarea-2/run.mjs`. Pendientes: instalación MAIN, fase check, retiro MAIN y fase baseline API. Las instrucciones históricas de instalación automática del primer tramo quedan sustituidas por este procedimiento no-owner.
 
+## Tramo 3 — CHECK y API ejecutados
+
+MAIN instaló constraint en copia y reinició procesos privados; handoff PID refrescado. `operator-add.json` acredita destino inventory55442. `results-check.json`: 224 casos servicios + 56 solicitudes API; 48/48 controles de comparación aprobados. Constraint observado convalidated=true. API METRO/KILO -2: HTTP500, fila permanece PROGRAMADO/10.000 y cero movimientos, ambos sitios. PIEZA/BOLSA -2: HTTP400 por guarda existente. Cantidad2: HTTP200 en cuatro unidades/dos sitios. Es protección de persistencia, **no mejora UX**: error500 sigue siendo pendiente de diseño/producto; no se corrigió automáticamente.
+
+Hubo dos intentos previos sin ensayos por URL login con doble slash en runner. Se corrigió a origin.origin, sin modificación de producto. Luego ejecución exitosa completa.
+
+Se amplió runtime en `chains.ts` / `chains-check.json`: 38/38 escenarios con rollback, cuatro unidades/dos sitios. Transferencia inmediata ida/vuelta conserva cantidad10 y asientos -10/+10, origen obsoleto rechazado; venta y reversión devuelve DISPONIBLE10; mostrador y salida extraordinaria dejan0 y rechazan venta posterior; BOLSA FIFO consume2 con ledger-2, rechaza negativo e insuficiencia. Reconstrucción caché real invocada en cada cadena y revertida junto al caso. Son secuencias, NO carreras simultáneas.
+
+Pendiente inmediato: MAIN retirar SOLO constraint de ensayo mediante `MAIN_COPY_OPERATOR=yes node reports/tanda-g-ampliada/tarea-2/copy-operator.mjs drop`, luego worker ejecuta fase baseline API. No se ha aplicado constraint en aplicación ni migración. Aún no se prueban en esta tanda recepción en tránsito, consumo metreado con entrada autoritativa, reactivación auditoría, costos/piso/metadatos ni carreras simultáneas; no se reportan aprobados.
+
 Fuente inspeccionada: ee1bb641e0513b7df18027ad351a72ebbe99af74 (identidad inicial; cambios paralelos deben registrarse separadamente). Baseline solicitado: currentsource61d strict; el runner exige identidad y rutas del setup, no lo sustituye por HEAD.
 
 Se leyó `.agents/memory/inventory-numeric-boundaries.md` y el antecedente `reports/tanda-g/candidate/negative-api-results.json`: activación METRO/KILO -2 aceptada HTTP 200. Esto es evidencia anterior, NO reproducción de esta tanda.

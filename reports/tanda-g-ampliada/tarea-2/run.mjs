@@ -11,4 +11,4 @@ process.env.APPLICATION_DATABASE_URL = process.env.DATABASE_URL;
 process.env.TEST_DATABASE_URL = c.databaseUrl;
 process.env.NODE_ENV = "test";
 process.env.REQUIRE_ISOLATED_TEST_DATABASE = "1";
-await import("./matrix.bundle.mjs");
+await import(process.env.INVENTORY_CHAINS === "yes" ? "./chains.bundle.mjs" : "./matrix.bundle.mjs");

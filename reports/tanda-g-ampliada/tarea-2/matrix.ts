@@ -37,8 +37,8 @@ if (config.apiOrigin && !servicesOnly) {
   assert.ok(env.includes("WORKER=inventory"), "API worker identity mismatch");
   assert.ok(fs.readFileSync(`/proc/${config.apiPid}/cmdline`, "utf8").includes("reports/tanda-g-ampliada/setup/api-runner.mjs"), "API runner identity mismatch");
   const credentials = JSON.parse(fs.readFileSync(config.credentialsFile, "utf8")).admin;
-  const login = await fetch(`${origin}/api/auth/login`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ usuario: credentials.username, password: credentials.password }) });
-  assert.ok(login.ok, "Isolated login failed");
+  const login = await fetch(`${origin.origin}/api/auth/login`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ usuario: credentials.username, password: credentials.password }) });
+  assert.ok(login.ok, `Isolated login failed (${login.status})`);
   cookie = login.headers.get("set-cookie")?.split(";")[0];
   assert.ok(cookie);
 }

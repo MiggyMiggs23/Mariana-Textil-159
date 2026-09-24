@@ -11,8 +11,8 @@ assert.ok(path.resolve(c.sourceRoot).includes("/.local/"), "Frozen isolated sour
 const require = createRequire(path.resolve(c.sourceRoot, "artifacts/api-server/package.json"));
 const { build } = require("esbuild");
 await build({
-  entryPoints: ["reports/tanda-g-ampliada/tarea-2/matrix.ts"],
-  outfile: "reports/tanda-g-ampliada/tarea-2/matrix.bundle.mjs",
+  entryPoints: [`reports/tanda-g-ampliada/tarea-2/${process.env.INVENTORY_CHAINS === "yes" ? "chains" : "matrix"}.ts`],
+  outfile: `reports/tanda-g-ampliada/tarea-2/${process.env.INVENTORY_CHAINS === "yes" ? "chains" : "matrix"}.bundle.mjs`,
   bundle: true, platform: "node", format: "esm", external: ["pg-native"],
   alias: {
     "@inventory-db": path.resolve(c.sourceRoot, "lib/db/src/index.ts"),
