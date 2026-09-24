@@ -17,6 +17,7 @@ const receipt = {
 };
 // Process-only module substitution. Never mutate watched source or generated deps.
 const mutations: Record<string, [string, string, string]> = {
+  "print-resize": ["pages/caja/recibo-e3.tsx", "if (root.getClientRects().length === 0) return;", ""],
   geometry: ["pages/caja/recibo-e3.tsx", "used + rowHeight > available", "false"],
   advance: ["pages/caja/recibo-e3.tsx", "Anticipo sin aplicación a notas.", "Recibido, pendiente de aplicación."],
   audit: ["pages/caja/recibo-e3.tsx", "      window.print();", "      window.print();"],
@@ -104,7 +105,12 @@ async function fixture(caseName: string, entry: string, check: Parameters<typeof
         window.e3PermissionIdentifiers=[Modules.CAJA_ABONOS,Modules.CLIENTES_RECAPTURAS];
         const query=new QueryClient({defaultOptions:{queries:{retry:false},mutations:{retry:false}}});
         const location=memoryLocation({path:"/recibos-e3/E3-2-00000001"});
-        export default function Fixture(){const [revision,setRevision]=React.useState(0);window.remount=()=>setRevision(x=>x+1);return <QueryClientProvider client={query}><Router hook={location.hook}><Route path="/recibos-e3/:folio"><React.Fragment key={revision}>${entry}</React.Fragment></Route></Router></QueryClientProvider>;}
+        export default function Fixture(){
+          // Match the application's actual mount: receipt print isolation
+          // intentionally removes every body child other than #root.
+          React.useLayoutEffect(()=>{document.getElementById("observable-test-root")?.setAttribute("id","root");},[]);
+          const [revision,setRevision]=React.useState(0);window.remount=()=>setRevision(x=>x+1);return <QueryClientProvider client={query}><Router hook={location.hook}><Route path="/recibos-e3/:folio"><React.Fragment key={revision}>${entry}</React.Fragment></Route></Router></QueryClientProvider>;
+        }
       `, moduleAliases: aliases,
     }, check);
   } finally { await rm(dir, { recursive: true, force: true }); }
@@ -127,6 +133,23 @@ test("E3 UI geometry: measured long-note pagination preserves two A5 copies and 
     assert.ok(sizes.length > 0 && sizes.every(size => Math.abs(size[2] - 210 * 72 / 25.4) < 2 && Math.abs(size[3] - 148 * 72 / 25.4) < 2), "E3_GEOMETRY: actual PDF A5 landscape");
     console.log(JSON.stringify({ measurement: "E3_A5", rows: 50, copies: 2, pages: pageCount, points: sizes[0] }));
   }, { rows: 50 });
+});
+
+test("E3 UI print resize: a hidden print probe preserves measured receipt pages", async () => {
+  await fixture("print-resize", "<ReciboE3/>", async page => {
+    await page.waitFor('document.querySelector("#e3-pages")?.dataset.ready === "true"');
+    await page.evaluate(`document.querySelector(".e3-probe").style.display="none";
+      window.dispatchEvent(new Event("resize"));`);
+    // Wait for the React update that used to clear both pages as false overflow.
+    await page.evaluate("new Promise(resolve => setTimeout(resolve, 50))");
+    assert.equal(await page.evaluate('document.querySelectorAll("#e3-pages .e3-sheet").length'), 2);
+    assert.equal(await page.evaluate('document.querySelector("#e3-pages").dataset.ready'), "true");
+    assert.equal(await page.evaluate('document.querySelector("[role=alert]") === null'), true);
+    await page.evaluate(`document.querySelector(".e3-probe").style.display="";
+      window.dispatchEvent(new Event("resize"));`);
+    await page.waitFor('document.querySelector("#e3-pages")?.dataset.ready === "true"');
+    assert.equal(await page.evaluate('document.querySelectorAll("#e3-pages .e3-sheet").length'), 2);
+  });
 });
 
 test("E3 UI advance: immutable human names and actual favor, never pending directed", async () => {

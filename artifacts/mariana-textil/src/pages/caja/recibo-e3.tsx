@@ -26,6 +26,9 @@ export function ReceiptPages({ recibo, printedAt, onReady }: {
     const measure = () => {
       if (!alive || !probe.current) return;
       const root = probe.current;
+      // Print media removes the measuring probe from layout. A print-preview
+      // resize must not replace the already measured pages with a false overflow.
+      if (root.getClientRects().length === 0) return;
       const height = (selector: string) => root.querySelector(selector)!.getBoundingClientRect().height;
       const available = height(".e3-inner") - height(".e3-heading") - height("thead") - height(".e3-footer") - 8;
       const rows = Array.from(root.querySelectorAll("tbody tr"));
