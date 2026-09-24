@@ -363,8 +363,11 @@ export default function RolloDetail() {
                 <TableBody>
                   {rollo.historial.map((mov) => {
                     const movementDocument = mov as typeof mov & MovimientoDocumentoReference;
-                    const isPositive = ['ALTA', 'RECEPCION', 'TRANSFERENCIA_ENTRADA', 'AJUSTE_POSITIVO', 'REACTIVACION_FALTANTE'].includes(mov.tipo);
-                    const isNegative = ['VENTA', 'TRANSFERENCIA_SALIDA', 'SALIDA_MOSTRADOR', 'AJUSTE_NEGATIVO', 'CANCELACION'].includes(mov.tipo);
+                    // The ledger quantity is signed; the movement label does not
+                    // determine its direction (a cancellation can restore stock).
+                    const quantity = Number(mov.cantidad);
+                    const isPositive = quantity > 0;
+                    const isNegative = quantity < 0;
 
                     const isExtraordinariaUnreversed = mov.tipo === 'AJUSTE_NEGATIVO' &&
                                                        mov.motivoSalidaExtraordinaria != null &&
@@ -391,7 +394,7 @@ export default function RolloDetail() {
                         </TableCell>
                         <TableCell className="text-sm">{mov.nombreUbicacion}</TableCell>
                         <TableCell className={`text-right font-medium tabular-nums ${isPositive ? 'text-emerald-600 dark:text-emerald-400' : isNegative ? 'text-red-600 dark:text-red-400' : ''}`}>
-                           {isPositive ? '+' : isNegative ? '-' : ''}{formatNumber(Math.abs(Number(mov.cantidad)), { kind: "quantity" })}
+                           {isPositive ? '+' : isNegative ? '-' : ''}{formatNumber(Math.abs(quantity), { kind: "quantity" })}
                         </TableCell>
                         <TableCell className="text-right font-bold tabular-nums">
                           {formatNumber(mov.saldoPosterior, { kind: "quantity" })}

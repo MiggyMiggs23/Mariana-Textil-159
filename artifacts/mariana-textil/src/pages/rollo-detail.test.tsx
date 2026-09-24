@@ -1,6 +1,6 @@
 import React from "react";
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as apiClient from "@workspace/api-client-react";
 import RolloDetail from "./rollo-detail";
@@ -39,6 +39,45 @@ afterEach(() => {
 });
 
 describe("RolloDetail reactivation", () => {
+  test.each([
+    ["CANCELACION", "1.000", "+1.00", "text-emerald", false],
+    ["VENTA", "-1.000", "-1.00", "text-red", true],
+    ["TRANSFERENCIA_SALIDA", "-2.500", "-2.50", "text-red", true],
+    ["BAJA", "-3.000", "-3.00", "text-red", true],
+    ["CANCELACION", "-1.000", "-1.00", "text-red", true],
+    ["AJUSTE_POSITIVO", "0.000", "0.00", "", false],
+  ])("uses signed ledger quantity for %s (%s)", (tipo, cantidad, text, color, destructive) => {
+    vi.spyOn(apiClient, "useGetCurrentUser").mockReturnValue({ data: { rol: "ADMIN" } } as any);
+    vi.spyOn(apiClient, "useListPisosLocation").mockReturnValue({ data: [] } as any);
+    vi.spyOn(apiClient, "useUpdateRolloPiso").mockReturnValue({ mutate: vi.fn(), isPending: false } as any);
+    vi.spyOn(apiClient, "useRevertSalidaExtraordinaria").mockReturnValue({ mutate: vi.fn(), isPending: false } as any);
+    vi.spyOn(apiClient, "useGetRollo").mockReturnValue({
+      data: {
+        id: 999, serie: "TEST-SIGNED-LEDGER", productoId: 12,
+        skuProducto: "GAB-AZU", telaProducto: "Gabardina", colorProducto: "Azul",
+        unidadProducto: "METRO", cantidadInicial: "1.000", cantidadActual: "1.000",
+        costoUnitario: "100.0000", costoTotal: "100.0000", estado: "DISPONIBLE",
+        ubicacionId: 1, nombreUbicacion: "Bodega Centro",
+        createdAt: "2026-09-24T03:23:00.000Z", notas: null,
+        historial: [{
+          id: 700, tipo, cantidad, saldoPosterior: "6.000",
+          nombreUbicacion: "Bodega Centro", createdAt: "2026-09-24T03:23:00.000Z",
+        }],
+      },
+      isLoading: false,
+    } as any);
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    render(<QueryClientProvider client={client}><RolloDetail /></QueryClientProvider>);
+    const row = within(screen.getByTestId("rollo-movement-row-700"));
+    const quantity = row.getByText(text);
+    expect(quantity.className).toContain(color);
+    if (!color) {
+      expect(quantity.className).not.toMatch(/text-(emerald|red)/);
+    }
+    expect(row.getByText(String(tipo).replaceAll("_", " ")).className.includes("bg-destructive")).toBe(destructive);
+    expect(row.getByText("6.00")).toBeTruthy();
+  });
+
   test("a BAJA roll opens the ROLLO entry point and labels reactivation as a distinct positive movement", async () => {
     const client = new QueryClient({
       defaultOptions: { queries: { retry: false, staleTime: Infinity } },
