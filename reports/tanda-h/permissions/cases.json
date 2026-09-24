@@ -1,0 +1,173 @@
+[
+  {
+    "module": "camionetas",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/camionetas/1",
+    "body": {
+      "nombre": "TANDA H PERMISSIONS VAN"
+    }
+  },
+  {
+    "module": "choferes",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/choferes/1",
+    "body": {
+      "nombreCompleto": "TANDA H PERMISSIONS DRIVER"
+    }
+  },
+  {
+    "module": "equipos",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/equipos/1",
+    "body": {
+      "marca": "TANDA H"
+    }
+  },
+  {
+    "module": "contenedores",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/contenedores/3",
+    "body": {
+      "proveedorId": 226,
+      "referencia": "TANDA H PERMISSIONS CONTAINER",
+      "fechaEstimadaLlegada": "2026-10-01",
+      "sitioDestinoId": 835,
+      "lineas": [
+        {
+          "productoId": 2078,
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1
+        }
+      ]
+    }
+  },
+  {
+    "module": "contenedores",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/contenedores/3/cancelar",
+    "body": {
+      "motivo": "TANDA H PERMISSIONS valid cancellation"
+    }
+  },
+  {
+    "module": "auditoria_inventario",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/auditorias/6/escaneos",
+    "body": {
+      "serie": "997000001"
+    }
+  },
+  {
+    "module": "etiquetas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/etiquetas/rollos/6233/revisar",
+    "body": {
+      "ultimaReimpresionId": 173
+    }
+  },
+  {
+    "module": "entradas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/entradas/471/costos",
+    "body": {
+      "costosProductos": [
+        {
+          "productoId": 2078,
+          "costoUnitario": "100.00"
+        }
+      ],
+      "costosRollos": []
+    }
+  },
+  {
+    "module": "salidas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/salidas-extraordinarias/7467/revertir",
+    "body": {
+      "justificacion": "TANDA H PERMISSIONS valid reversal",
+      "uuidCliente": "e774cc93-4d7b-4559-8ad9-0c9627ae96c8"
+    }
+  },
+  {
+    "module": "salidas",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/salidas/29/cancelar",
+    "body": {
+      "motivo": "TANDA H PERMISSIONS valid cancel"
+    }
+  },
+  {
+    "module": "salidas_venta",
+    "action": "crear",
+    "method": "POST",
+    "url": "/salidas/venta-cliente/generar-venta",
+    "body": {
+      "uuidCliente": "da6160a0-103b-4611-8646-29ba93ba393a",
+      "documentoTipo": "TICKET",
+      "ubicacionId": 835,
+      "clienteId": 8,
+      "salidaIds": [
+        30
+      ],
+      "precios": [
+        {
+          "salidaRolloId": 134,
+          "precioUnitario": 150
+        }
+      ]
+    }
+  },
+  {
+    "module": "cobros_pagos",
+    "action": "crear",
+    "method": "POST",
+    "url": "/tickets/109/cobrar",
+    "body": {
+      "pagos": [
+        {
+          "formaPago": "EFECTIVO",
+          "importe": 1500
+        }
+      ]
+    }
+  },
+  {
+    "module": "permisos",
+    "action": "editar",
+    "method": "PUT",
+    "url": "/permisos/roles/TERMINAL/dashboard",
+    "body": {
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    }
+  },
+  {
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "method": "POST",
+    "url": "/clientes/8/pagos/vista-previa",
+    "body": {
+      "importe": 1,
+      "fechaEfectiva": "2026-09-01T12:00:00.000Z"
+    }
+  },
+  {
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/inventario/auditorias/6/confirmar",
+    "body": {}
+  }
+]

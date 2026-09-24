@@ -1,0 +1,44 @@
+[
+  {
+    "role": "ADMIN",
+    "loginHttp": 200,
+    "meHttp": 200,
+    "userId": 234
+  },
+  {
+    "role": "TERMINAL",
+    "loginHttp": 200,
+    "meHttp": 200,
+    "userId": 235
+  },
+  {
+    "role": "CAJA",
+    "loginHttp": 200,
+    "meHttp": 200,
+    "userId": 236
+  },
+  {
+    "role": "SUPERVISOR",
+    "loginHttp": 200,
+    "meHttp": 200,
+    "userId": 237
+  },
+  {
+    "role": "BODEGA",
+    "loginHttp": 200,
+    "meHttp": 200,
+    "userId": 238
+  },
+  {
+    "role": "SISTEMAS",
+    "loginHttp": 200,
+    "meHttp": 200,
+    "userId": 239
+  },
+  {
+    "role": "CONTADOR",
+    "loginHttp": 200,
+    "meHttp": 200,
+    "userId": 240
+  }
+]

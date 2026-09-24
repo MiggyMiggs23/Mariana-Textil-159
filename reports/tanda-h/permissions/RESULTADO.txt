@@ -1,0 +1,15 @@
+TANDA H — PERMISOS — CIERRE BLOQUEADO, NO BYPASS DEMOSTRADO
+
+Identidad verificada: tanda_h_permissions / h_permissions / PostgreSQL 55444; API 43873; UI 43883. PID y hashes del build congelado comprobados. Siete roles naturales autenticados por HTTP y navegador contra la misma copia.
+
+Prioridad de solicitudes directas completada: 24 celdas únicas y 24 requests autenticados con IDs de campaña nuevos. Resultado: 15 denegaciones E11 (14 celdas outer previas + CONTADOR clientes_finanzas.crear), cuatro denegaciones permisos.ver antes de editar, cinco 409 legacy. Ninguna alcanza el guard seleccionado. No se contabilizan como cobertura interior.
+
+Saldo directo: 381 = 357 campos sin consumidor identificado + 18 outer + 6 legacy. Nuevas celdas directas/duales cerradas: 0. Los 357 campos exactos por rol, módulo, acción y nombre de campo están en owner-357.csv; preguntas en owner-questions.txt. No se inventa semántica.
+
+11 controles positivos ADMIN aceptados sobre fixtures reales: camionetas, choferes, equipos, contenedor editar/cancelar, etiquetas revisar, entrada costos, salida extraordinaria revertir, salida cancelar, generar venta y cobrar ticket. No son rutas ficticias. Audit confirmar queda sin positivo seguro: no se aplicó conteo incompleto; editar audit tampoco tiene positivo después del cierre. Actualización positiva de permisos omitida por prohibición de tocar matriz. Legacy ADMIN devuelve 409 y no es control positivo.
+
+Cada denegación incluye fingerprint de todas las tablas públicas salvo sesiones antes/después: cero cambios, incluida matriz. Se revalidaron el fingerprint de permisos_rol y los permisos efectivos de /auth/me al final; no se asume que cada permiso efectivo tenga fila persistida. Los únicos cambios de negocio fueron fixtures y controles positivos autorizados en la copia aislada. Un intento de fixture rechazado INVALID_CLIENT se conserva en el ledger y se corrigió usando el cliente nativo aprobado del manifest; no se cuenta como test de permisos.
+
+23 observaciones UI de siete roles, 6 diálogos reales de edición ADMIN/SISTEMAS, 0 errores finales. Capturas por observación. Las capturas/páginas o botones ocultos detrás de E11 no cierran el guard interior. No se guardaron cambios desde UI. El primer chequeo de sesión por APIRequestContext no conservó la sesión del navegador; se usó fetch same-origin dentro del navegador y se verificó rol en cada sesión; no se presenta aquel intento como evidencia.
+
+Bloqueador de alcance: sin modificar gates, matriz o roles de negocio no hay evidencia nueva de alcanzar estos 24 guards seleccionados. No se autoriza desactivar E3/E11 ni permisos.ver para fabricar cobertura. No se tocó aplicación productiva, schema, fuente de producto o workflows. Sin bypass demostrado ni fix especulativo.

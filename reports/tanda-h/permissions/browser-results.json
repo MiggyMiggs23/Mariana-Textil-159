@@ -1,0 +1,445 @@
+[
+  {
+    "role": "ADMIN",
+    "path": "/directorio/camionetas",
+    "module": "camionetas",
+    "editRow": "TANDA H PERMISSIONS VAN",
+    "campaignObservationId": "tanda-h:permissions:ui:admin:camionetas",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/directorio/camionetas",
+    "visibleButtons": [
+      "Activar sonido",
+      "1",
+      "Cerrar sesión",
+      "Nueva Camioneta",
+      ""
+    ],
+    "editVisible": true,
+    "actualEditClicked": true,
+    "dialogVisible": true,
+    "screenshot": "ui-admin-camionetas.jpg",
+    "bodyExcerpt": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nSitio\nVista Global\nActivar sonido\n1\nT\n\nTANDA H ADMIN\n\nADMIN\n\nGlobal\n\nCerrar sesión\nConciliaciones documentales\nAdministrar perfiles A/F\nCamionetas\n\nGestión de vehículos propios y subcontratados.\n\nNueva Camioneta\nTodos (Tipo)\nActivas\nAlias / Nombre\tPlacas\tVehículo\tTipo\tEstado\tAcciones\nTANDA H PERMISSIONS VAN\tH-PERM\t-\t\nPROPIA\tActiva\t\nEditar Camioneta\n\nModifica los datos de la camioneta seleccionada.\n\nAlias / Nombre *\nPlacas *\nTipo de Vehículo\nPropia\nMarca (Opcional)\nModelo (Opcional)\nEstado de la camioneta\n\nDesactivar impide su uso en nuevos viajes\n\nCancelar\nGuardar cambios\nCerrar"
+  },
+  {
+    "role": "ADMIN",
+    "path": "/directorio/choferes",
+    "module": "choferes",
+    "editButton": "Editar TANDA H PERMISSIONS DRIVER",
+    "campaignObservationId": "tanda-h:permissions:ui:admin:choferes",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/directorio/choferes",
+    "visibleButtons": [
+      "Activar sonido",
+      "1",
+      "Cerrar sesión",
+      "Nuevo chofer",
+      "Activos",
+      "Inactivos",
+      "Todos",
+      "",
+      "Desactivar"
+    ],
+    "editVisible": true,
+    "actualEditClicked": true,
+    "dialogVisible": true,
+    "screenshot": "ui-admin-choferes.jpg",
+    "bodyExcerpt": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nSitio\nVista Global\nActivar sonido\n1\nT\n\nTANDA H ADMIN\n\nADMIN\n\nGlobal\n\nCerrar sesión\nConciliaciones documentales\nAdministrar perfiles A/F\nChoferes\n\nCatálogo histórico de choferes para transporte.\n\nNuevo chofer\nActivos\nInactivos\nTodos\nNombre completo\tTeléfono\tEstado\tAcciones\nTANDA H PERMISSIONS DRIVER\t5550001234\tActivo\t\nDesactivar\nEditar chofer\n\nModifica los datos del chofer seleccionado.\n\nNombre completo *\nTeléfono *\nCancelar\nGuardar cambios\nCerrar"
+  },
+  {
+    "role": "ADMIN",
+    "path": "/equipos",
+    "module": "equipos",
+    "editButton": "Editar TANDA-H-PERMISSIONS",
+    "campaignObservationId": "tanda-h:permissions:ui:admin:equipos",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/equipos",
+    "visibleButtons": [
+      "Activar sonido",
+      "1",
+      "Cerrar sesión",
+      "Nuevo Equipo",
+      "Coco0de 0 activos",
+      "Cruces0de 0 activos",
+      "Don Nacho0de 0 activos",
+      "Lucas Alamán0de 0 activos",
+      "Mariana0de 0 activos",
+      "TANDA H TIENDA 10de 1 activos",
+      "TANDA H TIENDA 20de 0 activos",
+      "TANDA H TIENDA 30de 0 activos",
+      "Tomás0de 0 activos",
+      "Checklist",
+      ""
+    ],
+    "editVisible": true,
+    "actualEditClicked": true,
+    "dialogVisible": true,
+    "screenshot": "ui-admin-equipos.jpg",
+    "bodyExcerpt": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nSitio\nVista Global\nActivar sonido\n1\nT\n\nTANDA H ADMIN\n\nADMIN\n\nGlobal\n\nCerrar sesión\nConciliaciones documentales\nAdministrar perfiles A/F\nEquipos\n\nGestión de hardware de sistema en sucursales y almacenes.\n\nNuevo Equipo\nCoco\n0\nde 0 activos\nCruces\n0\nde 0 activos\nDon Nacho\n0\nde 0 activos\nLucas Alamán\n0\nde 0 activos\nMariana\n0\nde 0 activos\nTANDA H TIENDA 1\n0\nde 1 activos\nTANDA H TIENDA 2\n0\nde 0 activos\nTANDA H TIENDA 3\n0\nde 0 activos\nTomás\n0\nde 0 activos\nCoco\n0 de 0 activos\nSin equipos registrados en este sitio.\nCruces\n0 de 0 activos\nSin equipos registrados en este sitio.\nDon Nacho\n0 de 0 activos\nSin equipos registrados e"
+  },
+  {
+    "role": "ADMIN",
+    "path": "/permisos",
+    "module": "permisos",
+    "campaignObservationId": "tanda-h:permissions:ui:admin:permisos",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/permisos",
+    "visibleButtons": [
+      "Activar sonido",
+      "1",
+      "Cerrar sesión"
+    ],
+    "checkboxes": 140,
+    "disabledCheckboxes": 0,
+    "screenshot": "ui-admin-permisos.jpg",
+    "bodyExcerpt": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nSitio\nVista Global\nActivar sonido\n1\nT\n\nTANDA H ADMIN\n\nADMIN\n\nGlobal\n\nCerrar sesión\nConciliaciones documentales\nAdministrar perfiles A/F\nPermisos\n\nGestión de matriz de accesos y excepciones por usuario.\n\nPor Rol\nPor Usuario\nMatriz de Roles\n\nDefine los accesos base para cada perfil.\n\nCaja\nAdministrador\nEl administrador tiene acceso total a todos los módulos y no puede ser restringido.\nMódulo\tVer\tCrear\tEditar\tAutorizar\ndashboard\t\t\t\t\npos\t\t\t\t\nentradas\t\t\t\t\nsalidas\t\t\t\t\nmovimientos\t\t\t\t\netiquetas\t\t\t\t\ninventario\t\t\t\t\nauditoria_inventario\t\t\t\t\nproductos\t\t\t\t\najustes\t\t\t\t\nclientes\t\t\t\t\nclientes_credito\t\t\t\t\nclientes_precios\t\t\t\t\nclie"
+  },
+  {
+    "role": "ADMIN",
+    "path": "/clientes/8",
+    "module": "clientes_finanzas",
+    "campaignObservationId": "tanda-h:permissions:ui:admin:clientes_finanzas",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/clientes/8",
+    "visibleButtons": [
+      "Activar sonido",
+      "",
+      "Cerrar sesión"
+    ],
+    "screenshot": "ui-admin-clientes_finanzas.jpg",
+    "bodyExcerpt": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nSitio\nVista Global\nActivar sonido\nT\n\nTANDA H ADMIN\n\nADMIN\n\nGlobal\n\nCerrar sesión\nConciliaciones documentales\nAdministrar perfiles A/F"
+  },
+  {
+    "role": "TERMINAL",
+    "path": "/permisos",
+    "module": "permisos",
+    "campaignObservationId": "tanda-h:permissions:ui:terminal:permisos",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/permisos",
+    "visibleButtons": [
+      "Volver al inicio"
+    ],
+    "checkboxes": 0,
+    "disabledCheckboxes": 0,
+    "screenshot": "ui-terminal-permisos.jpg",
+    "bodyExcerpt": "Sin acceso\n\nNo tienes permisos para ver este módulo (permisos).\n\nVolver al inicio"
+  },
+  {
+    "role": "TERMINAL",
+    "path": "/clientes/8",
+    "module": "clientes_finanzas",
+    "campaignObservationId": "tanda-h:permissions:ui:terminal:clientes_finanzas",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/clientes/8",
+    "visibleButtons": [
+      "Activar sonido",
+      "",
+      "Cerrar sesión",
+      "Editar datos",
+      "Dar de baja"
+    ],
+    "screenshot": "ui-terminal-clientes_finanzas.jpg",
+    "bodyExcerpt": "Sitio\nTANDA H TIENDA 1\nActivar sonido\nT\n\nTANDA H TERMINAL\n\nTERMINAL\n\nTANDA H TIENDA 1\n\nCerrar sesión\nTANDA H CLIENTE GLOBAL\nActivo\n\nCliente #8 · Alta 24 sep 2026\n\nComportamiento de pago\nHistorial insuficiente\n\n0% · 0 notas evaluadas, 0 liquidadas\n\nAbiertas vigentes excluidas: 0 · Vencidas impagas: 0\n\nTodo el historial autorizado hasta hoy. Mide por nota liquidada si se pagó a más tardar en su vencimiento; incluye vencidas impagas como tardías y excluye abiertas aún no vencidas.\n\nEditar datos\nDar de baja\nDatos\nCrédito\nAnalítica\nDatos de contacto\n\nTELÉFONO\n\n—\n\nCORREO\n\n—\n\nRFC\n\n—\n\nPREFERENCIA DE IMPRESIÓN\n\nNota con precios\n\nDIRECCIÓN PARTICULAR\n\n—\n\nDIRECCIÓN DE ENTREGA\n\n—\n\nNOTAS\n\n—"
+  },
+  {
+    "role": "CAJA",
+    "path": "/permisos",
+    "module": "permisos",
+    "campaignObservationId": "tanda-h:permissions:ui:caja:permisos",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/permisos",
+    "visibleButtons": [
+      "Volver al inicio"
+    ],
+    "checkboxes": 0,
+    "disabledCheckboxes": 0,
+    "screenshot": "ui-caja-permisos.jpg",
+    "bodyExcerpt": "Sin acceso\n\nNo tienes permisos para ver este módulo (permisos).\n\nVolver al inicio"
+  },
+  {
+    "role": "CAJA",
+    "path": "/clientes/8",
+    "module": "clientes_finanzas",
+    "campaignObservationId": "tanda-h:permissions:ui:caja:clientes_finanzas",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/clientes/8",
+    "visibleButtons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-caja-clientes_finanzas.jpg",
+    "bodyExcerpt": "Sin acceso\n\nNo tienes permisos para ver este módulo (clientes).\n\nVolver al inicio"
+  },
+  {
+    "role": "SUPERVISOR",
+    "path": "/permisos",
+    "module": "permisos",
+    "campaignObservationId": "tanda-h:permissions:ui:supervisor:permisos",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/permisos",
+    "visibleButtons": [
+      "Volver al inicio"
+    ],
+    "checkboxes": 0,
+    "disabledCheckboxes": 0,
+    "screenshot": "ui-supervisor-permisos.jpg",
+    "bodyExcerpt": "Sin acceso\n\nNo tienes permisos para ver este módulo (permisos).\n\nVolver al inicio"
+  },
+  {
+    "role": "SUPERVISOR",
+    "path": "/clientes/8",
+    "module": "clientes_finanzas",
+    "campaignObservationId": "tanda-h:permissions:ui:supervisor:clientes_finanzas",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/clientes/8",
+    "visibleButtons": [
+      "Activar sonido",
+      "",
+      "Cerrar sesión",
+      "Editar datos",
+      "Dar de baja"
+    ],
+    "screenshot": "ui-supervisor-clientes_finanzas.jpg",
+    "bodyExcerpt": "Mariana Textil\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nViajes\nMovimientos\nDIRECTORIO\nClientes\nProveedores\nReportes\nPróximos Contenedores\nSitio\nVista Global\nActivar sonido\nT\n\nTANDA H SUPERVISOR\n\nSUPERVISOR\n\nTANDA H TIENDA 1\n\nCerrar sesión\nTANDA H CLIENTE GLOBAL\nActivo\n\nCliente #8 · Alta 24 sep 2026\n\nEditar datos\nDar de baja\nDatos\nDatos de contacto\n\nTELÉFONO\n\n—\n\nCORREO\n\n—\n\nRFC\n\n—\n\nPREFERENCIA DE IMPRESIÓN\n\nNota con precios\n\nDIRECCIÓN PARTICULAR\n\n—\n\nDIRECCIÓN DE ENTREGA\n\n—\n\nNOTAS\n\n—"
+  },
+  {
+    "role": "BODEGA",
+    "path": "/permisos",
+    "module": "permisos",
+    "campaignObservationId": "tanda-h:permissions:ui:bodega:permisos",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/permisos",
+    "visibleButtons": [
+      "Volver al inicio"
+    ],
+    "checkboxes": 0,
+    "disabledCheckboxes": 0,
+    "screenshot": "ui-bodega-permisos.jpg",
+    "bodyExcerpt": "Sin acceso\n\nNo tienes permisos para ver este módulo (permisos).\n\nVolver al inicio"
+  },
+  {
+    "role": "BODEGA",
+    "path": "/clientes/8",
+    "module": "clientes_finanzas",
+    "campaignObservationId": "tanda-h:permissions:ui:bodega:clientes_finanzas",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/clientes/8",
+    "visibleButtons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-bodega-clientes_finanzas.jpg",
+    "bodyExcerpt": "Sin acceso\n\nNo tienes permisos para ver este módulo (clientes).\n\nVolver al inicio"
+  },
+  {
+    "role": "SISTEMAS",
+    "path": "/directorio/camionetas",
+    "module": "camionetas",
+    "editRow": "TANDA H PERMISSIONS VAN",
+    "campaignObservationId": "tanda-h:permissions:ui:sistemas:camionetas",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/directorio/camionetas",
+    "visibleButtons": [
+      "Activar sonido",
+      "",
+      "Cerrar sesión",
+      "Nueva Camioneta",
+      ""
+    ],
+    "editVisible": true,
+    "actualEditClicked": true,
+    "dialogVisible": true,
+    "screenshot": "ui-sistemas-camionetas.jpg",
+    "bodyExcerpt": "Mariana Textil\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nPrecios\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nSitio\nVista Global\nActivar sonido\nT\n\nTANDA H SISTEMAS\n\nSISTEMAS\n\nTANDA H TIENDA 1\n\nCerrar sesión\nCamionetas\n\nGestión de vehículos propios y subcontratados.\n\nNueva Camioneta\nTodos (Tipo)\nActivas\nAlias / Nombre\tPlacas\tVehículo\tTipo\tEstado\tAcciones\nTANDA H PERMISSIONS VAN\tH-PERM\t-\t\nPROPIA\tActiva\t\nEditar Camioneta\n\nModifica los datos de la camioneta seleccionada.\n\nAlias / Nombre *\nPlacas *\nTipo de Vehículo\nPropia\nMarca (Opcional)\nModelo (Opcional)\nEstado de la camioneta\n\nDesactivar impide su uso en nuevos viajes\n\nCancelar\nGuardar cambios\nCerrar"
+  },
+  {
+    "role": "SISTEMAS",
+    "path": "/directorio/choferes",
+    "module": "choferes",
+    "editButton": "Editar TANDA H PERMISSIONS DRIVER",
+    "campaignObservationId": "tanda-h:permissions:ui:sistemas:choferes",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/directorio/choferes",
+    "visibleButtons": [
+      "Activar sonido",
+      "",
+      "Cerrar sesión",
+      "Nuevo chofer",
+      "Activos",
+      "Inactivos",
+      "Todos",
+      "",
+      "Desactivar"
+    ],
+    "editVisible": true,
+    "actualEditClicked": true,
+    "dialogVisible": true,
+    "screenshot": "ui-sistemas-choferes.jpg",
+    "bodyExcerpt": "Mariana Textil\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nPrecios\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nSitio\nVista Global\nActivar sonido\nT\n\nTANDA H SISTEMAS\n\nSISTEMAS\n\nTANDA H TIENDA 1\n\nCerrar sesión\nChoferes\n\nCatálogo histórico de choferes para transporte.\n\nNuevo chofer\nActivos\nInactivos\nTodos\nNombre completo\tTeléfono\tEstado\tAcciones\nTANDA H PERMISSIONS DRIVER\t5550001234\tActivo\t\nDesactivar\nEditar chofer\n\nModifica los datos del chofer seleccionado.\n\nNombre completo *\nTeléfono *\nCancelar\nGuardar cambios\nCerrar"
+  },
+  {
+    "role": "SISTEMAS",
+    "path": "/equipos",
+    "module": "equipos",
+    "editButton": "Editar TANDA-H-PERMISSIONS",
+    "campaignObservationId": "tanda-h:permissions:ui:sistemas:equipos",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/equipos",
+    "visibleButtons": [
+      "Activar sonido",
+      "",
+      "Cerrar sesión",
+      "Nuevo Equipo",
+      "Coco0de 0 activos",
+      "Cruces0de 0 activos",
+      "Don Nacho0de 0 activos",
+      "Lucas Alamán0de 0 activos",
+      "Mariana0de 0 activos",
+      "TANDA H TIENDA 10de 1 activos",
+      "TANDA H TIENDA 20de 0 activos",
+      "TANDA H TIENDA 30de 0 activos",
+      "Tomás0de 0 activos",
+      "Checklist",
+      ""
+    ],
+    "editVisible": true,
+    "actualEditClicked": true,
+    "dialogVisible": true,
+    "screenshot": "ui-sistemas-equipos.jpg",
+    "bodyExcerpt": "Mariana Textil\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nPrecios\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nSitio\nVista Global\nActivar sonido\nT\n\nTANDA H SISTEMAS\n\nSISTEMAS\n\nTANDA H TIENDA 1\n\nCerrar sesión\nEquipos\n\nGestión de hardware de sistema en sucursales y almacenes.\n\nNuevo Equipo\nCoco\n0\nde 0 activos\nCruces\n0\nde 0 activos\nDon Nacho\n0\nde 0 activos\nLucas Alamán\n0\nde 0 activos\nMariana\n0\nde 0 activos\nTANDA H TIENDA 1\n0\nde 1 activos\nTANDA H TIENDA 2\n0\nde 0 activos\nTANDA H TIENDA 3\n0\nde 0 activos\nTomás\n0\nde 0 activos\nCoco\n0 de 0 activos\nSin equipos registrados en este sitio.\nCruces\n0 de 0 activos\nSin equipos registrados en este sitio.\nDon Nacho\n0 de 0 activos\nSin equipos registrados en este sitio.\nLucas Alamán\n0 de 0 activos\nSin equipos registrados en este sitio.\nMaria"
+  },
+  {
+    "role": "SISTEMAS",
+    "path": "/permisos",
+    "module": "permisos",
+    "campaignObservationId": "tanda-h:permissions:ui:sistemas:permisos",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/permisos",
+    "visibleButtons": [
+      "Activar sonido",
+      "",
+      "Cerrar sesión"
+    ],
+    "checkboxes": 140,
+    "disabledCheckboxes": 0,
+    "screenshot": "ui-sistemas-permisos.jpg",
+    "bodyExcerpt": "Mariana Textil\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nPrecios\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nSitio\nVista Global\nActivar sonido\nT\n\nTANDA H SISTEMAS\n\nSISTEMAS\n\nTANDA H TIENDA 1\n\nCerrar sesión\nPermisos\n\nGestión de matriz de accesos y excepciones por usuario.\n\nPor Rol\nPor Usuario\nMatriz de Roles\n\nDefine los accesos base para cada perfil.\n\nCaja\nAdministrador\nEl administrador tiene acceso total a todos los módulos y no puede ser restringido.\nMódulo\tVer\tCrear\tEditar\tAutorizar\ndashboard\t\t\t\t\npos\t\t\t\t\nentradas\t\t\t\t\nsalidas\t\t\t\t\nmovimientos\t\t\t\t\netiquetas\t\t\t\t\ninventario\t\t\t\t\nauditoria_inventario\t\t\t\t\nproductos\t\t\t\t\najustes\t\t\t\t\nclientes\t\t\t\t\nclientes_credito\t\t\t\t\nclientes_precios\t\t\t\t\nclientes_finanzas\t\t\t\t\nproveedores\t\t\t\t\nproveedores_finanzas\t\t\t\t\ncontenedores\t\t\t\t\nubicacione"
+  },
+  {
+    "role": "SISTEMAS",
+    "path": "/clientes/8",
+    "module": "clientes_finanzas",
+    "campaignObservationId": "tanda-h:permissions:ui:sistemas:clientes_finanzas",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/clientes/8",
+    "visibleButtons": [
+      "Activar sonido",
+      "",
+      "Cerrar sesión",
+      "Editar datos",
+      "Dar de baja",
+      ""
+    ],
+    "screenshot": "ui-sistemas-clientes_finanzas.jpg",
+    "bodyExcerpt": "Mariana Textil\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nPrecios\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nSitio\nVista Global\nActivar sonido\nT\n\nTANDA H SISTEMAS\n\nSISTEMAS\n\nTANDA H TIENDA 1\n\nCerrar sesión\nTANDA H CLIENTE GLOBAL\nActivo\n\nCliente #8 · Alta 24 sep 2026\n\nComportamiento de pago\nHistorial insuficiente\n\n0% · 0 notas evaluadas, 0 liquidadas\n\nAbiertas vigentes excluidas: 0 · Vencidas impagas: 0\n\nTodo el historial autorizado hasta hoy. Mide por nota liquidada si se pagó a más tardar en su vencimiento; incluye vencidas impagas como tardías y excluye abiertas aún no vencidas.\n\nEditar datos\nDar de baja\nUtilidad acumulada\n\n••••••\n\nSe excluyeron 0 línea(s) sin costo asignado.\n\nSaldos del cliente\n\nSALDO DEUDOR\n\n—\n\nRojo significa dinero pendiente de cobro.\n\nSALDO A FA"
+  },
+  {
+    "role": "CONTADOR",
+    "path": "/directorio/camionetas",
+    "module": "camionetas",
+    "editRow": "TANDA H PERMISSIONS VAN",
+    "campaignObservationId": "tanda-h:permissions:ui:contador:camionetas",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/directorio/camionetas",
+    "visibleButtons": [
+      "Cerrar sesión"
+    ],
+    "editVisible": false,
+    "screenshot": "ui-contador-camionetas.jpg",
+    "bodyExcerpt": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\nConciliaciones documentales\n\nRuta no autorizada para este perfil. Usa las proyecciones contables, sin acceso legacy."
+  },
+  {
+    "role": "CONTADOR",
+    "path": "/directorio/choferes",
+    "module": "choferes",
+    "editButton": "Editar TANDA H PERMISSIONS DRIVER",
+    "campaignObservationId": "tanda-h:permissions:ui:contador:choferes",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/directorio/choferes",
+    "visibleButtons": [
+      "Cerrar sesión"
+    ],
+    "editVisible": false,
+    "screenshot": "ui-contador-choferes.jpg",
+    "bodyExcerpt": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\nConciliaciones documentales\n\nRuta no autorizada para este perfil. Usa las proyecciones contables, sin acceso legacy."
+  },
+  {
+    "role": "CONTADOR",
+    "path": "/equipos",
+    "module": "equipos",
+    "editButton": "Editar TANDA-H-PERMISSIONS",
+    "campaignObservationId": "tanda-h:permissions:ui:contador:equipos",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/equipos",
+    "visibleButtons": [
+      "Cerrar sesión"
+    ],
+    "editVisible": false,
+    "screenshot": "ui-contador-equipos.jpg",
+    "bodyExcerpt": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\nConciliaciones documentales\n\nRuta no autorizada para este perfil. Usa las proyecciones contables, sin acceso legacy."
+  },
+  {
+    "role": "CONTADOR",
+    "path": "/permisos",
+    "module": "permisos",
+    "campaignObservationId": "tanda-h:permissions:ui:contador:permisos",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/permisos",
+    "visibleButtons": [
+      "Cerrar sesión"
+    ],
+    "checkboxes": 0,
+    "disabledCheckboxes": 0,
+    "screenshot": "ui-contador-permisos.jpg",
+    "bodyExcerpt": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\nConciliaciones documentales\n\nRuta no autorizada para este perfil. Usa las proyecciones contables, sin acceso legacy."
+  },
+  {
+    "role": "CONTADOR",
+    "path": "/clientes/8",
+    "module": "clientes_finanzas",
+    "campaignObservationId": "tanda-h:permissions:ui:contador:clientes_finanzas",
+    "authHttp": 200,
+    "qualification": "UI observation only; outer-denied API does not prove selected action.",
+    "actualPath": "/contabilidad/fiscal",
+    "visibleButtons": [
+      "Cerrar sesión",
+      "Todos los clientes facturados",
+      "Primera página / reiniciar cursor",
+      "Siguiente",
+      "Consultar intervalo",
+      "Primera página / reiniciar cursor",
+      "Siguiente"
+    ],
+    "screenshot": "ui-contador-clientes_finanzas.jpg",
+    "bodyExcerpt": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\nConciliaciones documentales\nVentas facturadas y clientes facturados\n\n“Factura” identifica el ticket interno marcado facturado. No es un CFDI ni certifica timbrado externo.\n\nClientes con documentos facturados\nTodos los clientes facturados\n\nSin clientes facturados en esta página.\n\nPrimera página / reiniciar cursor\nSiguiente\nDesde (día CDMX)\nHasta, exclusivo (día CDMX)\nConsultar intervalo\nDocumentos facturados del intervalo\n\nTotal facturado del intervalo: $0.00\n\nSin documentos facturados en esta consulta.\n\nPrimera página / reiniciar cursor\nSiguiente"
+  }
+]

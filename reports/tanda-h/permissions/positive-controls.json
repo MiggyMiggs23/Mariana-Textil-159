@@ -1,0 +1,773 @@
+[
+  {
+    "role": "ADMIN",
+    "module": "camionetas",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/camionetas/1",
+    "body": {
+      "nombre": "TANDA H PERMISSIONS VAN"
+    },
+    "status": 200,
+    "response": {
+      "id": 1,
+      "nombre": "TANDA H PERMISSIONS VAN",
+      "placas": "H-PERM",
+      "marca": null,
+      "modelo": null,
+      "tipo": "PROPIA",
+      "activa": true,
+      "createdAt": "2026-09-24T06:29:02.302Z",
+      "updatedAt": "2026-09-24T06:29:32.464Z"
+    }
+  },
+  {
+    "role": "ADMIN",
+    "module": "choferes",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/choferes/1",
+    "body": {
+      "nombreCompleto": "TANDA H PERMISSIONS DRIVER"
+    },
+    "status": 200,
+    "response": {
+      "id": 1,
+      "nombreCompleto": "TANDA H PERMISSIONS DRIVER",
+      "telefono": "5550001234",
+      "activo": true,
+      "createdAt": "2026-09-24T06:29:02.355Z",
+      "updatedAt": "2026-09-24T06:29:32.507Z"
+    }
+  },
+  {
+    "role": "ADMIN",
+    "module": "equipos",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/equipos/1",
+    "body": {
+      "marca": "TANDA H"
+    },
+    "status": 200,
+    "response": {
+      "id": 1,
+      "ubicacionId": 835,
+      "ubicacionNombre": "TANDA H TIENDA 1",
+      "tipo": "PISTOLA_ESCANER",
+      "tipoLabel": "Pistola Escáner",
+      "identificador": "TANDA-H-PERMISSIONS",
+      "marca": "TANDA H",
+      "modelo": "TEST",
+      "numeroSerie": null,
+      "notas": null,
+      "activo": false,
+      "faltantes": 2,
+      "checklist": [
+        {
+          "key": "TECLADO_ESPANOL",
+          "label": "Configurada a teclado español",
+          "checked": false,
+          "actorId": null,
+          "actorNombre": null,
+          "checkedAt": null
+        },
+        {
+          "key": "QR_ROLLO",
+          "label": "Probada leyendo un QR de rollo del sistema",
+          "checked": false,
+          "actorId": null,
+          "actorNombre": null,
+          "checkedAt": null
+        }
+      ],
+      "creadoPor": 234,
+      "actualizadoPor": 234,
+      "createdAt": "2026-09-24T06:29:02.402Z",
+      "updatedAt": "2026-09-24T06:29:32.549Z"
+    }
+  },
+  {
+    "role": "ADMIN",
+    "module": "contenedores",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/contenedores/3",
+    "body": {
+      "proveedorId": 226,
+      "referencia": "TANDA H PERMISSIONS CONTAINER",
+      "fechaEstimadaLlegada": "2026-10-01",
+      "sitioDestinoId": 835,
+      "lineas": [
+        {
+          "productoId": 2078,
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1
+        }
+      ]
+    },
+    "status": 200,
+    "response": {
+      "id": 3,
+      "folio": 1,
+      "proveedorId": 226,
+      "proveedor": "TANDA H PROVEEDOR",
+      "referencia": "TANDA H PERMISSIONS CONTAINER",
+      "fechaPedido": null,
+      "fechaEstimadaLlegada": "2026-10-01",
+      "fechaRealLlegada": null,
+      "sitioDestinoId": 835,
+      "sitioDestino": "TANDA H TIENDA 1",
+      "entradaId": null,
+      "estado": "EN_TRANSITO",
+      "notas": null,
+      "motivoCancelacion": null,
+      "usuarioId": 234,
+      "createdAt": "2026-09-24T06:29:02.650Z",
+      "updatedAt": "2026-09-24T06:29:32.614Z",
+      "diasTransito": null,
+      "diferenciaFechaEstimada": null,
+      "totalesEsperados": {
+        "lineas": 1,
+        "rollos": 1,
+        "metros": "10.000",
+        "kilos": "0.000",
+        "bolsas": "0.000",
+        "piezas": "0.000"
+      },
+      "totalesRecibidos": {
+        "lineas": 0,
+        "rollos": 0,
+        "metros": "0.000",
+        "kilos": "0.000",
+        "bolsas": "0.000",
+        "piezas": "0.000"
+      },
+      "lineas": [
+        {
+          "id": 4,
+          "productoId": 2078,
+          "sku": "TANDA-H-METRO",
+          "tela": "TANDA H METRO",
+          "color": "AZUL TH",
+          "unidad": "METRO",
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1,
+          "nota": null,
+          "cantidadRecibida": "0.000",
+          "rollosRecibidos": 0,
+          "diferencia": "-10.000",
+          "costoTotal": null,
+          "costoUnitarioReal": null
+        }
+      ],
+      "costoTotal": null
+    }
+  },
+  {
+    "role": "ADMIN",
+    "module": "contenedores",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/contenedores/3/cancelar",
+    "body": {
+      "motivo": "TANDA H PERMISSIONS valid cancellation"
+    },
+    "status": 200,
+    "response": {
+      "id": 3,
+      "folio": 1,
+      "proveedorId": 226,
+      "proveedor": "TANDA H PROVEEDOR",
+      "referencia": "TANDA H PERMISSIONS CONTAINER",
+      "fechaPedido": null,
+      "fechaEstimadaLlegada": "2026-10-01",
+      "fechaRealLlegada": null,
+      "sitioDestinoId": 835,
+      "sitioDestino": "TANDA H TIENDA 1",
+      "entradaId": null,
+      "estado": "CANCELADO",
+      "notas": null,
+      "motivoCancelacion": "TANDA H PERMISSIONS valid cancellation",
+      "usuarioId": 234,
+      "createdAt": "2026-09-24T06:29:02.650Z",
+      "updatedAt": "2026-09-24T06:29:32.659Z",
+      "diasTransito": null,
+      "diferenciaFechaEstimada": null,
+      "totalesEsperados": {
+        "lineas": 1,
+        "rollos": 1,
+        "metros": "10.000",
+        "kilos": "0.000",
+        "bolsas": "0.000",
+        "piezas": "0.000"
+      },
+      "totalesRecibidos": {
+        "lineas": 0,
+        "rollos": 0,
+        "metros": "0.000",
+        "kilos": "0.000",
+        "bolsas": "0.000",
+        "piezas": "0.000"
+      },
+      "lineas": [
+        {
+          "id": 4,
+          "productoId": 2078,
+          "sku": "TANDA-H-METRO",
+          "tela": "TANDA H METRO",
+          "color": "AZUL TH",
+          "unidad": "METRO",
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1,
+          "nota": null,
+          "cantidadRecibida": "0.000",
+          "rollosRecibidos": 0,
+          "diferencia": "-10.000",
+          "costoTotal": null,
+          "costoUnitarioReal": null
+        }
+      ],
+      "costoTotal": null
+    }
+  },
+  {
+    "module": "auditoria_inventario",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/auditorias/6/escaneos",
+    "body": {
+      "serie": "997000001"
+    },
+    "skipped": "Audit now closed; no incomplete-count confirmation or ineligible edit control."
+  },
+  {
+    "role": "ADMIN",
+    "module": "etiquetas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/etiquetas/rollos/6233/revisar",
+    "body": {
+      "ultimaReimpresionId": 173
+    },
+    "status": 201,
+    "response": {
+      "id": 32,
+      "rolloId": 6233,
+      "reimpresionId": 173,
+      "revisadoPorId": 234,
+      "revisadoPor": "TANDA H ADMIN",
+      "revisadoPorUsuario": "admin",
+      "revisadoEn": "2026-09-24T06:29:32.704Z",
+      "idempotente": false
+    }
+  },
+  {
+    "role": "ADMIN",
+    "module": "entradas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/entradas/471/costos",
+    "body": {
+      "costosProductos": [
+        {
+          "productoId": 2078,
+          "costoUnitario": "100.00"
+        }
+      ],
+      "costosRollos": []
+    },
+    "status": 200,
+    "response": {
+      "id": 471,
+      "folio": 2,
+      "inicialesSitio": "HAA",
+      "folioFormateado": "HAA-000002",
+      "ubicacionId": 835,
+      "nombreUbicacion": "TANDA H TIENDA 1",
+      "proveedorId": 226,
+      "nombreProveedor": "TANDA H PROVEEDOR",
+      "usuarioId": 238,
+      "nombreUsuario": "TANDA H BODEGA",
+      "fecha": "2026-09-24T06:29:04.249Z",
+      "observaciones": "TANDA H PERMISSIONS pending cost",
+      "totalRollos": 1,
+      "totalCosto": "1000.00",
+      "uuidCliente": "529dde0c-740b-4768-aa3d-1763285013b7",
+      "createdAt": "2026-09-24T06:29:04.210Z",
+      "lineas": [
+        {
+          "productoId": 2078,
+          "skuProducto": "TANDA-H-METRO",
+          "telaProducto": "TANDA H METRO",
+          "colorProducto": "AZUL TH",
+          "unidadProducto": "METRO",
+          "costoUnitario": "100.00",
+          "rollosCount": 1,
+          "cantidadTotal": "10.000",
+          "costoTotal": "1000.00"
+        }
+      ],
+      "rollos": [
+        {
+          "id": 6329,
+          "serie": "10000741",
+          "productoId": 2078,
+          "cantidadInicial": "10.000",
+          "pisoId": null,
+          "nombrePiso": null,
+          "costoUnitario": "100.00",
+          "costoTotal": "1000.00"
+        }
+      ]
+    }
+  },
+  {
+    "role": "ADMIN",
+    "module": "salidas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/salidas-extraordinarias/7467/revertir",
+    "body": {
+      "justificacion": "TANDA H PERMISSIONS valid reversal",
+      "uuidCliente": "e774cc93-4d7b-4559-8ad9-0c9627ae96c8"
+    },
+    "status": 200,
+    "response": {
+      "id": 6234,
+      "serie": "997000002",
+      "productoId": 2078,
+      "skuProducto": "TANDA-H-METRO",
+      "telaProducto": "TANDA H METRO",
+      "colorProducto": "AZUL TH",
+      "unidadProducto": "METRO",
+      "ubicacionId": 835,
+      "nombreUbicacion": "TANDA H TIENDA 1",
+      "pisoId": null,
+      "nombrePiso": null,
+      "proveedorId": 226,
+      "estado": "DISPONIBLE",
+      "cantidadInicial": "10.000",
+      "cantidadActual": "10.000",
+      "costoUnitario": "100.00",
+      "costoTotal": "1000.00",
+      "notas": null,
+      "historial": [
+        {
+          "id": 7469,
+          "rolloId": 6234,
+          "productoId": 2078,
+          "ubicacionId": 835,
+          "tipo": "CANCELACION",
+          "cantidad": "10.000",
+          "saldoPosterior": "80.000",
+          "documentoTipo": null,
+          "documentoId": null,
+          "documentoEtiqueta": null,
+          "documentoRuta": null,
+          "documentoClienteId": null,
+          "movimientoOrigenId": 7467,
+          "usuarioId": 234,
+          "motivoSalidaExtraordinaria": null,
+          "justificacion": "TANDA H PERMISSIONS valid reversal",
+          "revisado": true,
+          "revisadoPor": null,
+          "revisadoAt": null,
+          "uuidCliente": "e774cc93-4d7b-4559-8ad9-0c9627ae96c8",
+          "createdAt": "2026-09-24T06:29:32.805Z"
+        },
+        {
+          "id": 7467,
+          "rolloId": 6234,
+          "productoId": 2078,
+          "ubicacionId": 835,
+          "tipo": "AJUSTE_NEGATIVO",
+          "cantidad": "-10.000",
+          "saldoPosterior": "80.000",
+          "documentoTipo": null,
+          "documentoId": null,
+          "documentoEtiqueta": null,
+          "documentoRuta": null,
+          "documentoClienteId": null,
+          "movimientoOrigenId": null,
+          "usuarioId": 234,
+          "motivoSalidaExtraordinaria": "MUESTRA",
+          "justificacion": "TANDA H PERMISSIONS reversible fixture",
+          "revisado": true,
+          "revisadoPor": null,
+          "revisadoAt": null,
+          "uuidCliente": "387fbae4-f075-4702-ace6-6f5a11929d3e",
+          "createdAt": "2026-09-24T06:29:04.428Z"
+        },
+        {
+          "id": 7371,
+          "rolloId": 6234,
+          "productoId": 2078,
+          "ubicacionId": 835,
+          "tipo": "RECEPCION",
+          "cantidad": "10.000",
+          "saldoPosterior": "20.000",
+          "documentoTipo": "ENTRADA",
+          "documentoId": "468",
+          "documentoEtiqueta": "Entrada HAA-000001",
+          "documentoRuta": "/entradas/468/documento",
+          "documentoClienteId": null,
+          "movimientoOrigenId": null,
+          "usuarioId": 234,
+          "motivoSalidaExtraordinaria": null,
+          "justificacion": null,
+          "revisado": true,
+          "revisadoPor": null,
+          "revisadoAt": null,
+          "uuidCliente": "bdb6c617-8a30-43b0-8f0e-152073f922cc",
+          "createdAt": "2026-09-24T06:23:47.430Z"
+        }
+      ],
+      "createdAt": "2026-09-24T06:23:47.430Z",
+      "updatedAt": "2026-09-24T06:29:32.810Z"
+    }
+  },
+  {
+    "role": "ADMIN",
+    "module": "salidas",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/salidas/29/cancelar",
+    "body": {
+      "motivo": "TANDA H PERMISSIONS valid cancel"
+    },
+    "status": 200,
+    "response": {
+      "id": 29,
+      "folio": 1,
+      "folioFormateado": "HAA-000001",
+      "modalidad": "VENTA_CLIENTE",
+      "estado": "CANCELADA",
+      "origenId": 835,
+      "nombreOrigen": "TANDA H TIENDA 1",
+      "destinoId": null,
+      "nombreDestino": "TANDA H CLIENTE GLOBAL",
+      "clienteId": 8,
+      "nombreCliente": "TANDA H CLIENTE GLOBAL",
+      "documentoVenta": null,
+      "autorizada": null,
+      "armadoPorId": 234,
+      "nombreArmadoPor": "TANDA H ADMIN",
+      "fechaArmado": "2026-09-24T06:29:27.454Z",
+      "totalProductos": 1,
+      "totalCantidadSolicitada": "10.000",
+      "totalCantidadEnviada": "10.000",
+      "totalCantidadRecibida": "0.000",
+      "totalRollos": 1,
+      "totalMetros": "10.000",
+      "totalKilos": "0.000",
+      "totalBolsas": "0.000",
+      "totalPiezas": "0.000",
+      "usuarioId": 234,
+      "nombreUsuario": "TANDA H ADMIN",
+      "transportista": null,
+      "observaciones": "TANDA H PERMISSIONS cancel fixture",
+      "diferenciasPendientes": false,
+      "createdAt": "2026-09-24T06:29:27.355Z",
+      "updatedAt": "2026-09-24T06:29:32.868Z",
+      "uuidCliente": "4488610c-09ba-4ba4-8ca5-7dde139aba8c",
+      "enviadoPorId": 234,
+      "nombreEnviadoPor": "TANDA H ADMIN",
+      "fechaEnvio": "2026-09-24T06:29:27.454Z",
+      "transporteEfectivo": null,
+      "viaje": null,
+      "notaEnvio": null,
+      "recibidoPorId": null,
+      "nombreRecibidoPor": null,
+      "fechaRecepcion": null,
+      "notaRecepcion": null,
+      "canceladoPorId": 234,
+      "nombreCanceladoPor": "TANDA H ADMIN",
+      "fechaCancelacion": "2026-09-24T06:29:32.868Z",
+      "motivoCancelacion": "TANDA H PERMISSIONS valid cancel",
+      "pisosRetorno": [],
+      "entregadoPorId": null,
+      "fechaEntrega": null,
+      "lineas": [
+        {
+          "id": 31,
+          "productoId": 2078,
+          "skuProducto": "TANDA-H-METRO",
+          "telaProducto": "TANDA H METRO",
+          "colorProducto": "AZUL TH",
+          "unidadProducto": "METRO",
+          "cantidadSolicitada": "10.000",
+          "cantidadEnviada": "10.000",
+          "cantidadRecibida": "0.000",
+          "rollosSolicitados": 1,
+          "rollosEnviados": 1,
+          "rollosRecibidos": 0,
+          "nota": null
+        }
+      ],
+      "rollos": [
+        {
+          "id": 133,
+          "lineaId": 31,
+          "rolloId": 6235,
+          "serie": "997000003",
+          "estado": "DISPONIBLE",
+          "cantidadEnviada": "10.000",
+          "cantidadRecibida": null,
+          "recibido": false,
+          "diferencia": null,
+          "notaDiferencia": null,
+          "cantidadActual": "10.000",
+          "productoId": 2078,
+          "sku": "TANDA-H-METRO",
+          "tela": "TANDA H METRO",
+          "color": "AZUL TH",
+          "unidad": "METRO"
+        }
+      ]
+    }
+  },
+  {
+    "role": "ADMIN",
+    "module": "salidas_venta",
+    "action": "crear",
+    "method": "POST",
+    "url": "/salidas/venta-cliente/generar-venta",
+    "body": {
+      "uuidCliente": "da6160a0-103b-4611-8646-29ba93ba393a",
+      "documentoTipo": "TICKET",
+      "ubicacionId": 835,
+      "clienteId": 8,
+      "salidaIds": [
+        30
+      ],
+      "precios": [
+        {
+          "salidaRolloId": 134,
+          "precioUnitario": 150
+        }
+      ]
+    },
+    "status": 201,
+    "response": {
+      "id": 110,
+      "folio": 1004,
+      "ubicacionId": 835,
+      "nombreUbicacion": "TANDA H TIENDA 1",
+      "usuarioTerminalId": 234,
+      "nombreUsuarioTerminal": "TANDA H ADMIN",
+      "clienteId": 8,
+      "nombreCliente": "TANDA H CLIENTE GLOBAL",
+      "notaSinPrecios": false,
+      "direccionEntregaEfectiva": null,
+      "subtotal": "1500.00",
+      "iva": "0.00",
+      "tasaIva": "0.1600",
+      "total": "1500.00",
+      "estado": "VENDIDO",
+      "cobrado": false,
+      "cobradoAt": null,
+      "usuarioCajaId": null,
+      "nombreUsuarioCaja": null,
+      "facturado": false,
+      "sesionCajaId": null,
+      "uuidCliente": "da6160a0-103b-4611-8646-29ba93ba393a",
+      "createdAt": "2026-09-24T06:29:32.922Z",
+      "canceladoAt": null,
+      "canceladoPor": null,
+      "nombreUsuarioCancelacion": null,
+      "motivoCancelacion": null,
+      "autorizadoPor": null,
+      "nombreUsuarioAutorizacion": null,
+      "esCredito": false,
+      "importeCredito": "0.00",
+      "diasPlazo": null,
+      "fechaVencimiento": null,
+      "saldoPendiente": "0.00",
+      "estadoNota": null,
+      "telefonoCliente": null,
+      "correoCliente": null,
+      "direccionCliente": null,
+      "remate": false,
+      "rollosRemate": [],
+      "documentoTipo": "TICKET",
+      "autorizacionEstado": "NO_APLICA",
+      "nombreDestinatario": null,
+      "direccionEntregaSnapshot": null,
+      "convertidoANotaPorCobro": false,
+      "diasCreditoCliente": 30,
+      "viaje": null,
+      "salidas": [
+        {
+          "id": 30,
+          "folioFormateado": "HAA-000002",
+          "origenId": 835,
+          "nombreOrigen": "TANDA H TIENDA 1",
+          "href": "/salidas/30"
+        }
+      ],
+      "lineas": [
+        {
+          "id": 370,
+          "ticketId": 110,
+          "rolloId": 6236,
+          "productoId": 2078,
+          "tipo": "NORMAL",
+          "cantidad": "10.000",
+          "precioUnitario": "150.00",
+          "precioSugerido": "150.00",
+          "importe": "1500.00",
+          "skuProducto": "TANDA-H-METRO",
+          "telaProducto": "TANDA H METRO",
+          "colorProducto": "AZUL TH",
+          "unidadProducto": "METRO",
+          "serieRollo": "997000004",
+          "nombreUbicacion": "TANDA H TIENDA 1",
+          "costoUnitarioCongelado": "100.00",
+          "costoTotalCongelado": "1000.00",
+          "costoFuente": "EXACT_ROLL",
+          "margen": "500.00"
+        }
+      ],
+      "pagos": []
+    }
+  },
+  {
+    "role": "ADMIN",
+    "module": "cobros_pagos",
+    "action": "crear",
+    "method": "POST",
+    "url": "/tickets/109/cobrar",
+    "body": {
+      "pagos": [
+        {
+          "formaPago": "EFECTIVO",
+          "importe": 1500
+        }
+      ]
+    },
+    "status": 200,
+    "response": {
+      "id": 109,
+      "folio": 1003,
+      "ubicacionId": 835,
+      "nombreUbicacion": "TANDA H TIENDA 1",
+      "usuarioTerminalId": 234,
+      "nombreUsuarioTerminal": "TANDA H ADMIN",
+      "clienteId": 8,
+      "nombreCliente": "TANDA H CLIENTE GLOBAL",
+      "notaSinPrecios": false,
+      "direccionEntregaEfectiva": null,
+      "subtotal": "1500.00",
+      "iva": "0.00",
+      "tasaIva": "0.1600",
+      "total": "1500.00",
+      "estado": "VENDIDO",
+      "cobrado": true,
+      "cobradoAt": "2026-09-24T06:29:32.981Z",
+      "usuarioCajaId": 234,
+      "nombreUsuarioCaja": null,
+      "facturado": false,
+      "sesionCajaId": 46,
+      "uuidCliente": "e720df1c-af7b-4b7a-b532-b7c583bdb520",
+      "createdAt": "2026-09-24T06:29:27.706Z",
+      "canceladoAt": null,
+      "canceladoPor": null,
+      "nombreUsuarioCancelacion": null,
+      "motivoCancelacion": null,
+      "autorizadoPor": null,
+      "nombreUsuarioAutorizacion": null,
+      "esCredito": false,
+      "importeCredito": "0.00",
+      "diasPlazo": null,
+      "fechaVencimiento": null,
+      "saldoPendiente": "0.00",
+      "estadoNota": null,
+      "telefonoCliente": null,
+      "correoCliente": null,
+      "direccionCliente": null,
+      "remate": false,
+      "rollosRemate": [],
+      "documentoTipo": "TICKET",
+      "autorizacionEstado": "NO_APLICA",
+      "nombreDestinatario": null,
+      "direccionEntregaSnapshot": null,
+      "convertidoANotaPorCobro": false,
+      "diasCreditoCliente": 30,
+      "viaje": null,
+      "salidas": [],
+      "lineas": [
+        {
+          "id": 369,
+          "ticketId": 109,
+          "rolloId": 6237,
+          "productoId": 2078,
+          "tipo": "NORMAL",
+          "cantidad": "10.000",
+          "precioUnitario": "150.00",
+          "precioSugerido": "150.00",
+          "importe": "1500.00",
+          "skuProducto": "TANDA-H-METRO",
+          "telaProducto": "TANDA H METRO",
+          "colorProducto": "AZUL TH",
+          "unidadProducto": "METRO",
+          "serieRollo": "997000005",
+          "nombreUbicacion": "TANDA H TIENDA 1",
+          "costoUnitarioCongelado": "100.00",
+          "costoTotalCongelado": "1000.00",
+          "costoFuente": "EXACT_ROLL",
+          "margen": "500.00"
+        }
+      ],
+      "pagos": [
+        {
+          "id": 91,
+          "ticketId": 109,
+          "formaPago": "EFECTIVO",
+          "importe": "1500.00",
+          "referencia": null,
+          "createdAt": "2026-09-24T06:29:32.978Z",
+          "usuarioId": 234,
+          "nombreUsuario": "TANDA H ADMIN"
+        }
+      ]
+    }
+  },
+  {
+    "module": "permisos",
+    "action": "editar",
+    "method": "PUT",
+    "url": "/permisos/roles/TERMINAL/dashboard",
+    "body": {
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    "skipped": "No matrix writes authorized; even unchanged-value positive update omitted."
+  },
+  {
+    "role": "ADMIN",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "method": "POST",
+    "url": "/clientes/8/pagos/vista-previa",
+    "body": {
+      "importe": 1,
+      "fechaEfectiva": "2026-09-01T12:00:00.000Z"
+    },
+    "status": 409,
+    "response": {
+      "code": "E3_DEDICATED_CAPTURE_REQUIRED",
+      "error": "Usa Caja para dinero recibido ahora. Para recapturas usa la pantalla del cliente: exige motivo y permiso clientes_recapturas."
+    }
+  },
+  {
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/inventario/auditorias/6/confirmar",
+    "body": {},
+    "skipped": "Audit now closed; no incomplete-count confirmation or ineligible edit control."
+  }
+]
