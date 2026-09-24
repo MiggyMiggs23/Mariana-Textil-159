@@ -1,0 +1,279 @@
+{
+  "timestamp": "2026-09-24T03:26:04.282Z",
+  "reads": [
+    {
+      "path": "/api/sesiones-caja/46/corte",
+      "status": 200,
+      "body": {
+        "sesion": {
+          "id": 46,
+          "ubicacionId": 835,
+          "nombreUbicacion": "TANDA E CONTINUACION",
+          "usuarioId": 235,
+          "nombreUsuario": "TANDA EC CAJA",
+          "abiertaAt": "2026-09-24T02:46:32.828Z",
+          "cerradaAt": null,
+          "fondoInicial": "500.00",
+          "efectivoContado": null,
+          "estado": "ABIERTA"
+        },
+        "formasPago": [
+          {
+            "formaPago": "EFECTIVO",
+            "importe": "240.00",
+            "pagosCount": 2,
+            "ticketsCount": 2
+          },
+          {
+            "formaPago": "TRANSFERENCIA",
+            "importe": "150.00",
+            "pagosCount": 1,
+            "ticketsCount": 1
+          },
+          {
+            "formaPago": "FACTURADO",
+            "importe": "0.00",
+            "pagosCount": 0,
+            "ticketsCount": 0
+          },
+          {
+            "formaPago": "CREDITO",
+            "importe": "0.00",
+            "pagosCount": 0,
+            "ticketsCount": 0
+          }
+        ],
+        "cuentasDestino": [
+          {
+            "formaPago": "EFECTIVO",
+            "cuentaDestino": "CAJA_FISICA",
+            "importe": "215.00"
+          },
+          {
+            "formaPago": "TRANSFERENCIA",
+            "cuentaDestino": "CUENTA_NO_FISCAL",
+            "importe": "150.00"
+          },
+          {
+            "formaPago": "TRANSFERENCIA",
+            "cuentaDestino": "CUENTA_FISCAL",
+            "importe": "0.00"
+          },
+          {
+            "formaPago": "CREDITO",
+            "cuentaDestino": "CUENTAS_POR_COBRAR",
+            "importe": "0.00"
+          }
+        ],
+        "salidas": [
+          {
+            "id": 1,
+            "monto": "25.00",
+            "motivo": "TANDA EC salida suficiente de caja25 sin desbloqueo",
+            "proveedorId": null,
+            "cuentaOrigen": "CAJA_FISICA",
+            "createdAt": "2026-09-24T03:23:04.951Z",
+            "proveedor": null,
+            "e4": {
+              "tipo": "EXTRAORDINARIA",
+              "estado": "PENDIENTE",
+              "version": 0,
+              "claveOperacion": "ede2473f-0301-4fa5-badf-4fecde8ba64b",
+              "historial": [],
+              "desbloqueoCaja": null
+            }
+          }
+        ],
+        "salidasPorCuenta": {
+          "CAJA_FISICA": "25.00",
+          "CUENTA_NO_FISCAL": "0.00",
+          "CUENTA_FISCAL": "0.00"
+        },
+        "facturacion": [
+          {
+            "facturado": true,
+            "ticketsCount": 0,
+            "subtotal": "0.00",
+            "iva": "0.00",
+            "importe": "0.00",
+            "efectivo": "0.00",
+            "transferencia": "0.00",
+            "credito": "0.00"
+          },
+          {
+            "facturado": false,
+            "ticketsCount": 3,
+            "subtotal": "390.00",
+            "iva": "0.00",
+            "importe": "390.00",
+            "efectivo": "240.00",
+            "transferencia": "150.00",
+            "credito": "0.00"
+          }
+        ],
+        "metreado": [
+          {
+            "tipo": "NORMAL",
+            "unidad": "METRO",
+            "ticketsCount": 4,
+            "cantidad": "4.000",
+            "importe": "540.00"
+          }
+        ],
+        "productos": [
+          {
+            "productoId": 2078,
+            "sku": "TANDA-EC-POS",
+            "tela": "TANDA EC TELA",
+            "color": "AZUL EC",
+            "tipo": "NORMAL",
+            "unidad": "METRO",
+            "cantidad": "4.000",
+            "importe": "540.00"
+          }
+        ],
+        "pendientes": [],
+        "ticketsCobradosDetalle": [
+          {
+            "ticketId": 109,
+            "folio": 1003,
+            "importe": "150.00",
+            "cobradoAt": "2026-09-24T03:14:29.289Z"
+          },
+          {
+            "ticketId": 110,
+            "folio": 1004,
+            "importe": "150.00",
+            "cobradoAt": "2026-09-24T03:15:45.473Z"
+          },
+          {
+            "ticketId": 112,
+            "folio": 1006,
+            "importe": "90.00",
+            "cobradoAt": "2026-09-24T03:22:37.571Z"
+          }
+        ],
+        "ticketsCobrados": 3,
+        "cancelaciones": [],
+        "fondoInicial": "500.00",
+        "totalCobrado": "390.00",
+        "ivaCobrado": "0.00",
+        "efectivoEsperado": "765.00",
+        "efectivoDesglose": {
+          "version": "E2",
+          "fondoInicial": "500.00",
+          "cobrosTickets": "240.00",
+          "abonosFisicos": "50.00",
+          "cobrosRetenidos": "0.00",
+          "salidasFisicas": "25.00",
+          "efectivoEsperado": "765.00",
+          "documentos": [
+            {
+              "origen": "FONDO_INICIAL",
+              "id": "46",
+              "folio": null,
+              "importe": "500.00",
+              "href": null,
+              "evidencia": {
+                "referencia": "Sesión de caja #46",
+                "motivo": null,
+                "fecha": "2026-09-24T02:46:32.828Z",
+                "usuarioId": 235,
+                "proveedorId": null,
+                "usuarioNombre": "TANDA EC CAJA",
+                "proveedorNombre": null
+              }
+            },
+            {
+              "origen": "TICKET",
+              "id": "91",
+              "folio": "1003",
+              "importe": "150.00",
+              "href": "/tickets/109"
+            },
+            {
+              "origen": "TICKET",
+              "id": "93",
+              "folio": "1006",
+              "importe": "90.00",
+              "href": "/tickets/112"
+            },
+            {
+              "origen": "ABONO",
+              "id": "ABONO_ORDINARIO:bfdbffa5-6407-4e13-8df2-1a417105a0b7",
+              "folio": null,
+              "importe": "50.00",
+              "href": "/clientes/8/movimientos/56",
+              "evidencia": {
+                "referencia": null,
+                "motivo": "Abono real recibido desde Caja",
+                "fecha": "2026-09-24T03:19:26.106Z",
+                "usuarioId": 234,
+                "proveedorId": null,
+                "usuarioNombre": "TANDA EC ADMIN",
+                "proveedorNombre": null
+              }
+            },
+            {
+              "origen": "SALIDA",
+              "id": "1",
+              "folio": null,
+              "importe": "25.00",
+              "href": null,
+              "evidencia": {
+                "referencia": null,
+                "motivo": "TANDA EC salida suficiente de caja25 sin desbloqueo",
+                "fecha": "2026-09-24T03:23:04.951Z",
+                "usuarioId": 235,
+                "proveedorId": null,
+                "usuarioNombre": "TANDA EC CAJA",
+                "proveedorNombre": null
+              }
+            }
+          ]
+        },
+        "efectivoContado": null,
+        "diferencia": null,
+        "hojaVentasDia": {
+          "sitio": "TANDA E CONTINUACION",
+          "fechaOperativa": "2026-09-23",
+          "cerrada": false,
+          "quienCerro": null,
+          "secciones": [
+            {
+              "modalidad": "ROLLOS",
+              "lineas": [
+                {
+                  "productoId": 2078,
+                  "sku": "TANDA-EC-POS",
+                  "tela": "TANDA EC TELA",
+                  "color": "AZUL EC",
+                  "tipo": "NORMAL",
+                  "unidad": "ROLLOS",
+                  "cantidad": "3",
+                  "importe": "390.00"
+                }
+              ],
+              "subtotal": "390.00"
+            },
+            {
+              "modalidad": "METRAJE",
+              "lineas": [],
+              "subtotal": "0.00"
+            }
+          ],
+          "totalRollos": "3",
+          "totalMetros": "3",
+          "totalKilos": "0",
+          "totalBolsas": "0",
+          "totalPiezas": "0",
+          "subtotal": "390.00",
+          "ivaFacturado": "0.00",
+          "totalGeneral": "390.00"
+        }
+      }
+    }
+  ],
+  "visibleText": "Corte y Cierre de Caja\nFondo Inicial\n$500.00\nTotal Cobrado\n$390.00\nIVA Cobrado\n$0.00\nEfectivo Esperado:\n$765.00\n\nConsulta abajo la versión del cálculo y sus documentos.\n\nTrazabilidad del efectivo esperado\nFÓRMULA E2\n\nFondo inicial + tickets en efectivo + abonos físicos + cobros retenidos − salidas físicas.\n\nFondo inicial\n$500.00\nCobros físicos de tickets\n$240.00\nAbonos físicos de crédito\n$50.00\nCobros físicos retenidos\n$0.00\nSalidas físicas\n− $25.00\nEfectivo esperado\n$765.00\nDOCUMENTOS QUE COMPONEN EL CÁLCULO\nOrigen\tDocumento y evidencia\tImporte\nFondo inicial\t\nID 46\nReferencia: Sesión de caja #46\nFecha: 24 sep 2026, 2:46 a.m.\nRegistró: TANDA EC CAJA\n\t$500.00\nTicket\t\n1003\n\t$150.00\nTicket\t\n1006\n\t$90.00\nAbono de crédito\t\nID ABONO_ORDINARIO:bfdbffa5-6407-4e13-8df2-1a417105a0b7\nMotivo: Abono real recibido desde Caja\nFecha: 24 sep 2026, 3:19 a.m.\nRegistró: TANDA EC ADMIN\n\t$50.00\nSalida física\t\nID 1\nMotivo: TANDA EC salida suficiente de caja25 sin desbloqueo\nFecha: 24 sep 2026, 3:23 a.m.\nRegistró: TANDA EC CAJA\n\t− $25.00\nFormas de pago\nEFECTIVO (2 tickets)\n$240.00\nTRANSFERENCIA (1 tickets)\n$150.00\nFACTURADO (0 tickets)\n$0.00\nCREDITO (0 tickets)\n$0.00\nCuentas destino\nEfectivo\n$215.00\nCuentas No Fiscales\n$150.00\nCuentas Fiscales\n$0.00\nVentas a Crédito\n$0.00\nFacturación\nFacturado (0)\n$0.00\nSubtotal\n$0.00\nIVA\n$0.00\nNo facturado (3)\n$390.00\nSubtotal\n$390.00\nIVA\n$0.00\nRollos / Metraje\nROLLOS · 4.00 Mts.\n$540.00\nProductos vendidos\nROLLO · TANDA-EC-POS · TANDA EC TELA AZUL EC · 4.00 Mts.\n$540.00\nTickets pendientes (0)\n\nSin tickets pendientes.\n\nEfectivo Físico Contado\n$\nCancelar\nImprimir Corte\nConfirmar Cierre\nCerrar",
+  "closed": false
+}

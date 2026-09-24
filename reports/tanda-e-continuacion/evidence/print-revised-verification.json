@@ -1,0 +1,17 @@
+{
+  "status": "PASS_READ_ONLY_REAL_ROUTE_CANDIDATE_PDF",
+  "timestamp": "2026-09-24T03:29:01.777Z",
+  "pages": 2,
+  "sizePoints": [
+    594.96,
+    420
+  ],
+  "bytes": 23380,
+  "allRequiredTextEachPage": true,
+  "rasterVisuallyInspected": true,
+  "noPageRange": true,
+  "negativeControl": "remove only ancestor visibility declaration => one blank page, 1064 bytes, zero trimmed text",
+  "dbWrites": false,
+  "realPrintButtonRetested": false,
+  "candidateTransport": "Playwright asset interception from separate built candidate; API GETs from isolated existing server"
+}

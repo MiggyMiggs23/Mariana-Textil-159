@@ -1,0 +1,24 @@
+{
+  "timestamp": "2026-09-24T03:39:15.232Z",
+  "privateDirectoryRemoved": true,
+  "dumpCredentialsClusterRemovedWithDirectory": true,
+  "privateRuntimeProcesses": [],
+  "priorLiveProcesses": [],
+  "ports": [
+    {
+      "port": 43820,
+      "listening": false
+    },
+    {
+      "port": 43821,
+      "listening": false
+    },
+    {
+      "port": 55439,
+      "listening": false
+    }
+  ],
+  "applicationRuntimeUntouched": true,
+  "reportsRetained": true,
+  "businessSessionClosed": false
+}

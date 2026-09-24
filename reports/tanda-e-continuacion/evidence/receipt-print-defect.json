@@ -1,0 +1,124 @@
+{
+  "timestamp": "2026-09-24T03:21:18.569Z",
+  "status": "FAIL_PRINT_RENDERING",
+  "description": "Receipt renders on screen, real print button audits successfully and fires beforeprint, but print-media screenshot and exported PDF are blank. No app fixes applied.",
+  "pdfPages": 1,
+  "pdfExtractedTextBytes": 1,
+  "css": {
+    "sheets": 2,
+    "ancestors": [
+      {
+        "tag": "DIV",
+        "id": "e3-pages",
+        "className": "",
+        "display": "block",
+        "visibility": "visible",
+        "position": "absolute",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 793.6875,
+          "height": 1118.71875
+        }
+      },
+      {
+        "tag": "MAIN",
+        "id": "",
+        "className": "flex-1 p-4 md:p-8 overflow-y-auto",
+        "display": "block",
+        "visibility": "hidden",
+        "position": "static",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1360,
+          "height": 1000
+        }
+      },
+      {
+        "tag": "DIV",
+        "id": "",
+        "className": "flex-1 flex flex-col min-w-0",
+        "display": "flex",
+        "visibility": "hidden",
+        "position": "static",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1360,
+          "height": 1000
+        }
+      },
+      {
+        "tag": "DIV",
+        "id": "",
+        "className": "min-h-[100dvh] flex bg-background",
+        "display": "flex",
+        "visibility": "hidden",
+        "position": "static",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1360,
+          "height": 1000
+        }
+      },
+      {
+        "tag": "DIV",
+        "id": "",
+        "className": "",
+        "display": "block",
+        "visibility": "hidden",
+        "position": "static",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1360,
+          "height": 1000
+        }
+      },
+      {
+        "tag": "DIV",
+        "id": "root",
+        "className": "",
+        "display": "block",
+        "visibility": "hidden",
+        "position": "static",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1360,
+          "height": 1000
+        }
+      },
+      {
+        "tag": "BODY",
+        "id": "",
+        "className": "",
+        "display": "block",
+        "visibility": "visible",
+        "position": "static",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1360,
+          "height": 1000
+        }
+      },
+      {
+        "tag": "HTML",
+        "id": "",
+        "className": "",
+        "display": "block",
+        "visibility": "visible",
+        "position": "static",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1360,
+          "height": 1000
+        }
+      }
+    ]
+  }
+}

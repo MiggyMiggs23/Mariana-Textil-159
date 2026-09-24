@@ -1,0 +1,4 @@
+heliumdb|on|160010
+Effective running API PID 180 URL matched internally; no credentials recorded.
+Fresh read-only transactional dump SHA256 5a45c6e79663d1d5db27334e7cd7cbf17f262da4aa05fd26521f3c714d6fbe45
+No quiescence or ongoing equality claimed.

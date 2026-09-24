@@ -1,0 +1,90 @@
+{
+  "timestamp": "2026-09-24T03:20:31.576Z",
+  "identity": {
+    "database": "tanda_e_continuacion_copy",
+    "readonly": "on"
+  },
+  "notes": [
+    {
+      "id": 111,
+      "folio": 1005,
+      "total": "150.00",
+      "documento_tipo": "NOTA",
+      "credito": true,
+      "dias_plazo": 30,
+      "sesion_caja_id": 46
+    }
+  ],
+  "movements": [
+    {
+      "id": 55,
+      "ticket_id": 111,
+      "tipo": "VENTA_CREDITO",
+      "importe": "150.00",
+      "naturaleza": "OPERACION_CREDITO_SIN_DINERO",
+      "forma_pago": "CREDITO",
+      "cuenta_destino": null,
+      "sesion_caja_id": null,
+      "operacion_productor": "VENTA_CREDITO",
+      "created_at": "2026-09-24T03:17:32.991Z"
+    },
+    {
+      "id": 56,
+      "ticket_id": null,
+      "tipo": "ABONO",
+      "importe": "-50.00",
+      "naturaleza": "INGRESO_FISICO",
+      "forma_pago": "EFECTIVO",
+      "cuenta_destino": "CAJA_FISICA",
+      "sesion_caja_id": 46,
+      "operacion_productor": "ABONO_ORDINARIO",
+      "created_at": "2026-09-24T03:19:26.106Z"
+    }
+  ],
+  "applications": [
+    {
+      "id": 10,
+      "abono_movimiento_id": 56,
+      "venta_movimiento_id": 55,
+      "importe": "50.00"
+    }
+  ],
+  "receipts": [
+    {
+      "folio": "E3-835-00000001",
+      "movimiento_id": 56,
+      "cliente_id": 8,
+      "sesion_operativa_id": 46,
+      "origen": "CAJA"
+    }
+  ],
+  "debt": [
+    {
+      "debt": "100.00"
+    }
+  ],
+  "printAudits": [
+    {
+      "id": "4349",
+      "accion": "E3_ABONO_REGISTRADO",
+      "entidad": "movimientos_credito",
+      "entidad_id": "56",
+      "created_at": "2026-09-24T03:19:26.107Z"
+    },
+    {
+      "id": "4351",
+      "accion": "E3_RECIBO_IMPRESION_SOLICITADA",
+      "entidad": "recibos_abono_e3",
+      "entidad_id": "E3-835-00000001",
+      "created_at": "2026-09-24T03:19:48.436Z"
+    }
+  ],
+  "session": [
+    {
+      "id": 46,
+      "estado": "ABIERTA",
+      "fondo_inicial": "500.00",
+      "expected_cash": "700.00"
+    }
+  ]
+}

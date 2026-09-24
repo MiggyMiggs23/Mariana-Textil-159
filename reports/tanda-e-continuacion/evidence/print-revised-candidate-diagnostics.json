@@ -1,0 +1,157 @@
+{
+  "timestamp": "2026-09-24T03:28:34.235Z",
+  "mode": "read-only real API data; local candidate asset interception; no button/audit POST",
+  "served": [
+    {
+      "file": "index.html",
+      "sha256": "a81f22a98b2b5a2eea382a02af0424be33ade97824f966664f45f55880dbe398"
+    },
+    {
+      "file": "index.html",
+      "sha256": "a81f22a98b2b5a2eea382a02af0424be33ade97824f966664f45f55880dbe398"
+    },
+    {
+      "file": "assets/index-CcGIvZsq.js",
+      "sha256": "e37e2c9b323df7fecaadceae37259c38490d0c5a69d9b0e6b5559d8d2f416311"
+    },
+    {
+      "file": "assets/index-gwM08gh0.css",
+      "sha256": "b7b5f517d651c34e521616b8faac1352e57a6762ed03aa1cb976cdd40cbb610c"
+    },
+    {
+      "file": "index.html",
+      "sha256": "a81f22a98b2b5a2eea382a02af0424be33ade97824f966664f45f55880dbe398"
+    },
+    {
+      "file": "assets/mariana-textil-logo-FFOiXRd3.png",
+      "sha256": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6"
+    }
+  ],
+  "blocked": [],
+  "diagnostic": {
+    "ancestors": [
+      {
+        "tag": "DIV",
+        "id": "e3-pages",
+        "display": "block",
+        "visibility": "visible",
+        "overflow": "visible",
+        "rect": [
+          0,
+          0,
+          1360,
+          1118.71875
+        ]
+      },
+      {
+        "tag": "MAIN",
+        "id": "",
+        "display": "contents",
+        "visibility": "visible",
+        "overflow": "visible",
+        "rect": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "tag": "DIV",
+        "id": "",
+        "display": "contents",
+        "visibility": "visible",
+        "overflow": "visible",
+        "rect": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "tag": "DIV",
+        "id": "",
+        "display": "contents",
+        "visibility": "visible",
+        "overflow": "visible",
+        "rect": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "tag": "DIV",
+        "id": "",
+        "display": "contents",
+        "visibility": "visible",
+        "overflow": "visible",
+        "rect": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "tag": "DIV",
+        "id": "root",
+        "display": "contents",
+        "visibility": "visible",
+        "overflow": "visible",
+        "rect": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "tag": "BODY",
+        "id": "",
+        "display": "block",
+        "visibility": "visible",
+        "overflow": "visible",
+        "rect": [
+          0,
+          0,
+          1360,
+          1118.71875
+        ]
+      },
+      {
+        "tag": "HTML",
+        "id": "",
+        "display": "block",
+        "visibility": "visible",
+        "overflow": "visible",
+        "rect": [
+          0,
+          0,
+          1360,
+          1118.71875
+        ]
+      }
+    ],
+    "copies": [
+      {
+        "copy": "Copia Cliente",
+        "text": "Mariana Textil · Recibo de abonoCopia Cliente · Página 1 / 1E3-835-00000001$50.00Cliente: TANDA EC CLIENTE CREDITOSitio receptor: TANDA E CONTINUACION · Recibió / registró: TANDA EC ADMINRecepción: 23/9/2026, 9:19:26 p.m. · Registro: 23/9/2026, 9:19:26 p.m.Medio: Efectivo · Cuenta: CAJA FISICANotaSaldo anteriorAplicadoSaldo posterior1005$150.00$50.00$100.00Remanente del abono: $0.00 · Saldo a favor total: $0.00 · Deuda total posterior: $100.00Firma de quien entregaFirma de quien recibeREIMPRESIÓN / copia de evidencia emitida · 23/9/2026, 9:28:33 p.m. · Movimiento 56",
+        "rect": {
+          "width": 793.6875,
+          "height": 559.359375
+        }
+      },
+      {
+        "copy": "Copia Tienda",
+        "text": "Mariana Textil · Recibo de abonoCopia Tienda · Página 1 / 1E3-835-00000001$50.00Cliente: TANDA EC CLIENTE CREDITOSitio receptor: TANDA E CONTINUACION · Recibió / registró: TANDA EC ADMINRecepción: 23/9/2026, 9:19:26 p.m. · Registro: 23/9/2026, 9:19:26 p.m.Medio: Efectivo · Cuenta: CAJA FISICANotaSaldo anteriorAplicadoSaldo posterior1005$150.00$50.00$100.00Remanente del abono: $0.00 · Saldo a favor total: $0.00 · Deuda total posterior: $100.00Firma de quien entregaFirma de quien recibeREIMPRESIÓN / copia de evidencia emitida · 23/9/2026, 9:28:33 p.m. · Movimiento 56",
+        "rect": {
+          "width": 793.6875,
+          "height": 559.359375
+        }
+      }
+    ]
+  }
+}

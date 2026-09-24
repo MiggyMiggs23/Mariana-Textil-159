@@ -1,0 +1,29 @@
+{
+  "events": [
+    {
+      "print": false,
+      "width": 1,
+      "height": 1,
+      "probe": 559.359375,
+      "pages": 2
+    },
+    {
+      "print": false,
+      "width": 1360,
+      "height": 1000,
+      "probe": 559.359375,
+      "pages": 2
+    },
+    {
+      "print": true,
+      "width": 1360,
+      "height": 1000,
+      "probe": 0,
+      "pages": 0
+    }
+  ],
+  "pages": 0,
+  "alerts": [
+    "Los datos no caben completos en A5. No se permite imprimir ni recortar evidencia."
+  ]
+}

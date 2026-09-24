@@ -64,3 +64,9 @@ Para medir desplazamiento inicial, separar la caja de toda la tinta de la posici
 **Why:** Un borde o fondo fijo puede comenzar en la misma coordenada aunque el contenido interior se desplace. A la inversa, el primer texto puede empezar antes en una continuación de series que en una hoja de productos sin que exista espacio inicial sobrante.
 
 **How to apply:** Conservar ambos indicadores y explicar las diferencias de plantilla; no declarar ausencia de desplazamiento únicamente porque coincida el borde, ni declarar un defecto comparando primeros textos de estructuras distintas.
+
+En recibos E3, la geometría visible no acredita pintura ni persistencia de páginas. Ancestros ocultos con `display:contents` pueden producir PDF vacío aun con hijos visibles; además, un resize de impresión puede medir un probe `display:none`, emitir falso overflow y borrar páginas ya calculadas.
+
+**Why:** El primer arreglo de visibilidad pasó una prueba interceptada, pero falló en el build realmente servido después de la captura completa. La guarda de rectángulos de layout del probe resolvió esa segunda causa; retirarla aisladamente volvió a fallar la regresión.
+
+**How to apply:** Exigir botón real auditado → captura completa → PDF natural del origen servido, sin intercepción ni CSS inyectado; comprobar texto y raster de todas las páginas y un control causal negativo. Registrar build/hash, no duplicar dinero para reimprimir y separar PASS digital de impresora física. Si un tester rebasa el plazo sin evidencia, cancelarlo y documentar duración, estado durable y alternativa; no inventar causa del atasco.

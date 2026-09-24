@@ -1,0 +1,48 @@
+{
+  "timestamp": "2026-09-24T03:25:09.181Z",
+  "posts": [
+    {
+      "path": "/api/recibos-e3/E3-835-00000001/impresiones",
+      "status": 200
+    }
+  ],
+  "geometry": [
+    {
+      "copy": null,
+      "width": 0,
+      "height": 0,
+      "x": 0,
+      "y": 0,
+      "visibility": "hidden",
+      "display": "none",
+      "text": "Mariana Textil · Recibo de abonoCopia Cliente · Página 999 / 999E3-835-00000001$50.00Cliente: TANDA EC CLIENTE CREDITOSitio receptor: TANDA E CONTINUACION · Recibió / registró: TANDA EC ADMINRecepción: 23/9/2026, 9:19:26 p.m. · Registro: 23/9/2026, 9:19:26 p.m.Medio: Efectivo · Cuenta: CAJA FISICANotaSaldo anteriorAplicadoSaldo posterior1005$150.00$50.00$100.00Remanente del abono: $0.00 · Saldo a favor total: $0.00 · Deuda total posterior: $100.00Firma de quien entregaFirma de quien recibeREIMPRESIÓN / copia de evidencia emitida · 23/9/2026, 9:25:08 p.m. · Movimiento 56"
+    },
+    {
+      "copy": "Copia Cliente",
+      "width": 793.6875,
+      "height": 559.359375,
+      "x": 0,
+      "y": 0,
+      "visibility": "visible",
+      "display": "block",
+      "text": "Mariana Textil · Recibo de abonoCopia Cliente · Página 1 / 1E3-835-00000001$50.00Cliente: TANDA EC CLIENTE CREDITOSitio receptor: TANDA E CONTINUACION · Recibió / registró: TANDA EC ADMINRecepción: 23/9/2026, 9:19:26 p.m. · Registro: 23/9/2026, 9:19:26 p.m.Medio: Efectivo · Cuenta: CAJA FISICANotaSaldo anteriorAplicadoSaldo posterior1005$150.00$50.00$100.00Remanente del abono: $0.00 · Saldo a favor total: $0.00 · Deuda total posterior: $100.00Firma de quien entregaFirma de quien recibeREIMPRESIÓN / copia de evidencia emitida · 23/9/2026, 9:25:08 p.m. · Movimiento 56"
+    },
+    {
+      "copy": "Copia Tienda",
+      "width": 793.6875,
+      "height": 559.359375,
+      "x": 0,
+      "y": 559.359375,
+      "visibility": "visible",
+      "display": "block",
+      "text": "Mariana Textil · Recibo de abonoCopia Tienda · Página 1 / 1E3-835-00000001$50.00Cliente: TANDA EC CLIENTE CREDITOSitio receptor: TANDA E CONTINUACION · Recibió / registró: TANDA EC ADMINRecepción: 23/9/2026, 9:19:26 p.m. · Registro: 23/9/2026, 9:19:26 p.m.Medio: Efectivo · Cuenta: CAJA FISICANotaSaldo anteriorAplicadoSaldo posterior1005$150.00$50.00$100.00Remanente del abono: $0.00 · Saldo a favor total: $0.00 · Deuda total posterior: $100.00Firma de quien entregaFirma de quien recibeREIMPRESIÓN / copia de evidencia emitida · 23/9/2026, 9:25:08 p.m. · Movimiento 56"
+    }
+  ],
+  "events": [
+    "beforeprint",
+    "beforeprint",
+    "afterprint"
+  ],
+  "physicalPrint": false,
+  "noPageRange": true
+}

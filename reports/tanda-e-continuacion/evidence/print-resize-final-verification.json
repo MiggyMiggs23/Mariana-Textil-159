@@ -1,0 +1,60 @@
+{
+  "status": "PASS_ACTUAL_SERVED_BUILD_REAL_BUTTON_FULL_SCREENSHOT_THEN_PDF",
+  "timestamp": "2026-09-24T03:36:45.151Z",
+  "commit": "11a070a",
+  "rootCause": "print-media resize remeasured display:none probe, cleared both pages and emitted false overflow; skip probe without layout rectangles",
+  "actualServer": "http://127.0.0.1:43820",
+  "assetInterception": false,
+  "cssInjection": false,
+  "pageRanges": false,
+  "results": [
+    {
+      "version": 140,
+      "pages": 2,
+      "sizePt": [
+        594.96,
+        420
+      ],
+      "bytes": 23200,
+      "printEvents": [
+        "beforeprint",
+        "beforeprint",
+        "afterprint"
+      ],
+      "realButtonPost": [
+        {
+          "path": "/api/recibos-e3/E3-835-00000001/impresiones",
+          "status": 200
+        }
+      ],
+      "allRequiredTextEachPage": true
+    },
+    {
+      "version": 153,
+      "pages": 2,
+      "sizePt": [
+        594.96,
+        420
+      ],
+      "bytes": 23213,
+      "printEvents": [
+        "beforeprint",
+        "beforeprint",
+        "afterprint"
+      ],
+      "realButtonPost": [
+        {
+          "path": "/api/recibos-e3/E3-835-00000001/impresiones",
+          "status": 200
+        }
+      ],
+      "allRequiredTextEachPage": true
+    }
+  ],
+  "candidate": "artifacts/mariana-textil/dist-tanda-e-print-resize-final-20260924",
+  "indexSha256": "6909b2638576c8735ccffa14959c6f0872fffbeaac5adce48e22520e9dabbea4",
+  "jsSha256": "d3930f905a084b71292fc3ffaaa88059cd27ccf3cee0f0378228e178a070c6ce",
+  "regression": "PASS; removing only layout-rectangle guard FAILS 0 !== 2",
+  "raster140BothPagesVisuallyInspected": true,
+  "physicalPrinterTested": false
+}

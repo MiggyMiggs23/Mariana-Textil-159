@@ -1,0 +1,58 @@
+{
+  "scripts": [
+    "http://127.0.0.1:43820/assets/index-CcGIvZsq.js"
+  ],
+  "parents": [
+    {
+      "tag": "DIV",
+      "id": "e3-pages",
+      "display": "block",
+      "visibility": "visible"
+    },
+    {
+      "tag": "MAIN",
+      "id": "",
+      "display": "contents",
+      "visibility": "visible"
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "display": "contents",
+      "visibility": "visible"
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "display": "contents",
+      "visibility": "visible"
+    },
+    {
+      "tag": "DIV",
+      "id": "",
+      "display": "contents",
+      "visibility": "visible"
+    },
+    {
+      "tag": "DIV",
+      "id": "root",
+      "display": "contents",
+      "visibility": "visible"
+    },
+    {
+      "tag": "BODY",
+      "id": "",
+      "display": "block",
+      "visibility": "visible"
+    },
+    {
+      "tag": "HTML",
+      "id": "",
+      "display": "block",
+      "visibility": "visible"
+    }
+  ],
+  "printStyle": [
+    "\n      .e3-sheet { width:210mm; height:148mm; padding:5mm; box-sizing:border-box; background:white; color:black; font:10px/1.25 Arial,sans-serif; overflow:hidden; }\n      .e3-inner { height:138mm; display:flex; flex-direction:column; }\n      .e3-sheet p { margin:1mm 0; overflow-wrap:anywhere; }\n      .e3-heading,.e3-footer { flex-shrink:0; }\n      .e3-line { display:flex; justify-content:space-between; gap:3mm; }\n      .e3-sheet table { width:100%; border-collapse:collapse; table-layout:fixed; }\n      .e3-sheet th,.e3-sheet td { padding:1mm; border-bottom:1px solid #aaa; text-align:right; overflow-wrap:anywhere; }\n      .e3-sheet th:first-child,.e3-sheet td:first-child { text-align:left; }\n      .e3-footer { margin-top:auto; padding-top:2mm; break-inside:avoid; }\n      .e3-signatures { display:flex; justify-content:space-around; padding-top:7mm; margin:2mm 0; }\n      .e3-signatures span { border-top:1px solid black; width:70mm; text-align:center; padding-top:1mm; }\n      .e3-probe { position:fixed; left:-20000px; top:0; visibility:hidden; }\n      @media print {\n        @page { size:A5 landscape; margin:0; }\n        body * { visibility:hidden; }\n        /* Chromium can suppress painting beneath hidden display:contents\n           ancestors even when the receipt itself computes visibility:visible.\n           Remove their layout boxes AND restore their visibility. */\n        body > *:not(#root) { display:none !important; }\n        #root, #root *:has(#e3-pages) { display:contents !important; visibility:visible; }\n        #root *:not(:has(#e3-pages)):not(#e3-pages):not(#e3-pages *) { display:none !important; }\n        #e3-pages,#e3-pages * { visibility:visible; }\n        #e3-pages { position:static; display:block !important; margin:0; padding:0; }\n        .e3-sheet { break-after:page; page-break-after:always; margin:0; }\n        .e3-sheet:last-child { break-after:auto; page-break-after:auto; }\n        .e3-probe,.e3-no-print { display:none !important; }\n      }\n    "
+  ]
+}

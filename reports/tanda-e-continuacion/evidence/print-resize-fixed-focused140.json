@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-09-24T03:35:10.790Z",
+  "posts": [
+    {
+      "path": "/api/recibos-e3/E3-835-00000001/impresiones",
+      "status": 200
+    }
+  ],
+  "geometry": [
+    {
+      "copy": "Copia Cliente",
+      "width": 793.6875,
+      "height": 559.359375,
+      "x": 0,
+      "y": 0,
+      "visibility": "visible"
+    },
+    {
+      "copy": "Copia Tienda",
+      "width": 793.6875,
+      "height": 559.359375,
+      "x": 0,
+      "y": 559.359375,
+      "visibility": "visible"
+    }
+  ],
+  "events": [
+    "beforeprint",
+    "beforeprint",
+    "afterprint"
+  ],
+  "physicalPrint": false,
+  "noPageRange": true,
+  "cancellationRow": "24/09/2026 03:23\tCANCELACION\t\t+1.00\t6.00\t\nTicket 1007\nTANDA EC cancelar pendiente sin cobro; devolver rollo006\n\t"
+}

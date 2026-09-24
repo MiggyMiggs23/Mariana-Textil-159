@@ -1,0 +1,10 @@
+2026-09-24T02:50:22+00:00
+{"status":"ok"}
+UI HTTP 200
+tanda_e_continuacion_copy
+tanda_e_continuacion_copy|127.0.0.1|43008|idle
+46|ABIERTA|500.00
+   1359      32 /bin/bash /home/runner/workspace/reports/tanda-e-continuacion/launch-isolated.sh
+   1373    1359 /nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node /home/runner/workspace/.local/tanda-e-continuacion/source/api-runner.mjs
+   1408    1359 /nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node /home/runner/workspace/.local/tanda-e-continuacion/source/proxy.mjs
+Verified live API PID1373 socket local43008 -> local PostgreSQL55439; pg_stat_activity maps that exact client port to tanda_e_continuacion_copy. Isolated guard enabled. Health and UI passed across separate tool calls. Launcher PID1359.

@@ -1,0 +1,5 @@
+588a13640e6a56ee8d401a9e04d002da3c359f5d
+1d22663f0cda69c2907d4171f902f51532cf45c013a8ccbd042a83c421bac80d  artifacts/api-server/dist-tanda-e-20260923/index.mjs
+1d22663f0cda69c2907d4171f902f51532cf45c013a8ccbd042a83c421bac80d  .local/tanda-e-continuacion/source/artifacts/api-server/dist/index.mjs
+5e90c451021013e5e1da297168a3213d044d1163d2e68c23b2ed40d8968d8b27  artifacts/mariana-textil/dist-tanda-e-20260923/index.html
+5e90c451021013e5e1da297168a3213d044d1163d2e68c23b2ed40d8968d8b27  .local/tanda-e-continuacion/source/artifacts/mariana-textil/dist/public/index.html

@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-09-24T03:41:44.850Z",
+  "scope": "All current report scripts/text/JSON/HTML; selected gallery images visually reviewed. Rerun before commit if evidence changes.",
+  "textFilesChecked": 71,
+  "privateSyntheticCredentialsComparedWithoutDisclosure": false,
+  "priorPrivateComparisonEvidence": "report-security-audit-pre-teardown.json",
+  "applicationSecretsRead": false,
+  "findings": [],
+  "selectedSyntheticImages": [
+    "transfer-caja-05-paid.png",
+    "abono-05-preview.png",
+    "receipt-02-visible.png",
+    "e4-04-success765.png",
+    "final-focused-05-cancellation-plus1.png",
+    "open-corte-03-preview765.png",
+    "print-resize-fixed-raster-1.png",
+    "print-resize-fixed-raster-2.png"
+  ],
+  "imageReview": "Synthetic TEC actors/customer/product only; no copied real client identities or credentials observed; no masking needed. Nonselected raw images excluded from downloadable report; not cleared for broad publication.",
+  "html": {
+    "file": "INFORME-descargable.html",
+    "bytes": 1360331,
+    "sha256": "22cc96e8fd96c0a6e197333d97ec406a8bf3882ab78ba53bccc73fc7cee4314c",
+    "embeddedImages": 8,
+    "externalResources": false
+  },
+  "committed": false
+}

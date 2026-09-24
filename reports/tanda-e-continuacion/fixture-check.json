@@ -1,0 +1,12 @@
+{
+  "database": "tanda_e_continuacion_copy",
+  "active_actors": "2",
+  "restored_active_actors": "0",
+  "auth_sessions": "0",
+  "cash_state": "ABIERTA",
+  "initial_fund": "500.00",
+  "daily_guard": "1",
+  "synthetic_tickets": "0",
+  "stock": "10.000",
+  "ledger_stock": "10.000"
+}

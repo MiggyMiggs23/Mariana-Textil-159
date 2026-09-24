@@ -1,0 +1,784 @@
+{
+  "timestamp": "2026-09-24T03:15:46.227Z",
+  "scope": "read-only repeatable-read site835; logs are API-wide metadata only, no headers/query strings/bodies",
+  "identity": {
+    "database": "tanda_e_continuacion_copy",
+    "readonly": "on"
+  },
+  "tickets": [
+    {
+      "id": 109,
+      "folio": 1003,
+      "documento_tipo": "TICKET",
+      "total": "150.00",
+      "estado": "VENDIDO",
+      "cobrado": true,
+      "cobrado_at": "2026-09-24T03:14:29.289Z",
+      "credito": false,
+      "sesion_caja_id": 46,
+      "created_at": "2026-09-24T02:52:34.994Z"
+    },
+    {
+      "id": 110,
+      "folio": 1004,
+      "documento_tipo": "TICKET",
+      "total": "150.00",
+      "estado": "VENDIDO",
+      "cobrado": true,
+      "cobrado_at": "2026-09-24T03:15:45.473Z",
+      "credito": false,
+      "sesion_caja_id": 46,
+      "created_at": "2026-09-24T03:15:36.437Z"
+    }
+  ],
+  "payments": [
+    {
+      "id": 91,
+      "ticket_id": 109,
+      "forma_pago": "EFECTIVO",
+      "importe": "150.00",
+      "created_at": "2026-09-24T03:14:29.205Z"
+    },
+    {
+      "id": 92,
+      "ticket_id": 110,
+      "forma_pago": "TRANSFERENCIA",
+      "importe": "150.00",
+      "created_at": "2026-09-24T03:15:45.470Z"
+    }
+  ],
+  "sessions": [
+    {
+      "id": 46,
+      "estado": "ABIERTA",
+      "fondo_inicial": "500.00",
+      "efectivo_contado": null,
+      "abierta_at": "2026-09-24T02:46:32.828Z",
+      "cerrada_at": null,
+      "fecha_operativa": "2026-09-23T00:00:00.000Z"
+    }
+  ],
+  "credit": [],
+  "retained": [],
+  "outflows": [],
+  "closedCutEvidence": [],
+  "expectedCash": [
+    {
+      "sessionId": 46,
+      "expected": "650.00"
+    }
+  ],
+  "expectedCashNote": "Initial fund plus paid VENDIDO cash tickets minus physical outflows; no session credit/retained records. Not a UI screenshot.",
+  "recentApiEvents": [
+    {
+      "time": "03:14:47.938",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "time": "03:14:47.951",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200
+    },
+    {
+      "time": "03:14:47.952",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "time": "03:14:47.964",
+      "method": "GET",
+      "path": "/api/admin/dashboard/realtime",
+      "status": 200
+    },
+    {
+      "time": "03:14:47.965",
+      "method": "GET",
+      "path": "/api/admin/cuentas-destino",
+      "status": 200
+    },
+    {
+      "time": "03:14:48.100",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:14:48.116",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200
+    },
+    {
+      "time": "03:14:48.136",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200
+    },
+    {
+      "time": "03:14:48.207",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:14:48.217",
+      "method": "GET",
+      "path": "/api/locations",
+      "status": 200
+    },
+    {
+      "time": "03:14:48.220",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "time": "03:14:48.227",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "time": "03:14:48.228",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200
+    },
+    {
+      "time": "03:14:48.230",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200
+    },
+    {
+      "time": "03:14:48.243",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200
+    },
+    {
+      "time": "03:14:48.248",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.160",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "time": "03:15:17.412",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.440",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.499",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.518",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.619",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.623",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.628",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.651",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.657",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.673",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.682",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.693",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.827",
+      "method": "GET",
+      "path": "/api/dashboard",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.838",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.839",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.843",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.855",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.857",
+      "method": "GET",
+      "path": "/api/admin/dashboard/realtime",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.877",
+      "method": "GET",
+      "path": "/api/admin/cuentas-destino",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.924",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.937",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200
+    },
+    {
+      "time": "03:15:17.959",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200
+    },
+    {
+      "time": "03:15:18.169",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200
+    },
+    {
+      "time": "03:15:18.178",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "time": "03:15:18.404",
+      "method": "GET",
+      "path": "/api/locations",
+      "status": 200
+    },
+    {
+      "time": "03:15:18.407",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "time": "03:15:18.415",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:15:18.431",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200
+    },
+    {
+      "time": "03:15:18.434",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200
+    },
+    {
+      "time": "03:15:18.435",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200
+    },
+    {
+      "time": "03:15:19.410",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:15:19.419",
+      "method": "GET",
+      "path": "/api/clientes",
+      "status": 200
+    },
+    {
+      "time": "03:15:19.614",
+      "method": "GET",
+      "path": "/api/pos/buscar",
+      "status": 200
+    },
+    {
+      "time": "03:15:33.568",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "time": "03:15:33.830",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "time": "03:15:33.860",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:15:33.867",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200
+    },
+    {
+      "time": "03:15:34.109",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200
+    },
+    {
+      "time": "03:15:34.128",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:15:34.137",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200
+    },
+    {
+      "time": "03:15:34.157",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200
+    },
+    {
+      "time": "03:15:34.353",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:15:34.357",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "time": "03:15:34.371",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200
+    },
+    {
+      "time": "03:15:34.372",
+      "method": "GET",
+      "path": "/api/locations",
+      "status": 200
+    },
+    {
+      "time": "03:15:34.375",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "time": "03:15:34.393",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200
+    },
+    {
+      "time": "03:15:34.403",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200
+    },
+    {
+      "time": "03:15:34.405",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200
+    },
+    {
+      "time": "03:15:34.782",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:15:34.793",
+      "method": "GET",
+      "path": "/api/clientes",
+      "status": 200
+    },
+    {
+      "time": "03:15:35.215",
+      "method": "GET",
+      "path": "/api/pos/buscar",
+      "status": 200
+    },
+    {
+      "time": "03:15:36.193",
+      "method": "POST",
+      "path": "/api/pos/validar-precio",
+      "status": 200
+    },
+    {
+      "time": "03:15:36.704",
+      "method": "POST",
+      "path": "/api/tickets",
+      "status": 201
+    },
+    {
+      "time": "03:15:36.744",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:15:36.752",
+      "method": "GET",
+      "path": "/api/tickets/110",
+      "status": 200
+    },
+    {
+      "time": "03:15:43.278",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "time": "03:15:43.534",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "time": "03:15:43.567",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:15:43.623",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:15:43.640",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "time": "03:15:43.641",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "time": "03:15:43.656",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 403
+    },
+    {
+      "time": "03:15:43.670",
+      "method": "GET",
+      "path": "/api/sesiones-caja/actual",
+      "status": 200
+    },
+    {
+      "time": "03:15:43.745",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:15:43.751",
+      "method": "GET",
+      "path": "/api/caja/tickets",
+      "status": 200
+    },
+    {
+      "time": "03:15:43.765",
+      "method": "GET",
+      "path": "/api/sesiones-caja/actual",
+      "status": 200
+    },
+    {
+      "time": "03:15:43.770",
+      "method": "GET",
+      "path": "/api/sesiones-caja/46/salidas-dinero",
+      "status": 200
+    },
+    {
+      "time": "03:15:43.909",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:15:44.134",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "time": "03:15:44.136",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "time": "03:15:44.137",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 403
+    },
+    {
+      "time": "03:15:44.139",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:15:44.155",
+      "method": "GET",
+      "path": "/api/sesiones-caja/actual",
+      "status": 200
+    },
+    {
+      "time": "03:15:44.223",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "time": "03:15:44.238",
+      "method": "GET",
+      "path": "/api/sesiones-caja/46/salidas-dinero",
+      "status": 200
+    },
+    {
+      "time": "03:15:44.239",
+      "method": "GET",
+      "path": "/api/caja/tickets",
+      "status": 200
+    },
+    {
+      "time": "03:15:44.240",
+      "method": "GET",
+      "path": "/api/sesiones-caja/actual",
+      "status": 200
+    },
+    {
+      "time": "03:15:44.955",
+      "method": "GET",
+      "path": "/api/tickets/110",
+      "status": 200
+    },
+    {
+      "time": "03:15:45.281",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 403
+    },
+    {
+      "time": "03:15:45.493",
+      "method": "POST",
+      "path": "/api/tickets/110/cobrar",
+      "status": 200
+    },
+    {
+      "time": "03:15:45.618",
+      "method": "GET",
+      "path": "/api/caja/tickets",
+      "status": 200
+    },
+    {
+      "time": "03:15:45.627",
+      "method": "GET",
+      "path": "/api/tickets/110",
+      "status": 200
+    }
+  ],
+  "recentErrors": [
+    {
+      "time": "02:51:31.205",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "time": "02:51:32.216",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "time": "02:51:39.268",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "time": "03:14:10.288",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "time": "03:14:11.813",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 403
+    },
+    {
+      "time": "03:14:12.173",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 403
+    },
+    {
+      "time": "03:14:27.851",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "time": "03:14:28.209",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 403
+    },
+    {
+      "time": "03:14:28.497",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 403
+    },
+    {
+      "time": "03:14:29.526",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 403
+    },
+    {
+      "time": "03:14:31.157",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "time": "03:14:47.394",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "time": "03:15:17.160",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "time": "03:15:33.568",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "time": "03:15:43.278",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "time": "03:15:43.656",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 403
+    },
+    {
+      "time": "03:15:44.137",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 403
+    },
+    {
+      "time": "03:15:45.281",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 403
+    }
+  ]
+}

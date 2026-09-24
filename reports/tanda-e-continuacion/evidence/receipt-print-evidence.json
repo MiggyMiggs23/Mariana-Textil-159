@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-09-24T03:19:48.718Z",
+  "folio": "E3-835-00000001",
+  "postResponses": [
+    {
+      "path": "/api/recibos-e3/E3-835-00000001/impresiones",
+      "status": 200
+    }
+  ],
+  "printEvents": [
+    "beforeprint",
+    "beforeprint",
+    "afterprint"
+  ],
+  "physicalPrint": false,
+  "pdf": "receipt-E3-835-00000001.pdf"
+}

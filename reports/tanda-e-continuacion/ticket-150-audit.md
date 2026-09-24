@@ -1,0 +1,29 @@
+# Ticket de $150 — revisión de código y evidencia histórica
+
+Corrected re-audit (workspace is enforced read-only, so I did not and cannot apply_patch/create `reports/tanda-e-continuacion/ticket-150-audit.md`; report contents are supplied here).
+
+CONCLUSION: no verified product defect. My prior “hidden/orphaned from Caja UI” conclusion was wrong.
+
+Evidence:
+- `artifacts/api-server/src/lib/pos.ts:2252-2289`: `listarTicketsCajaOperativa` scopes by location and VENDIDO, then explicitly includes every TICKET with `cobrado=false` regardless of `sesionCajaId` (`2277-2281`); only already-cobrado tickets require the current session. This is exactly the cross-session recovery behavior requested.
+- `artifacts/api-server/src/lib/pos.test.ts:1665-1762`: POS-05C creates prior/current pending documents and asserts both `listarTicketsPendientesCaja` and `listarTicketsCajaOperativa`; expected Caja IDs include pending prior/current tickets plus current-session paid ticket (`1733-1757`). This is direct regression evidence that a NULL/old session does not orphan an unpaid ticket.
+- UI uses that helper through `/caja/tickets`: `artifacts/api-server/src/routes/pos.ts:595-625` and `artifacts/mariana-textil/src/pages/cobros.tsx:1295-1313`; the page refreshes every 10 seconds and displays “No hay tickets pendientes” only when returned list is empty (`cobros.tsx:1513-1541`). Unpaid TICKETS receive a visible `Cobrar` button (`:1600-1619`). Therefore Ticket 112 should be recoverable by opening Caja at its location, where it is listed independent of original session.
+- Collection is not tied to creation session: `artifacts/api-server/src/lib/pos.ts:1830-1881` requires a current open session at the ticket location; `:1945-1975` inserts payments, sets `cobrado=true`, `cobradoAt`, cashier and current `sesionCajaId`, then consumes sale output. Ticket 112’s NULL session is expected before collection, not a defect.
+
+Financial totals vs pending section (must not conflate):
+- Canonical accounting predicate `artifacts/api-server/src/lib/accounted-document.ts:2-11` excludes VENDIDO/unpaid TICKETS from financial sales/cost/margin; pending predicate explicitly includes them (`:18-23`). Thus Ticket 112’s $150 belongs in pending/uncollected operational work, not collected financial totals or cash expected.
+- Corte separately builds `pendientes` from all location pending tickets (`artifacts/api-server/src/lib/pos.ts:2443-2451`), while product totals are filtered to tickets assigned to that session (`:2464-2474`). This is deliberate: the pending warning is location-wide, whereas session financial/product totals are session-attributed. Existing POS-05C asserts corte pending IDs (`pos.test.ts:1751-1753`).
+- Snapshot corroboration: `reports/tanda-e-20260923/tarea-1/final-state.txt:11-16` says Session 47 remains open, counted NULL; Ticket 112 is not charged/no cash session; roll 6248 is consumed/VENDIDO. `reports/tanda-e-20260923/INFORME.md:25-29` separately records the original closed-site totals ($500 fund, $525 exits, expected -$25, counted $0, difference $25) and says the second-site ticket was partial evidence, not a successful cash-sale test.
+
+Indefinite state/close policy:
+- No evidence in inspected code of an expiry/auto-cancel for VENDIDO+TICKET+cobrado=false; it is a valid pending state. Closing a session does not make pending tickets uncollectable: the Caja query uses location + unpaid status, not session. A later open session can collect and attach current session at payment.
+- Corte’s pending list is a warning/visibility section, not a financial charge; it is location-wide by design. The inspected close UI shows Corte and pending details, but no evidence that close automatically cancels or consumes pending tickets.
+
+Recover/cancel and authorization:
+- Recover: permitted `cobros_pagos.crear` is required by `/tickets/:id/cobrar` (`artifacts/api-server/src/routes/pos.ts:750-805`), plus location scope and an open location session; exact total and valid non-credit payment are enforced (`pos.ts:1882-1935`).
+- Cancel: `/tickets/:id/cancelar` requires `pos.crear`; non-ADMIN must supply ADMIN credentials (`routes/pos.ts:695-713`), location is checked (`:714-720`), and reason must be at least 10 chars (`lib/pos.ts:1423-1429`). The ticket-aware cancellation locks linked sale outputs (`:1430-1480`) and cancellation logic records/reverses the associated inventory/ledger state; use this route, not generic inventory reversal. The inspected Caja list itself exposes Cobrar/Autorizar (`cobros.tsx:1609-1632`), while cancellation is handled from ticket/detail operational surfaces; direct API authorization is clear even if a specific cancel button is not present in this page.
+
+Stall evidence limits:
+- `reports/tanda-e-20260923/INFORME.md:27-29` is the only preserved narrative evidence found for the actual run: browser worker stopped delivering evidence for >30 minutes and was stopped; final snapshot says canceled after stalling without new evidence (`final-state.txt:19-20`). No preserved request/response/network log tying the stall to ticket creation, payment, cancellation, or a server error was found in the report tree. Therefore cannot attribute the stall to payment failure, browser failure, or backend defect. The strongest evidence is the resulting atomic-looking business state: creation/physical consumption committed, payment did not.
+
+Recommendation: no fix based on current evidence. Treat Ticket 112 as legitimate indefinitely pending inventory consumption, visible in the next/any open Caja at its location, collectible or cancellable under existing authorization. If a future reproduction claims it is missing, capture `/api/caja/tickets` response plus current location/session and request logs before changing code.

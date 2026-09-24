@@ -1,3 +1,7 @@
+### Tanda E continuación — estado 24/09/2026
+
+Recorrido aislado conciliado: efectivo765, transferencia150, deuda100; sesión46 abierta antes de destruir la copia privada autorizada. E3 PDF real servido: dos A5 horizontales Cliente/Tienda en Chromium140/153, botón auditado y screenshot antes del PDF; impresión física no probada. Signo CANCELACION+1 corregido. Informe y descarga autocontenida en `reports/tanda-e-continuacion/`; evidencia de candidatos fallidos conservada. UI `dist-tanda-e-print-resize-final-20260924` liberada en el runtime del workspace con TOML validado y un reinicio web; API sin cambios ni reinicio por esta continuación. No reusar los scripts de mutación ni credenciales desechadas.
+
 Los documentos impresos requieren `print-color-adjust: exact` para que el logo y los fondos lleguen al papel; sin esa regla el navegador los descarta.
 
 **El ticket, la nota, la nota de productos y la hoja de Salida NO imprimen números de serie** y agrupan los rollos por producto. Las series de Salida permanecen completas en el sistema y se consultan desde su detalle en pantalla. **La hoja de viaje y la hoja de auditoría SÍ imprimen las series**, porque son documentos de control interno.

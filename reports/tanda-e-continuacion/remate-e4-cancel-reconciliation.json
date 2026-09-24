@@ -1,0 +1,271 @@
+{
+  "timestamp": "2026-09-24T03:23:57.156Z",
+  "identity": {
+    "database": "tanda_e_continuacion_copy",
+    "readonly": "on"
+  },
+  "tickets": [
+    {
+      "id": 112,
+      "folio": 1006,
+      "total": "90.00",
+      "estado": "VENDIDO",
+      "cobrado": true,
+      "sesion_caja_id": 46,
+      "cancelado_at": null,
+      "cancelado_por": null,
+      "motivo_cancelacion": null
+    },
+    {
+      "id": 113,
+      "folio": 1007,
+      "total": "150.00",
+      "estado": "CANCELADO",
+      "cobrado": false,
+      "sesion_caja_id": null,
+      "cancelado_at": "2026-09-24T03:23:33.390Z",
+      "cancelado_por": 234,
+      "motivo_cancelacion": "TANDA EC cancelar pendiente sin cobro; devolver rollo006"
+    }
+  ],
+  "payments": [
+    {
+      "id": 93,
+      "ticket_id": 112,
+      "forma_pago": "EFECTIVO",
+      "importe": "90.00"
+    }
+  ],
+  "lines": [
+    {
+      "ticket_id": 112,
+      "rollo_id": 6237,
+      "cantidad": "1.000",
+      "precio_unitario": "90.00",
+      "importe": "90.00",
+      "costo_unitario_congelado": "100.00",
+      "costo_total_congelado": "100.00",
+      "margin": "-10.00"
+    },
+    {
+      "ticket_id": 113,
+      "rollo_id": 6238,
+      "cantidad": "1.000",
+      "precio_unitario": "150.00",
+      "importe": "150.00",
+      "costo_unitario_congelado": "100.00",
+      "costo_total_congelado": "100.00",
+      "margin": "50.00"
+    }
+  ],
+  "rolls": [
+    {
+      "id": 6237,
+      "serie": "993000005",
+      "estado": "VENDIDO",
+      "cantidad_actual": "1.000",
+      "costo_total": "100.00"
+    },
+    {
+      "id": 6238,
+      "serie": "993000006",
+      "estado": "DISPONIBLE",
+      "cantidad_actual": "1.000",
+      "costo_total": "100.00"
+    }
+  ],
+  "movements": [
+    {
+      "id": "7374",
+      "rollo_id": 6237,
+      "tipo": "RECEPCION",
+      "cantidad": "1.000",
+      "saldo_posterior": "5.000",
+      "documento_tipo": "ENTRADA",
+      "documento_id": "468"
+    },
+    {
+      "id": "7375",
+      "rollo_id": 6238,
+      "tipo": "RECEPCION",
+      "cantidad": "1.000",
+      "saldo_posterior": "6.000",
+      "documento_tipo": "ENTRADA",
+      "documento_id": "468"
+    },
+    {
+      "id": "7383",
+      "rollo_id": 6237,
+      "tipo": "VENTA",
+      "cantidad": "-1.000",
+      "saldo_posterior": "6.000",
+      "documento_tipo": "TICKET",
+      "documento_id": "112"
+    },
+    {
+      "id": "7384",
+      "rollo_id": 6238,
+      "tipo": "VENTA",
+      "cantidad": "-1.000",
+      "saldo_posterior": "5.000",
+      "documento_tipo": "TICKET",
+      "documento_id": "113"
+    },
+    {
+      "id": "7385",
+      "rollo_id": 6238,
+      "tipo": "CANCELACION",
+      "cantidad": "1.000",
+      "saldo_posterior": "6.000",
+      "documento_tipo": "TICKET",
+      "documento_id": "113"
+    }
+  ],
+  "outflows": [
+    {
+      "id": 1,
+      "sesion_caja_id": 46,
+      "monto": "25.00",
+      "motivo": "TANDA EC salida suficiente de caja25 sin desbloqueo",
+      "cuenta_origen": "CAJA_FISICA",
+      "creado_por_id": 235
+    }
+  ],
+  "audit": [
+    {
+      "id": "4356",
+      "accion": "MARCAR_REMATE",
+      "entidad": "rollos",
+      "entidad_id": "6237",
+      "datos_despues": {
+        "motivo": "TANDA EC remate autorizado de rollo sintético con costo100 para venta90",
+        "rolloId": 6237,
+        "usuarioId": 234
+      },
+      "created_at": "2026-09-24T03:22:26.033Z"
+    },
+    {
+      "id": "4357",
+      "accion": "VENDER",
+      "entidad": "tickets",
+      "entidad_id": "112",
+      "datos_despues": {
+        "iva": "0.00",
+        "folio": 1006,
+        "total": "90.00",
+        "lineas": 1,
+        "remate": true,
+        "credito": false,
+        "subtotal": "90.00",
+        "diasPlazo": null,
+        "tiposLinea": [
+          "NORMAL"
+        ],
+        "rollosRemate": [
+          6237
+        ],
+        "documentoTipo": "TICKET",
+        "notaSinPrecios": false,
+        "nombreDestinatario": null,
+        "direccionEntregaSnapshot": null
+      },
+      "created_at": "2026-09-24T03:22:28.449Z"
+    },
+    {
+      "id": "4359",
+      "accion": "COBRAR",
+      "entidad": "tickets",
+      "entidad_id": "112",
+      "datos_despues": {
+        "pagos": [
+          {
+            "importe": "90.00",
+            "formaPago": "EFECTIVO"
+          }
+        ],
+        "sesionCajaId": 46
+      },
+      "created_at": "2026-09-24T03:22:37.568Z"
+    },
+    {
+      "id": "4361",
+      "accion": "SALIDA_DINERO_CAJA",
+      "entidad": "salidas_dinero_caja",
+      "entidad_id": "1",
+      "datos_despues": {
+        "e4": {
+          "tipo": "EXTRAORDINARIA",
+          "estado": "PENDIENTE",
+          "version": 0,
+          "historial": [],
+          "claveOperacion": "ede2473f-0301-4fa5-badf-4fecde8ba64b",
+          "desbloqueoCaja": null
+        },
+        "id": 1,
+        "monto": "25.00",
+        "motivo": "TANDA EC salida suficiente de caja25 sin desbloqueo",
+        "createdAt": "2026-09-24 03:23:04.951171+00",
+        "creadoPorId": 235,
+        "proveedorId": null,
+        "ubicacionId": 835,
+        "cuentaOrigen": "CAJA_FISICA",
+        "sesionCajaId": 46
+      },
+      "created_at": "2026-09-24T03:23:04.951Z"
+    },
+    {
+      "id": "4363",
+      "accion": "VENDER",
+      "entidad": "tickets",
+      "entidad_id": "113",
+      "datos_despues": {
+        "iva": "0.00",
+        "folio": 1007,
+        "total": "150.00",
+        "lineas": 1,
+        "remate": false,
+        "credito": false,
+        "subtotal": "150.00",
+        "diasPlazo": null,
+        "tiposLinea": [
+          "NORMAL"
+        ],
+        "rollosRemate": [],
+        "documentoTipo": "TICKET",
+        "notaSinPrecios": false,
+        "nombreDestinatario": null,
+        "direccionEntregaSnapshot": null
+      },
+      "created_at": "2026-09-24T03:23:10.096Z"
+    },
+    {
+      "id": "4365",
+      "accion": "CANCELAR",
+      "entidad": "tickets",
+      "entidad_id": "113",
+      "datos_despues": {
+        "estado": "CANCELADO",
+        "motivo": "TANDA EC cancelar pendiente sin cobro; devolver rollo006",
+        "autorizadoPor": 234,
+        "requiereDevolucion": false
+      },
+      "created_at": "2026-09-24T03:23:33.184Z"
+    }
+  ],
+  "session": [
+    {
+      "id": 46,
+      "estado": "ABIERTA",
+      "fondo_inicial": "500.00",
+      "cerrada_at": null,
+      "expected_cash": "765.00"
+    }
+  ],
+  "financialIsolation": [
+    {
+      "cancelled_ticket_payments": "0",
+      "cancelled_ticket_credit_movements": "0",
+      "customer8_debt": "100.00"
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "database": "tanda_e_continuacion_copy",
+  "site": {
+    "id": 835
+  },
+  "actors": {
+    "admin": {
+      "id": 234,
+      "username": "admin"
+    },
+    "caja": {
+      "id": 235,
+      "username": "tandaec-caja"
+    }
+  },
+  "customer": {
+    "id": 8
+  },
+  "product": {
+    "id": 2078
+  },
+  "supplier": {
+    "id": 226
+  },
+  "entry": {
+    "id": 468
+  },
+  "rolls": [
+    {
+      "id": 6233,
+      "serie": "993000001",
+      "recepcionId": 468,
+      "proveedorId": 226,
+      "movimientoId": "7370"
+    },
+    {
+      "id": 6234,
+      "serie": "993000002",
+      "recepcionId": 468,
+      "proveedorId": 226,
+      "movimientoId": "7371"
+    },
+    {
+      "id": 6235,
+      "serie": "993000003",
+      "recepcionId": 468,
+      "proveedorId": 226,
+      "movimientoId": "7372"
+    },
+    {
+      "id": 6236,
+      "serie": "993000004",
+      "recepcionId": 468,
+      "proveedorId": 226,
+      "movimientoId": "7373"
+    },
+    {
+      "id": 6237,
+      "serie": "993000005",
+      "recepcionId": 468,
+      "proveedorId": 226,
+      "movimientoId": "7374"
+    },
+    {
+      "id": 6238,
+      "serie": "993000006",
+      "recepcionId": 468,
+      "proveedorId": 226,
+      "movimientoId": "7375"
+    },
+    {
+      "id": 6239,
+      "serie": "993000007",
+      "recepcionId": 468,
+      "proveedorId": 226,
+      "movimientoId": "7376"
+    },
+    {
+      "id": 6240,
+      "serie": "993000008",
+      "recepcionId": 468,
+      "proveedorId": 226,
+      "movimientoId": "7377"
+    },
+    {
+      "id": 6241,
+      "serie": "993000009",
+      "recepcionId": 468,
+      "proveedorId": 226,
+      "movimientoId": "7378"
+    },
+    {
+      "id": 6242,
+      "serie": "993000010",
+      "recepcionId": 468,
+      "proveedorId": 226,
+      "movimientoId": "7379"
+    }
+  ],
+  "session": {
+    "id": 46,
+    "estado": "ABIERTA",
+    "fecha_operativa": "2026-09-23T00:00:00.000Z",
+    "fondo_inicial": "500.00"
+  },
+  "verification": {
+    "rolls": 10,
+    "receptions": 10,
+    "quantity": "10.000"
+  },
+  "purposes": [
+    "cash",
+    "transfer",
+    "credit authorization / E3",
+    "unmarked undercost negative",
+    "remate",
+    "five reserve rolls"
+  ],
+  "costPerRoll": 100,
+  "listPrice": 150,
+  "customerCreditLimit": 5000,
+  "customerCreditDays": 30
+}

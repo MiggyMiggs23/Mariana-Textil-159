@@ -1,0 +1,16 @@
+2026-09-24T02:45:32.155Z Inspected historical launcher, provenance rules and safe capture scripts. No app/workflow changes.
+2026-09-24T02:45:40.358Z Fresh effective-source dump captured read-only; private local cluster initialized.
+2026-09-24T02:45:51.848Z Fresh dump restored into local copy; original database has received no writes.
+2026-09-24T02:46:33.611Z Actors anonymized/disabled and auth sessions removed only in copy. Ten fully traced synthetic rolls, credit customer and OPEN cash session fund500 committed.
+2026-09-24T02:47:43+00:00 Frozen clean current HEAD and exact current served bundles copied privately. Static syntax checks passed. No API/browser started.
+2026-09-24T02:48:10.033Z Final copy verification passed: two synthetic active actors, zero restored active actors/auth sessions, daily guardian, OPEN fund500, zero synthetic tickets, stock equals ledger.
+2026-09-24T02:49:40.144Z Isolated launch blocker: prepared-test guard requires canonical username admin. Renamed ONLY synthetic ADMIN234 to admin; same random private password, restored actors remain disabled. No guard bypass or application edits.
+2026-09-24T03:15:46.227Z Local Playwright cash+transfer UI tranches PASS: ticket109 cash150, ticket110 transfer150; session46 OPEN expected650. Screenshots saved after login and actions. No API/DB mutation bypass.
+2026-09-24T03:21:25.405Z Credit tranche: Note111/folio1005 authorized, ordinary E3 cash50 movement56 FIFO->sale55, debt100 and cash700 OPEN. Receipt ADMIN visible; CAJA denied. Real print audit4351 succeeded but actual print CSS/PDF BLANK (1 page, no text); defect preserved, no application changes. Tranche stopped; spare cancellation deferred.
+2026-09-24T03:24:04.094Z Remate UI PASS ticket112/1006 cash90 cost100 margin-10; E4 CAJA235 sufficient25 no override cash765; pending113/1007 cancelled ADMIN234, roll6238 restored by +1 ledger, zero payment/credit contamination. Session46 OPEN. Read-only reconciliation saved.
+2026-09-24T03:24:50+00:00 Candidate UI files hash-matched and swapped into private static root; prior UI retained in public-before-print-candidate. No API/proxy restart.
+2026-09-24T03:26:40.132Z Candidate print FAIL: matched served hashes; audit4367 successful but natural PDF1 blank A5/1064bytes and blank print screenshot. No duplicate money. ADMIN read-only corte765, cash tickets240 + abono50 -outflow25 +fund500, transfer150 separate, pending0. Session OPEN.
+2026-09-24T03:31:32.864Z Served visibility candidate still produced blank PDF after actual button and full screenshot; sign CANCELACION+1 PASS. Refused false print PASS; environment preserved for diagnosis.
+2026-09-24T03:36:45.151Z Worker final served resize fix PASS: actual audited button, full screenshot, natural2page visible A5 PDF in Chromium140/153; audits4383/4385. No interception/CSS injection. Raster Cliente/Tienda reviewed; physical printer not tested.
+2026-09-24T03:38:20.514Z Final read-only snapshot: session46 OPEN expected765, transfer150 separate, customer8 debt100, only abono56, cancelled113 zero payment/credit, roll6238 restored. No duplicate money.
+2026-09-24T03:39:15.232Z Authorized exact private teardown verified: root/dump/credentials/cluster removed, no private runtime processes, ports43820/43821/55439 closed. Reports retained; no business close or application runtime modification by this task.

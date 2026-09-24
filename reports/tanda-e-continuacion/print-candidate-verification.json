@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-09-24T03:26:40.132Z",
+  "status": "FAIL_PRINT_RENDERING",
+  "servedIndexSha256": "38336117f09bc23a601f3a795ebf0f71a27b716b38f23cdaec634fbc76b0f666",
+  "servedJsSha256": "db4da5275795b1bebb74784bc453933ef7cb9e3d6c7917d106833294bf8972f1",
+  "servedCssSha256": "b7b5f517d651c34e521616b8faac1352e57a6762ed03aa1cb976cdd40cbb610c",
+  "fullManifestSha256": "121a9eff42e280143c0ce8709f13ec0aef1ada6fb95029dd0d9d002f3da1c648",
+  "pdf": {
+    "pages": 1,
+    "widthPt": 594.96,
+    "heightPt": 420,
+    "bytes": 1064,
+    "extractedTextTrimmed": "",
+    "expected": "2 nonblank A5 landscape pages Cliente/Tienda",
+    "pageRangeUsed": false
+  },
+  "printAuditId": 4367,
+  "duplicateAbonos": false,
+  "session46": "ABIERTA",
+  "corte": {
+    "expected": "765.00",
+    "cashTickets": "240.00",
+    "physicalAbonos": "50.00",
+    "outflows": "25.00",
+    "transfer": "150.00",
+    "pendingTickets": 0,
+    "closed": false
+  }
+}
