@@ -1,0 +1,6 @@
+38ca52abd53f3f736b73b94491d50a6dcbabf8d3f34f57dfce8b7579798418f5  frozen/artifacts/api-server/src/lib/pos.ts
+d62915f04c46a9a907b7fb85badee59a260e5c246890d296b0ed513941467083  frozen/artifacts/api-server/src/lib/e4-cash-out.ts
+1c80ddb150b1ade961066d5970ea9ec502969eb3e5456ee9c1af23c503c819ac  frozen/artifacts/api-server/src/lib/e4-cash-out-repository.ts
+8e10ce9ebeef9b0d2a28c415218328a50cde6703c1e66df9074821e7b4322793  frozen/artifacts/api-server/src/routes/clientes.ts
+ac59b087d8537abcfe6f021f9264bf0cce1aadd0b5c35923d65d20c7b58b9afd  frozen/lib/db/src/index.ts
+5a8ee01ddbd6f3097018066ca7363b1ebcae5fc3514c4c0aa5362a01fd682f40  private/concurrency-run.mjs (final diagnostic bundle)

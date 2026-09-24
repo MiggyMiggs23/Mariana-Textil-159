@@ -1,0 +1,2446 @@
+{
+  "started": "2026-09-24T03:59:59.730Z",
+  "methodology": "Frozen real producers + real PostgreSQL; customer payments invoke the unmodified production route handler with real auth actor IDs (not HTTP/middleware coverage). PostgreSQL-held deterministic blockers, polling pg_stat_activity, 20s barrier deadline, 30s lock timeout, 45s statement timeout.",
+  "cases": [
+    {
+      "name": "two_cashiers_distinct_tickets_same_session",
+      "before": {
+        "cash": [
+          {
+            "id": 46,
+            "fondo_inicial": "5000.00",
+            "payments": "0",
+            "withdrawals": "0"
+          }
+        ],
+        "payments": [],
+        "credit": [],
+        "inventory": [
+          {
+            "id": 2078,
+            "unidad": "METRO",
+            "cache": "60.000",
+            "rolls": "60.000",
+            "ledger": "60.000"
+          },
+          {
+            "id": 2079,
+            "unidad": "KILO",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2080,
+            "unidad": "PIEZA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2081,
+            "unidad": "BOLSA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          }
+        ],
+        "rolls": [
+          {
+            "id": 6233,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6234,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6235,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6236,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6237,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6238,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6239,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6240,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ]
+      },
+      "barrier": [
+        {
+          "pid": 18657,
+          "wait_event_type": "Lock",
+          "wait_event": "transactionid",
+          "query": "select \"id\", \"ubicacion_id\", \"usuario_id\", \"abierta_at\", \"fecha_operativa\", \"cerrada_at\", \"cerrada_por_id\", \"fondo_inicial\", \"efectivo_contado\", \"estado\" from \"sesiones_caja\" where \"sesiones_caja\".\"id\" = $1 limit $2 for update",
+          "blockers": [
+            18654
+          ]
+        },
+        {
+          "pid": 18658,
+          "wait_event_type": "Lock",
+          "wait_event": "tuple",
+          "query": "select \"id\", \"ubicacion_id\", \"usuario_id\", \"abierta_at\", \"fecha_operativa\", \"cerrada_at\", \"cerrada_por_id\", \"fondo_inicial\", \"efectivo_contado\", \"estado\" from \"sesiones_caja\" where \"sesiones_caja\".\"id\" = $1 limit $2 for update",
+          "blockers": [
+            18657
+          ]
+        }
+      ],
+      "results": [
+        {
+          "ok": true,
+          "id": 109,
+          "value": {
+            "id": 109,
+            "folio": 1003,
+            "ubicacionId": 836,
+            "nombreUbicacion": "TANDA F TIENDA 1",
+            "usuarioTerminalId": 235,
+            "nombreUsuarioTerminal": "TANDA F TERMINAL",
+            "clienteId": 8,
+            "nombreCliente": "TANDA F CLIENTE GLOBAL",
+            "documentoTipo": "TICKET",
+            "notaSinPrecios": false,
+            "nombreDestinatario": null,
+            "direccionEntregaSnapshot": null,
+            "diasCreditoCliente": 30,
+            "telefonoCliente": null,
+            "correoCliente": null,
+            "direccionFiscalEfectiva": null,
+            "direccionCliente": null,
+            "direccionEntregaEfectiva": null,
+            "subtotal": "1500.00",
+            "iva": "0.00",
+            "tasaIva": "0.1600",
+            "total": "1500.00",
+            "estado": "VENDIDO",
+            "cobrado": true,
+            "cobradoAt": "2026-09-24T04:00:00.618Z",
+            "autorizacionEstado": "NO_APLICA",
+            "autorizadoAt": null,
+            "usuarioCajaId": 236,
+            "facturado": false,
+            "credito": false,
+            "diasPlazoTicket": null,
+            "fechaVencimientoTicket": null,
+            "sesionCajaId": 46,
+            "uuidCliente": "38101b83-2656-40ad-8820-ba0b5fc0024d",
+            "createdAt": "2026-09-24T03:59:59.979Z",
+            "canceladoAt": null,
+            "canceladoPor": null,
+            "motivoCancelacion": null,
+            "autorizadoPor": null,
+            "remate": false,
+            "rollosRemate": [],
+            "esCredito": false,
+            "importeCredito": "0.00",
+            "diasPlazo": null,
+            "fechaVencimiento": null,
+            "saldoPendiente": "0.00",
+            "estadoNota": null,
+            "viaje": null,
+            "salidas": [],
+            "convertidoANotaPorCobro": false,
+            "nombreUsuarioCaja": null,
+            "nombreUsuarioCancelacion": null,
+            "nombreUsuarioAutorizacion": null,
+            "lineas": [
+              {
+                "id": 369,
+                "ticketId": 109,
+                "rolloId": 6233,
+                "serieRollo": "994000001",
+                "productoId": 2078,
+                "tipo": "NORMAL",
+                "skuProducto": "TANDA-F-METRO",
+                "telaProducto": "TANDA F METRO",
+                "colorProducto": "AZUL TF",
+                "unidadProducto": "METRO",
+                "nombreUbicacion": "TANDA F TIENDA 1",
+                "cantidad": "10.000",
+                "precioUnitario": "150.00",
+                "precioSugerido": "150.00",
+                "importe": "1500.00"
+              }
+            ],
+            "pagos": [
+              {
+                "id": 91,
+                "ticketId": 109,
+                "formaPago": "EFECTIVO",
+                "importe": "1500.00",
+                "referencia": null,
+                "createdAt": "2026-09-24T04:00:00.602Z",
+                "usuarioId": 236,
+                "nombreUsuario": "TANDA F CAJA"
+              }
+            ]
+          }
+        },
+        {
+          "ok": true,
+          "id": 110,
+          "value": {
+            "id": 110,
+            "folio": 1004,
+            "ubicacionId": 836,
+            "nombreUbicacion": "TANDA F TIENDA 1",
+            "usuarioTerminalId": 235,
+            "nombreUsuarioTerminal": "TANDA F TERMINAL",
+            "clienteId": 8,
+            "nombreCliente": "TANDA F CLIENTE GLOBAL",
+            "documentoTipo": "TICKET",
+            "notaSinPrecios": false,
+            "nombreDestinatario": null,
+            "direccionEntregaSnapshot": null,
+            "diasCreditoCliente": 30,
+            "telefonoCliente": null,
+            "correoCliente": null,
+            "direccionFiscalEfectiva": null,
+            "direccionCliente": null,
+            "direccionEntregaEfectiva": null,
+            "subtotal": "1500.00",
+            "iva": "0.00",
+            "tasaIva": "0.1600",
+            "total": "1500.00",
+            "estado": "VENDIDO",
+            "cobrado": true,
+            "cobradoAt": "2026-09-24T04:00:00.766Z",
+            "autorizacionEstado": "NO_APLICA",
+            "autorizadoAt": null,
+            "usuarioCajaId": 241,
+            "facturado": false,
+            "credito": false,
+            "diasPlazoTicket": null,
+            "fechaVencimientoTicket": null,
+            "sesionCajaId": 46,
+            "uuidCliente": "5fb11d27-59fc-4bb0-969d-69bb1b12a93d",
+            "createdAt": "2026-09-24T04:00:00.558Z",
+            "canceladoAt": null,
+            "canceladoPor": null,
+            "motivoCancelacion": null,
+            "autorizadoPor": null,
+            "remate": false,
+            "rollosRemate": [],
+            "esCredito": false,
+            "importeCredito": "0.00",
+            "diasPlazo": null,
+            "fechaVencimiento": null,
+            "saldoPendiente": "0.00",
+            "estadoNota": null,
+            "viaje": null,
+            "salidas": [],
+            "convertidoANotaPorCobro": false,
+            "nombreUsuarioCaja": null,
+            "nombreUsuarioCancelacion": null,
+            "nombreUsuarioAutorizacion": null,
+            "lineas": [
+              {
+                "id": 370,
+                "ticketId": 110,
+                "rolloId": 6234,
+                "serieRollo": "994000002",
+                "productoId": 2078,
+                "tipo": "NORMAL",
+                "skuProducto": "TANDA-F-METRO",
+                "telaProducto": "TANDA F METRO",
+                "colorProducto": "AZUL TF",
+                "unidadProducto": "METRO",
+                "nombreUbicacion": "TANDA F TIENDA 1",
+                "cantidad": "10.000",
+                "precioUnitario": "150.00",
+                "precioSugerido": "150.00",
+                "importe": "1500.00"
+              }
+            ],
+            "pagos": [
+              {
+                "id": 92,
+                "ticketId": 110,
+                "formaPago": "EFECTIVO",
+                "importe": "1500.00",
+                "referencia": null,
+                "createdAt": "2026-09-24T04:00:00.603Z",
+                "usuarioId": 241,
+                "nombreUsuario": "TANDA F CAJA 2"
+              }
+            ]
+          }
+        }
+      ],
+      "after": {
+        "cash": [
+          {
+            "id": 46,
+            "fondo_inicial": "5000.00",
+            "payments": "3000.00",
+            "withdrawals": "0"
+          }
+        ],
+        "payments": [
+          {
+            "id": 91,
+            "ticket_id": 109,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 92,
+            "ticket_id": 110,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          }
+        ],
+        "credit": [],
+        "inventory": [
+          {
+            "id": 2078,
+            "unidad": "METRO",
+            "cache": "60.000",
+            "rolls": "60.000",
+            "ledger": "60.000"
+          },
+          {
+            "id": 2079,
+            "unidad": "KILO",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2080,
+            "unidad": "PIEZA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2081,
+            "unidad": "BOLSA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          }
+        ],
+        "rolls": [
+          {
+            "id": 6233,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6234,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6235,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6236,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6237,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6238,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6239,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6240,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ]
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "two_cashiers_same_ticket_negative",
+      "before": {
+        "cash": [
+          {
+            "id": 46,
+            "fondo_inicial": "5000.00",
+            "payments": "3000.00",
+            "withdrawals": "0"
+          }
+        ],
+        "payments": [
+          {
+            "id": 91,
+            "ticket_id": 109,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 92,
+            "ticket_id": 110,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          }
+        ],
+        "credit": [],
+        "inventory": [
+          {
+            "id": 2078,
+            "unidad": "METRO",
+            "cache": "50.000",
+            "rolls": "50.000",
+            "ledger": "50.000"
+          },
+          {
+            "id": 2079,
+            "unidad": "KILO",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2080,
+            "unidad": "PIEZA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2081,
+            "unidad": "BOLSA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          }
+        ],
+        "rolls": [
+          {
+            "id": 6233,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6234,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6235,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6236,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6237,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6238,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6239,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6240,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ]
+      },
+      "barrier": [
+        {
+          "pid": 18657,
+          "wait_event_type": "Lock",
+          "wait_event": "tuple",
+          "query": "select \"id\", \"folio\", \"ubicacion_id\", \"usuario_terminal_id\", \"cliente_id\", \"documento_tipo\", \"nota_sin_precios\", \"nombre_destinatario\", \"direccion_entrega_snapshot\", \"subtotal\", \"iva\", \"tasa_iva\", \"total\", \"estado\", \"cobrado\", \"cobrado_at\",",
+          "blockers": [
+            18658
+          ]
+        },
+        {
+          "pid": 18658,
+          "wait_event_type": "Lock",
+          "wait_event": "transactionid",
+          "query": "select \"id\", \"folio\", \"ubicacion_id\", \"usuario_terminal_id\", \"cliente_id\", \"documento_tipo\", \"nota_sin_precios\", \"nombre_destinatario\", \"direccion_entrega_snapshot\", \"subtotal\", \"iva\", \"tasa_iva\", \"total\", \"estado\", \"cobrado\", \"cobrado_at\",",
+          "blockers": [
+            18654
+          ]
+        }
+      ],
+      "results": [
+        {
+          "ok": true,
+          "id": 111,
+          "value": {
+            "id": 111,
+            "folio": 1005,
+            "ubicacionId": 836,
+            "nombreUbicacion": "TANDA F TIENDA 1",
+            "usuarioTerminalId": 235,
+            "nombreUsuarioTerminal": "TANDA F TERMINAL",
+            "clienteId": 8,
+            "nombreCliente": "TANDA F CLIENTE GLOBAL",
+            "documentoTipo": "TICKET",
+            "notaSinPrecios": false,
+            "nombreDestinatario": null,
+            "direccionEntregaSnapshot": null,
+            "diasCreditoCliente": 30,
+            "telefonoCliente": null,
+            "correoCliente": null,
+            "direccionFiscalEfectiva": null,
+            "direccionCliente": null,
+            "direccionEntregaEfectiva": null,
+            "subtotal": "1500.00",
+            "iva": "0.00",
+            "tasaIva": "0.1600",
+            "total": "1500.00",
+            "estado": "VENDIDO",
+            "cobrado": true,
+            "cobradoAt": "2026-09-24T04:00:00.876Z",
+            "autorizacionEstado": "NO_APLICA",
+            "autorizadoAt": null,
+            "usuarioCajaId": 236,
+            "facturado": false,
+            "credito": false,
+            "diasPlazoTicket": null,
+            "fechaVencimientoTicket": null,
+            "sesionCajaId": 46,
+            "uuidCliente": "4f6dbf69-2f51-4a74-a85a-9bb241116b5f",
+            "createdAt": "2026-09-24T04:00:00.801Z",
+            "canceladoAt": null,
+            "canceladoPor": null,
+            "motivoCancelacion": null,
+            "autorizadoPor": null,
+            "remate": false,
+            "rollosRemate": [],
+            "esCredito": false,
+            "importeCredito": "0.00",
+            "diasPlazo": null,
+            "fechaVencimiento": null,
+            "saldoPendiente": "0.00",
+            "estadoNota": null,
+            "viaje": null,
+            "salidas": [],
+            "convertidoANotaPorCobro": false,
+            "nombreUsuarioCaja": null,
+            "nombreUsuarioCancelacion": null,
+            "nombreUsuarioAutorizacion": null,
+            "lineas": [
+              {
+                "id": 371,
+                "ticketId": 111,
+                "rolloId": 6235,
+                "serieRollo": "994000003",
+                "productoId": 2078,
+                "tipo": "NORMAL",
+                "skuProducto": "TANDA-F-METRO",
+                "telaProducto": "TANDA F METRO",
+                "colorProducto": "AZUL TF",
+                "unidadProducto": "METRO",
+                "nombreUbicacion": "TANDA F TIENDA 1",
+                "cantidad": "10.000",
+                "precioUnitario": "150.00",
+                "precioSugerido": "150.00",
+                "importe": "1500.00"
+              }
+            ],
+            "pagos": [
+              {
+                "id": 93,
+                "ticketId": 111,
+                "formaPago": "EFECTIVO",
+                "importe": "1500.00",
+                "referencia": null,
+                "createdAt": "2026-09-24T04:00:00.839Z",
+                "usuarioId": 236,
+                "nombreUsuario": "TANDA F CAJA"
+              }
+            ]
+          }
+        },
+        {
+          "ok": false,
+          "code": "ALREADY_CHARGED",
+          "message": "El ticket ya fue cobrado."
+        }
+      ],
+      "after": {
+        "cash": [
+          {
+            "id": 46,
+            "fondo_inicial": "5000.00",
+            "payments": "4500.00",
+            "withdrawals": "0"
+          }
+        ],
+        "payments": [
+          {
+            "id": 91,
+            "ticket_id": 109,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 92,
+            "ticket_id": 110,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 93,
+            "ticket_id": 111,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          }
+        ],
+        "credit": [],
+        "inventory": [
+          {
+            "id": 2078,
+            "unidad": "METRO",
+            "cache": "50.000",
+            "rolls": "50.000",
+            "ledger": "50.000"
+          },
+          {
+            "id": 2079,
+            "unidad": "KILO",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2080,
+            "unidad": "PIEZA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2081,
+            "unidad": "BOLSA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          }
+        ],
+        "rolls": [
+          {
+            "id": 6233,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6234,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6235,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6236,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6237,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6238,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6239,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6240,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ]
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "two_users_same_roll_inventory_pair",
+      "before": {
+        "cash": [
+          {
+            "id": 46,
+            "fondo_inicial": "5000.00",
+            "payments": "4500.00",
+            "withdrawals": "0"
+          }
+        ],
+        "payments": [
+          {
+            "id": 91,
+            "ticket_id": 109,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 92,
+            "ticket_id": 110,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 93,
+            "ticket_id": 111,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          }
+        ],
+        "credit": [],
+        "inventory": [
+          {
+            "id": 2078,
+            "unidad": "METRO",
+            "cache": "50.000",
+            "rolls": "50.000",
+            "ledger": "50.000"
+          },
+          {
+            "id": 2079,
+            "unidad": "KILO",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2080,
+            "unidad": "PIEZA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2081,
+            "unidad": "BOLSA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          }
+        ],
+        "rolls": [
+          {
+            "id": 6233,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6234,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6235,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6236,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6237,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6238,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6239,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6240,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ]
+      },
+      "barrier": [
+        {
+          "pid": 18657,
+          "wait_event_type": "Lock",
+          "wait_event": "advisory",
+          "query": "SELECT pg_advisory_xact_lock(hashtextextended($1, $2))",
+          "blockers": [
+            18654
+          ]
+        },
+        {
+          "pid": 18658,
+          "wait_event_type": "Lock",
+          "wait_event": "advisory",
+          "query": "SELECT pg_advisory_xact_lock(hashtextextended($1, $2))",
+          "blockers": [
+            18654,
+            18657
+          ]
+        }
+      ],
+      "results": [
+        {
+          "ok": true,
+          "id": 112,
+          "value": {
+            "id": 112,
+            "folio": 1006,
+            "ubicacionId": 836,
+            "nombreUbicacion": "TANDA F TIENDA 1",
+            "usuarioTerminalId": 235,
+            "nombreUsuarioTerminal": "TANDA F TERMINAL",
+            "clienteId": 8,
+            "nombreCliente": "TANDA F CLIENTE GLOBAL",
+            "documentoTipo": "TICKET",
+            "notaSinPrecios": false,
+            "nombreDestinatario": null,
+            "direccionEntregaSnapshot": null,
+            "diasCreditoCliente": 30,
+            "telefonoCliente": null,
+            "correoCliente": null,
+            "direccionFiscalEfectiva": null,
+            "direccionCliente": null,
+            "direccionEntregaEfectiva": null,
+            "subtotal": "1500.00",
+            "iva": "0.00",
+            "tasaIva": "0.1600",
+            "total": "1500.00",
+            "estado": "VENDIDO",
+            "cobrado": false,
+            "cobradoAt": null,
+            "autorizacionEstado": "NO_APLICA",
+            "autorizadoAt": null,
+            "usuarioCajaId": null,
+            "facturado": false,
+            "credito": false,
+            "diasPlazoTicket": null,
+            "fechaVencimientoTicket": null,
+            "sesionCajaId": null,
+            "uuidCliente": "e5c6ef82-48b2-49d4-ab48-ca306c5d0ae2",
+            "createdAt": "2026-09-24T04:00:00.941Z",
+            "canceladoAt": null,
+            "canceladoPor": null,
+            "motivoCancelacion": null,
+            "autorizadoPor": null,
+            "remate": false,
+            "rollosRemate": [],
+            "esCredito": false,
+            "importeCredito": "0.00",
+            "diasPlazo": null,
+            "fechaVencimiento": null,
+            "saldoPendiente": "0.00",
+            "estadoNota": null,
+            "viaje": null,
+            "salidas": [],
+            "convertidoANotaPorCobro": false,
+            "nombreUsuarioCaja": null,
+            "nombreUsuarioCancelacion": null,
+            "nombreUsuarioAutorizacion": null,
+            "lineas": [
+              {
+                "id": 372,
+                "ticketId": 112,
+                "rolloId": 6236,
+                "serieRollo": "994000004",
+                "productoId": 2078,
+                "tipo": "NORMAL",
+                "skuProducto": "TANDA-F-METRO",
+                "telaProducto": "TANDA F METRO",
+                "colorProducto": "AZUL TF",
+                "unidadProducto": "METRO",
+                "nombreUbicacion": "TANDA F TIENDA 1",
+                "cantidad": "10.000",
+                "precioUnitario": "150.00",
+                "precioSugerido": "150.00",
+                "importe": "1500.00"
+              }
+            ],
+            "pagos": []
+          }
+        },
+        {
+          "ok": false,
+          "code": "ROLLO_NOT_AVAILABLE",
+          "message": "El rollo serie 994000004 no está DISPONIBLE."
+        }
+      ],
+      "after": {
+        "cash": [
+          {
+            "id": 46,
+            "fondo_inicial": "5000.00",
+            "payments": "4500.00",
+            "withdrawals": "0"
+          }
+        ],
+        "payments": [
+          {
+            "id": 91,
+            "ticket_id": 109,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 92,
+            "ticket_id": 110,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 93,
+            "ticket_id": 111,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          }
+        ],
+        "credit": [],
+        "inventory": [
+          {
+            "id": 2078,
+            "unidad": "METRO",
+            "cache": "40.000",
+            "rolls": "40.000",
+            "ledger": "40.000"
+          },
+          {
+            "id": 2079,
+            "unidad": "KILO",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2080,
+            "unidad": "PIEZA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2081,
+            "unidad": "BOLSA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          }
+        ],
+        "rolls": [
+          {
+            "id": 6233,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6234,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6235,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6236,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6237,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6238,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6239,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6240,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ]
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "two_client_abonos",
+      "before": {
+        "cash": [
+          {
+            "id": 46,
+            "fondo_inicial": "5000.00",
+            "payments": "4500.00",
+            "withdrawals": "0"
+          }
+        ],
+        "payments": [
+          {
+            "id": 91,
+            "ticket_id": 109,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 92,
+            "ticket_id": 110,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 93,
+            "ticket_id": 111,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          }
+        ],
+        "credit": [],
+        "inventory": [
+          {
+            "id": 2078,
+            "unidad": "METRO",
+            "cache": "40.000",
+            "rolls": "40.000",
+            "ledger": "40.000"
+          },
+          {
+            "id": 2079,
+            "unidad": "KILO",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2080,
+            "unidad": "PIEZA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2081,
+            "unidad": "BOLSA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          }
+        ],
+        "rolls": [
+          {
+            "id": 6233,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6234,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6235,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6236,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6237,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6238,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6239,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6240,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ]
+      },
+      "barrierError": "Two blocked concurrent backends not observed within 20 seconds",
+      "results": [
+        {
+          "ok": true,
+          "id": 55,
+          "status": 201,
+          "value": {
+            "status": 201,
+            "id": 55
+          }
+        },
+        {
+          "ok": false,
+          "message": "Failed query: insert into \"operaciones_credito_e1\" (\"productor\", \"clave\", \"naturaleza\", \"usuario_id\", \"solicitud_canonica\", \"created_at\") values ($1, $2, $3, $4, $5, default) on conflict (\"productor\",\"clave\") do nothing returning \"productor\", \"clave\", \"naturaleza\", \"usuario_id\", \"solicitud_canonica\", \"created_at\"\nparams: ABONO_ORDINARIO,7ad168a2-b23c-4a75-9ced-c2f1b4fb73c2,INGRESO_FISICO,241,{\"actorId\":241,\"intent\":{\"clienteId\":8,\"cuentaDestino\":\"CAJA_FISICA\",\"destinos\":[],\"fechaEfectiva\":null,\"formaPago\":\"EFECTIVO\",\"importe\":\"100.00\",\"naturaleza\":\"INGRESO_FISICO\",\"notaOrigenId\":null,\"notas\":\"TANDA F concurrent real abono\",\"operacionClave\":\"7ad168a2-b23c-4a75-9ced-c2f1b4fb73c2\",\"origenJustificacion\":null,\"referencia\":null,\"sesionCajaId\":46,\"sitioOrigenId\":836,\"ticketId\":null},\"naturaleza\":\"INGRESO_FISICO\",\"productor\":\"ABONO_ORDINARIO\"}"
+        }
+      ],
+      "after": {
+        "cash": [
+          {
+            "id": 46,
+            "fondo_inicial": "5000.00",
+            "payments": "4500.00",
+            "withdrawals": "0"
+          }
+        ],
+        "payments": [
+          {
+            "id": 91,
+            "ticket_id": 109,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 92,
+            "ticket_id": 110,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 93,
+            "ticket_id": 111,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          }
+        ],
+        "credit": [
+          {
+            "id": 55,
+            "tipo": "ABONO",
+            "importe": "-100.00",
+            "forma_pago": "EFECTIVO",
+            "sesion_caja_id": 46
+          }
+        ],
+        "inventory": [
+          {
+            "id": 2078,
+            "unidad": "METRO",
+            "cache": "40.000",
+            "rolls": "40.000",
+            "ledger": "40.000"
+          },
+          {
+            "id": 2079,
+            "unidad": "KILO",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2080,
+            "unidad": "PIEZA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2081,
+            "unidad": "BOLSA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          }
+        ],
+        "rolls": [
+          {
+            "id": 6233,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6234,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6235,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6236,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6237,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6238,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6239,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6240,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ]
+      },
+      "result": "FAIL_OR_BLOCKED",
+      "error": "Two blocked concurrent backends not observed within 20 seconds"
+    },
+    {
+      "name": "two_e4_withdrawals_insufficient_combined_cash",
+      "before": {
+        "cash": [
+          {
+            "id": 46,
+            "fondo_inicial": "5000.00",
+            "payments": "4500.00",
+            "withdrawals": "0"
+          }
+        ],
+        "payments": [
+          {
+            "id": 91,
+            "ticket_id": 109,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 92,
+            "ticket_id": 110,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 93,
+            "ticket_id": 111,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          }
+        ],
+        "credit": [
+          {
+            "id": 55,
+            "tipo": "ABONO",
+            "importe": "-100.00",
+            "forma_pago": "EFECTIVO",
+            "sesion_caja_id": 46
+          }
+        ],
+        "inventory": [
+          {
+            "id": 2078,
+            "unidad": "METRO",
+            "cache": "40.000",
+            "rolls": "40.000",
+            "ledger": "40.000"
+          },
+          {
+            "id": 2079,
+            "unidad": "KILO",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2080,
+            "unidad": "PIEZA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2081,
+            "unidad": "BOLSA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          }
+        ],
+        "rolls": [
+          {
+            "id": 6233,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6234,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6235,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6236,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6237,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6238,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6239,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6240,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ]
+      },
+      "barrier": [
+        {
+          "pid": 18657,
+          "wait_event_type": "Lock",
+          "wait_event": "tuple",
+          "query": "SELECT s.id, s.ubicacion_id AS \"ubicacionId\", s.estado,\n        (u.tipo = 'TIENDA' AND u.activa) AS \"esTienda\"\n        FROM sesiones_caja s JOIN ubicaciones u ON u.id = s.ubicacion_id\n        WHERE s.id = $1 FOR UPDATE OF s",
+          "blockers": [
+            18658
+          ]
+        },
+        {
+          "pid": 18658,
+          "wait_event_type": "Lock",
+          "wait_event": "transactionid",
+          "query": "SELECT s.id, s.ubicacion_id AS \"ubicacionId\", s.estado,\n        (u.tipo = 'TIENDA' AND u.activa) AS \"esTienda\"\n        FROM sesiones_caja s JOIN ubicaciones u ON u.id = s.ubicacion_id\n        WHERE s.id = $1 FOR UPDATE OF s",
+          "blockers": [
+            18654
+          ]
+        }
+      ],
+      "results": [
+        {
+          "ok": true,
+          "id": 1,
+          "value": {
+            "id": 1,
+            "sesionCajaId": 46,
+            "monto": "6720.00",
+            "motivo": "TANDA F concurrent insufficient combined cash",
+            "proveedorId": null,
+            "cuentaOrigen": "CAJA_FISICA",
+            "creadoPorId": 236,
+            "createdAt": "2026-09-24 04:00:21.51058+00",
+            "e4": {
+              "tipo": "EXTRAORDINARIA",
+              "estado": "PENDIENTE",
+              "version": 0,
+              "claveOperacion": "c8995011-dc1e-40ff-b7a1-78f00c11a3c6",
+              "historial": [],
+              "desbloqueoCaja": null
+            }
+          }
+        },
+        {
+          "ok": false,
+          "code": "E4_CAJA_INSUFICIENTE",
+          "message": "Saldo de caja insuficiente; requiere desbloqueo ADMIN motivado."
+        }
+      ],
+      "after": {
+        "cash": [
+          {
+            "id": 46,
+            "fondo_inicial": "5000.00",
+            "payments": "4500.00",
+            "withdrawals": "6720.00"
+          }
+        ],
+        "payments": [
+          {
+            "id": 91,
+            "ticket_id": 109,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 92,
+            "ticket_id": 110,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 93,
+            "ticket_id": 111,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          }
+        ],
+        "credit": [
+          {
+            "id": 55,
+            "tipo": "ABONO",
+            "importe": "-100.00",
+            "forma_pago": "EFECTIVO",
+            "sesion_caja_id": 46
+          }
+        ],
+        "inventory": [
+          {
+            "id": 2078,
+            "unidad": "METRO",
+            "cache": "40.000",
+            "rolls": "40.000",
+            "ledger": "40.000"
+          },
+          {
+            "id": 2079,
+            "unidad": "KILO",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2080,
+            "unidad": "PIEZA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2081,
+            "unidad": "BOLSA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          }
+        ],
+        "rolls": [
+          {
+            "id": 6233,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6234,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6235,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6236,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6237,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6238,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6239,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6240,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ]
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "two_client_abonos_claim_table_barrier",
+      "before": {
+        "cash": [
+          {
+            "id": 46,
+            "fondo_inicial": "5000.00",
+            "payments": "4500.00",
+            "withdrawals": "6720.00"
+          }
+        ],
+        "payments": [
+          {
+            "id": 91,
+            "ticket_id": 109,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 92,
+            "ticket_id": 110,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 93,
+            "ticket_id": 111,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          }
+        ],
+        "credit": [
+          {
+            "id": 55,
+            "tipo": "ABONO",
+            "importe": "-100.00",
+            "forma_pago": "EFECTIVO",
+            "sesion_caja_id": 46
+          }
+        ],
+        "inventory": [
+          {
+            "id": 2078,
+            "unidad": "METRO",
+            "cache": "40.000",
+            "rolls": "40.000",
+            "ledger": "40.000"
+          },
+          {
+            "id": 2079,
+            "unidad": "KILO",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2080,
+            "unidad": "PIEZA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2081,
+            "unidad": "BOLSA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          }
+        ],
+        "rolls": [
+          {
+            "id": 6233,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6234,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6235,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6236,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6237,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6238,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6239,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6240,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ]
+      },
+      "lastObservedWaits": [
+        {
+          "pid": 18929,
+          "wait_event_type": "Lock",
+          "wait_event": "relation",
+          "query": "insert into \"operaciones_credito_e1\" (\"productor\", \"clave\", \"naturaleza\", \"usuario_id\", \"solicitud_canonica\", \"created_at\") values ($1, $2, $3, $4, $5, default) on conflict (\"productor\",\"clave\") do nothing returning \"productor\", \"clave\", \"n",
+          "blockers": [
+            18926
+          ]
+        },
+        {
+          "pid": 18930,
+          "wait_event_type": "Lock",
+          "wait_event": "relation",
+          "query": "insert into \"operaciones_credito_e1\" (\"productor\", \"clave\", \"naturaleza\", \"usuario_id\", \"solicitud_canonica\", \"created_at\") values ($1, $2, $3, $4, $5, default) on conflict (\"productor\",\"clave\") do nothing returning \"productor\", \"clave\", \"n",
+          "blockers": [
+            18926
+          ]
+        }
+      ],
+      "barrier": [
+        {
+          "pid": 18929,
+          "wait_event_type": "Lock",
+          "wait_event": "relation",
+          "query": "insert into \"operaciones_credito_e1\" (\"productor\", \"clave\", \"naturaleza\", \"usuario_id\", \"solicitud_canonica\", \"created_at\") values ($1, $2, $3, $4, $5, default) on conflict (\"productor\",\"clave\") do nothing returning \"productor\", \"clave\", \"n",
+          "blockers": [
+            18926
+          ]
+        },
+        {
+          "pid": 18930,
+          "wait_event_type": "Lock",
+          "wait_event": "relation",
+          "query": "insert into \"operaciones_credito_e1\" (\"productor\", \"clave\", \"naturaleza\", \"usuario_id\", \"solicitud_canonica\", \"created_at\") values ($1, $2, $3, $4, $5, default) on conflict (\"productor\",\"clave\") do nothing returning \"productor\", \"clave\", \"n",
+          "blockers": [
+            18926
+          ]
+        }
+      ],
+      "results": [
+        {
+          "ok": false,
+          "message": "Failed query: insert into \"operaciones_credito_e1\" (\"productor\", \"clave\", \"naturaleza\", \"usuario_id\", \"solicitud_canonica\", \"created_at\") values ($1, $2, $3, $4, $5, default) on conflict (\"productor\",\"clave\") do nothing returning \"productor\", \"clave\", \"naturaleza\", \"usuario_id\", \"solicitud_canonica\", \"created_at\"\nparams: ABONO_ORDINARIO,85cd7ec9-f017-4a36-9fa2-1e0214c33af4,INGRESO_FISICO,236,{\"actorId\":236,\"intent\":{\"clienteId\":8,\"cuentaDestino\":\"CAJA_FISICA\",\"destinos\":[],\"fechaEfectiva\":null,\"formaPago\":\"EFECTIVO\",\"importe\":\"100.00\",\"naturaleza\":\"INGRESO_FISICO\",\"notaOrigenId\":null,\"notas\":\"TANDA F concurrent real abono\",\"operacionClave\":\"85cd7ec9-f017-4a36-9fa2-1e0214c33af4\",\"origenJustificacion\":null,\"referencia\":null,\"sesionCajaId\":46,\"sitioOrigenId\":836,\"ticketId\":null},\"naturaleza\":\"INGRESO_FISICO\",\"productor\":\"ABONO_ORDINARIO\"}",
+          "causes": [
+            {
+              "code": "40001",
+              "message": "E5: grafo ocupado; abortar transacción completa, sin espera global"
+            }
+          ]
+        },
+        {
+          "ok": true,
+          "id": 56,
+          "status": 201,
+          "value": {
+            "status": 201,
+            "id": 56
+          }
+        }
+      ],
+      "after": {
+        "cash": [
+          {
+            "id": 46,
+            "fondo_inicial": "5000.00",
+            "payments": "4500.00",
+            "withdrawals": "6720.00"
+          }
+        ],
+        "payments": [
+          {
+            "id": 91,
+            "ticket_id": 109,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 92,
+            "ticket_id": 110,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 93,
+            "ticket_id": 111,
+            "importe": "1500.00",
+            "sesion_caja_id": 46
+          }
+        ],
+        "credit": [
+          {
+            "id": 55,
+            "tipo": "ABONO",
+            "importe": "-100.00",
+            "forma_pago": "EFECTIVO",
+            "sesion_caja_id": 46
+          },
+          {
+            "id": 56,
+            "tipo": "ABONO",
+            "importe": "-100.00",
+            "forma_pago": "EFECTIVO",
+            "sesion_caja_id": 46
+          }
+        ],
+        "inventory": [
+          {
+            "id": 2078,
+            "unidad": "METRO",
+            "cache": "40.000",
+            "rolls": "40.000",
+            "ledger": "40.000"
+          },
+          {
+            "id": 2079,
+            "unidad": "KILO",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2080,
+            "unidad": "PIEZA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          },
+          {
+            "id": 2081,
+            "unidad": "BOLSA",
+            "cache": "80.000",
+            "rolls": "80.000",
+            "ledger": "80.000"
+          }
+        ],
+        "rolls": [
+          {
+            "id": 6233,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6234,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6235,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6236,
+            "estado": "VENDIDO",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6237,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6238,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6239,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          },
+          {
+            "id": 6240,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ]
+      },
+      "result": "FAIL_OR_BLOCKED",
+      "error": "Expected values to be strictly equal:\n\n1 !== 2\n"
+    }
+  ],
+  "identity": {
+    "db": "tanda_f_concurrency",
+    "dir": "/home/runner/workspace/.local/tanda-f/cluster",
+    "port": 55440,
+    "started": "2026-09-24T03:56:26.179Z",
+    "pid": "13635",
+    "command": "/nix/store/bgwr5i8jf8jpg75rr53rz3fqv5k8yrwp-postgresql-16.10/bin/postgres -D /home/runner/workspace/.local/tanda-f/cluster -p 55440 -k /home/runner/workspace/.local/tanda-f/socket -h 127.0.0.1"
+  },
+  "fixtures": {
+    "secondCashier": 241,
+    "site": 836,
+    "secondCustomer": 9
+  },
+  "initial": {
+    "cash": [
+      {
+        "id": 46,
+        "fondo_inicial": "5000.00",
+        "payments": "0",
+        "withdrawals": "0"
+      }
+    ],
+    "payments": [],
+    "credit": [],
+    "inventory": [
+      {
+        "id": 2078,
+        "unidad": "METRO",
+        "cache": "80.000",
+        "rolls": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "id": 2079,
+        "unidad": "KILO",
+        "cache": "80.000",
+        "rolls": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "id": 2080,
+        "unidad": "PIEZA",
+        "cache": "80.000",
+        "rolls": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "id": 2081,
+        "unidad": "BOLSA",
+        "cache": "80.000",
+        "rolls": "80.000",
+        "ledger": "80.000"
+      }
+    ],
+    "rolls": [
+      {
+        "id": 6233,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6234,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6235,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6236,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6237,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6238,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6239,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6240,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      }
+    ]
+  },
+  "e4": {
+    "cashBefore": "9600.00",
+    "eachWithdrawal": "6720.00",
+    "combined": "13440.00"
+  },
+  "final": {
+    "cash": [
+      {
+        "id": 46,
+        "fondo_inicial": "5000.00",
+        "payments": "4500.00",
+        "withdrawals": "6720.00"
+      }
+    ],
+    "payments": [
+      {
+        "id": 91,
+        "ticket_id": 109,
+        "importe": "1500.00",
+        "sesion_caja_id": 46
+      },
+      {
+        "id": 92,
+        "ticket_id": 110,
+        "importe": "1500.00",
+        "sesion_caja_id": 46
+      },
+      {
+        "id": 93,
+        "ticket_id": 111,
+        "importe": "1500.00",
+        "sesion_caja_id": 46
+      }
+    ],
+    "credit": [
+      {
+        "id": 55,
+        "tipo": "ABONO",
+        "importe": "-100.00",
+        "forma_pago": "EFECTIVO",
+        "sesion_caja_id": 46
+      },
+      {
+        "id": 56,
+        "tipo": "ABONO",
+        "importe": "-100.00",
+        "forma_pago": "EFECTIVO",
+        "sesion_caja_id": 46
+      },
+      {
+        "id": 57,
+        "tipo": "ABONO",
+        "importe": "-100.00",
+        "forma_pago": "EFECTIVO",
+        "sesion_caja_id": 46
+      }
+    ],
+    "inventory": [
+      {
+        "id": 2078,
+        "unidad": "METRO",
+        "cache": "40.000",
+        "rolls": "40.000",
+        "ledger": "40.000"
+      },
+      {
+        "id": 2079,
+        "unidad": "KILO",
+        "cache": "80.000",
+        "rolls": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "id": 2080,
+        "unidad": "PIEZA",
+        "cache": "80.000",
+        "rolls": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "id": 2081,
+        "unidad": "BOLSA",
+        "cache": "80.000",
+        "rolls": "80.000",
+        "ledger": "80.000"
+      }
+    ],
+    "rolls": [
+      {
+        "id": 6233,
+        "estado": "VENDIDO",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6234,
+        "estado": "VENDIDO",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6235,
+        "estado": "VENDIDO",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6236,
+        "estado": "VENDIDO",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6237,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6238,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6239,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6240,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      }
+    ]
+  },
+  "finalCash": "3080.00",
+  "finished": "2026-09-24T04:01:19.964Z",
+  "abonoManualRetry": {
+    "note": "Explicit diagnostic retry, same actor and exact operation UUID/intent; not an application automatic retry.",
+    "before": {
+      "cash": [
+        {
+          "id": 46,
+          "fondo_inicial": "5000.00",
+          "payments": "4500.00",
+          "withdrawals": "6720.00"
+        }
+      ],
+      "payments": [
+        {
+          "id": 91,
+          "ticket_id": 109,
+          "importe": "1500.00",
+          "sesion_caja_id": 46
+        },
+        {
+          "id": 92,
+          "ticket_id": 110,
+          "importe": "1500.00",
+          "sesion_caja_id": 46
+        },
+        {
+          "id": 93,
+          "ticket_id": 111,
+          "importe": "1500.00",
+          "sesion_caja_id": 46
+        }
+      ],
+      "credit": [
+        {
+          "id": 55,
+          "tipo": "ABONO",
+          "importe": "-100.00",
+          "forma_pago": "EFECTIVO",
+          "sesion_caja_id": 46
+        },
+        {
+          "id": 56,
+          "tipo": "ABONO",
+          "importe": "-100.00",
+          "forma_pago": "EFECTIVO",
+          "sesion_caja_id": 46
+        }
+      ],
+      "inventory": [
+        {
+          "id": 2078,
+          "unidad": "METRO",
+          "cache": "40.000",
+          "rolls": "40.000",
+          "ledger": "40.000"
+        },
+        {
+          "id": 2079,
+          "unidad": "KILO",
+          "cache": "80.000",
+          "rolls": "80.000",
+          "ledger": "80.000"
+        },
+        {
+          "id": 2080,
+          "unidad": "PIEZA",
+          "cache": "80.000",
+          "rolls": "80.000",
+          "ledger": "80.000"
+        },
+        {
+          "id": 2081,
+          "unidad": "BOLSA",
+          "cache": "80.000",
+          "rolls": "80.000",
+          "ledger": "80.000"
+        }
+      ],
+      "rolls": [
+        {
+          "id": 6233,
+          "estado": "VENDIDO",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6234,
+          "estado": "VENDIDO",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6235,
+          "estado": "VENDIDO",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6236,
+          "estado": "VENDIDO",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6237,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6238,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6239,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6240,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "10.000"
+        }
+      ]
+    },
+    "claimsBefore": [],
+    "response": {
+      "status": 201,
+      "id": 57
+    },
+    "after": {
+      "cash": [
+        {
+          "id": 46,
+          "fondo_inicial": "5000.00",
+          "payments": "4500.00",
+          "withdrawals": "6720.00"
+        }
+      ],
+      "payments": [
+        {
+          "id": 91,
+          "ticket_id": 109,
+          "importe": "1500.00",
+          "sesion_caja_id": 46
+        },
+        {
+          "id": 92,
+          "ticket_id": 110,
+          "importe": "1500.00",
+          "sesion_caja_id": 46
+        },
+        {
+          "id": 93,
+          "ticket_id": 111,
+          "importe": "1500.00",
+          "sesion_caja_id": 46
+        }
+      ],
+      "credit": [
+        {
+          "id": 55,
+          "tipo": "ABONO",
+          "importe": "-100.00",
+          "forma_pago": "EFECTIVO",
+          "sesion_caja_id": 46
+        },
+        {
+          "id": 56,
+          "tipo": "ABONO",
+          "importe": "-100.00",
+          "forma_pago": "EFECTIVO",
+          "sesion_caja_id": 46
+        },
+        {
+          "id": 57,
+          "tipo": "ABONO",
+          "importe": "-100.00",
+          "forma_pago": "EFECTIVO",
+          "sesion_caja_id": 46
+        }
+      ],
+      "inventory": [
+        {
+          "id": 2078,
+          "unidad": "METRO",
+          "cache": "40.000",
+          "rolls": "40.000",
+          "ledger": "40.000"
+        },
+        {
+          "id": 2079,
+          "unidad": "KILO",
+          "cache": "80.000",
+          "rolls": "80.000",
+          "ledger": "80.000"
+        },
+        {
+          "id": 2080,
+          "unidad": "PIEZA",
+          "cache": "80.000",
+          "rolls": "80.000",
+          "ledger": "80.000"
+        },
+        {
+          "id": 2081,
+          "unidad": "BOLSA",
+          "cache": "80.000",
+          "rolls": "80.000",
+          "ledger": "80.000"
+        }
+      ],
+      "rolls": [
+        {
+          "id": 6233,
+          "estado": "VENDIDO",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6234,
+          "estado": "VENDIDO",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6235,
+          "estado": "VENDIDO",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6236,
+          "estado": "VENDIDO",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6237,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6238,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6239,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6240,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "10.000"
+        }
+      ]
+    },
+    "replay": {
+      "status": 201,
+      "id": 57
+    },
+    "afterReplay": {
+      "cash": [
+        {
+          "id": 46,
+          "fondo_inicial": "5000.00",
+          "payments": "4500.00",
+          "withdrawals": "6720.00"
+        }
+      ],
+      "payments": [
+        {
+          "id": 91,
+          "ticket_id": 109,
+          "importe": "1500.00",
+          "sesion_caja_id": 46
+        },
+        {
+          "id": 92,
+          "ticket_id": 110,
+          "importe": "1500.00",
+          "sesion_caja_id": 46
+        },
+        {
+          "id": 93,
+          "ticket_id": 111,
+          "importe": "1500.00",
+          "sesion_caja_id": 46
+        }
+      ],
+      "credit": [
+        {
+          "id": 55,
+          "tipo": "ABONO",
+          "importe": "-100.00",
+          "forma_pago": "EFECTIVO",
+          "sesion_caja_id": 46
+        },
+        {
+          "id": 56,
+          "tipo": "ABONO",
+          "importe": "-100.00",
+          "forma_pago": "EFECTIVO",
+          "sesion_caja_id": 46
+        },
+        {
+          "id": 57,
+          "tipo": "ABONO",
+          "importe": "-100.00",
+          "forma_pago": "EFECTIVO",
+          "sesion_caja_id": 46
+        }
+      ],
+      "inventory": [
+        {
+          "id": 2078,
+          "unidad": "METRO",
+          "cache": "40.000",
+          "rolls": "40.000",
+          "ledger": "40.000"
+        },
+        {
+          "id": 2079,
+          "unidad": "KILO",
+          "cache": "80.000",
+          "rolls": "80.000",
+          "ledger": "80.000"
+        },
+        {
+          "id": 2080,
+          "unidad": "PIEZA",
+          "cache": "80.000",
+          "rolls": "80.000",
+          "ledger": "80.000"
+        },
+        {
+          "id": 2081,
+          "unidad": "BOLSA",
+          "cache": "80.000",
+          "rolls": "80.000",
+          "ledger": "80.000"
+        }
+      ],
+      "rolls": [
+        {
+          "id": 6233,
+          "estado": "VENDIDO",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6234,
+          "estado": "VENDIDO",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6235,
+          "estado": "VENDIDO",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6236,
+          "estado": "VENDIDO",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6237,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6238,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6239,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "10.000"
+        },
+        {
+          "id": 6240,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "10.000"
+        }
+      ]
+    },
+    "result": "PASS: rollback atomic, explicit retry succeeds, exact replay does not duplicate"
+  }
+}

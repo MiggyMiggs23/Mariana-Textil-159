@@ -1,0 +1,24 @@
+2026-09-24T03:58:57.709Z Verified private PostgreSQL PID, data directory, port, database; starting fixtures.
+2026-09-24T03:58:57.711Z FATAL column "username" does not exist
+2026-09-24T03:59:10.993Z Verified private PostgreSQL PID, data directory, port, database; starting fixtures.
+2026-09-24T03:59:11.390Z FATAL column p.sesion_caja_id does not exist
+2026-09-24T03:59:35.334Z Verified private PostgreSQL PID, data directory, port, database; starting fixtures.
+2026-09-24T03:59:35.357Z FATAL duplicate key value violates unique constraint "clientes_activos_no_sistema_nombre_normalizado_uidx"
+2026-09-24T03:59:44.803Z Verified private PostgreSQL PID, data directory, port, database; starting fixtures.
+2026-09-24T03:59:44.915Z FATAL invalid input value for enum estado_rollo: "EN_STOCK"
+2026-09-24T03:59:59.752Z Verified private PostgreSQL PID, data directory, port, database; starting fixtures.
+2026-09-24T04:00:00.579Z START two_cashiers_distinct_tickets_same_session
+2026-09-24T04:00:00.795Z END two_cashiers_distinct_tickets_same_session PASS
+2026-09-24T04:00:00.822Z START two_cashiers_same_ticket_negative
+2026-09-24T04:00:00.890Z END two_cashiers_same_ticket_negative PASS
+2026-09-24T04:00:00.891Z START two_users_same_roll_inventory_pair
+2026-09-24T04:00:00.969Z END two_users_same_roll_inventory_pair PASS
+2026-09-24T04:00:00.969Z START two_client_abonos
+2026-09-24T04:00:21.480Z END two_client_abonos FAIL_OR_BLOCKED
+2026-09-24T04:00:21.493Z START two_e4_withdrawals_insufficient_combined_cash
+2026-09-24T04:00:21.587Z END two_e4_withdrawals_insufficient_combined_cash PASS
+2026-09-24T04:00:53.480Z Verified private PostgreSQL PID, data directory, port, database; starting fixtures.
+2026-09-24T04:00:53.498Z START two_client_abonos_claim_table_barrier
+2026-09-24T04:00:53.602Z END two_client_abonos_claim_table_barrier FAIL_OR_BLOCKED
+2026-09-24T04:01:19.869Z Verified private PostgreSQL PID, data directory, port, database; starting fixtures.
+2026-09-24T04:01:19.952Z Abono 40001 atomic rollback and exact UUID retry/replay verified.
