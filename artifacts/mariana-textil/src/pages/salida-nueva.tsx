@@ -268,8 +268,10 @@ export default function SalidaNueva() {
   const totals = scannedRolls.reduce((acc, curr) => {
     if (curr.unidad === 'METRO') acc.metros += Number(curr.cantidadActual);
     else if (curr.unidad === 'KILO') acc.kilos += Number(curr.cantidadActual);
+    else if (curr.unidad === 'BOLSA') acc.bolsas += Number(curr.cantidadActual);
+    else if (curr.unidad === 'PIEZA') acc.piezas += Number(curr.cantidadActual);
     return acc;
-  }, { metros: 0, kilos: 0 });
+  }, { metros: 0, kilos: 0, bolsas: 0, piezas: 0 });
 
   const productSummary = Array.from(scannedRolls.reduce((acc, roll) => {
     const key = `${roll.sku ?? ""}-${roll.tela ?? ""}-${roll.color ?? ""}-${roll.unidad ?? ""}`;
@@ -527,6 +529,14 @@ export default function SalidaNueva() {
                     <div className="flex justify-between items-end pb-1">
                       <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Kilos</span>
                        <span className="text-lg font-bold text-slate-700">{formatNumber(totals.kilos, { kind: "quantity" })}</span>
+                    </div>
+                    <div className="flex justify-between items-end border-b border-slate-100 pb-2">
+                      <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Bolsas</span>
+                      <span className="text-lg font-bold text-slate-700">{formatNumber(totals.bolsas, { kind: "quantity" })}</span>
+                    </div>
+                    <div className="flex justify-between items-end pb-1">
+                      <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Piezas</span>
+                      <span className="text-lg font-bold text-slate-700">{formatNumber(totals.piezas, { kind: "quantity" })}</span>
                     </div>
                   </CardContent>
                   <CardFooter className="bg-slate-50/50 border-t border-slate-100 pt-4">

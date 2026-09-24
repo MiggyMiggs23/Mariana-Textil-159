@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { loadRenderTestModule } from "../render-test-bundle";
 
-type BehaviorPage = "list" | "detail";
+type BehaviorPage = "list" | "detail" | "new";
 
 type BehaviorFixture = {
   actor: Record<string, unknown>;
@@ -36,7 +36,7 @@ export async function loadBehaviorStatusCancelPage(
     import.meta.url,
   ).pathname;
   const pagePath = new URL(
-    page === "list" ? "./salidas.tsx" : "./salida-detail.tsx",
+    page === "list" ? "./salidas.tsx" : page === "new" ? "./salida-nueva.tsx" : "./salida-detail.tsx",
     import.meta.url,
   ).pathname;
 
@@ -54,6 +54,12 @@ export async function loadBehaviorStatusCancelPage(
           data: { items: [salida], total: 1, pageSize: 100 },
         });
         export const useGetSalida = () => ({ ...empty, data: salida });
+        const draftData = { salida };
+        export const useGetBorradorSalida = () => ({ ...empty, data: draftData, isSuccess: true });
+        const mutation = { isPending: false, mutate() { throw new Error("Unexpected mutation"); }, mutateAsync() { throw new Error("Unexpected mutation"); } };
+        export const useAgregarRolloBorradorSalida = () => mutation;
+        export const useQuitarRolloBorradorSalida = () => mutation;
+        export const useEnviarSalida = () => mutation;
         export const useGetUbicacionesSalida = () => ({ ...empty, data: [] });
         export const useListUsers = () => ({ ...empty, data: { items: [] } });
         export const useListProductos = () => ({ ...empty, data: { items: [] } });

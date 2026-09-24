@@ -259,6 +259,12 @@ export default function SalidaDetail() {
                   <span className="text-lg font-bold text-slate-700">{formatNumber(salida.totalKilos, { kind: "quantity" })}</span>
                 </div>
               )}
+              {salida.totalPiezas && Number(salida.totalPiezas) > 0 && (
+                <div className="flex justify-between items-end border-b border-slate-100 pb-2">
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Piezas</span>
+                  <span className="text-lg font-bold text-slate-700">{formatNumber(salida.totalPiezas, { kind: "quantity" })}</span>
+                </div>
+              )}
               {salida.totalBolsas && Number(salida.totalBolsas) > 0 && (
                 <div className="flex justify-between items-end pb-1">
                   <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{formatUnit("BOLSA")}</span>
