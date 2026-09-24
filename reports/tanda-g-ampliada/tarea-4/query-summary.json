@@ -1,0 +1,176 @@
+[
+  {
+    "key": "d882bd81bfb62b6e",
+    "workload": "cashier_pending_read",
+    "maxMs": 45.47425699999985,
+    "executionMs": 18.87
+  },
+  {
+    "key": "0ad689d1c924c8a5",
+    "workload": "client_account_export_query",
+    "maxMs": 276.45926999999983,
+    "executionMs": 53.326
+  },
+  {
+    "key": "e6fb460dfe495714",
+    "workload": "grouped_stock_global",
+    "maxMs": 31.291221000000405,
+    "executionMs": 28.544
+  },
+  {
+    "key": "b0bdfa86f8c50b04",
+    "workload": "cash_cut_buildCorteCaja",
+    "maxMs": 129.87978600000042,
+    "executionMs": 0.069
+  },
+  {
+    "key": "d4f77c785f5514ed",
+    "workload": "cash_cut_buildCorteCaja",
+    "maxMs": 1.5187590000005002,
+    "executionMs": 0.126
+  },
+  {
+    "key": "b74b5b4728f35664",
+    "workload": "cash_cut_buildCorteCaja",
+    "maxMs": 8.394557000000532,
+    "executionMs": 0.03
+  },
+  {
+    "key": "0445011e4b744b54",
+    "workload": "cash_cut_buildCorteCaja",
+    "maxMs": 21.312866999999642,
+    "executionMs": 25.529
+  },
+  {
+    "key": "fcec803baf3db3e2",
+    "workload": "cash_cut_buildCorteCaja",
+    "maxMs": 7.010942000000796,
+    "executionMs": 0.293
+  },
+  {
+    "key": "a51f53ae04097c7f",
+    "workload": "cash_cut_buildCorteCaja",
+    "maxMs": 7.487506999999823,
+    "executionMs": 0.174
+  },
+  {
+    "key": "0262dab4dbc5dcea",
+    "workload": "cash_cut_buildCorteCaja",
+    "maxMs": 1.1619410000002972,
+    "executionMs": 0.037
+  },
+  {
+    "key": "bd86f5e727f0360d",
+    "workload": "cash_cut_buildCorteCaja",
+    "maxMs": 1.140900999999758,
+    "executionMs": 0.043
+  },
+  {
+    "key": "f485088ddf400c11",
+    "workload": "cash_cut_buildCorteCaja",
+    "maxMs": 0.8285939999996117,
+    "executionMs": 0.033
+  },
+  {
+    "key": "72db2b68dc8c64ea",
+    "workload": "cash_cut_buildCorteCaja",
+    "maxMs": 1.5928030000004583,
+    "executionMs": 0.273
+  },
+  {
+    "key": "96ce5c890f48afe3",
+    "workload": "cash_cut_buildCorteCaja",
+    "maxMs": 0.9007840000003853,
+    "executionMs": 0.125
+  },
+  {
+    "key": "3e8c0e17bf337d6f",
+    "workload": "cash_cut_buildCorteCaja",
+    "maxMs": 2.8164639999995416,
+    "executionMs": 2.137
+  },
+  {
+    "key": "030f95766be52028",
+    "workload": "cash_cut_buildCorteCaja",
+    "maxMs": 2.224124999999731,
+    "executionMs": 0.012
+  },
+  {
+    "key": "7586a1da625b3d08",
+    "workload": "cash_cut_buildCorteCaja",
+    "maxMs": 0.7179220000007263,
+    "executionMs": 0.016
+  },
+  {
+    "key": "69bea465140c094b",
+    "workload": "cash_cut_buildCorteCaja",
+    "maxMs": 3.998023000000103,
+    "executionMs": 0.016
+  },
+  {
+    "key": "c8e9b1ed3f5c4d5c",
+    "workload": "cash_cut_buildCorteCaja",
+    "maxMs": 6.6369150000000445,
+    "executionMs": 0.022
+  },
+  {
+    "key": "013b2a7a8f532b05",
+    "workload": "credit_clients_buildReport",
+    "maxMs": 26.03903000000082,
+    "executionMs": 0.015
+  },
+  {
+    "key": "63faf427f07cfc0e",
+    "workload": "credit_clients_buildReport",
+    "maxMs": 31.51843800000006,
+    "executionMs": 0.014
+  },
+  {
+    "key": "6a321e9314208160",
+    "workload": "credit_clients_buildReport",
+    "maxMs": 137.73658400000022,
+    "executionMs": 30.101
+  },
+  {
+    "key": "ca7c91678076d618",
+    "workload": "credit_clients_buildReport",
+    "maxMs": 138.11307899999974,
+    "executionMs": 61.259
+  },
+  {
+    "key": "4b8614ce12f4f1a4",
+    "workload": "credit_clients_buildReport",
+    "maxMs": 186.8355959999999,
+    "executionMs": 151.281
+  },
+  {
+    "key": "21e46560fbdadb5c",
+    "workload": "credit_clients_buildReport",
+    "maxMs": 251.85604599999988,
+    "executionMs": 253.945
+  },
+  {
+    "key": "484b91a72fbd6e2c",
+    "workload": "credit_clients_buildReport",
+    "maxMs": 270.8654059999999,
+    "executionMs": 116.998
+  },
+  {
+    "key": "cecfc40c872f0e25",
+    "workload": "credit_clients_buildReport",
+    "maxMs": 27.89911200000006,
+    "executionMs": 24.473
+  },
+  {
+    "key": "a2e7b242ac936df1",
+    "workload": "credit_clients_buildReport",
+    "maxMs": 293.71413399999983,
+    "executionMs": 96.441
+  },
+  {
+    "key": "5049d80dc181070d",
+    "workload": "credit_clients_buildReport",
+    "maxMs": 32.36976699999832,
+    "executionMs": 27.955
+  }
+]

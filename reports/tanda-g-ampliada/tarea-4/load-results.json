@@ -1,0 +1,303 @@
+{
+  "at": "2026-09-24T05:08:30.820Z",
+  "identity": {
+    "db": "tanda_ga_performance",
+    "actor": "ga_performance",
+    "port": 55442
+  },
+  "before": {
+    "tickets": 3,
+    "ticket_lineas": 15,
+    "ticket_pagos": 1,
+    "movimientos_credito": 4,
+    "rollos": 964,
+    "clientes": 8,
+    "productos": 1238,
+    "sesiones_caja": 6
+  },
+  "after": {
+    "tickets": 54753,
+    "ticket_lineas": 54765,
+    "ticket_pagos": 41064,
+    "movimientos_credito": 13691,
+    "rollos": 90714,
+    "clientes": 8,
+    "productos": 1238,
+    "sesiones_caja": 6
+  },
+  "loadMs": 20579.635788000003,
+  "assumptions": {
+    "days": 365,
+    "stores": 3,
+    "ticketsPerStoreDay": 50,
+    "tickets": 54750,
+    "creditShare": "25%",
+    "pendingShare": "5%",
+    "availableRolls": 35000,
+    "customerSkew": "all synthetic tickets assigned to one stress customer",
+    "products": 4,
+    "notRealAnnualVolume": true,
+    "notCorrectnessSimulation": true
+  },
+  "hardware": {
+    "cpus": 8,
+    "cpuModel": "INTEL(R) XEON(R) PLATINUM 8581C CPU @ 2.30GHz",
+    "memoryBytes": 16794316800,
+    "cgroupMemory": "17179869184",
+    "cgroupCpu": "800000 100000"
+  },
+  "settings": [
+    {
+      "name": "effective_cache_size",
+      "setting": "524288",
+      "unit": "8kB"
+    },
+    {
+      "name": "max_connections",
+      "setting": "100",
+      "unit": null
+    },
+    {
+      "name": "max_parallel_workers_per_gather",
+      "setting": "2",
+      "unit": null
+    },
+    {
+      "name": "shared_buffers",
+      "setting": "16384",
+      "unit": "8kB"
+    },
+    {
+      "name": "work_mem",
+      "setting": "4096",
+      "unit": "kB"
+    }
+  ],
+  "indexes": [
+    {
+      "tablename": "clientes",
+      "indexname": "clientes_activos_no_sistema_nombre_normalizado_uidx",
+      "indexdef": "CREATE UNIQUE INDEX clientes_activos_no_sistema_nombre_normalizado_uidx ON public.clientes USING btree (lower(btrim(nombre))) WHERE (activo AND (NOT es_sistema))"
+    },
+    {
+      "tablename": "clientes",
+      "indexname": "clientes_pkey",
+      "indexdef": "CREATE UNIQUE INDEX clientes_pkey ON public.clientes USING btree (id)"
+    },
+    {
+      "tablename": "movimientos_credito",
+      "indexname": "movimientos_credito_cliente_created_at_idx",
+      "indexdef": "CREATE INDEX movimientos_credito_cliente_created_at_idx ON public.movimientos_credito USING btree (cliente_id, created_at)"
+    },
+    {
+      "tablename": "movimientos_credito",
+      "indexname": "movimientos_credito_pkey",
+      "indexdef": "CREATE UNIQUE INDEX movimientos_credito_pkey ON public.movimientos_credito USING btree (id)"
+    },
+    {
+      "tablename": "movimientos_credito",
+      "indexname": "movimientos_credito_reverso_origen_uidx",
+      "indexdef": "CREATE UNIQUE INDEX movimientos_credito_reverso_origen_uidx ON public.movimientos_credito USING btree (movimiento_origen_id) WHERE ((tipo = 'REVERSO'::tipo_movimiento_credito) AND (movimiento_origen_id IS NOT NULL))"
+    },
+    {
+      "tablename": "movimientos_credito",
+      "indexname": "movimientos_credito_ticket_idx",
+      "indexdef": "CREATE INDEX movimientos_credito_ticket_idx ON public.movimientos_credito USING btree (ticket_id)"
+    },
+    {
+      "tablename": "movimientos_credito",
+      "indexname": "movimientos_operacion_uq_e1",
+      "indexdef": "CREATE UNIQUE INDEX movimientos_operacion_uq_e1 ON public.movimientos_credito USING btree (operacion_productor, operacion_clave) WHERE (operacion_productor IS NOT NULL)"
+    },
+    {
+      "tablename": "productos",
+      "indexname": "productos_pkey",
+      "indexdef": "CREATE UNIQUE INDEX productos_pkey ON public.productos USING btree (id)"
+    },
+    {
+      "tablename": "productos",
+      "indexname": "productos_sku_idx",
+      "indexdef": "CREATE INDEX productos_sku_idx ON public.productos USING btree (sku)"
+    },
+    {
+      "tablename": "productos",
+      "indexname": "productos_sku_unique",
+      "indexdef": "CREATE UNIQUE INDEX productos_sku_unique ON public.productos USING btree (sku)"
+    },
+    {
+      "tablename": "productos",
+      "indexname": "productos_tela_color_idx",
+      "indexdef": "CREATE INDEX productos_tela_color_idx ON public.productos USING btree (tela, color)"
+    },
+    {
+      "tablename": "productos",
+      "indexname": "productos_tela_color_unique",
+      "indexdef": "CREATE UNIQUE INDEX productos_tela_color_unique ON public.productos USING btree (tela, color)"
+    },
+    {
+      "tablename": "rollos",
+      "indexname": "rollos_estado_idx",
+      "indexdef": "CREATE INDEX rollos_estado_idx ON public.rollos USING btree (estado)"
+    },
+    {
+      "tablename": "rollos",
+      "indexname": "rollos_piso_idx",
+      "indexdef": "CREATE INDEX rollos_piso_idx ON public.rollos USING btree (piso_id)"
+    },
+    {
+      "tablename": "rollos",
+      "indexname": "rollos_pkey",
+      "indexdef": "CREATE UNIQUE INDEX rollos_pkey ON public.rollos USING btree (id)"
+    },
+    {
+      "tablename": "rollos",
+      "indexname": "rollos_producto_idx",
+      "indexdef": "CREATE INDEX rollos_producto_idx ON public.rollos USING btree (producto_id)"
+    },
+    {
+      "tablename": "rollos",
+      "indexname": "rollos_recepcion_producto_idx",
+      "indexdef": "CREATE INDEX rollos_recepcion_producto_idx ON public.rollos USING btree (recepcion_id, producto_id)"
+    },
+    {
+      "tablename": "rollos",
+      "indexname": "rollos_serie_idx",
+      "indexdef": "CREATE INDEX rollos_serie_idx ON public.rollos USING btree (serie)"
+    },
+    {
+      "tablename": "rollos",
+      "indexname": "rollos_serie_unique",
+      "indexdef": "CREATE UNIQUE INDEX rollos_serie_unique ON public.rollos USING btree (serie)"
+    },
+    {
+      "tablename": "rollos",
+      "indexname": "rollos_ubicacion_idx",
+      "indexdef": "CREATE INDEX rollos_ubicacion_idx ON public.rollos USING btree (ubicacion_id)"
+    },
+    {
+      "tablename": "rollos",
+      "indexname": "rollos_ubicacion_producto_reportes_idx",
+      "indexdef": "CREATE INDEX rollos_ubicacion_producto_reportes_idx ON public.rollos USING btree (ubicacion_id, producto_id)"
+    },
+    {
+      "tablename": "sesiones_caja",
+      "indexname": "sesiones_caja_cerrada_at_idx",
+      "indexdef": "CREATE INDEX sesiones_caja_cerrada_at_idx ON public.sesiones_caja USING btree (cerrada_at) WHERE (estado = 'CERRADA'::estado_sesion_caja)"
+    },
+    {
+      "tablename": "sesiones_caja",
+      "indexname": "sesiones_caja_pkey",
+      "indexdef": "CREATE UNIQUE INDEX sesiones_caja_pkey ON public.sesiones_caja USING btree (id)"
+    },
+    {
+      "tablename": "sesiones_caja",
+      "indexname": "sesiones_caja_ubicacion_estado_idx",
+      "indexdef": "CREATE INDEX sesiones_caja_ubicacion_estado_idx ON public.sesiones_caja USING btree (ubicacion_id, estado)"
+    },
+    {
+      "tablename": "sesiones_caja",
+      "indexname": "sesiones_caja_una_abierta_ubicacion_idx",
+      "indexdef": "CREATE UNIQUE INDEX sesiones_caja_una_abierta_ubicacion_idx ON public.sesiones_caja USING btree (ubicacion_id) WHERE (estado = 'ABIERTA'::estado_sesion_caja)"
+    },
+    {
+      "tablename": "ticket_lineas",
+      "indexname": "ticket_lineas_pkey",
+      "indexdef": "CREATE UNIQUE INDEX ticket_lineas_pkey ON public.ticket_lineas USING btree (id)"
+    },
+    {
+      "tablename": "ticket_lineas",
+      "indexname": "ticket_lineas_producto_idx",
+      "indexdef": "CREATE INDEX ticket_lineas_producto_idx ON public.ticket_lineas USING btree (producto_id)"
+    },
+    {
+      "tablename": "ticket_lineas",
+      "indexname": "ticket_lineas_producto_ticket_reportes_idx",
+      "indexdef": "CREATE INDEX ticket_lineas_producto_ticket_reportes_idx ON public.ticket_lineas USING btree (producto_id, ticket_id)"
+    },
+    {
+      "tablename": "ticket_lineas",
+      "indexname": "ticket_lineas_rollo_idx",
+      "indexdef": "CREATE INDEX ticket_lineas_rollo_idx ON public.ticket_lineas USING btree (rollo_id)"
+    },
+    {
+      "tablename": "ticket_lineas",
+      "indexname": "ticket_lineas_ticket_idx",
+      "indexdef": "CREATE INDEX ticket_lineas_ticket_idx ON public.ticket_lineas USING btree (ticket_id)"
+    },
+    {
+      "tablename": "ticket_lineas",
+      "indexname": "ticket_lineas_tipo_idx",
+      "indexdef": "CREATE INDEX ticket_lineas_tipo_idx ON public.ticket_lineas USING btree (tipo)"
+    },
+    {
+      "tablename": "ticket_pagos",
+      "indexname": "ticket_pagos_pkey",
+      "indexdef": "CREATE UNIQUE INDEX ticket_pagos_pkey ON public.ticket_pagos USING btree (id)"
+    },
+    {
+      "tablename": "ticket_pagos",
+      "indexname": "ticket_pagos_ticket_idx",
+      "indexdef": "CREATE INDEX ticket_pagos_ticket_idx ON public.ticket_pagos USING btree (ticket_id)"
+    },
+    {
+      "tablename": "tickets",
+      "indexname": "tickets_cliente_created_at_idx",
+      "indexdef": "CREATE INDEX tickets_cliente_created_at_idx ON public.tickets USING btree (cliente_id, created_at)"
+    },
+    {
+      "tablename": "tickets",
+      "indexname": "tickets_cobrado_created_at_idx",
+      "indexdef": "CREATE INDEX tickets_cobrado_created_at_idx ON public.tickets USING btree (created_at, ubicacion_id) WHERE (cobrado = true)"
+    },
+    {
+      "tablename": "tickets",
+      "indexname": "tickets_cobrado_idx",
+      "indexdef": "CREATE INDEX tickets_cobrado_idx ON public.tickets USING btree (cobrado)"
+    },
+    {
+      "tablename": "tickets",
+      "indexname": "tickets_created_at_idx",
+      "indexdef": "CREATE INDEX tickets_created_at_idx ON public.tickets USING btree (created_at)"
+    },
+    {
+      "tablename": "tickets",
+      "indexname": "tickets_estado_idx",
+      "indexdef": "CREATE INDEX tickets_estado_idx ON public.tickets USING btree (estado)"
+    },
+    {
+      "tablename": "tickets",
+      "indexname": "tickets_folio_idx",
+      "indexdef": "CREATE INDEX tickets_folio_idx ON public.tickets USING btree (folio)"
+    },
+    {
+      "tablename": "tickets",
+      "indexname": "tickets_folio_unique",
+      "indexdef": "CREATE UNIQUE INDEX tickets_folio_unique ON public.tickets USING btree (folio)"
+    },
+    {
+      "tablename": "tickets",
+      "indexname": "tickets_pkey",
+      "indexdef": "CREATE UNIQUE INDEX tickets_pkey ON public.tickets USING btree (id)"
+    },
+    {
+      "tablename": "tickets",
+      "indexname": "tickets_sesion_estado_idx",
+      "indexdef": "CREATE INDEX tickets_sesion_estado_idx ON public.tickets USING btree (sesion_caja_id, estado)"
+    },
+    {
+      "tablename": "tickets",
+      "indexname": "tickets_ubicacion_created_at_idx",
+      "indexdef": "CREATE INDEX tickets_ubicacion_created_at_idx ON public.tickets USING btree (ubicacion_id, created_at)"
+    },
+    {
+      "tablename": "tickets",
+      "indexname": "tickets_uuid_cliente_idx",
+      "indexdef": "CREATE INDEX tickets_uuid_cliente_idx ON public.tickets USING btree (uuid_cliente)"
+    },
+    {
+      "tablename": "tickets",
+      "indexname": "tickets_uuid_cliente_unique",
+      "indexdef": "CREATE UNIQUE INDEX tickets_uuid_cliente_unique ON public.tickets USING btree (uuid_cliente)"
+    }
+  ]
+}

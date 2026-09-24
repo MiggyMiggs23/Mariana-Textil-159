@@ -1,0 +1,24 @@
+{
+  "identity": {
+    "db": "tanda_ga_performance",
+    "actor": "ga_performance",
+    "port": 55442
+  },
+  "indexUnchanged": true,
+  "apiHashMatchesFrozenManifest": true,
+  "apiSha256": "d4a5a83bbaa5fc130f68217df5da4039d26db325f59345ee2958adabdcc0b0a9",
+  "sourceCommit": "ee1bb641e0513b7df18027ad351a72ebbe99af74",
+  "sourceArchiveSha256": "f823aa8a7f5560240ea9b2811c9a2fc73df6b3a72c8d016a148b947725694fc4",
+  "size": {
+    "bytes": "129634787"
+  },
+  "syntheticRange": {
+    "first": "2025-09-24 00:00:00+00",
+    "last": "2026-09-23 00:00:00+00",
+    "tickets": 54750,
+    "days": 365,
+    "stores": 3
+  },
+  "syntheticCreditOperations": 13687,
+  "noActorCredentialsUsed": true
+}
