@@ -1,0 +1,113 @@
+[
+  {
+    "entry": "/",
+    "navigation": [
+      {
+        "ms": 145,
+        "url": "http://127.0.0.1/"
+      },
+      {
+        "ms": 693,
+        "url": "http://127.0.0.1/"
+      },
+      {
+        "ms": 1769,
+        "url": "http://127.0.0.1/login?returnTo=%2F"
+      }
+    ],
+    "authResponses": [
+      {
+        "ms": 729,
+        "status": 401
+      },
+      {
+        "ms": 1763,
+        "status": 401
+      },
+      {
+        "ms": 1792,
+        "status": 401
+      }
+    ],
+    "blocked": [
+      {
+        "method": "GET",
+        "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      }
+    ],
+    "pageErrors": [],
+    "finalUrl": "http://127.0.0.1/login?returnTo=%2F",
+    "elapsedMs": 5580,
+    "passed": true
+  },
+  {
+    "entry": "/clientes/21",
+    "navigation": [
+      {
+        "ms": 17,
+        "url": "http://127.0.0.1/clientes/21"
+      },
+      {
+        "ms": 499,
+        "url": "http://127.0.0.1/clientes/21"
+      },
+      {
+        "ms": 1547,
+        "url": "http://127.0.0.1/login?returnTo=%2Fclientes%2F21"
+      }
+    ],
+    "authResponses": [
+      {
+        "ms": 533,
+        "status": 401
+      },
+      {
+        "ms": 1542,
+        "status": 401
+      },
+      {
+        "ms": 1569,
+        "status": 401
+      }
+    ],
+    "blocked": [
+      {
+        "method": "GET",
+        "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      }
+    ],
+    "pageErrors": [],
+    "finalUrl": "http://127.0.0.1/login?returnTo=%2Fclientes%2F21",
+    "elapsedMs": 5354,
+    "passed": true
+  },
+  {
+    "entry": "/login",
+    "navigation": [
+      {
+        "ms": 19,
+        "url": "http://127.0.0.1/login"
+      },
+      {
+        "ms": 416,
+        "url": "http://127.0.0.1/login"
+      }
+    ],
+    "authResponses": [
+      {
+        "ms": 462,
+        "status": 401
+      }
+    ],
+    "blocked": [
+      {
+        "method": "GET",
+        "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      }
+    ],
+    "pageErrors": [],
+    "finalUrl": "http://127.0.0.1/login",
+    "elapsedMs": 4021,
+    "passed": true
+  }
+]
