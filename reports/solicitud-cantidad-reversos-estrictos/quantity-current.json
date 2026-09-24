@@ -1,0 +1,58 @@
+{
+  "status": "CURRENT_LIVE_UNAVAILABLE",
+  "observedAtUtc": "2026-09-24T20:41:14Z",
+  "scope": "Read-only verification of point 1 (physical quantity in crearEntrada); no reapplication",
+  "currentSource": {
+    "path": "artifacts/api-server/src/lib/inventario.ts",
+    "sha256": "3e1c06120189811d4140766a6f987f4b7ed5abd15d268ff04682ec5313b1e79f",
+    "matchesCommitC5ad7db": true,
+    "routePath": "artifacts/api-server/src/routes/inventario.ts",
+    "routeSha256": "5d47269500a6b34363d8f3b67747608e94e6816572dc0bb73377b3272b69b253"
+  },
+  "configuredDevelopmentApi": {
+    "entry": "artifacts/api-server/dist-tanda-h-entry-guard/index.mjs",
+    "sha256": "7d5e47f61c1c9b9d78430e0f109d6e8fd4ad33f8ad0fc74c36ed100d601db366",
+    "matchesCommitC637d33": true,
+    "inspectionBootConfigured": "1",
+    "configuredLocalPort": 8080,
+    "provenance": "artifacts/api-server/.replit-artifact/artifact.toml and SHA-256 of local bundle; configuration is not proof of an effective live process"
+  },
+  "effectiveApiRuntime": {
+    "pid": null,
+    "command": null,
+    "entrySha256": null,
+    "port": null,
+    "inspectionBoot": null,
+    "reason": "No artifacts/api-server/*/index.mjs process found at final observation; MAIN controls workflow startup"
+  },
+  "effectiveAppDatabase": {
+    "queried": false,
+    "reason": "No effective API process/environment from which to discover the application's target connection; managed development SQL target is not assumed equivalent",
+    "identityFingerprint": null,
+    "catalogCurrent": null,
+    "quantityCountsCurrent": null
+  },
+  "historicalProofOnly": {
+    "checkApplication": {
+      "commit": "111c347",
+      "report": "reports/tanda-h/application/physical-check-result.json",
+      "status": "committed_verified",
+      "name": "rollos_physical_quantity_nonnegative_check",
+      "validated": true,
+      "definition": "CHECK (((cantidad_actual >= (0)::numeric) AND (cantidad_actual <> 'NaN'::numeric)))",
+      "priorCounts": [
+        {"column": "rollos.cantidad_actual", "total": "740", "negative": "0", "nulls": "0", "nan": "0", "infinity": "0"},
+        {"column": "rollos.cantidad_inicial", "total": "740", "negative": "0", "nulls": "0", "nan": "0", "infinity": "0"},
+        {"column": "existencias.cantidad_total", "total": "45", "negative": "0", "nulls": "0", "nan": "0", "infinity": "0"}
+      ]
+    },
+    "producer": {
+      "commit": "c5ad7db",
+      "red": {"path": "reports/tanda-h/tarea-1/producer-red.json", "sha256": "f63d484b32f897e1c8eabb593239b30dfc75ab5c3eb9ea60d679d2b05054ca40", "passed": 16, "total": 44, "failed": 28},
+      "green": {"path": "reports/tanda-h/tarea-1/producer-green.json", "sha256": "b7a00ddee6a1a8befa97b8b82050b233793a9bc2cc8a5e416666bf71f62b8438", "passed": 44, "total": 44},
+      "copyCheck": {"path": "reports/tanda-h/tarea-1/check-copy.json", "sha256": "b22ce17218fb968a92eb869ca937ff9a2b27e44f532666df1ac4f5f99877d310", "passed": 56, "total": 56}
+    },
+    "release": {"commit": "c637d33", "report": "reports/tanda-h/continuacion/release/runtime-verification.md", "entrySha256": "7d5e47f61c1c9b9d78430e0f109d6e8fd4ad33f8ad0fc74c36ed100d601db366"}
+  },
+  "safety": {"sqlStatementsExecuted": 0, "ddl": 0, "dml": 0, "authRequests": 0, "operationalTests": 0, "sourceEdits": 0, "reapplied": false}
+}

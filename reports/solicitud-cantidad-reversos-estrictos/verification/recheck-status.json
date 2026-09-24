@@ -1,0 +1,50 @@
+{
+  "status": "BLOCKED_FRESH_EXECUTION_NOT_CLAIMED",
+  "sourceCommit": "d504681859bfd396764af74bc263cc6df8b146a1",
+  "sourceTree": "87fb38bee0f0a57b30da9d0c2e01034cfa70f965",
+  "implementationCommit": "61d82169e414354f8e613f53d583581f3d7955fb",
+  "implementationIsAncestor": true,
+  "sourceComparison": {
+    "command": "git diff 61d8216 HEAD -- artifacts/api-server/src/lib/inventario.ts artifacts/api-server/src/lib/inventory-reversal-evidence.ts",
+    "exitCode": 0,
+    "result": "Evidence module unchanged; inventario.ts differs only in crearEntrada physical-quantity validation, not reversal implementation."
+  },
+  "exactCases": [1, 2, 4, 5, 6, 7, 8, 9],
+  "excludedCases": [3, 10],
+  "retainedHistoricalEvidence": {
+    "baselineCommit": "8e5dc4a3d5ffe33ea30dbd9ff2f170d7214390a5",
+    "baselineSummary": "reports/tanda-g/baseline/summary.json",
+    "baselineSummarySha256": "7b28b44824d3da701629c8613cf65b70426e5975ade4ff0e9f1b8a655d929494",
+    "candidateSummary": "reports/tanda-g/candidate/acceptance-summary.json",
+    "candidateSummarySha256": "84b627fbe164da6c521fec52c29b24a3289c7a588bad87f1f47aa8de757bacb5",
+    "candidateResult": "Eight requested rejections plus historical legacy control; each records 107 business tables unchanged.",
+    "positiveControl": "reports/tanda-g/candidate/extra-acceptance.json",
+    "positiveControlSha256": "6f2258200b76b3b8ec6d0db82a5646469507851e1336eab52a3cd03f760e0129",
+    "freshExecution": false
+  },
+  "bundleInspection": {
+    "defaultPath": "artifacts/api-server/dist/index.mjs",
+    "defaultSha256": "3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98",
+    "defaultFinding": "Matches historical 7cb bundle documented in replit.md, not strict candidate. No strict reversal error marker found. This is a file inspection, not a claim about the served process.",
+    "retainedStrictPath": "artifacts/api-server/dist-tanda-g-strict-candidate/index.mjs",
+    "retainedStrictSha256": "103e5dce97fc463eafb33e0ec9ac283c3e3b16bd9c1220e928694e2be90deeec"
+  },
+  "blocker": {
+    "existingGSetup": "reports/tanda-g/setup/prepare.mjs delegates to reports/tanda-f/setup/prepare.mjs, which captures/restores application data, disables restored actors, and inserts nine synthetic actors, three sites, products, suppliers, 96 rolls and cash sessions. H also delegates to that lifecycle. This is not a native empty-database canonical seed procedure.",
+    "canonicalSeedMissing": "lib/db/src/seed.mjs creates locations, an ADMIN, customers and permissions, but no METRO/KILO products, supplier or traced inventory rolls required by the unchanged eight-case manifest runner.",
+    "decision": "Stopped before provisioning rather than copying real identities, inventing replacement actors/fixtures, or silently substituting the historical witness database for application identity.",
+    "requiredResolution": "MAIN must identify an already-approved native fixture provisioning procedure that supplies the G runner manifest without real-data restoration, or resolve the exact fixture authorization. No external Neon connection requested."
+  },
+  "safety": {
+    "applicationDatabaseWrites": false,
+    "applicationAuthentication": false,
+    "applicationDatabaseReads": false,
+    "workflowsStartedOrRestarted": false,
+    "productBuilds": false,
+    "freshDatabaseCreated": false,
+    "privateCopyCreated": false,
+    "cleanupNeeded": false,
+    "exportZipModified": false,
+    "credentialsWritten": false
+  }
+}
