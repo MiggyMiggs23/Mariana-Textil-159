@@ -1,0 +1,116 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Vista Global
+Activar sonido
+4
+T
+
+TANDA F ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+Nueva Salida
+
+Escanea los rollos y confirma la salida para enviarlos al destino.
+
+Datos de Envío
+FECHA DE REGISTRO
+24 de septiembre, 2026
+ORIGEN
+TANDA F TIENDA 1
+DESTINO
+TANDA F TIENDA 3
+TRANSPORTISTA
+NOTA DE ENVÍO (OPCIONAL)
+Agregar
+Rollos Capturados (3)
+3
+
+994000101
+
+TANDA-F-KILO • TANDA F KILO AZUL TF
+
+10.00
+
+Kg.
+
+2
+
+994000201
+
+TANDA-F-PIEZA • TANDA F PIEZA AZUL TF
+
+10.00
+
+Pzas.
+
+1
+
+994000301
+
+TANDA-F-BOLSA • TANDA F BOLSA AZUL TF
+
+10.00
+
+Bolsas
+
+Resumen por Producto
+TANDA F KILO
+1 rollos
+AZUL TF • TANDA-F-KILO
+10.00 Kg.
+TANDA F PIEZA
+1 rollos
+AZUL TF • TANDA-F-PIEZA
+10.00 Pzas.
+TANDA F BOLSA
+1 rollos
+AZUL TF • TANDA-F-BOLSA
+10.00 Bolsas
+TOTAL ROLLOS
+3
+METROS
+0.00
+KILOS
+10.00
+Guardar y enviar

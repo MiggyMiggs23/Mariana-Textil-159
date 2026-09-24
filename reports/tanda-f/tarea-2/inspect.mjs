@@ -1,0 +1,2 @@
+import {run,snap,origin} from "./browser.mjs";
+await run(async page=>{await page.goto(origin+(process.argv[2]||"/contenedores/nuevo"));await page.waitForTimeout(1200);await snap(page,process.argv[3]||"01-container-form");});

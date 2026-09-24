@@ -1,0 +1,65 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Vista Global
+Activar sonido
+4
+T
+
+TANDA F ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+Entrada Completada
+
+Folio #TFA-000002
+
+Total Rollos
+2
+Costo Total
+$2,000.00
+Documento
+Etiquetas
+Nueva Entrada
+Entrada registrada correctamente
+Línea agregada a la lista
+Se aplicó 10 a 2 rollos sin capturar

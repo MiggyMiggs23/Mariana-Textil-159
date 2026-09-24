@@ -1,0 +1,88 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+TANDA F TIENDA 2
+Activar sonido
+4
+T
+
+TANDA F ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+Terminal POS
+NOTA
+
+Escanea o busca artículos para la venta.
+
+Venta de Rollos (NORMAL)
+Cortes (METREADO)
+Ticket de Venta
+0 renglones
+
+El ticket está vacío
+
+Requiere Factura
+
+El precio negociado es antes de IVA.
+
+Imprimir tabulares
+
+Agrega una tira por color de los rollos identificados.
+
+Total
+$0.00
+Cliente *
+Venta a Público
+
+El ticket se emitirá a nombre de Venta a Público.
+
+Venta a Público no admite compras a crédito.
+
+Formato de Nota
+Nota con precios
+Formato estándar
+Nota de Productos
+Sin importes ni totales
+Nombre del Destinatario *
+Dirección de Entrega *
+Confirmar Venta

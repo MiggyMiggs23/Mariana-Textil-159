@@ -1,0 +1,88 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Vista Global
+Activar sonido
+4
+T
+
+TANDA F ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+Contenedor #00001
+EN TRANSITO
+Editar
+Cancelar
+Ingresar Mercancía
+Resumen Operativo
+
+Proveedor
+
+TANDA F IMPORTADOR
+
+Destino
+
+TANDA F TIENDA 1
+
+Llegada Est.
+
+24 sep 2026
+
+Referencia
+
+TANDA-F-T2-CONTAINER
+
+Desglose de Mercancía
+Producto	Esperado	Rollos	Costo Ref.
+
+TANDA-F-METRO
+TANDA F METRO - AZUL TF
+	20 Mts.	2	-
+Totales
+Líneas
+1
+Metros
+20
+Kilos
+0
+Contenedor programado correctamente

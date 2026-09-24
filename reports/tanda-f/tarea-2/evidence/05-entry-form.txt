@@ -1,0 +1,77 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Vista Global
+Activar sonido
+4
+T
+
+TANDA F ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+ENTRADAS
+
+Historial completo de entradas y documentos registrados.
+
+Costos Pendientes
+Nueva entrada
+Historial
+Captura
+Historial de entradas
+
+Consulta, imprime o guarda nuevamente el documento de cada entrada.
+
+Filtros
+Folio	Fecha	Sitio	Proveedor	Rollos
+CR-000002
+	23/09/26, 4:16 a.m.	Cruces	FisFiber	400
+CR-000001
+	17/09/26, 12:38 a.m.	Cruces	Ling Si	300
+DN-000001
+	17/09/26, 1:08 a.m.	Don Nacho	Grupo Vision	40
+TFA-000001
+	24/09/26, 3:46 a.m.	TANDA F TIENDA 1	TANDA F PROVEEDOR	32
+TFB-000001
+	24/09/26, 3:46 a.m.	TANDA F TIENDA 2	TANDA F PROVEEDOR	32
+TFC-000001
+	24/09/26, 3:46 a.m.	TANDA F TIENDA 3	TANDA F PROVEEDOR	32

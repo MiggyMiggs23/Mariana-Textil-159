@@ -1,0 +1,9 @@
+import fs from "node:fs";
+import {c,identity} from "./db.mjs";
+import {dir} from "./browser.mjs";
+const name=process.argv[2]||"state";
+try{
+ const balances=(await c.query(`with r as (select producto_id,ubicacion_id,sum(cantidad_actual) qty,count(*) filter(where cantidad_actual>0) rolls from rollos where estado='DISPONIBLE' group by 1,2),m as(select producto_id,ubicacion_id,sum(cantidad) qty from movimientos group by 1,2) select p.id product,p.unidad unit,u.id site,coalesce(r.qty,0)::text roll_qty,coalesce(e.cantidad_total,0)::text cache_qty,coalesce(m.qty,0)::text ledger_qty from productos p cross join ubicaciones u left join r on r.producto_id=p.id and r.ubicacion_id=u.id left join existencias e on e.producto_id=p.id and e.ubicacion_id=u.id left join m on m.producto_id=p.id and m.ubicacion_id=u.id where p.id between 2078 and 2081 and u.id between 836 and 838 order by p.id,u.id`)).rows;
+ const data={identity,at:new Date().toISOString(),balances,rolls:(await c.query("select * from rollos where producto_id between 2078 and 2081 order by id")).rows,movements:(await c.query("select * from movimientos where producto_id between 2078 and 2081 order by id")).rows,containers:(await c.query("select * from contenedores where proveedor_id in(226,227)")).rows,partialCatalog:(await c.query("select id,unidad,se_vende_por_metro,activo from productos where se_vende_por_metro=true or id between 2078 and 2081")).rows,customerDebt:(await c.query("select sum(importe) from movimientos_credito where cliente_id=8")).rows};
+ fs.writeFileSync(dir+"/"+name+".json",JSON.stringify(data,null,2));console.log(balances);
+}finally{await c.end();}

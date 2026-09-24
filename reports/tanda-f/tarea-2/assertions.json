@@ -1,0 +1,270 @@
+{
+  "results": [
+    {
+      "snapshot": "00-baseline",
+      "siteProductUnitRows": 12,
+      "physicalCacheLedger": "PASS",
+      "customer8Debt1200": "PASS",
+      "transit": {
+        "METRO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "KILO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "PIEZA": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "BOLSA": {
+          "rolls": 0,
+          "ledger": 0
+        }
+      }
+    },
+    {
+      "snapshot": "01-container",
+      "siteProductUnitRows": 12,
+      "physicalCacheLedger": "PASS",
+      "customer8Debt1200": "PASS",
+      "transit": {
+        "METRO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "KILO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "PIEZA": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "BOLSA": {
+          "rolls": 0,
+          "ledger": 0
+        }
+      }
+    },
+    {
+      "snapshot": "02-entry",
+      "siteProductUnitRows": 12,
+      "physicalCacheLedger": "PASS",
+      "customer8Debt1200": "PASS",
+      "transit": {
+        "METRO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "KILO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "PIEZA": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "BOLSA": {
+          "rolls": 0,
+          "ledger": 0
+        }
+      }
+    },
+    {
+      "snapshot": "03-entry-confirmed",
+      "siteProductUnitRows": 12,
+      "physicalCacheLedger": "PASS",
+      "customer8Debt1200": "PASS",
+      "transit": {
+        "METRO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "KILO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "PIEZA": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "BOLSA": {
+          "rolls": 0,
+          "ledger": 0
+        }
+      }
+    },
+    {
+      "snapshot": "04-transfer",
+      "siteProductUnitRows": 12,
+      "physicalCacheLedger": "PASS",
+      "customer8Debt1200": "PASS",
+      "transit": {
+        "METRO": {
+          "rolls": 10,
+          "ledger": 10
+        },
+        "KILO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "PIEZA": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "BOLSA": {
+          "rolls": 0,
+          "ledger": 0
+        }
+      }
+    },
+    {
+      "snapshot": "05-reception",
+      "siteProductUnitRows": 12,
+      "physicalCacheLedger": "PASS",
+      "customer8Debt1200": "PASS",
+      "transit": {
+        "METRO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "KILO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "PIEZA": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "BOLSA": {
+          "rolls": 0,
+          "ledger": 0
+        }
+      }
+    },
+    {
+      "snapshot": "06-partial-blocked",
+      "siteProductUnitRows": 12,
+      "physicalCacheLedger": "PASS",
+      "customer8Debt1200": "PASS",
+      "transit": {
+        "METRO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "KILO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "PIEZA": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "BOLSA": {
+          "rolls": 0,
+          "ledger": 0
+        }
+      }
+    },
+    {
+      "snapshot": "07-transfer-cancel-before",
+      "siteProductUnitRows": 12,
+      "physicalCacheLedger": "PASS",
+      "customer8Debt1200": "PASS",
+      "transit": {
+        "METRO": {
+          "rolls": 10,
+          "ledger": 10
+        },
+        "KILO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "PIEZA": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "BOLSA": {
+          "rolls": 0,
+          "ledger": 0
+        }
+      }
+    },
+    {
+      "snapshot": "08-cancelled",
+      "siteProductUnitRows": 12,
+      "physicalCacheLedger": "PASS",
+      "customer8Debt1200": "PASS",
+      "transit": {
+        "METRO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "KILO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "PIEZA": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "BOLSA": {
+          "rolls": 0,
+          "ledger": 0
+        }
+      }
+    },
+    {
+      "snapshot": "09-multiunit-transit",
+      "siteProductUnitRows": 12,
+      "physicalCacheLedger": "PASS",
+      "customer8Debt1200": "PASS",
+      "transit": {
+        "METRO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "KILO": {
+          "rolls": 10,
+          "ledger": 10
+        },
+        "PIEZA": {
+          "rolls": 10,
+          "ledger": 10
+        },
+        "BOLSA": {
+          "rolls": 10,
+          "ledger": 10
+        }
+      }
+    },
+    {
+      "snapshot": "10-multiunit-received",
+      "siteProductUnitRows": 12,
+      "physicalCacheLedger": "PASS",
+      "customer8Debt1200": "PASS",
+      "transit": {
+        "METRO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "KILO": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "PIEZA": {
+          "rolls": 0,
+          "ledger": 0
+        },
+        "BOLSA": {
+          "rolls": 0,
+          "ledger": 0
+        }
+      }
+    }
+  ],
+  "finalCacheCounts": "PASS",
+  "enabledPartialProducts": 0
+}

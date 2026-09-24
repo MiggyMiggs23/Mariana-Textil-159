@@ -1,0 +1,96 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Vista Global
+Activar sonido
+4
+T
+
+TANDA F ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+Folio TFA-000001
+En tránsito
+24 sep 2026, 04:06
+•
+TANDA F ADMIN
+Imprimir Documento
+Rollos Incluidos (1)
+#	Serie	Producto	Cantidad
+1	10000741	
+
+TANDA-F-METRO
+
+TANDA F METRO AZUL TF
+
+	10.00Mts.
+Resumen por Producto
+TANDA F METRO
+1 rollos
+AZUL TF • TANDA-F-METRO
+10.00 Mts.
+TOTAL ROLLOS
+1
+METROS
+10.00
+Detalles del Envío
+OR
+
+ORIGEN
+
+TANDA F TIENDA 1
+
+DE
+
+DESTINO
+
+TANDA F TIENDA 2
+
+Transportista:
+TANDA F T2 TRANSPORTE
+Observaciones:
+TANDA F T2 traslado de entrada 471
+
+Si hubo un error y esta salida no debe proceder, puedes cancelarla.
+
+Cancelar Salida

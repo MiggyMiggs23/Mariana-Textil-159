@@ -1,0 +1,69 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Vista Global
+Activar sonido
+4
+T
+
+TANDA F ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+Salidas
+
+Historial completo de salidas y movimientos entre almacenes.
+
+Excel
+Nueva Salida
+Nueva salida para venta a cliente
+Historial
+Recepción
+A mostrador
+Extraordinarias
+Escanear salida para recibir
+Pendientes para este sitio
+
+No hay salidas en tránsito por recibir.
+
+Salida recibida
+El folio TFA-000003 y todos sus rollos ya están en el destino.

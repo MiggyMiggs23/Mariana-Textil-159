@@ -1,0 +1,120 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Vista Global
+Activar sonido
+4
+T
+
+TANDA F ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+Folio TFA-000003
+En tránsito
+24 sep 2026, 04:10
+•
+TANDA F ADMIN
+Imprimir Documento
+Rollos Incluidos (3)
+#	Serie	Producto	Cantidad
+1	994000101	
+
+TANDA-F-KILO
+
+TANDA F KILO AZUL TF
+
+	10.00Kg.
+2	994000201	
+
+TANDA-F-PIEZA
+
+TANDA F PIEZA AZUL TF
+
+	10.00Pzas.
+3	994000301	
+
+TANDA-F-BOLSA
+
+TANDA F BOLSA AZUL TF
+
+	10.00Bolsas
+Resumen por Producto
+TANDA F KILO
+1 rollos
+AZUL TF • TANDA-F-KILO
+10.00 Kg.
+TANDA F PIEZA
+1 rollos
+AZUL TF • TANDA-F-PIEZA
+10.00 Pzas.
+TANDA F BOLSA
+1 rollos
+AZUL TF • TANDA-F-BOLSA
+10.00 Bolsas
+TOTAL ROLLOS
+3
+KILOS
+10.00
+BOLSAS
+10.00
+Detalles del Envío
+OR
+
+ORIGEN
+
+TANDA F TIENDA 1
+
+DE
+
+DESTINO
+
+TANDA F TIENDA 3
+
+Transportista:
+TANDA F T2 UNIDADES
+Observaciones:
+TANDA F T2 unidades separadas
+
+Si hubo un error y esta salida no debe proceder, puedes cancelarla.
+
+Cancelar Salida

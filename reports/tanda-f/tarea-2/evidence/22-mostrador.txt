@@ -1,0 +1,72 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Vista Global
+Activar sonido
+4
+T
+
+TANDA F ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+Salidas
+
+Historial completo de salidas y movimientos entre almacenes.
+
+Excel
+Nueva Salida
+Nueva salida para venta a cliente
+Historial
+Recepción
+A mostrador
+Extraordinarias
+Sitio de origen
+Selecciona un sitio
+OBSERVACIONES
+Confirmar salida de 0 rollos
+
+La confirmación retira completamente todos los rollos y genera una hoja foliada imprimible.
+
+Rollos capturados (0)
+
+Escanea al menos un rollo para continuar.

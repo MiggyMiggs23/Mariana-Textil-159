@@ -1,0 +1,120 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Vista Global
+Activar sonido
+4
+T
+
+TANDA F ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+ENTRADAS
+
+Registra la mercancía que llega a un sitio. Cada rollo se da de alta con su cantidad propia y su número de serie.
+
+Costos Pendientes
+Nueva entrada
+Historial
+Captura
+Detalle del artículo
+Producto *
+
+Busca al instante; usa ↑ ↓ y Enter para seleccionar.
+
+SKU
+Cantidad de rollos *
+Costo por unidad *
+$
+Fecha y hora de entrada
+
+Fijada por el servidor · America/Mexico_City
+
+Sitio *
+TANDA F TIENDA 1
+Proveedor
+TANDA F IMPORTADOR
+Cambiar proveedor
+
+Bloqueado mientras haya líneas capturadas. Cambiarlo vaciará la captura.
+
+Contenedor Asociado (Opcional)
+Contenedor #00001 · TANDA F IMPORTADOR (TANDA-F-T2-CONTAINER)
+Notas
+Cantidad por rollo (Previsualización)
+Ingresa la cantidad de rollos para ver la previsualización.
+Agregar a la lista
+Lista de Entrada
+Mostrar filtros
+	Producto	SKU	Sitio	Rollos	Unidad	Cantidad total	Costo por metro / kilo	Costo total	Detalle
+	TANDA F METRO - AZUL TF	TANDA-F-METRO	TANDA F TIENDA 1	2	METRO	20.00	$100.00 / metro	$2,000.00	
+
+TOTAL GENERAL:	2		
+METRO: 20.00
+		$2,000.00	
+Imprimir Documento
+Imprimir Etiquetas
+Cancelar
+Guardar entrada
+Línea agregada a la lista
+Se aplicó 10 a 2 rollos sin capturar
+Revisar entrada antes de guardar
+
+Verifica los datos. La entrada no se guardará ni se imprimirá hasta confirmar.
+
+PROVEEDOR
+TANDA F IMPORTADOR
+SITIO
+TANDA F TIENDA 1
+LÍNEAS
+1
+TOTAL DE ROLLOS
+2
+Cantidad total por unidad
+METRO
+20.00
+Productos
+TANDA F METRO - AZUL TF
+Cancelar y volver
+Confirmar y guardar
+Cerrar

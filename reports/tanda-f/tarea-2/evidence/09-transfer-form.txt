@@ -1,0 +1,80 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Vista Global
+Activar sonido
+4
+T
+
+TANDA F ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+Nueva Salida
+
+Escanea los rollos y confirma la salida para enviarlos al destino.
+
+Datos de Envío
+FECHA DE REGISTRO
+24 de septiembre, 2026
+ORIGEN
+Seleccione origen
+DESTINO
+Seleccione destino
+TRANSPORTISTA
+NOTA DE ENVÍO (OPCIONAL)
+Agregar
+Rollos Capturados (0)
+
+Aún no hay rollos escaneados
+
+Usa el escáner para agregar productos
+
+Resumen por Producto
+Sin productos
+TOTAL ROLLOS
+0
+METROS
+0.00
+KILOS
+0.00
+Guardar y enviar

@@ -1,0 +1,79 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Vista Global
+Activar sonido
+4
+T
+
+TANDA F ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+Programar Contenedor
+
+Registra un nuevo embarque esperado en tránsito.
+
+Cancelar
+Programar Embarque
+Información del Embarque
+Proveedor *
+TANDA F IMPORTADOR
+Sitio Destino *
+TANDA F TIENDA 1
+Fecha Estimada de Llegada *
+Fecha de Pedido
+Referencia / BL / Tracking
+Productos Esperados
+
+Define los productos y cantidades a recibir.
+
+Agregar Producto
+Producto	Cantidad	Rollos	Nota	
+
+	
+	
+	
+	
+Notas del Embarque
+
+Los contenedores programados aparecerán como "En Tránsito". Cuando la mercancía llegue, podrás seleccionarlo desde el módulo de Entradas para ingresar el inventario real y conciliar diferencias.

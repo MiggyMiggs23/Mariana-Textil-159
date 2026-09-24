@@ -1,0 +1,135 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Vista Global
+Activar sonido
+4
+T
+
+TANDA F ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+ENTRADAS
+
+Registra la mercancía que llega a un sitio. Cada rollo se da de alta con su cantidad propia y su número de serie.
+
+Costos Pendientes
+Nueva entrada
+Historial
+Captura
+Detalle del artículo
+Producto *
+PRODUCTO SELECCIONADO
+TANDA F METRO
+AZUL TF
+TANDA-F-METRO
+Mts.
+
+Busca al instante; usa ↑ ↓ y Enter para seleccionar.
+
+SKU
+Cantidad de rollos *
+Costo por Mts. *
+$
+Fecha y hora de entrada
+
+Fijada por el servidor · America/Mexico_City
+
+Sitio *
+TANDA F TIENDA 1
+Proveedor
+TANDA F IMPORTADOR
+Contenedor Asociado (Opcional)
+Contenedor #00001 · TANDA F IMPORTADOR (TANDA-F-T2-CONTAINER)
+Notas
+Cantidad por rollo (Previsualización)
+1.
+Pendiente
+Serie por asignar
+2.
+Pendiente
+Serie por asignar
+Agregar a la lista
+Lista de Entrada
+Mostrar filtros
+	Producto	SKU	Sitio	Rollos	Unidad	Cantidad total	Costo por metro / kilo	Costo total	Detalle
+Aún no has agregado productos a esta entrada.
+Imprimir Documento
+Imprimir Etiquetas
+Cancelar
+Guardar entrada
+Se aplicó 10 a 2 rollos sin capturar
+TANDA F METRO - AZUL TF
+
+TANDA-F-METRO
+
+SITIO:
+TANDA F TIENDA 1
+Rollo 2 de 2
+2 CAPTURADOS
+Llenar cantidades
+Completa las cantidades de los 2 rollos y después ajusta las que sean diferentes.
+CANTIDAD UNIFORME
+Mts.
+Aplicar a los 0 rollos restantes
+Sobrescribir todos
+Cantidad de este rollo
+Mts.
+Siguiente rollo
+1
+10 Mts.
+UNIFORME
+SERIE POR ASIGNAR #1
+2
+10 Mts.
+UNIFORME
+SERIE POR ASIGNAR #2
+Estado de captura:
+Uniformes: 2
+Ajustados: 0
+En blanco: 0
+Qty: 20.00
+$2,000.00
+Descartar
+Confirmar Línea
+Cerrar
