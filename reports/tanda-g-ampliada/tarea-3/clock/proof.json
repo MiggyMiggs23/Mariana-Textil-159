@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "identity": {
+    "db": "tanda_ga_month",
+    "directory": "/home/runner/workspace/.local/tanda-g-ampliada/month-cluster",
+    "port": 55443,
+    "fixtureSites": 7,
+    "fixtureUnits": [
+      "BOLSA",
+      "KILO",
+      "METRO",
+      "PIEZA"
+    ],
+    "connect": [
+      {
+        "datname": "postgres",
+        "allowed": false
+      },
+      {
+        "datname": "tanda_ga_month",
+        "allowed": true
+      },
+      {
+        "datname": "tanda_ga_witness",
+        "allowed": false
+      }
+    ]
+  },
+  "observations": [
+    {
+      "target": "2026-09-23T18:00:00.000Z",
+      "postgres": "2026-09-23 12:00:00.153724-06",
+      "epoch": 1790186400.153724,
+      "harness": "2026-09-23T18:00:00.155Z",
+      "monotonicElapsedMs": 159.14776
+    },
+    {
+      "target": "2026-09-24T18:00:00.000Z",
+      "postgres": "2026-09-24 12:00:00.157553-06",
+      "epoch": 1790272800.157553,
+      "harness": "2026-09-24T18:00:00.158Z",
+      "monotonicElapsedMs": 163.164806
+    }
+  ],
+  "sql": "SELECT now(); read-only identity and clock probes only",
+  "restoredTo": "2026-09-23T18:00:00.000Z",
+  "noSimulationRun": true,
+  "monotonic": "CLOCK_MONOTONIC/RAW/BOOTTIME and all non-realtime IDs pass directly to kernel; 150ms Node timer remained real across one-day wall jump"
+}

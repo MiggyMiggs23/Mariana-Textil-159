@@ -1,0 +1,18 @@
+{
+  "classification": "HARNESS_CLOCK_ERROR_NOT_PRODUCT_DEFECT",
+  "completedDays": 29,
+  "interruptedDay": 30,
+  "interruptedStep": 2600,
+  "trigger": "300-second ShellExec timeout killed harness after authorization commit and before after-journal",
+  "recovery": "Read-only verification confirmed one VENTA_CREDITO for ticket 896, amount 1500 and unchanged physical/cache/ledger/cash; appended explicit recovered record without replaying authorization.",
+  "harnessError": "Resume reset the current day to 18:00:00, moving simulated wall time backward by about three seconds. The subsequent abono was therefore timestamped before the committed authorization.",
+  "evidence": [
+    {"movement": 838, "type": "VENTA_CREDITO", "amount": "1500.00", "createdAt": "2026-10-22T18:00:02.872Z"},
+    {"movement": 839, "type": "ABONO", "amount": "-1400.00", "createdAt": "2026-10-22T18:00:00.081Z"}
+  ],
+  "subsequentRejection": {"step": 2603, "ticket": 897, "code": "FAVOR_APPLICATION_STORAGE_UNAVAILABLE", "atomicRollback": true},
+  "noHistoryRewrites": true,
+  "fixInHarnessOnly": "Never invoke clock controller for current date; forbid backward calendar jumps. Add --through-day=N and day-boundary resumability for bounded stages.",
+  "requiredNextStep": "MAIN restore fresh dedicated monthly copy from template and reset clock before new run. Preserve this failed attempt journal. Execute stages 1-10, 11-20, 21-30 under 300 seconds each.",
+  "acceptance": "No full-month PASS claimed; 29 completed days and explicit day-30 harness-induced blocker."
+}

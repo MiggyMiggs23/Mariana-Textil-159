@@ -1,3 +1,65 @@
 Tramo 1: lectura de productores congelables y planeación terminadas. Sin conexiones ni escrituras a DB app u otros trabajadores.
 Bloqueo de ejecución: clúster MAIN compartido 55442 no permite adelantar reloj mensual sin afectar otras copias. Requiere postmaster mensual exclusivo y controlador de reloj de procesos.
-Arnés entregado: 30 fechas, 7 sitios, 4 unidades, diario antes/después, comprobación de sesión única diaria. Sin resultados de ejecución mensual.
+Arnés entregado: 30 fechas, 7 sitios, 4 unidades, diario antes/después, comprobación de sesión única diaria. Sin resultados de ejecución mensual.2026-09-23T18:00:00.054Z Day 1/30 2026-09-23 starting
+2026-09-23T18:00:02.284Z BLOCKED day 1: E1: una operación sin dinero real no puede imputar sesión de caja.
+2026-09-23T18:00:00.007Z Day 1/30 2026-09-23 starting
+2026-09-23T18:00:05.103Z Day 1/30 complete
+2026-09-24T18:00:00.002Z Day 2/30 2026-09-24 starting
+2026-09-24T18:00:07.946Z Day 2/30 complete
+2026-09-25T18:00:00.003Z Day 3/30 2026-09-25 starting
+2026-09-25T18:00:07.093Z Day 3/30 complete
+2026-09-26T18:00:00.005Z Day 4/30 2026-09-26 starting
+2026-09-26T18:00:09.062Z Day 4/30 complete
+2026-09-27T18:00:00.003Z Day 5/30 2026-09-27 starting
+2026-09-27T18:00:11.977Z Day 5/30 complete
+2026-09-28T18:00:00.003Z Day 6/30 2026-09-28 starting
+2026-09-28T18:00:16.186Z Day 6/30 complete
+2026-09-29T18:00:00.149Z Day 7/30 2026-09-29 starting
+2026-09-29T18:00:14.155Z Day 7/30 complete
+2026-09-30T18:00:00.005Z Day 8/30 2026-09-30 starting
+2026-09-30T18:00:12.248Z Day 8/30 complete
+2026-10-01T18:00:00.004Z Day 9/30 2026-10-01 starting
+2026-10-01T18:00:08.422Z Day 9/30 complete
+2026-10-02T18:00:00.003Z Day 10/30 2026-10-02 starting
+2026-10-02T18:00:08.430Z Day 10/30 complete
+2026-10-03T18:00:00.003Z Day 11/30 2026-10-03 starting
+2026-10-03T18:00:08.460Z Day 11/30 complete
+2026-10-04T18:00:00.003Z Day 12/30 2026-10-04 starting
+2026-10-04T18:00:09.250Z Day 12/30 complete
+2026-10-05T18:00:00.005Z Day 13/30 2026-10-05 starting
+2026-10-05T18:00:08.754Z Day 13/30 complete
+2026-10-06T18:00:00.003Z Day 14/30 2026-10-06 starting
+2026-10-06T18:00:08.221Z Day 14/30 complete
+2026-10-07T18:00:00.002Z Day 15/30 2026-10-07 starting
+2026-10-07T18:00:09.387Z Day 15/30 complete
+2026-10-08T18:00:00.003Z Day 16/30 2026-10-08 starting
+2026-10-08T18:00:10.243Z Day 16/30 complete
+2026-10-09T18:00:00.003Z Day 17/30 2026-10-09 starting
+2026-10-09T18:00:09.671Z Day 17/30 complete
+2026-10-10T18:00:00.003Z Day 18/30 2026-10-10 starting
+2026-10-10T18:00:11.657Z Day 18/30 complete
+2026-10-11T18:00:00.010Z Day 19/30 2026-10-11 starting
+2026-10-11T18:00:10.269Z Day 19/30 complete
+2026-10-12T18:00:00.004Z Day 20/30 2026-10-12 starting
+2026-10-12T18:00:10.003Z Day 20/30 complete
+2026-10-13T18:00:00.003Z Day 21/30 2026-10-13 starting
+2026-10-13T18:00:09.931Z Day 21/30 complete
+2026-10-14T18:00:00.004Z Day 22/30 2026-10-14 starting
+2026-10-14T18:00:14.287Z Day 22/30 complete
+2026-10-15T18:00:00.003Z Day 23/30 2026-10-15 starting
+2026-10-15T18:00:14.680Z Day 23/30 complete
+2026-10-16T18:00:00.003Z Day 24/30 2026-10-16 starting
+2026-10-16T18:00:09.891Z Day 24/30 complete
+2026-10-17T18:00:00.003Z Day 25/30 2026-10-17 starting
+2026-10-17T18:00:09.945Z Day 25/30 complete
+2026-10-18T18:00:00.003Z Day 26/30 2026-10-18 starting
+2026-10-18T18:00:10.465Z Day 26/30 complete
+2026-10-19T18:00:00.003Z Day 27/30 2026-10-19 starting
+2026-10-19T18:00:10.025Z Day 27/30 complete
+2026-10-20T18:00:00.004Z Day 28/30 2026-10-20 starting
+2026-10-20T18:00:09.512Z Day 28/30 complete
+2026-10-21T18:00:00.003Z Day 29/30 2026-10-21 starting
+2026-10-21T18:00:10.498Z Day 29/30 complete
+2026-10-22T18:00:00.088Z Day 30/30 2026-10-22 starting
+2026-10-22T18:00:00.005Z Day 30/30 2026-10-22 starting
+2026-10-22T18:00:00.539Z BLOCKED day 30: No se puede documentar el saldo a favor automático porque el ABONO ya tiene aplicaciones inmutables consumidas.

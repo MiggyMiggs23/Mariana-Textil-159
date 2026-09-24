@@ -4,6 +4,8 @@ import fs from "node:fs";
 import assert from "node:assert/strict";
 import {randomUUID} from "node:crypto";
 import {execFileSync} from "node:child_process";
+import {gzipSync,createGunzip} from "node:zlib";
+import {createInterface} from "node:readline";
 import {db,pool} from "../../../.local/tanda-g-ampliada/frozen-source/lib/db/src/index";
 import {crearEntrada,transferirRolloInmediato} from "../../../.local/tanda-g-ampliada/frozen-source/artifacts/api-server/src/lib/inventario";
 import {crearTicket,cobrarTicket,autorizarNota,cancelarTicket,abrirSesionCaja,cerrarSesionCaja,buildCorteCaja} from "../../../.local/tanda-g-ampliada/frozen-source/artifacts/api-server/src/lib/pos";
@@ -12,6 +14,12 @@ import {e4CashOutRepository} from "../../../.local/tanda-g-ampliada/frozen-sourc
 import clientesRouter from "../../../.local/tanda-g-ampliada/frozen-source/artifacts/api-server/src/routes/clientes";
 
 const out="reports/tanda-g-ampliada/tarea-3", setup="reports/tanda-g-ampliada/setup";
+const resume=process.argv.includes("--resume");
+const journalPath=`${out}/journal.jsonl.gz`;
+let replay:any[]=[];
+let startDay=1;
+const throughDay=Number(process.argv.find(s=>s.startsWith("--through-day="))?.split("=")[1]??30);
+assert.ok(Number.isInteger(throughDay)&&throughDay>=1&&throughDay<=30);
 const report:any={status:"RUNNING",method:"Frozen production producers and final customer route handler with real PostgreSQL; not HTTP/auth-middleware coverage.",clock:"Externally controlled isolated process clock, never date-column rewrites or gate deletion.",assumptions:"Synthetic modest workload, not observed or claimed business volume. Daily: entry at all seven sites in all four units, four warehouse-to-store transfers, each store four cash and four credit lines, payment, advance, E4, unpaid-ticket cancellation, close.",days:[]};
 const q=async(text:string,values:any[]=[]) => (await pool.query(text,values)).rows;
 const save=()=>fs.writeFileSync(`${out}/results.json`,JSON.stringify(report,null,2));
@@ -21,7 +29,7 @@ const txrun=(fn:any)=>db.transaction(fn);
 const ids=()=>f.products.map((p:any)=>p.id);
 const sites=()=>f.sites.map((s:any)=>s.id);
 async function identity(){
-  const [r]=await q("select current_database() db,current_setting('data_directory') dir,inet_server_port() port,(now() at time zone 'America/Mexico_City')::date::text day");
+  const [r]=await q("select current_database() db,current_setting('data_directory') dir,inet_server_port() port,(now() at time zone 'America/Mexico_City')::date::text AS day");
   assert.equal(r.db,"tanda_ga_month");
   assert.equal(r.dir,process.env.MONTH_DATA_DIRECTORY,"Dedicated clock-controlled data directory must match MAIN handoff");
   assert.equal(r.port,Number(process.env.MONTH_PG_PORT));
@@ -50,7 +58,10 @@ async function snapshot(){
 }
 type Delta={site:number,product:number,quantity:number};
 async function step(name:string,deltas:Delta[],debtDelta:number,fn:()=>Promise<any>,cashDelta:{site:number,amount:number}|null=null){
-  const entry:any={day,step:++stepNo,name,expected:{inventoryDeltas:deltas,debtDelta,cashDelta:cashDelta??"zero at every existing session"},before:await snapshot()};
+  stepNo++;
+  const prior=replay.find(r=>r.step===stepNo&&r.status==="PASS");
+  if(prior){assert.equal(prior.name,name);assert.equal(prior.day,day);return prior.result;}
+  const entry:any={day,step:stepNo,name,expected:{inventoryDeltas:deltas,debtDelta,cashDelta:cashDelta??"zero at every existing session"},before:await snapshot()};
   fs.writeFileSync(`${out}/pending-step.json`,JSON.stringify(entry,null,2));
   try{
     entry.result=await fn();entry.after=await snapshot();
@@ -72,7 +83,7 @@ async function step(name:string,deltas:Delta[],debtDelta:number,fn:()=>Promise<a
     }
     entry.status="PASS";return entry.result;
   }catch(e:any){entry.status="FAILED";entry.error={message:e.message,code:e.code};entry.after??=await snapshot();throw e;}
-  finally{fs.appendFileSync(`${out}/journal.jsonl`,JSON.stringify(entry)+"\n");fs.unlinkSync(`${out}/pending-step.json`);}
+  finally{fs.appendFileSync(journalPath,gzipSync(JSON.stringify(entry)+"\n"));fs.unlinkSync(`${out}/pending-step.json`);}
 }
 const actor=(site:any)=>Object.values(f.actors).find((a:any)=>a.role==="CAJA"&&a.siteId===site.id) as any;
 const auth=(a:any)=>({user:{id:a.id,rol:a.role,ubicacionId:a.siteId}});
@@ -96,17 +107,51 @@ try{
   assert.equal(process.env.MONTH_CLOCK_EXCLUSIVE,"MAIN_CONFIRMED_NO_OTHER_WORKER_DATABASES");
   assert.ok(process.env.MONTH_CLOCK_CONTROLLER?.startsWith(process.cwd()+"/.local/tanda-g-ampliada/"));
   assert.ok(fs.existsSync(`${setup}/template-identity.json`),"MAIN cluster readiness pending");
-  assert.ok(!fs.existsSync(`${out}/journal.jsonl`),"Fresh disposable copy and empty journal required; never blindly replay");
+  assert.ok(resume||(!fs.existsSync(journalPath)&&!fs.existsSync(`${out}/journal.jsonl`)),"Fresh disposable copy and empty journal required; never blindly replay");
   f=JSON.parse(fs.readFileSync(`${setup}/fixture-manifest-redacted.json`,"utf8"));
   assert.equal(f.sites.length,7);assert.deepEqual(f.products.map((p:any)=>p.unidad).sort(),["BOLSA","KILO","METRO","PIEZA"]);
-  report.initialIdentity=await identity();report.initial=await snapshot();save();
+  if(resume){
+    const old=JSON.parse(fs.readFileSync(`${out}/results.json`,"utf8"));
+    startDay=(old.days.at(-1)?.day??0)+1;
+    stepNo=old.days.at(-1)?.steps??0;
+    report.days=old.days;
+    const stream=fs.existsSync(journalPath)?fs.createReadStream(journalPath).pipe(createGunzip()):fs.createReadStream(`${out}/journal.jsonl`);
+    for await(const line of createInterface({input:stream,crlfDelay:Infinity})){
+      const row=JSON.parse(line);if(row.day>=startDay)replay.push(row);
+    }
+    const last=replay.at(-1);
+    const actual=await snapshot();
+    if(fs.existsSync(`${out}/pending-step.json`)){
+      const pending=JSON.parse(fs.readFileSync(`${out}/pending-step.json`,"utf8"));
+      assert.equal(pending.step,last.step+1);
+      // Read-only recovery of a timeout after commit but before the after-journal.
+      // Only authorization is accepted here; all other interrupted producers block.
+      assert.match(pending.name,/^authorize:\d+$/);
+      const ticketId=Number(pending.name.split(":")[1]);
+      for(const key of ["inventory","rolls","sessions","cash"])assert.deepEqual(actual[key],pending.before[key],`Pending authorization changed ${key}`);
+      assert.equal(Number(actual.debt[0].balance)-Number(pending.before.debt[0].balance),1500);
+      assert.equal(actual.credit.length-pending.before.credit.length,1);
+      const [proof]=await q("select count(*)::int n,sum(importe)::text amount from movimientos_credito where ticket_id=$1 and tipo='VENTA_CREDITO'",[ticketId]);
+      assert.equal(proof.n,1);assert.equal(Number(proof.amount),1500);
+      pending.after=actual;pending.status="PASS";pending.result={recoveredCommittedAuthorization:true,ticketId};pending.recovery="Read-only verification after command timeout, no producer replay";
+      fs.appendFileSync(journalPath,gzipSync(JSON.stringify(pending)+"\n"));fs.unlinkSync(`${out}/pending-step.json`);replay.push(pending);
+    }else for(const key of ["inventory","rolls","debt","credit","sessions","cash"])assert.deepEqual(actual[key],(last?.after??old.final)[key],`Resume state changed: ${key}`);
+    if(last&&last.status!=="PASS")for(const key of ["inventory","rolls","debt","credit","sessions","cash"])assert.deepEqual(last.before[key],last.after[key],`Failed operation committed changes: ${key}`);
+    if(!fs.existsSync(journalPath)){fs.writeFileSync(journalPath,gzipSync(fs.readFileSync(`${out}/journal.jsonl`)));fs.unlinkSync(`${out}/journal.jsonl`);}
+    report.initialIdentity=old.initialIdentity;report.initial=old.initial;report.resumes=[...(old.resumes??[]),{failed:old.error,at:new Date().toISOString(),verifiedUnchanged:true}];
+  }else{report.initialIdentity=await identity();report.initial=await snapshot();}
+  save();
   const initialDate=report.initialIdentity.day;
-  for(day=1;day<=30;day++){
+  for(day=startDay;day<=throughDay;day++){
     const date=new Date(`${initialDate}T18:00:00.000Z`);date.setUTCDate(date.getUTCDate()+day-1);
     const expectedDate=date.toISOString().slice(0,10);
     // Controller is supplied/owned by MAIN; it may advance only this dedicated
     // cluster and harness clock. It must not mutate database rows or SQL functions.
-    execFileSync(process.env.MONTH_CLOCK_CONTROLLER!,[date.toISOString()],{timeout:30000,stdio:"pipe"});
+    const current=await identity();
+    // Never reset an already-running calendar date: even a subsecond backwards
+    // jump can reorder immutable credit evidence after a resumed operation.
+    assert.ok(current.day<=expectedDate,"Refusing backwards calendar clock");
+    if(current.day<expectedDate)execFileSync(process.env.MONTH_CLOCK_CONTROLLER!,[date.toISOString()],{timeout:30000,stdio:"pipe"});
     assert.equal((await identity()).day,expectedDate,"PostgreSQL clock did not advance");
     assert.equal(new Date().toISOString().slice(0,10),expectedDate,"Harness clock must match PostgreSQL");
     progress(`Day ${day}/30 ${expectedDate} starting`);save();
@@ -118,9 +163,11 @@ try{
       await step(`transfer:${from.id}:${to.id}`,[{site:from.id,product:p.id,quantity:-10},{site:to.id,product:p.id,quantity:10}],0,()=>txrun(tx=>transferirRolloInmediato(tx,{rolloId:r.id,ubicacionOrigenId:from.id,ubicacionDestinoId:to.id,usuarioId:f.actors.admin.id,documentoTipo:"TRANSFERENCIA",documentoId:randomUUID(),uuidCliente:randomUUID(),justificacion:"TANDA GA monthly workload"})));
     }
     for(const site of f.sites.slice(0,3)){
+      const completed=replay.find(r=>r.day===day&&r.name===`close:${site.id}`&&r.status==="PASS");
+      if(completed){stepNo=completed.step;continue;}
       const a=actor(site);assert.ok(a);
       let [s]=await q("select id from sesiones_caja where ubicacion_id=$1 and estado='ABIERTA'",[site.id]);
-      if(!s)s=await step(`open:${site.id}`,[],0,()=>txrun(tx=>abrirSesionCaja(tx,{ubicacionId:site.id,usuarioId:a.id,fondoInicial:"5000",ip:"127.0.0.1"})));
+      if(!s||replay.some(r=>r.day===day&&r.name===`open:${site.id}`))s=await step(`open:${site.id}`,[],0,()=>txrun(tx=>abrirSesionCaja(tx,{ubicacionId:site.id,usuarioId:a.id,fondoInicial:"5000",ip:"127.0.0.1"})));
       const session=s.id;
       for(const credit of [false,true]){
         const lineas=[];
@@ -130,7 +177,7 @@ try{
         for(const line of lineas){
           const ticket=await step(`ticket:${site.id}:${credit?"credit":"cash"}:${line.productoId}`,[{site:site.id,product:line.productoId,quantity:-10}],0,()=>txrun(tx=>crearTicket(tx,{ubicacionId:site.id,usuarioTerminalId:a.id,clienteId:f.customer.id,documentoTipo:credit?"NOTA":"TICKET",credito:credit,diasPlazo:credit?30:undefined,facturado:false,uuidCliente:randomUUID(),lineas:[line],ip:"127.0.0.1"},false)));
           if(credit){
-            await step(`authorize:${ticket.id}`,[],1500,()=>txrun(tx=>autorizarNota(tx,{ticketId:ticket.id,sesionCajaId:session,usuarioId:a.id,ip:"127.0.0.1",creditRequest:{auth:auth(a)} as any,creditEvidence:{sitioOrigenId:site.id,sesionCajaId:session,naturaleza:"OPERACION_CREDITO_SIN_DINERO",operacionClave:randomUUID()}},false)));
+            await step(`authorize:${ticket.id}`,[],1500,()=>txrun(tx=>autorizarNota(tx,{ticketId:ticket.id,sesionCajaId:session,usuarioId:a.id,ip:"127.0.0.1",creditRequest:{auth:auth(a)} as any,creditEvidence:{sitioOrigenId:site.id,naturaleza:"OPERACION_CREDITO_SIN_DINERO",operacionClave:randomUUID()}},false)));
             const [balance]=await q("select coalesce(sum(importe),0)::text amount from movimientos_credito where cliente_id=$1",[f.customer.id]);
             const paymentAmount=Math.max(0,Math.min(1500,Number(balance.amount)));
             if(paymentAmount)await step(`abono:${ticket.id}`,[],-paymentAmount,()=>payment(a,session,paymentAmount),{site:site.id,amount:paymentAmount});
@@ -152,6 +199,6 @@ try{
     }
     report.days.push({day,date:expectedDate,steps:stepNo,status:"PASS"});save();progress(`Day ${day}/30 complete`);
   }
-  report.final=await snapshot();report.status="PASS";report.completedDays=30;
+  report.final=await snapshot();report.status=throughDay===30?"PASS":"PAUSED_AT_DAY_BOUNDARY";report.completedDays=report.days.length;
 }catch(e:any){report.status="BLOCKED_OR_FAILED";report.error={message:e.message,code:e.code};report.completedDays=report.days.length;process.exitCode=1;progress(`BLOCKED day ${day}: ${e.message}`);}
 finally{save();await pool.end();}

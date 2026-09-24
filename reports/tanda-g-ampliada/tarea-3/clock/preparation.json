@@ -1,0 +1,16 @@
+{
+  "database": "tanda_ga_month",
+  "directory": "/home/runner/workspace/.local/tanda-g-ampliada/month-cluster",
+  "port": 55443,
+  "databases": [
+    "postgres",
+    "tanda_ga_month",
+    "tanda_ga_witness"
+  ],
+  "metrage": 0,
+  "fixtureDate": "2026-09-23",
+  "templateSha256": "f6ce728b132b82b3760d75b35f33ba039677eee1de50de6ac588937d239b75e4",
+  "source": "Sanitized template.dump verified against setup/template-identity.json; no app DB connection",
+  "status": "prepared and stopped",
+  "clock": "PRIVATE process wall-clock offset; monotonic clocks unmodified"
+}

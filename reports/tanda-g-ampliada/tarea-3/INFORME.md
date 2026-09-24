@@ -2,7 +2,24 @@
 
 ## Estado y bloqueo
 
-Preparado el arnés; **no se han ejecutado días ni se afirma resultado mensual**.
+Actualización de ejecución: **29 días completos aprobados; día 30 bloqueado**.
+MAIN proporcionó postmaster exclusivo 55443 y reloj LD_PRELOAD comprobado
+(`clock/proof.json`). Se ejecutaron productores reales y se conservaron
+`journal.jsonl.gz` (miembros gzip concatenados; `gzip -cd`), cortes y resultados.
+Un timeout de 300 segundos interrumpió el día 30 después de commit. La recuperación
+verificó el commit sin repetirlo, pero reinició por error el reloj del mismo día,
+unos tres segundos hacia atrás. El abono posterior quedó antes de la autorización.
+Se reporta explícitamente **error del arnés**, no defecto del producto:
+`clock-resume-incident.json`. No se reescribió historia ni se reparó por SQL.
+Se requiere restauración fresca por MAIN para la aceptación completa.
+
+El arnés ahora conserva el reloj de la fecha actual y admite etapas acotadas:
+`launch.mjs harness --through-day=10`, luego
+`launch.mjs harness --resume --through-day=20` y
+`launch.mjs harness --resume --through-day=30`.
+El intento fallido debe conservarse aparte, nunca presentarse como aprobación.
+
+Contexto de planificación inicial (bloqueo de reloj ya resuelto):
 La entrega inicial MAIN contiene `tanda_ga_month` dentro del clúster compartido
 55442. Adelantar el reloj de ese postmaster afectaría las otras bases de los
 trabajadores, por lo que no se hace. Se requiere un postmaster exclusivo para la
@@ -30,7 +47,8 @@ modifican funciones SQL ni reglas de negocio. MAIN controla preparación y arran
    No se deben publicar credenciales ni variables de conexión en los resultados.
 
 No reutilizar una copia parcialmente consumida como si fuese nueva; el arnés
-rechaza un diario previo. Una falla conserva `results.json`, `journal.jsonl` y
+rechaza un diario previo salvo `--resume`, que verifica estado y conserva pasos.
+Una falla conserva `results.json`, `journal.jsonl.gz` y
 el paso pendiente si hubo interrupción. Los fallos de productores se reportan:
 no se corrigen alterando el producto ni abriendo compuertas.
 
