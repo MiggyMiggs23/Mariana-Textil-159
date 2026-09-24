@@ -38,7 +38,7 @@ export default function Login() {
     ? requestedReturn
     : "/";
   const queryClient = useQueryClient();
-  const { data: user, isLoading: isChecking } = useGetCurrentUser({
+  const { data: user, isLoading: isChecking, error: sessionError } = useGetCurrentUser({
     query: { retry: false, queryKey: getGetCurrentUserQueryKey() }
   });
 
@@ -54,10 +54,10 @@ export default function Login() {
   });
 
   useEffect(() => {
-    if (user && !isChecking) {
+    if (user && !isChecking && !sessionError) {
       setLocation(returnTo);
     }
-  }, [user, isChecking, returnTo, setLocation]);
+  }, [user, isChecking, sessionError, returnTo, setLocation]);
 
   const onSubmit = (data: LoginForm) => {
     login.mutate(
@@ -87,7 +87,7 @@ export default function Login() {
     );
   }
 
-  if (user) return null;
+  if (user && !sessionError) return null;
 
   return (
     <div className="min-h-[100dvh] flex items-center justify-center bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.12),transparent_45%)] p-4">

@@ -1,0 +1,16 @@
+✔ auth 401 redirects / to public login without mounting protected children (107.497094ms)
+✔ auth 401 redirects /clientes/21 to public login without mounting protected children (33.667788ms)
+✔ public login passes through the boundary on 401 (54.129524ms)
+✔ Acceso denegado: fail closed, preserve error and offer retry (124.892433ms)
+✔ Servidor no disponible: fail closed, preserve error and offer retry (46.768105ms)
+✔ Network unavailable; 401 is only text: fail closed, preserve error and offer retry (46.049417ms)
+✔ expired session with cached user unmounts protected content and redirects (58.980636ms)
+✔ gate off preserves passthrough without auth requests (2.346105ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2203.290041

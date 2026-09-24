@@ -1,0 +1,226 @@
+✖ auth 401 redirects / to public login without mounting protected children (1028.800106ms)
+✖ auth 401 redirects /clientes/21 to public login without mounting protected children (1006.780261ms)
+✔ public login passes through the boundary on 401 (82.986178ms)
+✖ Acceso denegado: fail closed, preserve error and offer retry (108.475137ms)
+✖ Servidor no disponible: fail closed, preserve error and offer retry (48.345602ms)
+✖ Network unavailable; 401 is only text: fail closed, preserve error and offer retry (42.953027ms)
+✖ expired session with cached user unmounts protected content and redirects (1009.587448ms)
+✔ gate off preserves passthrough without auth requests (2.459897ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 2
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4986.169818
+
+✖ failing tests:
+
+test at .auth-entry-test-66guY0/case.test.cjs:2857:29
+✖ auth 401 redirects / to public login without mounting protected children (1028.800106ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '/' !== '/login'
+  
+      at /home/runner/workspace/artifacts/mariana-textil/.auth-entry-test-66guY0/case.test.cjs:2860:66
+      at runWithExpensiveErrorDiagnosticsDisabled (/home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (/home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+      at Timeout.checkRealTimersCallback [as _onTimeout] (/home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+      at listOnTimeout (node:internal/timers:605:17)
+      at process.processTimers (node:internal/timers:541:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '/',
+    expected: '/login',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at .auth-entry-test-66guY0/case.test.cjs:2857:29
+✖ auth 401 redirects /clientes/21 to public login without mounting protected children (1006.780261ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '/clientes/21'
+  - '/login'
+  
+      at /home/runner/workspace/artifacts/mariana-textil/.auth-entry-test-66guY0/case.test.cjs:2860:66
+      at runWithExpensiveErrorDiagnosticsDisabled (/home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (/home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+      at Timeout.checkRealTimersCallback [as _onTimeout] (/home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+      at listOnTimeout (node:internal/timers:605:17)
+      at process.processTimers (node:internal/timers:541:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '/clientes/21',
+    expected: '/login',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at .auth-entry-test-66guY0/case.test.cjs:2880:29
+✖ Acceso denegado: fail closed, preserve error and offer retry (108.475137ms)
+  Error [TestingLibraryElementError]: Unable to find an accessible element with the role "button" and name "Reintentar sesión"
+  
+  Here are the accessible roles:
+  
+    alert:
+  
+    Name "":
+    [36m<p[39m
+      [33mclass[39m=[32m"text-destructive"[39m
+      [33mrole[39m=[32m"alert"[39m
+    [36m/>[39m
+  
+    --------------------------------------------------
+    link:
+  
+    Name "Iniciar sesión":
+    [36m<a[39m
+      [33mhref[39m=[32m"/login"[39m
+    [36m/>[39m
+  
+    --------------------------------------------------
+  
+  Ignored nodes: comments, script, style
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-destructive"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mAcceso denegado[0m
+      [36m</p>[39m
+      [36m<a[39m
+        [33mhref[39m=[32m"/login"[39m
+      [36m>[39m
+        [0mIniciar sesión[0m
+      [36m</a>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+      at Object.getElementError (/home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at /home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at /home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at /home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/mariana-textil/.auth-entry-test-66guY0/case.test.cjs:2888:56)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at .auth-entry-test-66guY0/case.test.cjs:2880:29
+✖ Servidor no disponible: fail closed, preserve error and offer retry (48.345602ms)
+  Error [TestingLibraryElementError]: Unable to find an accessible element with the role "button" and name "Reintentar sesión"
+  
+  Here are the accessible roles:
+  
+    alert:
+  
+    Name "":
+    [36m<p[39m
+      [33mclass[39m=[32m"text-destructive"[39m
+      [33mrole[39m=[32m"alert"[39m
+    [36m/>[39m
+  
+    --------------------------------------------------
+    link:
+  
+    Name "Iniciar sesión":
+    [36m<a[39m
+      [33mhref[39m=[32m"/login"[39m
+    [36m/>[39m
+  
+    --------------------------------------------------
+  
+  Ignored nodes: comments, script, style
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-destructive"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mServidor no disponible[0m
+      [36m</p>[39m
+      [36m<a[39m
+        [33mhref[39m=[32m"/login"[39m
+      [36m>[39m
+        [0mIniciar sesión[0m
+      [36m</a>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+      at Object.getElementError (/home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at /home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at /home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at /home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/mariana-textil/.auth-entry-test-66guY0/case.test.cjs:2888:56)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at .auth-entry-test-66guY0/case.test.cjs:2880:29
+✖ Network unavailable; 401 is only text: fail closed, preserve error and offer retry (42.953027ms)
+  Error [TestingLibraryElementError]: Unable to find an accessible element with the role "button" and name "Reintentar sesión"
+  
+  Here are the accessible roles:
+  
+    alert:
+  
+    Name "":
+    [36m<p[39m
+      [33mclass[39m=[32m"text-destructive"[39m
+      [33mrole[39m=[32m"alert"[39m
+    [36m/>[39m
+  
+    --------------------------------------------------
+    link:
+  
+    Name "Iniciar sesión":
+    [36m<a[39m
+      [33mhref[39m=[32m"/login"[39m
+    [36m/>[39m
+  
+    --------------------------------------------------
+  
+  Ignored nodes: comments, script, style
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-destructive"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mNetwork unavailable; 401 is only text[0m
+      [36m</p>[39m
+      [36m<a[39m
+        [33mhref[39m=[32m"/login"[39m
+      [36m>[39m
+        [0mIniciar sesión[0m
+      [36m</a>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+      at Object.getElementError (/home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/config.js:37:19)
+      at /home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at /home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at /home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/mariana-textil/.auth-entry-test-66guY0/case.test.cjs:2888:56)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at .auth-entry-test-66guY0/case.test.cjs:2894:27
+✖ expired session with cached user unmounts protected content and redirects (1009.587448ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '/clientes/21'
+  - '/login'
+  
+      at /home/runner/workspace/artifacts/mariana-textil/.auth-entry-test-66guY0/case.test.cjs:2902:64
+      at runWithExpensiveErrorDiagnosticsDisabled (/home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/config.js:47:12)
+      at checkCallback (/home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/wait-for.js:124:77)
+      at Timeout.checkRealTimersCallback [as _onTimeout] (/home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/wait-for.js:118:16)
+      at listOnTimeout (node:internal/timers:605:17)
+      at process.processTimers (node:internal/timers:541:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '/clientes/21',
+    expected: '/login',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

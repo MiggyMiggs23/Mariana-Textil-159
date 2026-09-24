@@ -59,10 +59,17 @@ export function E11ApplicationBoundary({ children }: { children: ReactNode }) {
   return e11On() ? <ActorApplication>{children}</ActorApplication> : <>{children}</>;
 }
 function ActorApplication({ children }: { children: ReactNode }) {
-  const [path] = useLocation();
+  const [path, navigate] = useLocation();
   const user = api.useGetCurrentUser();
+  const unauthenticated = user.error?.status === 401;
+  useEffect(() => {
+    if (path === "/login" || !unauthenticated) return;
+    const returnTo = path.startsWith("/") && !path.startsWith("//") && !path.includes("\\") ? path : "/";
+    navigate(`/login?returnTo=${encodeURIComponent(returnTo)}`, { replace: true });
+  }, [path, navigate, unauthenticated]);
   if (path === "/login") return <>{children}</>;
-  if (user.error) return <><E11Error error={user.error} /><Link href="/login">Iniciar sesión</Link></>;
+  if (unauthenticated) return <p role="status">Abriendo inicio de sesión…</p>;
+  if (user.error) return <><E11Error error={user.error} /><Button variant="outline" onClick={() => void user.refetch()}>Reintentar sesión</Button><Link href="/login">Iniciar sesión</Link></>;
   if (!user.data) return <p>Comprobando sesión…</p>;
   if (!["ADMIN", "CONTADOR"].includes(user.data.rol)) return <>{children}</>;
   return <E11SessionProvider key={`${user.data.id}:${user.data.rol}`} user={user.data}>
