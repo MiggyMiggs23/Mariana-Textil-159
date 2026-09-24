@@ -1,0 +1,81 @@
+{
+  "identity": {
+    "db": "tanda_ga_inventory",
+    "port": 55442,
+    "actor": "ga_inventory"
+  },
+  "row": {
+    "id": 6233,
+    "cantidad_actual": "10.000"
+  },
+  "after": {
+    "cantidad_actual": "10.000"
+  },
+  "records": [
+    {
+      "value": "NaN",
+      "expression": {
+        "basic_check": true,
+        "proposed_check": false
+      },
+      "physicalUpdateAccepted": true,
+      "after": {
+        "actual": "NaN"
+      }
+    },
+    {
+      "value": "Infinity",
+      "expression": {
+        "basic_check": true,
+        "proposed_check": true
+      },
+      "physicalUpdateAccepted": false,
+      "code": "22003",
+      "message": "numeric field overflow"
+    },
+    {
+      "value": "-Infinity",
+      "expression": {
+        "basic_check": false,
+        "proposed_check": false
+      },
+      "physicalUpdateAccepted": false,
+      "code": "22003",
+      "message": "numeric field overflow"
+    },
+    {
+      "value": "-2",
+      "expression": {
+        "basic_check": false,
+        "proposed_check": false
+      },
+      "physicalUpdateAccepted": true,
+      "after": {
+        "actual": "-2.000"
+      }
+    },
+    {
+      "value": "0",
+      "expression": {
+        "basic_check": true,
+        "proposed_check": true
+      },
+      "physicalUpdateAccepted": true,
+      "after": {
+        "actual": "0.000"
+      }
+    },
+    {
+      "value": "2",
+      "expression": {
+        "basic_check": true,
+        "proposed_check": true
+      },
+      "physicalUpdateAccepted": true,
+      "after": {
+        "actual": "2.000"
+      }
+    }
+  ],
+  "ddlApplied": false
+}

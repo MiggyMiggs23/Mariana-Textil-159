@@ -1,0 +1,17 @@
+{
+  "action": "drop",
+  "identity": {
+    "db": "tanda_ga_inventory",
+    "dir": "/home/runner/workspace/.local/tanda-g-ampliada/cluster",
+    "port": 55442,
+    "actor": "postgres"
+  },
+  "before": [
+    {
+      "conname": "tanda_ga_t2_physical_nonnegative",
+      "definition": "CHECK ((cantidad_actual >= (0)::numeric))",
+      "convalidated": true
+    }
+  ],
+  "at": "2026-09-24T05:19:15.511Z"
+}

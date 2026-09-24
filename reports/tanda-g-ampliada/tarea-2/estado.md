@@ -1,5 +1,7 @@
 # Tarea 2 — tramo estático / preparación
 
+**Cierre:** ver `resultado-final.md` y `comparison.json`. Baseline API terminado tras retiro MAIN; reproducción METRO/KILO -2 confirmada HTTP200 en ambos sitios. NaN/Infinity ensayados con rollback sin DDL adicional. Se conservan debajo los tramos cronológicos, cuyos pendientes están sustituidos por el informe final.
+
 Estado: preparado, ejecución DB/API pendiente de readiness explícito de MAIN. No se ha conectado a ningún cluster, aplicado DDL, arrancado workflow ni modificado producto.
 
 ## Tramo 2 — readiness recibido / baseline productores ejecutado
