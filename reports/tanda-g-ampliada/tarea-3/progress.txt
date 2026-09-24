@@ -1,0 +1,3 @@
+Tramo 1: lectura de productores congelables y planeación terminadas. Sin conexiones ni escrituras a DB app u otros trabajadores.
+Bloqueo de ejecución: clúster MAIN compartido 55442 no permite adelantar reloj mensual sin afectar otras copias. Requiere postmaster mensual exclusivo y controlador de reloj de procesos.
+Arnés entregado: 30 fechas, 7 sitios, 4 unidades, diario antes/después, comprobación de sesión única diaria. Sin resultados de ejecución mensual.

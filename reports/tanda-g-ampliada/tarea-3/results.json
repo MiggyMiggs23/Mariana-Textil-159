@@ -1,0 +1,14 @@
+{
+  "status": "BLOCKED_NOT_EXECUTED",
+  "completedDays": 0,
+  "databaseWrites": 0,
+  "blocker": "MAIN supplied month database is in shared cluster 55442. Monthly clock control requires dedicated monthly postmaster and process clock controller; changing shared postmaster clock would affect other workers.",
+  "implementation": "Frozen real producers and PostgreSQL harness prepared. esbuild syntax/import bundling passed; no runtime or business acceptance claimed.",
+  "requestedHandoff": [
+    "MONTH_DATA_DIRECTORY under .local/tanda-g-ampliada, exclusive monthly postmaster",
+    "MONTH_PG_PORT",
+    "MONTH_CLOCK_CONTROLLER accepting ISO UTC instant and controlling only monthly PostgreSQL and harness process clocks",
+    "MONTH_CLOCK_EXCLUSIVE=MAIN_CONFIRMED_NO_OTHER_WORKER_DATABASES",
+    "Explicit isolated test database and separate witness URLs"
+  ]
+}
