@@ -2,6 +2,20 @@
 
 Estado: preparado, ejecución DB/API pendiente de readiness explícito de MAIN. No se ha conectado a ningún cluster, aplicado DDL, arrancado workflow ni modificado producto.
 
+## Tramo 2 — readiness recibido / baseline productores ejecutado
+
+MAIN autorizó cluster55442 y API43852. Se construyó handoff privado desde setup, sin imprimir secretos. Identidad efectiva SQL: tanda_ga_inventory / puerto55442 / ga_inventory; directorio/proceso comprobados por postmaster.pid y cmdline. No se elevó el rol (data_directory no es visible al no-owner; intento read-only devolvió 42501 y se reemplazó por comprobación de proceso).
+
+`results-baseline-services.json`: 224 casos reales, todos en transacciones rollback, dos sitios y cuatro unidades; 32/32 controles válidos cantidad2 aceptados. -2 aceptado por crearRollo y activarRollo para METRO/KILO en ambos sitios; crearEntrada aceptó -2 en **las cuatro unidades** por servicio directo. ajustarRollo rechazó -2 en todas. Esto no afirma que API crearEntrada lo acepte: su guarda independiente de positividad sigue documentada.
+
+Cambio de procedimiento: el rol ga_inventory NO puede ALTER. El runner ahora NO contiene DDL y corre una fase por invocación (`INVENTORY_PHASE=baseline-services|check|baseline`). MAIN debe ejecutar el operador acotado antes de fase check:
+
+`MAIN_COPY_OPERATOR=yes node reports/tanda-g-ampliada/tarea-2/copy-operator.mjs add`
+
+El operador conecta exclusivamente localhost55442/tanda_ga_inventory como postgres, verifica SQL db/directorio/puerto/actor, y agrega SOLO tanda_ga_t2_physical_nonnegative con CHECK(cantidad_actual>=0). No usa URL ambiental, NOT VALID ni saneamiento. Una copia ya corrupta causa fallo normal al agregar. Después de fase check, MAIN ejecuta mismo comando con `drop`; luego corre baseline API y conserva corrupción de ensayo. Operador preparado, **no ejecutado por este worker**.
+
+Comando runner: `MAIN_READY=yes INVENTORY_PHASE=check INVENTORY_HANDOFF=.local/tanda-g-ampliada/inventory-handoff.json node reports/tanda-g-ampliada/tarea-2/run.mjs`. Pendientes: instalación MAIN, fase check, retiro MAIN y fase baseline API. Las instrucciones históricas de instalación automática del primer tramo quedan sustituidas por este procedimiento no-owner.
+
 Fuente inspeccionada: ee1bb641e0513b7df18027ad351a72ebbe99af74 (identidad inicial; cambios paralelos deben registrarse separadamente). Baseline solicitado: currentsource61d strict; el runner exige identidad y rutas del setup, no lo sustituye por HEAD.
 
 Se leyó `.agents/memory/inventory-numeric-boundaries.md` y el antecedente `reports/tanda-g/candidate/negative-api-results.json`: activación METRO/KILO -2 aceptada HTTP 200. Esto es evidencia anterior, NO reproducción de esta tanda.
