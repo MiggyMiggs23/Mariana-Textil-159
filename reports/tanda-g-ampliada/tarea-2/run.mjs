@@ -1,0 +1,11 @@
+import fs from "node:fs";
+import assert from "node:assert/strict";
+assert.equal(process.env.MAIN_READY, "yes", "Wait for MAIN readiness");
+const c = JSON.parse(fs.readFileSync(process.env.INVENTORY_HANDOFF, "utf8"));
+const url = new URL(c.databaseUrl);
+assert.equal(url.hostname, "127.0.0.1");
+assert.match(c.databaseName, /^tanda_ga_inventory(?:_[a-z0-9]+)*$/);
+assert.equal(url.pathname, `/${c.databaseName}`);
+process.env.DATABASE_URL = c.databaseUrl;
+process.env.TEST_DATABASE_URL = c.databaseUrl;
+await import("./matrix.bundle.mjs");
