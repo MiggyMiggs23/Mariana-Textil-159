@@ -1,0 +1,19 @@
+{
+  "case": 10,
+  "started": "2026-09-24T03:58:27.823Z",
+  "transport": "real production helpers / real PostgreSQL, not HTTP",
+  "steps": [],
+  "identity": {
+    "db": "tanda_f_reversal",
+    "directory": "/home/runner/workspace/.local/tanda-f/cluster",
+    "port": 55440,
+    "pid": 13635
+  },
+  "historical": [
+    {
+      "count": 0
+    }
+  ],
+  "status": "BLOCKED_NO_HISTORICAL_ROWS; no fabricated DEVOLUCION producer",
+  "finished": "2026-09-24T03:58:27.825Z"
+}

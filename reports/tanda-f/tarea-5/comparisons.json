@@ -1,0 +1,1245 @@
+[
+  {
+    "case": 1,
+    "status": "REPRODUCED",
+    "comparisons": [
+      {
+        "initiatingStep": "create transfer document",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "send transfer document",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "receive transfer document",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "reverse movement 7370",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": -10,
+            "discrepancyChangeFromPriorStep": -10
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 10
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": 2,
+    "status": "REPRODUCED",
+    "comparisons": [
+      {
+        "initiatingStep": "create transfer document",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": -10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "send transfer document",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": -10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "receive transfer document",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": -10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "administrative whole sale",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": -10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "reverse movement 7471",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 10
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": -10
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "reverse movement 7475",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 10
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": 3,
+    "status": "BLOCKED_PRODUCT_METREADO_NOT_ENABLED",
+    "comparisons": [
+      {
+        "initiatingStep": "partial metered ticket 5 of 10",
+        "committed": false,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": 4,
+    "status": "REPRODUCED",
+    "comparisons": [
+      {
+        "initiatingStep": "create transfer document",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "send transfer document",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "receive transfer document",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "reverse movement 7478",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 10
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": 5,
+    "status": "REPRODUCED",
+    "comparisons": [
+      {
+        "initiatingStep": "create transfer document",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "send transfer document",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "receive transfer document",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "reverse movement 7486",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": -10
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": 6,
+    "status": "REPRODUCED",
+    "comparisons": [
+      {
+        "initiatingStep": "adjust to 12",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "manual BAJA",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "reverse movement 7488",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": 7,
+    "status": "REPRODUCED",
+    "comparisons": [
+      {
+        "initiatingStep": "adjust to 8",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "manual BAJA",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "reverse movement 7491",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": 8,
+    "status": "REPRODUCED",
+    "comparisons": [
+      {
+        "initiatingStep": "create transfer document",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "send transfer document",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "manual BAJA",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "reverse movement 7496",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 8,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 836,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 10,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2078,
+            "unit": "METRO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": 9,
+    "status": "REPRODUCED",
+    "comparisons": [
+      {
+        "initiatingStep": "adjust to 12",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 836,
+            "product": 2079,
+            "unit": "KILO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2079,
+            "unit": "KILO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2079,
+            "unit": "KILO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "reverse movement 7498",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 836,
+            "product": 2079,
+            "unit": "KILO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 837,
+            "product": 2079,
+            "unit": "KILO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2079,
+            "unit": "KILO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      },
+      {
+        "initiatingStep": "reverse movement 7499",
+        "committed": true,
+        "comparisons": [
+          {
+            "site": 836,
+            "product": 2079,
+            "unit": "KILO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 2,
+            "discrepancyChangeFromPriorStep": 2
+          },
+          {
+            "site": 837,
+            "product": 2079,
+            "unit": "KILO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          },
+          {
+            "site": 838,
+            "product": 2079,
+            "unit": "KILO",
+            "cacheEqualsLedger": true,
+            "ledgerMinusInventoryRolls": 0,
+            "discrepancyChangeFromPriorStep": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "case": 10,
+    "status": "BLOCKED_NO_HISTORICAL_DEVOLUCION",
+    "comparisons": []
+  }
+]

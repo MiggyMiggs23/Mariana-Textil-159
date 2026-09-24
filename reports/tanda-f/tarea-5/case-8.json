@@ -1,0 +1,455 @@
+{
+  "case": 8,
+  "started": "2026-09-24T03:58:25.659Z",
+  "transport": "real production helpers / real PostgreSQL, not HTTP",
+  "steps": [
+    {
+      "name": "create transfer document",
+      "committed": true,
+      "snapshot": {
+        "balance": [
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 8,
+            "unidad": "METRO",
+            "available_roll_sum": "0",
+            "inventory_roll_sum": "0",
+            "signed_ledger": "0.000",
+            "cache": "0.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 836,
+            "unidad": "METRO",
+            "available_roll_sum": "20.000",
+            "inventory_roll_sum": "20.000",
+            "signed_ledger": "30.000",
+            "cache": "30.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 837,
+            "unidad": "METRO",
+            "available_roll_sum": "100.000",
+            "inventory_roll_sum": "110.000",
+            "signed_ledger": "110.000",
+            "cache": "110.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 838,
+            "unidad": "METRO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          }
+        ],
+        "roll": [
+          {
+            "id": 6240,
+            "producto_id": 2078,
+            "ubicacion_id": 836,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ],
+        "movements": [
+          {
+            "id": "7377",
+            "tipo": "RECEPCION",
+            "cantidad": "10.000",
+            "ubicacion_id": 836,
+            "movimiento_origen_id": null,
+            "documento_tipo": "ENTRADA",
+            "documento_id": "468"
+          }
+        ],
+        "documents": [
+          {
+            "id": 33,
+            "estado": "ARMANDO",
+            "origen_id": 836,
+            "destino_id": 837
+          }
+        ]
+      }
+    },
+    {
+      "name": "send transfer document",
+      "committed": true,
+      "snapshot": {
+        "balance": [
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 8,
+            "unidad": "METRO",
+            "available_roll_sum": "0",
+            "inventory_roll_sum": "10.000",
+            "signed_ledger": "10.000",
+            "cache": "10.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 836,
+            "unidad": "METRO",
+            "available_roll_sum": "10.000",
+            "inventory_roll_sum": "10.000",
+            "signed_ledger": "20.000",
+            "cache": "20.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 837,
+            "unidad": "METRO",
+            "available_roll_sum": "100.000",
+            "inventory_roll_sum": "110.000",
+            "signed_ledger": "110.000",
+            "cache": "110.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 838,
+            "unidad": "METRO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          }
+        ],
+        "roll": [
+          {
+            "id": 6240,
+            "producto_id": 2078,
+            "ubicacion_id": 8,
+            "estado": "EN_TRANSITO",
+            "cantidad_actual": "10.000"
+          }
+        ],
+        "movements": [
+          {
+            "id": "7377",
+            "tipo": "RECEPCION",
+            "cantidad": "10.000",
+            "ubicacion_id": 836,
+            "movimiento_origen_id": null,
+            "documento_tipo": "ENTRADA",
+            "documento_id": "468"
+          },
+          {
+            "id": "7494",
+            "tipo": "TRANSFERENCIA_SALIDA",
+            "cantidad": "-10.000",
+            "ubicacion_id": 836,
+            "movimiento_origen_id": null,
+            "documento_tipo": "SALIDA",
+            "documento_id": "33"
+          },
+          {
+            "id": "7495",
+            "tipo": "TRANSFERENCIA_ENTRADA",
+            "cantidad": "10.000",
+            "ubicacion_id": 8,
+            "movimiento_origen_id": null,
+            "documento_tipo": "SALIDA",
+            "documento_id": "33"
+          }
+        ],
+        "documents": [
+          {
+            "id": 33,
+            "estado": "EN_TRANSITO",
+            "origen_id": 836,
+            "destino_id": 837
+          }
+        ]
+      }
+    },
+    {
+      "name": "manual BAJA",
+      "committed": true,
+      "snapshot": {
+        "balance": [
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 8,
+            "unidad": "METRO",
+            "available_roll_sum": "0",
+            "inventory_roll_sum": "0",
+            "signed_ledger": "0.000",
+            "cache": "0.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 836,
+            "unidad": "METRO",
+            "available_roll_sum": "10.000",
+            "inventory_roll_sum": "10.000",
+            "signed_ledger": "20.000",
+            "cache": "20.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 837,
+            "unidad": "METRO",
+            "available_roll_sum": "100.000",
+            "inventory_roll_sum": "110.000",
+            "signed_ledger": "110.000",
+            "cache": "110.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 838,
+            "unidad": "METRO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          }
+        ],
+        "roll": [
+          {
+            "id": 6240,
+            "producto_id": 2078,
+            "ubicacion_id": 8,
+            "estado": "BAJA",
+            "cantidad_actual": "0.000"
+          }
+        ],
+        "movements": [
+          {
+            "id": "7377",
+            "tipo": "RECEPCION",
+            "cantidad": "10.000",
+            "ubicacion_id": 836,
+            "movimiento_origen_id": null,
+            "documento_tipo": "ENTRADA",
+            "documento_id": "468"
+          },
+          {
+            "id": "7494",
+            "tipo": "TRANSFERENCIA_SALIDA",
+            "cantidad": "-10.000",
+            "ubicacion_id": 836,
+            "movimiento_origen_id": null,
+            "documento_tipo": "SALIDA",
+            "documento_id": "33"
+          },
+          {
+            "id": "7495",
+            "tipo": "TRANSFERENCIA_ENTRADA",
+            "cantidad": "10.000",
+            "ubicacion_id": 8,
+            "movimiento_origen_id": null,
+            "documento_tipo": "SALIDA",
+            "documento_id": "33"
+          },
+          {
+            "id": "7496",
+            "tipo": "AJUSTE_NEGATIVO",
+            "cantidad": "-10.000",
+            "ubicacion_id": 8,
+            "movimiento_origen_id": null,
+            "documento_tipo": null,
+            "documento_id": null
+          }
+        ],
+        "documents": [
+          {
+            "id": 33,
+            "estado": "EN_TRANSITO",
+            "origen_id": 836,
+            "destino_id": 837
+          }
+        ]
+      }
+    },
+    {
+      "name": "reverse movement 7496",
+      "committed": true,
+      "snapshot": {
+        "balance": [
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 8,
+            "unidad": "METRO",
+            "available_roll_sum": "10.000",
+            "inventory_roll_sum": "10.000",
+            "signed_ledger": "10.000",
+            "cache": "10.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 836,
+            "unidad": "METRO",
+            "available_roll_sum": "10.000",
+            "inventory_roll_sum": "10.000",
+            "signed_ledger": "20.000",
+            "cache": "20.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 837,
+            "unidad": "METRO",
+            "available_roll_sum": "100.000",
+            "inventory_roll_sum": "110.000",
+            "signed_ledger": "110.000",
+            "cache": "110.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 838,
+            "unidad": "METRO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          }
+        ],
+        "roll": [
+          {
+            "id": 6240,
+            "producto_id": 2078,
+            "ubicacion_id": 8,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ],
+        "movements": [
+          {
+            "id": "7377",
+            "tipo": "RECEPCION",
+            "cantidad": "10.000",
+            "ubicacion_id": 836,
+            "movimiento_origen_id": null,
+            "documento_tipo": "ENTRADA",
+            "documento_id": "468"
+          },
+          {
+            "id": "7494",
+            "tipo": "TRANSFERENCIA_SALIDA",
+            "cantidad": "-10.000",
+            "ubicacion_id": 836,
+            "movimiento_origen_id": null,
+            "documento_tipo": "SALIDA",
+            "documento_id": "33"
+          },
+          {
+            "id": "7495",
+            "tipo": "TRANSFERENCIA_ENTRADA",
+            "cantidad": "10.000",
+            "ubicacion_id": 8,
+            "movimiento_origen_id": null,
+            "documento_tipo": "SALIDA",
+            "documento_id": "33"
+          },
+          {
+            "id": "7496",
+            "tipo": "AJUSTE_NEGATIVO",
+            "cantidad": "-10.000",
+            "ubicacion_id": 8,
+            "movimiento_origen_id": null,
+            "documento_tipo": null,
+            "documento_id": null
+          },
+          {
+            "id": "7497",
+            "tipo": "CANCELACION",
+            "cantidad": "10.000",
+            "ubicacion_id": 8,
+            "movimiento_origen_id": 7496,
+            "documento_tipo": null,
+            "documento_id": null
+          }
+        ],
+        "documents": [
+          {
+            "id": 33,
+            "estado": "EN_TRANSITO",
+            "origen_id": 836,
+            "destino_id": 837
+          }
+        ]
+      }
+    }
+  ],
+  "identity": {
+    "db": "tanda_f_reversal",
+    "directory": "/home/runner/workspace/.local/tanda-f/cluster",
+    "port": 55440,
+    "pid": 13635
+  },
+  "fixture": {
+    "id": 6240,
+    "serie": "994000008",
+    "productId": 2078,
+    "siteId": 836,
+    "unit": "METRO",
+    "entryId": 468,
+    "supplierId": 226,
+    "movementId": "7377"
+  },
+  "baseline": {
+    "balance": [
+      {
+        "producto_id": 2078,
+        "ubicacion_id": 8,
+        "unidad": "METRO",
+        "available_roll_sum": "0",
+        "inventory_roll_sum": "0",
+        "signed_ledger": "0.000",
+        "cache": "0.000"
+      },
+      {
+        "producto_id": 2078,
+        "ubicacion_id": 836,
+        "unidad": "METRO",
+        "available_roll_sum": "20.000",
+        "inventory_roll_sum": "20.000",
+        "signed_ledger": "30.000",
+        "cache": "30.000"
+      },
+      {
+        "producto_id": 2078,
+        "ubicacion_id": 837,
+        "unidad": "METRO",
+        "available_roll_sum": "100.000",
+        "inventory_roll_sum": "110.000",
+        "signed_ledger": "110.000",
+        "cache": "110.000"
+      },
+      {
+        "producto_id": 2078,
+        "ubicacion_id": 838,
+        "unidad": "METRO",
+        "available_roll_sum": "80.000",
+        "inventory_roll_sum": "80.000",
+        "signed_ledger": "80.000",
+        "cache": "80.000"
+      }
+    ],
+    "roll": [
+      {
+        "id": 6240,
+        "producto_id": 2078,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      }
+    ],
+    "movements": [
+      {
+        "id": "7377",
+        "tipo": "RECEPCION",
+        "cantidad": "10.000",
+        "ubicacion_id": 836,
+        "movimiento_origen_id": null,
+        "documento_tipo": "ENTRADA",
+        "documento_id": "468"
+      }
+    ],
+    "documents": []
+  },
+  "status": "EXECUTED_REQUIRES_BALANCE_INTERPRETATION",
+  "finished": "2026-09-24T03:58:25.757Z"
+}
