@@ -1,0 +1,38 @@
+{
+  "fullDatasetEqual": false,
+  "changedTables": [
+    "sesiones"
+  ],
+  "businessDatasetEqual": true,
+  "explicitExclusion": "sesiones is authentication-session storage, not sesiones_caja. Its row digest changed between samples; full dataset equality is NOT claimed. All other public tables, including all business tables, match.",
+  "orderedQueryResultsEqual": true,
+  "orderedOperationResultsEqual": true,
+  "timings": [
+    {
+      "name": "cash_cut",
+      "preMs": [
+        61.78013699999974,
+        37.720596000000114,
+        37.22602899999947
+      ],
+      "postMs": [
+        50.18441100000018,
+        32.86386700000003,
+        32.04220999999961
+      ]
+    },
+    {
+      "name": "credit_report",
+      "preMs": [
+        399.4708469999996,
+        439.1736270000001,
+        386.6342510000004
+      ],
+      "postMs": [
+        417.3381050000007,
+        373.918987,
+        381.71389499999987
+      ]
+    }
+  ]
+}

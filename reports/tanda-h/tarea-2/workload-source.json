@@ -1,0 +1,7 @@
+{
+  "source": "reports/tanda-g-ampliada/tarea-4/load.mjs",
+  "sha256": "a2bc541102203e2676af0b133bda594d0db94edc0dcd566b844b2b25d855c128",
+  "tickets": 54750,
+  "explanation": "365 × 50 × 3 = 54,750, not 54,150; original hypothetical assumptions unchanged",
+  "changes": "Private/report paths, database identity, actor, port, absolute pg module import; available-roll distribution uses the three fresh stores rather than seven prior sites"
+}

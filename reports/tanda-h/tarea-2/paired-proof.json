@@ -1,0 +1,5 @@
+{
+  "datasetEqual": false,
+  "semanticEqual": true,
+  "comparison": "Full public-table row digests; ordered response arrays preserved; response generatedAt alone excluded"
+}

@@ -1,0 +1,103 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Vista Global
+Activar sonido
+99+
+T
+
+TANDA H ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+TANDA H CLIENTE GLOBAL
+Activo
+
+Cliente #8 · Alta 24 sep 2026
+
+Comportamiento de pago
+Historial insuficiente
+
+0% · 12562 notas evaluadas, 0 liquidadas
+
+Abiertas vigentes excluidas: 1125 · Vencidas impagas: 12562
+
+Todo el historial autorizado hasta hoy. Mide por nota liquidada si se pagó a más tardar en su vencimiento; incluye vencidas impagas como tardías y excluye abiertas aún no vencidas.
+
+Editar datos
+Dar de baja
+Utilidad acumulada
+
+••••••
+
+Se excluyeron 0 línea(s) sin costo asignado.
+
+Saldos del cliente
+
+SALDO DEUDOR
+
+—
+
+Rojo significa dinero pendiente de cobro.
+
+SALDO A FAVOR
+
+—
+
+Verde significa dinero recibido disponible para aplicar.
+
+Datos
+Crédito
+Estado de cuenta
+Compras
+Analítica
+
+Verificando autorización E7…
+
+Origen y evidencia de crédito
+
+Cargando evidencia…
+
+Ver salidas pendientes a cobro de este cliente
+Solicitudes de pago dirigido
+
+Cargando solicitudes…

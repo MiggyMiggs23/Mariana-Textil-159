@@ -9,7 +9,7 @@ if (!["pre", "post"].includes(phase)) throw Error("Expected pre or post");
 if (fs.existsSync(`${out}/${phase}.json`)) throw Error("Refusing to overwrite paired evidence");
 const cfg = JSON.parse(fs.readFileSync(root + "/.local/tanda-h/worker-databases.json")).performance;
 const fixture = JSON.parse(fs.readFileSync(root + "/reports/tanda-h/setup/fixture-manifest-redacted.json"));
-const source = root; // current source, not the obsolete G frozen source
+const source = root + "/.local/tanda-h/frozen-source"; // matches running COPY API
 process.env.NODE_ENV = "test";
 process.env.REQUIRE_ISOLATED_TEST_DATABASE = "1";
 process.env.TEST_DATABASE_URL = cfg.url;

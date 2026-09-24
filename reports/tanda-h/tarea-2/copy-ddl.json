@@ -1,0 +1,29 @@
+{
+  "identity": {
+    "db": "tanda_h_performance",
+    "actor": "h_performance",
+    "port": 55444
+  },
+  "authorization": "Explicit MAIN COPY-only",
+  "prefixReview": "Existing site/date nonpartial index lacks ID and cut predicate; no site/accounted-date expression prefix exists. Other existing key prefixes differ. Only approved two candidates applied.",
+  "results": [
+    {
+      "sql": "CREATE INDEX CONCURRENTLY tickets_pendientes_corte_ga_candidate\nON public.tickets (ubicacion_id, created_at, id)\nWHERE estado = 'VENDIDO'\n  AND ((documento_tipo = 'TICKET' AND cobrado = false)\n    OR (documento_tipo = 'NOTA' AND autorizacion_estado = 'PENDIENTE'))",
+      "elapsedMs": 95.278122
+    },
+    {
+      "sql": "CREATE INDEX CONCURRENTLY tickets_contabilizados_sitio_fecha_ga_candidate\nON public.tickets\n  (ubicacion_id, (CASE WHEN documento_tipo = 'TICKET' THEN cobrado_at ELSE autorizado_at END))\nWHERE estado = 'VENDIDO'\n  AND ((documento_tipo = 'TICKET' AND cobrado = true)\n    OR (documento_tipo = 'NOTA' AND autorizacion_estado = 'AUTORIZADA'))",
+      "elapsedMs": 96.80066200000002
+    }
+  ],
+  "indexes": [
+    {
+      "indexname": "tickets_pendientes_corte_ga_candidate",
+      "indexdef": "CREATE INDEX tickets_pendientes_corte_ga_candidate ON public.tickets USING btree (ubicacion_id, created_at, id) WHERE ((estado = 'VENDIDO'::estado_ticket) AND (((documento_tipo = 'TICKET'::text) AND (cobrado = false)) OR ((documento_tipo = 'NOTA'::text) AND (autorizacion_estado = 'PENDIENTE'::text))))"
+    },
+    {
+      "indexname": "tickets_contabilizados_sitio_fecha_ga_candidate",
+      "indexdef": "CREATE INDEX tickets_contabilizados_sitio_fecha_ga_candidate ON public.tickets USING btree (ubicacion_id, (\nCASE\n    WHEN (documento_tipo = 'TICKET'::text) THEN cobrado_at\n    ELSE autorizado_at\nEND)) WHERE ((estado = 'VENDIDO'::estado_ticket) AND (((documento_tipo = 'TICKET'::text) AND (cobrado = true)) OR ((documento_tipo = 'NOTA'::text) AND (autorizacion_estado = 'AUTORIZADA'::text))))"
+    }
+  ]
+}
