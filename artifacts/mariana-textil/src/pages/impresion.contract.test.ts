@@ -11,6 +11,8 @@ test("E3 receipt escapes hidden app scroll/flex boxes and prints both copies in 
   // A visible, nonzero #e3-pages inside a hidden overflow ancestor still produced
   // an empty Chromium PDF. Ancestor boxes must disappear, not merely their ink.
   assert.match(print, /#root,\s*#root \*:has\(#e3-pages\)\s*\{\s*display:contents !important;/);
+  // Geometry remains nonzero without this, but Chromium paints an empty PDF.
+  assert.match(print, /#root,\s*#root \*:has\(#e3-pages\)\s*\{[^}]*visibility:visible;/);
   assert.match(print, /#root \*:not\(:has\(#e3-pages\)\):not\(#e3-pages\):not\(#e3-pages \*\)\s*\{\s*display:none !important;/);
   assert.match(print, /body > \*:not\(#root\)\s*\{\s*display:none !important;/);
   assert.match(print, /#e3-pages\s*\{\s*position:static;\s*display:block !important;/);

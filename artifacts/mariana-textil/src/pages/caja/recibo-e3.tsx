@@ -94,10 +94,11 @@ export function ReceiptPages({ recibo, printedAt, onReady }: {
       @media print {
         @page { size:A5 landscape; margin:0; }
         body * { visibility:hidden; }
-        /* Remove the app's flex/scroll boxes from print layout: visibility alone
-           leaves the receipt inside a hidden overflow container in Chromium. */
+        /* Chromium can suppress painting beneath hidden display:contents
+           ancestors even when the receipt itself computes visibility:visible.
+           Remove their layout boxes AND restore their visibility. */
         body > *:not(#root) { display:none !important; }
-        #root, #root *:has(#e3-pages) { display:contents !important; }
+        #root, #root *:has(#e3-pages) { display:contents !important; visibility:visible; }
         #root *:not(:has(#e3-pages)):not(#e3-pages):not(#e3-pages *) { display:none !important; }
         #e3-pages,#e3-pages * { visibility:visible; }
         #e3-pages { position:static; display:block !important; margin:0; padding:0; }
