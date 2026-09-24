@@ -1,0 +1,9 @@
+{
+  "sha256": "a119e170e66960570c1143e905d2032226fe85333572ee7145b47384c71da223",
+  "databases": [
+    "tanda_hr_template",
+    "tanda_hr_browser",
+    "tanda_hr_witness"
+  ],
+  "port": 55445
+}

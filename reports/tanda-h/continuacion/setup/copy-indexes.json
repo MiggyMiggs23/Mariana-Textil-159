@@ -1,0 +1,25 @@
+{
+  "identity": {
+    "db": "tanda_hr_browser",
+    "actor": "hr_browser",
+    "port": 55445
+  },
+  "proof": [
+    {
+      "requested": "tickets_pendientes_corte_ga_candidate",
+      "action": "created on copy",
+      "indexname": "tickets_pendientes_corte_ga_candidate",
+      "indexdef": "CREATE INDEX tickets_pendientes_corte_ga_candidate ON public.tickets USING btree (ubicacion_id, created_at, id) WHERE ((estado = 'VENDIDO'::estado_ticket) AND (((documento_tipo = 'TICKET'::text) AND (cobrado = false)) OR ((documento_tipo = 'NOTA'::text) AND (autorizacion_estado = 'PENDIENTE'::text))))",
+      "indisvalid": true,
+      "indisready": true
+    },
+    {
+      "requested": "tickets_contabilizados_sitio_fecha_ga_candidate",
+      "action": "created on copy",
+      "indexname": "tickets_contabilizados_sitio_fecha_ga_candidate",
+      "indexdef": "CREATE INDEX tickets_contabilizados_sitio_fecha_ga_candidate ON public.tickets USING btree (ubicacion_id, (\nCASE\n    WHEN (documento_tipo = 'TICKET'::text) THEN cobrado_at\n    ELSE autorizado_at\nEND)) WHERE ((estado = 'VENDIDO'::estado_ticket) AND (((documento_tipo = 'TICKET'::text) AND (cobrado = true)) OR ((documento_tipo = 'NOTA'::text) AND (autorizacion_estado = 'AUTORIZADA'::text))))",
+      "indisvalid": true,
+      "indisready": true
+    }
+  ]
+}

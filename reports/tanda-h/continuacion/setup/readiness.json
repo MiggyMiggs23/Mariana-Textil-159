@@ -1,0 +1,77 @@
+{
+  "at": "2026-09-24T16:35:43.038Z",
+  "identity": {
+    "db": "tanda_hr_browser",
+    "actor": "hr_browser",
+    "port": 55445
+  },
+  "quantities": [
+    {
+      "table": "rollos",
+      "column": "cantidad_inicial",
+      "total": 90586,
+      "invalid": 0
+    },
+    {
+      "table": "rollos",
+      "column": "cantidad_actual",
+      "total": 90586,
+      "invalid": 0
+    },
+    {
+      "table": "existencias",
+      "column": "cantidad_total",
+      "total": 57,
+      "invalid": 0
+    }
+  ],
+  "annual": {
+    "tickets": 54750,
+    "first": "2025-09-24T00:00:00.000Z",
+    "last": "2026-09-23T00:00:00.000Z"
+  },
+  "smallCustomer": {
+    "id": 9,
+    "nombre": "TANDA H RESUME SMALL CUSTOMER"
+  },
+  "smallTickets": [
+    {
+      "id": 54859,
+      "total": "1000.00",
+      "cobrado": true,
+      "credito": false,
+      "sesion_caja_id": 46
+    },
+    {
+      "id": 54860,
+      "total": "1000.00",
+      "cobrado": true,
+      "credito": false,
+      "sesion_caja_id": 46
+    },
+    {
+      "id": 54861,
+      "total": "1000.00",
+      "cobrado": true,
+      "credito": false,
+      "sesion_caja_id": 46
+    }
+  ],
+  "constraints": [
+    {
+      "conname": "rollos_physical_quantity_nonnegative_check",
+      "convalidated": true,
+      "definition": "CHECK (((cantidad_actual >= (0)::numeric) AND (cantidad_actual <> 'NaN'::numeric)))"
+    },
+    {
+      "conname": "stock_minimos_cantidad_nonnegative_check",
+      "convalidated": true,
+      "definition": "CHECK ((cantidad >= (0)::numeric))"
+    }
+  ],
+  "applicationStarted": false,
+  "gatesOpened": false,
+  "metrageChanged": false,
+  "annualDataset": "Prior task-2 hypothetical workload, not an inventory correctness simulation",
+  "sourceFreeze": "b77bd7db4f97368433ef7dbce6e5c756b78b4452"
+}

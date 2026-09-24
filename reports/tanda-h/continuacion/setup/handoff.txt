@@ -1,0 +1,18 @@
+Fresh resume disposable copy. No application/workflow launched.
+Frozen source: b77bd7db4f97368433ef7dbce6e5c756b78b4452.
+Private root: private.local/tanda-h-resume (0700, git-excluded).
+Credentials: private.local/tanda-h-resume/credentials.json (0600).
+Database URL: private.local/tanda-h-resume/worker-databases.json (0600), key browser.
+Database: tanda_hr_browser; template: tanda_hr_template; witness: tanda_hr_witness.
+Port: 55445. API/UI: 43874/43884.
+Canonical native admin; caja/caja2/caja3 for three fixture stores.
+Source dump is fresh effective-API READ ONLY, not a quiescence claim.
+MAIN owns persistent start and teardown:
+ node reports/tanda-h/continuacion/setup/lifecycle.mjs start
+ node reports/tanda-h/continuacion/setup/lifecycle.mjs api browser
+ node reports/tanda-h/continuacion/setup/lifecycle.mjs ui browser
+ node reports/tanda-h/continuacion/setup/lifecycle.mjs teardown --remove
+Setup runs the cluster transiently only for copy data preparation and leaves it stopped.
+No gates are opened; no metrage or live application writes authorized.
+Read load-results.json, copy-indexes.json, small-customer.json and cash-write.json
+for readiness; absence of any is NOT a success claim.

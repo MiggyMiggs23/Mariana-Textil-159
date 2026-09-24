@@ -1,0 +1,74 @@
+{
+  "identities": [
+    {
+      "db": "tanda_hr_template",
+      "directory": "/home/runner/workspace/private.local/tanda-h-resume/cluster",
+      "port": 55445,
+      "version": "160010",
+      "roles": [
+        "ADMIN",
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "sites": [
+        {
+          "tipo": "TIENDA",
+          "n": 3
+        }
+      ],
+      "admin": 1
+    },
+    {
+      "db": "tanda_hr_browser",
+      "directory": "/home/runner/workspace/private.local/tanda-h-resume/cluster",
+      "port": 55445,
+      "version": "160010",
+      "roles": [
+        "ADMIN",
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "sites": [
+        {
+          "tipo": "TIENDA",
+          "n": 3
+        }
+      ],
+      "admin": 1
+    },
+    {
+      "db": "tanda_hr_witness",
+      "directory": "/home/runner/workspace/private.local/tanda-h-resume/cluster",
+      "port": 55445,
+      "version": "160010",
+      "tables": 0
+    }
+  ],
+  "connectMatrix": [
+    {
+      "rolname": "hr_browser",
+      "datname": "tanda_hr_browser",
+      "allowed": true
+    },
+    {
+      "rolname": "hr_browser",
+      "datname": "tanda_hr_template",
+      "allowed": false
+    },
+    {
+      "rolname": "hr_browser",
+      "datname": "tanda_hr_witness",
+      "allowed": false
+    }
+  ],
+  "schemaSha256": "9e4254e8ed165542b92c266220f5a2a1e5e35306c98c363d941051d3cf94fedc",
+  "testsRun": false
+}

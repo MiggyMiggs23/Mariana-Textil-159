@@ -1,0 +1,12 @@
+[
+  {
+    "identity": {
+      "db": "tanda_hr_browser",
+      "directory": "/home/runner/workspace/private.local/tanda-h-resume/cluster",
+      "port": 55445
+    },
+    "owner": "hr_browser",
+    "tableCount": 107,
+    "purpose": "Worker may apply constraints/indexes on its own copy only; no proposed DDL applied"
+  }
+]

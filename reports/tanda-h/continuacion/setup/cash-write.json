@@ -1,0 +1,97 @@
+{
+  "identity": {
+    "db": "tanda_hr_browser",
+    "actor": "hr_browser",
+    "port": 55445
+  },
+  "definition": "Native cobrarTicket transaction through successful COMMIT; ticket creation excluded, no browser/network latency claim; each ticket uses original fully traced fresh synthetic receipt roll and native cash session.",
+  "samples": [
+    {
+      "ticketId": 54859,
+      "committedMs": 217.46831299999985,
+      "persisted": {
+        "id": 54859,
+        "cobrado": true,
+        "sesion_caja_id": 46,
+        "total": "1000.00"
+      },
+      "payments": [
+        {
+          "id": 41154,
+          "ticket_id": 54859,
+          "forma_pago": "EFECTIVO",
+          "importe": "1000.00"
+        }
+      ],
+      "source": {
+        "id": 6233,
+        "serie": "997000001",
+        "productId": 2078,
+        "siteId": 835,
+        "unit": "METRO",
+        "entryId": 468,
+        "supplierId": 226,
+        "movementId": "7370"
+      },
+      "returnedCollected": true
+    },
+    {
+      "ticketId": 54860,
+      "committedMs": 16.9840650000001,
+      "persisted": {
+        "id": 54860,
+        "cobrado": true,
+        "sesion_caja_id": 46,
+        "total": "1000.00"
+      },
+      "payments": [
+        {
+          "id": 41155,
+          "ticket_id": 54860,
+          "forma_pago": "EFECTIVO",
+          "importe": "1000.00"
+        }
+      ],
+      "source": {
+        "id": 6234,
+        "serie": "997000002",
+        "productId": 2078,
+        "siteId": 835,
+        "unit": "METRO",
+        "entryId": 468,
+        "supplierId": 226,
+        "movementId": "7371"
+      },
+      "returnedCollected": true
+    },
+    {
+      "ticketId": 54861,
+      "committedMs": 19.702271999999994,
+      "persisted": {
+        "id": 54861,
+        "cobrado": true,
+        "sesion_caja_id": 46,
+        "total": "1000.00"
+      },
+      "payments": [
+        {
+          "id": 41156,
+          "ticket_id": 54861,
+          "forma_pago": "EFECTIVO",
+          "importe": "1000.00"
+        }
+      ],
+      "source": {
+        "id": 6235,
+        "serie": "997000003",
+        "productId": 2078,
+        "siteId": 835,
+        "unit": "METRO",
+        "entryId": 468,
+        "supplierId": 226,
+        "movementId": "7372"
+      },
+      "returnedCollected": true
+    }
+  ]
+}
