@@ -1,0 +1,588 @@
+[
+  {
+    "cellId": "TERMINAL:clientes_finanzas:crear",
+    "campaignCaseId": "tanda-h:permissions:TERMINAL:clientes_finanzas:crear",
+    "role": "TERMINAL",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "carriedStatus": "LEGACY_GATE_NOT_ACTION_COVERAGE",
+    "priorDenial": null,
+    "priorLimitation": null,
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "TERMINAL:permisos:editar",
+    "campaignCaseId": "tanda-h:permissions:TERMINAL:permisos:editar",
+    "role": "TERMINAL",
+    "module": "permisos",
+    "action": "editar",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "PUT",
+      "url": "/permisos/roles/TERMINAL/dashboard",
+      "status": 403,
+      "response": {
+        "error": "No tienes permiso para 'ver' en el módulo 'permisos'."
+      }
+    },
+    "priorLimitation": "Outer permisos.ver rejected before editar; unchanged requested matrix and no writes verified.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CAJA:clientes_finanzas:crear",
+    "campaignCaseId": "tanda-h:permissions:CAJA:clientes_finanzas:crear",
+    "role": "CAJA",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "carriedStatus": "LEGACY_GATE_NOT_ACTION_COVERAGE",
+    "priorDenial": null,
+    "priorLimitation": null,
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CAJA:permisos:editar",
+    "campaignCaseId": "tanda-h:permissions:CAJA:permisos:editar",
+    "role": "CAJA",
+    "module": "permisos",
+    "action": "editar",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "PUT",
+      "url": "/permisos/roles/TERMINAL/dashboard",
+      "status": 403,
+      "response": {
+        "error": "No tienes permiso para 'ver' en el módulo 'permisos'."
+      }
+    },
+    "priorLimitation": "Outer permisos.ver rejected before editar; unchanged requested matrix and no writes verified.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "SUPERVISOR:clientes_finanzas:crear",
+    "campaignCaseId": "tanda-h:permissions:SUPERVISOR:clientes_finanzas:crear",
+    "role": "SUPERVISOR",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "carriedStatus": "LEGACY_GATE_NOT_ACTION_COVERAGE",
+    "priorDenial": null,
+    "priorLimitation": null,
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "SUPERVISOR:permisos:editar",
+    "campaignCaseId": "tanda-h:permissions:SUPERVISOR:permisos:editar",
+    "role": "SUPERVISOR",
+    "module": "permisos",
+    "action": "editar",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "PUT",
+      "url": "/permisos/roles/TERMINAL/dashboard",
+      "status": 403,
+      "response": {
+        "error": "No tienes permiso para 'ver' en el módulo 'permisos'."
+      }
+    },
+    "priorLimitation": "Outer permisos.ver rejected before editar; unchanged requested matrix and no writes verified.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "BODEGA:clientes_finanzas:crear",
+    "campaignCaseId": "tanda-h:permissions:BODEGA:clientes_finanzas:crear",
+    "role": "BODEGA",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "carriedStatus": "LEGACY_GATE_NOT_ACTION_COVERAGE",
+    "priorDenial": null,
+    "priorLimitation": null,
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "BODEGA:permisos:editar",
+    "campaignCaseId": "tanda-h:permissions:BODEGA:permisos:editar",
+    "role": "BODEGA",
+    "module": "permisos",
+    "action": "editar",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "PUT",
+      "url": "/permisos/roles/TERMINAL/dashboard",
+      "status": 403,
+      "response": {
+        "error": "No tienes permiso para 'ver' en el módulo 'permisos'."
+      }
+    },
+    "priorLimitation": "Outer permisos.ver rejected before editar; unchanged requested matrix and no writes verified.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "SISTEMAS:clientes_finanzas:crear",
+    "campaignCaseId": "tanda-h:permissions:SISTEMAS:clientes_finanzas:crear",
+    "role": "SISTEMAS",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "carriedStatus": "LEGACY_GATE_NOT_ACTION_COVERAGE",
+    "priorDenial": null,
+    "priorLimitation": null,
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CONTADOR:entradas:editar",
+    "campaignCaseId": "tanda-h:permissions:CONTADOR:entradas:editar",
+    "role": "CONTADOR",
+    "module": "entradas",
+    "action": "editar",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "POST",
+      "url": "/inventario/entradas/475/costos",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "e63b3801-aab0-47cc-bb7f-a940f4495617"
+      }
+    },
+    "priorLimitation": "E11 closed-world boundary, not inner guard isolation.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CONTADOR:salidas:editar",
+    "campaignCaseId": "tanda-h:permissions:CONTADOR:salidas:editar",
+    "role": "CONTADOR",
+    "module": "salidas",
+    "action": "editar",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "POST",
+      "url": "/inventario/salidas-extraordinarias/7595/revertir",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "23cdfb38-7f39-4af0-a6af-47607d441371"
+      }
+    },
+    "priorLimitation": "E11 closed-world boundary, not inner guard isolation.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CONTADOR:salidas:autorizar",
+    "campaignCaseId": "tanda-h:permissions:CONTADOR:salidas:autorizar",
+    "role": "CONTADOR",
+    "module": "salidas",
+    "action": "autorizar",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "POST",
+      "url": "/salidas/29/cancelar",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "32c72c9f-7b33-43f8-9fe5-4decf72fdf8e"
+      }
+    },
+    "priorLimitation": "E11 closed-world boundary, not inner guard isolation.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CONTADOR:etiquetas:editar",
+    "campaignCaseId": "tanda-h:permissions:CONTADOR:etiquetas:editar",
+    "role": "CONTADOR",
+    "module": "etiquetas",
+    "action": "editar",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "POST",
+      "url": "/etiquetas/rollos/6233/revisar",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "29d5dc7b-2c98-43e8-aeec-dfe324c611b9"
+      }
+    },
+    "priorLimitation": "E11 closed-world boundary, not inner guard isolation.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CONTADOR:auditoria_inventario:editar",
+    "campaignCaseId": "tanda-h:permissions:CONTADOR:auditoria_inventario:editar",
+    "role": "CONTADOR",
+    "module": "auditoria_inventario",
+    "action": "editar",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "POST",
+      "url": "/inventario/auditorias/6/escaneos",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "1bf327d4-127b-49ea-b8c4-fe57a27ce15c"
+      }
+    },
+    "priorLimitation": "E11 closed-world boundary, not inner guard isolation.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CONTADOR:auditoria_inventario:autorizar",
+    "campaignCaseId": "tanda-h:permissions:CONTADOR:auditoria_inventario:autorizar",
+    "role": "CONTADOR",
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "POST",
+      "url": "/inventario/auditorias/6/confirmar",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "6208f2b1-7d32-46a1-a791-14083b99d08f"
+      }
+    },
+    "priorLimitation": "Real CLOSED audit supplied; confirmation positive control intentionally not applied to incomplete count. No speculative adjustment.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CONTADOR:clientes_finanzas:crear",
+    "campaignCaseId": "tanda-h:permissions:CONTADOR:clientes_finanzas:crear",
+    "role": "CONTADOR",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "carriedStatus": "LEGACY_GATE_NOT_ACTION_COVERAGE",
+    "priorDenial": null,
+    "priorLimitation": null,
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CONTADOR:contenedores:editar",
+    "campaignCaseId": "tanda-h:permissions:CONTADOR:contenedores:editar",
+    "role": "CONTADOR",
+    "module": "contenedores",
+    "action": "editar",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "PATCH",
+      "url": "/contenedores/3",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "abdabced-eaa2-4b7c-9bd9-0d94ae350a34"
+      }
+    },
+    "priorLimitation": "E11 closed-world boundary, not inner guard isolation.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CONTADOR:contenedores:autorizar",
+    "campaignCaseId": "tanda-h:permissions:CONTADOR:contenedores:autorizar",
+    "role": "CONTADOR",
+    "module": "contenedores",
+    "action": "autorizar",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "POST",
+      "url": "/contenedores/3/cancelar",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "24bc4cf9-f1a5-420d-9f14-93c77afaa611"
+      }
+    },
+    "priorLimitation": "E11 closed-world boundary, not inner guard isolation.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CONTADOR:permisos:editar",
+    "campaignCaseId": "tanda-h:permissions:CONTADOR:permisos:editar",
+    "role": "CONTADOR",
+    "module": "permisos",
+    "action": "editar",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "PUT",
+      "url": "/permisos/roles/TERMINAL/dashboard",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "72fc12f1-1dac-4b28-b339-e3a25e9cbf5a"
+      }
+    },
+    "priorLimitation": "E11 closed-world boundary, not inner guard isolation.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CONTADOR:cobros_pagos:crear",
+    "campaignCaseId": "tanda-h:permissions:CONTADOR:cobros_pagos:crear",
+    "role": "CONTADOR",
+    "module": "cobros_pagos",
+    "action": "crear",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "POST",
+      "url": "/tickets/109/cobrar",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "4497c42a-950a-43fa-920b-278fc94c6c4e"
+      }
+    },
+    "priorLimitation": "E11 closed-world boundary, not inner guard isolation.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CONTADOR:camionetas:editar",
+    "campaignCaseId": "tanda-h:permissions:CONTADOR:camionetas:editar",
+    "role": "CONTADOR",
+    "module": "camionetas",
+    "action": "editar",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "PATCH",
+      "url": "/camionetas/1",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "928a56be-4ecd-47af-9ee1-dab2b2a354ea"
+      }
+    },
+    "priorLimitation": "E11 closed-world boundary, not inner guard isolation.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CONTADOR:choferes:editar",
+    "campaignCaseId": "tanda-h:permissions:CONTADOR:choferes:editar",
+    "role": "CONTADOR",
+    "module": "choferes",
+    "action": "editar",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "PATCH",
+      "url": "/choferes/1",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "b1845bc3-cd35-4632-96a7-ba55a4e7df8b"
+      }
+    },
+    "priorLimitation": "E11 closed-world boundary, not inner guard isolation.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CONTADOR:salidas_venta:crear",
+    "campaignCaseId": "tanda-h:permissions:CONTADOR:salidas_venta:crear",
+    "role": "CONTADOR",
+    "module": "salidas_venta",
+    "action": "crear",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "POST",
+      "url": "/salidas/venta-cliente/generar-venta",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "7afb96f7-28f8-49cd-b017-c175c7eb83ae"
+      }
+    },
+    "priorLimitation": "E11 closed-world boundary, not inner guard isolation.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  },
+  {
+    "cellId": "CONTADOR:equipos:editar",
+    "campaignCaseId": "tanda-h:permissions:CONTADOR:equipos:editar",
+    "role": "CONTADOR",
+    "module": "equipos",
+    "action": "editar",
+    "carriedStatus": "OUTER_BOUNDARY_DENIAL_ONLY",
+    "priorDenial": {
+      "method": "PATCH",
+      "url": "/equipos/1",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "6fdbd49d-32e4-4a16-83f6-9d2b914f6a47"
+      }
+    },
+    "priorLimitation": "E11 closed-world boundary, not inner guard isolation.",
+    "plannedStatus": "PENDING_HANDOFF_NOT_EXECUTED",
+    "requirements": [
+      "Authenticate the natural role against the dedicated permissions API and record /auth/me permissions.",
+      "Use a new valid fixture in an eligible state; do not replay prior campaign resource IDs.",
+      "Record exact selected-action denial; unrelated outer 403 or legacy 409 remains blocked.",
+      "Run allowed-role positive control on a valid equivalent fixture; never count arbitrary-route 403.",
+      "Compare business-state fingerprints around denials and preserve matrix/gates unchanged."
+    ]
+  }
+]

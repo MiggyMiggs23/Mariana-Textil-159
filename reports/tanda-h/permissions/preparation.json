@@ -1,0 +1,44 @@
+{
+  "phase": "PREPARED_AWAITING_MAIN_HANDOFF",
+  "baselinePath": "reports/tanda-g-ampliada/task1/runtime-cell-classification.json",
+  "baselineSha256": "5f0d1e0ffc75de7202a1a113a06c5e13057ffe7b0b2c165515608bd8aceb8784",
+  "baselineResidual": 381,
+  "ownerSemanticsRequired": 357,
+  "mappedResidual": 24,
+  "outerBoundaryOnly": 18,
+  "legacyGateOnly": 6,
+  "priorDirectCovered": 52,
+  "newlyCovered": 0,
+  "actualRequests": 0,
+  "actualBrowsers": 0,
+  "baselineRoles": [
+    "TERMINAL",
+    "CAJA",
+    "SUPERVISOR",
+    "BODEGA",
+    "SISTEMAS",
+    "CONTADOR"
+  ],
+  "requiredNaturalRoles": [
+    "ADMIN",
+    "TERMINAL",
+    "CAJA",
+    "SUPERVISOR",
+    "BODEGA",
+    "SISTEMAS",
+    "CONTADOR"
+  ],
+  "requestedPortsNotYetVerified": {
+    "database": 55444,
+    "api": 43873,
+    "ui": 43883
+  },
+  "requiredHandoff": [
+    "reports/tanda-h/setup handoff with frozen source/build hashes and baseline identity",
+    "Private seven-role credentials path/key mapping; never copy credentials into reports",
+    "Private permissions-only database connection and verified database/actor/cluster identity",
+    "MAIN-started API PID/port and matching UI proxy binding to the same permissions snapshot",
+    "Approved fixture manifest and lifecycle states; no application DB/schema/matrix/gate changes"
+  ],
+  "executionPolicy": "MAIN starts servers. Twelve-minute bounded tranche begins only after verified handoff. Stop unreachable selected guards as blockers. No coverage credit for repeated historical cells."
+}

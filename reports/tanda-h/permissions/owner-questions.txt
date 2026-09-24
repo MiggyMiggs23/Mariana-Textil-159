@@ -1,0 +1,5 @@
+357 campos pendientes: owner-357.csv contiene una fila por rol:módulo:acción; no se atribuye significado de negocio.
+1. Para cada fila, ¿qué operación concreta debe consumir el campo? Indique método/ruta y control UI.
+2. ¿Qué recurso y estado elegible permiten alcanzar esa operación con el rol natural indicado?
+3. Si no existe consumidor, ¿confirma que el campo carece de operación o requiere especificación futura?
+4. Para las 24 celdas mapeadas, ¿existe una ruta publicada que alcance el guard seleccionado sin cambiar E3/E11, permisos.ver ni la matriz? Indique evidencia, no desactive gates.
