@@ -5,6 +5,23 @@ import { buildThermalPageRules } from "../lib/print";
 
 const root = new URL("../../../../", import.meta.url);
 
+test("E3 receipt escapes hidden app scroll/flex boxes and prints both copies in normal flow", async () => {
+  const receipt = await readFile(new URL("artifacts/mariana-textil/src/pages/caja/recibo-e3.tsx", root), "utf8");
+  const print = receipt.slice(receipt.indexOf("@media print"), receipt.indexOf("`}</style>"));
+  // A visible, nonzero #e3-pages inside a hidden overflow ancestor still produced
+  // an empty Chromium PDF. Ancestor boxes must disappear, not merely their ink.
+  assert.match(print, /#root,\s*#root \*:has\(#e3-pages\)\s*\{\s*display:contents !important;/);
+  assert.match(print, /#root \*:not\(:has\(#e3-pages\)\):not\(#e3-pages\):not\(#e3-pages \*\)\s*\{\s*display:none !important;/);
+  assert.match(print, /body > \*:not\(#root\)\s*\{\s*display:none !important;/);
+  assert.match(print, /#e3-pages\s*\{\s*position:static;\s*display:block !important;/);
+  assert.match(print, /#e3-pages,#e3-pages \*\s*\{\s*visibility:visible;/);
+  assert.match(print, /@page\s*\{\s*size:A5 landscape;\s*margin:0;/);
+  assert.match(print, /\.e3-sheet\s*\{\s*break-after:page;\s*page-break-after:always;/);
+  assert.match(print, /\.e3-sheet:last-child\s*\{\s*break-after:auto;\s*page-break-after:auto;/);
+  assert.match(print, /\.e3-probe,\.e3-no-print\s*\{\s*display:none !important;/);
+  assert.match(receipt, /\["Copia Cliente", "Copia Tienda"\]\.flatMap/);
+});
+
 test("Entrada keeps 216x279mm paper and uses its measured safe content box", async () => {
   const css = await readFile(new URL("artifacts/mariana-textil/src/index.css", root), "utf8");
   const entrada = await readFile(new URL("artifacts/mariana-textil/src/pages/entrada-documento.tsx", root), "utf8");

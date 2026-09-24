@@ -94,8 +94,13 @@ export function ReceiptPages({ recibo, printedAt, onReady }: {
       @media print {
         @page { size:A5 landscape; margin:0; }
         body * { visibility:hidden; }
+        /* Remove the app's flex/scroll boxes from print layout: visibility alone
+           leaves the receipt inside a hidden overflow container in Chromium. */
+        body > *:not(#root) { display:none !important; }
+        #root, #root *:has(#e3-pages) { display:contents !important; }
+        #root *:not(:has(#e3-pages)):not(#e3-pages):not(#e3-pages *) { display:none !important; }
         #e3-pages,#e3-pages * { visibility:visible; }
-        #e3-pages { position:absolute; left:0; top:0; margin:0; padding:0; }
+        #e3-pages { position:static; display:block !important; margin:0; padding:0; }
         .e3-sheet { break-after:page; page-break-after:always; margin:0; }
         .e3-sheet:last-child { break-after:auto; page-break-after:auto; }
         .e3-probe,.e3-no-print { display:none !important; }
