@@ -1,0 +1,9 @@
+{
+  "db": "tanda_f_permissions",
+  "dir": "/home/runner/workspace/.local/tanda-f/cluster",
+  "port": 55440,
+  "readonly": "on",
+  "apiPort": 43831,
+  "apiPid": 15414,
+  "at": "2026-09-24T04:04:51.102Z"
+}
