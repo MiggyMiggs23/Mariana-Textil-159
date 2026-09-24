@@ -1,0 +1,4 @@
+e4da40416ae57d70df0fbd3a2ac6e256f91e23b0
+03fabdb4420ffe4db6a184a4b3defe07707004707c1b3abc22f482558a3c3294  -
+f707c42b04687cba24549e0fc5566324e45eb015ec2fa90325cba98a446ebf27  .local/tanda-f/source/artifacts/api-server/dist/index.mjs
+6909b2638576c8735ccffa14959c6f0872fffbeaac5adce48e22520e9dabbea4  .local/tanda-f/source/artifacts/mariana-textil/dist/index.html

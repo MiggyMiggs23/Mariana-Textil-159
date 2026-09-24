@@ -1,0 +1,15 @@
+import fs from "node:fs";
+import pg from "../../../scripts/node_modules/pg/lib/index.js";
+const root="/home/runner/workspace",dir=root+"/.local/tanda-f";
+const apiPid=Number(fs.readFileSync(dir+"/api.pid","utf8"));
+const cmd=fs.readFileSync(`/proc/${apiPid}/cmdline`,"utf8");
+const env=Object.fromEntries(fs.readFileSync(`/proc/${apiPid}/environ`,"utf8").split("\0").filter(Boolean).map(x=>{const i=x.indexOf("=");return [x.slice(0,i),x.slice(i+1)];}));
+if(!cmd.includes(dir+"/source/api-runner.mjs")||env.TEST_DATABASE_URL!=="postgresql://postgres@127.0.0.1:55440/tanda_f_browser"||env.DATABASE_URL!=="postgresql://postgres@127.0.0.1:55440/tanda_f_witness"||env.REQUIRE_ISOLATED_TEST_DATABASE!=="1")throw Error("API isolation identity mismatch");
+const c=new pg.Client({connectionString:env.TEST_DATABASE_URL,options:"-c default_transaction_read_only=on"});await c.connect();
+const identity=(await c.query("select current_database() db,current_setting('data_directory') dir,inet_server_port() port,current_setting('transaction_read_only') readonly")).rows[0];
+await c.end();
+if(identity.db!=="tanda_f_browser"||identity.dir!==dir+"/cluster"||identity.port!==55440)throw Error("SQL identity mismatch");
+const health=await fetch("http://127.0.0.1:43820/api/healthz",{signal:AbortSignal.timeout(5000)});
+if(!health.ok)throw Error("Health failed");
+fs.writeFileSync(root+"/reports/tanda-f/setup/runtime-ready.json",JSON.stringify({ready:true,at:new Date().toISOString(),apiPid,identity,healthStatus:health.status,browserOrigin:"http://127.0.0.1:43820",sharedClusterDoNotStop:true},null,2));
+console.log("Verified private runtime ready; shared sibling databases preserved.");

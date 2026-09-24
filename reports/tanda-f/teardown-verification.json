@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-09-24T04:18:47.839436+00:00",
+  "privateDirectoryRemoved": true,
+  "ports": [
+    {
+      "port": 43820,
+      "listening": false
+    },
+    {
+      "port": 43821,
+      "listening": false
+    },
+    {
+      "port": 43831,
+      "listening": false
+    },
+    {
+      "port": 55440,
+      "listening": false
+    }
+  ],
+  "remainingPrivateProcesses": [],
+  "method": "MAIN stopped both background launchers; pg_ctl status confirmed no server running; stale postmaster.pid retained until verified directory removal. Initial teardown script refused stale PID; not claimed as graceful pg_ctl stop.",
+  "removed": "Only .local/tanda-f including all six disposable DBs, dump/template, synthetic credentials and servers source. Preexisting backups untouched.",
+  "applicationWorkflowsChanged": false
+}

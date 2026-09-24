@@ -1,0 +1,1101 @@
+{
+  "sites": [
+    {
+      "id": 836,
+      "nombre": "TANDA F TIENDA 1"
+    },
+    {
+      "id": 837,
+      "nombre": "TANDA F TIENDA 2"
+    },
+    {
+      "id": 838,
+      "nombre": "TANDA F TIENDA 3"
+    }
+  ],
+  "actors": {
+    "admin": {
+      "username": "admin",
+      "id": 234,
+      "role": "ADMIN",
+      "siteId": 836
+    },
+    "terminal": {
+      "username": "tandaf-terminal",
+      "id": 235,
+      "role": "TERMINAL",
+      "siteId": 836
+    },
+    "caja": {
+      "username": "tandaf-caja",
+      "id": 236,
+      "role": "CAJA",
+      "siteId": 836
+    },
+    "supervisor": {
+      "username": "tandaf-supervisor",
+      "id": 237,
+      "role": "SUPERVISOR",
+      "siteId": 836
+    },
+    "bodega": {
+      "username": "tandaf-bodega",
+      "id": 238,
+      "role": "BODEGA",
+      "siteId": 836
+    },
+    "sistemas": {
+      "username": "tandaf-sistemas",
+      "id": 239,
+      "role": "SISTEMAS",
+      "siteId": 836
+    },
+    "contador": {
+      "username": "tandaf-contador",
+      "id": 240,
+      "role": "CONTADOR",
+      "siteId": 836
+    },
+    "caja2": {
+      "username": "tandaf-caja2",
+      "id": 241,
+      "role": "CAJA",
+      "siteId": 837
+    },
+    "caja3": {
+      "username": "tandaf-caja3",
+      "id": 242,
+      "role": "CAJA",
+      "siteId": 838
+    }
+  },
+  "customer": {
+    "id": 8,
+    "nombre": "TANDA F CLIENTE GLOBAL",
+    "limite_credito": "5000.00",
+    "dias_credito": 30
+  },
+  "supplier": {
+    "id": 226
+  },
+  "importSupplier": {
+    "id": 227
+  },
+  "products": [
+    {
+      "id": 2078,
+      "unidad": "METRO"
+    },
+    {
+      "id": 2079,
+      "unidad": "KILO"
+    },
+    {
+      "id": 2080,
+      "unidad": "PIEZA"
+    },
+    {
+      "id": 2081,
+      "unidad": "BOLSA"
+    }
+  ],
+  "entries": [
+    {
+      "id": 468,
+      "siteId": 836
+    },
+    {
+      "id": 469,
+      "siteId": 837
+    },
+    {
+      "id": 470,
+      "siteId": 838
+    }
+  ],
+  "rolls": [
+    {
+      "id": 6233,
+      "serie": "994000001",
+      "productId": 2078,
+      "siteId": 836,
+      "unit": "METRO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7370"
+    },
+    {
+      "id": 6234,
+      "serie": "994000002",
+      "productId": 2078,
+      "siteId": 836,
+      "unit": "METRO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7371"
+    },
+    {
+      "id": 6235,
+      "serie": "994000003",
+      "productId": 2078,
+      "siteId": 836,
+      "unit": "METRO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7372"
+    },
+    {
+      "id": 6236,
+      "serie": "994000004",
+      "productId": 2078,
+      "siteId": 836,
+      "unit": "METRO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7373"
+    },
+    {
+      "id": 6237,
+      "serie": "994000005",
+      "productId": 2078,
+      "siteId": 836,
+      "unit": "METRO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7374"
+    },
+    {
+      "id": 6238,
+      "serie": "994000006",
+      "productId": 2078,
+      "siteId": 836,
+      "unit": "METRO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7375"
+    },
+    {
+      "id": 6239,
+      "serie": "994000007",
+      "productId": 2078,
+      "siteId": 836,
+      "unit": "METRO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7376"
+    },
+    {
+      "id": 6240,
+      "serie": "994000008",
+      "productId": 2078,
+      "siteId": 836,
+      "unit": "METRO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7377"
+    },
+    {
+      "id": 6241,
+      "serie": "994000101",
+      "productId": 2079,
+      "siteId": 836,
+      "unit": "KILO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7378"
+    },
+    {
+      "id": 6242,
+      "serie": "994000102",
+      "productId": 2079,
+      "siteId": 836,
+      "unit": "KILO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7379"
+    },
+    {
+      "id": 6243,
+      "serie": "994000103",
+      "productId": 2079,
+      "siteId": 836,
+      "unit": "KILO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7380"
+    },
+    {
+      "id": 6244,
+      "serie": "994000104",
+      "productId": 2079,
+      "siteId": 836,
+      "unit": "KILO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7381"
+    },
+    {
+      "id": 6245,
+      "serie": "994000105",
+      "productId": 2079,
+      "siteId": 836,
+      "unit": "KILO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7382"
+    },
+    {
+      "id": 6246,
+      "serie": "994000106",
+      "productId": 2079,
+      "siteId": 836,
+      "unit": "KILO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7383"
+    },
+    {
+      "id": 6247,
+      "serie": "994000107",
+      "productId": 2079,
+      "siteId": 836,
+      "unit": "KILO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7384"
+    },
+    {
+      "id": 6248,
+      "serie": "994000108",
+      "productId": 2079,
+      "siteId": 836,
+      "unit": "KILO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7385"
+    },
+    {
+      "id": 6249,
+      "serie": "994000201",
+      "productId": 2080,
+      "siteId": 836,
+      "unit": "PIEZA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7386"
+    },
+    {
+      "id": 6250,
+      "serie": "994000202",
+      "productId": 2080,
+      "siteId": 836,
+      "unit": "PIEZA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7387"
+    },
+    {
+      "id": 6251,
+      "serie": "994000203",
+      "productId": 2080,
+      "siteId": 836,
+      "unit": "PIEZA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7388"
+    },
+    {
+      "id": 6252,
+      "serie": "994000204",
+      "productId": 2080,
+      "siteId": 836,
+      "unit": "PIEZA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7389"
+    },
+    {
+      "id": 6253,
+      "serie": "994000205",
+      "productId": 2080,
+      "siteId": 836,
+      "unit": "PIEZA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7390"
+    },
+    {
+      "id": 6254,
+      "serie": "994000206",
+      "productId": 2080,
+      "siteId": 836,
+      "unit": "PIEZA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7391"
+    },
+    {
+      "id": 6255,
+      "serie": "994000207",
+      "productId": 2080,
+      "siteId": 836,
+      "unit": "PIEZA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7392"
+    },
+    {
+      "id": 6256,
+      "serie": "994000208",
+      "productId": 2080,
+      "siteId": 836,
+      "unit": "PIEZA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7393"
+    },
+    {
+      "id": 6257,
+      "serie": "994000301",
+      "productId": 2081,
+      "siteId": 836,
+      "unit": "BOLSA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7394"
+    },
+    {
+      "id": 6258,
+      "serie": "994000302",
+      "productId": 2081,
+      "siteId": 836,
+      "unit": "BOLSA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7395"
+    },
+    {
+      "id": 6259,
+      "serie": "994000303",
+      "productId": 2081,
+      "siteId": 836,
+      "unit": "BOLSA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7396"
+    },
+    {
+      "id": 6260,
+      "serie": "994000304",
+      "productId": 2081,
+      "siteId": 836,
+      "unit": "BOLSA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7397"
+    },
+    {
+      "id": 6261,
+      "serie": "994000305",
+      "productId": 2081,
+      "siteId": 836,
+      "unit": "BOLSA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7398"
+    },
+    {
+      "id": 6262,
+      "serie": "994000306",
+      "productId": 2081,
+      "siteId": 836,
+      "unit": "BOLSA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7399"
+    },
+    {
+      "id": 6263,
+      "serie": "994000307",
+      "productId": 2081,
+      "siteId": 836,
+      "unit": "BOLSA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7400"
+    },
+    {
+      "id": 6264,
+      "serie": "994000308",
+      "productId": 2081,
+      "siteId": 836,
+      "unit": "BOLSA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7401"
+    },
+    {
+      "id": 6265,
+      "serie": "994001001",
+      "productId": 2078,
+      "siteId": 837,
+      "unit": "METRO",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7402"
+    },
+    {
+      "id": 6266,
+      "serie": "994001002",
+      "productId": 2078,
+      "siteId": 837,
+      "unit": "METRO",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7403"
+    },
+    {
+      "id": 6267,
+      "serie": "994001003",
+      "productId": 2078,
+      "siteId": 837,
+      "unit": "METRO",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7404"
+    },
+    {
+      "id": 6268,
+      "serie": "994001004",
+      "productId": 2078,
+      "siteId": 837,
+      "unit": "METRO",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7405"
+    },
+    {
+      "id": 6269,
+      "serie": "994001005",
+      "productId": 2078,
+      "siteId": 837,
+      "unit": "METRO",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7406"
+    },
+    {
+      "id": 6270,
+      "serie": "994001006",
+      "productId": 2078,
+      "siteId": 837,
+      "unit": "METRO",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7407"
+    },
+    {
+      "id": 6271,
+      "serie": "994001007",
+      "productId": 2078,
+      "siteId": 837,
+      "unit": "METRO",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7408"
+    },
+    {
+      "id": 6272,
+      "serie": "994001008",
+      "productId": 2078,
+      "siteId": 837,
+      "unit": "METRO",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7409"
+    },
+    {
+      "id": 6273,
+      "serie": "994001101",
+      "productId": 2079,
+      "siteId": 837,
+      "unit": "KILO",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7410"
+    },
+    {
+      "id": 6274,
+      "serie": "994001102",
+      "productId": 2079,
+      "siteId": 837,
+      "unit": "KILO",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7411"
+    },
+    {
+      "id": 6275,
+      "serie": "994001103",
+      "productId": 2079,
+      "siteId": 837,
+      "unit": "KILO",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7412"
+    },
+    {
+      "id": 6276,
+      "serie": "994001104",
+      "productId": 2079,
+      "siteId": 837,
+      "unit": "KILO",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7413"
+    },
+    {
+      "id": 6277,
+      "serie": "994001105",
+      "productId": 2079,
+      "siteId": 837,
+      "unit": "KILO",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7414"
+    },
+    {
+      "id": 6278,
+      "serie": "994001106",
+      "productId": 2079,
+      "siteId": 837,
+      "unit": "KILO",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7415"
+    },
+    {
+      "id": 6279,
+      "serie": "994001107",
+      "productId": 2079,
+      "siteId": 837,
+      "unit": "KILO",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7416"
+    },
+    {
+      "id": 6280,
+      "serie": "994001108",
+      "productId": 2079,
+      "siteId": 837,
+      "unit": "KILO",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7417"
+    },
+    {
+      "id": 6281,
+      "serie": "994001201",
+      "productId": 2080,
+      "siteId": 837,
+      "unit": "PIEZA",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7418"
+    },
+    {
+      "id": 6282,
+      "serie": "994001202",
+      "productId": 2080,
+      "siteId": 837,
+      "unit": "PIEZA",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7419"
+    },
+    {
+      "id": 6283,
+      "serie": "994001203",
+      "productId": 2080,
+      "siteId": 837,
+      "unit": "PIEZA",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7420"
+    },
+    {
+      "id": 6284,
+      "serie": "994001204",
+      "productId": 2080,
+      "siteId": 837,
+      "unit": "PIEZA",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7421"
+    },
+    {
+      "id": 6285,
+      "serie": "994001205",
+      "productId": 2080,
+      "siteId": 837,
+      "unit": "PIEZA",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7422"
+    },
+    {
+      "id": 6286,
+      "serie": "994001206",
+      "productId": 2080,
+      "siteId": 837,
+      "unit": "PIEZA",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7423"
+    },
+    {
+      "id": 6287,
+      "serie": "994001207",
+      "productId": 2080,
+      "siteId": 837,
+      "unit": "PIEZA",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7424"
+    },
+    {
+      "id": 6288,
+      "serie": "994001208",
+      "productId": 2080,
+      "siteId": 837,
+      "unit": "PIEZA",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7425"
+    },
+    {
+      "id": 6289,
+      "serie": "994001301",
+      "productId": 2081,
+      "siteId": 837,
+      "unit": "BOLSA",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7426"
+    },
+    {
+      "id": 6290,
+      "serie": "994001302",
+      "productId": 2081,
+      "siteId": 837,
+      "unit": "BOLSA",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7427"
+    },
+    {
+      "id": 6291,
+      "serie": "994001303",
+      "productId": 2081,
+      "siteId": 837,
+      "unit": "BOLSA",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7428"
+    },
+    {
+      "id": 6292,
+      "serie": "994001304",
+      "productId": 2081,
+      "siteId": 837,
+      "unit": "BOLSA",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7429"
+    },
+    {
+      "id": 6293,
+      "serie": "994001305",
+      "productId": 2081,
+      "siteId": 837,
+      "unit": "BOLSA",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7430"
+    },
+    {
+      "id": 6294,
+      "serie": "994001306",
+      "productId": 2081,
+      "siteId": 837,
+      "unit": "BOLSA",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7431"
+    },
+    {
+      "id": 6295,
+      "serie": "994001307",
+      "productId": 2081,
+      "siteId": 837,
+      "unit": "BOLSA",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7432"
+    },
+    {
+      "id": 6296,
+      "serie": "994001308",
+      "productId": 2081,
+      "siteId": 837,
+      "unit": "BOLSA",
+      "entryId": 469,
+      "supplierId": 226,
+      "movementId": "7433"
+    },
+    {
+      "id": 6297,
+      "serie": "994002001",
+      "productId": 2078,
+      "siteId": 838,
+      "unit": "METRO",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7434"
+    },
+    {
+      "id": 6298,
+      "serie": "994002002",
+      "productId": 2078,
+      "siteId": 838,
+      "unit": "METRO",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7435"
+    },
+    {
+      "id": 6299,
+      "serie": "994002003",
+      "productId": 2078,
+      "siteId": 838,
+      "unit": "METRO",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7436"
+    },
+    {
+      "id": 6300,
+      "serie": "994002004",
+      "productId": 2078,
+      "siteId": 838,
+      "unit": "METRO",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7437"
+    },
+    {
+      "id": 6301,
+      "serie": "994002005",
+      "productId": 2078,
+      "siteId": 838,
+      "unit": "METRO",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7438"
+    },
+    {
+      "id": 6302,
+      "serie": "994002006",
+      "productId": 2078,
+      "siteId": 838,
+      "unit": "METRO",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7439"
+    },
+    {
+      "id": 6303,
+      "serie": "994002007",
+      "productId": 2078,
+      "siteId": 838,
+      "unit": "METRO",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7440"
+    },
+    {
+      "id": 6304,
+      "serie": "994002008",
+      "productId": 2078,
+      "siteId": 838,
+      "unit": "METRO",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7441"
+    },
+    {
+      "id": 6305,
+      "serie": "994002101",
+      "productId": 2079,
+      "siteId": 838,
+      "unit": "KILO",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7442"
+    },
+    {
+      "id": 6306,
+      "serie": "994002102",
+      "productId": 2079,
+      "siteId": 838,
+      "unit": "KILO",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7443"
+    },
+    {
+      "id": 6307,
+      "serie": "994002103",
+      "productId": 2079,
+      "siteId": 838,
+      "unit": "KILO",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7444"
+    },
+    {
+      "id": 6308,
+      "serie": "994002104",
+      "productId": 2079,
+      "siteId": 838,
+      "unit": "KILO",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7445"
+    },
+    {
+      "id": 6309,
+      "serie": "994002105",
+      "productId": 2079,
+      "siteId": 838,
+      "unit": "KILO",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7446"
+    },
+    {
+      "id": 6310,
+      "serie": "994002106",
+      "productId": 2079,
+      "siteId": 838,
+      "unit": "KILO",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7447"
+    },
+    {
+      "id": 6311,
+      "serie": "994002107",
+      "productId": 2079,
+      "siteId": 838,
+      "unit": "KILO",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7448"
+    },
+    {
+      "id": 6312,
+      "serie": "994002108",
+      "productId": 2079,
+      "siteId": 838,
+      "unit": "KILO",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7449"
+    },
+    {
+      "id": 6313,
+      "serie": "994002201",
+      "productId": 2080,
+      "siteId": 838,
+      "unit": "PIEZA",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7450"
+    },
+    {
+      "id": 6314,
+      "serie": "994002202",
+      "productId": 2080,
+      "siteId": 838,
+      "unit": "PIEZA",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7451"
+    },
+    {
+      "id": 6315,
+      "serie": "994002203",
+      "productId": 2080,
+      "siteId": 838,
+      "unit": "PIEZA",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7452"
+    },
+    {
+      "id": 6316,
+      "serie": "994002204",
+      "productId": 2080,
+      "siteId": 838,
+      "unit": "PIEZA",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7453"
+    },
+    {
+      "id": 6317,
+      "serie": "994002205",
+      "productId": 2080,
+      "siteId": 838,
+      "unit": "PIEZA",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7454"
+    },
+    {
+      "id": 6318,
+      "serie": "994002206",
+      "productId": 2080,
+      "siteId": 838,
+      "unit": "PIEZA",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7455"
+    },
+    {
+      "id": 6319,
+      "serie": "994002207",
+      "productId": 2080,
+      "siteId": 838,
+      "unit": "PIEZA",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7456"
+    },
+    {
+      "id": 6320,
+      "serie": "994002208",
+      "productId": 2080,
+      "siteId": 838,
+      "unit": "PIEZA",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7457"
+    },
+    {
+      "id": 6321,
+      "serie": "994002301",
+      "productId": 2081,
+      "siteId": 838,
+      "unit": "BOLSA",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7458"
+    },
+    {
+      "id": 6322,
+      "serie": "994002302",
+      "productId": 2081,
+      "siteId": 838,
+      "unit": "BOLSA",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7459"
+    },
+    {
+      "id": 6323,
+      "serie": "994002303",
+      "productId": 2081,
+      "siteId": 838,
+      "unit": "BOLSA",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7460"
+    },
+    {
+      "id": 6324,
+      "serie": "994002304",
+      "productId": 2081,
+      "siteId": 838,
+      "unit": "BOLSA",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7461"
+    },
+    {
+      "id": 6325,
+      "serie": "994002305",
+      "productId": 2081,
+      "siteId": 838,
+      "unit": "BOLSA",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7462"
+    },
+    {
+      "id": 6326,
+      "serie": "994002306",
+      "productId": 2081,
+      "siteId": 838,
+      "unit": "BOLSA",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7463"
+    },
+    {
+      "id": 6327,
+      "serie": "994002307",
+      "productId": 2081,
+      "siteId": 838,
+      "unit": "BOLSA",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7464"
+    },
+    {
+      "id": 6328,
+      "serie": "994002308",
+      "productId": 2081,
+      "siteId": 838,
+      "unit": "BOLSA",
+      "entryId": 470,
+      "supplierId": 226,
+      "movementId": "7465"
+    }
+  ],
+  "sessions": [
+    {
+      "id": 46,
+      "ubicacion_id": 836,
+      "estado": "ABIERTA",
+      "fecha_operativa": "2026-09-23T00:00:00.000Z",
+      "fondo_inicial": "5000.00"
+    },
+    {
+      "id": 47,
+      "ubicacion_id": 837,
+      "estado": "ABIERTA",
+      "fecha_operativa": "2026-09-23T00:00:00.000Z",
+      "fondo_inicial": "5000.00"
+    },
+    {
+      "id": 48,
+      "ubicacion_id": 838,
+      "estado": "ABIERTA",
+      "fecha_operativa": "2026-09-23T00:00:00.000Z",
+      "fondo_inicial": "5000.00"
+    }
+  ]
+}

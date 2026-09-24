@@ -1,0 +1,12 @@
+{
+  "sha256": "cfa897c7c29447953a25e7a904ea41e07ed40dae889305b24a2641b292235bf3",
+  "databases": [
+    "tanda_f_template",
+    "tanda_f_browser",
+    "tanda_f_concurrency",
+    "tanda_f_permissions",
+    "tanda_f_reversal",
+    "tanda_f_witness"
+  ],
+  "port": 55440
+}

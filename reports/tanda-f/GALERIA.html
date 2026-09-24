@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Tanda F — informe y evidencia sintética</title>
+  <style>
+    :root{color-scheme:dark;--bg:#08111f;--card:#101d31;--ink:#edf4ff;--muted:#a9b9cf;--accent:#63d3b1;--warn:#ffc96b}
+    *{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#08111f,#14233b);color:var(--ink);font:16px/1.5 system-ui,sans-serif}
+    header,main,footer{width:min(1180px,calc(100% - 32px));margin:auto}header{padding:48px 0 24px}h1{margin:0 0 8px;font-size:clamp(2rem,5vw,4rem);line-height:1}h2{margin-top:32px}
+    .tag{display:inline-block;margin-top:14px;padding:7px 12px;border:1px solid var(--accent);border-radius:999px;color:var(--accent);font-weight:700}.notice{color:var(--muted);max-width:850px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px;padding:20px 0 48px}.card{overflow:hidden;background:var(--card);border:1px solid #263a56;border-radius:16px;box-shadow:0 16px 35px #0005}
+    .card img{display:block;width:100%;aspect-ratio:16/10;object-fit:contain;background:#fff}.copy{padding:18px}.copy h2{margin:0 0 8px;font-size:1.15rem}.copy p{margin:0;color:var(--muted)}
+    .summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.result{padding:18px;background:#0c1829;border:1px solid #263a56;border-radius:12px}.result strong{display:block;color:var(--accent);margin-bottom:6px}.result.partial strong{color:var(--warn)}
+    .pending{border-color:#745d30}.pending .copy h2{color:var(--warn)}footer{padding:0 0 48px;color:var(--muted);font-size:.9rem}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Informe y evidencia</h1>
+    <div class="tag">Tanda F · diagnóstico sin correcciones</div>
+    <p class="notice">Activo combinado local, sin recursos de red. Resultado general PARCIAL. La selección contiene únicamente capturas generadas con fixtures sintéticos de las tareas 1 y 2; no incluye catálogo copiado ni cuentas reales.</p>
+  </header>
+  <main>
+    <section class="summary" aria-label="Resumen de resultados">
+      <div class="result"><strong>Tarea 1 · PASS</strong>Crédito, FIFO entre tres tiendas, saldo a favor y límite global. API autenticada: HTTP 409 al proyectar $6,000 frente a $5,000; cuarta nota pendiente y 106 tablas de negocio sin cambios.</div>
+      <div class="result partial"><strong>Tarea 2 · PARCIAL</strong>Entrada, traslado, recepción, cancelación de traslado y separación de unidades conciliadas. Venta parcial/remanente, cancelación de venta y devolución bloqueadas: cero productos activos habilitados para metraje; no se abrió el gate.</div>
+      <div class="result partial"><strong>Tarea 3 · PARCIAL</strong>Cobros, mismo rollo y E4 protegidos. En abonos uno persistió y otro recibió 40001; el reintento fue manual, no “ambos pasan”.</div>
+      <div class="result partial"><strong>Tarea 4 · PARCIAL</strong>289/722 celdas negadas cubiertas con 483 solicitudes y 136 mutaciones denegadas. Las 433 residuales: 357 sin operación hallada estáticamente, 65 bloqueadas por fixture, 6 por gate legado y 5 ediciones de permisos no ejecutadas. UI solo estática.</div>
+      <div class="result partial"><strong>Tarea 5 · PARCIAL</strong>3 casos de stock duplicado/inflado, 5 corrupciones de estado/cantidad/ubicación y 2 bloqueados. El caso 3 comparte el bloqueo natural de metraje con tarea 2.</div>
+    </section>
+    <h2>Galería curada</h2>
+    <section class="grid">
+    <article class="card">
+      <img src="tarea-1/evidence/09-global-limit-authorization.png" alt="Interfaz sintética que bloquea una autorización al superar el límite global">
+      <div class="copy"><h2>1 · Crédito: límite global</h2><p>Proyección de $6,000 frente a límite de $5,000; autorización natural deshabilitada. El seguimiento separado de API confirmó 409 y rollback.</p></div>
+    </article>
+    <article class="card">
+      <img src="tarea-1/evidence/13-cross-store-fifo-fifo-preview.png" alt="Vista previa sintética del reparto FIFO entre tiendas">
+      <div class="copy"><h2>2 · Crédito: FIFO entre tiendas</h2><p>Vista previa del abono repartido primero a la nota global más antigua, sin preferencia por tienda.</p></div>
+    </article>
+    <article class="card">
+      <img src="tarea-1/evidence/15-advance-no-debt-success.png" alt="Confirmación sintética de anticipo sin deuda autorizada">
+      <div class="copy"><h2>3 · Crédito: anticipo</h2><p>Abono sin deuda autorizada que genera saldo a favor.</p></div>
+    </article>
+    <article class="card">
+      <img src="tarea-1/evidence/17-favor-applied-success.png" alt="Confirmación sintética de saldo a favor aplicado">
+      <div class="copy"><h2>4 · Crédito: consumo de saldo a favor</h2><p>Aplicación automática del anticipo al autorizar una nota posterior.</p></div>
+    </article>
+    <article class="card">
+      <img src="tarea-1/evidence/18-final-note-balance.png" alt="Saldo final de nota sintética">
+      <div class="copy"><h2>5 · Crédito: saldo final</h2><p>Nota final con $300 aplicado y saldo pendiente de $1,200.</p></div>
+    </article>
+    <article class="card">
+      <img src="tarea-2/evidence/08b-entry-confirmed.png" alt="Entrada sintética confirmada con rollos capturados">
+      <div class="copy"><h2>6 · Inventario: entrada confirmada</h2><p>Entrada única guardada con dos series sintéticas METRO.</p></div>
+    </article>
+    <article class="card">
+      <img src="tarea-2/evidence/15-received.png" alt="Traslado sintético recibido en tienda destino">
+      <div class="copy"><h2>7 · Inventario: recepción</h2><p>Primera serie recibida y disponible en la tienda destino.</p></div>
+    </article>
+    <article class="card pending">
+      <img src="tarea-2/evidence/18-partial-product-result.png" alt="Modo metrado sintético sin producto elegible">
+      <div class="copy"><h2>8 · Inventario: metraje bloqueado</h2><p>Cero productos elegibles. No se habilitó catálogo ni gate; venta parcial, remanente, cancelación de venta y devolución quedan sin ejecutar.</p></div>
+    </article>
+    <article class="card">
+      <img src="tarea-2/evidence/24-cancelled.png" alt="Salida sintética en tránsito cancelada">
+      <div class="copy"><h2>9 · Inventario: traslado cancelado</h2><p>Cancelación de salida en tránsito con restitución del rollo. No sustituye una cancelación de venta.</p></div>
+    </article>
+    <article class="card">
+      <img src="tarea-2/evidence/28-multiunit-reception.png" alt="Recepción sintética con unidades separadas">
+      <div class="copy"><h2>10 · Inventario: unidades separadas</h2><p>Recepción muestra METRO, KILO, PIEZA y BOLSA como categorías independientes, sin total mixto.</p></div>
+    </article>
+    </section>
+  </main>
+  <footer>Los archivos de imagen forman parte del mismo paquete local <strong>reports/tanda-f</strong>; esta página no carga recursos externos ni copia datos de producción.</footer>
+</body>
+</html>

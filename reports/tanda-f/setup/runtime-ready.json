@@ -1,0 +1,14 @@
+{
+  "ready": true,
+  "at": "2026-09-24T03:57:24.075Z",
+  "apiPid": 13644,
+  "identity": {
+    "db": "tanda_f_browser",
+    "dir": "/home/runner/workspace/.local/tanda-f/cluster",
+    "port": 55440,
+    "readonly": "on"
+  },
+  "healthStatus": 200,
+  "browserOrigin": "http://127.0.0.1:43820",
+  "sharedClusterDoNotStop": true
+}
