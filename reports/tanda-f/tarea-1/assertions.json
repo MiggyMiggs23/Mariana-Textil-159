@@ -1,0 +1,35 @@
+{
+  "pass": true,
+  "mutations": "Actual browser UI only; assertion source SQL sessions read-only",
+  "oldestOrder": [
+    {
+      "movementId": 55,
+      "siteId": 836,
+      "at": "2026-09-24T03:57:58.010Z"
+    },
+    {
+      "movementId": 56,
+      "siteId": 837,
+      "at": "2026-09-24T03:58:04.306Z"
+    },
+    {
+      "movementId": 57,
+      "siteId": 838,
+      "at": "2026-09-24T03:58:10.098Z"
+    }
+  ],
+  "initialAuthorizedDebt": 4500,
+  "blockedAuthorizationProjectedDebt": 6000,
+  "hardLimit": 5000,
+  "afterPartial": 4000,
+  "afterFirstThreeSettled": 0,
+  "advanceWithoutDirectedNote": 300,
+  "afterAdvanceNetLedger": -300,
+  "favorAppliedToFourthNote": 300,
+  "finalDebt": 1200,
+  "totalAuthorizedCredit": 6000,
+  "totalPhysicalPayments": 4800,
+  "receiptCount": 5,
+  "negativeApiLimitAttempt": "NOT RUN: natural UI disables authorization; no disabled-control bypass",
+  "allAssertionsPassed": true
+}

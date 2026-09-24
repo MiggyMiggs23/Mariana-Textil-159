@@ -1,0 +1,90 @@
+Mariana Textil
+CAJA
+Cobros
+Sitio (Sólo lectura)
+TANDA F TIENDA 3
+Activar sonido
+1
+T
+
+TANDA F CAJA 3
+
+CAJA
+
+TANDA F TIENDA 3
+
+Cerrar sesión
+Caja operativa
+Caja Operativa
+
+Cobro de tickets pendientes y cortes de caja.
+
+Sesión Abierta
+Salidas de dinero
+
+Pagos operativos y extraordinarios (E4).
+
+Tipo de Salida
+Extraordinaria
+Extraordinaria
+Monto
+Cuenta de origen
+Efectivo
+Efectivo
+
+E4 opera exclusivamente con Caja Física; Fondo y mezcla E12 están desactivados.
+
+Proveedor
+Sin proveedor
+Sin proveedor
+Motivo
+
+Saldo Caja (servidor): 5500.00. Se revalida al confirmar; la API conserva la autoridad final.
+
+Registrar salida extraordinaria
+Registro de Salidas
+
+Sin salidas registradas.
+
+Tickets de Caja
+Nota folio 1005
+3:58 AM
+$1,500.00
+Nota folio 1006
+3:58 AM
+$1,500.00
+Autorizar
+Autorizar nota de crédito
+
+La autorización registra la venta a crédito en Caja.
+
+Sitio operativo de origen
+TANDA F TIENDA 3
+
+Operación de crédito sin movimiento de dinero
+
+IMPORTE DE LA NOTA
+
+$1,500.00
+
+Nombre del cliente
+TANDA F CLIENTE GLOBAL
+Saldo deudor proyectado
+$1,200.00
+Importe por aprobar
+$1,500.00
+Suma de los dos
+$1,200.00
+Saldo a favor disponible
+$300.00
+Saldo a favor aplicado automáticamente
+$300.00
+Remanente de saldo a favor
+$0.00
+Crédito disponible resultante
+$3,800.00
+Límite de crédito (duro)
+$5,000.00
+Cancelar
+Autorizar
+Cerrar

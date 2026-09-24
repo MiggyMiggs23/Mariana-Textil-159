@@ -1,0 +1,87 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+TANDA F TIENDA 1
+Activar sonido
+3
+T
+
+TANDA F ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+Caja operativa
+Cartera / Estado de cuenta
+Historial de cortes
+Estado de Cuenta
+
+Escanea el QR de la nota de crédito o ingresa el folio para consultar y abonar a la cartera.
+
+Registrar Abono
+Escáner / Folio de Nota
+
+Escanea una nota de crédito para cargar el estado de cuenta.
+
+Vista Previa de Aplicación
+
+Revisa cómo se repartirá el importe antes de confirmar.
+
+IMPORTE A APLICAR
+
+$2,000.00
+
+Vista previa de abono ordinario
+
+Aún no se ha registrado dinero. Al confirmar se aplicará FIFO y el remanente quedará a favor.
+
+Reparto de abono (FIFO) proyectado
+#1004
+Saldo original: $1,500.00 → $0.00
+PROYECTADO
++$1,500.00
+#1005
+Saldo original: $1,500.00 → $1,000.00
+PROYECTADO
++$500.00
+Atrás
+Confirmar Abono
+Cerrar

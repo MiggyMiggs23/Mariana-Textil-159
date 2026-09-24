@@ -1,0 +1,39 @@
+Nota #1006
+
+TANDA F TIENDA 3
+
+Cancelar Nota
+Imprimir Nota
+Detalle de Operación
+
+Emitido por TANDA F ADMIN
+
+Ver rollos
+Nota autorizada
+Cliente: TANDA F CLIENTE GLOBAL
+Producto	Rollos	Cantidad	Precio Unit.	Importe	Costo	Margen
+ROLLOS
+
+TANDA F METRO - AZUL TF
+TANDA-F-METRO
+	1	10.00 Mts.	$150.00	$1,500.00	$1,000.00	$500.00
+Subtotal Rollos	$1,500.00		
+Subtotal:
+$1,500.00
+Total:
+$1,500.00
+ESTADO DE NOTA
+ABONO PARCIAL
+SALDO PENDIENTE
+De $1,500.00
+$1,200.00
+VENCIMIENTO
+23/10/2026
+Historial de Abonos (1)
+Fecha	Aplicado a Nota	Forma / Ref	Usuario	Total del Pago	Detalle
+24/09/2026	$300.00	
+EFECTIVO
+	TANDA F ADMIN	$300.00	
+Ver Reparto
+ABONO · Movimiento #62
+Reversar

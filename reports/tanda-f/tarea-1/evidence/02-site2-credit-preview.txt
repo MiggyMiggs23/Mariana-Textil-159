@@ -1,0 +1,92 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+TANDA F TIENDA 2
+Activar sonido
+1
+T
+
+TANDA F ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+Terminal POS
+NOTA
+
+Escanea o busca artículos para la venta.
+
+Venta de Rollos (NORMAL)
+Cortes (METREADO)
+Escanea o escribe para buscar...
+Ticket de Venta
+1 renglones
+TANDA F METRO - AZUL TF
+ROLLO
+1 rollo
+TANDA-F-METRO
+Precio / Mts.
+10.00 Mts.
+$1,500.00
+Ver series
+Requiere Factura
+
+El precio negociado es antes de IVA.
+
+Imprimir tabulares
+
+Agrega una tira por color de los rollos identificados.
+
+Total
+$1,500.00
+Cliente *
+TANDA F CLIENTE GLOBAL
+
+El ticket se emitirá a nombre de TANDA F CLIENTE GLOBAL.
+
+Plazo de esta nota
+30 días
+Formato de Nota
+Nota con precios
+Formato estándar
+Nota de Productos
+Sin importes ni totales
+Confirmar Venta

@@ -1,0 +1,29 @@
+Nota #1006
+
+TANDA F TIENDA 3
+
+Cancelar Nota
+Imprimir Nota
+Detalle de Operación
+
+Emitido por TANDA F ADMIN
+
+Ver rollos
+Nota por autorizar
+Cliente: TANDA F CLIENTE GLOBAL
+Producto	Rollos	Cantidad	Precio Unit.	Importe	Costo	Margen
+ROLLOS
+
+TANDA F METRO - AZUL TF
+TANDA-F-METRO
+	1	10.00 Mts.	$150.00	$1,500.00	$1,000.00	$500.00
+Subtotal Rollos	$1,500.00		
+Subtotal:
+$1,500.00
+Total:
+$1,500.00
+
+Cargando detalles de crédito...
+
+NOTA creado correctamente
+Folio: 1006
