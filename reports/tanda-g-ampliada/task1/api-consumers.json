@@ -1,0 +1,2550 @@
+[
+  {
+    "file": "artifacts/api-server/src/routes/auditoria.ts",
+    "line": 23,
+    "callee": "requierePermiso",
+    "args": [
+      "auditoria",
+      "ver"
+    ],
+    "literalArgs": [
+      "auditoria",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 112,
+    "callee": "requierePermiso",
+    "args": [
+      "auditoria_inventario",
+      "ver"
+    ],
+    "literalArgs": [
+      "auditoria_inventario",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 140,
+    "callee": "requierePermiso",
+    "args": [
+      "auditoria_inventario",
+      "ver"
+    ],
+    "literalArgs": [
+      "auditoria_inventario",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 165,
+    "callee": "requierePermiso",
+    "args": [
+      "auditoria_inventario",
+      "crear"
+    ],
+    "literalArgs": [
+      "auditoria_inventario",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 193,
+    "callee": "requierePermiso",
+    "args": [
+      "auditoria_inventario",
+      "ver"
+    ],
+    "literalArgs": [
+      "auditoria_inventario",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 217,
+    "callee": "requierePermiso",
+    "args": [
+      "auditoria_inventario",
+      "editar"
+    ],
+    "literalArgs": [
+      "auditoria_inventario",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 254,
+    "callee": "requierePermiso",
+    "args": [
+      "auditoria_inventario",
+      "editar"
+    ],
+    "literalArgs": [
+      "auditoria_inventario",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 298,
+    "callee": "requierePermiso",
+    "args": [
+      "auditoria_inventario",
+      "autorizar"
+    ],
+    "literalArgs": [
+      "auditoria_inventario",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 329,
+    "callee": "requierePermiso",
+    "args": [
+      "auditoria_inventario",
+      "autorizar"
+    ],
+    "literalArgs": [
+      "auditoria_inventario",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 346,
+    "callee": "requierePermiso",
+    "args": [
+      "inventario",
+      "ver"
+    ],
+    "literalArgs": [
+      "inventario",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 357,
+    "callee": "requierePermiso",
+    "args": [
+      "auditoria_inventario",
+      "autorizar"
+    ],
+    "literalArgs": [
+      "auditoria_inventario",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/caja-ventas.ts",
+    "line": 26,
+    "callee": "requierePermiso",
+    "args": [
+      "resumen_caja",
+      "ver"
+    ],
+    "literalArgs": [
+      "resumen_caja",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/caja-ventas.ts",
+    "line": 65,
+    "callee": "requierePermiso",
+    "args": [
+      "resumen_caja",
+      "ver"
+    ],
+    "literalArgs": [
+      "resumen_caja",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/camionetas.ts",
+    "line": 38,
+    "callee": "requierePermiso",
+    "args": [
+      "camionetas",
+      "action"
+    ],
+    "literalArgs": [
+      "camionetas",
+      null
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/camionetas.ts",
+    "line": 51,
+    "callee": "requierePermiso",
+    "args": [
+      "camionetas",
+      "ver"
+    ],
+    "literalArgs": [
+      "camionetas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/camionetas.ts",
+    "line": 101,
+    "callee": "requierePermiso",
+    "args": [
+      "camionetas",
+      "ver"
+    ],
+    "literalArgs": [
+      "camionetas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/choferes.ts",
+    "line": 40,
+    "callee": "requierePermiso",
+    "args": [
+      "choferes",
+      "action"
+    ],
+    "literalArgs": [
+      "choferes",
+      null
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/choferes.ts",
+    "line": 60,
+    "callee": "requierePermiso",
+    "args": [
+      "choferes",
+      "ver"
+    ],
+    "literalArgs": [
+      "choferes",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/choferes.ts",
+    "line": 127,
+    "callee": "requierePermiso",
+    "args": [
+      "choferes",
+      "ver"
+    ],
+    "literalArgs": [
+      "choferes",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+    "line": 42,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+    "line": 66,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes",
+      "editar"
+    ],
+    "literalArgs": [
+      "clientes",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+    "line": 155,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+    "line": 156,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes-admin.ts",
+    "line": 68,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes",
+      "editar"
+    ],
+    "literalArgs": [
+      "clientes",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes-admin.ts",
+    "line": 295,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes",
+      "editar"
+    ],
+    "literalArgs": [
+      "clientes",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 615,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 635,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 683,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes",
+      "crear"
+    ],
+    "literalArgs": [
+      "clientes",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 796,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 813,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 923,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 963,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 986,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1007,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_credito",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_credito",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1017,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_credito",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_credito",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1030,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1079,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes",
+      "editar"
+    ],
+    "literalArgs": [
+      "clientes",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1189,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_credito",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_credito",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1259,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_credito",
+      "editar"
+    ],
+    "literalArgs": [
+      "clientes_credito",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1318,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_precios",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_precios",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1399,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1543,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1588,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1636,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1687,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1742,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1819,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1887,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1934,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 2014,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 2053,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 2109,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "crear"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 2166,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "crear"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 2372,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "autorizar"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 2472,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "autorizar"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 96,
+    "callee": "requierePermiso",
+    "args": [
+      "contenedores",
+      "ver"
+    ],
+    "literalArgs": [
+      "contenedores",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 151,
+    "callee": "requierePermiso",
+    "args": [
+      "contenedores",
+      "ver"
+    ],
+    "literalArgs": [
+      "contenedores",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 176,
+    "callee": "requierePermiso",
+    "args": [
+      "contenedores",
+      "crear"
+    ],
+    "literalArgs": [
+      "contenedores",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 202,
+    "callee": "requierePermiso",
+    "args": [
+      "contenedores",
+      "ver"
+    ],
+    "literalArgs": [
+      "contenedores",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 232,
+    "callee": "requierePermiso",
+    "args": [
+      "entradas",
+      "crear"
+    ],
+    "literalArgs": [
+      "entradas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 260,
+    "callee": "requierePermiso",
+    "args": [
+      "contenedores",
+      "ver"
+    ],
+    "literalArgs": [
+      "contenedores",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 284,
+    "callee": "requierePermiso",
+    "args": [
+      "contenedores",
+      "editar"
+    ],
+    "literalArgs": [
+      "contenedores",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 308,
+    "callee": "requierePermiso",
+    "args": [
+      "contenedores",
+      "autorizar"
+    ],
+    "literalArgs": [
+      "contenedores",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 385,
+    "callee": "requierePermiso",
+    "args": [
+      "contenedores",
+      "ver"
+    ],
+    "literalArgs": [
+      "contenedores",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 428,
+    "callee": "requierePermiso",
+    "args": [
+      "contenedores",
+      "ver"
+    ],
+    "literalArgs": [
+      "contenedores",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/credit-evidence.ts",
+    "line": 29,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/credit-evidence.ts",
+    "line": 75,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/credit-evidence.ts",
+    "line": 76,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "autorizar"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/credit-refunds.ts",
+    "line": 12,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/credit-refunds.ts",
+    "line": 13,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "autorizar"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/credit-refunds.ts",
+    "line": 67,
+    "callee": "requierePermiso",
+    "args": [
+      "clientes_finanzas",
+      "autorizar"
+    ],
+    "literalArgs": [
+      "clientes_finanzas",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/dashboard.ts",
+    "line": 15,
+    "callee": "requierePermiso",
+    "args": [
+      "dashboard",
+      "ver"
+    ],
+    "literalArgs": [
+      "dashboard",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/equipos.ts",
+    "line": 208,
+    "callee": "requierePermiso",
+    "args": [
+      "equipos",
+      "ver"
+    ],
+    "literalArgs": [
+      "equipos",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/equipos.ts",
+    "line": 242,
+    "callee": "requierePermiso",
+    "args": [
+      "equipos",
+      "ver"
+    ],
+    "literalArgs": [
+      "equipos",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/equipos.ts",
+    "line": 276,
+    "callee": "requierePermiso",
+    "args": [
+      "equipos",
+      "crear"
+    ],
+    "literalArgs": [
+      "equipos",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/equipos.ts",
+    "line": 352,
+    "callee": "requierePermiso",
+    "args": [
+      "equipos",
+      "editar"
+    ],
+    "literalArgs": [
+      "equipos",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/equipos.ts",
+    "line": 470,
+    "callee": "requierePermiso",
+    "args": [
+      "equipos",
+      "editar"
+    ],
+    "literalArgs": [
+      "equipos",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/etiquetas.ts",
+    "line": 183,
+    "callee": "requierePermiso",
+    "args": [
+      "etiquetas",
+      "ver"
+    ],
+    "literalArgs": [
+      "etiquetas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/etiquetas.ts",
+    "line": 268,
+    "callee": "requierePermiso",
+    "args": [
+      "etiquetas",
+      "ver"
+    ],
+    "literalArgs": [
+      "etiquetas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/etiquetas.ts",
+    "line": 325,
+    "callee": "requierePermiso",
+    "args": [
+      "etiquetas",
+      "editar"
+    ],
+    "literalArgs": [
+      "etiquetas",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/etiquetas.ts",
+    "line": 509,
+    "callee": "requierePermiso",
+    "args": [
+      "etiquetas",
+      "ver"
+    ],
+    "literalArgs": [
+      "etiquetas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/etiquetas.ts",
+    "line": 561,
+    "callee": "requierePermiso",
+    "args": [
+      "etiquetas",
+      "crear"
+    ],
+    "literalArgs": [
+      "etiquetas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 142,
+    "callee": "requierePermiso",
+    "args": [
+      "inventario",
+      "ver"
+    ],
+    "literalArgs": [
+      "inventario",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 538,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas",
+      "ver"
+    ],
+    "literalArgs": [
+      "salidas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 641,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas",
+      "crear"
+    ],
+    "literalArgs": [
+      "salidas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 680,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas",
+      "editar"
+    ],
+    "literalArgs": [
+      "salidas",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 770,
+    "callee": "requierePermiso",
+    "args": [
+      "entradas",
+      "crear"
+    ],
+    "literalArgs": [
+      "entradas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 972,
+    "callee": "requierePermiso",
+    "args": [
+      "entradas",
+      "ver"
+    ],
+    "literalArgs": [
+      "entradas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1111,
+    "callee": "requierePermiso",
+    "args": [
+      "entradas",
+      "ver"
+    ],
+    "literalArgs": [
+      "entradas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1151,
+    "callee": "requierePermiso",
+    "args": [
+      "entradas",
+      "ver"
+    ],
+    "literalArgs": [
+      "entradas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1172,
+    "callee": "requierePermiso",
+    "args": [
+      "entradas",
+      "ver"
+    ],
+    "literalArgs": [
+      "entradas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1237,
+    "callee": "requierePermiso",
+    "args": [
+      "entradas",
+      "editar"
+    ],
+    "literalArgs": [
+      "entradas",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1277,
+    "callee": "requierePermiso",
+    "args": [
+      "entradas",
+      "ver"
+    ],
+    "literalArgs": [
+      "entradas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1331,
+    "callee": "requierePermiso",
+    "args": [
+      "entradas",
+      "editar"
+    ],
+    "literalArgs": [
+      "entradas",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1390,
+    "callee": "requierePermiso",
+    "args": [
+      "pos",
+      "crear"
+    ],
+    "literalArgs": [
+      "pos",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1455,
+    "callee": "requierePermiso",
+    "args": [
+      "ajustes",
+      "crear"
+    ],
+    "literalArgs": [
+      "ajustes",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1514,
+    "callee": "requierePermiso",
+    "args": [
+      "ajustes",
+      "autorizar"
+    ],
+    "literalArgs": [
+      "ajustes",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1597,
+    "callee": "requierePermiso",
+    "args": [
+      "inventario",
+      "ver"
+    ],
+    "literalArgs": [
+      "inventario",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1639,
+    "callee": "requierePermiso",
+    "args": [
+      "movimientos",
+      "ver"
+    ],
+    "literalArgs": [
+      "movimientos",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1670,
+    "callee": "requierePermiso",
+    "args": [
+      "inventario",
+      "editar"
+    ],
+    "literalArgs": [
+      "inventario",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1714,
+    "callee": "requierePermiso",
+    "args": [
+      "inventario",
+      "ver"
+    ],
+    "literalArgs": [
+      "inventario",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1841,
+    "callee": "requierePermiso",
+    "args": [
+      "inventario",
+      "ver"
+    ],
+    "literalArgs": [
+      "inventario",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1876,
+    "callee": "requierePermiso",
+    "args": [
+      "inventario",
+      "ver"
+    ],
+    "literalArgs": [
+      "inventario",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1977,
+    "callee": "requierePermiso",
+    "args": [
+      "inventario",
+      "ver"
+    ],
+    "literalArgs": [
+      "inventario",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 2114,
+    "callee": "requierePermiso",
+    "args": [
+      "movimientos",
+      "ver"
+    ],
+    "literalArgs": [
+      "movimientos",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 2158,
+    "callee": "requierePermiso",
+    "args": [
+      "movimientos",
+      "ver"
+    ],
+    "literalArgs": [
+      "movimientos",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 2198,
+    "callee": "requierePermiso",
+    "args": [
+      "movimientos",
+      "ver"
+    ],
+    "literalArgs": [
+      "movimientos",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 2230,
+    "callee": "requierePermiso",
+    "args": [
+      "movimientos",
+      "ver"
+    ],
+    "literalArgs": [
+      "movimientos",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 2331,
+    "callee": "requierePermiso",
+    "args": [
+      "ajustes",
+      "autorizar"
+    ],
+    "literalArgs": [
+      "ajustes",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 2370,
+    "callee": "requierePermiso",
+    "args": [
+      "ajustes",
+      "autorizar"
+    ],
+    "literalArgs": [
+      "ajustes",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 2425,
+    "callee": "requierePermiso",
+    "args": [
+      "conciliacion",
+      "ver"
+    ],
+    "literalArgs": [
+      "conciliacion",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 2456,
+    "callee": "requierePermiso",
+    "args": [
+      "conciliacion",
+      "autorizar"
+    ],
+    "literalArgs": [
+      "conciliacion",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/locations.ts",
+    "line": 39,
+    "callee": "requierePermiso",
+    "args": [
+      "ubicaciones",
+      "ver"
+    ],
+    "literalArgs": [
+      "ubicaciones",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/locations.ts",
+    "line": 73,
+    "callee": "requierePermiso",
+    "args": [
+      "ubicaciones",
+      "crear"
+    ],
+    "literalArgs": [
+      "ubicaciones",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/locations.ts",
+    "line": 111,
+    "callee": "requierePermiso",
+    "args": [
+      "ubicaciones",
+      "editar"
+    ],
+    "literalArgs": [
+      "ubicaciones",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/locations.ts",
+    "line": 187,
+    "callee": "requierePermiso",
+    "args": [
+      "ubicaciones",
+      "ver"
+    ],
+    "literalArgs": [
+      "ubicaciones",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/locations.ts",
+    "line": 205,
+    "callee": "requierePermiso",
+    "args": [
+      "ubicaciones",
+      "crear"
+    ],
+    "literalArgs": [
+      "ubicaciones",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/locations.ts",
+    "line": 234,
+    "callee": "requierePermiso",
+    "args": [
+      "ubicaciones",
+      "editar"
+    ],
+    "literalArgs": [
+      "ubicaciones",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/permisos.ts",
+    "line": 33,
+    "callee": "requierePermiso",
+    "args": [
+      "permisos",
+      "ver"
+    ],
+    "literalArgs": [
+      "permisos",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/permisos.ts",
+    "line": 76,
+    "callee": "requierePermiso",
+    "args": [
+      "permisos",
+      "editar"
+    ],
+    "literalArgs": [
+      "permisos",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/permisos.ts",
+    "line": 309,
+    "callee": "requierePermiso",
+    "args": [
+      "permisos",
+      "editar"
+    ],
+    "literalArgs": [
+      "permisos",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/permisos.ts",
+    "line": 486,
+    "callee": "requierePermiso",
+    "args": [
+      "permisos",
+      "editar"
+    ],
+    "literalArgs": [
+      "permisos",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 309,
+    "callee": "requierePermiso",
+    "args": [
+      "pos",
+      "ver"
+    ],
+    "literalArgs": [
+      "pos",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 324,
+    "callee": "requierePermiso",
+    "args": [
+      "pos",
+      "crear"
+    ],
+    "literalArgs": [
+      "pos",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 368,
+    "callee": "requierePermiso",
+    "args": [
+      "pos",
+      "crear"
+    ],
+    "literalArgs": [
+      "pos",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 389,
+    "callee": "requierePermiso",
+    "args": [
+      "pos",
+      "crear"
+    ],
+    "literalArgs": [
+      "pos",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 597,
+    "callee": "requierePermiso",
+    "args": [
+      "cobros_pagos",
+      "ver"
+    ],
+    "literalArgs": [
+      "cobros_pagos",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 697,
+    "callee": "requierePermiso",
+    "args": [
+      "pos",
+      "crear"
+    ],
+    "literalArgs": [
+      "pos",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 752,
+    "callee": "requierePermiso",
+    "args": [
+      "cobros_pagos",
+      "crear"
+    ],
+    "literalArgs": [
+      "cobros_pagos",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 814,
+    "callee": "requierePermiso",
+    "args": [
+      "cobros_pagos",
+      "crear"
+    ],
+    "literalArgs": [
+      "cobros_pagos",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 835,
+    "callee": "requierePermiso",
+    "args": [
+      "cobros_pagos",
+      "ver"
+    ],
+    "literalArgs": [
+      "cobros_pagos",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 928,
+    "callee": "requierePermiso",
+    "args": [
+      "cobros_pagos",
+      "ver"
+    ],
+    "literalArgs": [
+      "cobros_pagos",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 994,
+    "callee": "requierePermiso",
+    "args": [
+      "cortes",
+      "ver"
+    ],
+    "literalArgs": [
+      "cortes",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 995,
+    "callee": "requierePermiso",
+    "args": [
+      "cortes",
+      "crear"
+    ],
+    "literalArgs": [
+      "cortes",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 1019,
+    "callee": "requierePermiso",
+    "args": [
+      "cortes",
+      "ver"
+    ],
+    "literalArgs": [
+      "cortes",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 1038,
+    "callee": "requierePermiso",
+    "args": [
+      "cortes",
+      "ver"
+    ],
+    "literalArgs": [
+      "cortes",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 1039,
+    "callee": "requierePermiso",
+    "args": [
+      "cortes",
+      "crear"
+    ],
+    "literalArgs": [
+      "cortes",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 1108,
+    "callee": "requierePermiso",
+    "args": [
+      "cortes",
+      "ver"
+    ],
+    "literalArgs": [
+      "cortes",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/precios.ts",
+    "line": 181,
+    "callee": "requierePermiso",
+    "args": [
+      "precios",
+      "ver"
+    ],
+    "literalArgs": [
+      "precios",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/precios.ts",
+    "line": 206,
+    "callee": "requierePermiso",
+    "args": [
+      "precios",
+      "ver"
+    ],
+    "literalArgs": [
+      "precios",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/precios.ts",
+    "line": 224,
+    "callee": "requierePermiso",
+    "args": [
+      "precios",
+      "editar"
+    ],
+    "literalArgs": [
+      "precios",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/precios.ts",
+    "line": 277,
+    "callee": "requierePermiso",
+    "args": [
+      "precios",
+      "editar"
+    ],
+    "literalArgs": [
+      "precios",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/precios.ts",
+    "line": 373,
+    "callee": "requierePermiso",
+    "args": [
+      "precios",
+      "editar"
+    ],
+    "literalArgs": [
+      "precios",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/productos.ts",
+    "line": 304,
+    "callee": "requierePermiso",
+    "args": [
+      "productos",
+      "ver"
+    ],
+    "literalArgs": [
+      "productos",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/productos.ts",
+    "line": 346,
+    "callee": "requierePermiso",
+    "args": [
+      "productos",
+      "crear"
+    ],
+    "literalArgs": [
+      "productos",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/productos.ts",
+    "line": 475,
+    "callee": "requierePermiso",
+    "args": [
+      "productos",
+      "crear"
+    ],
+    "literalArgs": [
+      "productos",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/productos.ts",
+    "line": 532,
+    "callee": "requierePermiso",
+    "args": [
+      "productos",
+      "crear"
+    ],
+    "literalArgs": [
+      "productos",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/productos.ts",
+    "line": 658,
+    "callee": "requierePermiso",
+    "args": [
+      "productos",
+      "ver"
+    ],
+    "literalArgs": [
+      "productos",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/productos.ts",
+    "line": 768,
+    "callee": "requierePermiso",
+    "args": [
+      "productos",
+      "editar"
+    ],
+    "literalArgs": [
+      "productos",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 130,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "proveedores_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 143,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores_finanzas",
+      "crear"
+    ],
+    "literalArgs": [
+      "proveedores_finanzas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 169,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "proveedores_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 181,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores",
+      "ver"
+    ],
+    "literalArgs": [
+      "proveedores",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 232,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores",
+      "ver"
+    ],
+    "literalArgs": [
+      "proveedores",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 294,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores",
+      "crear"
+    ],
+    "literalArgs": [
+      "proveedores",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 340,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores",
+      "ver"
+    ],
+    "literalArgs": [
+      "proveedores",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 371,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores",
+      "editar"
+    ],
+    "literalArgs": [
+      "proveedores",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 454,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "proveedores_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 518,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "proveedores_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 581,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "proveedores_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 624,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores_finanzas",
+      "crear"
+    ],
+    "literalArgs": [
+      "proveedores_finanzas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 633,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores_finanzas",
+      "crear"
+    ],
+    "literalArgs": [
+      "proveedores_finanzas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 749,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores_finanzas",
+      "autorizar"
+    ],
+    "literalArgs": [
+      "proveedores_finanzas",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 820,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores_finanzas",
+      "autorizar"
+    ],
+    "literalArgs": [
+      "proveedores_finanzas",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 859,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "proveedores_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 905,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "proveedores_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 945,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "proveedores_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 1004,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "proveedores_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 1109,
+    "callee": "requierePermiso",
+    "args": [
+      "proveedores_finanzas",
+      "ver"
+    ],
+    "literalArgs": [
+      "proveedores_finanzas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/reportes.ts",
+    "line": 23,
+    "callee": "requierePermiso",
+    "args": [
+      "reportes",
+      "ver"
+    ],
+    "literalArgs": [
+      "reportes",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 98,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas",
+      "crear"
+    ],
+    "literalArgs": [
+      "salidas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 107,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas_venta",
+      "ver"
+    ],
+    "literalArgs": [
+      "salidas_venta",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 130,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas_venta",
+      "crear"
+    ],
+    "literalArgs": [
+      "salidas_venta",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 207,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas",
+      "ver"
+    ],
+    "literalArgs": [
+      "salidas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 471,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas",
+      "ver"
+    ],
+    "literalArgs": [
+      "salidas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 540,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas",
+      "crear"
+    ],
+    "literalArgs": [
+      "salidas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 570,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas",
+      "crear"
+    ],
+    "literalArgs": [
+      "salidas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 612,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas",
+      "crear"
+    ],
+    "literalArgs": [
+      "salidas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 646,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas",
+      "ver"
+    ],
+    "literalArgs": [
+      "salidas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 797,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas",
+      "ver"
+    ],
+    "literalArgs": [
+      "salidas",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 819,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas",
+      "crear"
+    ],
+    "literalArgs": [
+      "salidas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 841,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas",
+      "crear"
+    ],
+    "literalArgs": [
+      "salidas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 869,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas",
+      "crear"
+    ],
+    "literalArgs": [
+      "salidas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 902,
+    "callee": "requierePermiso",
+    "args": [
+      "salidas",
+      "autorizar"
+    ],
+    "literalArgs": [
+      "salidas",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/stock-minimos.ts",
+    "line": 106,
+    "callee": "requierePermiso",
+    "args": [
+      "inventario",
+      "ver"
+    ],
+    "literalArgs": [
+      "inventario",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/stock-minimos.ts",
+    "line": 128,
+    "callee": "requierePermiso",
+    "args": [
+      "inventario",
+      "editar"
+    ],
+    "literalArgs": [
+      "inventario",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/stock-minimos.ts",
+    "line": 161,
+    "callee": "requierePermiso",
+    "args": [
+      "inventario",
+      "ver"
+    ],
+    "literalArgs": [
+      "inventario",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/stock-minimos.ts",
+    "line": 187,
+    "callee": "requierePermiso",
+    "args": [
+      "inventario",
+      "editar"
+    ],
+    "literalArgs": [
+      "inventario",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/users.ts",
+    "line": 34,
+    "callee": "requierePermiso",
+    "args": [
+      "usuarios",
+      "ver"
+    ],
+    "literalArgs": [
+      "usuarios",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/users.ts",
+    "line": 120,
+    "callee": "requierePermiso",
+    "args": [
+      "usuarios",
+      "crear"
+    ],
+    "literalArgs": [
+      "usuarios",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/users.ts",
+    "line": 196,
+    "callee": "requierePermiso",
+    "args": [
+      "usuarios",
+      "editar"
+    ],
+    "literalArgs": [
+      "usuarios",
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/viajes.ts",
+    "line": 90,
+    "callee": "requierePermiso",
+    "args": [
+      "viajes",
+      "ver"
+    ],
+    "literalArgs": [
+      "viajes",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/viajes.ts",
+    "line": 101,
+    "callee": "requierePermiso",
+    "args": [
+      "viajes",
+      "crear"
+    ],
+    "literalArgs": [
+      "viajes",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/viajes.ts",
+    "line": 120,
+    "callee": "requierePermiso",
+    "args": [
+      "viajes",
+      "crear"
+    ],
+    "literalArgs": [
+      "viajes",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/viajes.ts",
+    "line": 159,
+    "callee": "requierePermiso",
+    "args": [
+      "viajes",
+      "ver"
+    ],
+    "literalArgs": [
+      "viajes",
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/viajes.ts",
+    "line": 174,
+    "callee": "requierePermiso",
+    "args": [
+      "viajes",
+      "ver"
+    ],
+    "literalArgs": [
+      "viajes",
+      "ver"
+    ]
+  }
+]

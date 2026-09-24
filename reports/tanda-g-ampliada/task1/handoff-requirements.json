@@ -1,0 +1,32 @@
+{
+  "stage": "STATIC_COMPLETE_RUNTIME_BLOCKED",
+  "scope": "Only tanda_ga_permissions; never application DB or other workers' copies.",
+  "mainStartsApiAndProxy": true,
+  "requiredHandoff": [
+    "Frozen source/build identity and absolute source path",
+    "Permissions database identity, cluster path/port and dedicated API PID/port",
+    "Dedicated browser proxy origin bound only to the permissions API",
+    "Private seven-role credentials path and role-key mapping",
+    "Approved fixture manifest for pending entry cost, reversible extraordinary exit, cancellable salida, immutable label reprint, audit lifecycle/faltante, modifiable container, pending ticket, vehicle, driver, sale source and equipment",
+    "Decision whether denied permission-update probes are authorized when no permission row may change"
+  ],
+  "runtimeAcceptance": [
+    "Verify exact copy and API identity before requests",
+    "Use frozen source and natural effective role matrices; no gate/permission changes",
+    "Seven roles sequentially, one direct Playwright browser at a time, bounded navigation and action timeouts",
+    "Record actual button clicks or hidden controls and screenshots, not just static predicates",
+    "Valid endpoint/body/resource/state required; 404, input rejection, unrelated outer 403 and invented routes do not prove the selected action guard",
+    "Capture business-state before/after each denied mutation and distinguish audit/security writes",
+    "Record unique role:module:action coverage only with linked evidence; aliases never multiply counts",
+    "Stop a tranche after twelve minutes without new evidence; report blocker",
+    "Report any demonstrated bypass immediately; no speculative source changes or release"
+  ],
+  "coverageAtHandoff": {
+    "residualUniqueCells": 433,
+    "staticallyMappedNotExecuted": 76,
+    "ownerSemanticsRequired": 357,
+    "newlyCoveredUniqueCells": 0,
+    "remainingUniqueCells": 433,
+    "actualRoleBrowsers": 0
+  }
+}

@@ -1,0 +1,7252 @@
+[
+  {
+    "file": "artifacts/api-server/src/lib/e3-collection.test.ts",
+    "line": 193,
+    "method": "POST",
+    "endpoint": "path",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": [
+      "legacyPaymentCaptureGuard(enabled)"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-alertas.ts",
+    "line": 8,
+    "method": "GET",
+    "endpoint": "/admin/alertas",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession",
+      "requireRole(\"ADMIN\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 77,
+    "method": "USE",
+    "endpoint": "/admin",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 78,
+    "method": "USE",
+    "endpoint": "/admin",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 134,
+    "method": "GET",
+    "endpoint": "/admin/dashboard/realtime",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 171,
+    "method": "GET",
+    "endpoint": "/admin/dashboard/realtime/pendientes",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 191,
+    "method": "GET",
+    "endpoint": "/admin/dashboard/realtime/desglose",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 222,
+    "method": "GET",
+    "endpoint": "/admin/cortes",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 237,
+    "method": "GET",
+    "endpoint": "/admin/diferencias",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 253,
+    "method": "GET",
+    "endpoint": "/admin/cuentas-destino",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 265,
+    "method": "GET",
+    "endpoint": "/admin/cuentas-destino/:cuentaDestino/movimientos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 340,
+    "method": "GET",
+    "endpoint": "/admin/cuadre-fiscal",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireRole(\"ADMIN\", \"CONTADOR\", \"SISTEMAS\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 369,
+    "method": "POST",
+    "endpoint": "/admin/cuadre-fiscal/confirmaciones",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireRole(\"ADMIN\", \"CONTADOR\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 370,
+    "method": "POST",
+    "endpoint": "/admin/cuadre-fiscal/diferencias",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireRole(\"ADMIN\", \"CONTADOR\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 371,
+    "method": "POST",
+    "endpoint": "/admin/cuadre-fiscal/diferencias/:id/resolver",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireRole(\"ADMIN\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 390,
+    "method": "GET",
+    "endpoint": "/admin/comparacion-tiendas",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 437,
+    "method": "GET",
+    "endpoint": "/admin/cortes/export.xlsx",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 441,
+    "method": "GET",
+    "endpoint": "/admin/cortes/export.pdf",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 466,
+    "method": "GET",
+    "endpoint": "/admin/cuentas-destino/export.xlsx",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 470,
+    "method": "GET",
+    "endpoint": "/admin/cuentas-destino/:cuentaDestino/movimientos/export.xlsx",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 514,
+    "method": "GET",
+    "endpoint": "/admin/cuentas-destino/export.pdf",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 525,
+    "method": "GET",
+    "endpoint": "/admin/cortes/:id",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 542,
+    "method": "GET",
+    "endpoint": "/admin/cortes/:id/export.xlsx",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "line": 576,
+    "method": "GET",
+    "endpoint": "/admin/cortes/:id/export.pdf",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditoria.ts",
+    "line": 20,
+    "method": "USE",
+    "endpoint": "/auditoria",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/auditoria.ts",
+        "line": 23,
+        "callee": "requierePermiso",
+        "args": [
+          "auditoria",
+          "ver"
+        ],
+        "literalArgs": [
+          "auditoria",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"auditoria\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditoria.ts",
+    "line": 26,
+    "method": "GET",
+    "endpoint": "/auditoria",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditoria.ts",
+    "line": 38,
+    "method": "GET",
+    "endpoint": "/auditoria/export.xlsx",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditoria.ts",
+    "line": 79,
+    "method": "GET",
+    "endpoint": "/auditoria/:id",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 109,
+    "method": "GET",
+    "endpoint": "/auditorias/sitios",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+        "line": 112,
+        "callee": "requierePermiso",
+        "args": [
+          "auditoria_inventario",
+          "ver"
+        ],
+        "literalArgs": [
+          "auditoria_inventario",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"auditoria_inventario\", \"ver\")",
+      "requireOperationalRole"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 137,
+    "method": "GET",
+    "endpoint": "/auditorias",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+        "line": 140,
+        "callee": "requierePermiso",
+        "args": [
+          "auditoria_inventario",
+          "ver"
+        ],
+        "literalArgs": [
+          "auditoria_inventario",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"auditoria_inventario\", \"ver\")",
+      "requireOperationalRole"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 162,
+    "method": "POST",
+    "endpoint": "/auditorias",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+        "line": 165,
+        "callee": "requierePermiso",
+        "args": [
+          "auditoria_inventario",
+          "crear"
+        ],
+        "literalArgs": [
+          "auditoria_inventario",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"auditoria_inventario\", \"crear\")",
+      "requireOperationalRole"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 190,
+    "method": "GET",
+    "endpoint": "/auditorias/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+        "line": 193,
+        "callee": "requierePermiso",
+        "args": [
+          "auditoria_inventario",
+          "ver"
+        ],
+        "literalArgs": [
+          "auditoria_inventario",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"auditoria_inventario\", \"ver\")",
+      "requireOperationalRole"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 214,
+    "method": "POST",
+    "endpoint": "/auditorias/:id/escaneos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+        "line": 217,
+        "callee": "requierePermiso",
+        "args": [
+          "auditoria_inventario",
+          "editar"
+        ],
+        "literalArgs": [
+          "auditoria_inventario",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"auditoria_inventario\", \"editar\")",
+      "requireOperationalRole"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 251,
+    "method": "POST",
+    "endpoint": "`/auditorias/:id/${action}`",
+    "dynamicPath": true,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+        "line": 254,
+        "callee": "requierePermiso",
+        "args": [
+          "auditoria_inventario",
+          "editar"
+        ],
+        "literalArgs": [
+          "auditoria_inventario",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"auditoria_inventario\", \"editar\")",
+      "requireOperationalRole"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 295,
+    "method": "POST",
+    "endpoint": "/auditorias/:id/confirmar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+        "line": 298,
+        "callee": "requierePermiso",
+        "args": [
+          "auditoria_inventario",
+          "autorizar"
+        ],
+        "literalArgs": [
+          "auditoria_inventario",
+          "autorizar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"auditoria_inventario\", \"autorizar\")",
+      "requireOperationalRole"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 329,
+    "method": "POST",
+    "endpoint": "/auditorias/:id/sobrantes/resolver",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+        "line": 329,
+        "callee": "requierePermiso",
+        "args": [
+          "auditoria_inventario",
+          "autorizar"
+        ],
+        "literalArgs": [
+          "auditoria_inventario",
+          "autorizar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"auditoria_inventario\", \"autorizar\")",
+      "requireDecisionAdmin"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 346,
+    "method": "GET",
+    "endpoint": "/rollos/:id/reactivacion-faltante",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+        "line": 346,
+        "callee": "requierePermiso",
+        "args": [
+          "inventario",
+          "ver"
+        ],
+        "literalArgs": [
+          "inventario",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"inventario\", \"ver\")",
+      "requireDecisionAdmin"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "line": 357,
+    "method": "POST",
+    "endpoint": "/rollos/:id/reactivacion-faltante",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+        "line": 357,
+        "callee": "requierePermiso",
+        "args": [
+          "auditoria_inventario",
+          "autorizar"
+        ],
+        "literalArgs": [
+          "auditoria_inventario",
+          "autorizar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"auditoria_inventario\", \"autorizar\")",
+      "requireDecisionAdmin"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auth.ts",
+    "line": 34,
+    "method": "POST",
+    "endpoint": "/auth/login",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auth.ts",
+    "line": 159,
+    "method": "USE",
+    "endpoint": "/auth",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auth.ts",
+    "line": 161,
+    "method": "GET",
+    "endpoint": "/auth/me",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auth.ts",
+    "line": 170,
+    "method": "POST",
+    "endpoint": "/auth/logout",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/caja-ventas.ts",
+    "line": 23,
+    "method": "GET",
+    "endpoint": "/caja/tiendas/:ubicacionId/ventas/global",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/caja-ventas.ts",
+        "line": 26,
+        "callee": "requierePermiso",
+        "args": [
+          "resumen_caja",
+          "ver"
+        ],
+        "literalArgs": [
+          "resumen_caja",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"resumen_caja\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/caja-ventas.ts",
+    "line": 62,
+    "method": "GET",
+    "endpoint": "/caja/tiendas/:ubicacionId/ventas",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/caja-ventas.ts",
+        "line": 65,
+        "callee": "requierePermiso",
+        "args": [
+          "resumen_caja",
+          "ver"
+        ],
+        "literalArgs": [
+          "resumen_caja",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"resumen_caja\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/camionetas.ts",
+    "line": 49,
+    "method": "USE",
+    "endpoint": "/camionetas",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/camionetas.ts",
+    "line": 51,
+    "method": "GET",
+    "endpoint": "/camionetas",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/camionetas.ts",
+        "line": 51,
+        "callee": "requierePermiso",
+        "args": [
+          "camionetas",
+          "ver"
+        ],
+        "literalArgs": [
+          "camionetas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"camionetas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/camionetas.ts",
+    "line": 65,
+    "method": "POST",
+    "endpoint": "/camionetas",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/camionetas.ts",
+        "line": 65,
+        "callee": "requiereGestorCamionetas",
+        "args": [
+          "camionetas",
+          "crear"
+        ],
+        "literalArgs": [
+          "camionetas",
+          "crear"
+        ],
+        "qualification": "Reviewed wrapper forwards action to requierePermiso; role guard remains independent."
+      }
+    ],
+    "middleware": [
+      "...requiereGestorCamionetas(\"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/camionetas.ts",
+    "line": 101,
+    "method": "GET",
+    "endpoint": "/camionetas/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/camionetas.ts",
+        "line": 101,
+        "callee": "requierePermiso",
+        "args": [
+          "camionetas",
+          "ver"
+        ],
+        "literalArgs": [
+          "camionetas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"camionetas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/camionetas.ts",
+    "line": 111,
+    "method": "PATCH",
+    "endpoint": "/camionetas/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/camionetas.ts",
+        "line": 111,
+        "callee": "requiereGestorCamionetas",
+        "args": [
+          "camionetas",
+          "editar"
+        ],
+        "literalArgs": [
+          "camionetas",
+          "editar"
+        ],
+        "qualification": "Reviewed wrapper forwards action to requierePermiso; role guard remains independent."
+      }
+    ],
+    "middleware": [
+      "...requiereGestorCamionetas(\"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/choferes.ts",
+    "line": 56,
+    "method": "USE",
+    "endpoint": "/choferes",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/choferes.ts",
+    "line": 58,
+    "method": "GET",
+    "endpoint": "/choferes",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/choferes.ts",
+        "line": 60,
+        "callee": "requierePermiso",
+        "args": [
+          "choferes",
+          "ver"
+        ],
+        "literalArgs": [
+          "choferes",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"choferes\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/choferes.ts",
+    "line": 82,
+    "method": "POST",
+    "endpoint": "/choferes",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/choferes.ts",
+        "line": 82,
+        "callee": "requiereGestorChoferes",
+        "args": [
+          "choferes",
+          "crear"
+        ],
+        "literalArgs": [
+          "choferes",
+          "crear"
+        ],
+        "qualification": "Reviewed wrapper forwards action to requierePermiso; role guard remains independent."
+      }
+    ],
+    "middleware": [
+      "...requiereGestorChoferes(\"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/choferes.ts",
+    "line": 125,
+    "method": "GET",
+    "endpoint": "/choferes/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/choferes.ts",
+        "line": 127,
+        "callee": "requierePermiso",
+        "args": [
+          "choferes",
+          "ver"
+        ],
+        "literalArgs": [
+          "choferes",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"choferes\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/choferes.ts",
+    "line": 151,
+    "method": "PATCH",
+    "endpoint": "/choferes/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/choferes.ts",
+        "line": 151,
+        "callee": "requiereGestorChoferes",
+        "args": [
+          "choferes",
+          "editar"
+        ],
+        "literalArgs": [
+          "choferes",
+          "editar"
+        ],
+        "qualification": "Reviewed wrapper forwards action to requierePermiso; role guard remains independent."
+      }
+    ],
+    "middleware": [
+      "...requiereGestorChoferes(\"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+    "line": 25,
+    "method": "USE",
+    "endpoint": "/clientes/:id/documentos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+    "line": 25,
+    "method": "USE",
+    "endpoint": "/clientes/:id/documentos/:lado",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+    "line": 25,
+    "method": "USE",
+    "endpoint": "/cliente-documentos/:publicId/ver",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+    "line": 25,
+    "method": "USE",
+    "endpoint": "/cliente-documentos/:publicId/descargar",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+    "line": 40,
+    "method": "GET",
+    "endpoint": "/clientes/:id/documentos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+        "line": 42,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes\", \"ver\")",
+      "requireRole(\"ADMIN\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+    "line": 64,
+    "method": "POST",
+    "endpoint": "/clientes/:id/documentos/:lado",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+        "line": 66,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes",
+          "editar"
+        ],
+        "literalArgs": [
+          "clientes",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes\", \"editar\")",
+      "requireRole(\"ADMIN\")",
+      "raw"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+    "line": 155,
+    "method": "GET",
+    "endpoint": "/cliente-documentos/:publicId/ver",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+        "line": 155,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes\", \"ver\")",
+      "requireRole(\"ADMIN\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+    "line": 156,
+    "method": "GET",
+    "endpoint": "/cliente-documentos/:publicId/descargar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+        "line": 156,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes\", \"ver\")",
+      "requireRole(\"ADMIN\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes-admin.ts",
+    "line": 22,
+    "method": "USE",
+    "endpoint": "/clientes",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes-admin.ts",
+    "line": 29,
+    "method": "GET",
+    "endpoint": "/clientes/incobrables",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireRole(\"ADMIN\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes-admin.ts",
+    "line": 66,
+    "method": "POST",
+    "endpoint": "/clientes/:id/baja",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes-admin.ts",
+        "line": 68,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes",
+          "editar"
+        ],
+        "literalArgs": [
+          "clientes",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes-admin.ts",
+    "line": 293,
+    "method": "POST",
+    "endpoint": "/clientes/:id/reactivar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes-admin.ts",
+        "line": 295,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes",
+          "editar"
+        ],
+        "literalArgs": [
+          "clientes",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 109,
+    "method": "USE",
+    "endpoint": "/clientes",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 111,
+    "method": "GET",
+    "endpoint": "/clientes/:id/estado-cuenta.xlsx",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 111,
+    "method": "GET",
+    "endpoint": "/clientes/:id/estado-cuenta.pdf",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 111,
+    "method": "GET",
+    "endpoint": "/clientes/:id/estado-cuenta/imprimir",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 128,
+    "method": "GET",
+    "endpoint": "/clientes/analitica.xlsx",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 613,
+    "method": "GET",
+    "endpoint": "/clientes/resumen",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 615,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 633,
+    "method": "GET",
+    "endpoint": "/clientes",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 635,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 681,
+    "method": "POST",
+    "endpoint": "/clientes",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 683,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes",
+          "crear"
+        ],
+        "literalArgs": [
+          "clientes",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 794,
+    "method": "GET",
+    "endpoint": "/clientes/cartera",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 796,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 811,
+    "method": "GET",
+    "endpoint": "/clientes/analitica",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 813,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 921,
+    "method": "GET",
+    "endpoint": "/clientes/analitica.xlsx",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 923,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 961,
+    "method": "GET",
+    "endpoint": "/clientes/cartera.xlsx",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 963,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 984,
+    "method": "GET",
+    "endpoint": "/clientes/cartera.pdf",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 986,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1005,
+    "method": "GET",
+    "endpoint": "/clientes/comportamiento-pago",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 1007,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_credito",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_credito",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_credito\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1015,
+    "method": "GET",
+    "endpoint": "/clientes/:id/comportamiento-pago",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 1017,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_credito",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_credito",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_credito\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1028,
+    "method": "GET",
+    "endpoint": "/clientes/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 1030,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1077,
+    "method": "PATCH",
+    "endpoint": "/clientes/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 1079,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes",
+          "editar"
+        ],
+        "literalArgs": [
+          "clientes",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1187,
+    "method": "GET",
+    "endpoint": "/clientes/:id/credito",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 1189,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_credito",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_credito",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_credito\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1257,
+    "method": "PATCH",
+    "endpoint": "/clientes/:id/credito",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 1259,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_credito",
+          "editar"
+        ],
+        "literalArgs": [
+          "clientes_credito",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_credito\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1316,
+    "method": "GET",
+    "endpoint": "/clientes/:id/precios",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 1318,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_precios",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_precios",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_precios\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1397,
+    "method": "GET",
+    "endpoint": "/clientes/:id/estado-cuenta",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 1399,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1541,
+    "method": "GET",
+    "endpoint": "/clientes/:id/estado-cuenta/imprimir",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 1543,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1586,
+    "method": "GET",
+    "endpoint": "/clientes/:id/estado-cuenta.xlsx",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 1588,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1634,
+    "method": "GET",
+    "endpoint": "/clientes/:id/estado-cuenta.pdf",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 1636,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1685,
+    "method": "GET",
+    "endpoint": "/clientes/:id/compras",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 1687,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1740,
+    "method": "GET",
+    "endpoint": "/clientes/:id/analitica",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 1742,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1817,
+    "method": "GET",
+    "endpoint": "/clientes/:id/estadisticas",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 1819,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1885,
+    "method": "GET",
+    "endpoint": "/clientes/:id/pagos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 1887,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 1932,
+    "method": "GET",
+    "endpoint": "/clientes/:id/notas/:ticketId",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 1934,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 2012,
+    "method": "GET",
+    "endpoint": "/clientes/:id/pagos/:pagoId",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 2014,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 2051,
+    "method": "POST",
+    "endpoint": "/clientes/:id/notas/:ticketId/reimprimir",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 2053,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 2106,
+    "method": "POST",
+    "endpoint": "/clientes/:id/pagos/vista-previa",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 2109,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "crear"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "legacyPaymentCaptureGuard()",
+      "requierePermiso(\"clientes_finanzas\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 2163,
+    "method": "POST",
+    "endpoint": "/clientes/:id/pagos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 2166,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "crear"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "legacyPaymentCaptureGuard()",
+      "requierePermiso(\"clientes_finanzas\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 2370,
+    "method": "POST",
+    "endpoint": "/clientes/:id/pagos/:pagoId/reversar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 2372,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "autorizar"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "autorizar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"autorizar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "line": 2470,
+    "method": "POST",
+    "endpoint": "/clientes/:id/ajustes",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/clientes.ts",
+        "line": 2472,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "autorizar"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "autorizar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"clientes_finanzas\", \"autorizar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 93,
+    "method": "GET",
+    "endpoint": "/contenedores/catalogos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/contenedores.ts",
+        "line": 96,
+        "callee": "requierePermiso",
+        "args": [
+          "contenedores",
+          "ver"
+        ],
+        "literalArgs": [
+          "contenedores",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"contenedores\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 148,
+    "method": "GET",
+    "endpoint": "/contenedores",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/contenedores.ts",
+        "line": 151,
+        "callee": "requierePermiso",
+        "args": [
+          "contenedores",
+          "ver"
+        ],
+        "literalArgs": [
+          "contenedores",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"contenedores\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 173,
+    "method": "POST",
+    "endpoint": "/contenedores",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/contenedores.ts",
+        "line": 176,
+        "callee": "requierePermiso",
+        "args": [
+          "contenedores",
+          "crear"
+        ],
+        "literalArgs": [
+          "contenedores",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"contenedores\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 199,
+    "method": "GET",
+    "endpoint": "/contenedores/resumen",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/contenedores.ts",
+        "line": 202,
+        "callee": "requierePermiso",
+        "args": [
+          "contenedores",
+          "ver"
+        ],
+        "literalArgs": [
+          "contenedores",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"contenedores\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 229,
+    "method": "GET",
+    "endpoint": "/contenedores/disponibles-entrada",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/contenedores.ts",
+        "line": 232,
+        "callee": "requierePermiso",
+        "args": [
+          "entradas",
+          "crear"
+        ],
+        "literalArgs": [
+          "entradas",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"entradas\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 257,
+    "method": "GET",
+    "endpoint": "/contenedores/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/contenedores.ts",
+        "line": 260,
+        "callee": "requierePermiso",
+        "args": [
+          "contenedores",
+          "ver"
+        ],
+        "literalArgs": [
+          "contenedores",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"contenedores\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 281,
+    "method": "PATCH",
+    "endpoint": "/contenedores/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/contenedores.ts",
+        "line": 284,
+        "callee": "requierePermiso",
+        "args": [
+          "contenedores",
+          "editar"
+        ],
+        "literalArgs": [
+          "contenedores",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"contenedores\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 305,
+    "method": "POST",
+    "endpoint": "/contenedores/:id/cancelar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/contenedores.ts",
+        "line": 308,
+        "callee": "requierePermiso",
+        "args": [
+          "contenedores",
+          "autorizar"
+        ],
+        "literalArgs": [
+          "contenedores",
+          "autorizar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"contenedores\", \"autorizar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 382,
+    "method": "GET",
+    "endpoint": "/contenedores/export.xlsx",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/contenedores.ts",
+        "line": 385,
+        "callee": "requierePermiso",
+        "args": [
+          "contenedores",
+          "ver"
+        ],
+        "literalArgs": [
+          "contenedores",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"contenedores\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "line": 425,
+    "method": "GET",
+    "endpoint": "/contenedores/export.pdf",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/contenedores.ts",
+        "line": 428,
+        "callee": "requierePermiso",
+        "args": [
+          "contenedores",
+          "ver"
+        ],
+        "literalArgs": [
+          "contenedores",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"contenedores\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/credit-evidence.ts",
+    "line": 26,
+    "method": "GET",
+    "endpoint": "/clientes/:clienteId/evidencia-credito",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/credit-evidence.ts",
+        "line": 29,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"clientes_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/credit-evidence.ts",
+    "line": 71,
+    "method": "POST",
+    "endpoint": "/clientes/:clienteId/atribuciones-credito",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/credit-evidence.ts",
+        "line": 75,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      },
+      {
+        "file": "artifacts/api-server/src/routes/credit-evidence.ts",
+        "line": 76,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "autorizar"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "autorizar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requireRole(\"ADMIN\", \"SUPERVISOR\")",
+      "requierePermiso(\"clientes_finanzas\", \"ver\")",
+      "requierePermiso(\"clientes_finanzas\", \"autorizar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/credit-refunds.ts",
+    "line": 11,
+    "method": "GET",
+    "endpoint": "/clientes/:id/devoluciones-credito/opciones",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/credit-refunds.ts",
+        "line": 12,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "ver"
+        ]
+      },
+      {
+        "file": "artifacts/api-server/src/routes/credit-refunds.ts",
+        "line": 13,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "autorizar"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "autorizar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"clientes_finanzas\", \"ver\")",
+      "requierePermiso(\"clientes_finanzas\", \"autorizar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/credit-refunds.ts",
+    "line": 66,
+    "method": "POST",
+    "endpoint": "/clientes/:id/devoluciones-credito",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/credit-refunds.ts",
+        "line": 67,
+        "callee": "requierePermiso",
+        "args": [
+          "clientes_finanzas",
+          "autorizar"
+        ],
+        "literalArgs": [
+          "clientes_finanzas",
+          "autorizar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"clientes_finanzas\", \"autorizar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/dashboard.ts",
+    "line": 12,
+    "method": "GET",
+    "endpoint": "/dashboard",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/dashboard.ts",
+        "line": 15,
+        "callee": "requierePermiso",
+        "args": [
+          "dashboard",
+          "ver"
+        ],
+        "literalArgs": [
+          "dashboard",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"dashboard\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 26,
+    "method": "USE",
+    "endpoint": "/e11",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 38,
+    "method": "USE",
+    "endpoint": "/e11",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 65,
+    "method": "GET",
+    "endpoint": "/e11/identidad",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(null, GetE11IdentidadResponse, async (_tx, actor) => actor)"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 66,
+    "method": "GET",
+    "endpoint": "/e11/operaciones/:actorId/:accion/:uuidOriginal",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"FISCAL_LEER\", E11RecoveryOutput, async (tx, actor, req) => {\n  z.object({}).strict().parse(req.query);\n  return e11Recovery(tx, actor, E11RecoveryTarget.parse(req.params));\n})"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 70,
+    "method": "POST",
+    "endpoint": "/e11/operaciones/:actorId/:accion/:uuidOriginal/resolucion",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"FISCAL_LEER\", E11RecoveryOutput, async (tx, actor, req) => {\n  z.object({}).strict().parse(req.query);\n  return e11Resolve(tx, actor, E11RecoveryTarget.parse(req.params), E11RecoveryInput.parse(req.body));\n})"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 74,
+    "method": "GET",
+    "endpoint": "/e11/usuarios/:usuarioId/perfil",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"PERFILES_ADMINISTRAR\", GetE11IdentidadResponse, async (tx, _a, req) => {\n  const identity = await e11Identity(tx, e11Id.parse(req.params.usuarioId));\n  if (identity.rolBase !== \"CONTADOR\") throw new E11Error(\"USUARIO_NO_CONTADOR\", \"El destinatario no es CONTADOR.\", 422);\n  return identity;\n})"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 79,
+    "method": "PUT",
+    "endpoint": "/e11/usuarios/:usuarioId/perfil",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"PERFILES_ADMINISTRAR\", AssignE11PerfilResponse, async (tx, a, req) =>\n  e11AssignProfile(tx, a, e11Id.parse(req.params.usuarioId), AssignE11PerfilBody.strict().parse(req.body)), true)"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 81,
+    "method": "GET",
+    "endpoint": "/e11/usuarios/:usuarioId/perfil/historial",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"PERFILES_ADMINISTRAR\", ListE11PerfilHistorialResponse, async (tx, a, req) => {\n  e11Page.strict().parse(req.query);\n  const id = e11Id.parse(req.params.usuarioId);\n  return page(await e11ProfileHistory(tx, id), a, req, { route: \"historial\", id });\n})"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 86,
+    "method": "GET",
+    "endpoint": "/e11/fiscal/clientes",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"FISCAL_LEER\", ListE11FiscalClientesResponse, async (tx, a, req) => {\n  e11Page.strict().parse(req.query);\n  return page(await e11FiscalClients(tx), a, req, { route: \"clientesF\" });\n})"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 90,
+    "method": "GET",
+    "endpoint": "/e11/fiscal/ventas",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"FISCAL_LEER\", ListE11FiscalVentasResponse, async (tx, a, req) => {\n  const query = e11Page.extend({ ...dateRange, clienteId: e11Id.optional() }).strict().parse(req.query);\n  const sales = await e11FiscalSales(tx, query.desde, query.hastaExclusivo, query.clienteId);\n  return { ...page(sales.items, a, req, { route: \"ventasF\", desde: query.desde,\n    hasta: query.hastaExclusivo, clienteId: query.clienteId ?? null }, sales.fuenteRevision), totalFacturado: sales.totalFacturado };\n})"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 96,
+    "method": "GET",
+    "endpoint": "/e11/fiscal/facturas/:facturaId",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"FISCAL_LEER\", GetE11FiscalFacturaResponse, async (tx, _a, req) => {\n  z.object({}).strict().parse(req.query);\n  const id = e11Id.parse(req.params.facturaId);\n  const sale = (await e11FiscalSales(tx)).items.find(s => s.facturaId === id);\n  if (!sale) throw new E11Error(\"NO_ENCONTRADO\", \"Documento fiscal no encontrado.\", 404);\n  return sale;\n})"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 103,
+    "method": "GET",
+    "endpoint": "/e11/finanzas/clientes",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"FINANZAS_LIMITADAS_LEER\", ListE11FinanzasClientesResponse, async (tx, a, req) => {\n  e11Page.strict().parse(req.query);\n  return page(await e11FinanceClients(tx), a, req, { route: \"clientesA\" });\n})"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 107,
+    "method": "GET",
+    "endpoint": "/e11/finanzas/clientes/:clienteId/notas",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"FINANZAS_LIMITADAS_LEER\", ListE11FinanzasNotasResponse, async (tx, a, req) => {\n  e11Page.strict().parse(req.query); const id = e11Id.parse(req.params.clienteId);\n  return page(await e11FinanceNotes(tx, id), a, req, { route: \"notasA\", id });\n})"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 111,
+    "method": "GET",
+    "endpoint": "/e11/finanzas/clientes/:clienteId/estado-cuenta",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"FINANZAS_LIMITADAS_LEER\", GetE11FinanzasEstadoCuentaResponse, async (tx, a, req) => {\n  e11Page.strict().parse(req.query); const id = e11Id.parse(req.params.clienteId);\n  const statement = await e11FinanceStatement(tx, id);\n  return { ...page(statement.items, a, req, { route: \"estadoA\", id }, e11Hash(statement)), cliente: statement.cliente };\n})"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 116,
+    "method": "GET",
+    "endpoint": "/e11/conciliaciones",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"FISCAL_LEER\", ListE11ConciliacionesResponse, async (tx, a, req) => {\n  const query = e11Page.extend(dateRange).strict().parse(req.query);\n  return page(await e11Periods(tx, query.desde, query.hastaExclusivo), a, req,\n    { route: \"periodos\", desde: query.desde, hasta: query.hastaExclusivo });\n})"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 121,
+    "method": "POST",
+    "endpoint": "/e11/conciliaciones",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"FISCAL_CONCILIAR\", GetE11ConciliacionResponse, async (tx, a, req) =>\n  e11CreateSnapshot(tx, a, CreateE11ConciliacionBody.strict().parse(req.body)))"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 123,
+    "method": "GET",
+    "endpoint": "/e11/conciliaciones/:id",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"FISCAL_LEER\", GetE11ConciliacionResponse, async (tx, _a, req) =>\n  e11Snapshot(tx, e11Uuid.parse(req.params.id)))"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 125,
+    "method": "GET",
+    "endpoint": "/e11/conciliaciones/:id/ventas",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"FISCAL_LEER\", ListE11ConciliacionVentasResponse, async (tx, a, req) => {\n  e11Page.strict().parse(req.query); const id = e11Uuid.parse(req.params.id);\n  const sales = await e11SnapshotSales(tx, id);\n  return { ...page(sales.items, a, req, { route: \"snapshotVentas\", id }, sales.fuenteRevision), totalFacturado: sales.totalFacturado };\n})"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 130,
+    "method": "POST",
+    "endpoint": "/e11/conciliaciones/:id/decisiones",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"FISCAL_CONCILIAR\", GetE11ConciliacionResponse, async (tx, a, req) =>\n  e11DecideSnapshot(tx, a, e11Uuid.parse(req.params.id), DecideE11ConciliacionBody.strict().parse(req.body)))"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 132,
+    "method": "GET",
+    "endpoint": "/e11/a/preparaciones",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"E5_PREPARAR\", ListE11PreparacionesResponse, async (tx, a, req) => {\n  const query = e11Page.extend({ clienteId: e11Id.optional() }).strict().parse(req.query);\n  return page(await e11Preparations(tx, a, query.clienteId), a, req, { route: \"preparaciones\", clienteId: query.clienteId ?? null });\n})"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 136,
+    "method": "GET",
+    "endpoint": "/e11/a/preparaciones/:cobroId",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"E5_PREPARAR\", GetE11PreparacionResponse, async (tx, a, req) =>\n  e11Preparation(tx, a, e11Uuid.parse(req.params.cobroId)))"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 138,
+    "method": "POST",
+    "endpoint": "/e11/a/preparaciones/:cobroId",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "endpoint(\"E5_PREPARAR\", GetE11PreparacionResponse, async (tx, a, req) =>\n  e11Prepare(tx, a, e11Uuid.parse(req.params.cobroId), PrepareE11AplicacionBody.strict().parse(req.body), getRequestIp(req)))"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 140,
+    "method": "USE",
+    "endpoint": "/e11",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "line": 159,
+    "method": "USE",
+    "endpoint": "/e11",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e3-collections.ts",
+    "line": 25,
+    "method": "GET",
+    "endpoint": "/caja/abonos-e3/contexto",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "gate",
+      "deps.authenticate",
+      "deps.permission(\"caja_abonos\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e3-collections.ts",
+    "line": 49,
+    "method": "POST",
+    "endpoint": "`${base}/vista-previa`",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": [
+      "gate",
+      "deps.authenticate",
+      "deps.permission(module, \"crear\")",
+      "action(origin, false)"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e3-collections.ts",
+    "line": 50,
+    "method": "POST",
+    "endpoint": "base",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": [
+      "gate",
+      "deps.authenticate",
+      "deps.permission(module, \"crear\")",
+      "action(origin, true)"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e3-collections.ts",
+    "line": 52,
+    "method": "GET",
+    "endpoint": "/recibos-e3/:folio",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "gate",
+      "deps.authenticate",
+      "deps.admin"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e3-collections.ts",
+    "line": 70,
+    "method": "GET",
+    "endpoint": "/clientes/:id/recibos-e3",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "gate",
+      "deps.authenticate",
+      "deps.admin",
+      "list"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e3-collections.ts",
+    "line": 71,
+    "method": "GET",
+    "endpoint": "/caja/recibos-e3",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "gate",
+      "deps.authenticate",
+      "deps.admin",
+      "list"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e3-collections.ts",
+    "line": 72,
+    "method": "POST",
+    "endpoint": "/recibos-e3/:folio/impresiones",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "gate",
+      "deps.authenticate",
+      "deps.admin"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e3-collections.ts",
+    "line": 79,
+    "method": "USE",
+    "endpoint": "(error: unknown, _req: Request, res: import(\"express\").Response, next: import(\"express\").NextFunction) => {\n    if (error instanceof E3Error) { res.status(error.status).json({ code: error.code, error: error.message }); return; }\n    if (error instanceof CreditEvidenceError) { res.status(error.status).json({ code: \"E1_EVIDENCE_REJECTED\", error: error.message }); return; }\n    if (error instanceof z.ZodError) { res.status(400).json({ code: \"E3_INVALID_INPUT\", error: error.issues.map(i => `${i.path.join(\".\")}: ${i.message}`).join(\"; \") }); return; }\n    next(error);\n  }",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 16,
+    "method": "USE",
+    "endpoint": "/e5",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "e5OffBoundary"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 17,
+    "method": "USE",
+    "endpoint": "/e5",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 49,
+    "method": "GET",
+    "endpoint": "/e5/disponibilidad",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 55,
+    "method": "GET",
+    "endpoint": "/e5/contexto",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 66,
+    "method": "GET",
+    "endpoint": "/e5/cobros",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 69,
+    "method": "GET",
+    "endpoint": "/e5/avisos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 75,
+    "method": "GET",
+    "endpoint": "/e5/cobros/:id",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 78,
+    "method": "POST",
+    "endpoint": "/e5/cobros/vista-previa",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 92,
+    "method": "POST",
+    "endpoint": "/e5/cobros",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "command(\"RECIBIR\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 93,
+    "method": "POST",
+    "endpoint": "/e5/cobros/:id/propuestas",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "command(\"PROPONER\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 94,
+    "method": "POST",
+    "endpoint": "/e5/cobros/:id/autorizar",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "command(\"AUTORIZAR\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 95,
+    "method": "POST",
+    "endpoint": "/e5/cobros/:id/rechazar",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "command(\"RECHAZAR\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 96,
+    "method": "POST",
+    "endpoint": "/e5/cobros/:id/devolver",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "command(\"DEVOLVER\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 97,
+    "method": "GET",
+    "endpoint": "/e5/cobros/:id/devolucion/opciones",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 100,
+    "method": "GET",
+    "endpoint": "/e5/cobros/:id/documentos/:documentoId",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 103,
+    "method": "POST",
+    "endpoint": "/e5/cobros/:id/documentos/:documentoId/impresiones",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "line": 126,
+    "method": "USE",
+    "endpoint": "/e5",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e7.ts",
+    "line": 28,
+    "method": "GET",
+    "endpoint": "/e7/disponibilidad",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e7.ts",
+    "line": 35,
+    "method": "USE",
+    "endpoint": "/e7",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e7.ts",
+    "line": 39,
+    "method": "USE",
+    "endpoint": "/e7",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e7.ts",
+    "line": 41,
+    "method": "USE",
+    "endpoint": "/e7/atribucion",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e7.ts",
+    "line": 41,
+    "method": "USE",
+    "endpoint": "/e7/atribucion.xlsx",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e7.ts",
+    "line": 41,
+    "method": "USE",
+    "endpoint": "/e7/atribucion.pdf",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e7.ts",
+    "line": 48,
+    "method": "GET",
+    "endpoint": "/e7/atribucion",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e7.ts",
+    "line": 54,
+    "method": "GET",
+    "endpoint": "/e7/atribucion.xlsx",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e7.ts",
+    "line": 54,
+    "method": "GET",
+    "endpoint": "/e7/atribucion.pdf",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e7.ts",
+    "line": 66,
+    "method": "GET",
+    "endpoint": "/e7/clientes/:clienteId/exportacion",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e7.ts",
+    "line": 75,
+    "method": "USE",
+    "endpoint": "/e7",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e9.ts",
+    "line": 14,
+    "method": "USE",
+    "endpoint": "/e9",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "e9OffBoundary"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e9.ts",
+    "line": 15,
+    "method": "USE",
+    "endpoint": "/e9",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e9.ts",
+    "line": 26,
+    "method": "GET",
+    "endpoint": "/e9/disponibilidad",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e9.ts",
+    "line": 33,
+    "method": "GET",
+    "endpoint": "/e9/entregas",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e9.ts",
+    "line": 41,
+    "method": "GET",
+    "endpoint": "/e9/entregas/:id",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e9.ts",
+    "line": 53,
+    "method": "POST",
+    "endpoint": "/e9/entregas",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "command(\"ENVIAR\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e9.ts",
+    "line": 54,
+    "method": "POST",
+    "endpoint": "/e9/entregas/:id/conteos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "command(\"CONTAR\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e9.ts",
+    "line": 55,
+    "method": "POST",
+    "endpoint": "/e9/entregas/:id/autorizar",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "command(\"AUTORIZAR\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e9.ts",
+    "line": 56,
+    "method": "POST",
+    "endpoint": "/e9/entregas/:id/investigacion/cierre",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "command(\"CERRAR\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e9.ts",
+    "line": 57,
+    "method": "USE",
+    "endpoint": "/e9",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/equipos.ts",
+    "line": 204,
+    "method": "USE",
+    "endpoint": "/equipos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/equipos.ts",
+    "line": 206,
+    "method": "GET",
+    "endpoint": "/equipos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/equipos.ts",
+        "line": 208,
+        "callee": "requierePermiso",
+        "args": [
+          "equipos",
+          "ver"
+        ],
+        "literalArgs": [
+          "equipos",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"equipos\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/equipos.ts",
+    "line": 240,
+    "method": "GET",
+    "endpoint": "/equipos/ubicaciones",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/equipos.ts",
+        "line": 242,
+        "callee": "requierePermiso",
+        "args": [
+          "equipos",
+          "ver"
+        ],
+        "literalArgs": [
+          "equipos",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"equipos\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/equipos.ts",
+    "line": 274,
+    "method": "POST",
+    "endpoint": "/equipos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/equipos.ts",
+        "line": 276,
+        "callee": "requierePermiso",
+        "args": [
+          "equipos",
+          "crear"
+        ],
+        "literalArgs": [
+          "equipos",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"equipos\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/equipos.ts",
+    "line": 350,
+    "method": "PATCH",
+    "endpoint": "/equipos/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/equipos.ts",
+        "line": 352,
+        "callee": "requierePermiso",
+        "args": [
+          "equipos",
+          "editar"
+        ],
+        "literalArgs": [
+          "equipos",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"equipos\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/equipos.ts",
+    "line": 468,
+    "method": "PATCH",
+    "endpoint": "/equipos/:id/checklist/:itemKey",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/equipos.ts",
+        "line": 470,
+        "callee": "requierePermiso",
+        "args": [
+          "equipos",
+          "editar"
+        ],
+        "literalArgs": [
+          "equipos",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"equipos\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/etiquetas.ts",
+    "line": 180,
+    "method": "GET",
+    "endpoint": "/etiquetas/rollos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/etiquetas.ts",
+        "line": 183,
+        "callee": "requierePermiso",
+        "args": [
+          "etiquetas",
+          "ver"
+        ],
+        "literalArgs": [
+          "etiquetas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"etiquetas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/etiquetas.ts",
+    "line": 265,
+    "method": "GET",
+    "endpoint": "/etiquetas/rollos/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/etiquetas.ts",
+        "line": 268,
+        "callee": "requierePermiso",
+        "args": [
+          "etiquetas",
+          "ver"
+        ],
+        "literalArgs": [
+          "etiquetas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"etiquetas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/etiquetas.ts",
+    "line": 322,
+    "method": "POST",
+    "endpoint": "/etiquetas/rollos/:id/revisar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/etiquetas.ts",
+        "line": 325,
+        "callee": "requierePermiso",
+        "args": [
+          "etiquetas",
+          "editar"
+        ],
+        "literalArgs": [
+          "etiquetas",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"etiquetas\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/etiquetas.ts",
+    "line": 506,
+    "method": "GET",
+    "endpoint": "/etiquetas/rollos/:id/revisiones",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/etiquetas.ts",
+        "line": 509,
+        "callee": "requierePermiso",
+        "args": [
+          "etiquetas",
+          "ver"
+        ],
+        "literalArgs": [
+          "etiquetas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"etiquetas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/etiquetas.ts",
+    "line": 558,
+    "method": "POST",
+    "endpoint": "/etiquetas/reimpresiones",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/etiquetas.ts",
+        "line": 561,
+        "callee": "requierePermiso",
+        "args": [
+          "etiquetas",
+          "crear"
+        ],
+        "literalArgs": [
+          "etiquetas",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"etiquetas\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/etiquetas.ts",
+    "line": 675,
+    "method": "GET",
+    "endpoint": "/etiquetas/historial",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/etiquetas.ts",
+    "line": 704,
+    "method": "GET",
+    "endpoint": "/etiquetas/historial/export.xlsx",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/etiquetas.ts",
+    "line": 734,
+    "method": "GET",
+    "endpoint": "/etiquetas/alertas/count",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/etiquetas.ts",
+    "line": 755,
+    "method": "USE",
+    "endpoint": "(\n    error: unknown,\n    _req: Request,\n    res: Response,\n    next: NextFunction,\n  ): void => {\n    if (error instanceof ZodError) {\n      res.status(400).json({\n        error: \"Revisa los datos enviados e intenta de nuevo.\",\n        code: \"VALIDATION_ERROR\",\n      });\n      return;\n    }\n    next(error);\n  }",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/fondo.ts",
+    "line": 84,
+    "method": "USE",
+    "endpoint": "/fondo",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "...options.authorizeAdmin"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/fondo.ts",
+    "line": 86,
+    "method": "USE",
+    "endpoint": "/fondo",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "enforceFondoAdmin"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/fondo.ts",
+    "line": 87,
+    "method": "USE",
+    "endpoint": "/fondo",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/fondo.ts",
+    "line": 99,
+    "method": "GET",
+    "endpoint": "/fondo",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "handle(async (req, res) => {\n    strictEmpty.parse(req.body ?? {});\n    strictEmpty.parse(req.query);\n    res.json((await obtenerResumenEHistorialFondo(options.db)).summary);\n  })"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/fondo.ts",
+    "line": 104,
+    "method": "GET",
+    "endpoint": "/fondo/movimientos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "handle(async (req, res) => {\n    strictEmpty.parse(req.body ?? {});\n    const query = movementQuery.parse(req.query);\n    res.json((await obtenerResumenEHistorialFondo(options.db, query)).movimientos);\n  })"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/fondo.ts",
+    "line": 109,
+    "method": "GET",
+    "endpoint": "/fondo/movimientos/:id",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "handle(async (req, res) => {\n    strictEmpty.parse(req.body ?? {});\n    strictEmpty.parse(req.query);\n    const { id } = idParams.parse(req.params);\n    const movement = await obtenerMovimientoFondo(options.db, id);\n    const origenE9 = await readE9FundOrigin(options.db, id);\n    res.json({ ...movement, ...(origenE9 ? { origenE9 } : {}) });\n  })"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/fondo.ts",
+    "line": 117,
+    "method": "POST",
+    "endpoint": "/fondo/movimientos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "handle(async (req, res) => {\n    strictEmpty.parse(req.query);\n    const result = await crearMovimientoFondo(options.db, actor(req), movementInput.parse(req.body));\n    if (result.replay) res.setHeader(\"Idempotent-Replay\", \"true\");\n    res.status(result.replay ? 200 : 201).json(result.value);\n  })"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/fondo.ts",
+    "line": 123,
+    "method": "POST",
+    "endpoint": "/fondo/movimientos/:id/inverso",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "handle(async (req, res) => {\n    strictEmpty.parse(req.query);\n    const { id } = idParams.parse(req.params);\n    const result = await invertirMovimientoFondo(options.db, actor(req), id, inverseInput.parse(req.body),\n      async tx => {\n        await assertE9NoIndependentInverse(tx, id);\n        await assertE5NoIndependentInverse(tx, id);\n      });\n    if (result.replay) res.setHeader(\"Idempotent-Replay\", \"true\");\n    res.status(result.replay ? 200 : 201).json(result.value);\n  })"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/fondo.ts",
+    "line": 134,
+    "method": "GET",
+    "endpoint": "/fondo/arqueos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "handle(async (req, res) => {\n    strictEmpty.parse(req.body ?? {});\n    res.json(await listarArqueosFondo(options.db, range.parse(req.query)));\n  })"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/fondo.ts",
+    "line": 138,
+    "method": "GET",
+    "endpoint": "/fondo/arqueos/:id",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "handle(async (req, res) => {\n    strictEmpty.parse(req.body ?? {});\n    strictEmpty.parse(req.query);\n    const { id } = idParams.parse(req.params);\n    res.json(await obtenerArqueoFondo(options.db, id));\n  })"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/fondo.ts",
+    "line": 144,
+    "method": "POST",
+    "endpoint": "/fondo/arqueos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "handle(async (req, res) => {\n    strictEmpty.parse(req.query);\n    const result = await crearArqueoFondo(options.db, actor(req), auditInput.parse(req.body));\n    if (result.replay) res.setHeader(\"Idempotent-Replay\", \"true\");\n    res.status(result.replay ? 200 : 201).json(result.value);\n  })"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/fondo.ts",
+    "line": 150,
+    "method": "GET",
+    "endpoint": "/fondo/exportar",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "handle(async (req, res) => {\n    strictEmpty.parse(req.body ?? {});\n    const { tipo } = exportQuery.parse(req.query);\n    if (tipo === \"movimientos\") {\n      const data = (await obtenerResumenEHistorialFondo(options.db)).movimientos.items;\n      res.type(\"text/csv; charset=utf-8\");\n      res.attachment(\"fondo-mariana-movimientos.csv\");\n      res.send(csv([\n        [\"id\", \"ordinal\", \"naturaleza\", \"categoria\", \"importe\", \"importeFirmado\", \"motivo\", \"fecha\", \"autorId\", \"autor\", \"esInverso\", \"advertencia\", \"efectivoFisicoContado\", \"declaracionSinDuplicacion\", \"evidenciaConciliacion\", \"originalId\", \"inversoId\"],\n        ...data.map((item) => [item.id, item.ordinal, item.naturaleza, item.categoria, item.importe, item.importeFirmado, neutralizeFondoCsvText(item.motivo), item.fecha, item.autor.id, neutralizeFondoCsvText(item.autor.nombre), item.esInverso, item.advertencia, item.conciliacionInicial?.efectivoFisicoContado, item.conciliacionInicial?.declaracionSinDuplicacion, item.conciliacionInicial ? neutralizeFondoCsvText(item.conciliacionInicial.evidencia) : null, item.originalId, item.inversoId]),\n      ]));\n    } else {\n      const data = (await listarArqueosFondo(options.db)).items;\n      res.type(\"text/csv; charset=utf-8\");\n      res.attachment(\"fondo-mariana-arqueos.csv\");\n      res.send(csv([\n        [\"id\", \"saldoSistema\", \"efectivoContado\", \"diferencia\", \"versionSaldo\", \"motivo\", \"fecha\", \"autorId\", \"autor\"],\n        ...data.map((item) => [item.id, item.saldoSistema, item.efectivoContado, item.diferencia, item.versionSaldo, neutralizeFondoCsvText(item.motivo), item.fecha, item.autor.id, neutralizeFondoCsvText(item.autor.nombre)]),\n      ]));\n    }\n  })"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/health.ts",
+    "line": 6,
+    "method": "GET",
+    "endpoint": "/healthz",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 50,
+    "method": "USE",
+    "endpoint": "e11Router",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 51,
+    "method": "USE",
+    "endpoint": "e7Router",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 54,
+    "method": "USE",
+    "endpoint": "createE11LegacyBoundary(E11_ENABLED, requireSession)",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 55,
+    "method": "USE",
+    "endpoint": "e9Router",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 56,
+    "method": "USE",
+    "endpoint": "e5Router",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 59,
+    "method": "USE",
+    "endpoint": "createE3Router({\n  authenticate: requireSession, permission: requierePermiso, admin: requireRole(\"ADMIN\"),\n  repository: e3Repository, receipts: readE3Receipts, print: recordE3Print, context: readE3Context,\n})",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 63,
+    "method": "USE",
+    "endpoint": "healthRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 64,
+    "method": "USE",
+    "endpoint": "authRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 65,
+    "method": "USE",
+    "endpoint": "dashboardRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 66,
+    "method": "USE",
+    "endpoint": "locationsRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 67,
+    "method": "USE",
+    "endpoint": "usersRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 68,
+    "method": "USE",
+    "endpoint": "productosRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 69,
+    "method": "USE",
+    "endpoint": "preciosRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 70,
+    "method": "USE",
+    "endpoint": "proveedoresRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 71,
+    "method": "USE",
+    "endpoint": "creditEvidenceRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 72,
+    "method": "USE",
+    "endpoint": "creditRefundsRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 73,
+    "method": "USE",
+    "endpoint": "clientesAdminRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 74,
+    "method": "USE",
+    "endpoint": "clienteDocumentosRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 75,
+    "method": "USE",
+    "endpoint": "clientesRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 76,
+    "method": "USE",
+    "endpoint": "permisosRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 77,
+    "method": "USE",
+    "endpoint": "/inventario",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "inventarioRouter"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 78,
+    "method": "USE",
+    "endpoint": "/inventario",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "auditoriasInventarioRouter"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 79,
+    "method": "USE",
+    "endpoint": "posRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 80,
+    "method": "USE",
+    "endpoint": "cajaVentasRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 81,
+    "method": "USE",
+    "endpoint": "salidasRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 82,
+    "method": "USE",
+    "endpoint": "adminAnalyticsRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 83,
+    "method": "USE",
+    "endpoint": "adminAlertasRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 84,
+    "method": "USE",
+    "endpoint": "reportesRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 85,
+    "method": "USE",
+    "endpoint": "contenedoresRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 86,
+    "method": "USE",
+    "endpoint": "notificacionesRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 87,
+    "method": "USE",
+    "endpoint": "etiquetasRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 88,
+    "method": "USE",
+    "endpoint": "auditoriaRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 89,
+    "method": "USE",
+    "endpoint": "pagosDirigidosRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 90,
+    "method": "USE",
+    "endpoint": "camionetasRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 91,
+    "method": "USE",
+    "endpoint": "choferesRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 92,
+    "method": "USE",
+    "endpoint": "viajesRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 93,
+    "method": "USE",
+    "endpoint": "equiposRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 94,
+    "method": "USE",
+    "endpoint": "stockMinimosRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 95,
+    "method": "USE",
+    "endpoint": "createFondoRouter({\n  db: pool as unknown as import(\"../lib/fondo\").FondoPool,\n  authorizeAdmin: [requireSession, requireRole(\"ADMIN\")],\n})",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "line": 99,
+    "method": "USE",
+    "endpoint": "purgaRouter",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 142,
+    "method": "GET",
+    "endpoint": "/rollos/:id/remate",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 142,
+        "callee": "requierePermiso",
+        "args": [
+          "inventario",
+          "ver"
+        ],
+        "literalArgs": [
+          "inventario",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"inventario\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 212,
+    "method": "GET",
+    "endpoint": "/fecha-servidor",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 535,
+    "method": "GET",
+    "endpoint": "/salidas-extraordinarias",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 538,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas",
+          "ver"
+        ],
+        "literalArgs": [
+          "salidas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas\", \"ver\")",
+      "requiereAdmin"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 638,
+    "method": "POST",
+    "endpoint": "/salidas-extraordinarias",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 641,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas",
+          "crear"
+        ],
+        "literalArgs": [
+          "salidas",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas\", \"crear\")",
+      "requiereAdmin"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 677,
+    "method": "POST",
+    "endpoint": "/salidas-extraordinarias/:movimientoId/revertir",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 680,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas",
+          "editar"
+        ],
+        "literalArgs": [
+          "salidas",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas\", \"editar\")",
+      "requiereAdmin"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 767,
+    "method": "POST",
+    "endpoint": "/entradas",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 770,
+        "callee": "requierePermiso",
+        "args": [
+          "entradas",
+          "crear"
+        ],
+        "literalArgs": [
+          "entradas",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"entradas\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 969,
+    "method": "GET",
+    "endpoint": "/entradas",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 972,
+        "callee": "requierePermiso",
+        "args": [
+          "entradas",
+          "ver"
+        ],
+        "literalArgs": [
+          "entradas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"entradas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1108,
+    "method": "GET",
+    "endpoint": "/entradas/catalogos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 1111,
+        "callee": "requierePermiso",
+        "args": [
+          "entradas",
+          "ver"
+        ],
+        "literalArgs": [
+          "entradas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"entradas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1148,
+    "method": "GET",
+    "endpoint": "/entradas/pendientes-costo/count",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 1151,
+        "callee": "requierePermiso",
+        "args": [
+          "entradas",
+          "ver"
+        ],
+        "literalArgs": [
+          "entradas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"entradas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1169,
+    "method": "GET",
+    "endpoint": "/entradas/pendientes-costo",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 1172,
+        "callee": "requierePermiso",
+        "args": [
+          "entradas",
+          "ver"
+        ],
+        "literalArgs": [
+          "entradas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"entradas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1234,
+    "method": "POST",
+    "endpoint": "/entradas/:id/costos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 1237,
+        "callee": "requierePermiso",
+        "args": [
+          "entradas",
+          "editar"
+        ],
+        "literalArgs": [
+          "entradas",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"entradas\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1274,
+    "method": "GET",
+    "endpoint": "/entradas/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 1277,
+        "callee": "requierePermiso",
+        "args": [
+          "entradas",
+          "ver"
+        ],
+        "literalArgs": [
+          "entradas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"entradas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1328,
+    "method": "POST",
+    "endpoint": "/rollos/:id/activar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 1331,
+        "callee": "requierePermiso",
+        "args": [
+          "entradas",
+          "editar"
+        ],
+        "literalArgs": [
+          "entradas",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"entradas\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1387,
+    "method": "POST",
+    "endpoint": "/rollos/:id/vender",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 1390,
+        "callee": "requierePermiso",
+        "args": [
+          "pos",
+          "crear"
+        ],
+        "literalArgs": [
+          "pos",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"pos\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1452,
+    "method": "POST",
+    "endpoint": "/rollos/:id/ajustar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 1455,
+        "callee": "requierePermiso",
+        "args": [
+          "ajustes",
+          "crear"
+        ],
+        "literalArgs": [
+          "ajustes",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"ajustes\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1511,
+    "method": "POST",
+    "endpoint": "/rollos/:id/revertir",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 1514,
+        "callee": "requierePermiso",
+        "args": [
+          "ajustes",
+          "autorizar"
+        ],
+        "literalArgs": [
+          "ajustes",
+          "autorizar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"ajustes\", \"autorizar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1594,
+    "method": "GET",
+    "endpoint": "/rollos/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 1597,
+        "callee": "requierePermiso",
+        "args": [
+          "inventario",
+          "ver"
+        ],
+        "literalArgs": [
+          "inventario",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"inventario\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1636,
+    "method": "GET",
+    "endpoint": "/movimientos/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 1639,
+        "callee": "requierePermiso",
+        "args": [
+          "movimientos",
+          "ver"
+        ],
+        "literalArgs": [
+          "movimientos",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"movimientos\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1667,
+    "method": "PATCH",
+    "endpoint": "/rollos/:id/piso",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 1670,
+        "callee": "requierePermiso",
+        "args": [
+          "inventario",
+          "editar"
+        ],
+        "literalArgs": [
+          "inventario",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"inventario\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1711,
+    "method": "GET",
+    "endpoint": "/rollos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 1714,
+        "callee": "requierePermiso",
+        "args": [
+          "inventario",
+          "ver"
+        ],
+        "literalArgs": [
+          "inventario",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"inventario\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1838,
+    "method": "GET",
+    "endpoint": "/ubicaciones",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 1841,
+        "callee": "requierePermiso",
+        "args": [
+          "inventario",
+          "ver"
+        ],
+        "literalArgs": [
+          "inventario",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"inventario\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1873,
+    "method": "GET",
+    "endpoint": "/existencias/agrupadas",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 1876,
+        "callee": "requierePermiso",
+        "args": [
+          "inventario",
+          "ver"
+        ],
+        "literalArgs": [
+          "inventario",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"inventario\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 1974,
+    "method": "GET",
+    "endpoint": "/existencias",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 1977,
+        "callee": "requierePermiso",
+        "args": [
+          "inventario",
+          "ver"
+        ],
+        "literalArgs": [
+          "inventario",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"inventario\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 2111,
+    "method": "GET",
+    "endpoint": "/kardex",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 2114,
+        "callee": "requierePermiso",
+        "args": [
+          "movimientos",
+          "ver"
+        ],
+        "literalArgs": [
+          "movimientos",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"movimientos\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 2155,
+    "method": "GET",
+    "endpoint": "/kardex/agrupado",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 2158,
+        "callee": "requierePermiso",
+        "args": [
+          "movimientos",
+          "ver"
+        ],
+        "literalArgs": [
+          "movimientos",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"movimientos\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 2195,
+    "method": "GET",
+    "endpoint": "/kardex/filtros",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 2198,
+        "callee": "requierePermiso",
+        "args": [
+          "movimientos",
+          "ver"
+        ],
+        "literalArgs": [
+          "movimientos",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"movimientos\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 2227,
+    "method": "GET",
+    "endpoint": "/kardex/exportar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 2230,
+        "callee": "requierePermiso",
+        "args": [
+          "movimientos",
+          "ver"
+        ],
+        "literalArgs": [
+          "movimientos",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"movimientos\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 2328,
+    "method": "GET",
+    "endpoint": "/ajustes/pendientes",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 2331,
+        "callee": "requierePermiso",
+        "args": [
+          "ajustes",
+          "autorizar"
+        ],
+        "literalArgs": [
+          "ajustes",
+          "autorizar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"ajustes\", \"autorizar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 2367,
+    "method": "POST",
+    "endpoint": "/ajustes/:id/revisar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 2370,
+        "callee": "requierePermiso",
+        "args": [
+          "ajustes",
+          "autorizar"
+        ],
+        "literalArgs": [
+          "ajustes",
+          "autorizar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"ajustes\", \"autorizar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 2422,
+    "method": "GET",
+    "endpoint": "/conciliacion",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 2425,
+        "callee": "requierePermiso",
+        "args": [
+          "conciliacion",
+          "ver"
+        ],
+        "literalArgs": [
+          "conciliacion",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"conciliacion\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "line": 2453,
+    "method": "POST",
+    "endpoint": "/conciliacion/recalcular",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/inventario.ts",
+        "line": 2456,
+        "callee": "requierePermiso",
+        "args": [
+          "conciliacion",
+          "autorizar"
+        ],
+        "literalArgs": [
+          "conciliacion",
+          "autorizar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"conciliacion\", \"autorizar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/locations.ts",
+    "line": 35,
+    "method": "USE",
+    "endpoint": "/locations",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/locations.ts",
+    "line": 37,
+    "method": "GET",
+    "endpoint": "/locations",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/locations.ts",
+        "line": 39,
+        "callee": "requierePermiso",
+        "args": [
+          "ubicaciones",
+          "ver"
+        ],
+        "literalArgs": [
+          "ubicaciones",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"ubicaciones\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/locations.ts",
+    "line": 71,
+    "method": "POST",
+    "endpoint": "/locations",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/locations.ts",
+        "line": 73,
+        "callee": "requierePermiso",
+        "args": [
+          "ubicaciones",
+          "crear"
+        ],
+        "literalArgs": [
+          "ubicaciones",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"ubicaciones\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/locations.ts",
+    "line": 111,
+    "method": "PATCH",
+    "endpoint": "/locations/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/locations.ts",
+        "line": 111,
+        "callee": "requierePermiso",
+        "args": [
+          "ubicaciones",
+          "editar"
+        ],
+        "literalArgs": [
+          "ubicaciones",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"ubicaciones\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/locations.ts",
+    "line": 187,
+    "method": "GET",
+    "endpoint": "/locations/:id/pisos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/locations.ts",
+        "line": 187,
+        "callee": "requierePermiso",
+        "args": [
+          "ubicaciones",
+          "ver"
+        ],
+        "literalArgs": [
+          "ubicaciones",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"ubicaciones\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/locations.ts",
+    "line": 205,
+    "method": "POST",
+    "endpoint": "/locations/:id/pisos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/locations.ts",
+        "line": 205,
+        "callee": "requierePermiso",
+        "args": [
+          "ubicaciones",
+          "crear"
+        ],
+        "literalArgs": [
+          "ubicaciones",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"ubicaciones\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/locations.ts",
+    "line": 234,
+    "method": "PATCH",
+    "endpoint": "/locations/:id/pisos/:pisoId",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/locations.ts",
+        "line": 234,
+        "callee": "requierePermiso",
+        "args": [
+          "ubicaciones",
+          "editar"
+        ],
+        "literalArgs": [
+          "ubicaciones",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"ubicaciones\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/notificaciones.ts",
+    "line": 29,
+    "method": "USE",
+    "endpoint": "/notificaciones",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/notificaciones.ts",
+    "line": 219,
+    "method": "GET",
+    "endpoint": "/notificaciones/feed",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/notificaciones.ts",
+    "line": 488,
+    "method": "GET",
+    "endpoint": "/notificaciones",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/notificaciones.ts",
+    "line": 664,
+    "method": "GET",
+    "endpoint": "/notificaciones/no-leidas/count",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/notificaciones.ts",
+    "line": 674,
+    "method": "POST",
+    "endpoint": "/notificaciones/leer-todas",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/notificaciones.ts",
+    "line": 700,
+    "method": "POST",
+    "endpoint": "/notificaciones/:tipo/:id/leer",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pagos-dirigidos.ts",
+    "line": 42,
+    "method": "USE",
+    "endpoint": "/pagos-dirigidos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pagos-dirigidos.ts",
+    "line": 264,
+    "method": "GET",
+    "endpoint": "/pagos-dirigidos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pagos-dirigidos.ts",
+    "line": 303,
+    "method": "POST",
+    "endpoint": "/pagos-dirigidos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pagos-dirigidos.ts",
+    "line": 413,
+    "method": "POST",
+    "endpoint": "/pagos-dirigidos/:id/aprobar",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireRole(\"ADMIN\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pagos-dirigidos.ts",
+    "line": 493,
+    "method": "POST",
+    "endpoint": "/pagos-dirigidos/:id/rechazar",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireRole(\"ADMIN\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/permisos.ts",
+    "line": 33,
+    "method": "USE",
+    "endpoint": "/permisos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/permisos.ts",
+        "line": 33,
+        "callee": "requierePermiso",
+        "args": [
+          "permisos",
+          "ver"
+        ],
+        "literalArgs": [
+          "permisos",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"permisos\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/permisos.ts",
+    "line": 58,
+    "method": "GET",
+    "endpoint": "/permisos/roles",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/permisos.ts",
+    "line": 74,
+    "method": "PUT",
+    "endpoint": "/permisos/roles/:rol/:modulo",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/permisos.ts",
+        "line": 76,
+        "callee": "requierePermiso",
+        "args": [
+          "permisos",
+          "editar"
+        ],
+        "literalArgs": [
+          "permisos",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"permisos\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/permisos.ts",
+    "line": 261,
+    "method": "GET",
+    "endpoint": "/permisos/usuarios/:id",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/permisos.ts",
+    "line": 307,
+    "method": "PUT",
+    "endpoint": "/permisos/usuarios/:id/:modulo",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/permisos.ts",
+        "line": 309,
+        "callee": "requierePermiso",
+        "args": [
+          "permisos",
+          "editar"
+        ],
+        "literalArgs": [
+          "permisos",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"permisos\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/permisos.ts",
+    "line": 484,
+    "method": "DELETE",
+    "endpoint": "/permisos/usuarios/:id/:modulo",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/permisos.ts",
+        "line": 486,
+        "callee": "requierePermiso",
+        "args": [
+          "permisos",
+          "editar"
+        ],
+        "literalArgs": [
+          "permisos",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"permisos\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/permisos.ts",
+    "line": 604,
+    "method": "GET",
+    "endpoint": "/permisos/preview/:id",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 108,
+    "method": "USE",
+    "endpoint": "/pos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 108,
+    "method": "USE",
+    "endpoint": "/tickets",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 108,
+    "method": "USE",
+    "endpoint": "/caja",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 108,
+    "method": "USE",
+    "endpoint": "/sesiones-caja",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 307,
+    "method": "GET",
+    "endpoint": "/pos/buscar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/pos.ts",
+        "line": 309,
+        "callee": "requierePermiso",
+        "args": [
+          "pos",
+          "ver"
+        ],
+        "literalArgs": [
+          "pos",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"pos\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 322,
+    "method": "GET",
+    "endpoint": "/pos/clientes/:clienteId/credito-disponible",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/pos.ts",
+        "line": 324,
+        "callee": "requierePermiso",
+        "args": [
+          "pos",
+          "crear"
+        ],
+        "literalArgs": [
+          "pos",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"pos\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 366,
+    "method": "POST",
+    "endpoint": "/pos/validar-precio",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/pos.ts",
+        "line": 368,
+        "callee": "requierePermiso",
+        "args": [
+          "pos",
+          "crear"
+        ],
+        "literalArgs": [
+          "pos",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"pos\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 387,
+    "method": "POST",
+    "endpoint": "/tickets",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/pos.ts",
+        "line": 389,
+        "callee": "requierePermiso",
+        "args": [
+          "pos",
+          "crear"
+        ],
+        "literalArgs": [
+          "pos",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"pos\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 459,
+    "method": "GET",
+    "endpoint": "/tickets",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requiereAlguno([\n    { modulo: \"pos\", accion: \"ver\" },\n    { modulo: \"cobros_pagos\", accion: \"ver\" },\n  ])"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 559,
+    "method": "GET",
+    "endpoint": "/tickets/pendientes",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requiereAlguno([\n    { modulo: \"pos\", accion: \"ver\" },\n    { modulo: \"cobros_pagos\", accion: \"ver\" },\n  ])"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 595,
+    "method": "GET",
+    "endpoint": "/caja/tickets",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/pos.ts",
+        "line": 597,
+        "callee": "requierePermiso",
+        "args": [
+          "cobros_pagos",
+          "ver"
+        ],
+        "literalArgs": [
+          "cobros_pagos",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"cobros_pagos\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 627,
+    "method": "GET",
+    "endpoint": "/tickets/:id/documento-impresion",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requiereLecturaTicket"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 649,
+    "method": "GET",
+    "endpoint": "/tickets/:id",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 695,
+    "method": "POST",
+    "endpoint": "/tickets/:id/cancelar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/pos.ts",
+        "line": 697,
+        "callee": "requierePermiso",
+        "args": [
+          "pos",
+          "crear"
+        ],
+        "literalArgs": [
+          "pos",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"pos\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 750,
+    "method": "POST",
+    "endpoint": "/tickets/:id/cobrar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/pos.ts",
+        "line": 752,
+        "callee": "requierePermiso",
+        "args": [
+          "cobros_pagos",
+          "crear"
+        ],
+        "literalArgs": [
+          "cobros_pagos",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"cobros_pagos\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 812,
+    "method": "POST",
+    "endpoint": "/tickets/:id/autorizar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/pos.ts",
+        "line": 814,
+        "callee": "requierePermiso",
+        "args": [
+          "cobros_pagos",
+          "crear"
+        ],
+        "literalArgs": [
+          "cobros_pagos",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"cobros_pagos\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 833,
+    "method": "GET",
+    "endpoint": "/tickets/:id/autorizar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/pos.ts",
+        "line": 835,
+        "callee": "requierePermiso",
+        "args": [
+          "cobros_pagos",
+          "ver"
+        ],
+        "literalArgs": [
+          "cobros_pagos",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"cobros_pagos\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 926,
+    "method": "GET",
+    "endpoint": "/sesiones-caja/actual",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/pos.ts",
+        "line": 928,
+        "callee": "requierePermiso",
+        "args": [
+          "cobros_pagos",
+          "ver"
+        ],
+        "literalArgs": [
+          "cobros_pagos",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"cobros_pagos\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 973,
+    "method": "GET",
+    "endpoint": "/sesiones-caja",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 992,
+    "method": "POST",
+    "endpoint": "/sesiones-caja/abrir",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/pos.ts",
+        "line": 994,
+        "callee": "requierePermiso",
+        "args": [
+          "cortes",
+          "ver"
+        ],
+        "literalArgs": [
+          "cortes",
+          "ver"
+        ]
+      },
+      {
+        "file": "artifacts/api-server/src/routes/pos.ts",
+        "line": 995,
+        "callee": "requierePermiso",
+        "args": [
+          "cortes",
+          "crear"
+        ],
+        "literalArgs": [
+          "cortes",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"cortes\", \"ver\")",
+      "requierePermiso(\"cortes\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 1017,
+    "method": "GET",
+    "endpoint": "/sesiones-caja/:id/corte",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/pos.ts",
+        "line": 1019,
+        "callee": "requierePermiso",
+        "args": [
+          "cortes",
+          "ver"
+        ],
+        "literalArgs": [
+          "cortes",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"cortes\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 1036,
+    "method": "POST",
+    "endpoint": "/sesiones-caja/:id/cerrar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/pos.ts",
+        "line": 1038,
+        "callee": "requierePermiso",
+        "args": [
+          "cortes",
+          "ver"
+        ],
+        "literalArgs": [
+          "cortes",
+          "ver"
+        ]
+      },
+      {
+        "file": "artifacts/api-server/src/routes/pos.ts",
+        "line": 1039,
+        "callee": "requierePermiso",
+        "args": [
+          "cortes",
+          "crear"
+        ],
+        "literalArgs": [
+          "cortes",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"cortes\", \"ver\")",
+      "requierePermiso(\"cortes\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 1065,
+    "method": "GET",
+    "endpoint": "/sesiones-caja/:id/salidas-dinero",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "e4CashOutPermission(\"ver\", requierePermiso)"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 1079,
+    "method": "POST",
+    "endpoint": "/sesiones-caja/:id/salidas-dinero",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "e4CashOutPermission(\"ver\", requierePermiso)",
+      "e4CashOutPermission(\"crear\", requierePermiso)"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 1106,
+    "method": "POST",
+    "endpoint": "/sesiones-caja/:id/salidas-dinero/:salidaId/revision",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/pos.ts",
+        "line": 1108,
+        "callee": "requierePermiso",
+        "args": [
+          "cortes",
+          "ver"
+        ],
+        "literalArgs": [
+          "cortes",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"cortes\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "line": 1122,
+    "method": "GET",
+    "endpoint": "/caja/proveedores-activos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "e4CashOutPermission(\"ver\", requierePermiso)"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/precios.ts",
+    "line": 38,
+    "method": "USE",
+    "endpoint": "/precios",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/precios.ts",
+    "line": 181,
+    "method": "GET",
+    "endpoint": "/precios",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/precios.ts",
+        "line": 181,
+        "callee": "requierePermiso",
+        "args": [
+          "precios",
+          "ver"
+        ],
+        "literalArgs": [
+          "precios",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"precios\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/precios.ts",
+    "line": 206,
+    "method": "GET",
+    "endpoint": "/precios/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/precios.ts",
+        "line": 206,
+        "callee": "requierePermiso",
+        "args": [
+          "precios",
+          "ver"
+        ],
+        "literalArgs": [
+          "precios",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"precios\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/precios.ts",
+    "line": 224,
+    "method": "POST",
+    "endpoint": "/precios/:id/cambiar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/precios.ts",
+        "line": 224,
+        "callee": "requierePermiso",
+        "args": [
+          "precios",
+          "editar"
+        ],
+        "literalArgs": [
+          "precios",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"precios\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/precios.ts",
+    "line": 277,
+    "method": "POST",
+    "endpoint": "/precios/cambiar-masivo",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/precios.ts",
+        "line": 277,
+        "callee": "requierePermiso",
+        "args": [
+          "precios",
+          "editar"
+        ],
+        "literalArgs": [
+          "precios",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"precios\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/precios.ts",
+    "line": 373,
+    "method": "PATCH",
+    "endpoint": "/precios/:id/venta-por-metro",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/precios.ts",
+        "line": 373,
+        "callee": "requierePermiso",
+        "args": [
+          "precios",
+          "editar"
+        ],
+        "literalArgs": [
+          "precios",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"precios\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/precios.ts",
+    "line": 424,
+    "method": "USE",
+    "endpoint": "(error: unknown, _req: import(\"express\").Request, res: import(\"express\").Response, next: import(\"express\").NextFunction) => {\n  if (!(error instanceof PriceFloorError)) return next(error);\n  res.status(409).json({ error: error.message, code: error.code });\n}",
+    "dynamicPath": true,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/productos.ts",
+    "line": 54,
+    "method": "USE",
+    "endpoint": "/productos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/productos.ts",
+    "line": 304,
+    "method": "GET",
+    "endpoint": "/productos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/productos.ts",
+        "line": 304,
+        "callee": "requierePermiso",
+        "args": [
+          "productos",
+          "ver"
+        ],
+        "literalArgs": [
+          "productos",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"productos\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/productos.ts",
+    "line": 344,
+    "method": "POST",
+    "endpoint": "/productos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/productos.ts",
+        "line": 346,
+        "callee": "requierePermiso",
+        "args": [
+          "productos",
+          "crear"
+        ],
+        "literalArgs": [
+          "productos",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"productos\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/productos.ts",
+    "line": 473,
+    "method": "POST",
+    "endpoint": "/productos/import/preview",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/productos.ts",
+        "line": 475,
+        "callee": "requierePermiso",
+        "args": [
+          "productos",
+          "crear"
+        ],
+        "literalArgs": [
+          "productos",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"productos\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/productos.ts",
+    "line": 530,
+    "method": "POST",
+    "endpoint": "/productos/import/confirm",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/productos.ts",
+        "line": 532,
+        "callee": "requierePermiso",
+        "args": [
+          "productos",
+          "crear"
+        ],
+        "literalArgs": [
+          "productos",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"productos\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/productos.ts",
+    "line": 658,
+    "method": "GET",
+    "endpoint": "/productos/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/productos.ts",
+        "line": 658,
+        "callee": "requierePermiso",
+        "args": [
+          "productos",
+          "ver"
+        ],
+        "literalArgs": [
+          "productos",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"productos\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/productos.ts",
+    "line": 766,
+    "method": "PATCH",
+    "endpoint": "/productos/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/productos.ts",
+        "line": 768,
+        "callee": "requierePermiso",
+        "args": [
+          "productos",
+          "editar"
+        ],
+        "literalArgs": [
+          "productos",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"productos\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 72,
+    "method": "USE",
+    "endpoint": "/proveedores",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 128,
+    "method": "GET",
+    "endpoint": "/proveedores/resumen",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 130,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "proveedores_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 141,
+    "method": "POST",
+    "endpoint": "/proveedores/:id/pagos/preview",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 143,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores_finanzas",
+          "crear"
+        ],
+        "literalArgs": [
+          "proveedores_finanzas",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores_finanzas\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 167,
+    "method": "GET",
+    "endpoint": "/proveedores/analitica-global",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 169,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "proveedores_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 179,
+    "method": "GET",
+    "endpoint": "/proveedores/historial-compras",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 181,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores",
+          "ver"
+        ],
+        "literalArgs": [
+          "proveedores",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 230,
+    "method": "GET",
+    "endpoint": "/proveedores",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 232,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores",
+          "ver"
+        ],
+        "literalArgs": [
+          "proveedores",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 292,
+    "method": "POST",
+    "endpoint": "/proveedores",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 294,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores",
+          "crear"
+        ],
+        "literalArgs": [
+          "proveedores",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 338,
+    "method": "GET",
+    "endpoint": "/proveedores/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 340,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores",
+          "ver"
+        ],
+        "literalArgs": [
+          "proveedores",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 369,
+    "method": "PATCH",
+    "endpoint": "/proveedores/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 371,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores",
+          "editar"
+        ],
+        "literalArgs": [
+          "proveedores",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 452,
+    "method": "GET",
+    "endpoint": "/proveedores/:id/compras",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 454,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "proveedores_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 516,
+    "method": "GET",
+    "endpoint": "/proveedores/:id/pagos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 518,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "proveedores_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 579,
+    "method": "GET",
+    "endpoint": "/proveedores/:id/estado-cuenta",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 581,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "proveedores_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 624,
+    "method": "GET",
+    "endpoint": "/proveedores/:id/pagos/efectivo-opciones",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 624,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores_finanzas",
+          "crear"
+        ],
+        "literalArgs": [
+          "proveedores_finanzas",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores_finanzas\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 631,
+    "method": "POST",
+    "endpoint": "/proveedores/:id/pagos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 633,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores_finanzas",
+          "crear"
+        ],
+        "literalArgs": [
+          "proveedores_finanzas",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores_finanzas\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 747,
+    "method": "POST",
+    "endpoint": "/proveedores/:id/ajustes",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 749,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores_finanzas",
+          "autorizar"
+        ],
+        "literalArgs": [
+          "proveedores_finanzas",
+          "autorizar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores_finanzas\", \"autorizar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 818,
+    "method": "POST",
+    "endpoint": "/proveedores/:id/pagos/:pagoId/reversar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 820,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores_finanzas",
+          "autorizar"
+        ],
+        "literalArgs": [
+          "proveedores_finanzas",
+          "autorizar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores_finanzas\", \"autorizar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 857,
+    "method": "GET",
+    "endpoint": "/proveedores/:id/compras/:compraId",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 859,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "proveedores_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 903,
+    "method": "GET",
+    "endpoint": "/proveedores/:id/pagos/:pagoId",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 905,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "proveedores_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 943,
+    "method": "GET",
+    "endpoint": "/proveedores/:id/estadisticas",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 945,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "proveedores_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 1002,
+    "method": "GET",
+    "endpoint": "/proveedores/:id/utilidad",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 1004,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "proveedores_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "line": 1107,
+    "method": "GET",
+    "endpoint": "/proveedores/:id/exportar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/proveedores.ts",
+        "line": 1109,
+        "callee": "requierePermiso",
+        "args": [
+          "proveedores_finanzas",
+          "ver"
+        ],
+        "literalArgs": [
+          "proveedores_finanzas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"proveedores_finanzas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/purga.ts",
+    "line": 20,
+    "method": "USE",
+    "endpoint": "/purga",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession",
+      "requireRole(\"ADMIN\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/purga.ts",
+    "line": 22,
+    "method": "GET",
+    "endpoint": "/purga/:entidad/:id/preflight",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/purga.ts",
+    "line": 40,
+    "method": "DELETE",
+    "endpoint": "/purga/:entidad/:id",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/reportes.ts",
+    "line": 23,
+    "method": "USE",
+    "endpoint": "/reportes",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/reportes.ts",
+        "line": 23,
+        "callee": "requierePermiso",
+        "args": [
+          "reportes",
+          "ver"
+        ],
+        "literalArgs": [
+          "reportes",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"reportes\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/reportes.ts",
+    "line": 33,
+    "method": "USE",
+    "endpoint": "/reportes/control-operativo",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "controlOperativoRoleGate"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/reportes.ts",
+    "line": 33,
+    "method": "USE",
+    "endpoint": "/reportes/vistas/control-operativo",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "controlOperativoRoleGate"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/reportes.ts",
+    "line": 73,
+    "method": "GET",
+    "endpoint": "/reportes/catalogos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/reportes.ts",
+    "line": 90,
+    "method": "GET",
+    "endpoint": "/reportes/que-comprar/evidencia",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/reportes.ts",
+    "line": 121,
+    "method": "GET",
+    "endpoint": "/reportes/:seccion",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/reportes.ts",
+    "line": 130,
+    "method": "GET",
+    "endpoint": "/reportes/:seccion/export.xlsx",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/reportes.ts",
+    "line": 160,
+    "method": "GET",
+    "endpoint": "/reportes/:seccion/export.pdf",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/reportes.ts",
+    "line": 309,
+    "method": "GET",
+    "endpoint": "/reportes/vistas/:vista/export.xlsx",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/reportes.ts",
+    "line": 356,
+    "method": "GET",
+    "endpoint": "/reportes/vistas/:vista/export.pdf",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 98,
+    "method": "POST",
+    "endpoint": "/salidas/venta-cliente",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/salidas.ts",
+        "line": 98,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas",
+          "crear"
+        ],
+        "literalArgs": [
+          "salidas",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 107,
+    "method": "GET",
+    "endpoint": "/salidas/venta-cliente/pendientes",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/salidas.ts",
+        "line": 107,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas_venta",
+          "ver"
+        ],
+        "literalArgs": [
+          "salidas_venta",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas_venta\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 130,
+    "method": "POST",
+    "endpoint": "/salidas/venta-cliente/generar-venta",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/salidas.ts",
+        "line": 130,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas_venta",
+          "crear"
+        ],
+        "literalArgs": [
+          "salidas_venta",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas_venta\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 204,
+    "method": "GET",
+    "endpoint": "/salidas/ubicaciones",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/salidas.ts",
+        "line": 207,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas",
+          "ver"
+        ],
+        "literalArgs": [
+          "salidas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 232,
+    "method": "GET",
+    "endpoint": "/salidas/venta-cliente/verificar-autorizacion",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 257,
+    "method": "POST",
+    "endpoint": "/salidas/:id/entregar",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 468,
+    "method": "GET",
+    "endpoint": "/salidas",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/salidas.ts",
+        "line": 471,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas",
+          "ver"
+        ],
+        "literalArgs": [
+          "salidas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 537,
+    "method": "GET",
+    "endpoint": "/salidas/borrador",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/salidas.ts",
+        "line": 540,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas",
+          "crear"
+        ],
+        "literalArgs": [
+          "salidas",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 567,
+    "method": "POST",
+    "endpoint": "/salidas/mostrador",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/salidas.ts",
+        "line": 570,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas",
+          "crear"
+        ],
+        "literalArgs": [
+          "salidas",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 609,
+    "method": "POST",
+    "endpoint": "/salidas/borrador/rollos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/salidas.ts",
+        "line": 612,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas",
+          "crear"
+        ],
+        "literalArgs": [
+          "salidas",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 643,
+    "method": "GET",
+    "endpoint": "/salidas/exportar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/salidas.ts",
+        "line": 646,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas",
+          "ver"
+        ],
+        "literalArgs": [
+          "salidas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 707,
+    "method": "GET",
+    "endpoint": "/salidas/recepcion",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 734,
+    "method": "GET",
+    "endpoint": "/salidas/recepcion/:id",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 768,
+    "method": "GET",
+    "endpoint": "/salidas/:id",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 794,
+    "method": "GET",
+    "endpoint": "/salidas/:id/documento",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/salidas.ts",
+        "line": 797,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas",
+          "ver"
+        ],
+        "literalArgs": [
+          "salidas",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 816,
+    "method": "DELETE",
+    "endpoint": "/salidas/:id/rollos/:rolloId",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/salidas.ts",
+        "line": 819,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas",
+          "crear"
+        ],
+        "literalArgs": [
+          "salidas",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 838,
+    "method": "POST",
+    "endpoint": "/salidas/:id/enviar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/salidas.ts",
+        "line": 841,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas",
+          "crear"
+        ],
+        "literalArgs": [
+          "salidas",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 866,
+    "method": "POST",
+    "endpoint": "/salidas/:id/recibir",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/salidas.ts",
+        "line": 869,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas",
+          "crear"
+        ],
+        "literalArgs": [
+          "salidas",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "line": 899,
+    "method": "POST",
+    "endpoint": "/salidas/:id/cancelar",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/salidas.ts",
+        "line": 902,
+        "callee": "requierePermiso",
+        "args": [
+          "salidas",
+          "autorizar"
+        ],
+        "literalArgs": [
+          "salidas",
+          "autorizar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"salidas\", \"autorizar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/stock-minimos.ts",
+    "line": 102,
+    "method": "USE",
+    "endpoint": "/stock-minimos",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": [
+      "requireSession"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/stock-minimos.ts",
+    "line": 104,
+    "method": "GET",
+    "endpoint": "/stock-minimos/config",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/stock-minimos.ts",
+        "line": 106,
+        "callee": "requierePermiso",
+        "args": [
+          "inventario",
+          "ver"
+        ],
+        "literalArgs": [
+          "inventario",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"inventario\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/stock-minimos.ts",
+    "line": 126,
+    "method": "PATCH",
+    "endpoint": "/stock-minimos/config",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/stock-minimos.ts",
+        "line": 128,
+        "callee": "requierePermiso",
+        "args": [
+          "inventario",
+          "editar"
+        ],
+        "literalArgs": [
+          "inventario",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"inventario\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/stock-minimos.ts",
+    "line": 159,
+    "method": "GET",
+    "endpoint": "/stock-minimos",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/stock-minimos.ts",
+        "line": 161,
+        "callee": "requierePermiso",
+        "args": [
+          "inventario",
+          "ver"
+        ],
+        "literalArgs": [
+          "inventario",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"inventario\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/stock-minimos.ts",
+    "line": 185,
+    "method": "PUT",
+    "endpoint": "/stock-minimos/:productoId",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/stock-minimos.ts",
+        "line": 187,
+        "callee": "requierePermiso",
+        "args": [
+          "inventario",
+          "editar"
+        ],
+        "literalArgs": [
+          "inventario",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"inventario\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/users.ts",
+    "line": 34,
+    "method": "USE",
+    "endpoint": "/users",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/users.ts",
+        "line": 34,
+        "callee": "requierePermiso",
+        "args": [
+          "usuarios",
+          "ver"
+        ],
+        "literalArgs": [
+          "usuarios",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"usuarios\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/users.ts",
+    "line": 104,
+    "method": "GET",
+    "endpoint": "/users",
+    "dynamicPath": false,
+    "guards": [],
+    "middleware": []
+  },
+  {
+    "file": "artifacts/api-server/src/routes/users.ts",
+    "line": 120,
+    "method": "POST",
+    "endpoint": "/users",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/users.ts",
+        "line": 120,
+        "callee": "requierePermiso",
+        "args": [
+          "usuarios",
+          "crear"
+        ],
+        "literalArgs": [
+          "usuarios",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"usuarios\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/users.ts",
+    "line": 196,
+    "method": "PATCH",
+    "endpoint": "/users/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/users.ts",
+        "line": 196,
+        "callee": "requierePermiso",
+        "args": [
+          "usuarios",
+          "editar"
+        ],
+        "literalArgs": [
+          "usuarios",
+          "editar"
+        ]
+      }
+    ],
+    "middleware": [
+      "requierePermiso(\"usuarios\", \"editar\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/viajes.ts",
+    "line": 90,
+    "method": "GET",
+    "endpoint": "/viajes/catalogo-operativo",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/viajes.ts",
+        "line": 90,
+        "callee": "requierePermiso",
+        "args": [
+          "viajes",
+          "ver"
+        ],
+        "literalArgs": [
+          "viajes",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"viajes\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/viajes.ts",
+    "line": 101,
+    "method": "GET",
+    "endpoint": "/viajes/elegibles",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/viajes.ts",
+        "line": 101,
+        "callee": "requierePermiso",
+        "args": [
+          "viajes",
+          "crear"
+        ],
+        "literalArgs": [
+          "viajes",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"viajes\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/viajes.ts",
+    "line": 120,
+    "method": "POST",
+    "endpoint": "/viajes",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/viajes.ts",
+        "line": 120,
+        "callee": "requierePermiso",
+        "args": [
+          "viajes",
+          "crear"
+        ],
+        "literalArgs": [
+          "viajes",
+          "crear"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"viajes\", \"crear\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/viajes.ts",
+    "line": 159,
+    "method": "GET",
+    "endpoint": "/viajes",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/viajes.ts",
+        "line": 159,
+        "callee": "requierePermiso",
+        "args": [
+          "viajes",
+          "ver"
+        ],
+        "literalArgs": [
+          "viajes",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"viajes\", \"ver\")"
+    ]
+  },
+  {
+    "file": "artifacts/api-server/src/routes/viajes.ts",
+    "line": 174,
+    "method": "GET",
+    "endpoint": "/viajes/:id",
+    "dynamicPath": false,
+    "guards": [
+      {
+        "file": "artifacts/api-server/src/routes/viajes.ts",
+        "line": 174,
+        "callee": "requierePermiso",
+        "args": [
+          "viajes",
+          "ver"
+        ],
+        "literalArgs": [
+          "viajes",
+          "ver"
+        ]
+      }
+    ],
+    "middleware": [
+      "requireSession",
+      "requierePermiso(\"viajes\", \"ver\")"
+    ]
+  }
+]

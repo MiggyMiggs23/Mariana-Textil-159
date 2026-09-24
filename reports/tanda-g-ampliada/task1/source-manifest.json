@@ -1,0 +1,2642 @@
+[
+  {
+    "file": "artifacts/api-server/src/lib/accounted-document-source-guard.contract.ts",
+    "sha256": "5431e80923e39356469e4fa178a4dd7a104ce60a9a82c783cd4debadd4142482"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/accounted-document.ts",
+    "sha256": "629c0e45a3dbf6ceb02596fb166ac9c3f05101083611e9e17c11e6abab2f7fbe"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/activar-rollo-programado.test.ts",
+    "sha256": "2d2c006efe1b021662c563ad7af42dec8923fad37b3e47859559dd156225f3f5"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/admin-alertas-credit-risk.test.ts",
+    "sha256": "a89aac03b8ca79252da720e3fcd54170f521be2c9a423849648849a2bdaf5a2f"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/admin-alertas.ts",
+    "sha256": "0fb05c214c43ee427fa5d3e13b1af2acf41892a99e884b24cd29a2cb277ac7a8"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/admin-analytics-active-stores.contract.ts",
+    "sha256": "df8bc27b4ff6cbe556a0bbab470c77db194d4763f047bf225ff4406a6a7faef6"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/admin-analytics.contract.ts",
+    "sha256": "f00441fc35a297a5bd24834e25047189a9747bd960203f359df3fe787e538c71"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/admin-analytics.ts",
+    "sha256": "ba2b691191055aa7ea4ceb8604050ec47c7405490846a12b7704ddcff4e425a5"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/auditoria-inventario.ts",
+    "sha256": "2e90ff7eb6cbb6b3eb88b4f48e6678f356e9f074336c30a24b1edc8374325df4"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/auditoria-owner.test.ts",
+    "sha256": "ca4090ee45bab1393d55718ffaafee64f62033340d6cffebc1ad04dff1aa6fee"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/auditoria-owner.ts",
+    "sha256": "967272a7bc8b8d3e8c95bb33f66323646b741bb07cb49dc98b75ae36b94f9d8b"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/auditoria-queries.ts",
+    "sha256": "558fe629ef032e98707b3c123391ea9f824cae75a2389ec1794ad3e39171b06a"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/auditoria-resoluciones.ts",
+    "sha256": "edb774b8b8ee03f2e95dec6beb3d78ea386af045b113c39f32ea47a49c5e561c"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/auditoria.ts",
+    "sha256": "d8ea8a578752b38d5877aa39f1cf17b81ac607856357c863732f80143191458e"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/auth-identifiers.test.ts",
+    "sha256": "92d30f82d11a960141eadf4a5a03c560403deb8d993fb7bde2440dc984d4c9b7"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/auth-identifiers.ts",
+    "sha256": "1004f409ffd1a47e92838635e544fdca80b9876a22c8eb8a745e16bfde14c42b"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/caja-admin-cash.mock.test.ts",
+    "sha256": "99bfba2cf6c43da88e4a0194b4ff88e51cf753dfa03800e3d47b71be898ef696"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/caja-cash-ledger.test.ts",
+    "sha256": "7d90417a81325bf6b3161938eeb46fdf5298c632c75849f81ccdca31961eebbe"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/caja-cash-ledger.ts",
+    "sha256": "e046f773af2a8231c82a32912d4d6e9d59105aa3b5a3e644a0c34ba09684f89b"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/caja-close.mock.test.ts",
+    "sha256": "836721d937059cfce5ab988961cc9a7d45064d23d20a364afb82f74e4163c6f2"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/caja-corte-reader.mock.test.ts",
+    "sha256": "e2b6d4ad2ca44d6ee45a46fac1789eb59f5db552ef33be86b75f495ddb51fb09"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/caja-corte-reader.ts",
+    "sha256": "20571f9402c1e0dee0b535a88bb7ec72f25cb3c0cc84be4563910f8973700b58"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/catalog-import.ts",
+    "sha256": "1078abab2f3cd5c899c2adabc6a266ec231086fe5d9eff86b162ffb8d6d85d8b"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/clientes-aging.test.ts",
+    "sha256": "62b5e4054f0efd68eaa3970c21dc3dbe5934cffe358bb63137a6d3e4ae167ac7"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/clientes-aging.ts",
+    "sha256": "e349e7da08c916d2c4a8472dccba65210e5bb7356df4c3c7d8b29d895fee2b3e"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/clientes-cartera-export.ts",
+    "sha256": "4441b8ae3e425bafa01db9d2493dfea1c14ee24a1d1b02ff695c73ac4376a329"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/clientes-cartera-read-model.test.ts",
+    "sha256": "9a6280fa6f8e4526b46dae14184fae89d57675edc41dcc52bbffa0894150b50d"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/clientes-cartera-read-model.ts",
+    "sha256": "262d24d8f4ad1b505a6a7a2bb90350067dea5e376f942ba14c9c7b3d573df8ba"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/clientes-create.test.ts",
+    "sha256": "7f6957a7c95618366a1a769965f2451f0d55182b9d1c89f691b18fa662cc7142"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/clientes-create.ts",
+    "sha256": "b4662350781f3cf32bfc02cd8083d28ba03282a84aa94193d49d644ed149892a"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/clientes-financial-read-scope.ts",
+    "sha256": "00353b2f6f1d49cae4192e061d024dccc65a0f5bf1a0f251e68ab69f9334fc21"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/clientes-ledger.test.ts",
+    "sha256": "aee283fb41dd191777b53c7a2a2d648ec3c1bb54157c5a622dcb1e094422265a"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/compras-proveedor.test.ts",
+    "sha256": "c66050a8e5e674b9d1bb81c2d38d8907e48467676c326a7252fb2925eddae662"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/compras-proveedor.ts",
+    "sha256": "581d6e526ec2568a3e22d15520502272df430a6b43ea50fb2a5c0a4933649573"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/contenedores-helpers.ts",
+    "sha256": "57765513e8242a606e9ce88cd9572d7cb771b99f0b3367a0136f13808c7bbed9"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/contenedores.test.ts",
+    "sha256": "f0ac33248fc0ead1087d7233f35b692c6cde9272830087c226aee964f5aa3770"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/contenedores.ts",
+    "sha256": "e6136190ad0efc1ee77a4121cfea6f2ef50df7ed4fbc5b7a7cdca47c0b6a6502"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-abono-evidence.test.ts",
+    "sha256": "c147a6cf5f1a91ad5ee56927d206ce9c15e77283816a37b6cc555693fed6013a"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-abono-evidence.ts",
+    "sha256": "79e7761f88bd72d3b467aea02428f9ef8720ee2a80587b89f9d9638ebdd3905d"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-aging-read-model.ts",
+    "sha256": "315085339a169249d9d45a4ec4f6e04158b789d4b64dce546465a8d6d9dd7ed0"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-allocation.test.ts",
+    "sha256": "20d4a88fa567dcb5ff12e285f8416d9bc41d329542b9b07f9e458b79ed933d43"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-allocation.ts",
+    "sha256": "3748b1489259cea9b199784148687d207d7fff55a1d7a09ceae46c683af80599"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-evidence-contract.test.ts",
+    "sha256": "8f6ad98c656cdb5321c366f5332b3b815926d0275523b6f08c28d2f858ba3c2e"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-evidence-contract.ts",
+    "sha256": "7ccadc09f6e96f1ff20c8e4b02cfcc6994cc9ff7a10bfc13c8809fb4d5ccd280"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-evidence-read.test.ts",
+    "sha256": "fcf1b766bad403d0a66e087bbaef595ebfd06c0033a2069a95b3e2772378e3e2"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-evidence-read.ts",
+    "sha256": "10a4388a131af8cd818772d7eb080c4e30883ecc870a3edf3837d41c58509853"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-evidence.mock.test.ts",
+    "sha256": "480601377772360c34eddb7f03ec33efcf06ec5b9924439da21c1f90f6a1ca5c"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-evidence.ts",
+    "sha256": "26cbe5cc827f215e993004032d4b997bebbca67f02a119c9e8f106594ed7fa4e"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-movement-detail.test.ts",
+    "sha256": "dc4852a6d8902076d41402ef1b1c4274034b93134dc21cd8c6d9063a157b36c1"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-movement-detail.ts",
+    "sha256": "950c0f1f5544b7817aa2bcdccdeca2258c3b90a11a6844b551fcc7b444a1fd97"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-refund-contract.ts",
+    "sha256": "0e3506e9f402a6af1332a88c82b9fcd281b6537709a15edabd9af8f0de34d5f1"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-refund.mock.test.ts",
+    "sha256": "2cac1d3816de5e993541c36b4a3470d71454270c8996c3ea2347168d16145ef5"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-refund.safe.test.ts",
+    "sha256": "f2e6c2fdb23195f08862a0fedc68bb7294e31f19680ff05ae5ceee3c28913a5b"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/credit-refund.ts",
+    "sha256": "04f40603037fbd01e56491d320272798599f936a878515e02e0e881c5ee2ae8d"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/cuentas-destino-export.test.ts",
+    "sha256": "3f24b40895deb783437b02aa9becb724ed05ec029472a10f15b0e6017851dd07"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/cuentas-destino-export.ts",
+    "sha256": "44b4859b821dbb63b74e59c2c1247b9eace9dee788aee048eb359159e5b7d94e"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/date-only.ts",
+    "sha256": "276ab049be90f250780441e82738f9f845b4faf1e22e336625b0027ba3697b68"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e11-feature.ts",
+    "sha256": "20c9c260e125453875f9eeeed1860fdd2a61d9011745d33d57d074a090274a68"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e11-repository.ts",
+    "sha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e11-runtime.ts",
+    "sha256": "ad64af6f1efe5d1bd96ab90f35cd01b7e417362a5e4143fdb31af4c0f04cc28f"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e11-tanda-d.test.ts",
+    "sha256": "7aaa07e323e0d84929cab422ff518376aeab2cf456b7cdea53fa34717dd8c0f6"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e11.test.ts",
+    "sha256": "dfb2d0ef7c68cf20a8ab2f664f79b2d45325f0e4250fd9caddd92d335a9fac9c"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e11.ts",
+    "sha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e12-cash-ledger.ts",
+    "sha256": "dd635e7b03bfb545f7783acf14d1250e48485e1c2889dcc9467ec5b3cb997bb8"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e12-directed.ts",
+    "sha256": "c93b68cb9be6bd6b68bf9ef5987e9065b07b3942dee11ab8c3e0de4a8e73548e"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e12-fondo-executor.ts",
+    "sha256": "84adb1335a0ba23c233165340c012aa37a0ecabaac4756ad736b2485491cf59a"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e12-http.ts",
+    "sha256": "efd28696ea89d374779ff24f50b9168f6a2b77a25cf423694f3c3f93ca2ecdb3"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e12-supplier-cash-repository.ts",
+    "sha256": "154a39e1bd71dc3dfbdf715fd16ea658f28d4a8c7d26cbf81376dbe1ff4954e6"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e12-supplier-cash.test.ts",
+    "sha256": "cfced0e966f2bcbd413c37f487f76d930c88c29d5e23bb18cdcc0c0d2f83d823"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+    "sha256": "e1f647d4c6405e710911157a0f00f012f2f4db4409504fd9943abbac2d36d487"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e3-collection.test.ts",
+    "sha256": "7cac0d7434ff10e8dc0f705b9991736bd07fbbe0e5597409906708033bd93442"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e3-collection.ts",
+    "sha256": "f9fcb59052f2b20abae60ee038c0326e0e53b681386b13d719b7cbf061f1b9aa"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e3-context.ts",
+    "sha256": "f637f1d8cb2898ff488d7bf5ef4bb691001d7b8c3b33e1501da5b30638e74cfd"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e3-legacy-capture.ts",
+    "sha256": "14631efd29e1ec13591cab4142f766ce4f41386e3213774b4128af8a938a62be"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e3-ordinary-cash-release.ts",
+    "sha256": "43e2e1ed090d17ae09452d0cc7d1054ccdbd31f1ec216d618e537cc4bff85986"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e3-repository.ts",
+    "sha256": "88adc7b119166f3865e4a9d0107e1f86f9ceb90e3a6096b50c0740702a1c0062"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e4-cash-out-repository.ts",
+    "sha256": "1c80ddb150b1ade961066d5970ea9ec502969eb3e5456ee9c1af23c503c819ac"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e4-cash-out.pg.integration.ts",
+    "sha256": "9ccc73d067a3d6d25179587449758463c6de263c745d2b04a7ee59e03c23b379"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e4-cash-out.test.ts",
+    "sha256": "26c1ff4c06a4c301ed7f7c9e034bb0eb49c5bcd4f74e26737687c1ffcd31d1be"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+    "sha256": "d62915f04c46a9a907b7fb85badee59a260e5c246890d296b0ed513941467083"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e5-destination-reader.ts",
+    "sha256": "f40ede1cdaec0017dc6a836e14dc2af6dcbdc32d1153ce042ceae8e23e9c0a3c"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e5-e7.pg.integration.ts",
+    "sha256": "50dc7c7c1b40209d9d5ab0277e57d11f7d2c2a3d571cb9f8c1befe66ea3e6ce3"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e5-feature.ts",
+    "sha256": "646fa375b6402e98994104e7c023854ef229c167388cd1a1ff3159afbe1d071d"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e5-fondo.ts",
+    "sha256": "7e94b544d6ec3218b28e337aaca68e8a3fc9d7c38daa8263f700c38e7cb325bd"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e5-http.ts",
+    "sha256": "2d2e220b446fe0adb374f0f651f1cac662226b7ca9019f476613e36ba7e29a5e"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e5-repository.ts",
+    "sha256": "159e2922ac1e853f1e761250553971ccd68321d2b7bfa4207615b663e60585ba"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e5.test.ts",
+    "sha256": "efa7f41070cee32dcafe17360d69a48ad0bc40622fd195b367fb3b241f919261"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e5.ts",
+    "sha256": "d93eb7ac9103213f35ec62cbeb33fa1851ef677e9f22ad27e23a7ace945d1cc3"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e7-export.ts",
+    "sha256": "1a6fa464166943a449180f6d6da621597399a6711c0b6284b88a6f1fb3e6c9cb"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e7-feature.ts",
+    "sha256": "018860341c19599a46fb04a9080a33e989eab3fbd8cc9a001512f1f976e191b8"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e7-read-model.ts",
+    "sha256": "b3ed02d234b45a1f7c7a4355ea9b413621786eb2a9f775ff546dcbbc3fd1c96d"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e7.test.ts",
+    "sha256": "253950e30844e819733a011c11f8fadf6c8ae86ed2d1d35abc9f5092de442b93"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e9-cut.ts",
+    "sha256": "88255d12fc56d2f8e7632ccb1a639f46655294e659f0ff2c62e36281de0909c6"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e9-feature.ts",
+    "sha256": "267f685528ea49301f89b548b963ee194e9707033d91ef9520c9fcdb2422e26e"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e9-fondo.ts",
+    "sha256": "863126cc45045498bcf3e7920d186ce105616975a8ac43966271e94cea274697"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e9-http.ts",
+    "sha256": "9d597033042deb95a707257569c12054f79c0df1c29041eeeced97bbde0c9f7a"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e9-repository.ts",
+    "sha256": "82b0dec513e5bc6ceb144bff5eb89ce4d23c7cee12106a44b7fcf33fbf473dc0"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e9.pg.integration.ts",
+    "sha256": "dda5cd310c45d78fc7b96ba8bf097d119e7be5dab2a20175378aefc787ef57dc"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e9.test.ts",
+    "sha256": "b0fac86c4865f8bfb0aac5269db2b4f30ebc351f554b863d04a2fd565b0bdf6c"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e9.ts",
+    "sha256": "aee8ceb587f220605e61baafbb35a559c7677db6b1bf6d66fa0d2ff3d6c4c3bd"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/entradas.test.ts",
+    "sha256": "6087e3da06fd15ab8b9fa97e083e4ad53c81cdf13304f0447c4f9158c439f693"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/fecha-efectiva-routes.test.ts",
+    "sha256": "6730ca99aa183300f082d02d40941f77a7155478436c93ce619b354d8d5fe6e4"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/fecha-efectiva.test.ts",
+    "sha256": "91ab9448d3f0863cc3ba52eb877d9fe2819d19af11842af3d6c6eb7be4fecf63"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/fecha-efectiva.ts",
+    "sha256": "bbbcb32b0755af927e84482ac820310c0796588377f0cf6477ef14122efe2c85"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/fondo.test.ts",
+    "sha256": "a9d65af901a971e38c43316fd93c6c0f706e52b02991b62577ad5816e6b4894e"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/fondo.ts",
+    "sha256": "e26f7dd79aa14bbfdfcd2af64b5a2d5bcb753a53625961d0be461da083850add"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/generacion-venta-idempotency.test.ts",
+    "sha256": "1d19ae43fad5239c2ac2280e4bdaaf4c57a5b6d5e03ad80d8212d40573099d44"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/header-locations.ts",
+    "sha256": "2dfcda3a75149c96ad7a3154c36fd7a573917c8d94e8356cb9b6ccbe788a625f"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/historial-compras-proveedores.ts",
+    "sha256": "320b1c8328209e944404c0be87f46dab829231cd3f6bc4bab551d465afce2d20"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/inventario-lock-barrier.test.ts",
+    "sha256": "085f9827d6c28b482380141b0df591cb835d31775fdb83720565072c0a5c4322"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/inventario-reconstruir-cache.local.integration.test.ts",
+    "sha256": "e8a08d63c670c888cb1c5f827bc152c6c5b8add9c36d2f99eeb0d1cc8782f169"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/inventario-reconstruir-cache.unit.test.ts",
+    "sha256": "283f21f34cb3c02d306fa8169ce9c03b54246f51d78693ec0f6d028f230dac8c"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/inventario.test.ts",
+    "sha256": "6daebbe7b8bfd1f6603f8129315f0819817573570cf75cbceeaceab06f544efe"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/inventario.ts",
+    "sha256": "26414ec310200f9545778a530aa33132f1483850c23dd78af5c02bb7de924675"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/inventory-reversal-evidence.test.ts",
+    "sha256": "a5c843e288769c24eb95983ef986959585127785921d217c6170bc06f20585ad"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/inventory-reversal-evidence.ts",
+    "sha256": "3de79ce9c099133565d221555b15e4e0efed6447fc27641b4c6fb6b85da5a2cf"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/inventory-status-semantics.test.ts",
+    "sha256": "6e8570c475ca50cbd55ce23fdc8579f4204d3f284ee4ee8ed6712c74c74db051"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/inventory-strict-reversal.integration.test.ts",
+    "sha256": "9c02a667acef4430cada52b13823839963cc82c3ef8875b2931cee81ee8e133f"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/iva.test.ts",
+    "sha256": "cd51d1a7b04788b5b427de5df0ac0b071b9d6d2b4c41beed61d37c9fd0d8f33e"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/iva.ts",
+    "sha256": "3a4dbdba1bf806bb5df2f75e84896e0a94edeeeafb5d8fad221f9137884d5fb4"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/kardex-document.ts",
+    "sha256": "22f9385562ed3857b02d053b04b3ea39c1a6ee374f130201791929c9b206e14e"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/kardex-grouped.test.ts",
+    "sha256": "617f0a63ec09d57ea495dfbcdbab34491d9b90fe80edfd1375b96ebe5d4d8026"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/kardex-grouped.ts",
+    "sha256": "c89d344ee06c8d4b5a2bcb7be692e7c2be95fc176742f2bbf222fb8155381ea5"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/kardex.ts",
+    "sha256": "62ebd19628acb123f5162556084ae354000d1f774400e6f82a83974c8091e98a"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/limited-startup-preflight.test.ts",
+    "sha256": "dfdc03dab79dd7a5c0522a706c2099c3cbebd2d36b8a222486981e37ff453ba3"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/limited-startup-preflight.ts",
+    "sha256": "d197df962f4c1292b3affdf071e59c8c9ed05712885da5c5e6600055abb140a0"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/linked-cancellation.test.ts",
+    "sha256": "1dd2ecae3ca5d4b6e06b2eb8a10c03da02039ad89ff4a1ef34c05e2429148afb"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/locations-query.test.ts",
+    "sha256": "96f7641bb487a691118f9d6f14fca63110ecfe1575dc055573b0e67acec6bd76"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/locations-query.ts",
+    "sha256": "33ad985f4cc845666cc1ae92305bc775b7f49dd48830f1b685b2d0de1d103770"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/logger.ts",
+    "sha256": "29e1ca75036fe917595a3a74fd450857d845836fe0625c30b9caa02df4acba62"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/login-lockout.test.ts",
+    "sha256": "3dafc72a7a6fff32ecf7b333ff522138a1022059d65cb0fd58e1317afa1931fa"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/login-lockout.ts",
+    "sha256": "f7af4139b13b01dd99184e6aeeebda0e5fe2677ba892388ff4b361f16156f38f"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/metered-reference-cost.test.ts",
+    "sha256": "af80652995b485ed75ae0a6a90998cdbe7a014e191f73a91d12765a2169c8c0d"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/metered-reference-cost.ts",
+    "sha256": "f54bbf391532f1af0110af505c570204805860e616e6be945133b047d0e75b48"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/mexico-date.ts",
+    "sha256": "db4e77517fc7920b880f809f2c4fcb529fdcce6f2fff2cf5a2a2a16454da8cf2"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+    "sha256": "047d8949e0e807dc8a5545372d13b7971d1192bf7e439f7421dbca78bb2d4600"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/payment-behavior.test.ts",
+    "sha256": "0fb9159a5450db3c667f53a771b73ec93c47968739c9c6d84067d4369a0e7efc"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/payment-behavior.ts",
+    "sha256": "271a8974942ad0f15749a6f5812097f9544e143a69ee252b94e6db0ebfb9d183"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/pdf.test.ts",
+    "sha256": "1e6a9be9219118292c3164865d3d3a7947eaeec31cf7b1d3dcf7243c5a57f337"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/pdf.ts",
+    "sha256": "2e6201f26286e7342ab9c45cb60aaeb19d384e9694cc478425e602e550b532f8"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/pending-costs-schema.test.ts",
+    "sha256": "8a835ee1a94ff0a4b34d9383d041d7e470081fb5a533f388de8f285bd0f20ce7"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/permisos-matrix.no-db.test.ts",
+    "sha256": "ad5b8dac1aabb9333eec214e584447da09cf6bee48b5a82994bb061756c47224"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/permisos-salidas-venta.test.ts",
+    "sha256": "85fad98eb69965b7dc6dc619dee26c1c242a646ee974aa1920dce1b50a29f1e8"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/permisos.test.ts",
+    "sha256": "a9284e0ece98c948aa6034b173376e8c929db948cfae2218e873208cdfa6208a"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/permisos.ts",
+    "sha256": "297d36aea580be029a4183bcf96c1a350fd0bf011925bd1c9a4845ef0c59156a"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/pos.test.ts",
+    "sha256": "bf4b44725fc84401c6f88af3fd4f12a1dbeb4a8f2035bbe1e75caf8ed7141829"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/pos.ts",
+    "sha256": "38ca52abd53f3f736b73b94491d50a6dcbabf8d3f34f57dfce8b7579798418f5"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/postgres-errors.test.ts",
+    "sha256": "a3b1982dc6417a654f7d9434ff85d2808987095008212dfdffcc29521330c2f3"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/postgres-errors.ts",
+    "sha256": "3e05bd81823ed175975fb74341841d0fd38ddd1c1dad0e37fa0ebdc6e4f1f281"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/precios.test.ts",
+    "sha256": "660df004b9d04e74d0f9423a6cd6f9dfa6bfbf00286cdc3dffa386e778a4a8f3"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/precios.ts",
+    "sha256": "9c8d2a1ea5d6a9bf2cf6af2b66427d04d1dee21f54e1cc05708c779abca124e0"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/presenters.ts",
+    "sha256": "6e06f2ba533dc64a1f47506d3a32bd183da0590463e5a83c5051f849e094f2f0"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/private-object-storage.ts",
+    "sha256": "4b9f863d7851eabf51e03f9f1ba5886eb7f4359819bfa21f5a75480be38bc02e"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/product-color.test.ts",
+    "sha256": "26548194c39bd031fce8411b6e98b461a94c6a422906ae5b8b2c2922a264a4fb"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/product-color.ts",
+    "sha256": "e198497bb1241381d4e8117fa736b48a811a75049ed152762f16dcea4ca72c56"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/prompt-t.test.ts",
+    "sha256": "9405c51fcd2d09394af2aa9c37dc2a40e58a6f57804e3933bd444c5770dc178d"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/proveedor-utilidad-pure.ts",
+    "sha256": "da0b5fd4b4ae056dd76c7dc0fc85abb9e544953f382042c2f802d84a2fe80506"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/purga-catalogos.ts",
+    "sha256": "861be5b237b59d6f8d8220ed2883a1c41f2184824a4e16687fe23fa6505f8c46"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/quantity-comparison.test.ts",
+    "sha256": "8dc26e1f84784f5afd8c2ab45223f4d2c2ca7fc59c8f759b4d3fb242d9568a84"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/quantity-comparison.ts",
+    "sha256": "d55ea66c6d9d72e34a5faecdc99bba113686d97f2669e06fc8892d8d89dd53ff"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/reactivacion-faltante-evidencia.ts",
+    "sha256": "370e70f53a73c757593ab50a1c2bec7d4793c43ae0b558a95902757b4dff56f1"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/read-scope.ts",
+    "sha256": "39a65d245fc94043efff0d576c26fbcc4da98879ff7c8c9a69075b495d568fa3"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/realtime-cancellations.test.ts",
+    "sha256": "f8a9548dbb88e87c9099a47f9c8c5a85ad9e43b4e75d0c5e93c9072069aabb6d"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/realtime-cancellations.ts",
+    "sha256": "bf2f38103c0e3333f8530d691b0b29e78b7ad65473ae92461c0baad124efc6ae"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/report-export.test.ts",
+    "sha256": "a05fd98762dc1d8bb49dde89e71e702a75bda39b3fcadb02ffaad5fdd8edb732"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/report-export.ts",
+    "sha256": "13ff7f6dbb45a1d857668918a307ce57066cdaf1810b355008fbaa0b279cefc4"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/report-heatmap.ts",
+    "sha256": "833d241f8707a84ac43206bb7a5fdade6c2c5a3a7d1e51799d07e812a7a6ebe3"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/report-presentation.test.ts",
+    "sha256": "adec43dd93485501465ff6ad603de0d244d9c3a6d78349f992ae40f425530fc1"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/report-presentation.ts",
+    "sha256": "4c7368e7effed441926d4d3ce8df6a63a95f3888383e7be7fd8be1c2345eb864"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/reportes-commercial.test.ts",
+    "sha256": "c060a5d15f35e986578dd22f0ceec6ffcc710e94afffb527f3977be8ac9a8cc0"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/reportes-commercial.ts",
+    "sha256": "4ac10b12bcc24b23f26c67067481349907b7cc2612040fd65ca776a6d2ed2ec8"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/reportes-composed-export.test.ts",
+    "sha256": "3af22573824764042afa5fd2e73bca6e9d7e71d33491cae22367f2e0bd7a82d9"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/reportes-composed-export.ts",
+    "sha256": "04406e660d7757d6c5273f52d48456b92da12eae3e0826707bfeb3688d8118b0"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/reportes-control-operativo.test.ts",
+    "sha256": "63cf854e027cae493f119fa255db44e0d548fc27ba14ac295f7d5d12986b41bc"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/reportes-control-operativo.ts",
+    "sha256": "d01286e17d92225a91ab384f70d75ea482e4b7dc1ee5b9e8b529c7618be6f7f7"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/reportes-inventory.test.ts",
+    "sha256": "84ef083243e010dbda2579d45a6b50b96d6f1a8e53f785cf4ec7a478fbd148d2"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/reportes-inventory.ts",
+    "sha256": "1d944d713aa831c7094a31f59d4237a70da50e3413c7d123fd1abf73ea0fbc36"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/reportes-que-comprar.test.ts",
+    "sha256": "c787ec7f864c60a47bb2942a1dee5afa2e6f01444bd9c8243601edbc0244753d"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/reportes-que-comprar.ts",
+    "sha256": "ffe19a57a4d3c69e411f05f42d234a79af8d04192463bcc09d62f36d98066a03"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/reportes-sales.test.ts",
+    "sha256": "54ac59d68e22ed58a1190d98515c97b6e783722057e9435df4e2c41c42e3f608"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/reportes-sales.ts",
+    "sha256": "4737ec7a11561eb1b91b23df2cb2b6ee0523f3075d50ed99268758924d4aa233"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/reportes.test.ts",
+    "sha256": "d1067a43ff19efad182ba46666d6d1006bee6789e9c40f60b9b794d2642f833f"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/reportes.ts",
+    "sha256": "7a3cdd9bd43b30671e5be4e02d13168aa20b09e0fcb7a901f4a9452484e2aeb2"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/request.ts",
+    "sha256": "49a677ae93aa6a1dc0720f9155816351f96e5721339e9a832bc313ead598948a"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/salida-venta-contract.test.ts",
+    "sha256": "7d8e2a729fd16e673a91931309815d0a1c6662b44dc9e6fbe97f4ae15ef4f41a"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/salida-venta-reservation.ts",
+    "sha256": "dca8c6c96dbfff055bd5f8d2fdc4bf9402c458bd2614ff47c4b0c6fc11cf6850"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/salida-venta-zod.contract.test.ts",
+    "sha256": "31db15516e1b849d7106fd61a35f9e0e5086a663931964b01d71784333c39353"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/salidas-reservation-entrypoints.contract.test.ts",
+    "sha256": "c5b80aadc35eb1564fe472a7c448ee6e62df9095cee9111de474e5e0fffaedb2"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/salidas-schema.test.ts",
+    "sha256": "dde0275d92f654509c28eeff90e52715a9668bf346d03c4534de3a3e4b204607"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/salidas.test.ts",
+    "sha256": "8cedf988dfdad0c2dd5c802abab80b0731ed72dcfdcf24f83642a3eca52faf4b"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/salidas.ts",
+    "sha256": "21278d6a66d8d659eab3c378f7156b5f3ff2bad78d6fdab85fe317dd3f673ba9"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/sensitive-data.test.ts",
+    "sha256": "b8954eedc4879cfe8f8b56c895cff9569804c89e661046a838e35d8fa7c4afb3"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/sensitive-data.ts",
+    "sha256": "19e55f86034d972e3456bb792c8a884ca99d7b69524256df98d5d76a5959367f"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/series-reservation.unit.test.ts",
+    "sha256": "0baed837af0898bad2993b3168197795f1a10ef2a42eb3540f1ce92741e66587"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/server-lifecycle.test.ts",
+    "sha256": "38ae4b581751ec93948ebca6ac2242b277d19867c1ced01cfafd0aed03bbe263"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/server-lifecycle.ts",
+    "sha256": "fdd319c938028a00a4dec21c470716f80aca77d5263f1ad1dd6321c3774539ec"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/single-roll-return.test.ts",
+    "sha256": "efdebf9dacc2a7af2e12d1387d172e4620e7cd48a693f3f3cb8ee1e396aa110b"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/spanish-order.test.ts",
+    "sha256": "d97e8b5e4053bc296243c680797acfddc189e724c9ad5eae5e11f9960bc9812e"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/spanish-order.ts",
+    "sha256": "87310ed351b2bff6618aa47b29f8a83d0e140fad887e63e4b1b82e045d796480"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/startup-mode.test.ts",
+    "sha256": "e5c19287d0fbef431a86d4718390d7c6be4034316b3d8d8bc1e3c5cc7d77d7a8"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/startup-mode.ts",
+    "sha256": "3b33915260210df6dca5ede230e0fe897fec7a727b1d1038f35649b3f86bc0b4"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/stock-minimos-engine.test.ts",
+    "sha256": "7315d32af290b53f835ff528e408dfbd6605da646309d6e62ba8423204bea33e"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/stock-minimos-engine.ts",
+    "sha256": "bca8df5ac22e86d41aa57de72a738f795934fca49b1d5838482ea663ed60fab6"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/stock-minimos.ts",
+    "sha256": "9ddbcf44efb502c8b09f62adcce6b7e62af5c71c024f1ae0b9b5af52b63ecff8"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/store-order.test.ts",
+    "sha256": "2facafda90698520c517e2d619383ab9e22927d7454c7c1124580e2f590b47f5"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/store-order.ts",
+    "sha256": "ea1ba6663e4d891bbf67ed4db8c4c04c11acb3c12e27742216c41777b18dcd86"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/supplier-trace.ts",
+    "sha256": "4ee470a99879146a524a417b7258aa84db069be0a2013ca48bfbe03c73c1b384"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/tarea4-gates.ts",
+    "sha256": "d922ea0d699b1c4dcad0bfff8d76cbc6a9fe7b20e3706240e2784535d4d3c6e0"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/tarea4-price-floor.ts",
+    "sha256": "ca058365eae6fbb506105b6e3d154dfe392e3d7e4e7a57b1b37b3908620f5b6f"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/tarea4-remate-sale.ts",
+    "sha256": "e4985806890494be0bb87ca9c9fdf718dfe7a9655e9d84645b9e0bf5e2332686"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/tarea4-remate-store.ts",
+    "sha256": "545808cf08be640b57b61663f3845b9bac49e78c368d56bccb5f7072f09f8e8a"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/tarea4-remate.ts",
+    "sha256": "6ccff8ae7291b10dfb407e66fc2932acd22f7fcc46af632ebca2b4470fa77d21"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/ticket-credit-contract.test.ts",
+    "sha256": "c2030209e4514952cf489f595b3ca2f4cc7f58c844015b2c86cd541004cd2ab0"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/ticket-credit-schema.test.ts",
+    "sha256": "e63b2ef35611ed1db2c787de711a07dc6daf2af0f95755e078eeece5a1218a88"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/ticket-iva-schema.test.ts",
+    "sha256": "80afe22346dee5fb1cc76532507941285646eb87ae448561a89c21f5365f4f61"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/ticket-line-types-schema.test.ts",
+    "sha256": "822f25824e0f670f470020c22b207d1c3f5db0b110851c192fc98df3d8702207"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/ticket-payment-methods.contract.test.ts",
+    "sha256": "0f49f016111c44150cfa2fb865f2c29e4c4906dd2b449b58921da95092e6f32a"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/unit-cost.ts",
+    "sha256": "4f8701e660b2a59afa74192b7fefc6884223c1bc2baa326e15190241f6c3c07f"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/user-validation-errors.ts",
+    "sha256": "a11203a118512d1d57933ff49ea56f9961bc008a2f30f205f931562fa7536b1e"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/venta-trace-access.test.ts",
+    "sha256": "5484734fc6f9fd472450cbc6c1c052e60c0ac083fe773a22e086717e28f1e51b"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/venta-trace-access.ts",
+    "sha256": "2b28f9922ace2de40f573d1e83e77704cc449313432e7407679ecda74009ada2"
+  },
+  {
+    "file": "artifacts/api-server/src/middlewares/auth.ts",
+    "sha256": "7bb195f9ab2233e55aff004df49676713c39a5b6650baa1cc06126b45a9f0ec1"
+  },
+  {
+    "file": "artifacts/api-server/src/middlewares/e11-legacy.ts",
+    "sha256": "772c7fab46901f7366c65d084d7b54068b0359dfdb26a2935c46417e1f8f70b8"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-alertas.ts",
+    "sha256": "37507fa64b611e93fc0fac288f9793c556ea60971b56c081fd398a973f114e11"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/admin-analytics.ts",
+    "sha256": "21ced48895b910aaba94c0e13a42a5a834e3c05c74b6ee26f83b23b38e3ca4a6"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditoria.ts",
+    "sha256": "69c0ffabf1ae3ab07a6ae7f13b9f4a85ffd1fdc96b843d9406a1ee21bc0c0931"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "sha256": "b7ca281c3090d42707fa0049b652628b74865a0b9ad3d4bd99cc52ab54f37019"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/auth.ts",
+    "sha256": "d81dc2372a7f3ebcc266c5ea73bfa8c3201dfdca5ec566d68c77abbee6c7be15"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/caja-ventas.ts",
+    "sha256": "9320856d985872242d3616d29e37d7719ee778d720f0f858b73fe424d8457194"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/camionetas.ts",
+    "sha256": "de02126f6410c287346fc6b8ce0b304713705d12fd12072e78ed32a6b5464e7c"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/choferes.ts",
+    "sha256": "df5e8c66a6681d2fd27ce1738e995479cabbc5e8083aacaee6c34dfa03776a42"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/cliente-documentos.ts",
+    "sha256": "7a307e9da371e82dfc5f1df91ff1a5f89fb5f9f006186817dae955a94d743d94"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes-admin.ts",
+    "sha256": "1da57a7b1f1c5f198925c312db8bd6bb91e0a764bedb9d74a4d431cf4184e28e"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/clientes.ts",
+    "sha256": "8e10ce9ebeef9b0d2a28c415218328a50cde6703c1e66df9074821e7b4322793"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/contenedores.ts",
+    "sha256": "1d993d127923f4b1eedfeb0a034e60e2e416712e700d1ee234f591b94ab4a433"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/credit-evidence.ts",
+    "sha256": "af90b079c15d528c58421a611a2326488e7c1639c7e331eebc4a6973525e145a"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/credit-refunds.options.safe.test.ts",
+    "sha256": "af9d29aa38b466a23e243790e511418414402ac4ad74e4813db7569a57e4b125"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/credit-refunds.ts",
+    "sha256": "ecb709abc46f7631ba28b7aa66f5cb86d331a189f4ead32dbbd7b2032ea42b3c"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/dashboard.ts",
+    "sha256": "72c880dfa4f544df9a9e7880a00a65cfeaac9b199589448b44bf7e2cbadf79dc"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts",
+    "sha256": "f825e8085464e184c3085e9870cc925b3b0f2da924506059eb421effd961fcdc"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e11.ts",
+    "sha256": "cc75e3a9073088e08ee216889d6960708f3ffac661131ab44a4346ceb77857b2"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e3-collections.ts",
+    "sha256": "1e6f0f4aa6946dab0ad0a4d3e5e48f9288603bff5eed577af571686a0987e898"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e5.ts",
+    "sha256": "480eee0de701bfbaa0061c3ec620eeb1b5b142a36656eb268eaa79780b77d1a8"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e7.ts",
+    "sha256": "c897d7dd31c7eb71c2ceb08cc7a7b348c9649a5fcd48f9446771d000b0843b2b"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/e9.ts",
+    "sha256": "58dd9ae654aca19fe919902f346d9c05c3a9c8a30539fcb42bd646a084efdd52"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/equipos.ts",
+    "sha256": "42bef09691ba239a63177da99b070f3bef8bc38c2fa002ddd8576c1fc85e439e"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/etiquetas.ts",
+    "sha256": "eb78affef5446a24accf216152145304685187e7379dec475b5b78be19d15b15"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/fondo.ts",
+    "sha256": "f4af29c1e96bea3192e02896104a6b9649ff768e2df4db2432ab02e5b7233650"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/health.ts",
+    "sha256": "0386ceddb4ff4bff220af72ca38a62191ad95a2f41fd619df3bb9ceffce03db2"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/index.ts",
+    "sha256": "f82f5db8253f3a921035392aab3e431135b7619819ea8be3313a9401a6d8a48e"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/inventario.ts",
+    "sha256": "5d47269500a6b34363d8f3b67747608e94e6816572dc0bb73377b3272b69b253"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/locations.ts",
+    "sha256": "dd33c85ec4733a78bde9fe332dc1730ee496cb4c18d424756dffd69619d8373e"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/notificaciones.ts",
+    "sha256": "5df43b301120749b8070f54a3bc633614e76cbf4fe5bcffd14bba2d1d6b10e65"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pagos-dirigidos.ts",
+    "sha256": "868b956a8dc9f65e0c97692cf4a8df6cbe79ed8f85e19c1029e46483d73ff1d5"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/permisos.ts",
+    "sha256": "4c7a2eb0d82acf28e491b7c9690ccaf8af59449622c8ac852773873c7ef5e66d"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/pos.ts",
+    "sha256": "b8128dcbcd2e842552c9c6bb20f1724fa929036426f9b132e924994fe646b824"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/precios.ts",
+    "sha256": "3fe5f035a0a1260a6e96b51eca6fecccfed35835feb182300f0598c49657f2ac"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/productos.ts",
+    "sha256": "5b37d8df740b857d569d7cd59300c748f6cef8cc2a329a7b91bb05a56a241af4"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/proveedores.ts",
+    "sha256": "0e70f450bf9200a608096af09e9d2590172e601f305afcffeb8e2eaa4b1cfd44"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/purga.ts",
+    "sha256": "ce1c0d1223ad3cb59d77e9df0fcab5919867c43b44399aa4f0af62fa52b4351f"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/reportes.ts",
+    "sha256": "114d64d785be8b271ffc31643a146db609c7ab02674c5f65eb335c74b3b13cd4"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/salidas.ts",
+    "sha256": "df43584ad5951e04eeffa0c876cdb280c60a0684b15108038a8a8f8ae4993442"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/stock-minimos.ts",
+    "sha256": "dc6844f451f58b3de914a958c6b60ee18e049bab97f9166de3bccdc5c5f451c8"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/users.ts",
+    "sha256": "1f0c61b489a72d2c8ff810e6ddae6949a65583e631647abc72dd935a3bf61f3b"
+  },
+  {
+    "file": "artifacts/api-server/src/routes/viajes.ts",
+    "sha256": "257189fa5bd5e566bb151ee4f876de0d52c3251a85eae150ba083b184b874d5d"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/App.tsx",
+    "sha256": "129bedbefbc08f1a175e35497f32711014b271bea7455d7be8050c94bdf57937"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/behavior-links-units-render.ts",
+    "sha256": "d0bc5798068d4a26884b5d351ea64176af07698792e9b2a3f3306b6c798df9e6"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/caja-cobranza.contract.test.ts",
+    "sha256": "88f4b8e8f9f8ec2c0d5796dbd015d8b104f7c00c26abdcdd1d03d9a3041d0a88"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/client-utility-card.contract.test.ts",
+    "sha256": "ef12a565405957fe8163df91923f4c38f1e033e1dbc5220838433212ac16298e"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/app-navigation.contract.test.ts",
+    "sha256": "1dc6c9d8752099fee2a5cfe8bf576e2524225f90e4379e8cf8bc6490eb024222"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/auditoria-inventario-print.contract.test.ts",
+    "sha256": "f790ef7eca56a5cefde3f4dbac0d5c1e57cf8979436b8df5003a3486d4740046"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/auditoria-inventario-print.tsx",
+    "sha256": "b95652e6d024d2066127428d989ecb90cfc0da7c47bc79f430a78fcdfdc64a90"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/auditoria/auditoria-sobrante-resolution-dialog.tsx",
+    "sha256": "d85b6c3aa24bd5dc3283d59281a6044966a7ae2fa75966651c45c2699139eef2"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/auditoria/reactivacion-faltante-dialog.test.tsx",
+    "sha256": "99212089b1cf4070e0cbf453c7cbf4aa05ac0390191afa2f8bcbc17f4c1e2d7c"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/auditoria/reactivacion-faltante-dialog.tsx",
+    "sha256": "4ddf0795a7a88023e9d4f4cde8faefa12904c83d35d155ffd2ffdd0123888420"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/brand-logo.tsx",
+    "sha256": "efb75e06eee7e696bec6fb04afc7e8a33600c3e12b441be0200343385a2cf402"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/caja-abono-e3-dialog.tsx",
+    "sha256": "fd2919e1b0749b237438d83cffd9da2e7370790f4a65e4ed099f2c87c4e920b7"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/campo-escaneo.contract.test.ts",
+    "sha256": "4600d10bba8ca527b886573980d0ebe71edc245eb051bb321b49b85e962fde33"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/campo-escaneo.tsx",
+    "sha256": "5f434a5c43d37cc5a90f5b5a4a0eaedc564d6c39a078e91af62f46eb6e15ec32"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/client-responsive-table.tsx",
+    "sha256": "6ea44bd1f6a5da44425ec043f3d245b51c223889d02a0cd4041f04c1ed172d10"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/client-selector.tsx",
+    "sha256": "6bafa8ef2bec8c07d10a98f47950ce3742b7d913b02c916e71c6dd1a89f31201"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-context-combobox.tsx",
+    "sha256": "7e73f77da76e0468efa19900d182149ce21ee21bf94103a9875b59e2488c0446"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-credit-evidence.tsx",
+    "sha256": "701e94dddc1d7e062a6092444c72dd2fef4df890ddf78811e103691ebdb63578"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-e3-recaptura-dialog.tsx",
+    "sha256": "f23467d6fd1499135ae6cff45ed5efcca196d2a7f09f32268fdf6e9df08c480c"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-movimiento-navigation.contract.test.ts",
+    "sha256": "a07526ffaf628135e56bda824fd2672ea10c12ab82eeb1c6e5da6832d99824e2"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-nota-credito.render.contract.test.ts",
+    "sha256": "5f40025ef03a338db5913f17b64ccd4b191fb12759163f7711450d8bbcde01ff"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-nota-credito.tsx",
+    "sha256": "949690a1f8fc39b0be1c6e48c218a006d83a09367bb0f747f185373db3589a79"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-nota-estado-badge.contract.test.ts",
+    "sha256": "a92d2d7aaff8f8fca82d5a44073d3881b22783a0250d3c8bdfa77c9baa61e265"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-nota-estado-badge.render.test.ts",
+    "sha256": "ab3c15cf6d022fefc9c5a8d0937b564c4017b2010f4c2e845c4c678db2ac48b1"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-nota-estado-badge.tsx",
+    "sha256": "866b5eb451c4f829ccaaa25d4858414c8230af25d753bdcc2804eaf568055d90"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-pago-dialog.tsx",
+    "sha256": "d270ff1a87d921a0aa6cbbc84f02ca5aebac40002c0ce3adf7bf340b180049a9"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-saldo-a-favor.contract.test.ts",
+    "sha256": "d260f114f6f1e92f904c3039100a4731fc6319123204b80f33a4b2523c371400"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/confirmacion-texto-exacto.contract.test.ts",
+    "sha256": "df86ad5182f64ced58c0ac3a098c1e2136215b178ba411022db0c0767f2d02c9"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/confirmacion-texto-exacto.tsx",
+    "sha256": "91bf8593d626d2502f2fa9385048968fda6f244fb172016ed7e0eed0eb61088a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/corte-efectivo-desglose.tsx",
+    "sha256": "84dddf0a469302649fad9e08d720ceebb3eb70cbc305e811515c19f5d1ff8ff2"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/credit-evidence-fields.tsx",
+    "sha256": "a1ce201a44deb859dff1b3031700ca6dbf9949ed23340d3e24ae74fd12301b79"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/devolucion-credito-inactiva-dialog.tsx",
+    "sha256": "5d8726f82746ab23259ceca8e8138a2e4865f135632956d473cdc402fa5125df"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/directed-payment-history.tsx",
+    "sha256": "c04f37c2a4e3c17323770754532416d12e7c7b2f160599d7914d396f46b58bb4"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/document-qr-code.tsx",
+    "sha256": "870088cd7673c508b92f86f5d28638441287b65ba3bb38ecf97612ddc4c34ecf"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e11-node-test-transport.ts",
+    "sha256": "e926ab0f8944182a7db281645fa8aff0a2bfeca9018b7023e431d49554d37199"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e11-node.dom.test.tsx",
+    "sha256": "42c3483bb308b33c195f6c85fd42ee5f082a935dae81ea82644cc5efa81b6b34"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e11-recovery-admin.tsx",
+    "sha256": "0da7249d51f702d7e13b1afc042bdfdc4a1a9d59dc45f6781997ca1a74c9b15c"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e12-node-test-fixtures.ts",
+    "sha256": "573b643970bc1fa41abe345c977fe1d52dd42cfd3b14a4afb274453d726cf433"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e12-node-test-harness.tsx",
+    "sha256": "10d2948c08d5ad5fb92a0893f34c0b9956b720de89d175c216f3cb39bf5b621d"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e12-node.dom.test.tsx",
+    "sha256": "864f0e23731d66c22cb31b4b9e500eb7fd1d01585b0b66ba4022eccfbd282efb"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e2-cash-ui.render.test.tsx",
+    "sha256": "d5c3937ec46405285f67030b7602a60052e4a69eb54ea55ca6cdee150f74dcb7"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e3-ui.observable.test.ts",
+    "sha256": "d91120ab6de99c4b027d030cfbb82d99457c3b87bce9643fd21a697cf1ecb124"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e4-node-test-harness.tsx",
+    "sha256": "2c8322b39a6f246ec35f08c570edbb857d864b3ba2ea06159c275ead401c94b5"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e4-node.dom.test.tsx",
+    "sha256": "350a97bd9de2ad930d6f60f9243b993de11441ef44131f44c0253a1e2797432d"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e5-node-test-fixtures.ts",
+    "sha256": "4432abb5e06b990ab60a3df5cec9d73bbfaef2fed604c6382ab126bb90e4a4db"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e5-node-test-harness.tsx",
+    "sha256": "d2da9ff794ea0d887ed046b35a6effeffd015c894611f8327829ef6238d3504a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e5-node.dom.test.tsx",
+    "sha256": "ad45ccacb75a03660ea140cb5bdcdad7f818fd166a2de96a40f4cb13a1bf9a38"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e5-pendientes.tsx",
+    "sha256": "4445518423e49eacaf416a7e043410965ff598d6ae949286bfae71bb0845b925"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e7-node-download-support.ts",
+    "sha256": "cb59bfd7a1b9fc5f8ae6bd5581de5621a5e96fb30c5874f26292ee8435eaeca1"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e7-node-test-transport.ts",
+    "sha256": "9ac0ea4807f2a0bda15123ff16f074e5f73364d3f6419b03daf829f75c331987"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e7-node.dom.test.tsx",
+    "sha256": "85a7283eff03bda62e0b56c7d0fcb70b39069e17833712b7e2e4235821d6eb09"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e7-readers.tsx",
+    "sha256": "669b2a7b7e7aa5429d0d4622c247f492253485818e98c7c860bf7dab54d0e4bf"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e7-release.contract.test.ts",
+    "sha256": "e71bcc82d62d889a505e00ae3a73c74b2a0ba163ffee23efa8bbce7fe0bf248b"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e9-entregas-panel.tsx",
+    "sha256": "af2291d9fbf2eeab7bfe66c3d4cef22a5834ebb51b88a1e9e34d501e08a31971"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e9-envio-panel.tsx",
+    "sha256": "ba5d7dab6a1fdf99f03a2866689ccb07b9b0204aa4c925023e39b82c1df8effc"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e9-node-test-fixtures.ts",
+    "sha256": "271493fa1623fe9de802cf2d4fedadf63169569c9612af14def5e4d50ded4c63"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e9-node-test-harness.tsx",
+    "sha256": "e97ed22565cffc6bb5d42214bb387d341e1441ce808ba8f7af8322d41f298e23"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e9-node.dom.test.tsx",
+    "sha256": "34d5f257cd829b47502d5cf6e6da4fef843c9989e7e0d670f71e1388476ba36a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/entrada-history.contract.test.ts",
+    "sha256": "f958c1ce0235ffd48eac07dc7bfc6628ce87a7a120dac44e5c9d68f049974c0a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/entrada-history.tsx",
+    "sha256": "5662e4538bfea8d0de6cf621047c167be86af512b29be41e04dabcbd4aac31ff"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/error-boundary.tsx",
+    "sha256": "c1ea4d88be8cd206a46bd87f19edf025b2504a70a2b65cd9c438e4a0e62dafe0"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/fondo/corregir-movimiento-dialog.tsx",
+    "sha256": "72f9e60151d0d05fa4e38ab40d1693a32e0c8dda1178351953fd59d0ff3d6c00"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/fondo/fondo-summary.contract.test.ts",
+    "sha256": "f02bce0278f163082bf67a535c53d791286d4b43f7b946219c443769d57978a2"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/fondo/nuevo-arqueo-dialog.tsx",
+    "sha256": "a6378971a13f1fef723376a4b4c646146d406b5d82ca5278016cb22b446cfdeb"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/fondo/nuevo-movimiento-dialog.tsx",
+    "sha256": "2138d2cce31eb539ea808fa4eb9c3313eb616afe72cc7781eb6f6e8d59162569"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/label-print.contract.test.ts",
+    "sha256": "3ea06d0cfb48746d6e62c550783e08026cebfa5fe895f309b3c328f1336b1802"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/label-print.tsx",
+    "sha256": "df56b174a0f271d5f492466ae5994f705883e0c96937fed93a2a0475e2b5c548"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/layout/app-layout.tsx",
+    "sha256": "0397ab54ca4437696366dd989f1298c01a4b94b1e50eee2ae99eaaf0b34ac36f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/layout/app-navigation.ts",
+    "sha256": "42da6af8895033f2c08acdb161a14f37311e044ea2776ad51b46f33f51d5b910"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/mobile-action-layouts.contract.test.ts",
+    "sha256": "c7f1a90249605ef4652065db576933c4546f66fb8c56f0764bea8ebe5877e3ec"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/money-input.contract.test.ts",
+    "sha256": "457225812b0bd70bcb4b798283e050d9fa1eef9dd46251757746501eec007ad8"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/money-input.tsx",
+    "sha256": "f3322560508d404c6caee94f4cd6d8958569ef1ae130e7b1ec692683509fc609"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/monochrome-brand-logo.tsx",
+    "sha256": "89d6018cc2e5ef048c3dd4769e1c9201a66677630aa56ba11e92523996030fc3"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/movimiento-documento-link.render.test.ts",
+    "sha256": "617623cc6db5f0e321c40b4271728697db0574acafa31202c5cb8f356692b003"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/movimiento-documento-link.tsx",
+    "sha256": "70959e927a2eb2e3326eb26b3936a2ee155d2c441c5673fd0580ca5573624811"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/notification-audio-controller.contract.test.ts",
+    "sha256": "5b08e96c0b969c982713fa38dbed303b62886418b296ede0539209b0890fd5b1"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/notification-audio-controller.tsx",
+    "sha256": "e46af1a543a58a3445b10fbb9b0ee876bb29f29bb5989964a8616f85b0cf5e99"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/notifications-bell.tsx",
+    "sha256": "5dcc555ef5c7413fb80b80ef0c55a892fe47af986f478d35a81fccaf6b6862dc"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/printable-document-header.tsx",
+    "sha256": "1c667fb3e9a9e75d6ded179df443b488126e385a8275be275b9721db9bff6297"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/product-combobox.contract.test.ts",
+    "sha256": "17486254380da4c9c45f11bff01b3019145bf61f8f2c6e4f283948a36a431e87"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/product-combobox.tsx",
+    "sha256": "436e08a31762f9437d928308e8adf325ad7be7536d813cc3d94619784fb34f18"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/proveedor-compra-detalle.tsx",
+    "sha256": "2868fc62bfb0ab0588108aa3557aa59034f48323c1b2d471395bba6f5aa925b6"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/proveedor-efectivo-e12.tsx",
+    "sha256": "409d867f62a72034ad6e8c214d9e692b81129f95b1a1fa45f09d1ecec7ebe147"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/proveedor-pago-dialog.tsx",
+    "sha256": "7434f1bce93e542736872c026fdfb42df7c160544a209a9bdaedaaf0e609fc34"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/proveedores/historial-compras.tsx",
+    "sha256": "015fad1221f1a354345c442f10ae887e9cd47c7975f4acb5e966ff718a5fcdf5"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/purga-catalogo-button.tsx",
+    "sha256": "827de9f0c3dfe7ff9632cc642378e84f0be81bcac5dea8a9a8222c9e5559457f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/recepcion-salidas.tsx",
+    "sha256": "7bc382fc1c69821a641bdf0102ce651727bfc1c0ef927df3bd8925878c05bb29"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/cash-controls.ts",
+    "sha256": "3c895011b068b914372b9046c80574d7df3e50026b11b7a0bfa0eeee30f93d5b"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/generic-report-renderer.tsx",
+    "sha256": "1c2a2b8a8aa67854faaedcf16881e6aa3d274f0ae033c63333d28693f0c67399"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/que-comprar-report.contract.test.ts",
+    "sha256": "03d91304d5811ceaad3c9faa16f87ed8a96af386d900502334a0955fc7c892c5"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/que-comprar-report.tsx",
+    "sha256": "2fb63f25561a704caa55627778f7eca02ce0d847cafe4fed449ee841309f347f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/report-charts.tsx",
+    "sha256": "c5d74111564de02ad0f53e38b25ae5ab58a926873577bbf59a5be01850f6cb29"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/report-explanations.contract.test.ts",
+    "sha256": "cdfc03c0b3876a1642806e75c34029d6ac18f7b63193f82acdb6e26bf545cc3f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/report-explanations.ts",
+    "sha256": "1cd6be68ce4eee6107a7ce767a188770087c99cc836422dee39cd11f2236ea62"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/report-filter-bar.tsx",
+    "sha256": "d55d8d4779f1d1f9f1bf8415c225b4e14a593c4a0c5994c8b110f3e3db7adc90"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/report-format.ts",
+    "sha256": "153766b985541acbb3b7a4abadb3841e206f31fd947dad30f56d45a53fc9bed5"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/report-kpis.tsx",
+    "sha256": "feb0438bb4fc1f8d122346a863bafe2cecaef876f4eba3ddce34bc7c4cef1b96"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/report-scope.contract.test.ts",
+    "sha256": "c13820f7440aeb00dee4733700365528f7b597c5a3be5b9610ad5c6062b22969"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/report-scope.ts",
+    "sha256": "e6a490d8bcad2c57c79f39c664f64f1451c4cd66239caedfaab11064fc49a983"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/report-source-frame.tsx",
+    "sha256": "85156b0d5b32760b90df8c65db2851a64f9f72f23c4782c29bfa045b01ff585b"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/report-table.tsx",
+    "sha256": "96d5716c50e0a6947e8855e8f80cd824edc458f78e0f1d71231281071e75e9ad"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/report-warnings.tsx",
+    "sha256": "7f43094ba5e1eaf0314560e2a5663dc6993fa1855c7cf5e8294312bd00031b31"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/tabs/clientes-tab.tsx",
+    "sha256": "27fee7613ce00c4d5be36a372ab65959ad437e628e5b9b94a656c16afd23b2db"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/tabs/control-operativo-tab.tsx",
+    "sha256": "3d0e30da71aead91d305653c8d9aca13db0a50934197232d9993122d431871c6"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/tabs/que-comprar-tab.tsx",
+    "sha256": "0c5cab3bec8e1652c8a5c18e67b415b5c00e00de28a6a63a46928b8387091d1b"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/tabs/utilidad-tab.tsx",
+    "sha256": "34a610033ddaaa815446c2bc6d76124b3c408bc173829b434d80eafa2d90d847"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/tabs/ventas-tab.tsx",
+    "sha256": "bb825578e14b990978cb0c70326db32be720ae22039a5405c342efa78129c61a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reportes/types.ts",
+    "sha256": "2ff57f20840a7a38e6806f442e1034453857bdc7bbaa0e28b72e456ceb396a9f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reprint-labels-dialog.tsx",
+    "sha256": "c4d72e5d36f3092db3d0c7b01791ad77135eba7555c89cda778c6182ab50df0c"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/rollo-remate-panel.tsx",
+    "sha256": "edc33caa0715b490e62fe4d7eed4cae6e1cea2978a4134a05b8b52e6276807ec"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/salida-cancel-dialog.tsx",
+    "sha256": "49fe8dd343a31c511a9b0a069256cdbd7f835efc2741cd0ddb6d90b7ff27692a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/salida-estado-badge.tsx",
+    "sha256": "73fe3f3d742fc6516e5156243c6abf89cf57a65474f49022c95918c7711527ad"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/salida-mostrador.tsx",
+    "sha256": "298dcf508372b56b2593a9860f09eb617ff6be6858600683c99b815c98f1523a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/salida-venta-cliente-nueva.contract.test.ts",
+    "sha256": "d9ddf8401fe03c8f1fde6dc68935257a2178604c02dd6c40e9ac44a40ca1a826"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/salida-venta-cliente-nueva.tsx",
+    "sha256": "7bde6fda4c368c6ce083cc5dfc9f8e0d3521b436989a46d8984d1553b308e09a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/salida-venta-entrega.tsx",
+    "sha256": "99f4c684e8a7b5326d313599607be97fb1ccdf8d91df468e3a969a65cc1cb60c"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/salidas-dinero-e4-item.tsx",
+    "sha256": "673a6fe40d6e0d189c002dad14317ba6243707faaf6775f30a20161dbaa2fe2c"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/salidas-dinero-e4-panel.tsx",
+    "sha256": "a0310d56bf861a4f54c42396b13ed4ebc39fed54bf2550d0619b01879f4b4b11"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/salidas-extraordinarias.tsx",
+    "sha256": "64cfb58b0f891feecf2a6b66ae86475cbfcd45f63cc2a40864f7af0955f9107b"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/salidas-pendientes-cobro.tsx",
+    "sha256": "796df5805317f0601fceffd2ce0d24455fc6cd3a9273b5d06c3038bdfaa87ae9"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/shared/combined-filter-bar.tsx",
+    "sha256": "1510834b572cf9bddacc07f6d3338c11ef41400ee5c79d9f4871e6e486f9663a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/shared/combined-filter-url.test.ts",
+    "sha256": "5c8fdb25c4fd2f2bb46deed11b37dcff8181036d51ff0e90bf689cfa903180eb"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/shared/combined-filter-url.ts",
+    "sha256": "215aeb69425a8d31375f3e1419dcf0c67f88200a317a1658d680470b13cd005b"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/solicitud-pago-dirigido-dialog.tsx",
+    "sha256": "2263e2d49e09bd5e6d3e953f141ec5b4228a63609c5f3e3c895ee1dabef54517"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/tarea4-remate.dom.test.tsx",
+    "sha256": "cde12905c9f045276c9047d90c2055fe1d09ff3c148c85cbbfc04d7c5b5ec343"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/tarea4-remate.tsx",
+    "sha256": "b22ba50408eb159bb8de2959a1ce6a680ee6c1f9256a6762a0cdfd3bb9d86881"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/accordion.tsx",
+    "sha256": "8e4230a3e6d38bfab7b02f00f9e948c8c4038432c5b1bf2d0ea44dc8b5ce09cc"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/alert-dialog.tsx",
+    "sha256": "d76901a06e6881e94aa3847fde2602ee6f6ddc9f4cace9fa238627a5572bd24e"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/alert.tsx",
+    "sha256": "695369ea4d1ba4438dcedacaa8059b08b6463ac93170360f3bd42b983b7608e9"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/aspect-ratio.tsx",
+    "sha256": "2f5b0ed3cbcf84e526caad0c6b88d4457f8745a365c86cc74d924a1b6e013a36"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/avatar.tsx",
+    "sha256": "429f5e82fc3dcf265625650176f16ff9b35e55826183e1f1b2d4dc2a338f9b15"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/badge.tsx",
+    "sha256": "eb38751ddf154101d6338d5d846a4e3a6b11a8f54605e78b598236edda14debd"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/breadcrumb.tsx",
+    "sha256": "44b4de47f806eec0e3de5130f0399e83700eaf0bc8deb47af5ffda2bb11eb3f1"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/button-group.tsx",
+    "sha256": "b89025c11d08652597cb46b097d3e04658ad2c383bf81ed445c8182c0ed1b260"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/button.tsx",
+    "sha256": "64054fc68f28859bcdb81ac282012c27797c340d84fc9d92ccd22f1cbf029536"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/calendar.tsx",
+    "sha256": "1cdd1e62797356fe62f61f5521fcf0da8e3570b1120868ccca2b48370157fe46"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/card.tsx",
+    "sha256": "049d9c1fc1e5bd8e874ab7a2f41078e76bf355fc82f156cd2efc33b0fb48af15"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/carousel.tsx",
+    "sha256": "4ae2f69bc2c1ce33c60b23ddc5382f4b93882dac07c2d18cce32fb148ff52c48"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/chart.tsx",
+    "sha256": "6799f2c117565f11f6c86ef720f0c284c68e0f9e3829dc9770c0fa699c919914"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/checkbox.tsx",
+    "sha256": "5590aab08eeecc7a004aaca5cfb31e408edd3164075203e2c4f7a95f415a25e4"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/collapsible.tsx",
+    "sha256": "aedcd10b62404b39d8d5544c01fee90aa7b66e7280bb80a215601ad198a1b8fd"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/command.tsx",
+    "sha256": "d8fb66e44f9f8de558f6a94c781f3d890871d76dbabcda64e6fab3c917b3237d"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/context-menu.tsx",
+    "sha256": "bdff38b45a6010e3db808c099c799bd61e6aca619378074e7b14b63c1291e4c9"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/dialog.tsx",
+    "sha256": "637edaddc98fa3e5c766113235a16b368f58fa0197bea91f1d78e23880028427"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/drawer.tsx",
+    "sha256": "152bc340ad982e84f851e3bc1a6b8e7ffd0151a7445c6ecf1b1e3e13cbc19210"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/dropdown-menu.tsx",
+    "sha256": "a79d5419ee174de35880340aef44d67847cee54846c058e02ac4a846b603c60f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/empty.tsx",
+    "sha256": "48824b1b37bd406fa74f48db726a4f1d70cf88db5b3432f7b1d59f584f1c5dad"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/field.tsx",
+    "sha256": "c3787ffb045354e9f18e70d94890627caea94939a226e49c1e6cedee84a1e9e1"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/form.tsx",
+    "sha256": "8b4cc7db414d62b763dca5207df06460a04866a619c25ddb463ff5196740a0b8"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/hover-card.tsx",
+    "sha256": "e0b4e3f0126757a8eb5c6e436c8c041c049430abe9a2eb84b10154144b31c29c"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/input-group.tsx",
+    "sha256": "f4befbf9bf8ebd755b267c4db2b396be296adb95acca5c3fba54f6495bdedebd"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/input-otp.tsx",
+    "sha256": "b4891335e70920518cfbdef2aeb399f61477fbc4b3ffe3b8a2938f19074164cc"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/input.tsx",
+    "sha256": "99c822694b3300c276e2ef3e7ef951eb5e8b9686077532d4300cd3968b1f3d70"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/item.tsx",
+    "sha256": "4a84cda22d692ee176f5128517a4003a63d11f907df445e7586ef034c88e8772"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/kbd.tsx",
+    "sha256": "4348a7a06a715e9e9673602cbb9ed89a6a4c6cbdd457d4c03db0f23a139d19eb"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/label.tsx",
+    "sha256": "e69cfc27d78c9ef31b248ab8ea4fa54327c1038843f70efb5cd85d54c0bf1e0e"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/menubar.tsx",
+    "sha256": "26dbbf36e4ffd87aab74e61dd1e3613f0c640988479679d53bacd8dbd15cc891"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/navigation-menu.tsx",
+    "sha256": "222020e1ac703ce01700d6e8822c6263932bc71c481d724b8ef53ccaae8ad63f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/pagination.tsx",
+    "sha256": "dd65d2e59226a3f384014b596ae701aef50f130cb3061f4657e81c588587b8da"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/password-input.tsx",
+    "sha256": "296b5ec5d7bda4eb7a9ceab65fa8f635967e3296cb4bde506a4240e913f1b910"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/popover.tsx",
+    "sha256": "dc574442536873c8aa88733c348503c4599ad6ed0fc9898fd25406d94e095cca"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/progress.tsx",
+    "sha256": "74223bcccf7ca2ed026d197476abbe3d48fbc531c40f4252445f56954a270c75"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/radio-group.tsx",
+    "sha256": "8155d32dea5d4ddea2048b6d12f83fe4805d9bc87c97b994dbb0d040981334f2"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/resizable.tsx",
+    "sha256": "8e73dfb8b582944364d73b64ed03378016f20f7251f15f880dcf0fb140e1ad41"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/scroll-area.tsx",
+    "sha256": "73f5dedda781e5285092ea269f747378dbad8d95631eab638e15b3c31595dc59"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/select.tsx",
+    "sha256": "779226bcf9db1de4b1337647d517555c0584d5492c932f420e18688bf0c0aab4"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/separator.tsx",
+    "sha256": "2b129347f918742bf006099f7f56a9be373250de2ecc3ad201297563e3d1f807"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/sheet.tsx",
+    "sha256": "ef2ae35ccab1252c4eee56e67e9f1b2499b5bbfb3ae39037d8d4be39915c272f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/sidebar.tsx",
+    "sha256": "de7566e708ba8bf34cb4a78fc018c784315c9d7a16d70e66255f8c72caf9d1db"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/skeleton.tsx",
+    "sha256": "d78130b2e311a750e7bb524e66e3af4c04e2ab02b04fd68539c1afd0bbb47152"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/slider.tsx",
+    "sha256": "ecac74b8f3a044ba7a9e4eb0bdbfdf48be92483a32d2c414c5078c9f38e1f369"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/sonner.contract.test.ts",
+    "sha256": "19d1a4f4e59b16c620bcf438792e6595c7aedffbd54c4d4a64372786858e29bd"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/sonner.tsx",
+    "sha256": "deba59ea06c9ec60d1e8dff70ad3600178ffaa93e8db016c08f7d6763a08e6a8"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/spinner.tsx",
+    "sha256": "4458ea392b32f439cd4c64b9593846f339370fa1295c04f9003f05c1f3386689"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/switch.tsx",
+    "sha256": "f81bc9b5ce2d6a92b6b2f1f3376c0489f30f7073081a1d9d6c56553880f44c58"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/table.tsx",
+    "sha256": "ecefaf81ac55aeb1e6e3964124dbb1a2f4ba990c6a5f3caeb8431b33e6da55d8"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/tabs.tsx",
+    "sha256": "320609101fbaa6cccda0b899154cb510fa322926cfdbaf07e33b79c00c83fcd6"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/textarea.tsx",
+    "sha256": "63fb699771afe60c5073ed50e1a042d7d7f21eefd12d15bcb750cf3230985011"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/toast.tsx",
+    "sha256": "04d4ef720079342e2f4380c22683f1544bd8e93a581fb55e447458f04a6127d5"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/toaster.tsx",
+    "sha256": "0e181fbad41db95da72b6e05b42ffbf5fc1d3f03b1239a5cc0743b00ecd77f7e"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/toggle-group.tsx",
+    "sha256": "6d7aca86245edf5d0a8f6f3ed73bd19316f4865425891eabccd6f3e37e59519e"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/toggle.tsx",
+    "sha256": "5800d2099224ef90892e8c1d972d2a0964391c33cd43d7f5c6abf5cd42e023e1"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/ui/tooltip.tsx",
+    "sha256": "e3c6ea9d4ecd62881af33564e25be013d35a8a7fa78475a6dcc98a06c7f894eb"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/hooks/fondo.ts",
+    "sha256": "65bea5561ee416ea50c4827aa042932bd3ec6e53ab2196e91e630e886e25a69f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/hooks/use-debounce.ts",
+    "sha256": "4df36cae534898297749ac0b139422788950d3792087ebb0559e36bd84c8ea67"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/hooks/use-e11-write.ts",
+    "sha256": "8b43af1e382b63b94ff5685842a3054e98795b7757356150fc63e493fda51f7e"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/hooks/use-e3.ts",
+    "sha256": "14c223743d39c928571d3f85db07c46a6f1b13b358abf87e2f28d00ffe881df2"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/hooks/use-e5-actions.ts",
+    "sha256": "47116d4522e8f270be52bcf7d9962cdb89355b7ffeebb1525c82d3eaef3aa270"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/hooks/use-mobile.tsx",
+    "sha256": "82bff42ff087bd5dc90a5d17609cc428b8688de92d1333073a839af5ad3c9cbd"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/hooks/use-shared-cuentas-destino.ts",
+    "sha256": "3c58dbcf4d85372ecdd338c9765d52c7f265898037f8170232d49e0f9b034785"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/hooks/use-toast.ts",
+    "sha256": "186149c6fc44eefa83bd0dd7a0a314e63e9b3a45d42b7c4638e34c54cb7fa848"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/ajuste-confirmacion.contract.test.ts",
+    "sha256": "ce6641461ab98fa4717db4d8d83bdb42fa8fc99fec37b4bd24c3209eab6678e6"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/ajuste-confirmacion.ts",
+    "sha256": "7c3652add0ec60e5f3250f63e77a4be2e40e87b90d1af7bd672b35dd338f3185"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/api-error.ts",
+    "sha256": "f98f5a1a7bc4b08c015dd90687a3e70374f9dfa369e85ae51a96058ecf0f4623"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/api-related-movement-error.dom.test.tsx",
+    "sha256": "a91ef7176fdc2999a65f189adf2e01226987e292c25f9e91fd53e4159eb65442"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/catalog-colors.test.ts",
+    "sha256": "072bb9e026ee0f2271c60f83df1b8b1474e07522919c2065299aaf2e96e3674b"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/catalog-colors.ts",
+    "sha256": "3232a1313914b67d6b068c03ace2a9e5c77321c37af40a96283619d12eea0a86"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/clientes-api.contract.test.ts",
+    "sha256": "c3ccd909982f84c75f7313c5c8fd687938b6dcfe93ec1e870a2edb07ca939678"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/clientes-api.ts",
+    "sha256": "488bd67a8103ed42cf16da79ff2a55ec25bd03a5d966cb821686c3334d2eb225"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/confirmacion-texto-exacto.ts",
+    "sha256": "7a243cd834f0322f4c475df467b16deb8c0b787ce68693a4123beea448e02dd3"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts",
+    "sha256": "18be0d835b2f05ec25b84b3a4e834adf99cb99f5845e9db6c3ebd62ebf4182c2"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/credit-evidence.ts",
+    "sha256": "8c8987f72748aa0bd738b1531737eccff53f89e7e5825c6cb9273dda469e4d3a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/credit-terms.contract.test.ts",
+    "sha256": "102cb847a0b5cb819779edf3cb607236a34d7c1273390b891e47ed8ebc803185"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/credit-terms.ts",
+    "sha256": "42c4f35dc3aea73c97bde69ba45cd9fb4a0d1b9f8a4181ebf318938715d294a1"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/cuentas-destino-financial.contract.test.ts",
+    "sha256": "62fd68b264615e905644847dac4d3a99be1e9ab89be97e2e8c2895ad242c5a46"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/cuentas-destino-financial.ts",
+    "sha256": "58b7c0f6ea17d8f89da0c87bd5270bd55851a2b795cebacd86335e000af9a9c1"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/date-only.contract.test.ts",
+    "sha256": "61df5d5fd3175f1964f591f691aaf4117a6c5e82b81142963e9b9653409e0f15"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/date-only.ts",
+    "sha256": "82f32441e647f6721455f112fcb985a81ccbbc0f783da716cd92b8183f27a97b"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/document-name.contract.test.ts",
+    "sha256": "b4c17d5451fe0c589d4db9616746ed576ca34827d53fc3316303aeab4a08a211"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/document-name.ts",
+    "sha256": "941fbf7bba879231da80b335185437100fca0fb0320464588c7b0836aa73f414"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e11-feature-flags.ts",
+    "sha256": "535138382e6a523d49f022f383768b6863821e2dcda64c5edc0691e05196fe2e"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e11-recovery.ts",
+    "sha256": "45dc10702d6f555cd212957b05d24058ff2bfe93da61e905919f950ba9df19e7"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e11-session.tsx",
+    "sha256": "6fdab59b97202257224a779e8390adc9aff5e0a5b0c6a581e676dda85c2f13ca"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e12-feature-flags.ts",
+    "sha256": "f47b1f8eec14764ed0f7bacdc9a96b3d16b1533d9d091d659a54efa06fab04b8"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e3-feature-flags.ts",
+    "sha256": "f30b192a93472002b1360e57eff54c413c0187cdd5ea6bfd3f5fb5c4b3003125"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e4-feature-flags.ts",
+    "sha256": "37be3b5e5fc8c92b193c066075a14a97a04c7c467eeb9d6853bd5b79c54e059b"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e5-authorization.ts",
+    "sha256": "3ca17a855afa8dacd53aa1476fa279c8c5fbc792bdbf3efa2a3dbfee6e200bb4"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e5-feature-flags.ts",
+    "sha256": "245d2de66d22c01261acd3630c1830e5bc3885a084b3197f4b6baae6e2b673d1"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e7-feature-flags.ts",
+    "sha256": "0b5249ae1bf0615c6fce871d068f91d0d38d11f1c2ed77121074fd106f1767c8"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e9-feature-flags.ts",
+    "sha256": "b2c625ffa2f7bf895fae40c1518a1a80799555ae69139164ef1372746a15deef"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e9-ui.ts",
+    "sha256": "2a8570763667f759955eb5669c9ca0229c01e64e3b5e2c2f6ec7baf82c8a93f5"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/entrada-review.test.ts",
+    "sha256": "3c6428721b373b490f6deed8c923dea82acbe61dce66f40a6d1ab87d3c225196"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/entrada-review.ts",
+    "sha256": "87a10f87f29ae6203b6e6206c418fcbbd42f6daec16552828d9349161702f820"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/etiquetas-api.ts",
+    "sha256": "d1cf1a8928681009fecd59240447a2b6f81b6b33aaa070312f4d8de5c14d7b6b"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/fecha-efectiva.test.ts",
+    "sha256": "324f4814922e4564b8420e3c4a94b7de1beba3553d7ddb7d8cd658c6841f9d8c"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/fecha-efectiva.ts",
+    "sha256": "8374449dd42ea640e3e288d019e6c7179cbedb3511bef94455812a46a21b61cd"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/fondo-utils.ts",
+    "sha256": "20ebc1d1eedccee0d850b279e4416f3cea7f281f2e419f3dc7437f881d6d7247"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/home-route.test.ts",
+    "sha256": "729ff3c11c4a76ff3407c0ae416920d0248250602aa3234b2ba48f31354c2c28"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/home-route.ts",
+    "sha256": "05577abd445eb5f927e7eca771a1bee64e0d4a656a3cc9cbccb13cf6ba3faa72"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/internal-navigation.contract.test.ts",
+    "sha256": "1eee5fef660f860c33b2903d5e535575efb14c5f650ef02d07872dacc2f59c9d"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/internal-navigation.runtime.contract.test.ts",
+    "sha256": "e83c7f6e8d9c7b26785b536b974c728fc4ecc1c6f0532e6b42bc8c8c87f02ea4"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/internal-navigation.tsx",
+    "sha256": "7cafea89239ac193cf90dbc9a6019803d219c3b1e52668a0fa34209a4c544c94"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/inventory-global-totals.test.ts",
+    "sha256": "525894187018eba9d1793f36a31ef8366c5efba0e5fdbea713144ba585e1a337"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/inventory-global-totals.ts",
+    "sha256": "20061268c87ef9865e482b1f45a977ae8be0b4647334fcdc844eba46e012037e"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/label-selection.contract.test.ts",
+    "sha256": "aaf97f3a1e3ee5e2dcccd0be9c3fe2d99092773f7dcab210ee06c3a8869a592f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/label-selection.ts",
+    "sha256": "79f5bc5ba0767e6ad66e5b449b6c5e18ae666853250780c084602d09e6c68c8b"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/location-scope.tsx",
+    "sha256": "e41586c6b8db8de64cbd466d928bd9765607234e827bf64f5646da216572c10f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/origin-drilldown.test.ts",
+    "sha256": "a403205e599385be4c045325f5f5c42ff42f18fbb05b0c5f44b4123042375d71"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/origin-drilldown.ts",
+    "sha256": "a4930cf3d232f3d947bf6278b449918c20372221420c6cf21dfbd39dd9502aa8"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/permisos.ts",
+    "sha256": "fe114a81529e8c6b45d08f581cc8dcde837938a6a78f2e02de06a8bc52b80e4e"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/pos-product-price.contract.test.ts",
+    "sha256": "5cb9dfdac819ba337bdef57a1e1787082727b6c6cc3ed2cbe5eda2940e41f11a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/pos-product-price.ts",
+    "sha256": "0021e2cdf295507ce13f150345f1c8a5765b000366637074de480786d81aabf7"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/precio-groups.contract.test.ts",
+    "sha256": "ecb7a1ae4e25a43373d8b0a0983eb28e9957f8bc2d701ab03e15fecfe6cc32da"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/precio-groups.ts",
+    "sha256": "7a85c275ace71bc45587c945e26afb6a70d09d6a5ec39e6fe04f275ceaf485aa"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/print.contract.test.ts",
+    "sha256": "817ac91d2f78a8c1c2f54e3916f95304fd41bccc29db30c705f3f28163fdf435"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/print.ts",
+    "sha256": "e145903ce6755bc46f1a3be8d3d2b271c3169bcad805222ef77ace8a5595948a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/report-chart-colors.ts",
+    "sha256": "9145d3316cd2c53fcf644c105d426b16e6c8380b2f35ac383ecc16239c699e3c"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/report-href.test.ts",
+    "sha256": "61926b11f301b6ae5c45c3fcc9d03e3e2b6b2c4ae2f0918ed3224c14457b998c"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/report-href.ts",
+    "sha256": "775e786c427a21b1aa2a255ffac3e68662133eb4015d0dfbaf0468b44e95df6a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/roll-capture-state.test.ts",
+    "sha256": "9a4616c7d8821d1bf97694f853aa68891e81d58e6d79f8ab77c122b068d16d94"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/roll-capture-state.ts",
+    "sha256": "0d640e1bc40bdbb61e0acda759bce38af1ca58d1f383b32d847363e159c8cf95"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/salida-cancelacion.contract.test.ts",
+    "sha256": "651cb3fb8243a8ecc7a1ec360832c411ca15cdfe3fefa48bf014a78e904fdc3f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/salida-cancelacion.ts",
+    "sha256": "0b1401f08f9c9f65f6d7f8441d7aa96dc87d2239c191a9919a91a15b3329b585"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/stock-minimos-api.ts",
+    "sha256": "3eede3fb558052073aa8b81ffeca0b3e8e8f61715715e16b58f1db4f4c8e5cf1"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/tarea4-gates.ts",
+    "sha256": "1dee4236037c5b913ea9e4aa33df5003f8be0f0a794ee123bc1c9456b56de488"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/ticket-lines.contract.test.ts",
+    "sha256": "9801a49f3ad29ee37e0cc455e2315160d1fa423553d9cfe48a8ad3ce64b0870e"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/ticket-lines.ts",
+    "sha256": "690fbef19f12647d8377ad44e446a06cdaae15bd16718623b0bb8e422e3c1192"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/unit-labels.contract.test.ts",
+    "sha256": "7478f9ada27f841393142d75862e919357b46116d1fa286a1c5af806c96e0a58"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/user-form-validation.contract.test.ts",
+    "sha256": "180fac72e5bccf16e3766ed995b6d7227f906297b9c7b77ff7dc7e02fea147b6"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/user-form-validation.ts",
+    "sha256": "c359f85daedaee18e2df378bed13681b27ddbcc96d61cf99cb5585254455c79a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/utils.ts",
+    "sha256": "0f8fddae990db8327fef0efd3d4edb121b2e2e388d9912d7cfd940d8e8ea22e0"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/main.tsx",
+    "sha256": "8c579db9a2a87cb219df66263bc5256ff20ad622523a5a012031909576973d87"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/notifications-read.contract.test.ts",
+    "sha256": "a7362ce4e718e6a13c3aa538dc60a77321fe2bd18da783bdad5b876b11b652dc"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/observable-test/browser.ts",
+    "sha256": "43f9714b5e9a7544ea15e6942ae6193e60d5b37e0be5b95f529d5af79c1a4320"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/observable-test/profit-export-output.ts",
+    "sha256": "8bd29444c55be88f24fbeeaa3996fff15896ca5399d2afa6bafe4ba33a4e0a34"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/ajustes.contract.test.ts",
+    "sha256": "1f5dcbc431b05b79a87b80db76d0e4138604b0dc30e0a562a01ed265c7405376"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/ajustes.tsx",
+    "sha256": "941898921a8e92bb8799850412073aefddcb4a120f96bc4cb4aabdc6f67209a2"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/alertas.tsx",
+    "sha256": "f55cec8a4fdbee027a41b9a82cc800fd14902de388458b6561df50215c1e192b"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/auditoria/index.tsx",
+    "sha256": "30dbc67deba89c9061f19a3d118eaab759dadf7802f67963a9a45d81ca07a993"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/auditorias-inventario.contract.test.ts",
+    "sha256": "aa378ca9122d3511e8130547480e86ab1427a56498f3c77aa27a712b0095f402"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/auditorias-inventario.test.tsx",
+    "sha256": "d1704263b6b66f7bd4fcad8e642d6175a5769c5ba21caa38fa854366df1356cd"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/auditorias-inventario.tsx",
+    "sha256": "96f39dd621fc9b1d31aa83fb767fe9f2352050030b24c1e509d7b92be0db3e78"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/behavior-status-cancel-test-support.ts",
+    "sha256": "4821e904253175d139328121ab0b702bdc4909f2f70ffa2b3606122bd9052efd"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/attention-card-tone.test.ts",
+    "sha256": "9c7974ce0d49eed8a92de3e6a9c22cb5fcab17094e51ad0c83e412b582974603"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/attention-card-tone.ts",
+    "sha256": "882c17120a75a529193255103fb91fa1480d9a87f618b89428543b1b974686ff"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/caja-tiempo-real-observable-test-support.ts",
+    "sha256": "cf35ab38e7743ae396cdefa34d0ec90dfec455a8d40a1b49c4004766fb4c249c"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/comparativo-query.ts",
+    "sha256": "ea81d4b20751f6acdd221ec30f078c84db1026b0060f2116cbefd2e56b0b671a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/comparativo.contract.test.ts",
+    "sha256": "4a528ba123db2c97218439e96f53fff6ec2c4c275b6d7c4356b6e935813594e5"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/comparativo.tsx",
+    "sha256": "9de8ac6cc1a02d9878c135f6ceaf669a85827019ac067f3ae87693fd3b040d16"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/cortes.contract.test.ts",
+    "sha256": "eeb604afb07a80277af4faf5530d396f5abe2bccd52c538e504c93f3b19bc54c"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/cortes.tsx",
+    "sha256": "c802124cf8b7b6227c273d52e55f5714d8a51c5d0214894df6209b00c7ab2aaa"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/cuenta-destino-detalle.tsx",
+    "sha256": "5eac4b96b0956f19d73bfa54129e324418a0685aa2797cbeaef5ed386a1acbfe"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/cuentas-destino-labels.observable.test.ts",
+    "sha256": "d02db74dd0057d84bad03d93ce7c31490bbf928cde3e21395de198f08e9422b8"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/cuentas-destino.contract.test.ts",
+    "sha256": "2522c7d592b22d9fa2f2bdddaa2805ce1b032e802462454642ea6ec56505d773"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/cuentas-destino.tsx",
+    "sha256": "9c6e3bcafbe35407d2d1c41c2d27b8ee8aa0eb0afe59bd06ca16397e82b13703"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/diferencias.tsx",
+    "sha256": "10b0b6ef8e1ec47136a81dea109252d99f293f9d22cfce5a2101058e69384d0b"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/recibo-e3.tsx",
+    "sha256": "0bf02953f41f6f8f83a48d8d246a193660528bcfa2e6852ccff1bb72f35a464c"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/tiempo-real-breakdown.contract.test.ts",
+    "sha256": "33a7b607805fbd9b77bd9e3180250f4f1f3812a9ab40cd7229133ea3fef34025"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/tiempo-real-credit.contract.test.ts",
+    "sha256": "f1da21fc605741c8a9f305326a9da69ef2ec74280386a85db5cb98af3b352ca8"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/tiempo-real.contract.test.ts",
+    "sha256": "a07d487be881721c270a4fe654019c867c1fb3b2089b47f40f48c698ef968ba3"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/tiempo-real.tsx",
+    "sha256": "16ac0c0ccb16b9ee8abc003b507a4d22141c9a7f60f69d7ea09310c4253d8ec3"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/tienda-ventas.contract.test.ts",
+    "sha256": "592b1def9c0fe1842ca3b312d98f82996d1c1d0a9d7446a2fcd9020b7ae001c8"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/caja/tienda-ventas.tsx",
+    "sha256": "475ba41cc4fd9ec854ec59b83dde5b00b362a418324a4f4596c66e061507c8f8"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cartera.contract.test.ts",
+    "sha256": "831d6b278e1b6add97160140bf58eef316d41fb5ee6c7b27ff4528c87065ecfa"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "sha256": "068b8254fcb6abc66e7796379feb79e9df1a359de9806070c3d6b0617a2fe578"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-movimiento-detail.tsx",
+    "sha256": "c58472c2ab7ab9145b715ba732550c48a4b1c44697d8462545c25722e293cbd4"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-ticket-links.contract.test.ts",
+    "sha256": "236833085b2a88dbb0bc7312ab24c1088c2477f0971ff32f77d367a28074593f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/clientes.tsx",
+    "sha256": "1811d1a75e5057a2c62b124113a21530b14db65c26fac0e4ea0b214dde33efe3"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros-payment-methods.contract.test.ts",
+    "sha256": "eda1cdfaa061df373ea82a91d1e5d804adbb7153011c58f6692cfd52a1b4c1ba"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros-salidas-block4.contract.test.ts",
+    "sha256": "83e88845ec4b8755927aab7ce507ef0d2b8a217f341c27ad7876e7dd99c8432f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros.tsx",
+    "sha256": "aee0b71931cd60e95990974c99758f1222a1db541b3caff9602844ebcda0f974"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/conciliacion.tsx",
+    "sha256": "a3e335cdfd3dfdda319583ffae1a80bb8b8412b78f4c631159f231d876c5fe31"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/configuracion/camionetas.tsx",
+    "sha256": "16f53cd7872d4e4b9c0027e33de0c8c89e2fd0a1cdbc2e486858cf93d0d8a128"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/configuracion/choferes.tsx",
+    "sha256": "9d4c3c9bfd1a53fdd440c6a7d77d2b10557fa1337615389b90460e8e71fd96c6"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/contenedores/detail.tsx",
+    "sha256": "a5565b6e65fd374b67246ca8ffa5638559839644941fdfec7f67985bb4e57684"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/contenedores/index.tsx",
+    "sha256": "8285240b3ac3550475b41531dba4da92ccd6ac477207deebb30aea315a090479"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/contenedores/nuevo.tsx",
+    "sha256": "5af3eb1e22565b53f5d25c94e6b2c4c20da7acc82bf679c6172a3e810c4d40f2"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/corte-detail-shared.tsx",
+    "sha256": "bfcaaa52c55a08bf10c5f70c0375859e54c686e1f0831ff22a2f057bc416e212"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/dashboard.tsx",
+    "sha256": "2d29cd2c4b856bb4c8f12830d278f3061e68b15cdd7e2173178547a39f8f6cc6"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/detail-identity-links.render.test.ts",
+    "sha256": "201405f04abcd208c7748580dcc9426d34a7ff3c4139336441a64b08b2e857e8"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/detail-link-tables.contract.test.ts",
+    "sha256": "b7905084ae133c61f2b2cce284ac8c5d08ae5aab8adcea5930a2ab9b16d2572e"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/e11.tsx",
+    "sha256": "51d93ca93bccccbb5a708468b3eb38d2260391c74ab8a2c89d68d3badc22e52d"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/e5-documento.tsx",
+    "sha256": "df49f3ee70a4c28be352d3ff3a8321829fe830c786a2e9872d4a7e844b6d513d"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/entrada-documento.contract.test.ts",
+    "sha256": "3550611318970d1e2005148b0adac0ce5d63ff4c928a89aa5e5d1919eb7c4e6c"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/entrada-documento.tsx",
+    "sha256": "83baf69db514d3c09fe72797eb4932028887a45e71c697453dd147633b22a38a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/entrada-etiquetas.tsx",
+    "sha256": "49c1fff705c0f38e913efbeadffbf95e8c8b7efd05a3f24fbea332abd9289d02"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/entradas-pendientes-costo.tsx",
+    "sha256": "2131ff0dda97ba79a1eff29e1f00f8c271c41658411600f3503d6b054408c693"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/entradas-requirements.contract.test.ts",
+    "sha256": "2a562242f2138e7ab49cf91cf274abd804451526ea84d4243f0ccca0a3aa3faa"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/entradas-roll-capture.contract.test.ts",
+    "sha256": "b5d32d2d13a5cd5e74c6ef3b5f38c4412490d7e1e2da1f21e32bbf410f2ef61d"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/entradas-roll-capture.visual.test.ts",
+    "sha256": "3ee0b782341082353cf08551931bb1682408ecda4ca3bc9a254a1d569ffae50c"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/entradas.tsx",
+    "sha256": "333113e7af60deed7d67f27e2e64f5478ece773a6cf2fc1bfeb9d129dcebb9a4"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/equipos.contract.test.ts",
+    "sha256": "9c8afbd621911bebb8d51ebf999ffe4713b1944f571f059ccfe48b2fc1936811"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/equipos/equipo-checklist-dialog.tsx",
+    "sha256": "4a5bc1a10948f9f5deb42bc7463844c4ad83b8a1ae89fa9b2b5951a20d14f3d6"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/equipos/equipo-form-dialog.tsx",
+    "sha256": "d35b1045d9a047612bd534280e10eb9f6f7cfac9760737580e601832686fe1b6"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/equipos/index.tsx",
+    "sha256": "ccf7b6f4c2e64fcf765c17a5870dd26967fa16289476bfb7cbca8f39c4fb7628"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/etiquetas-print.contract.test.ts",
+    "sha256": "30f460c17095f4e974c2383e47ee5c37e268c84b5e0cf397b990f4e5acf757c7"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/etiquetas.tsx",
+    "sha256": "a9c6834bfac5a6e0f3345d43f6d578bf3b521021b05b050b69bb1b4c8f35b5c8"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/folios-formateados.contract.test.ts",
+    "sha256": "0cf7c444c47f37df8243a054596760e9bb2f467a11275a0dc1968c23e8f3d90d"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/fondo/arqueo-detail.tsx",
+    "sha256": "f7565d4a66949f47395e4c2f312bdfc8bd6c386b5b8ebe633bd7738a418e84fd"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/fondo/arqueos.tsx",
+    "sha256": "f7e6ccc5ccdda1fe41b5586bcb7edb8855956a0afbe974a9429869c650cf4fd5"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/fondo/index.tsx",
+    "sha256": "bc261c10b974091e2a37eb5ed1c1c62a1488b48ec272d1b80dc5f98401fe92cb"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/fondo/movimiento-detail.tsx",
+    "sha256": "473859d410b7f556fae6c3a5579c95158dc487cdac15b3794eec5fc2594bb798"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/fondo/movimientos.tsx",
+    "sha256": "94920a374bde7a64c1238ff799f19962c0a4e0f387438ef33da40cb5ee4bff27"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/hoja-ventas-dia.contract.test.ts",
+    "sha256": "c4f5bb7b7478dc39ba5b80bb38c818a1844369da43236a46259cb43e4ca43271"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/human-text-casing.contract.test.ts",
+    "sha256": "dcf2c1ec8b53b663e877a33d075d35f0831b9bbbdb8faac634f0876b4c747fda"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/impresion.contract.test.ts",
+    "sha256": "ca0d92f080a643166071dc7dd734ea0aaa6b810af74fa852ff08f26de37e0282"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/inventario-bulk-selection.contract.test.ts",
+    "sha256": "4273ef5b2a2110407a8deb942aa16c96ff66f5628e5f2ec5567a7b91918a5306"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/inventario.tsx",
+    "sha256": "e3f585760c162f732c273b0a68a67f3badf27927e0b75a43842e97b533a29064"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/inventory-reference-links.contract.test.ts",
+    "sha256": "ca2465e1b928f7a427963784e11536d39dad4690338a536607dc040694441f18"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/login.tsx",
+    "sha256": "14b99681cc45fb467a883896328740b407e827ad0b9fb0b7139410b5fb5d776d"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/movimientos-ticket-link.contract.test.ts",
+    "sha256": "b92b7e97f526c221a5c94bfa9e519941b1dc6697e352ce0a0f074aaa5034c70f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/movimientos.tsx",
+    "sha256": "dd3f0d85befc82606c6ed807108136a4fe864a5df8132b5c36a3924d2a7776b9"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/not-found.tsx",
+    "sha256": "6aaea7a7125024440020566f3a14fde4f65149b1fd21f68c6a437b193e88c642"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/nota.contract.test.ts",
+    "sha256": "0694648980488d3240075f061d3507a9a5bc8c5cc8c8712f3e1ec749c8b4ef6a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/notificaciones.tsx",
+    "sha256": "be1a65fe4bc8238b35d9a60a3aa9f8bc855e89f6b660b8ff718470ff453106eb"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/pagos-dirigidos.tsx",
+    "sha256": "39f948ebb26223348969d377a22a664ab078b386cfdce7289797fb2f65a90761"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/permisos.tsx",
+    "sha256": "3e50984eb8ecbffa6614424d41ab66460e2661ac49e10a7fa8a26064eca3203c"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/pos.contract.test.ts",
+    "sha256": "78590bc3e5d7e4d50a48dc39a4fc81a12a0e14b4ab2b6a6d5b60cdbd85e4fadb"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/pos.tsx",
+    "sha256": "bf679d532d58cf56482e346bd7e47a4c24a98917f7ae183734269b05ad8d80ce"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/precios/detail.tsx",
+    "sha256": "2b49eb4290d345e5f08d0ea8db1cea879842395d51cf6539d76508513781abbb"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/precios/index.tsx",
+    "sha256": "9c4fb0193217171575e42f28edea3a4bcbb0d161fafa1fcb33353ee19e13475a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/precios/precios-grouping-bulk.contract.test.ts",
+    "sha256": "0b040af0052775fe8a2440512ea46eb3d916a32f4bb45295b72ce4a7f8e5b495"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/precios/precios-null.contract.test.ts",
+    "sha256": "e4f80c5dc08ba36af5731c1129dde0545a6c56ab61b5f4552b50244bd908ae25"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/print-document-header.contract.test.ts",
+    "sha256": "3db169b570b419b36b27b9e247ffce14c3d1b1319300d6624703b8e858768bb2"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/producto-detail.tsx",
+    "sha256": "886a0684679194296d52dafd2dcd9c0191a292eb1e2cdfa754ed8c0c109f37bf"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/productos-especificaciones.contract.test.ts",
+    "sha256": "ce499da41cab9ca2fe48aa9b442cc5f8fbc51361cff947b8b41a52d7bf9e6fa2"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/productos.contract.test.ts",
+    "sha256": "04f8af27d2a6aab1d4b0029782c11408c4375a699b5ffbf6a66bf9df9b134923"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/productos.tsx",
+    "sha256": "c30c479c676639e8b3ef87b0c2fa5192db4661268dc265e32b439a55ddbfd4d9"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/prompt-g-document-names.contract.test.ts",
+    "sha256": "42d785735ee0b3acb453de95cf9e536b03845e50ed9526b16e1c1323b526aefa"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "sha256": "78dd1b8da3835708ce2c9b0d4de780fc7d70fe74a545bf0848740790d5ce8f81"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-finanzas.contract.test.ts",
+    "sha256": "2522989454bad745411da302c56845af16e8e276507458142e3df6f8df908180"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedores.tsx",
+    "sha256": "acc1aa591c6e6009f491b4414e5170f6fbd53b6a260e84b250f987cff607e0e0"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/reportes.tsx",
+    "sha256": "184c53d393e3eb19aa4eae11a5dbf7900647a7f47847c2d223abdd7edb6721a1"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/reversos.contract.test.ts",
+    "sha256": "0eef5919c8eb541cb41b49bc5f0325dba3c1e239cb0e64c3104c872ee6664db5"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/rollo-detail-movement-navigation.dom.test.tsx",
+    "sha256": "72ae788de4ce0d9ae9d5d658a12d97c728c0b29b14e5c55d7873288c2b285a58"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/rollo-detail.test.tsx",
+    "sha256": "32e30ecb08d28bbeb76dcb0dbcdfc8a7694d7c166ec78a060c0fe23b6d8c5b3f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/rollo-detail.tsx",
+    "sha256": "1490e4c46163cbe7e28693836c25cb80ce5394ea0196428c29d26d01651ce8be"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/rollo-etiqueta.tsx",
+    "sha256": "a49628fea10c9ff2102fbaf447f9890418ffe2941bb5ad3fd3c5643e259eb298"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/salida-detail.tsx",
+    "sha256": "b13407bbac539ee2d1ea74b00953337f2233624579d87a626bc3898e0186bedc"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/salida-documento.contract.test.ts",
+    "sha256": "2f8b1ad1fd26db809333f1097f0e4d32a22fed39e51cf6d7619e5e950cc09476"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/salida-documento.tsx",
+    "sha256": "91d657cc9b6a1b9005ee7dc274f9c56b9e902c3d80b19ed99745136f6ec2322e"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/salida-nueva.tsx",
+    "sha256": "7ac0d0842f8e021b4341a9190e0f4369d3e2e6fb3425731416ab2d116ad7c57f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/salida-unit-totals.dom.test.tsx",
+    "sha256": "47497dbac667cd22f0bf4bafb96efba510aac05d9091f0294e6a43e5f4d1e644"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/salidas-cancel-history.contract.test.ts",
+    "sha256": "0c6490e0072646eee8beeab915dc0c0a5f064957331b086f7e328b42442ffcb9"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/salidas-history-layout.contract.test.ts",
+    "sha256": "6092f594c08e8e67d500945b522516e023a355402ecbeee02296ab538bf8e0d2"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/salidas-status.contract.test.ts",
+    "sha256": "1f84966bac8c90dc019097b957fe7a1eb10ff7bc02bb29f0d2ece1bfacf3417d"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/salidas-venta-errors.contract.test.ts",
+    "sha256": "bf522c777cac540047725a0243d33e31ba57e80b914839e91150c389f1996f08"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/salidas-venta-final.contract.test.ts",
+    "sha256": "64b27c5640ead6224352e23e91c139482e83cc7ad3d9e89686a299abe904b9e0"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/salidas.tsx",
+    "sha256": "ab40e9bc2a6a6f296caba849e014e6c53862b86b1ef865966d6e7662476a2c5d"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/stock-minimos.contract.test.ts",
+    "sha256": "9c41e8057f4b1fdc3104251fe1ef9804ae28abc2cf58e13dfa28fe2e893a8a03"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/stock-minimos.tsx",
+    "sha256": "94c5fb26d418d20d97b5d1f958f8a02a917164495faa26135c6de9e70ced817b"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/supplier-utility.contract.test.ts",
+    "sha256": "a96e4f911e9ce679ed9c90f7074d9bba89357c767b885653bfb1c6c8f0317f60"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/ticket-detail-route-gate.contract.test.ts",
+    "sha256": "4a8430a2257df64db7eebb7399d0fa4554481a9b82d97f2a38cb95b40c7df92a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/ticket-detail.tsx",
+    "sha256": "35771267150094e172e350ca5a4cbd5f786676f559a5e85254f2be1e8bfba3d4"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/ubicaciones.contract.test.ts",
+    "sha256": "86b39efe70ffea22fbc14b0387c2fdfb4c8fc330434e0b906ed5d96d87240f02"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/ubicaciones.tsx",
+    "sha256": "078f4365b98dd9bcc010fda0de5f68f2ea45d77c71ac52756d4fa80fb2d1492b"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/usuarios.tsx",
+    "sha256": "c81f0e423c81d092f4c3174f6deb654d13f373c3c39578e0166468cd3069bc74"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/viaje-detail.tsx",
+    "sha256": "8277e45ea040b67cc6941a58bfdacdc1e6b6679d0698a5d15453b58721e70a8f"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/viaje-documento.tsx",
+    "sha256": "4e38f7727cf249acd72eed64501d6c7c1dab1cc2a98eb732079efd7befd4e95e"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/viaje-nuevo.tsx",
+    "sha256": "a18bf85a1371c27331ee4708a0f71da6e098cb4ad26494acfbf39e517f5e184d"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/viajes.contract.test.ts",
+    "sha256": "699094c2fae911b9985aa8e7d4d452f7cf14a51ceb634dc06a453020f4a1a146"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/viajes.tsx",
+    "sha256": "51631466316be8cc0799a6022a46a65bf73922550b22a453de07694db905df01"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/proveedores-historial.contract.test.ts",
+    "sha256": "b0db584119cc7143ecb7ae050bf17124e84643846619569c1828fefcadefae6d"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/render-test-bundle.ts",
+    "sha256": "a970df17ff8854de3af397be4cb32f5dc562ae283b8a6af9fd6a9da1a1a67c4a"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/utilidad-nomenclature.contract.test.ts",
+    "sha256": "5187836978592f0f4adebd4c5fc4e476af1978c3cd83b29e53913a29e987898f"
+  }
+]

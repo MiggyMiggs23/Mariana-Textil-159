@@ -1,0 +1,1292 @@
+[
+  {
+    "file": "artifacts/mariana-textil/src/App.tsx",
+    "line": 201,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "module",
+      "allowedAction"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      null
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/App.tsx",
+    "line": 202,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "allowedModule",
+      "allowedAction"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      null
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/caja-abono-e3-dialog.tsx",
+    "line": 16,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "caja_abonos",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      "caja_abonos",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/client-selector.tsx",
+    "line": 58,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CLIENTES",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-credit-evidence.tsx",
+    "line": 23,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CLIENTES_FINANZAS",
+      "autorizar"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-e3-recaptura-dialog.tsx",
+    "line": 142,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "clientes_recapturas",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      "clientes_recapturas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-e3-recaptura-dialog.tsx",
+    "line": 316,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "module",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-nota-credito.tsx",
+    "line": 264,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CLIENTES_FINANZAS",
+      "autorizar"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-pago-dialog.tsx",
+    "line": 535,
+    "callee": "hasPermission",
+    "args": [
+      "e3User",
+      "module",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e7-readers.tsx",
+    "line": 46,
+    "callee": "hasPermission",
+    "args": [
+      "user.data",
+      "Modules.CLIENTES_FINANZAS",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e9-entregas-panel.tsx",
+    "line": 26,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CORTES",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e9-envio-panel.tsx",
+    "line": 21,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CORTES",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/layout/app-layout.tsx",
+    "line": 62,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.AJUSTES",
+      "autorizar"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/layout/app-navigation.ts",
+    "line": 139,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "module",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/layout/app-navigation.ts",
+    "line": 140,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "module",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/layout/app-navigation.ts",
+    "line": 142,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "item.module",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/proveedor-compra-detalle.tsx",
+    "line": 144,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PROVEEDORES_FINANZAS",
+      "autorizar"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/proveedor-compra-detalle.tsx",
+    "line": 192,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PROVEEDORES_FINANZAS",
+      "autorizar"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reprint-labels-dialog.tsx",
+    "line": 83,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.ETIQUETAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/rollo-remate-panel.tsx",
+    "line": 16,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "marcar_remate",
+      "autorizar"
+    ],
+    "literalArgs": [
+      null,
+      "marcar_remate",
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/salidas-dinero-e4-panel.tsx",
+    "line": 45,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CORTES",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e5-authorization.ts",
+    "line": 17,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "entrada === \"CAJA\" ? Modules.CAJA_ABONOS : Modules.CLIENTES_FINANZAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e5-authorization.ts",
+    "line": 22,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "module",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/home-route.ts",
+    "line": 8,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.DASHBOARD",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/home-route.ts",
+    "line": 11,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.POS",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/home-route.ts",
+    "line": 12,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.COBROS_PAGOS",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/auditorias-inventario.tsx",
+    "line": 101,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PRODUCTOS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 337,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CLIENTES_CREDITO",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 338,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CLIENTES_PRECIOS",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 339,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CLIENTES_FINANZAS",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 340,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.SALIDAS_VENTA",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 341,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CLIENTES_FINANZAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 342,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CLIENTES_FINANZAS",
+      "autorizar"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "autorizar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 343,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CLIENTES_CREDITO",
+      "editar"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 344,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CLIENTES",
+      "editar"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 534,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "clientes_recapturas",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      "clientes_recapturas",
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/clientes.tsx",
+    "line": 67,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CLIENTES_FINANZAS",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/clientes.tsx",
+    "line": 68,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CLIENTES_CREDITO",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/clientes.tsx",
+    "line": 69,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CLIENTES",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros.tsx",
+    "line": 159,
+    "callee": "hasPermission",
+    "args": [
+      "currentUser",
+      "Modules.CLIENTES_FINANZAS",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros.tsx",
+    "line": 160,
+    "callee": "hasPermission",
+    "args": [
+      "currentUser",
+      "Modules.CLIENTES_FINANZAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros.tsx",
+    "line": 1252,
+    "callee": "hasPermission",
+    "args": [
+      "currentUser",
+      "Modules.CORTES",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros.tsx",
+    "line": 1256,
+    "callee": "hasPermission",
+    "args": [
+      "currentUser",
+      "Modules.CORTES",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros.tsx",
+    "line": 1257,
+    "callee": "hasPermission",
+    "args": [
+      "currentUser",
+      "Modules.COBROS_PAGOS",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros.tsx",
+    "line": 1258,
+    "callee": "hasPermission",
+    "args": [
+      "currentUser",
+      "Modules.COBROS_PAGOS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros.tsx",
+    "line": 1920,
+    "callee": "hasPermission",
+    "args": [
+      "currentUser",
+      "Modules.CLIENTES_FINANZAS",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/configuracion/camionetas.tsx",
+    "line": 58,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CAMIONETAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/configuracion/choferes.tsx",
+    "line": 69,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CHOFERES",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/configuracion/choferes.tsx",
+    "line": 71,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.CHOFERES",
+      "editar"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/entradas.tsx",
+    "line": 203,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.ENTRADAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/equipos/index.tsx",
+    "line": 64,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.EQUIPOS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/equipos/index.tsx",
+    "line": 65,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.EQUIPOS",
+      "editar"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/etiquetas.tsx",
+    "line": 60,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.ETIQUETAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/inventario.tsx",
+    "line": 138,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.ETIQUETAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/movimientos.tsx",
+    "line": 216,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.COBROS_PAGOS",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/movimientos.tsx",
+    "line": 217,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.POS",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/pos.tsx",
+    "line": 1333,
+    "callee": "hasPermission",
+    "args": [
+      "currentUser",
+      "Modules.SALIDAS_VENTA",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/pos.tsx",
+    "line": 1353,
+    "callee": "hasPermission",
+    "args": [
+      "currentUser",
+      "Modules.SALIDAS_VENTA",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/producto-detail.tsx",
+    "line": 176,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PRODUCTOS",
+      "editar"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/productos.tsx",
+    "line": 210,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PRODUCTOS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 143,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PROVEEDORES",
+      "editar"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 145,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PROVEEDORES_FINANZAS",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 146,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PROVEEDORES_FINANZAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 147,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PROVEEDORES_FINANZAS",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 367,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PROVEEDORES_FINANZAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 559,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PROVEEDORES_FINANZAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 564,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PROVEEDORES_FINANZAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 566,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PROVEEDORES_FINANZAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 613,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PROVEEDORES_FINANZAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 639,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PROVEEDORES_FINANZAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 651,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PROVEEDORES_FINANZAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedores.tsx",
+    "line": 85,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PROVEEDORES",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedores.tsx",
+    "line": 86,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PROVEEDORES_FINANZAS",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/rollo-detail.tsx",
+    "line": 42,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.INVENTARIO",
+      "editar"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/rollo-detail.tsx",
+    "line": 43,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.ETIQUETAS",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/rollo-detail.tsx",
+    "line": 44,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.ETIQUETAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/salidas.tsx",
+    "line": 124,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.SALIDAS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/stock-minimos.tsx",
+    "line": 109,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.INVENTARIO",
+      "editar"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/stock-minimos.tsx",
+    "line": 111,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.PRODUCTOS",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/ticket-detail.tsx",
+    "line": 149,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.POS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/ticket-detail.tsx",
+    "line": 394,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.INVENTARIO",
+      "ver"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "ver"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/ubicaciones.tsx",
+    "line": 159,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.UBICACIONES",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/ubicaciones.tsx",
+    "line": 160,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.UBICACIONES",
+      "editar"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/usuarios.tsx",
+    "line": 45,
+    "callee": "hasPermission",
+    "args": [
+      "currentUser",
+      "Modules.USUARIOS",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/usuarios.tsx",
+    "line": 46,
+    "callee": "hasPermission",
+    "args": [
+      "currentUser",
+      "Modules.USUARIOS",
+      "editar"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "editar"
+    ]
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/viajes.tsx",
+    "line": 14,
+    "callee": "hasPermission",
+    "args": [
+      "user",
+      "Modules.VIAJES",
+      "crear"
+    ],
+    "literalArgs": [
+      null,
+      null,
+      "crear"
+    ]
+  }
+]

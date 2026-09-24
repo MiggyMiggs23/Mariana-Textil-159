@@ -1,0 +1,38 @@
+{
+  "source": "/home/runner/workspace",
+  "sourceMode": "CURRENT_WORKTREE_HASHED_NOT_ISOLATED_FROZEN_COPY",
+  "head": "ee1bb641e0513b7df18027ad351a72ebbe99af74",
+  "sourceManifestSha256": "1ef0cf42d67e0c493cf0193a98305852dbb4dfd9f2b90f8bea5cbc8463a7c147",
+  "baselineSha256": "67c3787f2a204769ede83f43f2c145f03bd817d346d4049ffa52bc68542c2ad2",
+  "residualUniqueCells": 433,
+  "priorResidualStatuses": {
+    "NO_OPERATION_FOUND_STATIC": 357,
+    "BLOCKED_SYNTHETIC_FIXTURE": 65,
+    "BLOCKED_LEGACY_CAPTURE_GATE": 6,
+    "UNTESTED_SCOPE_RESTRICTION": 5
+  },
+  "staticStatuses": {
+    "OWNER_SEMANTICS_REQUIRED": 357,
+    "OPERATION_MAPPED_NOT_EXECUTED": 76
+  },
+  "uniqueModuleActions": 76,
+  "newlyCoveredUniqueCells": 0,
+  "remainingUniqueCells": 433,
+  "actualApiRequests": 0,
+  "actualRoleBrowsers": 0,
+  "rolesRequired": [
+    "ADMIN",
+    "TERMINAL",
+    "CAJA",
+    "SUPERVISOR",
+    "BODEGA",
+    "SISTEMAS",
+    "CONTADOR"
+  ],
+  "blockers": [
+    "Dedicated permissions-copy setup handoff and API/proxy not yet supplied.",
+    "Need approved synthetic lifecycle fixtures for valid denied mutations.",
+    "Unconsumed flags require owner semantics; do not substitute arbitrary 403 routes.",
+    "Static extraction does not expand arbitrary computed factory routes; review dynamic references."
+  ]
+}
