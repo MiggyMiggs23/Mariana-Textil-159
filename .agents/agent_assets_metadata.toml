@@ -2285,3 +2285,17 @@ mtime_ms = 1790228341478
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e9ca13ab-109f-4013-b428-da82e6f31a07/ab08754f-6f84-4c78-bdda-c5d4148bdfe8"
 storage_version_token = "1790228373662782"
 content_type = "text/html"
+
+[[outputs]]
+id = "w2brerMx8_nJuAvpFlOxs"
+uri = "file://reports/tanda-h/INFORME.html"
+type = "html"
+title = "Tanda H — informe final de aplicación y mediciones"
+description = "Protección e índices aplicados, crearEntrada liberado, tiempos reales de pantalla, permisos pendientes y cierre de las copias."
+logical_id = "e1faca38-8c35-4aeb-af53-c287440a35aa"
+content_hash = "sha256:ff1ae787a6658acbb8ad72500bfc1f35ac2511ee69c73790be613f9533c4650e"
+size = 8916
+mtime_ms = 1790268877763
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e1faca38-8c35-4aeb-af53-c287440a35aa/b7af429f-227f-456f-82cf-74c56901e197"
+storage_version_token = "1790268910581486"
+content_type = "text/html"
