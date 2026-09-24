@@ -2243,3 +2243,45 @@ mtime_ms = 1790223594722
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/7e89aa53-698d-4c57-ace8-26252a42f46a/e82e8b89-0630-4111-b5f9-3d329b1cc6c3"
 storage_version_token = "1790223615205526"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "MNcN54ShgoMmz2FiARJib"
+uri = "file://reports/tanda-g/INFORME.html"
+type = "html"
+title = "Informe: reversos estrictos y resúmenes por unidad"
+description = "Resultados, capturas reales, ocho bloqueos comprobados, catálogo consultado en solo lectura y defecto adicional de activación negativa."
+logical_id = "aec55743-7437-4ebd-a9af-1161bd1696c0"
+content_hash = "sha256:6e63412f2560b647c1529859282321d6d5adbb30deeda6aa27e7d2bafd0cd074"
+size = 674402
+mtime_ms = 1790225748728
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/aec55743-7437-4ebd-a9af-1161bd1696c0/0f47f455-45f9-45f5-972e-57c0cc52fc6f"
+storage_version_token = "1790225801095506"
+content_type = "text/html"
+
+[[outputs]]
+id = "ZnmOTj2DtQBr2jDryhOBo"
+uri = "file://reports/tanda-g/INFORME.md"
+type = "text"
+title = "Informe técnico y commits"
+description = "Evidencia de pruebas aisladas, límites conservadores, liberación y eliminación verificada de las copias."
+logical_id = "e3cc9463-94a5-4967-a29b-140896864c5d"
+content_hash = "sha256:43dfa17ad8b15af3c4b7d79a4d0f1f1cb3c5c919692a99a3f1a183768e6c08a2"
+size = 11220
+mtime_ms = 1790225771583
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e3cc9463-94a5-4967-a29b-140896864c5d/854fe5ff-57b9-4f57-80bc-90cf05168e57"
+storage_version_token = "1790225801686568"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "lgteYxkQvhcxHvwSIVkjK"
+uri = "file://reports/tanda-g-ampliada/INFORME.html"
+type = "html"
+title = "Tanda G ampliada — informe único"
+description = "Resultados de las cinco tareas, capturas reales, commits, cobertura parcial y pendientes; copias de prueba eliminadas."
+logical_id = "e9ca13ab-109f-4013-b428-da82e6f31a07"
+content_hash = "sha256:80ef228bf3136b2be888ee4e3c2f68f87730f01f50712f3b95bb3ead999e7105"
+size = 244702
+mtime_ms = 1790228341478
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e9ca13ab-109f-4013-b428-da82e6f31a07/ab08754f-6f84-4c78-bdda-c5d4148bdfe8"
+storage_version_token = "1790228373662782"
+content_type = "text/html"

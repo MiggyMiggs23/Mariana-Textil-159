@@ -1,0 +1,13 @@
+Tanda G, trabajo pesado para toda la noche. Procedimiento simple. Cada tarea en su propio commit. No abras puertas nuevas, no hagas operaciones de prueba en la base de la aplicación y no tomes decisiones de negocio: lo que lo parezca, anótalo para el propietario. Si una tarea se atora, documéntala y pasa a la siguiente.
+
+1. Termina la matriz de permisos: faltan 433 de 722 celdas negadas por comprobar contra la API, y la comparación con la pantalla fue estática. Comprueba las 433 con solicitudes autenticadas en copia desechable y recorre los botones reales de la pantalla para cada rol. Reporta toda diferencia entre lo que la pantalla esconde y lo que la API permite. Cualquier bypass es defecto: corrígelo y libéralo.
+
+2. Inventario corrupto: busca todas las rutas que puedan dejar un rollo con cantidad negativa, en estado imposible o en dos sitios a la vez, no solo por reversos. Revisa cada escritura del motor de inventario y demuestra con pruebas cuáles están protegidas y cuáles no. Propón una protección en la base que haga imposible una cantidad negativa, prepárala y pruébala en copia desechable, sin aplicarla.
+
+3. Recorrido largo simulado en copia desechable: un mes de operación de las tres tiendas y las cuatro bodegas, con entradas de contenedor, traslados, ventas de contado y crédito, abonos, anticipos, salidas extraordinarias, cortes diarios y cancelaciones. Al final, concilia: existencia por sitio contra suma de rollos, deuda por cliente contra notas y abonos, y efectivo esperado contra la suma de los cortes. Reporta cualquier diferencia con el paso exacto que la provocó.
+
+4. Rendimiento con volumen real: carga la copia desechable con el volumen de un año de operación y mide las pantallas que más se usan, cobro en caja, estado de cuenta del cliente, inventario agrupado, corte y los reportes de crédito. Reporta cuáles tardan más de dos segundos, con la consulta culpable, y propón los índices que faltan sin aplicarlos.
+
+5. Recuperación ante fallas, en copia desechable: corta la conexión a la base a media venta, a media aplicación de abono y a medio cierre de caja. Comprueba que nada queda a medias: ni dinero aplicado sin recibo, ni rollo vendido sin ticket, ni corte cerrado sin sus movimientos. Reporta cada caso donde quede algo inconsistente.
+
+Informe único en reports/ con resultado por tarea, capturas, commits y lo detenido con su motivo. Todas las copias, credenciales y servidores se eliminan al terminar.
