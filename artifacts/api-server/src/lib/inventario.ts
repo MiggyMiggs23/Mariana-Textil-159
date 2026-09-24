@@ -21,7 +21,7 @@
 
 import { createHash } from "node:crypto";
 import { getReactivacionContexto } from "./reactivacion-faltante-evidencia";
-import { and, eq, sql, desc, count, gte, inArray, lte } from "drizzle-orm";
+import { and, eq, sql, desc, count, gt, gte, inArray, lte } from "drizzle-orm";
 import {
   auditoriaTable,
   contenedoresTable,
@@ -55,6 +55,14 @@ import {
   quantityToThousandths,
 } from "./quantity-comparison";
 import { assertNoActiveVentaClienteReservation } from "./salida-venta-reservation";
+import {
+  REVERSAL_EVIDENCE_ACTION,
+  physicalRollState,
+  readPhysicalRollState,
+  samePhysicalRollState,
+  hasOutstandingSuccessors,
+  type PhysicalRollState,
+} from "./inventory-reversal-evidence";
 
 // ── Drizzle transaction type ──────────────────────────────────────────────────
 export type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
@@ -339,6 +347,8 @@ async function getSaldo(
  * current ledger total plus this movement's quantity.
  */
 type InsertMovimientoArgs = {
+  /** Trusted producer state, captured before its physical mutation. Never inferred from ledger totals. */
+  estadoRolloAntes?: PhysicalRollState;
   rolloId: number;
   productoId: number;
   ubicacionId: number;
@@ -400,6 +410,19 @@ async function insertMovimientoWithDependencies(
     })
     .returning();
 
+  if (args.estadoRolloAntes) {
+    const [after] = await tx.select().from(rollosTable)
+      .where(eq(rollosTable.id, args.rolloId)).for("update").limit(1);
+    if (!after) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+    await tx.insert(auditoriaTable).values({
+      usuarioId: args.usuarioId, sitioId: after.ubicacionId,
+      modulo: "inventario", accion: REVERSAL_EVIDENCE_ACTION,
+      entidad: "movimientos", entidadId: String(mov!.id),
+      datosAntes: physicalRollState(args.estadoRolloAntes),
+      datosDespues: physicalRollState(after),
+      ip: "internal",
+    });
+  }
   return mov!;
 }
 
@@ -1390,6 +1413,7 @@ export async function activarRollo(
     productoId: rollo.productoId,
     ubicacionId: rollo.ubicacionId,
     tipo: "RECEPCION",
+    estadoRolloAntes: physicalRollState(rollo),
     cantidad: cantidadReal,
     usuarioId: input.usuarioId,
     uuidCliente: input.uuidCliente ?? null,
@@ -1899,6 +1923,7 @@ export async function venderRollo(
     productoId: rollo.productoId,
     ubicacionId: rollo.ubicacionId,
     tipo: "VENTA",
+    estadoRolloAntes: physicalRollState(rollo),
     cantidad: `-${rollo.cantidadActual}`,
     usuarioId: input.usuarioId,
     justificacion: input.justificacion ?? null,
@@ -1993,6 +2018,7 @@ export async function consumirBolsasFifo(
     movimientos.push(
       await insertMovimiento(tx, {
         rolloId: caja.id,
+        estadoRolloAntes: physicalRollState(caja),
         productoId: input.productoId,
         ubicacionId: input.ubicacionId,
         tipo: "VENTA",
@@ -2318,6 +2344,7 @@ export async function ajustarRollo(
     productoId: rollo.productoId,
     ubicacionId: rollo.ubicacionId,
     tipo,
+    estadoRolloAntes: physicalRollState(rollo),
     cantidad: formatQuantityThousandthsBigInt(diff),
     usuarioId: input.usuarioId,
     justificacion,
@@ -2465,6 +2492,7 @@ export async function crearSalidaExtraordinaria(
     productoId: rollo.productoId,
     ubicacionId: rollo.ubicacionId,
     tipo: "AJUSTE_NEGATIVO",
+    estadoRolloAntes: physicalRollState(rollo),
     motivoSalidaExtraordinaria: input.motivo,
     cantidad: formatQuantityThousandthsBigInt(-cantidadAntes),
     usuarioId: input.usuarioId,
@@ -2759,6 +2787,59 @@ export async function revertirMovimiento(
     );
   }
 
+  if (orig.tipo === "SALIDA_MOSTRADOR") {
+    // Preserve the existing terminal-state error before the evidence gate.
+    estadoAntesDe(orig.tipo, rollo.estado);
+  }
+
+  // Historical DEVOLUCION and partial-metre ticket cancellation are explicitly
+  // outside this delivery. Their existing producer behavior is not expanded.
+  const strictReversal = orig.tipo !== "DEVOLUCION" &&
+    orig.documentoTipo !== "TICKET_METRO_METREADO";
+  let trustedBefore: PhysicalRollState | null = null;
+  if (strictReversal) {
+    const guidance = " Cancela primero las operaciones posteriores en orden inverso o registra un ajuste nuevo con motivo.";
+    const evidence = await tx.select({
+      before: auditoriaTable.datosAntes, after: auditoriaTable.datosDespues,
+    }).from(auditoriaTable).where(and(
+      eq(auditoriaTable.accion, REVERSAL_EVIDENCE_ACTION),
+      eq(auditoriaTable.entidad, "movimientos"),
+      eq(auditoriaTable.entidadId, String(orig.id)),
+    )).limit(2);
+    const before = evidence.length === 1 ? readPhysicalRollState(evidence[0]!.before) : null;
+    const after = evidence.length === 1 ? readPhysicalRollState(evidence[0]!.after) : null;
+    if (!before || !after || before.id !== orig.rolloId ||
+        after.id !== orig.rolloId || before.productoId !== orig.productoId ||
+        after.productoId !== orig.productoId ||
+        before.estado === "EN_TRANSITO" || after.estado === "EN_TRANSITO" ||
+        before.ubicacionId !== orig.ubicacionId || after.ubicacionId !== orig.ubicacionId) {
+      throw new InventarioError(
+        "No se puede revertir: falta evidencia íntegra del estado anterior y posterior del rollo para este movimiento. Un tramo aislado de traslado o un reverso encadenado no acredita la operación completa." + guidance,
+        "REVERSAL_STATE_EVIDENCE_REQUIRED",
+      );
+    }
+    if (!samePhysicalRollState(physicalRollState(rollo), after)) {
+      throw new InventarioError(
+        "No se puede revertir: el rollo ya no conserva exactamente el sitio, cantidad y estado que dejó el movimiento." + guidance,
+        "REVERSAL_ROLL_STATE_CHANGED",
+      );
+    }
+    const successors = await tx.select({
+      id: movimientosTable.id, tipo: movimientosTable.tipo,
+      movimientoOrigenId: movimientosTable.movimientoOrigenId,
+    }).from(movimientosTable).where(and(
+      eq(movimientosTable.rolloId, orig.rolloId),
+      gt(movimientosTable.id, orig.id),
+    ));
+    if (hasOutstandingSuccessors(successors)) {
+      throw new InventarioError(
+        "No se puede revertir: existen movimientos posteriores del rollo sin cancelar, aunque su cantidad actual coincida." + guidance,
+        "REVERSAL_LATER_MOVEMENTS",
+      );
+    }
+    trustedBefore = before;
+  }
+
   // Determine restoration: CANCELACION records the inverse signed quantity
   const inversaCantidad = formatQuantityThousandthsBigInt(
     -quantityToThousandthsBigInt(orig.cantidad),
@@ -2766,7 +2847,7 @@ export async function revertirMovimiento(
 
   // Restore roll state where sensible.
   // estadoAntesDe throws for SALIDA_MOSTRADOR (MOSTRADOR is terminal).
-  const estadoAnterior = estadoAntesDe(orig.tipo, rollo.estado);
+  const estadoAnterior = trustedBefore?.estado ?? estadoAntesDe(orig.tipo, rollo.estado);
 
   // Guard: every state change must pass through the transition machine.
   if (estadoAnterior !== rollo.estado) {
@@ -2788,18 +2869,19 @@ export async function revertirMovimiento(
       orig.documentoTipo === DOCUMENTO_TICKET_BOLSA_METREADO ||
       orig.documentoTipo === DOCUMENTO_TICKET_PIEZA_NORMAL ||
       orig.documentoTipo === "TICKET_METRO_METREADO");
-  const cantidadRestore = movsThatChangeCantidad.includes(orig.tipo) || ventaBolsa
+  const cantidadRestore = trustedBefore?.cantidadActual ?? (movsThatChangeCantidad.includes(orig.tipo) || ventaBolsa
     ? formatQuantityThousandthsBigInt(
         quantityToThousandthsBigInt(rollo.cantidadActual) +
           quantityToThousandthsBigInt(inversaCantidad),
       )
-    : rollo.cantidadActual;
+    : rollo.cantidadActual);
 
   await tx
     .update(rollosTable)
     .set({
       cantidadActual: cantidadRestore,
       estado: estadoAnterior,
+      ...(trustedBefore ? { ubicacionId: trustedBefore.ubicacionId, pisoId: trustedBefore.pisoId } : {}),
     })
     .where(eq(rollosTable.id, orig.rolloId));
 
