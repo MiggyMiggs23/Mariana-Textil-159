@@ -1,0 +1,67 @@
+Tanda H — crearEntrada release handoff
+
+Status: candidate built and preserved; not released by this worker.
+
+Source identity
+- Proven producer commit: c5ad7db5b31bb7958d222a3c020462fa5d48d438
+- Build source commit: b77bd7db4f97368433ef7dbce6e5c756b78b4452
+- artifacts/api-server/src tree at both commits:
+  2d6dde36ccbb59618c0ef97698102a41305ea89e
+- inventario.ts SHA-256 at both commits:
+  3e1c06120189811d4140766a6f987f4b7ed5abd15d268ff04682ec5313b1e79f
+- API/runtime source, build script, package metadata, shared API/DB source,
+  workspace metadata and lockfile have no diff from c5ad7db to the build source.
+  Later commits contain reports and index-work evidence only; index declarations
+  already precede c5ad7db and are not a release gate or an applied migration.
+
+Preserved candidate
+- Directory: artifacts/api-server/dist-tanda-h-entry-guard
+- Entrypoint SHA-256:
+  7d5e47f61c1c9b9d78430e0f109d6e8fd4ad33f8ad0fc74c36ed100d601db366
+- Built with the existing build.mjs output option:
+  API_BUILD_OUTPUT_DIR=/home/runner/workspace/artifacts/api-server/dist-tanda-h-entry-guard
+- API typecheck: PASS (one execution).
+- Bundle syntax check with node --check: PASS.
+- No RED/GREEN/CHECK suite was rerun. The accepted evidence remains
+  producer-red.json 28/44 failed expectations, producer-green.json 44/44, and
+  check-copy.json 56/56.
+- No import/start smoke was run because index.ts starts the server outside
+  NODE_ENV=test. This worker did not start an API, use a database, or restart a
+  workflow.
+
+Effective API comparison
+- Current effective API command at handoff:
+  node artifacts/api-server/dist-tanda-g-strict-candidate/index.mjs
+- Current effective entrypoint SHA-256:
+  103e5dce97fc463eafb33e0ec9ac283c3e3b16bd9c1220e928694e2be90deeec
+- Current effective process has API_INSPECTION_BOOT=1 and no E3/E4 environment
+  gate variables.
+- Existing API artifact TOML SHA-256:
+  75e216efcbfd274d29fbc5e8ed6b7ec05471893b0cb9bf5a550cd7f6db5a5b18
+- The current effective bundle has zero INVALID_PHYSICAL_QUANTITY markers; the
+  candidate has one. Both bundles retain one E3_CLOSED marker and two
+  E4_DISABLED markers.
+- Source constants remain E3_ENABLED=true, E3_ORDINARY_CASH_ENABLED=true and
+  E4_CASH_OUT_ENABLED=true. No gate, workflow, E3 or E4 configuration changed.
+- Active dist-tanda-g-strict-candidate and default dist entrypoint hashes stayed
+  unchanged across the build.
+
+Producer Number behavior reviewed, no scope added
+- String(cantidad).trim() is checked against decimal syntax before acceptance.
+- Number(text) must be finite; NaN and +/-Infinity are rejected.
+- Blank/malformed and JS-only numeric coercions are rejected.
+- A negative mantissa is rejected even if Number underflows to signed zero.
+- Existing signed-zero acceptance is preserved.
+
+MAIN release step (not performed here)
+1. Verify this handoff commit and the entrypoint hash above.
+2. In the API artifact TOML, change only the development command entrypoint from
+   artifacts/api-server/dist-tanda-g-strict-candidate/index.mjs to
+   artifacts/api-server/dist-tanda-h-entry-guard/index.mjs.
+3. Preserve API_STARTUP_MODE=NORMAL, API_INSPECTION_BOOT=1, NODE_ENV=development
+   and all existing E3/E4 behavior; add no gate.
+4. Validate the TOML, restart the API workflow exactly once, then check
+   /api/healthz. MAIN owns the swap, restart and post-release health evidence.
+
+No production build command, default dist, workflow configuration, runtime,
+database, schema, or application data was changed by this worker.
