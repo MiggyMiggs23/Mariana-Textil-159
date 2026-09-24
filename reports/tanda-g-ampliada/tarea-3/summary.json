@@ -1,0 +1,152 @@
+{
+  "status": "PASS",
+  "scope": "Synthetic 30-calendar-date controlled process-clock run, not actual observed business volume",
+  "completedDays": 30,
+  "steps": 2667,
+  "counts": {
+    "entry": 210,
+    "transfer": 120,
+    "ticket": 720,
+    "charge": 360,
+    "authorize": 360,
+    "abono": 360,
+    "advance": 90,
+    "cancel-draft": 90,
+    "cancel": 90,
+    "E4": 90,
+    "close": 90,
+    "open": 87
+  },
+  "stepsPerDay": {
+    "1": 86,
+    "2": 89,
+    "3": 89,
+    "4": 89,
+    "5": 89,
+    "6": 89,
+    "7": 89,
+    "8": 89,
+    "9": 89,
+    "10": 89,
+    "11": 89,
+    "12": 89,
+    "13": 89,
+    "14": 89,
+    "15": 89,
+    "16": 89,
+    "17": 89,
+    "18": 89,
+    "19": 89,
+    "20": 89,
+    "21": 89,
+    "22": 89,
+    "23": 89,
+    "24": 89,
+    "25": 89,
+    "26": 89,
+    "27": 89,
+    "28": 89,
+    "29": 89,
+    "30": 89
+  },
+  "sites": 7,
+  "nativeUnits": [
+    "METRO",
+    "KILO",
+    "PIEZA",
+    "BOLSA"
+  ],
+  "totalsByUnit": {
+    "METRO": {
+      "initial": 560,
+      "final": 7160
+    },
+    "KILO": {
+      "initial": 560,
+      "final": 7160
+    },
+    "PIEZA": {
+      "initial": 560,
+      "final": 7160
+    },
+    "BOLSA": {
+      "initial": 560,
+      "final": 7160
+    }
+  },
+  "firstDate": "2026-09-23",
+  "lastDate": "2026-10-22",
+  "uniqueClosedCuts": 90,
+  "allCutDifferencesZero": true,
+  "finalCustomerNetBalance": "-100.00",
+  "db": {
+    "identity": {
+      "db": "tanda_ga_month",
+      "directory": "/home/runner/workspace/.local/tanda-g-ampliada/month-cluster",
+      "port": 55443,
+      "read_only": "on"
+    },
+    "sessions": [
+      {
+        "ubicacion_id": 836,
+        "sessions": 30,
+        "dates": 30,
+        "closed": 30,
+        "first": "2026-09-23",
+        "last": "2026-10-22"
+      },
+      {
+        "ubicacion_id": 837,
+        "sessions": 30,
+        "dates": 30,
+        "closed": 30,
+        "first": "2026-09-23",
+        "last": "2026-10-22"
+      },
+      {
+        "ubicacion_id": 838,
+        "sessions": 30,
+        "dates": 30,
+        "closed": 30,
+        "first": "2026-09-23",
+        "last": "2026-10-22"
+      }
+    ],
+    "gates": [
+      {
+        "ubicacion_id": 836,
+        "gates": 30,
+        "dates": 30
+      },
+      {
+        "ubicacion_id": 837,
+        "gates": 30,
+        "dates": 30
+      },
+      {
+        "ubicacion_id": 838,
+        "gates": 30,
+        "dates": 30
+      }
+    ],
+    "credit": [
+      {
+        "tipo": "VENTA_CREDITO",
+        "movements": 360,
+        "amount": "540000.00"
+      },
+      {
+        "tipo": "ABONO",
+        "movements": 450,
+        "amount": "-540100.00"
+      }
+    ],
+    "creditTimestampInversions": 0
+  },
+  "evidence": {
+    "journalSha256": "12cf093f4720978200bba844798912eba0f0dc68655c6012dc6436e1fddab35b",
+    "cutsSha256": "be90ac4bec6c2c57ef2385d40b88ef9f43503bc1e62d9870e79b24b9a454241c",
+    "resultsSha256": "32d0d56da976e092b88040df11043fa2d8a828f11490dff86394f7a0d6086980"
+  },
+  "excluded": "Previous failed clock-resume attempt retained separately; no events from it included."
+}

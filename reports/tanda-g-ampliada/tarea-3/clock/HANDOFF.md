@@ -1,5 +1,28 @@
 # Reloj mensual privado — entrega a MAIN y g-month-simulation
 
+## Restauración autorizada posterior al incidente de reanudación
+
+Ejecutado `restore-fresh.mjs` una única vez tras el incidente documentado:
+29 días completos no constituyen aprobación mensual. Evidencia original movida
+sin alterar bytes a `../failed-attempt-clock-resume/`, con SHA256 y tamaños en
+`archive-manifest.json`; también se conservaron INFORME.md y run.ts del intento.
+El script rechaza un archivo de respaldo existente, valida PID/comando/ruta/puerto
+y ausencia del arnés antes de detener únicamente el postmaster exclusivo.
+
+Se eliminó y restauró **sólo tanda_ga_month en 55443** desde el template
+sanitizado verificado; sin reparaciones de historia y sin tocar 55442 ni testigo.
+Reloj restablecido con postmaster detenido a 2026-09-23T18:00:00.000Z.
+Credenciales anteriores del clúster exclusivo siguen vigentes.
+`fresh-restore.json` acredita siete sitios, cuatro unidades, metraje cero y
+tres sesiones ABIERTA del fixture. **Postmaster detenido: MAIN debe reiniciar
+persistente mediante launch.mjs postgres.**
+
+No se ejecutó simulación. El worker debe comenzar sin --resume:
+`launch.mjs harness --through-day=10`, luego etapas --resume --through-day=20 y
+--resume --through-day=30, usando su arnés corregido. No repetir proof.mjs durante
+una corrida: retrocede al instante inicial. El INFORME principal todavía describe
+el intento anterior; corresponde al worker actualizarlo con los nuevos resultados.
+
 Preparado y **detenido**: PostgreSQL exclusivo en
 `/home/runner/workspace/.local/tanda-g-ampliada/month-cluster`, TCP 55443.
 La copia se llama `tanda_ga_month`; testigo vacío `tanda_ga_witness`.

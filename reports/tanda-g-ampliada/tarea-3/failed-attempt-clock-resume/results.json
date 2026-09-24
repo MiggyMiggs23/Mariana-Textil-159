@@ -1,0 +1,2542 @@
+{
+  "status": "BLOCKED_OR_FAILED",
+  "method": "Frozen production producers and final customer route handler with real PostgreSQL; not HTTP/auth-middleware coverage.",
+  "clock": "Externally controlled isolated process clock, never date-column rewrites or gate deletion.",
+  "assumptions": "Synthetic modest workload, not observed or claimed business volume. Daily: entry at all seven sites in all four units, four warehouse-to-store transfers, each store four cash and four credit lines, payment, advance, E4, unpaid-ticket cancellation, close.",
+  "days": [
+    {
+      "day": 1,
+      "date": "2026-09-23",
+      "steps": 86,
+      "status": "PASS"
+    },
+    {
+      "day": 2,
+      "date": "2026-09-24",
+      "steps": 175,
+      "status": "PASS"
+    },
+    {
+      "day": 3,
+      "date": "2026-09-25",
+      "steps": 264,
+      "status": "PASS"
+    },
+    {
+      "day": 4,
+      "date": "2026-09-26",
+      "steps": 353,
+      "status": "PASS"
+    },
+    {
+      "day": 5,
+      "date": "2026-09-27",
+      "steps": 442,
+      "status": "PASS"
+    },
+    {
+      "day": 6,
+      "date": "2026-09-28",
+      "steps": 531,
+      "status": "PASS"
+    },
+    {
+      "day": 7,
+      "date": "2026-09-29",
+      "steps": 620,
+      "status": "PASS"
+    },
+    {
+      "day": 8,
+      "date": "2026-09-30",
+      "steps": 709,
+      "status": "PASS"
+    },
+    {
+      "day": 9,
+      "date": "2026-10-01",
+      "steps": 798,
+      "status": "PASS"
+    },
+    {
+      "day": 10,
+      "date": "2026-10-02",
+      "steps": 887,
+      "status": "PASS"
+    },
+    {
+      "day": 11,
+      "date": "2026-10-03",
+      "steps": 976,
+      "status": "PASS"
+    },
+    {
+      "day": 12,
+      "date": "2026-10-04",
+      "steps": 1065,
+      "status": "PASS"
+    },
+    {
+      "day": 13,
+      "date": "2026-10-05",
+      "steps": 1154,
+      "status": "PASS"
+    },
+    {
+      "day": 14,
+      "date": "2026-10-06",
+      "steps": 1243,
+      "status": "PASS"
+    },
+    {
+      "day": 15,
+      "date": "2026-10-07",
+      "steps": 1332,
+      "status": "PASS"
+    },
+    {
+      "day": 16,
+      "date": "2026-10-08",
+      "steps": 1421,
+      "status": "PASS"
+    },
+    {
+      "day": 17,
+      "date": "2026-10-09",
+      "steps": 1510,
+      "status": "PASS"
+    },
+    {
+      "day": 18,
+      "date": "2026-10-10",
+      "steps": 1599,
+      "status": "PASS"
+    },
+    {
+      "day": 19,
+      "date": "2026-10-11",
+      "steps": 1688,
+      "status": "PASS"
+    },
+    {
+      "day": 20,
+      "date": "2026-10-12",
+      "steps": 1777,
+      "status": "PASS"
+    },
+    {
+      "day": 21,
+      "date": "2026-10-13",
+      "steps": 1866,
+      "status": "PASS"
+    },
+    {
+      "day": 22,
+      "date": "2026-10-14",
+      "steps": 1955,
+      "status": "PASS"
+    },
+    {
+      "day": 23,
+      "date": "2026-10-15",
+      "steps": 2044,
+      "status": "PASS"
+    },
+    {
+      "day": 24,
+      "date": "2026-10-16",
+      "steps": 2133,
+      "status": "PASS"
+    },
+    {
+      "day": 25,
+      "date": "2026-10-17",
+      "steps": 2222,
+      "status": "PASS"
+    },
+    {
+      "day": 26,
+      "date": "2026-10-18",
+      "steps": 2311,
+      "status": "PASS"
+    },
+    {
+      "day": 27,
+      "date": "2026-10-19",
+      "steps": 2400,
+      "status": "PASS"
+    },
+    {
+      "day": 28,
+      "date": "2026-10-20",
+      "steps": 2489,
+      "status": "PASS"
+    },
+    {
+      "day": 29,
+      "date": "2026-10-21",
+      "steps": 2578,
+      "status": "PASS"
+    }
+  ],
+  "initialIdentity": {
+    "db": "tanda_ga_month",
+    "dir": "/home/runner/workspace/.local/tanda-g-ampliada/month-cluster",
+    "port": 55443,
+    "day": "2026-09-23"
+  },
+  "initial": {
+    "cuts": [
+      {
+        "site": 836,
+        "session": 46,
+        "cut": {
+          "sesion": {
+            "id": 46,
+            "ubicacionId": 836,
+            "nombreUbicacion": "TANDA GA TIENDA 1",
+            "usuarioId": 236,
+            "nombreUsuario": "TANDA GA CAJA",
+            "abiertaAt": "2026-09-24T05:01:02.356Z",
+            "cerradaAt": null,
+            "fechaOperativa": "2026-09-23",
+            "cerradaPorId": null,
+            "fondoInicial": "5000.00",
+            "efectivoContado": null,
+            "estado": "ABIERTA"
+          },
+          "ticketsCobrados": 0,
+          "ticketsCancelados": 0,
+          "documentosPendientes": 0,
+          "totalCobrado": "0.00",
+          "ivaCobrado": "0.00",
+          "formasPago": [
+            {
+              "formaPago": "EFECTIVO",
+              "importe": "0.00",
+              "pagosCount": 0,
+              "ticketsCount": 0
+            },
+            {
+              "formaPago": "TRANSFERENCIA",
+              "importe": "0.00",
+              "pagosCount": 0,
+              "ticketsCount": 0
+            },
+            {
+              "formaPago": "FACTURADO",
+              "importe": "0.00",
+              "pagosCount": 0,
+              "ticketsCount": 0
+            },
+            {
+              "formaPago": "CREDITO",
+              "importe": "0.00",
+              "pagosCount": 0,
+              "ticketsCount": 0
+            }
+          ],
+          "cuentasDestino": [
+            {
+              "formaPago": "EFECTIVO",
+              "cuentaDestino": "CAJA_FISICA",
+              "importe": "0.00"
+            },
+            {
+              "formaPago": "TRANSFERENCIA",
+              "cuentaDestino": "CUENTA_NO_FISCAL",
+              "importe": "0.00"
+            },
+            {
+              "formaPago": "TRANSFERENCIA",
+              "cuentaDestino": "CUENTA_FISCAL",
+              "importe": "0.00"
+            },
+            {
+              "formaPago": "CREDITO",
+              "cuentaDestino": "CUENTAS_POR_COBRAR",
+              "importe": "0.00"
+            }
+          ],
+          "salidas": [],
+          "salidasPorCuenta": {
+            "CAJA_FISICA": "0.00",
+            "CUENTA_NO_FISCAL": "0.00",
+            "CUENTA_FISCAL": "0.00"
+          },
+          "facturacion": [
+            {
+              "facturado": true,
+              "ticketsCount": 0,
+              "subtotal": "0.00",
+              "iva": "0.00",
+              "importe": "0.00",
+              "efectivo": "0.00",
+              "transferencia": "0.00",
+              "credito": "0.00"
+            },
+            {
+              "facturado": false,
+              "ticketsCount": 0,
+              "subtotal": "0.00",
+              "iva": "0.00",
+              "importe": "0.00",
+              "efectivo": "0.00",
+              "transferencia": "0.00",
+              "credito": "0.00"
+            }
+          ],
+          "metreado": [],
+          "productos": [],
+          "pendientes": [],
+          "ticketsCobradosDetalle": [],
+          "cancelaciones": [],
+          "efectivoDesglose": {
+            "version": "E2",
+            "fondoInicial": "5000.00",
+            "cobrosTickets": "0.00",
+            "abonosFisicos": "0.00",
+            "cobrosRetenidos": "0.00",
+            "salidasFisicas": "0.00",
+            "efectivoEsperado": "5000.00",
+            "documentos": [
+              {
+                "origen": "FONDO_INICIAL",
+                "id": "46",
+                "folio": null,
+                "importe": "5000.00",
+                "href": null,
+                "evidencia": {
+                  "referencia": "Sesión de caja #46",
+                  "motivo": null,
+                  "fecha": "2026-09-24T05:01:02.356Z",
+                  "usuarioId": 236,
+                  "proveedorId": null,
+                  "usuarioNombre": "TANDA GA CAJA",
+                  "proveedorNombre": null
+                }
+              }
+            ]
+          },
+          "efectivoEsperado": "5000.00",
+          "diferencia": null,
+          "efectivoContado": null,
+          "fondoInicial": "5000.00",
+          "hojaVentasDia": {
+            "sitio": "TANDA GA TIENDA 1",
+            "fechaOperativa": "2026-09-23",
+            "cerrada": false,
+            "quienCerro": null,
+            "secciones": [
+              {
+                "modalidad": "ROLLOS",
+                "lineas": [],
+                "subtotal": "0.00"
+              },
+              {
+                "modalidad": "METRAJE",
+                "lineas": [],
+                "subtotal": "0.00"
+              }
+            ],
+            "totalRollos": "0",
+            "totalMetros": "0",
+            "totalKilos": "0",
+            "totalBolsas": "0",
+            "totalPiezas": "0",
+            "subtotal": "0.00",
+            "ivaFacturado": "0.00",
+            "totalGeneral": "0.00"
+          }
+        }
+      },
+      {
+        "site": 837,
+        "session": 47,
+        "cut": {
+          "sesion": {
+            "id": 47,
+            "ubicacionId": 837,
+            "nombreUbicacion": "TANDA GA TIENDA 2",
+            "usuarioId": 241,
+            "nombreUsuario": "TANDA GA CAJA 2",
+            "abiertaAt": "2026-09-24T05:01:02.356Z",
+            "cerradaAt": null,
+            "fechaOperativa": "2026-09-23",
+            "cerradaPorId": null,
+            "fondoInicial": "5000.00",
+            "efectivoContado": null,
+            "estado": "ABIERTA"
+          },
+          "ticketsCobrados": 0,
+          "ticketsCancelados": 0,
+          "documentosPendientes": 0,
+          "totalCobrado": "0.00",
+          "ivaCobrado": "0.00",
+          "formasPago": [
+            {
+              "formaPago": "EFECTIVO",
+              "importe": "0.00",
+              "pagosCount": 0,
+              "ticketsCount": 0
+            },
+            {
+              "formaPago": "TRANSFERENCIA",
+              "importe": "0.00",
+              "pagosCount": 0,
+              "ticketsCount": 0
+            },
+            {
+              "formaPago": "FACTURADO",
+              "importe": "0.00",
+              "pagosCount": 0,
+              "ticketsCount": 0
+            },
+            {
+              "formaPago": "CREDITO",
+              "importe": "0.00",
+              "pagosCount": 0,
+              "ticketsCount": 0
+            }
+          ],
+          "cuentasDestino": [
+            {
+              "formaPago": "EFECTIVO",
+              "cuentaDestino": "CAJA_FISICA",
+              "importe": "0.00"
+            },
+            {
+              "formaPago": "TRANSFERENCIA",
+              "cuentaDestino": "CUENTA_NO_FISCAL",
+              "importe": "0.00"
+            },
+            {
+              "formaPago": "TRANSFERENCIA",
+              "cuentaDestino": "CUENTA_FISCAL",
+              "importe": "0.00"
+            },
+            {
+              "formaPago": "CREDITO",
+              "cuentaDestino": "CUENTAS_POR_COBRAR",
+              "importe": "0.00"
+            }
+          ],
+          "salidas": [],
+          "salidasPorCuenta": {
+            "CAJA_FISICA": "0.00",
+            "CUENTA_NO_FISCAL": "0.00",
+            "CUENTA_FISCAL": "0.00"
+          },
+          "facturacion": [
+            {
+              "facturado": true,
+              "ticketsCount": 0,
+              "subtotal": "0.00",
+              "iva": "0.00",
+              "importe": "0.00",
+              "efectivo": "0.00",
+              "transferencia": "0.00",
+              "credito": "0.00"
+            },
+            {
+              "facturado": false,
+              "ticketsCount": 0,
+              "subtotal": "0.00",
+              "iva": "0.00",
+              "importe": "0.00",
+              "efectivo": "0.00",
+              "transferencia": "0.00",
+              "credito": "0.00"
+            }
+          ],
+          "metreado": [],
+          "productos": [],
+          "pendientes": [],
+          "ticketsCobradosDetalle": [],
+          "cancelaciones": [],
+          "efectivoDesglose": {
+            "version": "E2",
+            "fondoInicial": "5000.00",
+            "cobrosTickets": "0.00",
+            "abonosFisicos": "0.00",
+            "cobrosRetenidos": "0.00",
+            "salidasFisicas": "0.00",
+            "efectivoEsperado": "5000.00",
+            "documentos": [
+              {
+                "origen": "FONDO_INICIAL",
+                "id": "47",
+                "folio": null,
+                "importe": "5000.00",
+                "href": null,
+                "evidencia": {
+                  "referencia": "Sesión de caja #47",
+                  "motivo": null,
+                  "fecha": "2026-09-24T05:01:02.356Z",
+                  "usuarioId": 241,
+                  "proveedorId": null,
+                  "usuarioNombre": "TANDA GA CAJA 2",
+                  "proveedorNombre": null
+                }
+              }
+            ]
+          },
+          "efectivoEsperado": "5000.00",
+          "diferencia": null,
+          "efectivoContado": null,
+          "fondoInicial": "5000.00",
+          "hojaVentasDia": {
+            "sitio": "TANDA GA TIENDA 2",
+            "fechaOperativa": "2026-09-23",
+            "cerrada": false,
+            "quienCerro": null,
+            "secciones": [
+              {
+                "modalidad": "ROLLOS",
+                "lineas": [],
+                "subtotal": "0.00"
+              },
+              {
+                "modalidad": "METRAJE",
+                "lineas": [],
+                "subtotal": "0.00"
+              }
+            ],
+            "totalRollos": "0",
+            "totalMetros": "0",
+            "totalKilos": "0",
+            "totalBolsas": "0",
+            "totalPiezas": "0",
+            "subtotal": "0.00",
+            "ivaFacturado": "0.00",
+            "totalGeneral": "0.00"
+          }
+        }
+      },
+      {
+        "site": 838,
+        "session": 48,
+        "cut": {
+          "sesion": {
+            "id": 48,
+            "ubicacionId": 838,
+            "nombreUbicacion": "TANDA GA TIENDA 3",
+            "usuarioId": 242,
+            "nombreUsuario": "TANDA GA CAJA 3",
+            "abiertaAt": "2026-09-24T05:01:02.356Z",
+            "cerradaAt": null,
+            "fechaOperativa": "2026-09-23",
+            "cerradaPorId": null,
+            "fondoInicial": "5000.00",
+            "efectivoContado": null,
+            "estado": "ABIERTA"
+          },
+          "ticketsCobrados": 0,
+          "ticketsCancelados": 0,
+          "documentosPendientes": 0,
+          "totalCobrado": "0.00",
+          "ivaCobrado": "0.00",
+          "formasPago": [
+            {
+              "formaPago": "EFECTIVO",
+              "importe": "0.00",
+              "pagosCount": 0,
+              "ticketsCount": 0
+            },
+            {
+              "formaPago": "TRANSFERENCIA",
+              "importe": "0.00",
+              "pagosCount": 0,
+              "ticketsCount": 0
+            },
+            {
+              "formaPago": "FACTURADO",
+              "importe": "0.00",
+              "pagosCount": 0,
+              "ticketsCount": 0
+            },
+            {
+              "formaPago": "CREDITO",
+              "importe": "0.00",
+              "pagosCount": 0,
+              "ticketsCount": 0
+            }
+          ],
+          "cuentasDestino": [
+            {
+              "formaPago": "EFECTIVO",
+              "cuentaDestino": "CAJA_FISICA",
+              "importe": "0.00"
+            },
+            {
+              "formaPago": "TRANSFERENCIA",
+              "cuentaDestino": "CUENTA_NO_FISCAL",
+              "importe": "0.00"
+            },
+            {
+              "formaPago": "TRANSFERENCIA",
+              "cuentaDestino": "CUENTA_FISCAL",
+              "importe": "0.00"
+            },
+            {
+              "formaPago": "CREDITO",
+              "cuentaDestino": "CUENTAS_POR_COBRAR",
+              "importe": "0.00"
+            }
+          ],
+          "salidas": [],
+          "salidasPorCuenta": {
+            "CAJA_FISICA": "0.00",
+            "CUENTA_NO_FISCAL": "0.00",
+            "CUENTA_FISCAL": "0.00"
+          },
+          "facturacion": [
+            {
+              "facturado": true,
+              "ticketsCount": 0,
+              "subtotal": "0.00",
+              "iva": "0.00",
+              "importe": "0.00",
+              "efectivo": "0.00",
+              "transferencia": "0.00",
+              "credito": "0.00"
+            },
+            {
+              "facturado": false,
+              "ticketsCount": 0,
+              "subtotal": "0.00",
+              "iva": "0.00",
+              "importe": "0.00",
+              "efectivo": "0.00",
+              "transferencia": "0.00",
+              "credito": "0.00"
+            }
+          ],
+          "metreado": [],
+          "productos": [],
+          "pendientes": [],
+          "ticketsCobradosDetalle": [],
+          "cancelaciones": [],
+          "efectivoDesglose": {
+            "version": "E2",
+            "fondoInicial": "5000.00",
+            "cobrosTickets": "0.00",
+            "abonosFisicos": "0.00",
+            "cobrosRetenidos": "0.00",
+            "salidasFisicas": "0.00",
+            "efectivoEsperado": "5000.00",
+            "documentos": [
+              {
+                "origen": "FONDO_INICIAL",
+                "id": "48",
+                "folio": null,
+                "importe": "5000.00",
+                "href": null,
+                "evidencia": {
+                  "referencia": "Sesión de caja #48",
+                  "motivo": null,
+                  "fecha": "2026-09-24T05:01:02.356Z",
+                  "usuarioId": 242,
+                  "proveedorId": null,
+                  "usuarioNombre": "TANDA GA CAJA 3",
+                  "proveedorNombre": null
+                }
+              }
+            ]
+          },
+          "efectivoEsperado": "5000.00",
+          "diferencia": null,
+          "efectivoContado": null,
+          "fondoInicial": "5000.00",
+          "hojaVentasDia": {
+            "sitio": "TANDA GA TIENDA 3",
+            "fechaOperativa": "2026-09-23",
+            "cerrada": false,
+            "quienCerro": null,
+            "secciones": [
+              {
+                "modalidad": "ROLLOS",
+                "lineas": [],
+                "subtotal": "0.00"
+              },
+              {
+                "modalidad": "METRAJE",
+                "lineas": [],
+                "subtotal": "0.00"
+              }
+            ],
+            "totalRollos": "0",
+            "totalMetros": "0",
+            "totalKilos": "0",
+            "totalBolsas": "0",
+            "totalPiezas": "0",
+            "subtotal": "0.00",
+            "ivaFacturado": "0.00",
+            "totalGeneral": "0.00"
+          }
+        }
+      }
+    ],
+    "inventory": [
+      {
+        "unidad": "METRO",
+        "producto_id": 2078,
+        "ubicacion_id": 836,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "KILO",
+        "producto_id": 2079,
+        "ubicacion_id": 836,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "PIEZA",
+        "producto_id": 2080,
+        "ubicacion_id": 836,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "BOLSA",
+        "producto_id": 2081,
+        "ubicacion_id": 836,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "METRO",
+        "producto_id": 2078,
+        "ubicacion_id": 837,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "KILO",
+        "producto_id": 2079,
+        "ubicacion_id": 837,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "PIEZA",
+        "producto_id": 2080,
+        "ubicacion_id": 837,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "BOLSA",
+        "producto_id": 2081,
+        "ubicacion_id": 837,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "METRO",
+        "producto_id": 2078,
+        "ubicacion_id": 838,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "KILO",
+        "producto_id": 2079,
+        "ubicacion_id": 838,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "PIEZA",
+        "producto_id": 2080,
+        "ubicacion_id": 838,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "BOLSA",
+        "producto_id": 2081,
+        "ubicacion_id": 838,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "METRO",
+        "producto_id": 2078,
+        "ubicacion_id": 839,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "KILO",
+        "producto_id": 2079,
+        "ubicacion_id": 839,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "PIEZA",
+        "producto_id": 2080,
+        "ubicacion_id": 839,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "BOLSA",
+        "producto_id": 2081,
+        "ubicacion_id": 839,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "METRO",
+        "producto_id": 2078,
+        "ubicacion_id": 840,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "KILO",
+        "producto_id": 2079,
+        "ubicacion_id": 840,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "PIEZA",
+        "producto_id": 2080,
+        "ubicacion_id": 840,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "BOLSA",
+        "producto_id": 2081,
+        "ubicacion_id": 840,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "METRO",
+        "producto_id": 2078,
+        "ubicacion_id": 841,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "KILO",
+        "producto_id": 2079,
+        "ubicacion_id": 841,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "PIEZA",
+        "producto_id": 2080,
+        "ubicacion_id": 841,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "BOLSA",
+        "producto_id": 2081,
+        "ubicacion_id": 841,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "METRO",
+        "producto_id": 2078,
+        "ubicacion_id": 842,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "KILO",
+        "producto_id": 2079,
+        "ubicacion_id": 842,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "PIEZA",
+        "producto_id": 2080,
+        "ubicacion_id": 842,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      },
+      {
+        "unidad": "BOLSA",
+        "producto_id": 2081,
+        "ubicacion_id": 842,
+        "physical": "80.000",
+        "cache": "80.000",
+        "ledger": "80.000"
+      }
+    ],
+    "rolls": [
+      {
+        "id": 6233,
+        "producto_id": 2078,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6234,
+        "producto_id": 2078,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6235,
+        "producto_id": 2078,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6236,
+        "producto_id": 2078,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6237,
+        "producto_id": 2078,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6238,
+        "producto_id": 2078,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6239,
+        "producto_id": 2078,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6240,
+        "producto_id": 2078,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6241,
+        "producto_id": 2079,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6242,
+        "producto_id": 2079,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6243,
+        "producto_id": 2079,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6244,
+        "producto_id": 2079,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6245,
+        "producto_id": 2079,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6246,
+        "producto_id": 2079,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6247,
+        "producto_id": 2079,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6248,
+        "producto_id": 2079,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6249,
+        "producto_id": 2080,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6250,
+        "producto_id": 2080,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6251,
+        "producto_id": 2080,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6252,
+        "producto_id": 2080,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6253,
+        "producto_id": 2080,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6254,
+        "producto_id": 2080,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6255,
+        "producto_id": 2080,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6256,
+        "producto_id": 2080,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6257,
+        "producto_id": 2081,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6258,
+        "producto_id": 2081,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6259,
+        "producto_id": 2081,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6260,
+        "producto_id": 2081,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6261,
+        "producto_id": 2081,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6262,
+        "producto_id": 2081,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6263,
+        "producto_id": 2081,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6264,
+        "producto_id": 2081,
+        "ubicacion_id": 836,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6265,
+        "producto_id": 2078,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6266,
+        "producto_id": 2078,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6267,
+        "producto_id": 2078,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6268,
+        "producto_id": 2078,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6269,
+        "producto_id": 2078,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6270,
+        "producto_id": 2078,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6271,
+        "producto_id": 2078,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6272,
+        "producto_id": 2078,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6273,
+        "producto_id": 2079,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6274,
+        "producto_id": 2079,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6275,
+        "producto_id": 2079,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6276,
+        "producto_id": 2079,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6277,
+        "producto_id": 2079,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6278,
+        "producto_id": 2079,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6279,
+        "producto_id": 2079,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6280,
+        "producto_id": 2079,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6281,
+        "producto_id": 2080,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6282,
+        "producto_id": 2080,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6283,
+        "producto_id": 2080,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6284,
+        "producto_id": 2080,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6285,
+        "producto_id": 2080,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6286,
+        "producto_id": 2080,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6287,
+        "producto_id": 2080,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6288,
+        "producto_id": 2080,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6289,
+        "producto_id": 2081,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6290,
+        "producto_id": 2081,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6291,
+        "producto_id": 2081,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6292,
+        "producto_id": 2081,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6293,
+        "producto_id": 2081,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6294,
+        "producto_id": 2081,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6295,
+        "producto_id": 2081,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6296,
+        "producto_id": 2081,
+        "ubicacion_id": 837,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6297,
+        "producto_id": 2078,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6298,
+        "producto_id": 2078,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6299,
+        "producto_id": 2078,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6300,
+        "producto_id": 2078,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6301,
+        "producto_id": 2078,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6302,
+        "producto_id": 2078,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6303,
+        "producto_id": 2078,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6304,
+        "producto_id": 2078,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6305,
+        "producto_id": 2079,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6306,
+        "producto_id": 2079,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6307,
+        "producto_id": 2079,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6308,
+        "producto_id": 2079,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6309,
+        "producto_id": 2079,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6310,
+        "producto_id": 2079,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6311,
+        "producto_id": 2079,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6312,
+        "producto_id": 2079,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6313,
+        "producto_id": 2080,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6314,
+        "producto_id": 2080,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6315,
+        "producto_id": 2080,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6316,
+        "producto_id": 2080,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6317,
+        "producto_id": 2080,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6318,
+        "producto_id": 2080,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6319,
+        "producto_id": 2080,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6320,
+        "producto_id": 2080,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6321,
+        "producto_id": 2081,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6322,
+        "producto_id": 2081,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6323,
+        "producto_id": 2081,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6324,
+        "producto_id": 2081,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6325,
+        "producto_id": 2081,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6326,
+        "producto_id": 2081,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6327,
+        "producto_id": 2081,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6328,
+        "producto_id": 2081,
+        "ubicacion_id": 838,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6329,
+        "producto_id": 2078,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6330,
+        "producto_id": 2078,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6331,
+        "producto_id": 2078,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6332,
+        "producto_id": 2078,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6333,
+        "producto_id": 2078,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6334,
+        "producto_id": 2078,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6335,
+        "producto_id": 2078,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6336,
+        "producto_id": 2078,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6337,
+        "producto_id": 2079,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6338,
+        "producto_id": 2079,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6339,
+        "producto_id": 2079,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6340,
+        "producto_id": 2079,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6341,
+        "producto_id": 2079,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6342,
+        "producto_id": 2079,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6343,
+        "producto_id": 2079,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6344,
+        "producto_id": 2079,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6345,
+        "producto_id": 2080,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6346,
+        "producto_id": 2080,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6347,
+        "producto_id": 2080,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6348,
+        "producto_id": 2080,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6349,
+        "producto_id": 2080,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6350,
+        "producto_id": 2080,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6351,
+        "producto_id": 2080,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6352,
+        "producto_id": 2080,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6353,
+        "producto_id": 2081,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6354,
+        "producto_id": 2081,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6355,
+        "producto_id": 2081,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6356,
+        "producto_id": 2081,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6357,
+        "producto_id": 2081,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6358,
+        "producto_id": 2081,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6359,
+        "producto_id": 2081,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6360,
+        "producto_id": 2081,
+        "ubicacion_id": 839,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6361,
+        "producto_id": 2078,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6362,
+        "producto_id": 2078,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6363,
+        "producto_id": 2078,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6364,
+        "producto_id": 2078,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6365,
+        "producto_id": 2078,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6366,
+        "producto_id": 2078,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6367,
+        "producto_id": 2078,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6368,
+        "producto_id": 2078,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6369,
+        "producto_id": 2079,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6370,
+        "producto_id": 2079,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6371,
+        "producto_id": 2079,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6372,
+        "producto_id": 2079,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6373,
+        "producto_id": 2079,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6374,
+        "producto_id": 2079,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6375,
+        "producto_id": 2079,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6376,
+        "producto_id": 2079,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6377,
+        "producto_id": 2080,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6378,
+        "producto_id": 2080,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6379,
+        "producto_id": 2080,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6380,
+        "producto_id": 2080,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6381,
+        "producto_id": 2080,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6382,
+        "producto_id": 2080,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6383,
+        "producto_id": 2080,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6384,
+        "producto_id": 2080,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6385,
+        "producto_id": 2081,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6386,
+        "producto_id": 2081,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6387,
+        "producto_id": 2081,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6388,
+        "producto_id": 2081,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6389,
+        "producto_id": 2081,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6390,
+        "producto_id": 2081,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6391,
+        "producto_id": 2081,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6392,
+        "producto_id": 2081,
+        "ubicacion_id": 840,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6393,
+        "producto_id": 2078,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6394,
+        "producto_id": 2078,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6395,
+        "producto_id": 2078,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6396,
+        "producto_id": 2078,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6397,
+        "producto_id": 2078,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6398,
+        "producto_id": 2078,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6399,
+        "producto_id": 2078,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6400,
+        "producto_id": 2078,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6401,
+        "producto_id": 2079,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6402,
+        "producto_id": 2079,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6403,
+        "producto_id": 2079,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6404,
+        "producto_id": 2079,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6405,
+        "producto_id": 2079,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6406,
+        "producto_id": 2079,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6407,
+        "producto_id": 2079,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6408,
+        "producto_id": 2079,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6409,
+        "producto_id": 2080,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6410,
+        "producto_id": 2080,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6411,
+        "producto_id": 2080,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6412,
+        "producto_id": 2080,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6413,
+        "producto_id": 2080,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6414,
+        "producto_id": 2080,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6415,
+        "producto_id": 2080,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6416,
+        "producto_id": 2080,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6417,
+        "producto_id": 2081,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6418,
+        "producto_id": 2081,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6419,
+        "producto_id": 2081,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6420,
+        "producto_id": 2081,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6421,
+        "producto_id": 2081,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6422,
+        "producto_id": 2081,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6423,
+        "producto_id": 2081,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6424,
+        "producto_id": 2081,
+        "ubicacion_id": 841,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6425,
+        "producto_id": 2078,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6426,
+        "producto_id": 2078,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6427,
+        "producto_id": 2078,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6428,
+        "producto_id": 2078,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6429,
+        "producto_id": 2078,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6430,
+        "producto_id": 2078,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6431,
+        "producto_id": 2078,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6432,
+        "producto_id": 2078,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6433,
+        "producto_id": 2079,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6434,
+        "producto_id": 2079,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6435,
+        "producto_id": 2079,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6436,
+        "producto_id": 2079,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6437,
+        "producto_id": 2079,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6438,
+        "producto_id": 2079,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6439,
+        "producto_id": 2079,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6440,
+        "producto_id": 2079,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6441,
+        "producto_id": 2080,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6442,
+        "producto_id": 2080,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6443,
+        "producto_id": 2080,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6444,
+        "producto_id": 2080,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6445,
+        "producto_id": 2080,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6446,
+        "producto_id": 2080,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6447,
+        "producto_id": 2080,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6448,
+        "producto_id": 2080,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6449,
+        "producto_id": 2081,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6450,
+        "producto_id": 2081,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6451,
+        "producto_id": 2081,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6452,
+        "producto_id": 2081,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6453,
+        "producto_id": 2081,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6454,
+        "producto_id": 2081,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6455,
+        "producto_id": 2081,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      },
+      {
+        "id": 6456,
+        "producto_id": 2081,
+        "ubicacion_id": 842,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      }
+    ],
+    "debt": [
+      {
+        "balance": "0",
+        "count": 0
+      }
+    ],
+    "credit": [],
+    "sessions": [
+      {
+        "id": 46,
+        "ubicacion_id": 836,
+        "fecha_operativa": "2026-09-23",
+        "estado": "ABIERTA",
+        "fondo_inicial": "5000.00"
+      },
+      {
+        "id": 47,
+        "ubicacion_id": 837,
+        "fecha_operativa": "2026-09-23",
+        "estado": "ABIERTA",
+        "fondo_inicial": "5000.00"
+      },
+      {
+        "id": 48,
+        "ubicacion_id": 838,
+        "fecha_operativa": "2026-09-23",
+        "estado": "ABIERTA",
+        "fondo_inicial": "5000.00"
+      }
+    ],
+    "cash": [
+      {
+        "id": 46,
+        "payments": "0",
+        "withdrawals": "0"
+      },
+      {
+        "id": 47,
+        "payments": "0",
+        "withdrawals": "0"
+      },
+      {
+        "id": 48,
+        "payments": "0",
+        "withdrawals": "0"
+      }
+    ]
+  },
+  "resumes": [
+    {
+      "failed": {
+        "message": "E1: una operación sin dinero real no puede imputar sesión de caja."
+      },
+      "at": "2026-09-23T18:00:43.277Z",
+      "verifiedUnchanged": true
+    },
+    {
+      "at": "2026-10-22T18:01:18.002Z",
+      "verifiedUnchanged": true
+    }
+  ],
+  "error": {
+    "message": "No se puede documentar el saldo a favor automático porque el ABONO ya tiene aplicaciones inmutables consumidas.",
+    "code": "FAVOR_APPLICATION_STORAGE_UNAVAILABLE"
+  },
+  "completedDays": 29
+}

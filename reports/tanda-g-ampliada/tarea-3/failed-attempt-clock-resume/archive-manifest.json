@@ -1,0 +1,33 @@
+{
+  "classification": "HARNESS_CLOCK_ERROR_NOT_PRODUCT_DEFECT",
+  "completedDays": 29,
+  "fullMonthPass": false,
+  "files": [
+    {
+      "name": "results.json",
+      "bytes": 61561,
+      "sha256": "a94158b78a4d7b3ea50bb71fd787a1bfb59f3440bd4f2699b6a521dd431466c8"
+    },
+    {
+      "name": "progress.txt",
+      "bytes": 3750,
+      "sha256": "9175fce9e207d082c775bbb32c16802f8fc2d140e043479b13a9d216e9463685"
+    },
+    {
+      "name": "journal.jsonl.gz",
+      "bytes": 74267932,
+      "sha256": "259663036d3225ffe17eade8b6621aa92db77b36736440ac46d34a0e3b7906a6"
+    },
+    {
+      "name": "cuts.jsonl",
+      "bytes": 1289303,
+      "sha256": "9a2babd7b34706f13c52f995007eb2461babb709afb056b7ebaea01f922932cc"
+    },
+    {
+      "name": "clock-resume-incident.json",
+      "bytes": 1547,
+      "sha256": "6ce28da0c54fab9ef3b135f6d99c908e740836c372ee6550f0c40740ecb8b5e5"
+    }
+  ],
+  "method": "Original failed evidence moved byte-for-byte; no history repair"
+}

@@ -1,0 +1,31 @@
+{
+  "status": "RESTORED_FRESH_STOPPED",
+  "database": "tanda_ga_month",
+  "directory": "/home/runner/workspace/.local/tanda-g-ampliada/month-cluster",
+  "port": 55443,
+  "templateSha256": "f6ce728b132b82b3760d75b35f33ba039677eee1de50de6ac588937d239b75e4",
+  "archive": "failed-attempt-clock-resume",
+  "clock": {
+    "wall": "2026-09-23 12:00:09.993265-06",
+    "day": "2026-09-23"
+  },
+  "sites": 7,
+  "units": [
+    "BOLSA",
+    "KILO",
+    "METRO",
+    "PIEZA"
+  ],
+  "metrage": 0,
+  "sessions": [
+    {
+      "fecha": "2026-09-23",
+      "estado": "ABIERTA",
+      "n": 3
+    }
+  ],
+  "simulationRun": false,
+  "historyRepair": false,
+  "shared55442Touched": false,
+  "mainPersistentRestartRequired": true
+}

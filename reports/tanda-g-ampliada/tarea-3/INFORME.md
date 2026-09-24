@@ -1,81 +1,97 @@
-# Tarea 3 — simulación mensual ampliada
+# Tarea 3 — mes ampliado: PASS
 
-## Estado y bloqueo
+## Resultado real
 
-Actualización de ejecución: **29 días completos aprobados; día 30 bloqueado**.
-MAIN proporcionó postmaster exclusivo 55443 y reloj LD_PRELOAD comprobado
-(`clock/proof.json`). Se ejecutaron productores reales y se conservaron
-`journal.jsonl.gz` (miembros gzip concatenados; `gzip -cd`), cortes y resultados.
-Un timeout de 300 segundos interrumpió el día 30 después de commit. La recuperación
-verificó el commit sin repetirlo, pero reinició por error el reloj del mismo día,
-unos tres segundos hacia atrás. El abono posterior quedó antes de la autorización.
-Se reporta explícitamente **error del arnés**, no defecto del producto:
-`clock-resume-incident.json`. No se reescribió historia ni se reparó por SQL.
-Se requiere restauración fresca por MAIN para la aceptación completa.
+Se completaron **30 fechas consecutivas, 2026-09-23 a 2026-10-22**, en PostgreSQL
+real exclusivo, puerto **55443**, base `tanda_ga_month`. Son fechas de un
+**reloj de procesos controlado**, no treinta días de tiempo real transcurrido.
+Se usaron los productores reales del código congelado y los siete sitios
+del fixture: **tres tiendas y cuatro bodegas**, con productos nativos
+**METRO, KILO, PIEZA y BOLSA**. No se cambió código de producto.
 
-El arnés ahora conserva el reloj de la fecha actual y admite etapas acotadas:
-`launch.mjs harness --through-day=10`, luego
-`launch.mjs harness --resume --through-day=20` y
-`launch.mjs harness --resume --through-day=30`.
-El intento fallido debe conservarse aparte, nunca presentarse como aprobación.
+La carga es un supuesto sintético modesto, **no volumen comercial observado**.
+Se ejecutó en tres etapas acotadas de diez días, conservando el estado y
+avanzando el reloj sólo hacia fechas posteriores. No hubo SQL de reescritura
+histórica, apertura de compuertas ni modificación de la regla de una sesión por
+tienda y fecha. No se usó la base app ni la copia mensual compartida 55442.
 
-Contexto de planificación inicial (bloqueo de reloj ya resuelto):
-La entrega inicial MAIN contiene `tanda_ga_month` dentro del clúster compartido
-55442. Adelantar el reloj de ese postmaster afectaría las otras bases de los
-trabajadores, por lo que no se hace. Se requiere un postmaster exclusivo para la
-copia mensual y un reloj de proceso aislado compartido por PostgreSQL y el arnés.
-No basta con cambiar `Date` de JavaScript: `abrirSesionCaja` obtiene la fecha de
-PostgreSQL. No se borra `sesiones_caja_dias`, no se reescribe historia, no se
-modifican funciones SQL ni reglas de negocio. MAIN controla preparación y arranque.
+| Operación | Cantidad |
+|---|---:|
+| Entradas reales, una por sitio y día | 210 |
+| Transferencias inmediatas bodega→tienda | 120 |
+| Tickets de contado cobrados | 360 |
+| Notas de crédito autorizadas | 360 |
+| Abonos sobre crédito | 360 |
+| Anticipos | 90 |
+| Salidas E4 | 90 |
+| Tickets adicionales creados y cancelados sin cobro | 90 |
+| Cortes diarios cerrados | 90 |
+| Aperturas mediante productor | 87 |
+| Sesiones iniciales del fixture utilizadas | 3 |
+| Pasos con antes/después y expectativas verificadas | **2667** |
 
-## Ejecución preparada
+## Conciliaciones
 
-1. MAIN debe restaurar la copia mensual en su postmaster exclusivo. Mantener el
-   nombre `tanda_ga_month`, los siete sitios y cuatro unidades del manifiesto.
-2. Proveer `MONTH_DATA_DIRECTORY`, `MONTH_PG_PORT`,
-   `MONTH_CLOCK_EXCLUSIVE=MAIN_CONFIRMED_NO_OTHER_WORKER_DATABASES` y
-   `MONTH_CLOCK_CONTROLLER` (ejecutable privado bajo `.local/tanda-g-ampliada/`).
-   El controlador recibe un instante ISO UTC, avanza exclusivamente el reloj de
-   procesos de ese postmaster y del arnés, sin escribir filas históricas.
-   Ejemplo de mecanismo admisible: libfaketime con fichero de timestamp compartido
-   sólo por dichos procesos; los temporizadores monotónicos deben quedar reales.
-3. Compilar con `node reports/tanda-g-ampliada/tarea-3/build.mjs`.
-4. MAIN ejecuta `.local/tanda-g-ampliada/month-run.mjs` con
-   `NODE_ENV=test`, `REQUIRE_ISOLATED_TEST_DATABASE=1`, `TEST_DATABASE_URL`
-   apuntando exclusivamente a la copia mensual y las variables de aislamiento
-   del paquete DB apuntando a un testigo local distinto, nunca la base app.
-   No se deben publicar credenciales ni variables de conexión en los resultados.
+- Cada paso contiene las **28 celdas sitio/producto/unidad**, rollos individuales,
+  caché, ledger, saldo y movimientos del cliente, sesiones, pagos, retiros y cortes.
+  Se verificaron deltas independientes del escenario y coincidencia
+  **físico = caché = ledger** en todas las celdas después de cada paso.
+- Por cada unidad nativa, sin sumar unidades incompatibles: inicial **560**;
+  entradas **+8400**; ventas **−1800**; transferencias netas **0**;
+  cancelaciones netas **0**; final **7160**.
+- Cliente: **360 cargos de crédito por 540000.00** y **450 movimientos ABONO
+  por −540100.00**, incluyendo anticipos. Saldo neto final **−100.00**:
+  saldo a favor de 100, no deuda pendiente.
+- El efectivo esperado se contrastó por operación: cobro +1500, abono +importe,
+  anticipo +100, E4 −100, cero para las operaciones sin dinero. Cada sesión nueva
+  comienza con fondo de 5000.
+- **90 cortes únicos**, todos cerrados con diferencia cero. La comprobación SQL
+  final de sólo lectura demuestra **30 sesiones cerradas y 30 fechas por tienda**,
+  y **30 registros de compuerta diaria conservados por tienda**.
+- Se intentó reabrir después de cada cierre y se exigió
+  `SESSION_ALREADY_EXISTS_TODAY`. Ninguna compuerta fue eliminada.
+- La comprobación final detectó **cero inversiones de timestamp** en el ledger
+  de crédito del cliente de prueba.
 
-No reutilizar una copia parcialmente consumida como si fuese nueva; el arnés
-rechaza un diario previo salvo `--resume`, que verifica estado y conserva pasos.
-Una falla conserva `results.json`, `journal.jsonl.gz` y
-el paso pendiente si hubo interrupción. Los fallos de productores se reportan:
-no se corrigen alterando el producto ni abriendo compuertas.
+## Evidencia y alcance
 
-## Supuestos y verificaciones
+- `summary.json`: resultados compactos, conteos, conciliación final PostgreSQL
+  en transacción `READ ONLY` y SHA256 de los tres archivos principales.
+- `results.json`: identidad exclusiva, snapshots inicial/final y treinta días PASS.
+- `journal.jsonl.gz`: diario completo, miembros gzip concatenados;
+  lectura con `gzip -cd`. No se mezcló evidencia del intento previo.
+- `cuts.jsonl`: antes/después de los 90 cortes.
+- `progress.txt`: progreso por día de esta ejecución.
+- `clock/proof.json`: comprobación previa de PostgreSQL `now()` y Node `Date`,
+  con temporizadores monotónicos reales.
+- `clock/fresh-restore.json`: entrega de la restauración fresca hecha por MAIN.
+- `run.ts`, `build.mjs`, `summarize.mjs`: arnés, compilación y verificación final.
 
-Carga sintética razonable y modesta, **no volumen comercial observado**:
-30 fechas consecutivas; tres tiendas; cuatro bodegas; entrada diaria por sitio
-con cuatro paquetes/rollos de diez unidades de cada producto nativo; cuatro
-transferencias diarias bodega→tienda; por tienda/día cuatro tickets de contado y
-cuatro notas de crédito, abonos antes de la siguiente exposición, anticipo de
-100, salida E4 de 100, cancelación de ticket no cobrado y corte diario.
-El anticipo queda disponible para la siguiente nota, no se elimina por SQL.
+El abono usa el handler final de producción con actor y PostgreSQL reales,
+**no acredita cobertura HTTP ni middleware**. Las transferencias usan el
+productor inmediato real, no el flujo documental completo de salidas.
+Las cancelaciones son de tickets **no cobrados**, no reembolsos.
+Los cierres representan conteos simulados exactos, no arqueos humanos reales.
 
-Productores reales del código congelado y PostgreSQL real. El abono llama al
-handler final real de clientes con actor real; **no acredita cobertura HTTP ni
-middleware**. Las transferencias usan el productor inmediato real y no acreditan
-el flujo documental completo de salidas. Las cancelaciones son no cobradas, no
-reembolsos de ventas cobradas.
+## Intento previo preservado
 
-Cada paso escribe antes/después y expectativas de saldo de cliente e inventario
-por sitio/producto/unidad (28 celdas), comparando físico, caché y ledger.
-Incluye rollos individuales, movimientos de crédito, sesiones, cobros y salidas
-de caja. Los cortes se conservan por sesión y se exige diferencia cero.
-Después de cada cierre se intenta abrir de nuevo y se exige el rechazo de una
-sesión por sitio/fecha, preservando la regla de producción.
+`failed-attempt-clock-resume/` conserva byte por byte el intento previo con
+29 días completos, interrupción por timeout y error de reloj del arnés al
+reanudar el día 30. **No se presenta como defecto de producto ni como PASS**.
+No se reparó su historia: MAIN restauró una copia fresca y el intento aceptado
+se ejecutó desde cero. El arnés corregido no restablece el reloj de una fecha
+ya en curso y admite pausas explícitas en límites diarios.
 
-Cada paso también compara el efectivo esperado del último corte de cada tienda
-contra deltas independientes del escenario: cobro +1500, abono +importe,
-anticipo +100, E4 -100 y cero para las demás operaciones. Una nueva sesión debe
-partir de 5000. Esto complementa, sin sustituirlo, el cierre con diferencia cero.
+## Reproducción (sólo después de preparar otra copia fresca)
+
+MAIN controla la restauración y el arranque del postmaster exclusivo; el launcher
+lee las credenciales privadas, nunca incluidas en resultados. No volver a ejecutar
+la prueba del reloj contra una simulación en curso.
+
+```sh
+node reports/tanda-g-ampliada/tarea-3/build.mjs
+node reports/tanda-g-ampliada/tarea-3/clock/launch.mjs harness --through-day=10
+node reports/tanda-g-ampliada/tarea-3/clock/launch.mjs harness --resume --through-day=20
+node reports/tanda-g-ampliada/tarea-3/clock/launch.mjs harness --resume --through-day=30
+node reports/tanda-g-ampliada/tarea-3/summarize.mjs
+```
