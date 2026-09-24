@@ -1,0 +1,953 @@
+{
+  "name": "large",
+  "sample": "0",
+  "ready": false,
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "timing": {
+        "startTime": 1790268238705.181,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.617,
+        "responseStart": 19.191,
+        "responseEnd": 35.509
+      }
+    },
+    {
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/login",
+      "timing": {
+        "startTime": 1790268238978.087,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.562,
+        "responseStart": 278.601,
+        "responseEnd": 301.347
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "timing": {
+        "startTime": 1790268239273.975,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.92,
+        "responseStart": 26.912,
+        "responseEnd": 37.737
+      }
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "timing": {
+        "startTime": 1790268239362.89,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.501,
+        "responseStart": 2.146,
+        "responseEnd": 6.335
+      }
+    },
+    {
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/identidad",
+      "timing": {
+        "startTime": 1790268239371.112,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.317,
+        "responseStart": 17.724,
+        "responseEnd": 21.365
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "timing": {
+        "startTime": 1790268239451.869,
+        "domainLookupStart": 3.393,
+        "domainLookupEnd": 3.403,
+        "connectStart": 3.403,
+        "secureConnectionStart": -1,
+        "connectEnd": 3.795,
+        "requestStart": 4.145,
+        "responseStart": 76.919,
+        "responseEnd": 113.58
+      }
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "timing": {
+        "startTime": 1790268239454.763,
+        "domainLookupStart": 0.753,
+        "domainLookupEnd": 0.757,
+        "connectStart": 0.757,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.907,
+        "requestStart": 1.405,
+        "responseStart": 142.52,
+        "responseEnd": 179.564
+      }
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "timing": {
+        "startTime": 1790268239483.171,
+        "domainLookupStart": 10.782,
+        "domainLookupEnd": 10.786,
+        "connectStart": 10.786,
+        "secureConnectionStart": -1,
+        "connectEnd": 11.023,
+        "requestStart": 11.182,
+        "responseStart": 686.21,
+        "responseEnd": 709.61
+      }
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "timing": {
+        "startTime": 1790268239485.1638,
+        "domainLookupStart": 8.896,
+        "domainLookupEnd": 8.898,
+        "connectStart": 8.898,
+        "secureConnectionStart": -1,
+        "connectEnd": 9.018,
+        "requestStart": 9.206,
+        "responseStart": 686.944,
+        "responseEnd": 711.697
+      }
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "timing": {
+        "startTime": 1790268239485.3452,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 45.774,
+        "responseStart": 767.803,
+        "responseEnd": 791.928
+      }
+    },
+    {
+      "path": "/api/e7/disponibilidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e7/disponibilidad",
+      "timing": {
+        "startTime": 1790268239580.134,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 688.741,
+        "responseStart": 691.046,
+        "responseEnd": 697.071
+      }
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "timing": {
+        "startTime": 1790268239481.184,
+        "domainLookupStart": 12.233,
+        "domainLookupEnd": 12.246,
+        "connectStart": 12.246,
+        "secureConnectionStart": -1,
+        "connectEnd": 12.946,
+        "requestStart": 13.037,
+        "responseStart": 1086.006,
+        "responseEnd": 1108.794
+      }
+    },
+    {
+      "path": "/api/notificaciones",
+      "timing": {
+        "startTime": 1790268239482.9111,
+        "domainLookupStart": 10.769,
+        "domainLookupEnd": 10.775,
+        "connectStart": 10.775,
+        "secureConnectionStart": -1,
+        "connectEnd": 11.245,
+        "requestStart": 11.395,
+        "responseStart": 969.065,
+        "responseEnd": 1110.609
+      }
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "timing": {
+        "startTime": 1790268240857.811,
+        "domainLookupStart": 3.26,
+        "domainLookupEnd": 3.27,
+        "connectStart": 3.27,
+        "secureConnectionStart": -1,
+        "connectEnd": 3.378,
+        "requestStart": 3.442,
+        "responseStart": 128.017,
+        "responseEnd": 258.378
+      }
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "timing": {
+        "startTime": 1790268240854.216,
+        "domainLookupStart": 5.065,
+        "domainLookupEnd": 5.082,
+        "connectStart": 5.082,
+        "secureConnectionStart": -1,
+        "connectEnd": 5.779,
+        "requestStart": 5.964,
+        "responseStart": 265.905,
+        "responseEnd": 363.166
+      }
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "timing": {
+        "startTime": 1790268240855.479,
+        "domainLookupStart": 4.142,
+        "domainLookupEnd": 4.148,
+        "connectStart": 4.148,
+        "secureConnectionStart": -1,
+        "connectEnd": 4.68,
+        "requestStart": 4.892,
+        "responseStart": 314.696,
+        "responseEnd": 412.187
+      }
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "timing": {
+        "startTime": 1790268240856.798,
+        "domainLookupStart": 3.066,
+        "domainLookupEnd": 3.078,
+        "connectStart": 3.078,
+        "secureConnectionStart": -1,
+        "connectEnd": 3.311,
+        "requestStart": 3.58,
+        "responseStart": 316.236,
+        "responseEnd": 422.338
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "timing": {
+        "startTime": 1790268240854.021,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.614,
+        "responseStart": 319.243,
+        "responseEnd": 424.963
+      }
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "timing": {
+        "startTime": 1790268240852.839,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.572,
+        "responseStart": 542.658,
+        "responseEnd": 641.478
+      }
+    },
+    {
+      "path": "/api/clientes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes",
+      "timing": {
+        "startTime": 1790268240857.841,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 163.049,
+        "responseStart": 621.399,
+        "responseEnd": 719.027
+      }
+    },
+    {
+      "path": "/api/clientes/6/credito",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/6/credito",
+      "timing": {
+        "startTime": 1790268241542.6382,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 2.162,
+        "responseStart": 73.786,
+        "responseEnd": 107.16
+      }
+    },
+    {
+      "path": "/api/clientes/2/credito",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/7/credito",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/3/credito",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/4/credito",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/1/credito",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/2/credito",
+      "timing": {
+        "startTime": 1790268241538.54,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.772,
+        "responseStart": 90.783,
+        "responseEnd": 121.481
+      }
+    },
+    {
+      "path": "/api/clientes/7/credito",
+      "timing": {
+        "startTime": 1790268241537.711,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 2.458,
+        "responseStart": 104.735,
+        "responseEnd": 125.551
+      }
+    },
+    {
+      "path": "/api/clientes/3/credito",
+      "timing": {
+        "startTime": 1790268241542.417,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.499,
+        "responseStart": 100.035,
+        "responseEnd": 124.491
+      }
+    },
+    {
+      "path": "/api/clientes/4/credito",
+      "timing": {
+        "startTime": 1790268241537.023,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 2.318,
+        "responseStart": 108.981,
+        "responseEnd": 130.625
+      }
+    },
+    {
+      "path": "/api/clientes/1/credito",
+      "timing": {
+        "startTime": 1790268241536.644,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 2.655,
+        "responseStart": 114.473,
+        "responseEnd": 134.924
+      }
+    },
+    {
+      "path": "/api/clientes/5/credito",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/5/credito",
+      "timing": {
+        "startTime": 1790268241543.041,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 86.65,
+        "responseStart": 140.637,
+        "responseEnd": 162.221
+      }
+    },
+    {
+      "path": "/api/clientes/9/credito",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/9/credito",
+      "timing": {
+        "startTime": 1790268241543.3281,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 102.52,
+        "responseStart": 149.584,
+        "responseEnd": 170.891
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "timing": {
+        "startTime": 1790268241837.7559,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 2.119,
+        "responseStart": 94.723,
+        "responseEnd": 145.376
+      }
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "timing": {
+        "startTime": 1790268241851.357,
+        "domainLookupStart": 2.157,
+        "domainLookupEnd": 2.171,
+        "connectStart": 2.171,
+        "secureConnectionStart": -1,
+        "connectEnd": 2.523,
+        "requestStart": 2.937,
+        "responseStart": 88.278,
+        "responseEnd": 145.84
+      }
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "timing": {
+        "startTime": 1790268241848.1782,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 4.487,
+        "responseStart": 278.825,
+        "responseEnd": 337.55
+      }
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "timing": {
+        "startTime": 1790268241851.2368,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 2.49,
+        "responseStart": 285.038,
+        "responseEnd": 341.903
+      }
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "timing": {
+        "startTime": 1790268241849.069,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 3.788,
+        "responseStart": 288.668,
+        "responseEnd": 345.053
+      }
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "timing": {
+        "startTime": 1790268241835.3938,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 4.106,
+        "responseStart": 505.195,
+        "responseEnd": 549.741
+      }
+    },
+    {
+      "path": "/api/clientes/8",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/8",
+      "timing": {
+        "startTime": 1790268241851.4458,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 90.463,
+        "responseStart": 1043.808,
+        "responseEnd": 1100.797
+      }
+    },
+    {
+      "path": "/api/clientes/8/comportamiento-pago",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/8/comportamiento-pago",
+      "timing": {
+        "startTime": 1790268241851.739,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 281.221,
+        "responseStart": 1216.051,
+        "responseEnd": 1272.148
+      }
+    },
+    {
+      "path": "/api/clientes/8/estadisticas",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/8/estadisticas",
+      "timing": {
+        "startTime": 1790268241852.0808,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 288.378,
+        "responseStart": 1215.946,
+        "responseEnd": 1272.911
+      }
+    },
+    {
+      "path": "/api/clientes/8/credito",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/8/credito",
+      "timing": {
+        "startTime": 1790268241851.555,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 90.495,
+        "responseStart": 1306.365,
+        "responseEnd": 1364.6
+      }
+    },
+    {
+      "path": "/api/clientes/8/analitica",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/8/analitica",
+      "timing": {
+        "startTime": 1790268241852.2,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 490.749,
+        "responseStart": 1359.632,
+        "responseEnd": 1413.446
+      }
+    },
+    {
+      "path": "/api/clientes/8/compras",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/8/compras",
+      "timing": {
+        "startTime": 1790268241852.099,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 285.832,
+        "responseStart": 1625.97,
+        "responseEnd": 1724.646
+      }
+    },
+    {
+      "path": "/api/locations",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/cartera",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/8/precios",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/8/pagos",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/pagos-dirigidos",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/8/evidencia-credito",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/locations",
+      "timing": {
+        "startTime": 1790268241852.453,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1309.279,
+        "responseStart": 1907.507,
+        "responseEnd": 1959.923
+      }
+    },
+    {
+      "path": "/api/clientes/cartera",
+      "timing": {
+        "startTime": 1790268241852.273,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1045.79,
+        "responseStart": 2148.271,
+        "responseEnd": 2202.094
+      }
+    },
+    {
+      "path": "/api/clientes/8/precios",
+      "timing": {
+        "startTime": 1790268241852.3918,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1220.079,
+        "responseStart": 2246.898,
+        "responseEnd": 2300.213
+      }
+    },
+    {
+      "path": "/api/clientes/8/pagos",
+      "timing": {
+        "startTime": 1790268241852.32,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1219.984,
+        "responseStart": 2247.349,
+        "responseEnd": 2300.977
+      }
+    },
+    {
+      "path": "/api/pagos-dirigidos",
+      "timing": {
+        "startTime": 1790268243007.967,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 755.004,
+        "responseStart": 1093.965,
+        "responseEnd": 1155.87
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "timing": {
+        "startTime": 1790268243002.433,
+        "domainLookupStart": 362.479,
+        "domainLookupEnd": 363.28,
+        "connectStart": 363.28,
+        "secureConnectionStart": -1,
+        "connectEnd": 363.904,
+        "requestStart": 364.048,
+        "responseStart": 1108.842,
+        "responseEnd": 1166.635
+      }
+    }
+  ],
+  "auth": [
+    {
+      "path": "/api/auth/me",
+      "status": 401,
+      "body": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "path": "/api/auth/login",
+      "status": 200,
+      "body": {}
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "body": {
+        "id": 234,
+        "rol": "ADMIN"
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "body": {
+        "id": 234,
+        "rol": "ADMIN"
+      }
+    },
+    {
+      "path": "/api/e7/disponibilidad",
+      "status": 200,
+      "body": {
+        "enabled": true,
+        "clienteFinanzas": true,
+        "atribucion": true
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "body": {
+        "id": 234,
+        "rol": "ADMIN"
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "body": {
+        "id": 234,
+        "rol": "ADMIN"
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "body": {
+        "id": 234,
+        "rol": "ADMIN"
+      }
+    }
+  ],
+  "definition": "Fresh browser process per sample; native login and site selection excluded from route readiness; network timings are not SQL timings.",
+  "loginMs": 1380.2112889999999,
+  "error": "locator.waitFor: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('e7-client-export') to be visible\u001b[22m\n",
+  "body": "locator.innerText: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('body')\u001b[22m\n"
+}

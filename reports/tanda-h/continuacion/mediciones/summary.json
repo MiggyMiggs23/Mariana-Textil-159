@@ -1,0 +1,296 @@
+{
+  "samples": [
+    {
+      "file": "cash-0-native.json",
+      "ready": true,
+      "routeReadyMs": 2916.943329,
+      "clickReadyMs": 1166.5125260000004,
+      "cdp": {
+        "Nodes": {
+          "value": 17400,
+          "delta": 17278
+        },
+        "LayoutDuration": {
+          "value": 0.109772,
+          "delta": 0.109772
+        },
+        "RecalcStyleDuration": {
+          "value": 0.338469,
+          "delta": 0.338469
+        },
+        "ScriptDuration": {
+          "value": 0.390842,
+          "delta": 0.390842
+        },
+        "TaskDuration": {
+          "value": 1.585143,
+          "delta": 1.585017
+        },
+        "JSHeapUsedSize": {
+          "value": 58749232,
+          "delta": 49619736
+        }
+      }
+    },
+    {
+      "file": "cash-0-retry.json",
+      "ready": false,
+      "error": "locator.waitFor: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Confirmar Pago', exact: true }) to be visible\u001b[22m\n"
+    },
+    {
+      "file": "cash-0.json",
+      "ready": false,
+      "error": "locator.fill: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Usuario', { exact: true })\u001b[22m\n"
+    },
+    {
+      "file": "cash-1-native.json",
+      "ready": true,
+      "routeReadyMs": 2491.534857,
+      "clickReadyMs": 319.366763,
+      "cdp": {
+        "Nodes": {
+          "value": 17406,
+          "delta": 17284
+        },
+        "LayoutDuration": {
+          "value": 0.129246,
+          "delta": 0.129246
+        },
+        "RecalcStyleDuration": {
+          "value": 0.270163,
+          "delta": 0.270163
+        },
+        "ScriptDuration": {
+          "value": 0.437627,
+          "delta": 0.437627
+        },
+        "TaskDuration": {
+          "value": 1.556138,
+          "delta": 1.556108
+        },
+        "JSHeapUsedSize": {
+          "value": 40562996,
+          "delta": 31653928
+        }
+      }
+    },
+    {
+      "file": "cash-1.json",
+      "ready": false,
+      "error": "locator.waitFor: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Confirmar Pago', exact: true }) to be visible\u001b[22m\n"
+    },
+    {
+      "file": "cash-2-native.json",
+      "ready": true,
+      "routeReadyMs": 2211.221228,
+      "clickReadyMs": 396.30423500000006,
+      "cdp": {
+        "Nodes": {
+          "value": 17309,
+          "delta": 17187
+        },
+        "LayoutDuration": {
+          "value": 0.097775,
+          "delta": 0.097775
+        },
+        "RecalcStyleDuration": {
+          "value": 0.260944,
+          "delta": 0.260944
+        },
+        "ScriptDuration": {
+          "value": 0.343995,
+          "delta": 0.343995
+        },
+        "TaskDuration": {
+          "value": 1.312008,
+          "delta": 1.311978
+        },
+        "JSHeapUsedSize": {
+          "value": 47344448,
+          "delta": 38262244
+        }
+      }
+    },
+    {
+      "file": "cash-2.json",
+      "ready": false,
+      "error": "locator.waitFor: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Confirmar Pago', exact: true }) to be visible\u001b[22m\n"
+    },
+    {
+      "file": "credit-0-retry.json",
+      "ready": false,
+      "error": "locator.fill: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Usuario', { exact: true })\u001b[22m\n"
+    },
+    {
+      "file": "credit-0.json",
+      "ready": false,
+      "error": "locator.fill: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Usuario', { exact: true })\u001b[22m\n"
+    },
+    {
+      "file": "credit-1.json",
+      "ready": true,
+      "routeReadyMs": 11005.310343999998,
+      "cdp": {
+        "Nodes": {
+          "value": 261716,
+          "delta": 260670
+        },
+        "LayoutDuration": {
+          "value": 4.270176,
+          "delta": 4.270176
+        },
+        "RecalcStyleDuration": {
+          "value": 1.720422,
+          "delta": 1.720016
+        },
+        "ScriptDuration": {
+          "value": 2.878349,
+          "delta": 2.878349
+        },
+        "TaskDuration": {
+          "value": 10.016311,
+          "delta": 9.993746
+        },
+        "JSHeapUsedSize": {
+          "value": 132679724,
+          "delta": 120724200
+        }
+      }
+    },
+    {
+      "file": "credit-2.json",
+      "ready": true,
+      "routeReadyMs": 9804.433178000001,
+      "cdp": {
+        "Nodes": {
+          "value": 261710,
+          "delta": 259672
+        },
+        "LayoutDuration": {
+          "value": 3.961184,
+          "delta": 3.961184
+        },
+        "RecalcStyleDuration": {
+          "value": 1.295712,
+          "delta": 1.295712
+        },
+        "ScriptDuration": {
+          "value": 2.704766,
+          "delta": 2.704766
+        },
+        "TaskDuration": {
+          "value": 8.909586,
+          "delta": 8.909559999999999
+        },
+        "JSHeapUsedSize": {
+          "value": 140808044,
+          "delta": 123979824
+        }
+      }
+    },
+    {
+      "file": "cut-0.json",
+      "ready": true,
+      "routeReadyMs": 4653.46744,
+      "clickReadyMs": 945.4236979999996,
+      "cdp": {
+        "Nodes": {
+          "value": 22794,
+          "delta": 20756
+        },
+        "LayoutDuration": {
+          "value": 0.21548,
+          "delta": 0.21548
+        },
+        "RecalcStyleDuration": {
+          "value": 0.291279,
+          "delta": 0.291279
+        },
+        "ScriptDuration": {
+          "value": 0.597088,
+          "delta": 0.597088
+        },
+        "TaskDuration": {
+          "value": 2.045609,
+          "delta": 2.045531
+        },
+        "JSHeapUsedSize": {
+          "value": 19807208,
+          "delta": 2338480
+        }
+      }
+    },
+    {
+      "file": "cut-1-retry.json",
+      "ready": false,
+      "error": "locator.fill: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Usuario', { exact: true })\u001b[22m\n"
+    },
+    {
+      "file": "cut-1.json",
+      "ready": false,
+      "error": "locator.waitFor: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('heading', { name: 'Caja Operativa', exact: true }) to be visible\u001b[22m\n"
+    },
+    {
+      "file": "cut-2-retry.json",
+      "ready": false,
+      "error": "locator.fill: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Usuario', { exact: true })\u001b[22m\n"
+    },
+    {
+      "file": "cut-2.json",
+      "ready": false,
+      "error": "locator.fill: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Usuario', { exact: true })\u001b[22m\n"
+    },
+    {
+      "file": "large-0-retry.json",
+      "ready": false,
+      "error": "locator.waitFor: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('e7-client-export') to be visible\u001b[22m\n"
+    },
+    {
+      "file": "large-0.json",
+      "ready": false,
+      "error": "locator.waitFor: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('e7-client-export') to be visible\u001b[22m\n"
+    },
+    {
+      "file": "small-0.json",
+      "ready": true,
+      "routeReadyMs": 3788.536366999999,
+      "clickReadyMs": 865.6208130000014,
+      "cdp": {
+        "Nodes": {
+          "value": 3049,
+          "delta": 2003
+        },
+        "LayoutDuration": {
+          "value": 0.066891,
+          "delta": 0.066891
+        },
+        "RecalcStyleDuration": {
+          "value": 0.048799,
+          "delta": 0.048799
+        },
+        "ScriptDuration": {
+          "value": 0.753293,
+          "delta": 0.753293
+        },
+        "TaskDuration": {
+          "value": 1.182723,
+          "delta": 1.182647
+        },
+        "JSHeapUsedSize": {
+          "value": 26507144,
+          "delta": 14857352
+        }
+      }
+    }
+  ],
+  "conclusions": {
+    "small": "Customer 9 E7 ready, native navigation and selected site 835: 3788.54 ms navigation; tab click to ready 865.62 ms. Export HTTP 200; fresh auth/me 200 ADMIN.",
+    "large": "Customer 8 twice times out on e7-client-export; subsequent body read and screenshot also timeout. Auth/me 200 ADMIN and availability 200 enabled; no client export request observed. Not an established server authorization failure.",
+    "cash": "Three native producer-created tickets 54862–54864 collected by CAJA via actual Cobrar → Efectivo → Confirmar Pago, success toast and screenshots. Persisted payments 41157–41159, session 46, 1000 each. Click-to-success 1166.51 / 319.37 / 396.30 ms.",
+    "cut": "Only one ready sample: navigation 4653.47 ms, click-to-dialog 945.42 ms; no three-sample certification. Later attempt had authenticated shell but no Caja Operativa; subsequent attempts blank login without auth requests.",
+    "credit": "Two ready samples only: 11005.31 / 9804.43 ms, exceeds 3000 ms objective. Approximately 261710 DOM nodes and 8.91–9.99 s main-thread task CPU. Report HTTP TTFB 825 / 758 ms. Missing sample blank login without auth request.",
+    "blank": "Requestless blank login is distinct from rejected auth. No pageerror and no auth request; only external-font request blocked as intended. Exact browser/bootstrap cause not established by bounded read-only evidence; do not call this an auth gate failure.",
+    "recommendation": "Indexes alone do not achieve credit readiness target. Needed frontend change: paginate/virtualize report rows and avoid mounting entire 261k-node result. No implementation performed. Large-account readiness needs bounded rendering investigation independently of auth.",
+    "exclusions": "No source, schema, gate or business-metric changes; no SQL paired rerun. Browser network TTFB is not SQL duration. Cash routeReadyMs includes selection, confirmation and pre-confirm screenshot; cash clickReadyMs excludes screenshot. All browsers are separate processes, native login, no auth mocks or tokens. Test servers owned by MAIN."
+  }
+}

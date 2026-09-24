@@ -1,0 +1,51 @@
+{
+  "identity": {
+    "db": "tanda_hr_browser",
+    "actor": "hr_browser",
+    "port": 55445
+  },
+  "samples": [
+    {
+      "ticketId": 54862,
+      "total": "1000.00",
+      "source": {
+        "id": 6236,
+        "serie": "997000004",
+        "productId": 2078,
+        "siteId": 835,
+        "unit": "METRO",
+        "entryId": 468,
+        "supplierId": 226,
+        "movementId": "7373"
+      }
+    },
+    {
+      "ticketId": 54863,
+      "total": "1000.00",
+      "source": {
+        "id": 6237,
+        "serie": "997000005",
+        "productId": 2078,
+        "siteId": 835,
+        "unit": "METRO",
+        "entryId": 468,
+        "supplierId": 226,
+        "movementId": "7374"
+      }
+    },
+    {
+      "ticketId": 54864,
+      "total": "1000.00",
+      "source": {
+        "id": 6238,
+        "serie": "997000006",
+        "productId": 2078,
+        "siteId": 835,
+        "unit": "METRO",
+        "entryId": 468,
+        "supplierId": 226,
+        "movementId": "7375"
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "cash",
+  "sample": "0",
+  "ready": false,
+  "requests": [],
+  "auth": [],
+  "definition": "Fresh browser process per sample; native login and site selection excluded from route readiness; network timings are not SQL timings.",
+  "error": "locator.fill: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Usuario', { exact: true })\u001b[22m\n",
+  "body": ""
+}

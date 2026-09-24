@@ -1,0 +1,387 @@
+{
+  "name": "cash",
+  "sample": "1",
+  "ready": false,
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "timing": {
+        "startTime": 1790268370811.332,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.491,
+        "responseStart": 2.738,
+        "responseEnd": 15.268
+      }
+    },
+    {
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/login",
+      "timing": {
+        "startTime": 1790268371007.874,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.573,
+        "responseStart": 163.143,
+        "responseEnd": 174.476
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "timing": {
+        "startTime": 1790268371446.658,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.574,
+        "responseStart": 23.691,
+        "responseEnd": 39.248
+      }
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones",
+      "timing": {
+        "startTime": 1790268371507.528,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.359,
+        "responseStart": 42.385,
+        "responseEnd": 54.192
+      }
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "timing": {
+        "startTime": 1790268371506.423,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.446,
+        "responseStart": 48.894,
+        "responseEnd": 61.962
+      }
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "status": 403,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "timing": {
+        "startTime": 1790268371509.966,
+        "domainLookupStart": 1.074,
+        "domainLookupEnd": 1.08,
+        "connectStart": 1.08,
+        "secureConnectionStart": -1,
+        "connectEnd": 1.263,
+        "requestStart": 1.497,
+        "responseStart": 64.704,
+        "responseEnd": 76.305
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "timing": {
+        "startTime": 1790268371509.723,
+        "domainLookupStart": 0.729,
+        "domainLookupEnd": 0.74,
+        "connectStart": 0.74,
+        "secureConnectionStart": -1,
+        "connectEnd": 1.49,
+        "requestStart": 1.584,
+        "responseStart": 67.427,
+        "responseEnd": 82.526
+      }
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "timing": {
+        "startTime": 1790268371509.844,
+        "domainLookupStart": 0.764,
+        "domainLookupEnd": 0.768,
+        "connectStart": 0.768,
+        "secureConnectionStart": -1,
+        "connectEnd": 1.369,
+        "requestStart": 1.536,
+        "responseStart": 88.323,
+        "responseEnd": 100.958
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "timing": {
+        "startTime": 1790268371659.5303,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.471,
+        "responseStart": 39.016,
+        "responseEnd": 73.104
+      }
+    },
+    {
+      "path": "/api/caja/tickets",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/caja/tickets",
+      "timing": {
+        "startTime": 1790268371661.798,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.344,
+        "responseStart": 101.406,
+        "responseEnd": 135.531
+      }
+    },
+    {
+      "path": "/api/sesiones-caja/46/salidas-dinero",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/46/salidas-dinero",
+      "timing": {
+        "startTime": 1790268371661.2458,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.683,
+        "responseStart": 113.346,
+        "responseEnd": 150.284
+      }
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "timing": {
+        "startTime": 1790268371661.467,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.58,
+        "responseStart": 120.021,
+        "responseEnd": 154.602
+      }
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "status": 403,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "timing": {
+        "startTime": 1790268372581.9622,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.499,
+        "responseStart": 21.511,
+        "responseEnd": 26.558
+      }
+    },
+    {
+      "path": "/api/caja/tickets",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/caja/tickets",
+      "timing": {
+        "startTime": 1790268381771.317,
+        "domainLookupStart": 0.638,
+        "domainLookupEnd": 0.816,
+        "connectStart": 0.816,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.925,
+        "requestStart": 1.023,
+        "responseStart": 320.544,
+        "responseEnd": 326.215
+      }
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "timing": {
+        "startTime": 1790268386562.396,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.774,
+        "responseStart": 31.522,
+        "responseEnd": 36.497
+      }
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "timing": {
+        "startTime": 1790268387195.667,
+        "domainLookupStart": 0.247,
+        "domainLookupEnd": 0.681,
+        "connectStart": 0.681,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.806,
+        "requestStart": 0.884,
+        "responseStart": 59.547,
+        "responseEnd": 66.266
+      }
+    },
+    {
+      "path": "/api/sesiones-caja/46/salidas-dinero",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/46/salidas-dinero",
+      "timing": {
+        "startTime": 1790268387194.987,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.411,
+        "responseStart": 61.767,
+        "responseEnd": 68.192
+      }
+    }
+  ],
+  "auth": [
+    {
+      "path": "/api/auth/me",
+      "status": 401,
+      "body": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "path": "/api/auth/login",
+      "status": 200,
+      "body": {}
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "body": {
+        "id": 236,
+        "rol": "CAJA"
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "body": {
+        "id": 236,
+        "rol": "CAJA"
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "body": {
+        "id": 236,
+        "rol": "CAJA"
+      }
+    }
+  ],
+  "definition": "Fresh browser process per sample; native login and site selection excluded from route readiness; network timings are not SQL timings.",
+  "pageErrors": [],
+  "failedRequests": [
+    {
+      "path": "/css2",
+      "error": {
+        "errorText": "net::ERR_FAILED"
+      }
+    },
+    {
+      "path": "/css2",
+      "error": {
+        "errorText": "net::ERR_FAILED"
+      }
+    }
+  ],
+  "loginMs": 823.6835369999999,
+  "error": "locator.waitFor: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Confirmar Pago', exact: true }) to be visible\u001b[22m\n",
+  "body": "Mariana Textil\nCAJA\nCobros\nSitio (Sólo lectura)\nTANDA H TIENDA 1\nActivar sonido\n50\nT\n\nTANDA H CAJA\n\nCAJA\n\nTANDA H TIENDA 1\n\nCerrar sesión\nCaja operativa\nCaja Operativa\n\nCobro de tickets pendientes y cortes de caja.\n\nSesión Abierta\nSalidas de dinero\n\nPagos operativos y extraordinarios (E4).\n\nTipo de Salida\nExtraordinaria\nExtraordinaria\nMonto\nCuenta de origen\nEfectivo\nEfectivo\n\nE4 opera exclusivamente con Caja Física; Fondo y mezcla E12 están desactivados.\n\nProveedor\nSin proveedor\nSin proveedor\nMotivo\n\nSaldo Caja (servidor): 12292.00. Se revalida al confirmar; la API conserva la autoridad final.\n\nRegistrar salida extraordinaria\nRegistro de Salidas\n\nSin salidas registradas.\n\nTickets de Caja\nTicket folio 1800000100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800000040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800000160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800000220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800000280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800000340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800000400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800000460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800000520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800000580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800000640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800000700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800000760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800000820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800000880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800000940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800001960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800002980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800003040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800003100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800003160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800003220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800003280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800003340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800003400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800003460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800003520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800003580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800003640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800003700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800003760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800003820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800003880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800003940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800004960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800005980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800006040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800006100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800006160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800006220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800006280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800006340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800006400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800006460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800006520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800006580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800006640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800006700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800006760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800006820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800006880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800006940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800007960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800008980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800009040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800009100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800009160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800009220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800009280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800009340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800009400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800009460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800009520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800009580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800009640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800009700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800009760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800009820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800009880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800009940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800010960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800011980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800012040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800012100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800012160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800012220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800012280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800012340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800012400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800012460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800012520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800012580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800012640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800012700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800012760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800012820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800012880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800012940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800013960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800014980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800015040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800015100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800015160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800015220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800015280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800015340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800015400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800015460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800015520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800015580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800015640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800015700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800015760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800015820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800015880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800015940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800016960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800017980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800018040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800018100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800018160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800018220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800018280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800018340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800018400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800018460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800018520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800018580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800018640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800018700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800018760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800018820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800018880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800018940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800019960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800020980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800021040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800021100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800021160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800021220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800021280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800021340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800021400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800021460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800021520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800021580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800021640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800021700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800021760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800021820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800021880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800021940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800022960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800023980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800024040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800024100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800024160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800024220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800024280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800024340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800024400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800024460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800024520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800024580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800024640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800024700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800024760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800024820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800024880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800024940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800025960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800026980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800027040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800027100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800027160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800027220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800027280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800027340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800027400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800027460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800027520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800027580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800027640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800027700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800027760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800027820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800027880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800027940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800028960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800029980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800030040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800030100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800030160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800030220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800030280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800030340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800030400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800030460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800030520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800030580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800030640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800030700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800030760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800030820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800030880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800030940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800031960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800032980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800033040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800033100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800033160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800033220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800033280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800033340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800033400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800033460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800033520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800033580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800033640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800033700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800033760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800033820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800033880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800033940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800034960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800035980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800036040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800036100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800036160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800036220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800036280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800036340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800036400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800036460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800036520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800036580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800036640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800036700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800036760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800036820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800036880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800036940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800037960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800038980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800039040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800039100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800039160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800039220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800039280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800039340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800039400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800039460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800039520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800039580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800039640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800039700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800039760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800039820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800039880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800039940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800040960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800041980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800042040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800042100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800042160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800042220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800042280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800042340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800042400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800042460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800042520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800042580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800042640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800042700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800042760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800042820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800042880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800042940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800043960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800044980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800045040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800045100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800045160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800045220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800045280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800045340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800045400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800045460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800045520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800045580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800045640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800045700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800045760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800045820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800045880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800045940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800046960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800047980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800048040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800048100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800048160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800048220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800048280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800048340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800048400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800048460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800048520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800048580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800048640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800048700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800048760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800048820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800048880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800048940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800049960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800050980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800051040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800051100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800051160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800051220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800051280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800051340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800051400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800051460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800051520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800051580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800051640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800051700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800051760\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800051820\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800051880\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800051940\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052000\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052060\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052120\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052180\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052240\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052300\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052360\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052420\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052480\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052540\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052600\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052660\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052720\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052780\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052840\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052900\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800052960\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053020\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053080\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053140\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053200\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053260\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053320\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053380\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053440\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053500\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053560\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053620\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053680\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053740\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053800\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053860\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053920\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800053980\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800054040\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800054100\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800054160\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800054220\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800054280\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800054400\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800054340\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800054580\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800054520\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800054460\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800054640\n12:00 AM\n$116.00\nCobrar\nTicket folio 1800054700\n12:00 AM\n$116.00\nCobrar\nTicket folio 1006\n4:44 PM\n$1,000.00\nCobrar\nTicket folio 1007\n4:44 PM\n$1,000.00\nCobrar\nTicket folio 1008\n4:44 PM\n$1,000.00\nCobrar\nTicket folio 1800054622\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054625\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054628\n12:00 AM\n•\nCobrado a las 12:00 AM\n$116.00\nTicket folio 1800054631\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054634\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054637\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054643\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054646\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054649\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054652\n12:00 AM\n•\nCobrado a las 12:00 AM\n$116.00\nTicket folio 1800054655\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054658\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054661\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054664\n12:00 AM\n•\nCobrado a las 12:00 AM\n$116.00\nTicket folio 1800054667\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054670\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054673\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054676\n12:00 AM\n•\nCobrado a las 12:00 AM\n$116.00\nTicket folio 1800054679\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054682\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054685\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054688\n12:00 AM\n•\nCobrado a las 12:00 AM\n$116.00\nTicket folio 1800054691\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054694\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054697\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054703\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054706\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054709\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054712\n12:00 AM\n•\nCobrado a las 12:00 AM\n$116.00\nTicket folio 1800054715\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054718\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054721\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054724\n12:00 AM\n•\nCobrado a las 12:00 AM\n$116.00\nTicket folio 1800054727\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054730\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054733\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054736\n12:00 AM\n•\nCobrado a las 12:00 AM\n$116.00\nTicket folio 1800054739\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054742\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054748\n12:00 AM\n•\nCobrado a las 12:00 AM\n$116.00\nTicket folio 1800054745\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054601\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054604\n12:00 AM\n•\nCobrado a las 12:00 AM\n$116.00\nTicket folio 1800054607\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054610\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054613\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1800054616\n12:00 AM\n•\nCobrado a las 12:00 AM\n$116.00\nTicket folio 1800054619\n12:00 AM\n•\nCobrado a las 12:00 AM\nEfectivo\n$116.00\nTicket folio 1003\n4:35 PM\n•\nCobrado a las 4:35 PM\nEfectivo\n$1,000.00\nTicket folio 1004\n4:35 PM\n•\nCobrado a las 4:35 PM\nEfectivo\n$1,000.00\nTicket folio 1005\n4:35 PM\n•\nCobrado a las 4:35 PM\nEfectivo\n$1,000.00"
+}

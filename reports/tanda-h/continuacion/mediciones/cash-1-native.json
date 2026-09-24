@@ -1,0 +1,401 @@
+{
+  "name": "cash",
+  "sample": "1-native",
+  "ready": true,
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "timing": {
+        "startTime": 1790268448379.8132,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.462,
+        "responseStart": 2.412,
+        "responseEnd": 13.03
+      }
+    },
+    {
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/login",
+      "timing": {
+        "startTime": 1790268448536.831,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.361,
+        "responseStart": 104.142,
+        "responseEnd": 111.738
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "timing": {
+        "startTime": 1790268448873.153,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.547,
+        "responseStart": 25.976,
+        "responseEnd": 33.122
+      }
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones",
+      "timing": {
+        "startTime": 1790268448932.179,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.457,
+        "responseStart": 280.502,
+        "responseEnd": 311.188
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "timing": {
+        "startTime": 1790268448935.202,
+        "domainLookupStart": 0.551,
+        "domainLookupEnd": 0.567,
+        "connectStart": 0.567,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.877,
+        "requestStart": 0.959,
+        "responseStart": 304.455,
+        "responseEnd": 326.482
+      }
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "timing": {
+        "startTime": 1790268448929.792,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.441,
+        "responseStart": 313.017,
+        "responseEnd": 329.589
+      }
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "status": 403,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "timing": {
+        "startTime": 1790268448935.487,
+        "domainLookupStart": 0.473,
+        "domainLookupEnd": 0.476,
+        "connectStart": 0.476,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.596,
+        "requestStart": 0.78,
+        "responseStart": 324.956,
+        "responseEnd": 338.944
+      }
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "timing": {
+        "startTime": 1790268448935.3762,
+        "domainLookupStart": 0.518,
+        "domainLookupEnd": 0.522,
+        "connectStart": 0.522,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.706,
+        "requestStart": 0.857,
+        "responseStart": 329.879,
+        "responseEnd": 344.876
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "timing": {
+        "startTime": 1790268449452.404,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 9.043,
+        "responseStart": 68.541,
+        "responseEnd": 122.576
+      }
+    },
+    {
+      "path": "/api/caja/tickets",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/caja/tickets",
+      "timing": {
+        "startTime": 1790268449456.6907,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 6.776,
+        "responseStart": 126.227,
+        "responseEnd": 181.462
+      }
+    },
+    {
+      "path": "/api/sesiones-caja/46/salidas-dinero",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/46/salidas-dinero",
+      "timing": {
+        "startTime": 1790268449456.094,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 6.774,
+        "responseStart": 146.033,
+        "responseEnd": 201.373
+      }
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "timing": {
+        "startTime": 1790268449456.279,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 6.792,
+        "responseStart": 152.423,
+        "responseEnd": 206.567
+      }
+    },
+    {
+      "path": "/api/tickets/54863",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/tickets/54863",
+      "timing": {
+        "startTime": 1790268450133.593,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.953,
+        "responseStart": 424.852,
+        "responseEnd": 549.052
+      }
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "status": 403,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "timing": {
+        "startTime": 1790268450348.074,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.656,
+        "responseStart": 212.509,
+        "responseEnd": 217.433
+      }
+    },
+    {
+      "path": "/api/tickets/54863/cobrar",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/api/tickets/54863/cobrar",
+      "timing": {
+        "startTime": 1790268450828.78,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.551,
+        "responseStart": 73.487,
+        "responseEnd": 78.669
+      }
+    },
+    {
+      "path": "/api/caja/tickets",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/caja/tickets",
+      "timing": {
+        "startTime": 1790268450912.582,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.502,
+        "responseStart": 69.641,
+        "responseEnd": 75.519
+      }
+    }
+  ],
+  "auth": [
+    {
+      "path": "/api/auth/me",
+      "status": 401,
+      "body": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "path": "/api/auth/login",
+      "status": 200,
+      "body": {}
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "body": {
+        "id": 236,
+        "rol": "CAJA"
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "body": {
+        "id": 236,
+        "rol": "CAJA"
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "body": {
+        "id": 236,
+        "rol": "CAJA"
+      }
+    }
+  ],
+  "definition": "Fresh browser process per sample; native login and site selection excluded from route readiness; network timings are not SQL timings.",
+  "pageErrors": [],
+  "failedRequests": [
+    {
+      "path": "/css2",
+      "error": {
+        "errorText": "net::ERR_FAILED"
+      }
+    },
+    {
+      "path": "/css2",
+      "error": {
+        "errorText": "net::ERR_FAILED"
+      }
+    },
+    {
+      "path": "/api/tickets/54863",
+      "error": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    }
+  ],
+  "loginMs": 672.2599990000001,
+  "pendingReadyMs": 1959.418581,
+  "clickReadyMs": 319.366763,
+  "routeReadyMs": 2491.534857,
+  "cdp": {
+    "Nodes": {
+      "value": 17406,
+      "delta": 17284
+    },
+    "LayoutDuration": {
+      "value": 0.129246,
+      "delta": 0.129246
+    },
+    "RecalcStyleDuration": {
+      "value": 0.270163,
+      "delta": 0.270163
+    },
+    "ScriptDuration": {
+      "value": 0.437627,
+      "delta": 0.437627
+    },
+    "TaskDuration": {
+      "value": 1.556138,
+      "delta": 1.556108
+    },
+    "JSHeapUsedSize": {
+      "value": 40562996,
+      "delta": 31653928
+    }
+  }
+}

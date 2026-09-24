@@ -1,0 +1,138 @@
+{
+  "at": "2026-09-24T16:52:40.962Z",
+  "sourceCommit": "b77bd7db4f97368433ef7dbce6e5c756b78b4452",
+  "assets": [
+    {
+      "path": "artifacts/api-server/dist/assets/fonts/DEJAVU-LICENSE.txt",
+      "expected": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9",
+      "actual": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9"
+    },
+    {
+      "path": "artifacts/api-server/dist/assets/fonts/DejaVuSans.ttf",
+      "expected": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+      "actual": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280"
+    },
+    {
+      "path": "artifacts/api-server/dist/index.mjs",
+      "expected": "c8db08080a732f1f51f8450624d8eae4ad2cc6216dafce3a7ed3403c07ee02c4",
+      "actual": "c8db08080a732f1f51f8450624d8eae4ad2cc6216dafce3a7ed3403c07ee02c4"
+    },
+    {
+      "path": "artifacts/api-server/dist/index.mjs.map",
+      "expected": "0924676608d2d962b211f144e9577450e1ab8eda22fb660dcaaad38a900561d8",
+      "actual": "0924676608d2d962b211f144e9577450e1ab8eda22fb660dcaaad38a900561d8"
+    },
+    {
+      "path": "artifacts/api-server/dist/pino-file.mjs",
+      "expected": "16e73e087b894bec5e19ff8cdfecbd28dcd40ef6814aa274fd94061addad03b9",
+      "actual": "16e73e087b894bec5e19ff8cdfecbd28dcd40ef6814aa274fd94061addad03b9"
+    },
+    {
+      "path": "artifacts/api-server/dist/pino-file.mjs.map",
+      "expected": "b8a8028e9fbe53606eaf9ebde09e897780e72b7a1808a10cfe3d8b35864784ed",
+      "actual": "b8a8028e9fbe53606eaf9ebde09e897780e72b7a1808a10cfe3d8b35864784ed"
+    },
+    {
+      "path": "artifacts/api-server/dist/pino-pretty.mjs",
+      "expected": "a0e84eadb04888316e0a4c65e21dabc36554fc396206ba962b65c63d31e11b03",
+      "actual": "a0e84eadb04888316e0a4c65e21dabc36554fc396206ba962b65c63d31e11b03"
+    },
+    {
+      "path": "artifacts/api-server/dist/pino-pretty.mjs.map",
+      "expected": "d83688a9052aebbf9d6b0dca4f6da925e402cf4d3d2222199b730aa9d92c89af",
+      "actual": "d83688a9052aebbf9d6b0dca4f6da925e402cf4d3d2222199b730aa9d92c89af"
+    },
+    {
+      "path": "artifacts/api-server/dist/pino-worker.mjs",
+      "expected": "6ff162755d9f7ceeba650cf098f91124132eb49d4471eb7941ecdcf2dfe9ee12",
+      "actual": "6ff162755d9f7ceeba650cf098f91124132eb49d4471eb7941ecdcf2dfe9ee12"
+    },
+    {
+      "path": "artifacts/api-server/dist/pino-worker.mjs.map",
+      "expected": "498c8479b87cc7f95ba282ab33be1220bf89f9a23c495ec299346b5f8ef87259",
+      "actual": "498c8479b87cc7f95ba282ab33be1220bf89f9a23c495ec299346b5f8ef87259"
+    },
+    {
+      "path": "artifacts/api-server/dist/thread-stream-worker.mjs",
+      "expected": "682af21c74dcff21d325b5e7856bba74ed0c660dbd6f4a0f737a2f9c3cbd9e8b",
+      "actual": "682af21c74dcff21d325b5e7856bba74ed0c660dbd6f4a0f737a2f9c3cbd9e8b"
+    },
+    {
+      "path": "artifacts/api-server/dist/thread-stream-worker.mjs.map",
+      "expected": "c16a22e4ea62c0930ab0b84aa72544a341729eadd04195756e751ca7624bfeb3",
+      "actual": "c16a22e4ea62c0930ab0b84aa72544a341729eadd04195756e751ca7624bfeb3"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/assets/index-CJ5sQYvB.js",
+      "expected": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c",
+      "actual": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/assets/index-D83sgxmD.js",
+      "expected": "cbb34ab7a36dbc8f513766e49c1106eec672fb61f754f8e0fe20a26d647f9a41",
+      "actual": "cbb34ab7a36dbc8f513766e49c1106eec672fb61f754f8e0fe20a26d647f9a41"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/assets/index-puVzVoL4.css",
+      "expected": "1637256e3fb51451afd4804371c2a31fec24db576abf9f51876acea7b1a71733",
+      "actual": "1637256e3fb51451afd4804371c2a31fec24db576abf9f51876acea7b1a71733"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/assets/mariana-textil-logo-FFOiXRd3.png",
+      "expected": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+      "actual": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/assets/mariana-textil-logo-monochrome-_7AVoW2A.png",
+      "expected": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24",
+      "actual": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/favicon.png",
+      "expected": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+      "actual": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/index.html",
+      "expected": "f62cb83b0c2f1564124428c93cee90ea846b28478b2c6bc31271ec3c9c27bfb8",
+      "actual": "f62cb83b0c2f1564124428c93cee90ea846b28478b2c6bc31271ec3c9c27bfb8"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/robots.txt",
+      "expected": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+      "actual": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/sounds/alerta.ogg",
+      "expected": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e",
+      "actual": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/sounds/aviso.ogg",
+      "expected": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4",
+      "actual": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/sounds/solicitud.ogg",
+      "expected": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d",
+      "actual": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+    }
+  ],
+  "processes": [
+    {
+      "kind": "api",
+      "pid": 2568,
+      "cmd": "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node /home/runner/workspace/reports/tanda-h/continuacion/setup/api-runner.mjs ",
+      "cwd": "/home/runner/workspace"
+    },
+    {
+      "kind": "ui",
+      "pid": 2584,
+      "cmd": "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node /home/runner/workspace/reports/tanda-h/continuacion/setup/proxy.mjs ",
+      "cwd": "/home/runner/workspace"
+    }
+  ],
+  "allAssetHashesMatch": true,
+  "osSnapshot": "               total        used        free      shared  buff/cache   available\nMem:           16016        6086       11362          85         759        9929\nSwap:              0           0           0\n      1 node\n",
+  "osLimitation": "Snapshot after browser closure; no evidence of browser-process leak or current memory exhaustion. /proc/pressure/memory unavailable. This does not diagnose transient blank documents."
+}

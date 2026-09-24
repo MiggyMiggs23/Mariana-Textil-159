@@ -1,0 +1,57 @@
+{
+  "identity": {
+    "db": "tanda_hr_browser",
+    "actor": "hr_browser",
+    "port": 55445
+  },
+  "tickets": [
+    {
+      "id": 54862,
+      "folio": 1006,
+      "cobrado": true,
+      "sesion_caja_id": 46,
+      "total": "1000.00"
+    },
+    {
+      "id": 54863,
+      "folio": 1007,
+      "cobrado": true,
+      "sesion_caja_id": 46,
+      "total": "1000.00"
+    },
+    {
+      "id": 54864,
+      "folio": 1008,
+      "cobrado": true,
+      "sesion_caja_id": 46,
+      "total": "1000.00"
+    }
+  ],
+  "payments": [
+    {
+      "id": 41157,
+      "ticket_id": 54862,
+      "forma_pago": "EFECTIVO",
+      "importe": "1000.00"
+    },
+    {
+      "id": 41158,
+      "ticket_id": 54863,
+      "forma_pago": "EFECTIVO",
+      "importe": "1000.00"
+    },
+    {
+      "id": 41159,
+      "ticket_id": 54864,
+      "forma_pago": "EFECTIVO",
+      "importe": "1000.00"
+    }
+  ],
+  "sessions": [
+    {
+      "id": 46,
+      "estado": "ABIERTA",
+      "ubicacion_id": 835
+    }
+  ]
+}
