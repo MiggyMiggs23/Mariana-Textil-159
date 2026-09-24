@@ -703,6 +703,8 @@ export type EntradaResult = {
  *
  * Business validation (products exist/active, provider active, location type,
  * positive quantities, duplicate lines) is performed by the caller/route.
+ * Physical quantities are independently required to be finite/nonnegative here;
+ * zero retains the existing direct-producer semantics.
  * Positive unit cost is also enforced here so direct engine callers cannot
  * create rolls whose persisted two-decimal cost would be zero.
  */
@@ -804,6 +806,23 @@ export async function crearEntrada(
       "La entrada debe incluir al menos un rollo.",
       "EMPTY_ENTRY",
     );
+  }
+  for (const linea of input.lineas) {
+    for (const cantidad of linea.cantidades) {
+      const text = String(cantidad).trim();
+      const value = Number(text);
+      // Accept decimal numeric input, not JS-only hex/blank coercions or NaN.
+      // Inspect the mantissa as well so negative values that underflow Number
+      // cannot silently become physical zero. Signed zero remains valid.
+      const decimal = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i;
+      const negative = text.startsWith("-") && /[1-9]/.test(text.split(/[eE]/)[0]!);
+      if (!decimal.test(text) || !Number.isFinite(value) || negative) {
+        throw new InventarioError(
+          "La cantidad física debe ser un número finito mayor o igual a cero.",
+          "INVALID_PHYSICAL_QUANTITY",
+        );
+      }
+    }
   }
   await lockInventoryPairs(
     tx,

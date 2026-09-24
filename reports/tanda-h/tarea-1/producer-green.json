@@ -1,0 +1,439 @@
+{
+  "identity": {
+    "db": "tanda_h_inventory",
+    "actor": "h_inventory",
+    "port": 55444
+  },
+  "guards": [],
+  "results": [
+    {
+      "unit": "METRO",
+      "quantity": "-2",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "METRO",
+      "quantity": "-0.001",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "METRO",
+      "quantity": "NaN",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "METRO",
+      "quantity": "Infinity",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "METRO",
+      "quantity": "-Infinity",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "METRO",
+      "quantity": "invalid",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "METRO",
+      "quantity": "",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "METRO",
+      "quantity": "0",
+      "accepted": true,
+      "persisted": "0.000",
+      "pass": true
+    },
+    {
+      "unit": "METRO",
+      "quantity": "-0",
+      "accepted": true,
+      "persisted": "0.000",
+      "pass": true
+    },
+    {
+      "unit": "METRO",
+      "quantity": "2",
+      "accepted": true,
+      "persisted": "2.000",
+      "pass": true
+    },
+    {
+      "unit": "METRO",
+      "quantity": "1.5",
+      "accepted": true,
+      "persisted": "1.500",
+      "pass": true
+    },
+    {
+      "unit": "KILO",
+      "quantity": "-2",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "KILO",
+      "quantity": "-0.001",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "KILO",
+      "quantity": "NaN",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "KILO",
+      "quantity": "Infinity",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "KILO",
+      "quantity": "-Infinity",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "KILO",
+      "quantity": "invalid",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "KILO",
+      "quantity": "",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "KILO",
+      "quantity": "0",
+      "accepted": true,
+      "persisted": "0.000",
+      "pass": true
+    },
+    {
+      "unit": "KILO",
+      "quantity": "-0",
+      "accepted": true,
+      "persisted": "0.000",
+      "pass": true
+    },
+    {
+      "unit": "KILO",
+      "quantity": "2",
+      "accepted": true,
+      "persisted": "2.000",
+      "pass": true
+    },
+    {
+      "unit": "KILO",
+      "quantity": "1.5",
+      "accepted": true,
+      "persisted": "1.500",
+      "pass": true
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "-2",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "-0.001",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "NaN",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "Infinity",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "-Infinity",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "invalid",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "0",
+      "accepted": true,
+      "persisted": "0.000",
+      "pass": true
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "-0",
+      "accepted": true,
+      "persisted": "0.000",
+      "pass": true
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "2",
+      "accepted": true,
+      "persisted": "2.000",
+      "pass": true
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "1.5",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad de piezas por registro debe ser un número entero.",
+        "code": "PIEZA_INTEGER_QUANTITY_REQUIRED"
+      }
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "-2",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "-0.001",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "NaN",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "Infinity",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "-Infinity",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "invalid",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad física debe ser un número finito mayor o igual a cero.",
+        "code": "INVALID_PHYSICAL_QUANTITY"
+      }
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "0",
+      "accepted": true,
+      "persisted": "0.000",
+      "pass": true
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "-0",
+      "accepted": true,
+      "persisted": "0.000",
+      "pass": true
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "2",
+      "accepted": true,
+      "persisted": "2.000",
+      "pass": true
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "1.5",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad de bolsas por registro debe ser un número entero.",
+        "code": "BOLSA_INTEGER_QUANTITY_REQUIRED"
+      }
+    }
+  ],
+  "failed": 0
+}

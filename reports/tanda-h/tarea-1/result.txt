@@ -1,0 +1,60 @@
+Task 1 — crearEntrada / physical roll quantity
+
+Baseline frozen before edit: a8cebb4626d8ed6b03824708443f052bc51d4d5a.
+Baseline inventario.ts SHA256:
+26414ec310200f9545778a530aa33132f1483850c23dd78af5c02bb7de924675
+Fixed inventario.ts SHA256:
+3e1c06120189811d4140766a6f987f4b7ed5abd15d268ff04682ec5313b1e79f
+
+Only crearEntrada producer behavior changed. The function lives in inventario.ts.
+All four units now reject negative, nonfinite, malformed or blank physical
+quantities as InventarioError / INVALID_PHYSICAL_QUANTITY with a user-safe
+Spanish message. Zero and signed zero remain accepted by the direct producer;
+the route's existing positive-only rule was not changed. Fractional discrete
+unit checks, other producers, signed ledger quantities and gates are unchanged.
+The named schema CHECK is declarative only; there is no startup DDL.
+
+Real PostgreSQL identity: tanda_h_inventory / h_inventory / localhost:55444.
+No application DB writes, workflow changes, app startup, schema push or cleanup.
+Only disposable inventory-copy CHECK application was performed.
+
+Chronological evidence:
+1. producer-red.json: 44 cases before producer edit, no rollos CHECK in catalog,
+   28 failed expectations. In particular -2 persisted as -2.000 for METRO, KILO,
+   PIEZA and BOLSA inside transactions deliberately rolled back. Zero and positive
+   controls passed; malformed/nonfinite rejection was not uniformly user-safe.
+2. producer-green.json: same 44 cases after producer edit, still no rollos CHECK,
+   44 passed. No entry UUID persisted after rollback.
+3. check-copy.json: 56 successful assertions. Existing negative and NaN rows make
+   validated ADD fail with 23514 and operator preflight fail explicitly. Operator
+   SQL adds the reinforced validated CHECK, then exact catalog idempotence passes.
+   Real valid INSERT and UPDATE test all four units with -2, NaN, 0, 2, +/-Infinity.
+   Negative and NaN fail specifically at the named CHECK; zero and positives pass;
+   infinities fail numeric(10,3) typmod (22003). All DML is rolled back. Same-name
+   weaker and NOT VALID constraints are rejected as catalog drift. Row count and
+   ordered full-row hash remain identical. Sequence nextval is not transactional:
+   disposable-copy sequence increments are not claimed to be rolled back.
+
+Operator handoff: apply-physical-check.sql is exactly the SQL tested on the copy.
+SHA256: 028394e16327b5a1784a18aa72c29462bd4917d8d88bf01159b0669558174a1d
+Explicit public.rollos; 3s lock_timeout; 30s statement_timeout; preflight under
+ACCESS EXCLUSIVE lock; refuses invalid existing rows, type drift, weaker or
+unvalidated same-name constraint. Expected change: one validated named CHECK.
+No row writes/repairs or NOT VALID final state. MAIN must verify application
+identity/approval/rollback point before running it; this task did not apply it.
+
+Candidate API build succeeded without modifying active bundles:
+.local/tanda-h/task1-candidate-api/index.mjs
+SHA256: 709c46c57122bc99e5361e620d28a90b167ec194ce4f29aa00a4e863c26a7919
+API source typecheck passed: pnpm --filter @workspace/api-server exec tsc --noEmit.
+No UI change; browser/app execution belongs to MAIN, not this worker.
+
+Reproduction on a freshly restored prepared copy without rollos CHECK:
+MAIN_READY=yes node reports/tanda-h/tarea-1/run-producer.mjs green
+MAIN_READY=yes node reports/tanda-h/tarea-1/check-copy.mjs
+For historical RED, build the regression against baseline inventario.ts in an
+isolated tree, never overwrite a watched active source. The actual chronological
+RED bundle is preserved privately at .local/tanda-h/entradas-red.mjs:
+49aa49da2b549460e233ff6b9d648852239a682efd82a0634f24514ffee076ab
+The current copy retains the reinforced validated CHECK; do not rerun a suite
+that asserts CHECK absence against it without an explicitly restored fresh copy.

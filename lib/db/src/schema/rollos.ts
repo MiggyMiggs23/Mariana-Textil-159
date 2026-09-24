@@ -1,5 +1,6 @@
 import {
   bigserial,
+  check,
   index,
   integer,
   numeric,
@@ -11,6 +12,7 @@ import {
   boolean,
   uuid,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 import {
@@ -78,6 +80,10 @@ export const rollosTable = pgTable(
     index("rollos_ubicacion_idx").on(table.ubicacionId),
     index("rollos_piso_idx").on(table.pisoId),
     index("rollos_estado_idx").on(table.estado),
+    check(
+      "rollos_physical_quantity_nonnegative_check",
+      sql`${table.cantidadActual} >= 0 AND ${table.cantidadActual} <> 'NaN'::numeric`,
+    ),
     index("rollos_serie_idx").on(table.serie),
     index("rollos_recepcion_producto_idx").on(
       table.recepcionId,

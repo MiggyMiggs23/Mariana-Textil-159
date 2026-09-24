@@ -1,0 +1,403 @@
+{
+  "identity": {
+    "db": "tanda_h_inventory",
+    "actor": "h_inventory",
+    "port": 55444
+  },
+  "guards": [],
+  "results": [
+    {
+      "unit": "METRO",
+      "quantity": "-2",
+      "accepted": true,
+      "persisted": "-2.000",
+      "pass": false
+    },
+    {
+      "unit": "METRO",
+      "quantity": "-0.001",
+      "accepted": true,
+      "persisted": "-0.001",
+      "pass": false
+    },
+    {
+      "unit": "METRO",
+      "quantity": "NaN",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "Error",
+        "message": "Cantidad decimal inválida: NaN"
+      }
+    },
+    {
+      "unit": "METRO",
+      "quantity": "Infinity",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "Error",
+        "message": "Failed query: insert into \"entradas\" (\"id\", \"folio\", \"ubicacion_id\", \"proveedor_id\", \"usuario_id\", \"fecha\", \"observaciones\", \"total_rollos\", \"total_costo\", \"uuid_cliente\", \"created_at\") values (default, $1, $2, $3, $4, $5, $6, $7, $8, $9, default) returning \"id\", \"folio\", \"ubicacion_id\", \"proveedor_id\", \"usuario_id\", \"fecha\", \"observaciones\", \"total_rollos\", \"total_costo\", \"uuid_cliente\", \"created_at\"\nparams: 2,835,,234,2026-09-24T06:28:46.433Z,,1,Infinity,779bca1c-a9b5-4d64-90fd-8f18a93c08ca"
+      }
+    },
+    {
+      "unit": "METRO",
+      "quantity": "-Infinity",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "Error",
+        "message": "Failed query: insert into \"entradas\" (\"id\", \"folio\", \"ubicacion_id\", \"proveedor_id\", \"usuario_id\", \"fecha\", \"observaciones\", \"total_rollos\", \"total_costo\", \"uuid_cliente\", \"created_at\") values (default, $1, $2, $3, $4, $5, $6, $7, $8, $9, default) returning \"id\", \"folio\", \"ubicacion_id\", \"proveedor_id\", \"usuario_id\", \"fecha\", \"observaciones\", \"total_rollos\", \"total_costo\", \"uuid_cliente\", \"created_at\"\nparams: 2,835,,234,2026-09-24T06:28:46.442Z,,1,-Infinity,329e6a9e-6296-4cea-86b7-8d350aeecbf5"
+      }
+    },
+    {
+      "unit": "METRO",
+      "quantity": "invalid",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "Error",
+        "message": "Failed query: insert into \"rollos\" (\"id\", \"serie\", \"producto_id\", \"ubicacion_id\", \"piso_id\", \"proveedor_id\", \"recepcion_id\", \"rollo_origen_id\", \"estado\", \"cantidad_inicial\", \"cantidad_actual\", \"costo_unitario\", \"costo_total\", \"notas\", \"created_at\", \"updated_at\") values (default, $1, $2, $3, $4, $5, $6, default, $7, $8, $9, $10, $11, default, default, default) returning \"id\", \"serie\", \"producto_id\", \"ubicacion_id\", \"piso_id\", \"proveedor_id\", \"recepcion_id\", \"rollo_origen_id\", \"estado\", \"cantidad_inicial\", \"cantidad_actual\", \"costo_unitario\", \"costo_total\", \"notas\", \"created_at\", \"updated_at\"\nparams: 10000741,2078,835,,,502,DISPONIBLE,invalid,invalid,100,NaN"
+      }
+    },
+    {
+      "unit": "METRO",
+      "quantity": "",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "Error",
+        "message": "Failed query: insert into \"rollos\" (\"id\", \"serie\", \"producto_id\", \"ubicacion_id\", \"piso_id\", \"proveedor_id\", \"recepcion_id\", \"rollo_origen_id\", \"estado\", \"cantidad_inicial\", \"cantidad_actual\", \"costo_unitario\", \"costo_total\", \"notas\", \"created_at\", \"updated_at\") values (default, $1, $2, $3, $4, $5, $6, default, $7, $8, $9, $10, $11, default, default, default) returning \"id\", \"serie\", \"producto_id\", \"ubicacion_id\", \"piso_id\", \"proveedor_id\", \"recepcion_id\", \"rollo_origen_id\", \"estado\", \"cantidad_inicial\", \"cantidad_actual\", \"costo_unitario\", \"costo_total\", \"notas\", \"created_at\", \"updated_at\"\nparams: 10000741,2078,835,,,503,DISPONIBLE,,,100,NaN"
+      }
+    },
+    {
+      "unit": "METRO",
+      "quantity": "0",
+      "accepted": true,
+      "persisted": "0.000",
+      "pass": true
+    },
+    {
+      "unit": "METRO",
+      "quantity": "-0",
+      "accepted": true,
+      "persisted": "0.000",
+      "pass": true
+    },
+    {
+      "unit": "METRO",
+      "quantity": "2",
+      "accepted": true,
+      "persisted": "2.000",
+      "pass": true
+    },
+    {
+      "unit": "METRO",
+      "quantity": "1.5",
+      "accepted": true,
+      "persisted": "1.500",
+      "pass": true
+    },
+    {
+      "unit": "KILO",
+      "quantity": "-2",
+      "accepted": true,
+      "persisted": "-2.000",
+      "pass": false
+    },
+    {
+      "unit": "KILO",
+      "quantity": "-0.001",
+      "accepted": true,
+      "persisted": "-0.001",
+      "pass": false
+    },
+    {
+      "unit": "KILO",
+      "quantity": "NaN",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "Error",
+        "message": "Cantidad decimal inválida: NaN"
+      }
+    },
+    {
+      "unit": "KILO",
+      "quantity": "Infinity",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "Error",
+        "message": "Failed query: insert into \"entradas\" (\"id\", \"folio\", \"ubicacion_id\", \"proveedor_id\", \"usuario_id\", \"fecha\", \"observaciones\", \"total_rollos\", \"total_costo\", \"uuid_cliente\", \"created_at\") values (default, $1, $2, $3, $4, $5, $6, $7, $8, $9, default) returning \"id\", \"folio\", \"ubicacion_id\", \"proveedor_id\", \"usuario_id\", \"fecha\", \"observaciones\", \"total_rollos\", \"total_costo\", \"uuid_cliente\", \"created_at\"\nparams: 2,835,,234,2026-09-24T06:28:46.526Z,,1,Infinity,051a5669-75a4-455e-9436-fda63ec2f5eb"
+      }
+    },
+    {
+      "unit": "KILO",
+      "quantity": "-Infinity",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "Error",
+        "message": "Failed query: insert into \"entradas\" (\"id\", \"folio\", \"ubicacion_id\", \"proveedor_id\", \"usuario_id\", \"fecha\", \"observaciones\", \"total_rollos\", \"total_costo\", \"uuid_cliente\", \"created_at\") values (default, $1, $2, $3, $4, $5, $6, $7, $8, $9, default) returning \"id\", \"folio\", \"ubicacion_id\", \"proveedor_id\", \"usuario_id\", \"fecha\", \"observaciones\", \"total_rollos\", \"total_costo\", \"uuid_cliente\", \"created_at\"\nparams: 2,835,,234,2026-09-24T06:28:46.529Z,,1,-Infinity,a38a0d4e-bee0-43f7-ae02-a09d3a81a747"
+      }
+    },
+    {
+      "unit": "KILO",
+      "quantity": "invalid",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "Error",
+        "message": "Failed query: insert into \"rollos\" (\"id\", \"serie\", \"producto_id\", \"ubicacion_id\", \"piso_id\", \"proveedor_id\", \"recepcion_id\", \"rollo_origen_id\", \"estado\", \"cantidad_inicial\", \"cantidad_actual\", \"costo_unitario\", \"costo_total\", \"notas\", \"created_at\", \"updated_at\") values (default, $1, $2, $3, $4, $5, $6, default, $7, $8, $9, $10, $11, default, default, default) returning \"id\", \"serie\", \"producto_id\", \"ubicacion_id\", \"piso_id\", \"proveedor_id\", \"recepcion_id\", \"rollo_origen_id\", \"estado\", \"cantidad_inicial\", \"cantidad_actual\", \"costo_unitario\", \"costo_total\", \"notas\", \"created_at\", \"updated_at\"\nparams: 10000741,2079,835,,,511,DISPONIBLE,invalid,invalid,100,NaN"
+      }
+    },
+    {
+      "unit": "KILO",
+      "quantity": "",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "Error",
+        "message": "Failed query: insert into \"rollos\" (\"id\", \"serie\", \"producto_id\", \"ubicacion_id\", \"piso_id\", \"proveedor_id\", \"recepcion_id\", \"rollo_origen_id\", \"estado\", \"cantidad_inicial\", \"cantidad_actual\", \"costo_unitario\", \"costo_total\", \"notas\", \"created_at\", \"updated_at\") values (default, $1, $2, $3, $4, $5, $6, default, $7, $8, $9, $10, $11, default, default, default) returning \"id\", \"serie\", \"producto_id\", \"ubicacion_id\", \"piso_id\", \"proveedor_id\", \"recepcion_id\", \"rollo_origen_id\", \"estado\", \"cantidad_inicial\", \"cantidad_actual\", \"costo_unitario\", \"costo_total\", \"notas\", \"created_at\", \"updated_at\"\nparams: 10000741,2079,835,,,512,DISPONIBLE,,,100,NaN"
+      }
+    },
+    {
+      "unit": "KILO",
+      "quantity": "0",
+      "accepted": true,
+      "persisted": "0.000",
+      "pass": true
+    },
+    {
+      "unit": "KILO",
+      "quantity": "-0",
+      "accepted": true,
+      "persisted": "0.000",
+      "pass": true
+    },
+    {
+      "unit": "KILO",
+      "quantity": "2",
+      "accepted": true,
+      "persisted": "2.000",
+      "pass": true
+    },
+    {
+      "unit": "KILO",
+      "quantity": "1.5",
+      "accepted": true,
+      "persisted": "1.500",
+      "pass": true
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "-2",
+      "accepted": true,
+      "persisted": "-2.000",
+      "pass": false
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "-0.001",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad de piezas por registro debe ser un número entero.",
+        "code": "PIEZA_INTEGER_QUANTITY_REQUIRED"
+      }
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "NaN",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad de piezas por registro debe ser un número entero.",
+        "code": "PIEZA_INTEGER_QUANTITY_REQUIRED"
+      }
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "Infinity",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad de piezas por registro debe ser un número entero.",
+        "code": "PIEZA_INTEGER_QUANTITY_REQUIRED"
+      }
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "-Infinity",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad de piezas por registro debe ser un número entero.",
+        "code": "PIEZA_INTEGER_QUANTITY_REQUIRED"
+      }
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "invalid",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad de piezas por registro debe ser un número entero.",
+        "code": "PIEZA_INTEGER_QUANTITY_REQUIRED"
+      }
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "Error",
+        "message": "Failed query: insert into \"rollos\" (\"id\", \"serie\", \"producto_id\", \"ubicacion_id\", \"piso_id\", \"proveedor_id\", \"recepcion_id\", \"rollo_origen_id\", \"estado\", \"cantidad_inicial\", \"cantidad_actual\", \"costo_unitario\", \"costo_total\", \"notas\", \"created_at\", \"updated_at\") values (default, $1, $2, $3, $4, $5, $6, default, $7, $8, $9, $10, $11, default, default, default) returning \"id\", \"serie\", \"producto_id\", \"ubicacion_id\", \"piso_id\", \"proveedor_id\", \"recepcion_id\", \"rollo_origen_id\", \"estado\", \"cantidad_inicial\", \"cantidad_actual\", \"costo_unitario\", \"costo_total\", \"notas\", \"created_at\", \"updated_at\"\nparams: 10000741,2080,835,,,518,DISPONIBLE,,,100,NaN"
+      }
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "0",
+      "accepted": true,
+      "persisted": "0.000",
+      "pass": true
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "-0",
+      "accepted": true,
+      "persisted": "0.000",
+      "pass": true
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "2",
+      "accepted": true,
+      "persisted": "2.000",
+      "pass": true
+    },
+    {
+      "unit": "PIEZA",
+      "quantity": "1.5",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad de piezas por registro debe ser un número entero.",
+        "code": "PIEZA_INTEGER_QUANTITY_REQUIRED"
+      }
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "-2",
+      "accepted": true,
+      "persisted": "-2.000",
+      "pass": false
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "-0.001",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad de bolsas por registro debe ser un número entero.",
+        "code": "BOLSA_INTEGER_QUANTITY_REQUIRED"
+      }
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "NaN",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad de bolsas por registro debe ser un número entero.",
+        "code": "BOLSA_INTEGER_QUANTITY_REQUIRED"
+      }
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "Infinity",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad de bolsas por registro debe ser un número entero.",
+        "code": "BOLSA_INTEGER_QUANTITY_REQUIRED"
+      }
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "-Infinity",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad de bolsas por registro debe ser un número entero.",
+        "code": "BOLSA_INTEGER_QUANTITY_REQUIRED"
+      }
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "invalid",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad de bolsas por registro debe ser un número entero.",
+        "code": "BOLSA_INTEGER_QUANTITY_REQUIRED"
+      }
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "",
+      "accepted": false,
+      "pass": false,
+      "error": {
+        "name": "Error",
+        "message": "Failed query: insert into \"rollos\" (\"id\", \"serie\", \"producto_id\", \"ubicacion_id\", \"piso_id\", \"proveedor_id\", \"recepcion_id\", \"rollo_origen_id\", \"estado\", \"cantidad_inicial\", \"cantidad_actual\", \"costo_unitario\", \"costo_total\", \"notas\", \"created_at\", \"updated_at\") values (default, $1, $2, $3, $4, $5, $6, default, $7, $8, $9, $10, $11, default, default, default) returning \"id\", \"serie\", \"producto_id\", \"ubicacion_id\", \"piso_id\", \"proveedor_id\", \"recepcion_id\", \"rollo_origen_id\", \"estado\", \"cantidad_inicial\", \"cantidad_actual\", \"costo_unitario\", \"costo_total\", \"notas\", \"created_at\", \"updated_at\"\nparams: 10000741,2081,835,,,523,DISPONIBLE,,,100,NaN"
+      }
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "0",
+      "accepted": true,
+      "persisted": "0.000",
+      "pass": true
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "-0",
+      "accepted": true,
+      "persisted": "0.000",
+      "pass": true
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "2",
+      "accepted": true,
+      "persisted": "2.000",
+      "pass": true
+    },
+    {
+      "unit": "BOLSA",
+      "quantity": "1.5",
+      "accepted": false,
+      "pass": true,
+      "error": {
+        "name": "InventarioError",
+        "message": "La cantidad de bolsas por registro debe ser un número entero.",
+        "code": "BOLSA_INTEGER_QUANTITY_REQUIRED"
+      }
+    }
+  ],
+  "failed": 28
+}

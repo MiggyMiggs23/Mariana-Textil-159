@@ -1,0 +1,247 @@
+{
+  "identity": {
+    "db": "tanda_h_inventory",
+    "actor": "h_inventory",
+    "port": 55444
+  },
+  "before": {
+    "hash": "07fe946fb0955ecbb96017dfe670c8d5",
+    "count": "836"
+  },
+  "after": {
+    "hash": "07fe946fb0955ecbb96017dfe670c8d5",
+    "count": "836"
+  },
+  "catalog": {
+    "conname": "rollos_physical_quantity_nonnegative_check",
+    "convalidated": true,
+    "definition": "CHECK (((cantidad_actual >= (0)::numeric) AND (cantidad_actual <> 'NaN'::numeric)))"
+  },
+  "results": [
+    {
+      "label": "existing -2: validated ADD fails 23514",
+      "pass": true
+    },
+    {
+      "label": "operator preflight rejects existing -2",
+      "pass": true
+    },
+    {
+      "label": "existing NaN: validated ADD fails 23514",
+      "pass": true
+    },
+    {
+      "label": "operator preflight rejects existing NaN",
+      "pass": true
+    },
+    {
+      "label": "operator adds validated reinforced CHECK",
+      "pass": true
+    },
+    {
+      "label": "operator exact catalog idempotence",
+      "pass": true
+    },
+    {
+      "label": "METRO INSERT -2",
+      "pass": true
+    },
+    {
+      "label": "METRO INSERT NaN",
+      "pass": true
+    },
+    {
+      "label": "METRO INSERT 0",
+      "pass": true
+    },
+    {
+      "label": "METRO INSERT 2",
+      "pass": true
+    },
+    {
+      "label": "METRO INSERT Infinity",
+      "pass": true
+    },
+    {
+      "label": "METRO INSERT -Infinity",
+      "pass": true
+    },
+    {
+      "label": "METRO UPDATE -2",
+      "pass": true
+    },
+    {
+      "label": "METRO UPDATE NaN",
+      "pass": true
+    },
+    {
+      "label": "METRO UPDATE 0",
+      "pass": true
+    },
+    {
+      "label": "METRO UPDATE 2",
+      "pass": true
+    },
+    {
+      "label": "METRO UPDATE Infinity",
+      "pass": true
+    },
+    {
+      "label": "METRO UPDATE -Infinity",
+      "pass": true
+    },
+    {
+      "label": "KILO INSERT -2",
+      "pass": true
+    },
+    {
+      "label": "KILO INSERT NaN",
+      "pass": true
+    },
+    {
+      "label": "KILO INSERT 0",
+      "pass": true
+    },
+    {
+      "label": "KILO INSERT 2",
+      "pass": true
+    },
+    {
+      "label": "KILO INSERT Infinity",
+      "pass": true
+    },
+    {
+      "label": "KILO INSERT -Infinity",
+      "pass": true
+    },
+    {
+      "label": "KILO UPDATE -2",
+      "pass": true
+    },
+    {
+      "label": "KILO UPDATE NaN",
+      "pass": true
+    },
+    {
+      "label": "KILO UPDATE 0",
+      "pass": true
+    },
+    {
+      "label": "KILO UPDATE 2",
+      "pass": true
+    },
+    {
+      "label": "KILO UPDATE Infinity",
+      "pass": true
+    },
+    {
+      "label": "KILO UPDATE -Infinity",
+      "pass": true
+    },
+    {
+      "label": "PIEZA INSERT -2",
+      "pass": true
+    },
+    {
+      "label": "PIEZA INSERT NaN",
+      "pass": true
+    },
+    {
+      "label": "PIEZA INSERT 0",
+      "pass": true
+    },
+    {
+      "label": "PIEZA INSERT 2",
+      "pass": true
+    },
+    {
+      "label": "PIEZA INSERT Infinity",
+      "pass": true
+    },
+    {
+      "label": "PIEZA INSERT -Infinity",
+      "pass": true
+    },
+    {
+      "label": "PIEZA UPDATE -2",
+      "pass": true
+    },
+    {
+      "label": "PIEZA UPDATE NaN",
+      "pass": true
+    },
+    {
+      "label": "PIEZA UPDATE 0",
+      "pass": true
+    },
+    {
+      "label": "PIEZA UPDATE 2",
+      "pass": true
+    },
+    {
+      "label": "PIEZA UPDATE Infinity",
+      "pass": true
+    },
+    {
+      "label": "PIEZA UPDATE -Infinity",
+      "pass": true
+    },
+    {
+      "label": "BOLSA INSERT -2",
+      "pass": true
+    },
+    {
+      "label": "BOLSA INSERT NaN",
+      "pass": true
+    },
+    {
+      "label": "BOLSA INSERT 0",
+      "pass": true
+    },
+    {
+      "label": "BOLSA INSERT 2",
+      "pass": true
+    },
+    {
+      "label": "BOLSA INSERT Infinity",
+      "pass": true
+    },
+    {
+      "label": "BOLSA INSERT -Infinity",
+      "pass": true
+    },
+    {
+      "label": "BOLSA UPDATE -2",
+      "pass": true
+    },
+    {
+      "label": "BOLSA UPDATE NaN",
+      "pass": true
+    },
+    {
+      "label": "BOLSA UPDATE 0",
+      "pass": true
+    },
+    {
+      "label": "BOLSA UPDATE 2",
+      "pass": true
+    },
+    {
+      "label": "BOLSA UPDATE Infinity",
+      "pass": true
+    },
+    {
+      "label": "BOLSA UPDATE -Infinity",
+      "pass": true
+    },
+    {
+      "label": "operator refuses same-name weaker CHECK",
+      "pass": true
+    },
+    {
+      "label": "operator refuses same-name unvalidated CHECK",
+      "pass": true
+    }
+  ],
+  "sequenceCaveat": "Rollback preserves rows, not nextval increments in the disposable copy."
+}
