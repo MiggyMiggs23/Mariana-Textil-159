@@ -1,0 +1,94 @@
+✖ fresh receipt, adjustment and sale preserve supported chronological reversal (59.033855ms)
+✖ case6 cannot subtract consumed positive adjustment into negative availability (34.851011ms)
+✖ equal quantity with uncancelled successors does not prove same history (37.75265ms)
+✖ case9 reverse-of-cancellation fails closed without multiplying ledger (25.01405ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 330.688281
+
+✖ failing tests:
+
+test at .local/tanda-g/baseline-negative-tests.mjs:26886:7
+✖ fresh receipt, adjustment and sale preserve supported chronological reversal (59.033855ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26891:5
+      at async file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26863:7
+      at async _NodePgSession.transaction (file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:12237:22)
+      at async isolated (file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26862:5)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26887:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      at async file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26886:1 {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'REVERSAL_ROLL_STATE_CHANGED' },
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at .local/tanda-g/baseline-negative-tests.mjs:26902:7
+✖ case6 cannot subtract consumed positive adjustment into negative availability (34.851011ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26907:5
+      at async file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26863:7
+      at async _NodePgSession.transaction (file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:12237:22)
+      at async isolated (file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26862:5)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26903:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      at async file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26902:1 {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'REVERSAL_ROLL_STATE_CHANGED' },
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at .local/tanda-g/baseline-negative-tests.mjs:26916:7
+✖ equal quantity with uncancelled successors does not prove same history (37.75265ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26922:5
+      at async file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26863:7
+      at async _NodePgSession.transaction (file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:12237:22)
+      at async isolated (file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26862:5)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26917:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      at async file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26916:1 {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'REVERSAL_LATER_MOVEMENTS' },
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at .local/tanda-g/baseline-negative-tests.mjs:26925:7
+✖ case9 reverse-of-cancellation fails closed without multiplying ledger (25.01405ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26930:5
+      at async file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26863:7
+      at async _NodePgSession.transaction (file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:12237:22)
+      at async isolated (file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26862:5)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26926:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+      at async file:///home/runner/workspace/.local/tanda-g/baseline-negative-tests.mjs:26925:1 {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'REVERSAL_STATE_EVIDENCE_REQUIRED' },
+    operator: 'rejects',
+    diff: 'simple'
+  }

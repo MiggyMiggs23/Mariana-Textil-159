@@ -1,0 +1,14 @@
+import fs from "node:fs";
+const root="/home/runner/workspace/.local/tanda-g";
+const modulePath=process.env.ISOLATED_API_MODULE;
+if(!modulePath?.startsWith(root+"/")||!modulePath.endsWith("/index.mjs"))throw Error("Private bundle required");
+if(process.env.NODE_ENV!=="test"||process.env.REQUIRE_ISOLATED_TEST_DATABASE!=="1")throw Error("Isolation guard required");
+const url=new URL(process.env.TEST_DATABASE_URL);
+if(url.hostname!=="127.0.0.1"||url.port!=="55441"||!["/tanda_g_baseline","/tanda_g_candidate","/tanda_g_browser"].includes(url.pathname))throw Error("Wrong copy identity");
+if(process.env.DATABASE_URL!=="postgresql://postgres@127.0.0.1:55441/tanda_g_witness"||process.env.APPLICATION_DATABASE_URL!==process.env.DATABASE_URL)throw Error("Witness required");
+if(!fs.existsSync(root+"/cluster/PG_VERSION"))throw Error("Private cluster missing");
+const api=await import(modulePath);
+if(typeof api.startServer!=="function")throw Error("Missing startServer");
+process.env.NODE_ENV="development";
+process.env.API_INSPECTION_BOOT="1";
+await api.startServer();

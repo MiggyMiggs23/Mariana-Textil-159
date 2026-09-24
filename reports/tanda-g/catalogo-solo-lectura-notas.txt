@@ -1,0 +1,4 @@
+Solo lectura; identidad del API verificada; ninguna copia ni escritura en la aplicación.
+Actual: 0 activos con se_vende_por_metro=true; 1047 activos con unidad=METRO; 0 desactivados habilitados para metraje.
+Tanda F: 0 activos habilitados en su copia aislada (2026-09-24T04:11:28.672Z), evidencia final-audit.json y consulta final-audit.mjs.
+METRO no equivale al indicador de venta parcial. Conteos agrupados y SQL exacto en catalogo-solo-lectura.json; IDs elegibles únicamente en ese informe privado.

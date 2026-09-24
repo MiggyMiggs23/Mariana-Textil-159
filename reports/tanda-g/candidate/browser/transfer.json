@@ -1,0 +1,45 @@
+{
+  "url": "http://127.0.0.1:43840/salidas/29",
+  "selected": [
+    {
+      "id": 6233,
+      "serie": "995000001",
+      "productId": 2078,
+      "siteId": 835,
+      "unit": "METRO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7370"
+    },
+    {
+      "id": 6241,
+      "serie": "995000101",
+      "productId": 2079,
+      "siteId": 835,
+      "unit": "KILO",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7378"
+    },
+    {
+      "id": 6249,
+      "serie": "995000201",
+      "productId": 2080,
+      "siteId": 835,
+      "unit": "PIEZA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7386"
+    },
+    {
+      "id": 6257,
+      "serie": "995000301",
+      "productId": 2081,
+      "siteId": 835,
+      "unit": "BOLSA",
+      "entryId": 468,
+      "supplierId": 226,
+      "movementId": "7394"
+    }
+  ]
+}

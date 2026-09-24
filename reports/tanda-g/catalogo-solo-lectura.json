@@ -1,0 +1,93 @@
+{
+  "checkedAt": "2026-09-24T04:24:05.626Z",
+  "readOnly": true,
+  "applicationWrites": false,
+  "copiesCreated": false,
+  "identity": {
+    "apiPid": 180,
+    "apiEntrypoint": "artifacts/api-server/dist-tanda-e-20260923/index.mjs",
+    "connectionSource": "verified running API /proc/180/environ DATABASE_URL; matches shell internally",
+    "currentDatabaseSha256": "0ac25563bcd2c20357c1e0e81f7fd4cf586fb4f7ebb345c47437026d79c606d0",
+    "matchesConnectionDatabase": true,
+    "matchesTandaFSourceDatabase": true,
+    "transactionReadOnly": "on",
+    "serverVersion": "160010"
+  },
+  "queries": {
+    "begin": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+    "identity": "SELECT current_database() AS db, current_setting('transaction_read_only') AS readonly, current_setting('server_version_num') AS version",
+    "counts": "SELECT count(*)::int AS total,\n    count(*) FILTER (WHERE activo=true)::int AS active,\n    count(*) FILTER (WHERE activo=false)::int AS disabled,\n    count(*) FILTER (WHERE activo IS NULL)::int AS active_null,\n    count(*) FILTER (WHERE activo=true AND se_vende_por_metro=true)::int AS active_partial_enabled,\n    count(*) FILTER (WHERE activo=false AND se_vende_por_metro=true)::int AS disabled_partial_enabled,\n    count(*) FILTER (WHERE se_vende_por_metro=true)::int AS all_partial_enabled,\n    count(*) FILTER (WHERE activo=true AND unidad='METRO')::int AS active_unit_metro,\n    count(*) FILTER (WHERE activo=true AND unidad='METRO' AND se_vende_por_metro=true)::int AS active_unit_metro_partial_enabled\n    FROM public.productos",
+    "groups": "SELECT activo, unidad, se_vende_por_metro, count(*)::int AS count FROM public.productos GROUP BY activo, unidad, se_vende_por_metro ORDER BY activo, unidad, se_vende_por_metro",
+    "ids": "SELECT id, unidad FROM public.productos WHERE activo=true AND se_vende_por_metro=true ORDER BY id",
+    "end": "ROLLBACK"
+  },
+  "counts": {
+    "total": 1234,
+    "active": 1222,
+    "disabled": 12,
+    "active_null": 0,
+    "active_partial_enabled": 0,
+    "disabled_partial_enabled": 0,
+    "all_partial_enabled": 0,
+    "active_unit_metro": 1047,
+    "active_unit_metro_partial_enabled": 0
+  },
+  "groups": [
+    {
+      "activo": false,
+      "unidad": "METRO",
+      "se_vende_por_metro": false,
+      "count": 9
+    },
+    {
+      "activo": false,
+      "unidad": "KILO",
+      "se_vende_por_metro": false,
+      "count": 3
+    },
+    {
+      "activo": true,
+      "unidad": "METRO",
+      "se_vende_por_metro": false,
+      "count": 1047
+    },
+    {
+      "activo": true,
+      "unidad": "KILO",
+      "se_vende_por_metro": false,
+      "count": 162
+    },
+    {
+      "activo": true,
+      "unidad": "BOLSA",
+      "se_vende_por_metro": false,
+      "count": 5
+    },
+    {
+      "activo": true,
+      "unidad": "PIEZA",
+      "se_vende_por_metro": false,
+      "count": 8
+    }
+  ],
+  "comparison": {
+    "evidence": "reports/tanda-f/tarea-2/final-audit.json",
+    "evidenceSha256": "d4dcccba2659a89927258ed931b8cebda6a7af153cf19ba15c1712a5ff33bfbf",
+    "queryEvidence": "reports/tanda-f/tarea-2/final-audit.mjs",
+    "snapshotAt": "2026-09-24T04:11:28.672Z",
+    "scope": "Tanda F isolated browser copy, not a fresh application query",
+    "priorActivePartialEnabled": 0,
+    "currentActivePartialEnabled": 0,
+    "sameCount": true,
+    "sourceEvidence": "reports/tanda-f/setup/source-identity.json",
+    "sourceDumpSha256": "fa9873da1e31828125a117bfd06a0e598c9ac0883a019968812957bc28ebcbdb"
+  },
+  "notes": [
+    "unidad=METRO is distinct from se_vende_por_metro=true; only activo=true AND se_vende_por_metro=true answers partial-sale catalog eligibility.",
+    "Disabled products are counted separately and do not satisfy active eligibility.",
+    "Tanda F evidence proves the copied catalog count at its recorded time, not historical or current live application availability.",
+    "No app sessions, initializers, workflow actions, mutations, dumps or copies were performed.",
+    "Eligibility does not independently establish available stock, permissions or all sale prerequisites."
+  ],
+  "privateEligibleProductIds": []
+}

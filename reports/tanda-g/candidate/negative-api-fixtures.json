@@ -1,0 +1,18 @@
+[
+  {
+    "unit": "METRO",
+    "rollId": 6329,
+    "productId": 2078,
+    "siteId": 835,
+    "initialState": "PROGRAMADO",
+    "initialQuantity": "10.000"
+  },
+  {
+    "unit": "KILO",
+    "rollId": 6330,
+    "productId": 2079,
+    "siteId": 835,
+    "initialState": "PROGRAMADO",
+    "initialQuantity": "10.000"
+  }
+]

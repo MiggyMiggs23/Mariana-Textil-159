@@ -1,0 +1,60 @@
+{
+  "status": 400,
+  "body": {
+    "error": "No se puede revertir: el rollo ya no conserva exactamente el sitio, cantidad y estado que dejó el movimiento. Cancela primero las operaciones posteriores en orden inverso o registra un ajuste nuevo con motivo."
+  },
+  "before": [
+    {
+      "r": {
+        "id": 6234,
+        "serie": "995000002",
+        "producto_id": 2078,
+        "ubicacion_id": 835,
+        "proveedor_id": 226,
+        "recepcion_id": 468,
+        "rollo_origen_id": null,
+        "estado": "DISPONIBLE",
+        "cantidad_inicial": 10,
+        "cantidad_actual": 14,
+        "costo_unitario": 100,
+        "costo_total": 1000,
+        "notas": null,
+        "created_at": "2026-09-24T04:30:29.007311+00:00",
+        "updated_at": "2026-09-24T04:48:22.842+00:00",
+        "piso_id": null
+      }
+    }
+  ],
+  "after": [
+    {
+      "r": {
+        "id": 6234,
+        "serie": "995000002",
+        "producto_id": 2078,
+        "ubicacion_id": 835,
+        "proveedor_id": 226,
+        "recepcion_id": 468,
+        "rollo_origen_id": null,
+        "estado": "DISPONIBLE",
+        "cantidad_inicial": 10,
+        "cantidad_actual": 14,
+        "costo_unitario": 100,
+        "costo_total": 1000,
+        "notas": null,
+        "created_at": "2026-09-24T04:30:29.007311+00:00",
+        "updated_at": "2026-09-24T04:48:22.842+00:00",
+        "piso_id": null
+      }
+    }
+  ],
+  "countBefore": [
+    {
+      "count": "3"
+    }
+  ],
+  "countAfter": [
+    {
+      "count": "3"
+    }
+  ]
+}

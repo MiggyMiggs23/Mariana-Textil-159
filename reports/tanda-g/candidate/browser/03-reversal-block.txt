@@ -1,0 +1,78 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+2
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Vista Global
+Activar sonido
+T
+
+TANDA G ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+Ajustes de Inventario
+
+Registra mermas, diferencias o da de baja rollos defectuosos.
+
+Nuevo Ajuste
+Revisión Pendiente
+2
+Ajustes Pendientes de Revisión
+
+Aprueba o rechaza los ajustes de inventario realizados por los operadores.
+
+Fecha	Rollo	Tipo	Diferencia	Justificación	Acciones
+24/09/26 04:48
+	AJUSTE_POSITIVO	+2.00
+TANDA G browser successor adjustment
+
+Rechazar
+Aprobar
+
+24/09/26 04:48
+	AJUSTE_POSITIVO	+2.00
+TANDA G browser blocked reversal target
+
+Rechazar
+Aprobar
+Error
+No se puede revertir: el rollo ya no conserva exactamente el sitio, cantidad y estado que dejó el movimiento. Cancela primero las operaciones posteriores en orden inverso o registra un ajuste nuevo con motivo.

@@ -1,0 +1,72 @@
+[
+  {
+    "identity": {
+      "db": "tanda_g_template",
+      "dir": "/home/runner/workspace/.local/tanda-g/cluster",
+      "port": 55441,
+      "read_only": "on"
+    },
+    "tables": 107,
+    "checks": {
+      "admin_guard": "1",
+      "active_partial_enabled": "0",
+      "synthetic_partial_enabled": "0",
+      "cancellation_rows": "3"
+    }
+  },
+  {
+    "identity": {
+      "db": "tanda_g_baseline",
+      "dir": "/home/runner/workspace/.local/tanda-g/cluster",
+      "port": 55441,
+      "read_only": "on"
+    },
+    "tables": 107,
+    "checks": {
+      "admin_guard": "1",
+      "active_partial_enabled": "0",
+      "synthetic_partial_enabled": "0",
+      "cancellation_rows": "13"
+    }
+  },
+  {
+    "identity": {
+      "db": "tanda_g_candidate",
+      "dir": "/home/runner/workspace/.local/tanda-g/cluster",
+      "port": 55441,
+      "read_only": "on"
+    },
+    "tables": 107,
+    "checks": {
+      "admin_guard": "1",
+      "active_partial_enabled": "0",
+      "synthetic_partial_enabled": "0",
+      "cancellation_rows": "3"
+    }
+  },
+  {
+    "identity": {
+      "db": "tanda_g_browser",
+      "dir": "/home/runner/workspace/.local/tanda-g/cluster",
+      "port": 55441,
+      "read_only": "on"
+    },
+    "tables": 107,
+    "checks": {
+      "admin_guard": "1",
+      "active_partial_enabled": "0",
+      "synthetic_partial_enabled": "0",
+      "cancellation_rows": "3"
+    }
+  },
+  {
+    "identity": {
+      "db": "tanda_g_witness",
+      "dir": "/home/runner/workspace/.local/tanda-g/cluster",
+      "port": 55441,
+      "read_only": "on"
+    },
+    "tables": 0,
+    "checks": null
+  }
+]

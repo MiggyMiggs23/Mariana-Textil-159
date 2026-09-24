@@ -1,0 +1,11 @@
+{
+  "sha256": "7daf921b6d0a22cf41f34eda81a45f44deb256e3fd761fee8fdf53de6c602a56",
+  "databases": [
+    "tanda_g_template",
+    "tanda_g_baseline",
+    "tanda_g_candidate",
+    "tanda_g_browser",
+    "tanda_g_witness"
+  ],
+  "port": 55441
+}

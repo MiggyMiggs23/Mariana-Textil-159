@@ -1,0 +1,669 @@
+{
+  "at": "2026-09-24T04:34:03.617Z",
+  "transport": "Frozen real production helpers + disposable PostgreSQL; not HTTP/browser",
+  "cases": [
+    {
+      "case": 1,
+      "status": "EXECUTED_REQUIRES_BALANCE_INTERPRETATION",
+      "steps": [
+        {
+          "name": "create transfer document",
+          "committed": true
+        },
+        {
+          "name": "send transfer document",
+          "committed": true
+        },
+        {
+          "name": "receive transfer document",
+          "committed": true
+        },
+        {
+          "name": "reverse movement 7370",
+          "committed": true
+        }
+      ],
+      "finalRoll": [
+        {
+          "id": 6233,
+          "producto_id": 2078,
+          "ubicacion_id": 836,
+          "estado": "PROGRAMADO",
+          "cantidad_actual": "0.000"
+        }
+      ],
+      "balances": [
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 8,
+          "unidad": "METRO",
+          "available_roll_sum": "0",
+          "inventory_roll_sum": "0",
+          "signed_ledger": "0.000",
+          "cache": "0.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 835,
+          "unidad": "METRO",
+          "available_roll_sum": "70.000",
+          "inventory_roll_sum": "70.000",
+          "signed_ledger": "60.000",
+          "cache": "60.000",
+          "ledgerMinusInventory": -10,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": -10,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 836,
+          "unidad": "METRO",
+          "available_roll_sum": "80.000",
+          "inventory_roll_sum": "80.000",
+          "signed_ledger": "90.000",
+          "cache": "90.000",
+          "ledgerMinusInventory": 10,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 10,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 837,
+          "unidad": "METRO",
+          "available_roll_sum": "80.000",
+          "inventory_roll_sum": "80.000",
+          "signed_ledger": "80.000",
+          "cache": "80.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        }
+      ]
+    },
+    {
+      "case": 2,
+      "status": "EXECUTED_REQUIRES_BALANCE_INTERPRETATION",
+      "steps": [
+        {
+          "name": "create transfer document",
+          "committed": true
+        },
+        {
+          "name": "send transfer document",
+          "committed": true
+        },
+        {
+          "name": "receive transfer document",
+          "committed": true
+        },
+        {
+          "name": "administrative whole sale",
+          "committed": true
+        },
+        {
+          "name": "reverse movement 7471",
+          "committed": true
+        },
+        {
+          "name": "reverse movement 7475",
+          "committed": true
+        }
+      ],
+      "finalRoll": [
+        {
+          "id": 6234,
+          "producto_id": 2078,
+          "ubicacion_id": 836,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "10.000"
+        }
+      ],
+      "balances": [
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 8,
+          "unidad": "METRO",
+          "available_roll_sum": "0",
+          "inventory_roll_sum": "0",
+          "signed_ledger": "0.000",
+          "cache": "0.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 835,
+          "unidad": "METRO",
+          "available_roll_sum": "60.000",
+          "inventory_roll_sum": "60.000",
+          "signed_ledger": "60.000",
+          "cache": "60.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": -10,
+          "caseDiscrepancyDelta": 10,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 836,
+          "unidad": "METRO",
+          "available_roll_sum": "90.000",
+          "inventory_roll_sum": "90.000",
+          "signed_ledger": "100.000",
+          "cache": "100.000",
+          "ledgerMinusInventory": 10,
+          "baselineLedgerMinusInventory": 10,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 837,
+          "unidad": "METRO",
+          "available_roll_sum": "80.000",
+          "inventory_roll_sum": "80.000",
+          "signed_ledger": "80.000",
+          "cache": "80.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        }
+      ]
+    },
+    {
+      "case": 4,
+      "status": "EXECUTED_REQUIRES_BALANCE_INTERPRETATION",
+      "steps": [
+        {
+          "name": "create transfer document",
+          "committed": true
+        },
+        {
+          "name": "send transfer document",
+          "committed": true
+        },
+        {
+          "name": "receive transfer document",
+          "committed": true
+        },
+        {
+          "name": "reverse movement 7478",
+          "committed": true
+        }
+      ],
+      "finalRoll": [
+        {
+          "id": 6236,
+          "producto_id": 2078,
+          "ubicacion_id": 836,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "10.000"
+        }
+      ],
+      "balances": [
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 8,
+          "unidad": "METRO",
+          "available_roll_sum": "0",
+          "inventory_roll_sum": "0",
+          "signed_ledger": "0.000",
+          "cache": "0.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 835,
+          "unidad": "METRO",
+          "available_roll_sum": "50.000",
+          "inventory_roll_sum": "50.000",
+          "signed_ledger": "60.000",
+          "cache": "60.000",
+          "ledgerMinusInventory": 10,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 10,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 836,
+          "unidad": "METRO",
+          "available_roll_sum": "100.000",
+          "inventory_roll_sum": "100.000",
+          "signed_ledger": "110.000",
+          "cache": "110.000",
+          "ledgerMinusInventory": 10,
+          "baselineLedgerMinusInventory": 10,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 837,
+          "unidad": "METRO",
+          "available_roll_sum": "80.000",
+          "inventory_roll_sum": "80.000",
+          "signed_ledger": "80.000",
+          "cache": "80.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        }
+      ]
+    },
+    {
+      "case": 5,
+      "status": "EXECUTED_REQUIRES_BALANCE_INTERPRETATION",
+      "steps": [
+        {
+          "name": "create transfer document",
+          "committed": true
+        },
+        {
+          "name": "send transfer document",
+          "committed": true
+        },
+        {
+          "name": "receive transfer document",
+          "committed": true
+        },
+        {
+          "name": "reverse movement 7486",
+          "committed": true
+        }
+      ],
+      "finalRoll": [
+        {
+          "id": 6237,
+          "producto_id": 2078,
+          "ubicacion_id": 836,
+          "estado": "EN_TRANSITO",
+          "cantidad_actual": "10.000"
+        }
+      ],
+      "balances": [
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 8,
+          "unidad": "METRO",
+          "available_roll_sum": "0",
+          "inventory_roll_sum": "0",
+          "signed_ledger": "0.000",
+          "cache": "0.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 835,
+          "unidad": "METRO",
+          "available_roll_sum": "40.000",
+          "inventory_roll_sum": "40.000",
+          "signed_ledger": "50.000",
+          "cache": "50.000",
+          "ledgerMinusInventory": 10,
+          "baselineLedgerMinusInventory": 10,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 836,
+          "unidad": "METRO",
+          "available_roll_sum": "100.000",
+          "inventory_roll_sum": "110.000",
+          "signed_ledger": "110.000",
+          "cache": "110.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 10,
+          "caseDiscrepancyDelta": -10,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 837,
+          "unidad": "METRO",
+          "available_roll_sum": "80.000",
+          "inventory_roll_sum": "80.000",
+          "signed_ledger": "80.000",
+          "cache": "80.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        }
+      ]
+    },
+    {
+      "case": 6,
+      "status": "EXECUTED_REQUIRES_BALANCE_INTERPRETATION",
+      "steps": [
+        {
+          "name": "adjust to 12",
+          "committed": true
+        },
+        {
+          "name": "manual BAJA",
+          "committed": true
+        },
+        {
+          "name": "reverse movement 7488",
+          "committed": true
+        }
+      ],
+      "finalRoll": [
+        {
+          "id": 6238,
+          "producto_id": 2078,
+          "ubicacion_id": 835,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "-2.000"
+        }
+      ],
+      "balances": [
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 8,
+          "unidad": "METRO",
+          "available_roll_sum": "0",
+          "inventory_roll_sum": "0",
+          "signed_ledger": "0.000",
+          "cache": "0.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 835,
+          "unidad": "METRO",
+          "available_roll_sum": "28.000",
+          "inventory_roll_sum": "28.000",
+          "signed_ledger": "38.000",
+          "cache": "38.000",
+          "ledgerMinusInventory": 10,
+          "baselineLedgerMinusInventory": 10,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 836,
+          "unidad": "METRO",
+          "available_roll_sum": "100.000",
+          "inventory_roll_sum": "110.000",
+          "signed_ledger": "110.000",
+          "cache": "110.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 837,
+          "unidad": "METRO",
+          "available_roll_sum": "80.000",
+          "inventory_roll_sum": "80.000",
+          "signed_ledger": "80.000",
+          "cache": "80.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        }
+      ]
+    },
+    {
+      "case": 7,
+      "status": "EXECUTED_REQUIRES_BALANCE_INTERPRETATION",
+      "steps": [
+        {
+          "name": "adjust to 8",
+          "committed": true
+        },
+        {
+          "name": "manual BAJA",
+          "committed": true
+        },
+        {
+          "name": "reverse movement 7491",
+          "committed": true
+        }
+      ],
+      "finalRoll": [
+        {
+          "id": 6239,
+          "producto_id": 2078,
+          "ubicacion_id": 835,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "2.000"
+        }
+      ],
+      "balances": [
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 8,
+          "unidad": "METRO",
+          "available_roll_sum": "0",
+          "inventory_roll_sum": "0",
+          "signed_ledger": "0.000",
+          "cache": "0.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 835,
+          "unidad": "METRO",
+          "available_roll_sum": "20.000",
+          "inventory_roll_sum": "20.000",
+          "signed_ledger": "30.000",
+          "cache": "30.000",
+          "ledgerMinusInventory": 10,
+          "baselineLedgerMinusInventory": 10,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 836,
+          "unidad": "METRO",
+          "available_roll_sum": "100.000",
+          "inventory_roll_sum": "110.000",
+          "signed_ledger": "110.000",
+          "cache": "110.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 837,
+          "unidad": "METRO",
+          "available_roll_sum": "80.000",
+          "inventory_roll_sum": "80.000",
+          "signed_ledger": "80.000",
+          "cache": "80.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        }
+      ]
+    },
+    {
+      "case": 8,
+      "status": "EXECUTED_REQUIRES_BALANCE_INTERPRETATION",
+      "steps": [
+        {
+          "name": "create transfer document",
+          "committed": true
+        },
+        {
+          "name": "send transfer document",
+          "committed": true
+        },
+        {
+          "name": "manual BAJA",
+          "committed": true
+        },
+        {
+          "name": "reverse movement 7496",
+          "committed": true
+        }
+      ],
+      "finalRoll": [
+        {
+          "id": 6240,
+          "producto_id": 2078,
+          "ubicacion_id": 8,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "10.000"
+        }
+      ],
+      "balances": [
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 8,
+          "unidad": "METRO",
+          "available_roll_sum": "10.000",
+          "inventory_roll_sum": "10.000",
+          "signed_ledger": "10.000",
+          "cache": "10.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 835,
+          "unidad": "METRO",
+          "available_roll_sum": "10.000",
+          "inventory_roll_sum": "10.000",
+          "signed_ledger": "20.000",
+          "cache": "20.000",
+          "ledgerMinusInventory": 10,
+          "baselineLedgerMinusInventory": 10,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 836,
+          "unidad": "METRO",
+          "available_roll_sum": "100.000",
+          "inventory_roll_sum": "110.000",
+          "signed_ledger": "110.000",
+          "cache": "110.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2078,
+          "ubicacion_id": 837,
+          "unidad": "METRO",
+          "available_roll_sum": "80.000",
+          "inventory_roll_sum": "80.000",
+          "signed_ledger": "80.000",
+          "cache": "80.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        }
+      ]
+    },
+    {
+      "case": 9,
+      "status": "EXECUTED_REQUIRES_BALANCE_INTERPRETATION",
+      "steps": [
+        {
+          "name": "adjust to 12",
+          "committed": true
+        },
+        {
+          "name": "reverse movement 7498",
+          "committed": true
+        },
+        {
+          "name": "reverse movement 7499",
+          "committed": true
+        }
+      ],
+      "finalRoll": [
+        {
+          "id": 6241,
+          "producto_id": 2079,
+          "ubicacion_id": 835,
+          "estado": "DISPONIBLE",
+          "cantidad_actual": "10.000"
+        }
+      ],
+      "balances": [
+        {
+          "producto_id": 2079,
+          "ubicacion_id": 835,
+          "unidad": "KILO",
+          "available_roll_sum": "80.000",
+          "inventory_roll_sum": "80.000",
+          "signed_ledger": "82.000",
+          "cache": "82.000",
+          "ledgerMinusInventory": 2,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 2,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2079,
+          "ubicacion_id": 836,
+          "unidad": "KILO",
+          "available_roll_sum": "80.000",
+          "inventory_roll_sum": "80.000",
+          "signed_ledger": "80.000",
+          "cache": "80.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        },
+        {
+          "producto_id": 2079,
+          "ubicacion_id": 837,
+          "unidad": "KILO",
+          "available_roll_sum": "80.000",
+          "inventory_roll_sum": "80.000",
+          "signed_ledger": "80.000",
+          "cache": "80.000",
+          "ledgerMinusInventory": 0,
+          "baselineLedgerMinusInventory": 0,
+          "caseDiscrepancyDelta": 0,
+          "cacheEqualsLedger": true
+        }
+      ]
+    }
+  ]
+}

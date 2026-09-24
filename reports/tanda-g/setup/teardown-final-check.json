@@ -1,0 +1,13 @@
+{
+  "time": "2026-09-24T04:55:12.488327+00:00",
+  "portsListening": {
+    "55441": false,
+    "43840": false,
+    "43841": false,
+    "43842": false,
+    "43843": false
+  },
+  "privateRootRemoved": true,
+  "privateUICandidateRemoved": true,
+  "applicationBuildsPreserved": true
+}

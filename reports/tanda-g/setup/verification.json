@@ -1,0 +1,125 @@
+{
+  "identity": {
+    "db": "tanda_g_template",
+    "dir": "/home/runner/workspace/.local/tanda-g/cluster",
+    "port": 55441
+  },
+  "pid": 26723,
+  "checks": {
+    "active_actors": 9,
+    "auth_sessions": 0,
+    "restored_active_actors": 0
+  },
+  "inventory": [
+    {
+      "unidad": "METRO",
+      "ubicacion_id": 835,
+      "producto_id": 2078,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "KILO",
+      "ubicacion_id": 835,
+      "producto_id": 2079,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "BOLSA",
+      "ubicacion_id": 835,
+      "producto_id": 2081,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "PIEZA",
+      "ubicacion_id": 835,
+      "producto_id": 2080,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "METRO",
+      "ubicacion_id": 836,
+      "producto_id": 2078,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "KILO",
+      "ubicacion_id": 836,
+      "producto_id": 2079,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "BOLSA",
+      "ubicacion_id": 836,
+      "producto_id": 2081,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "PIEZA",
+      "ubicacion_id": 836,
+      "producto_id": 2080,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "METRO",
+      "ubicacion_id": 837,
+      "producto_id": 2078,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "KILO",
+      "ubicacion_id": 837,
+      "producto_id": 2079,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "BOLSA",
+      "ubicacion_id": 837,
+      "producto_id": 2081,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "PIEZA",
+      "ubicacion_id": 837,
+      "producto_id": 2080,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    }
+  ],
+  "provenance": 96,
+  "permissions": "Natural roles; restored matrix unchanged; no actor overrides inserted"
+}

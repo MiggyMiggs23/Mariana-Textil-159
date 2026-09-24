@@ -1,0 +1,299 @@
+{
+  "case": 9,
+  "started": "2026-09-24T04:32:21.781Z",
+  "transport": "real production helpers / real PostgreSQL, not HTTP",
+  "steps": [
+    {
+      "name": "adjust to 12",
+      "committed": true,
+      "snapshot": {
+        "balance": [
+          {
+            "producto_id": 2079,
+            "ubicacion_id": 835,
+            "unidad": "KILO",
+            "available_roll_sum": "82.000",
+            "inventory_roll_sum": "82.000",
+            "signed_ledger": "82.000",
+            "cache": "82.000"
+          },
+          {
+            "producto_id": 2079,
+            "ubicacion_id": 836,
+            "unidad": "KILO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          },
+          {
+            "producto_id": 2079,
+            "ubicacion_id": 837,
+            "unidad": "KILO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          }
+        ],
+        "roll": [
+          {
+            "id": 6241,
+            "producto_id": 2079,
+            "ubicacion_id": 835,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "12.000"
+          }
+        ],
+        "movements": [
+          {
+            "id": "7378",
+            "tipo": "RECEPCION",
+            "cantidad": "10.000",
+            "ubicacion_id": 835,
+            "movimiento_origen_id": null,
+            "documento_tipo": "ENTRADA",
+            "documento_id": "468"
+          },
+          {
+            "id": "7498",
+            "tipo": "AJUSTE_POSITIVO",
+            "cantidad": "2.000",
+            "ubicacion_id": 835,
+            "movimiento_origen_id": null,
+            "documento_tipo": null,
+            "documento_id": null
+          }
+        ],
+        "documents": []
+      }
+    },
+    {
+      "name": "reverse movement 7498",
+      "committed": true,
+      "snapshot": {
+        "balance": [
+          {
+            "producto_id": 2079,
+            "ubicacion_id": 835,
+            "unidad": "KILO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          },
+          {
+            "producto_id": 2079,
+            "ubicacion_id": 836,
+            "unidad": "KILO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          },
+          {
+            "producto_id": 2079,
+            "ubicacion_id": 837,
+            "unidad": "KILO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          }
+        ],
+        "roll": [
+          {
+            "id": 6241,
+            "producto_id": 2079,
+            "ubicacion_id": 835,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ],
+        "movements": [
+          {
+            "id": "7378",
+            "tipo": "RECEPCION",
+            "cantidad": "10.000",
+            "ubicacion_id": 835,
+            "movimiento_origen_id": null,
+            "documento_tipo": "ENTRADA",
+            "documento_id": "468"
+          },
+          {
+            "id": "7498",
+            "tipo": "AJUSTE_POSITIVO",
+            "cantidad": "2.000",
+            "ubicacion_id": 835,
+            "movimiento_origen_id": null,
+            "documento_tipo": null,
+            "documento_id": null
+          },
+          {
+            "id": "7499",
+            "tipo": "CANCELACION",
+            "cantidad": "-2.000",
+            "ubicacion_id": 835,
+            "movimiento_origen_id": 7498,
+            "documento_tipo": null,
+            "documento_id": null
+          }
+        ],
+        "documents": []
+      }
+    },
+    {
+      "name": "reverse movement 7499",
+      "committed": true,
+      "snapshot": {
+        "balance": [
+          {
+            "producto_id": 2079,
+            "ubicacion_id": 835,
+            "unidad": "KILO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "82.000",
+            "cache": "82.000"
+          },
+          {
+            "producto_id": 2079,
+            "ubicacion_id": 836,
+            "unidad": "KILO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          },
+          {
+            "producto_id": 2079,
+            "ubicacion_id": 837,
+            "unidad": "KILO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          }
+        ],
+        "roll": [
+          {
+            "id": 6241,
+            "producto_id": 2079,
+            "ubicacion_id": 835,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ],
+        "movements": [
+          {
+            "id": "7378",
+            "tipo": "RECEPCION",
+            "cantidad": "10.000",
+            "ubicacion_id": 835,
+            "movimiento_origen_id": null,
+            "documento_tipo": "ENTRADA",
+            "documento_id": "468"
+          },
+          {
+            "id": "7498",
+            "tipo": "AJUSTE_POSITIVO",
+            "cantidad": "2.000",
+            "ubicacion_id": 835,
+            "movimiento_origen_id": null,
+            "documento_tipo": null,
+            "documento_id": null
+          },
+          {
+            "id": "7499",
+            "tipo": "CANCELACION",
+            "cantidad": "-2.000",
+            "ubicacion_id": 835,
+            "movimiento_origen_id": 7498,
+            "documento_tipo": null,
+            "documento_id": null
+          },
+          {
+            "id": "7500",
+            "tipo": "CANCELACION",
+            "cantidad": "2.000",
+            "ubicacion_id": 835,
+            "movimiento_origen_id": 7499,
+            "documento_tipo": null,
+            "documento_id": null
+          }
+        ],
+        "documents": []
+      }
+    }
+  ],
+  "identity": {
+    "db": "tanda_g_baseline",
+    "directory": "/home/runner/workspace/.local/tanda-g/cluster",
+    "port": 55441,
+    "pid": 27723
+  },
+  "fixture": {
+    "id": 6241,
+    "serie": "995000101",
+    "productId": 2079,
+    "siteId": 835,
+    "unit": "KILO",
+    "entryId": 468,
+    "supplierId": 226,
+    "movementId": "7378"
+  },
+  "baseline": {
+    "balance": [
+      {
+        "producto_id": 2079,
+        "ubicacion_id": 835,
+        "unidad": "KILO",
+        "available_roll_sum": "80.000",
+        "inventory_roll_sum": "80.000",
+        "signed_ledger": "80.000",
+        "cache": "80.000"
+      },
+      {
+        "producto_id": 2079,
+        "ubicacion_id": 836,
+        "unidad": "KILO",
+        "available_roll_sum": "80.000",
+        "inventory_roll_sum": "80.000",
+        "signed_ledger": "80.000",
+        "cache": "80.000"
+      },
+      {
+        "producto_id": 2079,
+        "ubicacion_id": 837,
+        "unidad": "KILO",
+        "available_roll_sum": "80.000",
+        "inventory_roll_sum": "80.000",
+        "signed_ledger": "80.000",
+        "cache": "80.000"
+      }
+    ],
+    "roll": [
+      {
+        "id": 6241,
+        "producto_id": 2079,
+        "ubicacion_id": 835,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      }
+    ],
+    "movements": [
+      {
+        "id": "7378",
+        "tipo": "RECEPCION",
+        "cantidad": "10.000",
+        "ubicacion_id": 835,
+        "movimiento_origen_id": null,
+        "documento_tipo": "ENTRADA",
+        "documento_id": "468"
+      }
+    ],
+    "documents": []
+  },
+  "status": "EXECUTED_REQUIRES_BALANCE_INTERPRETATION",
+  "finished": "2026-09-24T04:32:21.841Z"
+}

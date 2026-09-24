@@ -1,0 +1,264 @@
+{
+  "at": "2026-09-24T04:41:14.033Z",
+  "candidateCommit": "61d82169e414354f8e613f53d583581f3d7955fb",
+  "identity": {
+    "db": "tanda_g_candidate",
+    "dir": "/home/runner/workspace/.local/tanda-g/cluster"
+  },
+  "cases": [
+    {
+      "case": 1,
+      "activationEvidence": [
+        {
+          "accion": "INVENTARIO_ESTADO_MOVIMIENTO_V1",
+          "entidad_id": "7466",
+          "datos_antes": {
+            "id": 6329,
+            "estado": "PROGRAMADO",
+            "pisoId": null,
+            "productoId": 2078,
+            "ubicacionId": 835,
+            "cantidadActual": "10.000"
+          },
+          "datos_despues": {
+            "id": 6329,
+            "estado": "DISPONIBLE",
+            "pisoId": null,
+            "productoId": 2078,
+            "ubicacionId": 835,
+            "cantidadActual": "10.000"
+          }
+        }
+      ],
+      "rejectedStep": "reverse movement 7466",
+      "code": "REVERSAL_ROLL_STATE_CHANGED",
+      "message": "No se puede revertir: el rollo ya no conserva exactamente el sitio, cantidad y estado que dejó el movimiento. Cancela primero las operaciones posteriores en orden inverso o registra un ajuste nuevo con motivo.",
+      "all107BusinessTablesUnchanged": true,
+      "changedTables": []
+    },
+    {
+      "case": 2,
+      "activationEvidence": [
+        {
+          "accion": "INVENTARIO_ESTADO_MOVIMIENTO_V1",
+          "entidad_id": "7471",
+          "datos_antes": {
+            "id": 6330,
+            "estado": "PROGRAMADO",
+            "pisoId": null,
+            "productoId": 2078,
+            "ubicacionId": 835,
+            "cantidadActual": "10.000"
+          },
+          "datos_despues": {
+            "id": 6330,
+            "estado": "DISPONIBLE",
+            "pisoId": null,
+            "productoId": 2078,
+            "ubicacionId": 835,
+            "cantidadActual": "10.000"
+          }
+        }
+      ],
+      "rejectedStep": "reverse movement 7472",
+      "code": "REVERSAL_STATE_EVIDENCE_REQUIRED",
+      "message": "No se puede revertir: falta evidencia íntegra del estado anterior y posterior del rollo para este movimiento. Un tramo aislado de traslado o un reverso encadenado no acredita la operación completa. Cancela primero las operaciones posteriores en orden inverso o registra un ajuste nuevo con motivo.",
+      "all107BusinessTablesUnchanged": true,
+      "changedTables": []
+    },
+    {
+      "case": 4,
+      "activationEvidence": [
+        {
+          "accion": "INVENTARIO_ESTADO_MOVIMIENTO_V1",
+          "entidad_id": "7477",
+          "datos_antes": {
+            "id": 6331,
+            "estado": "PROGRAMADO",
+            "pisoId": null,
+            "productoId": 2078,
+            "ubicacionId": 835,
+            "cantidadActual": "10.000"
+          },
+          "datos_despues": {
+            "id": 6331,
+            "estado": "DISPONIBLE",
+            "pisoId": null,
+            "productoId": 2078,
+            "ubicacionId": 835,
+            "cantidadActual": "10.000"
+          }
+        }
+      ],
+      "rejectedStep": "reverse movement 7478",
+      "code": "REVERSAL_STATE_EVIDENCE_REQUIRED",
+      "message": "No se puede revertir: falta evidencia íntegra del estado anterior y posterior del rollo para este movimiento. Un tramo aislado de traslado o un reverso encadenado no acredita la operación completa. Cancela primero las operaciones posteriores en orden inverso o registra un ajuste nuevo con motivo.",
+      "all107BusinessTablesUnchanged": true,
+      "changedTables": []
+    },
+    {
+      "case": 5,
+      "activationEvidence": [
+        {
+          "accion": "INVENTARIO_ESTADO_MOVIMIENTO_V1",
+          "entidad_id": "7482",
+          "datos_antes": {
+            "id": 6332,
+            "estado": "PROGRAMADO",
+            "pisoId": null,
+            "productoId": 2078,
+            "ubicacionId": 835,
+            "cantidadActual": "10.000"
+          },
+          "datos_despues": {
+            "id": 6332,
+            "estado": "DISPONIBLE",
+            "pisoId": null,
+            "productoId": 2078,
+            "ubicacionId": 835,
+            "cantidadActual": "10.000"
+          }
+        }
+      ],
+      "rejectedStep": "reverse movement 7486",
+      "code": "REVERSAL_STATE_EVIDENCE_REQUIRED",
+      "message": "No se puede revertir: falta evidencia íntegra del estado anterior y posterior del rollo para este movimiento. Un tramo aislado de traslado o un reverso encadenado no acredita la operación completa. Cancela primero las operaciones posteriores en orden inverso o registra un ajuste nuevo con motivo.",
+      "all107BusinessTablesUnchanged": true,
+      "changedTables": []
+    },
+    {
+      "case": 6,
+      "activationEvidence": [
+        {
+          "accion": "INVENTARIO_ESTADO_MOVIMIENTO_V1",
+          "entidad_id": "7487",
+          "datos_antes": {
+            "id": 6333,
+            "estado": "PROGRAMADO",
+            "pisoId": null,
+            "productoId": 2078,
+            "ubicacionId": 835,
+            "cantidadActual": "10.000"
+          },
+          "datos_despues": {
+            "id": 6333,
+            "estado": "DISPONIBLE",
+            "pisoId": null,
+            "productoId": 2078,
+            "ubicacionId": 835,
+            "cantidadActual": "10.000"
+          }
+        }
+      ],
+      "rejectedStep": "reverse movement 7488",
+      "code": "REVERSAL_ROLL_STATE_CHANGED",
+      "message": "No se puede revertir: el rollo ya no conserva exactamente el sitio, cantidad y estado que dejó el movimiento. Cancela primero las operaciones posteriores en orden inverso o registra un ajuste nuevo con motivo.",
+      "all107BusinessTablesUnchanged": true,
+      "changedTables": []
+    },
+    {
+      "case": 7,
+      "activationEvidence": [
+        {
+          "accion": "INVENTARIO_ESTADO_MOVIMIENTO_V1",
+          "entidad_id": "7490",
+          "datos_antes": {
+            "id": 6334,
+            "estado": "PROGRAMADO",
+            "pisoId": null,
+            "productoId": 2078,
+            "ubicacionId": 835,
+            "cantidadActual": "10.000"
+          },
+          "datos_despues": {
+            "id": 6334,
+            "estado": "DISPONIBLE",
+            "pisoId": null,
+            "productoId": 2078,
+            "ubicacionId": 835,
+            "cantidadActual": "10.000"
+          }
+        }
+      ],
+      "rejectedStep": "reverse movement 7491",
+      "code": "REVERSAL_ROLL_STATE_CHANGED",
+      "message": "No se puede revertir: el rollo ya no conserva exactamente el sitio, cantidad y estado que dejó el movimiento. Cancela primero las operaciones posteriores en orden inverso o registra un ajuste nuevo con motivo.",
+      "all107BusinessTablesUnchanged": true,
+      "changedTables": []
+    },
+    {
+      "case": 8,
+      "activationEvidence": [
+        {
+          "accion": "INVENTARIO_ESTADO_MOVIMIENTO_V1",
+          "entidad_id": "7493",
+          "datos_antes": {
+            "id": 6335,
+            "estado": "PROGRAMADO",
+            "pisoId": null,
+            "productoId": 2078,
+            "ubicacionId": 835,
+            "cantidadActual": "10.000"
+          },
+          "datos_despues": {
+            "id": 6335,
+            "estado": "DISPONIBLE",
+            "pisoId": null,
+            "productoId": 2078,
+            "ubicacionId": 835,
+            "cantidadActual": "10.000"
+          }
+        }
+      ],
+      "rejectedStep": "reverse movement 7496",
+      "code": "REVERSAL_STATE_EVIDENCE_REQUIRED",
+      "message": "No se puede revertir: falta evidencia íntegra del estado anterior y posterior del rollo para este movimiento. Un tramo aislado de traslado o un reverso encadenado no acredita la operación completa. Cancela primero las operaciones posteriores en orden inverso o registra un ajuste nuevo con motivo.",
+      "all107BusinessTablesUnchanged": true,
+      "changedTables": []
+    },
+    {
+      "case": 9,
+      "activationEvidence": [
+        {
+          "accion": "INVENTARIO_ESTADO_MOVIMIENTO_V1",
+          "entidad_id": "7497",
+          "datos_antes": {
+            "id": 6336,
+            "estado": "PROGRAMADO",
+            "pisoId": null,
+            "productoId": 2079,
+            "ubicacionId": 835,
+            "cantidadActual": "10.000"
+          },
+          "datos_despues": {
+            "id": 6336,
+            "estado": "DISPONIBLE",
+            "pisoId": null,
+            "productoId": 2079,
+            "ubicacionId": 835,
+            "cantidadActual": "10.000"
+          }
+        }
+      ],
+      "rejectedStep": "reverse movement 7499",
+      "code": "REVERSAL_STATE_EVIDENCE_REQUIRED",
+      "message": "No se puede revertir: falta evidencia íntegra del estado anterior y posterior del rollo para este movimiento. Un tramo aislado de traslado o un reverso encadenado no acredita la operación completa. Cancela primero las operaciones posteriores en orden inverso o registra un ajuste nuevo con motivo.",
+      "all107BusinessTablesUnchanged": true,
+      "changedTables": []
+    },
+    {
+      "case": "1-legacy",
+      "activationEvidence": [],
+      "rejectedStep": "reverse movement 7370",
+      "code": "REVERSAL_STATE_EVIDENCE_REQUIRED",
+      "message": "No se puede revertir: falta evidencia íntegra del estado anterior y posterior del rollo para este movimiento. Un tramo aislado de traslado o un reverso encadenado no acredita la operación completa. Cancela primero las operaciones posteriores en orden inverso o registra un ajuste nuevo con motivo.",
+      "all107BusinessTablesUnchanged": true,
+      "changedTables": []
+    }
+  ],
+  "excludedCases": [
+    3,
+    10
+  ],
+  "scope": "native production helpers; all public table rows hashed before/after rejected transaction, sequences excluded"
+}

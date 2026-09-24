@@ -1,0 +1,12 @@
+{
+  "baselineCommit": "8e5dc4a3d5ffe33ea30dbd9ff2f170d7214390a5",
+  "freeze": "git archive HEAD; all @workspace links resolve to frozen libraries, not mutable working tree",
+  "apiSha256": "e217bb3e5acd628f0f0ddbe5517d0012024732be847632c8107cb56b1f5818bc",
+  "uiSha256": "bcb0beaacb2d0a46d77c5645c1b26780a2e6d3b6a54597f65f157d21ba66db5f",
+  "runnerSha256": "40501633109d3d1b865c0f884d8d767e6a35b7e8838d39a0646d620030372eeb",
+  "sourceDumpSha256": "108f6864a2f20146963caafceaae5ed05ae83b1686e8d72fc2b13a1ea159a1b3",
+  "apiStarted": false,
+  "uiStarted": false,
+  "applicationWrites": false,
+  "gateFlagsEnabled": false
+}

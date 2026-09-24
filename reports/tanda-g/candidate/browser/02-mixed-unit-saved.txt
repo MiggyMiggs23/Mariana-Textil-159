@@ -1,0 +1,134 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Vista Global
+Activar sonido
+T
+
+TANDA G ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+Folio TGA-000001
+En tránsito
+24 sep 2026, 04:47
+•
+TANDA G ADMIN
+Imprimir Documento
+Rollos Incluidos (4)
+#	Serie	Producto	Cantidad
+1	995000001
+
+TANDA-G-METRO
+
+TANDA G METRO AZUL TG
+
+	10.00Mts.
+2	995000101
+
+TANDA-G-KILO
+
+TANDA G KILO AZUL TG
+
+	10.00Kg.
+3	995000201
+
+TANDA-G-PIEZA
+
+TANDA G PIEZA AZUL TG
+
+	10.00Pzas.
+4	995000301
+
+TANDA-G-BOLSA
+
+TANDA G BOLSA AZUL TG
+
+	10.00Bolsas
+Resumen por Producto
+TANDA G METRO
+1 rollos
+AZUL TG • TANDA-G-METRO
+10.00 Mts.
+TANDA G KILO
+1 rollos
+AZUL TG • TANDA-G-KILO
+10.00 Kg.
+TANDA G PIEZA
+1 rollos
+AZUL TG • TANDA-G-PIEZA
+10.00 Pzas.
+TANDA G BOLSA
+1 rollos
+AZUL TG • TANDA-G-BOLSA
+10.00 Bolsas
+TOTAL ROLLOS
+4
+METROS
+10.00
+KILOS
+10.00
+PIEZAS
+10.00
+BOLSAS
+10.00
+Detalles del Envío
+OR
+
+ORIGEN
+
+TANDA G TIENDA 1
+
+DE
+
+DESTINO
+
+TANDA G TIENDA 3
+
+Transportista:
+TANDA G browser verification
+Observaciones:
+Tanda G four-unit verification on disposable copy
+
+Si hubo un error y esta salida no debe proceder, puedes cancelarla.
+
+Cancelar Salida

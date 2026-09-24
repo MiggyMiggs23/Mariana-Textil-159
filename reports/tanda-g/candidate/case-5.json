@@ -1,0 +1,1333 @@
+{
+  "case": 5,
+  "started": "2026-09-24T04:38:11.667Z",
+  "transport": "real production helpers / real PostgreSQL, not HTTP",
+  "steps": [
+    {
+      "name": "create transfer document",
+      "committed": true,
+      "snapshot": {
+        "balance": [
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 8,
+            "unidad": "METRO",
+            "available_roll_sum": "0",
+            "inventory_roll_sum": "0",
+            "signed_ledger": "0.000",
+            "cache": "0.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 835,
+            "unidad": "METRO",
+            "available_roll_sum": "90.000",
+            "inventory_roll_sum": "90.000",
+            "signed_ledger": "90.000",
+            "cache": "90.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 836,
+            "unidad": "METRO",
+            "available_roll_sum": "100.000",
+            "inventory_roll_sum": "100.000",
+            "signed_ledger": "100.000",
+            "cache": "100.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 837,
+            "unidad": "METRO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          }
+        ],
+        "roll": [
+          {
+            "id": 6332,
+            "producto_id": 2078,
+            "ubicacion_id": 835,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ],
+        "movements": [
+          {
+            "id": "7482",
+            "tipo": "RECEPCION",
+            "cantidad": "10.000",
+            "ubicacion_id": 835,
+            "movimiento_origen_id": null,
+            "documento_tipo": null,
+            "documento_id": null
+          }
+        ],
+        "documents": [
+          {
+            "id": 32,
+            "estado": "ARMANDO",
+            "origen_id": 835,
+            "destino_id": 836
+          }
+        ]
+      }
+    },
+    {
+      "name": "send transfer document",
+      "committed": true,
+      "snapshot": {
+        "balance": [
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 8,
+            "unidad": "METRO",
+            "available_roll_sum": "0",
+            "inventory_roll_sum": "10.000",
+            "signed_ledger": "10.000",
+            "cache": "10.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 835,
+            "unidad": "METRO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 836,
+            "unidad": "METRO",
+            "available_roll_sum": "100.000",
+            "inventory_roll_sum": "100.000",
+            "signed_ledger": "100.000",
+            "cache": "100.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 837,
+            "unidad": "METRO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          }
+        ],
+        "roll": [
+          {
+            "id": 6332,
+            "producto_id": 2078,
+            "ubicacion_id": 8,
+            "estado": "EN_TRANSITO",
+            "cantidad_actual": "10.000"
+          }
+        ],
+        "movements": [
+          {
+            "id": "7482",
+            "tipo": "RECEPCION",
+            "cantidad": "10.000",
+            "ubicacion_id": 835,
+            "movimiento_origen_id": null,
+            "documento_tipo": null,
+            "documento_id": null
+          },
+          {
+            "id": "7483",
+            "tipo": "TRANSFERENCIA_SALIDA",
+            "cantidad": "-10.000",
+            "ubicacion_id": 835,
+            "movimiento_origen_id": null,
+            "documento_tipo": "SALIDA",
+            "documento_id": "32"
+          },
+          {
+            "id": "7484",
+            "tipo": "TRANSFERENCIA_ENTRADA",
+            "cantidad": "10.000",
+            "ubicacion_id": 8,
+            "movimiento_origen_id": null,
+            "documento_tipo": "SALIDA",
+            "documento_id": "32"
+          }
+        ],
+        "documents": [
+          {
+            "id": 32,
+            "estado": "EN_TRANSITO",
+            "origen_id": 835,
+            "destino_id": 836
+          }
+        ]
+      }
+    },
+    {
+      "name": "receive transfer document",
+      "committed": true,
+      "snapshot": {
+        "balance": [
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 8,
+            "unidad": "METRO",
+            "available_roll_sum": "0",
+            "inventory_roll_sum": "0",
+            "signed_ledger": "0.000",
+            "cache": "0.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 835,
+            "unidad": "METRO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 836,
+            "unidad": "METRO",
+            "available_roll_sum": "110.000",
+            "inventory_roll_sum": "110.000",
+            "signed_ledger": "110.000",
+            "cache": "110.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 837,
+            "unidad": "METRO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          }
+        ],
+        "roll": [
+          {
+            "id": 6332,
+            "producto_id": 2078,
+            "ubicacion_id": 836,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ],
+        "movements": [
+          {
+            "id": "7482",
+            "tipo": "RECEPCION",
+            "cantidad": "10.000",
+            "ubicacion_id": 835,
+            "movimiento_origen_id": null,
+            "documento_tipo": null,
+            "documento_id": null
+          },
+          {
+            "id": "7483",
+            "tipo": "TRANSFERENCIA_SALIDA",
+            "cantidad": "-10.000",
+            "ubicacion_id": 835,
+            "movimiento_origen_id": null,
+            "documento_tipo": "SALIDA",
+            "documento_id": "32"
+          },
+          {
+            "id": "7484",
+            "tipo": "TRANSFERENCIA_ENTRADA",
+            "cantidad": "10.000",
+            "ubicacion_id": 8,
+            "movimiento_origen_id": null,
+            "documento_tipo": "SALIDA",
+            "documento_id": "32"
+          },
+          {
+            "id": "7485",
+            "tipo": "TRANSFERENCIA_SALIDA",
+            "cantidad": "-10.000",
+            "ubicacion_id": 8,
+            "movimiento_origen_id": null,
+            "documento_tipo": "RECEPCION_SALIDA",
+            "documento_id": "32"
+          },
+          {
+            "id": "7486",
+            "tipo": "TRANSFERENCIA_ENTRADA",
+            "cantidad": "10.000",
+            "ubicacion_id": 836,
+            "movimiento_origen_id": null,
+            "documento_tipo": "RECEPCION_SALIDA",
+            "documento_id": "32"
+          }
+        ],
+        "documents": [
+          {
+            "id": 32,
+            "estado": "RECIBIDA",
+            "origen_id": 835,
+            "destino_id": 836
+          }
+        ]
+      }
+    },
+    {
+      "name": "reverse movement 7486",
+      "committed": false,
+      "businessBefore": {
+        "aplicaciones_credito": {
+          "count": 3,
+          "digest": "dae688128859e130f146541abb5e6120"
+        },
+        "aplicaciones_pago_proveedor": {
+          "count": 1,
+          "digest": "dd2a003432bf8bb7ce4c2431f321e2e3"
+        },
+        "atribuciones_credito_e1": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "auditoria": {
+          "count": 3630,
+          "digest": "c12dc58b1cdd161054cd4aea3d573e0a"
+        },
+        "auditoria_faltante_reactivaciones": {
+          "count": 5,
+          "digest": "ce76e458334067ad30f4aca08a020662"
+        },
+        "auditoria_inventario_escaneos": {
+          "count": 140,
+          "digest": "e3d6abb5a6b1c7b0f43032f34d0c247b"
+        },
+        "auditoria_inventario_folio": {
+          "count": 11,
+          "digest": "66c652654047591ac618c3bc9125d110"
+        },
+        "auditoria_inventario_participantes": {
+          "count": 5,
+          "digest": "c7e564c007b4d7618f97c655c8f050bd"
+        },
+        "auditoria_inventario_snapshot": {
+          "count": 178,
+          "digest": "cfd846096b05b35fff1a57fa49d21897"
+        },
+        "auditoria_sobrante_contextos": {
+          "count": 1,
+          "digest": "d2afb2c087712551bcf7947d328be89b"
+        },
+        "auditoria_sobrante_decisiones": {
+          "count": 2,
+          "digest": "417f7190eb4520360418ee56f0010e77"
+        },
+        "auditorias_inventario": {
+          "count": 5,
+          "digest": "629ec59ed85ea3a4aaed0cc7e6e895c4"
+        },
+        "autorizaciones_nota": {
+          "count": 2,
+          "digest": "a6582df463135b2f7d2d8d989d142310"
+        },
+        "caja_desbloqueos_e12": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "caja_retornos_proveedor_e12": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "caja_salidas_e4": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "caja_salidas_e4_operaciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "camionetas": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "choferes": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "cliente_documentos": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "clientes": {
+          "count": 8,
+          "digest": "649558985ed4209afa473bf0a492b067"
+        },
+        "cobros_credito_pendientes_e1": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "contenedor_lineas": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "contenedores": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "cuadre_fiscal_registros": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_avisos": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_cambios_usuario": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_conciliacion_ventas": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_conciliaciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_decisiones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_e5_definiciones": {
+          "count": 5,
+          "digest": "88a2ced80abdd4d2b8daf910f3b490d0"
+        },
+        "e11_e5_preparaciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_notificacion_origen": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_operaciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_perfil_eventos": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_perfiles": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_resoluciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_aplicaciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_cobros": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_ddl_originales": {
+          "count": 4,
+          "digest": "ec007f6c6fd5072337935017762f06ed"
+        },
+        "e5_devoluciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_documentos": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_impresiones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_nacimientos": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_operaciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_recepciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_salidas_bancarias": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_vinculos_credito": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e9_entregas": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e9_operaciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "entrada_folio": {
+          "count": 14,
+          "digest": "d06dd893eea75750f415d5b989b4c36d"
+        },
+        "entradas": {
+          "count": 6,
+          "digest": "401671471bae28edf52119978e486c8c"
+        },
+        "equipos": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "equipos_checklist": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "evidencia_no_aplicada_e2": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "existencias": {
+          "count": 58,
+          "digest": "d3fcfb54bd5a325efec54b71238f42d2"
+        },
+        "finalizaciones_abono_e2": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "fondo_arqueos": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "fondo_mariana": {
+          "count": 1,
+          "digest": "85910e5ceea00e3314e30323a5e38920"
+        },
+        "fondo_movimientos": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "movimientos": {
+          "count": 935,
+          "digest": "15b61ee1454c2071cf1ce52d6ba457c3"
+        },
+        "movimientos_credito": {
+          "count": 4,
+          "digest": "3f55aff1f1a7d3783d2b795bffa77412"
+        },
+        "notificaciones_credito": {
+          "count": 2,
+          "digest": "894daf1154bfcff6cbc6ddd92a2a0d43"
+        },
+        "notificaciones_sistema": {
+          "count": 14,
+          "digest": "d52c3b9574eed8bbbcbe9a785744909b"
+        },
+        "operaciones_credito_e1": {
+          "count": 1,
+          "digest": "98632517a33400139ec8eb2857bd87e3"
+        },
+        "pagos_proveedor": {
+          "count": 4,
+          "digest": "444c2695432f38012f2c616e3408ad53"
+        },
+        "permisos_rol": {
+          "count": 204,
+          "digest": "153f81ddf73fa196c12c9f0e2db63917"
+        },
+        "permisos_ubicacion": {
+          "count": 54,
+          "digest": "ae0e8d996e5d3270e91681f436681858"
+        },
+        "permisos_usuario": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "pisos": {
+          "count": 2,
+          "digest": "66b0e5d138d3cb0ce141ba2f90977c28"
+        },
+        "precio_historial": {
+          "count": 1102,
+          "digest": "75d9ded907eadbf5104e9324f5d66d5c"
+        },
+        "productos": {
+          "count": 1238,
+          "digest": "2865d35a7a6c1c4a44d7d2c79d624aec"
+        },
+        "proveedor_efectivo_e12": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "proveedor_operaciones_e12": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "proveedor_solicitudes_e12": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "proveedores": {
+          "count": 29,
+          "digest": "dc84cbc55a1e9106bfc57c8de667027d"
+        },
+        "recibo_folio_e3": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "recibos_abono_e3": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "reimpresiones_etiqueta": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "revisiones_etiqueta": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "rollos": {
+          "count": 840,
+          "digest": "e802915a79e4f2c32943afd65716ac15"
+        },
+        "salida_folio": {
+          "count": 12,
+          "digest": "a534791940c324e20808f322c7bb92d5"
+        },
+        "salida_lineas": {
+          "count": 8,
+          "digest": "a26e20e19f0d5bbfb269f93b47f184ad"
+        },
+        "salida_rollos": {
+          "count": 23,
+          "digest": "b1ebcd6892d90a7b4a3a8c2f324e776a"
+        },
+        "salidas": {
+          "count": 8,
+          "digest": "76f8f134aa3f8887f44823f88a019562"
+        },
+        "salidas_dinero_caja": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "series_consecutivo": {
+          "count": 1,
+          "digest": "6a67febe792eaf392b50b7a83d55db41"
+        },
+        "sesiones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "sesiones_caja": {
+          "count": 6,
+          "digest": "8647b80cea8f7df7488db4e8f9dcd729"
+        },
+        "sesiones_caja_dias": {
+          "count": 6,
+          "digest": "151b8417eaaad510ef9c6b967cb972aa"
+        },
+        "solicitudes_pago_dirigido": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "stock_minimo_episodios": {
+          "count": 3,
+          "digest": "7c9f9e18484871769263102bb401796d"
+        },
+        "stock_minimo_sitios": {
+          "count": 1,
+          "digest": "ea18e5b74c5e023a1f0c5f4801d16e07"
+        },
+        "stock_minimos": {
+          "count": 3,
+          "digest": "d89b9998d2d70c5d55e749252e2c62c8"
+        },
+        "tarea4_rollo_remate": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "ticket_folio": {
+          "count": 1,
+          "digest": "b838223cd1c3c38dff19091e0a5b8b5d"
+        },
+        "ticket_linea_consumos": {
+          "count": 18,
+          "digest": "d1c01fd7e4a4a78a30a2e776533bd2ba"
+        },
+        "ticket_lineas": {
+          "count": 15,
+          "digest": "259aad39af83b465b62c3b1e8c83e682"
+        },
+        "ticket_pagos": {
+          "count": 1,
+          "digest": "e477ec0cc59607924fe1103cbd2afa75"
+        },
+        "tickets": {
+          "count": 3,
+          "digest": "91724cc260adca710c087f92db82d3d5"
+        },
+        "ubicaciones": {
+          "count": 14,
+          "digest": "135e56a8fe22610a9a603035eac77f15"
+        },
+        "usuarios": {
+          "count": 40,
+          "digest": "30b67ac5d5fed15caa65fb6f6f048587"
+        },
+        "viaje_folio": {
+          "count": 11,
+          "digest": "ecb29fedd3b7215bbc7e48d38c261334"
+        },
+        "viaje_salidas": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "viaje_tickets": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "viajes": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "vistas_abono_e3": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        }
+      },
+      "businessAfter": {
+        "aplicaciones_credito": {
+          "count": 3,
+          "digest": "dae688128859e130f146541abb5e6120"
+        },
+        "aplicaciones_pago_proveedor": {
+          "count": 1,
+          "digest": "dd2a003432bf8bb7ce4c2431f321e2e3"
+        },
+        "atribuciones_credito_e1": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "auditoria": {
+          "count": 3630,
+          "digest": "c12dc58b1cdd161054cd4aea3d573e0a"
+        },
+        "auditoria_faltante_reactivaciones": {
+          "count": 5,
+          "digest": "ce76e458334067ad30f4aca08a020662"
+        },
+        "auditoria_inventario_escaneos": {
+          "count": 140,
+          "digest": "e3d6abb5a6b1c7b0f43032f34d0c247b"
+        },
+        "auditoria_inventario_folio": {
+          "count": 11,
+          "digest": "66c652654047591ac618c3bc9125d110"
+        },
+        "auditoria_inventario_participantes": {
+          "count": 5,
+          "digest": "c7e564c007b4d7618f97c655c8f050bd"
+        },
+        "auditoria_inventario_snapshot": {
+          "count": 178,
+          "digest": "cfd846096b05b35fff1a57fa49d21897"
+        },
+        "auditoria_sobrante_contextos": {
+          "count": 1,
+          "digest": "d2afb2c087712551bcf7947d328be89b"
+        },
+        "auditoria_sobrante_decisiones": {
+          "count": 2,
+          "digest": "417f7190eb4520360418ee56f0010e77"
+        },
+        "auditorias_inventario": {
+          "count": 5,
+          "digest": "629ec59ed85ea3a4aaed0cc7e6e895c4"
+        },
+        "autorizaciones_nota": {
+          "count": 2,
+          "digest": "a6582df463135b2f7d2d8d989d142310"
+        },
+        "caja_desbloqueos_e12": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "caja_retornos_proveedor_e12": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "caja_salidas_e4": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "caja_salidas_e4_operaciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "camionetas": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "choferes": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "cliente_documentos": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "clientes": {
+          "count": 8,
+          "digest": "649558985ed4209afa473bf0a492b067"
+        },
+        "cobros_credito_pendientes_e1": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "contenedor_lineas": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "contenedores": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "cuadre_fiscal_registros": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_avisos": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_cambios_usuario": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_conciliacion_ventas": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_conciliaciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_decisiones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_e5_definiciones": {
+          "count": 5,
+          "digest": "88a2ced80abdd4d2b8daf910f3b490d0"
+        },
+        "e11_e5_preparaciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_notificacion_origen": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_operaciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_perfil_eventos": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_perfiles": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e11_resoluciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_aplicaciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_cobros": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_ddl_originales": {
+          "count": 4,
+          "digest": "ec007f6c6fd5072337935017762f06ed"
+        },
+        "e5_devoluciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_documentos": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_impresiones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_nacimientos": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_operaciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_recepciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_salidas_bancarias": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e5_vinculos_credito": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e9_entregas": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "e9_operaciones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "entrada_folio": {
+          "count": 14,
+          "digest": "d06dd893eea75750f415d5b989b4c36d"
+        },
+        "entradas": {
+          "count": 6,
+          "digest": "401671471bae28edf52119978e486c8c"
+        },
+        "equipos": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "equipos_checklist": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "evidencia_no_aplicada_e2": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "existencias": {
+          "count": 58,
+          "digest": "d3fcfb54bd5a325efec54b71238f42d2"
+        },
+        "finalizaciones_abono_e2": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "fondo_arqueos": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "fondo_mariana": {
+          "count": 1,
+          "digest": "85910e5ceea00e3314e30323a5e38920"
+        },
+        "fondo_movimientos": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "movimientos": {
+          "count": 935,
+          "digest": "15b61ee1454c2071cf1ce52d6ba457c3"
+        },
+        "movimientos_credito": {
+          "count": 4,
+          "digest": "3f55aff1f1a7d3783d2b795bffa77412"
+        },
+        "notificaciones_credito": {
+          "count": 2,
+          "digest": "894daf1154bfcff6cbc6ddd92a2a0d43"
+        },
+        "notificaciones_sistema": {
+          "count": 14,
+          "digest": "d52c3b9574eed8bbbcbe9a785744909b"
+        },
+        "operaciones_credito_e1": {
+          "count": 1,
+          "digest": "98632517a33400139ec8eb2857bd87e3"
+        },
+        "pagos_proveedor": {
+          "count": 4,
+          "digest": "444c2695432f38012f2c616e3408ad53"
+        },
+        "permisos_rol": {
+          "count": 204,
+          "digest": "153f81ddf73fa196c12c9f0e2db63917"
+        },
+        "permisos_ubicacion": {
+          "count": 54,
+          "digest": "ae0e8d996e5d3270e91681f436681858"
+        },
+        "permisos_usuario": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "pisos": {
+          "count": 2,
+          "digest": "66b0e5d138d3cb0ce141ba2f90977c28"
+        },
+        "precio_historial": {
+          "count": 1102,
+          "digest": "75d9ded907eadbf5104e9324f5d66d5c"
+        },
+        "productos": {
+          "count": 1238,
+          "digest": "2865d35a7a6c1c4a44d7d2c79d624aec"
+        },
+        "proveedor_efectivo_e12": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "proveedor_operaciones_e12": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "proveedor_solicitudes_e12": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "proveedores": {
+          "count": 29,
+          "digest": "dc84cbc55a1e9106bfc57c8de667027d"
+        },
+        "recibo_folio_e3": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "recibos_abono_e3": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "reimpresiones_etiqueta": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "revisiones_etiqueta": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "rollos": {
+          "count": 840,
+          "digest": "e802915a79e4f2c32943afd65716ac15"
+        },
+        "salida_folio": {
+          "count": 12,
+          "digest": "a534791940c324e20808f322c7bb92d5"
+        },
+        "salida_lineas": {
+          "count": 8,
+          "digest": "a26e20e19f0d5bbfb269f93b47f184ad"
+        },
+        "salida_rollos": {
+          "count": 23,
+          "digest": "b1ebcd6892d90a7b4a3a8c2f324e776a"
+        },
+        "salidas": {
+          "count": 8,
+          "digest": "76f8f134aa3f8887f44823f88a019562"
+        },
+        "salidas_dinero_caja": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "series_consecutivo": {
+          "count": 1,
+          "digest": "6a67febe792eaf392b50b7a83d55db41"
+        },
+        "sesiones": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "sesiones_caja": {
+          "count": 6,
+          "digest": "8647b80cea8f7df7488db4e8f9dcd729"
+        },
+        "sesiones_caja_dias": {
+          "count": 6,
+          "digest": "151b8417eaaad510ef9c6b967cb972aa"
+        },
+        "solicitudes_pago_dirigido": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "stock_minimo_episodios": {
+          "count": 3,
+          "digest": "7c9f9e18484871769263102bb401796d"
+        },
+        "stock_minimo_sitios": {
+          "count": 1,
+          "digest": "ea18e5b74c5e023a1f0c5f4801d16e07"
+        },
+        "stock_minimos": {
+          "count": 3,
+          "digest": "d89b9998d2d70c5d55e749252e2c62c8"
+        },
+        "tarea4_rollo_remate": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "ticket_folio": {
+          "count": 1,
+          "digest": "b838223cd1c3c38dff19091e0a5b8b5d"
+        },
+        "ticket_linea_consumos": {
+          "count": 18,
+          "digest": "d1c01fd7e4a4a78a30a2e776533bd2ba"
+        },
+        "ticket_lineas": {
+          "count": 15,
+          "digest": "259aad39af83b465b62c3b1e8c83e682"
+        },
+        "ticket_pagos": {
+          "count": 1,
+          "digest": "e477ec0cc59607924fe1103cbd2afa75"
+        },
+        "tickets": {
+          "count": 3,
+          "digest": "91724cc260adca710c087f92db82d3d5"
+        },
+        "ubicaciones": {
+          "count": 14,
+          "digest": "135e56a8fe22610a9a603035eac77f15"
+        },
+        "usuarios": {
+          "count": 40,
+          "digest": "30b67ac5d5fed15caa65fb6f6f048587"
+        },
+        "viaje_folio": {
+          "count": 11,
+          "digest": "ecb29fedd3b7215bbc7e48d38c261334"
+        },
+        "viaje_salidas": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "viaje_tickets": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "viajes": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        },
+        "vistas_abono_e3": {
+          "count": 0,
+          "digest": "d41d8cd98f00b204e9800998ecf8427e"
+        }
+      },
+      "changedTables": [],
+      "unchanged": true,
+      "error": {
+        "message": "No se puede revertir: falta evidencia íntegra del estado anterior y posterior del rollo para este movimiento. Un tramo aislado de traslado o un reverso encadenado no acredita la operación completa. Cancela primero las operaciones posteriores en orden inverso o registra un ajuste nuevo con motivo.",
+        "code": "REVERSAL_STATE_EVIDENCE_REQUIRED"
+      },
+      "snapshot": {
+        "balance": [
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 8,
+            "unidad": "METRO",
+            "available_roll_sum": "0",
+            "inventory_roll_sum": "0",
+            "signed_ledger": "0.000",
+            "cache": "0.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 835,
+            "unidad": "METRO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 836,
+            "unidad": "METRO",
+            "available_roll_sum": "110.000",
+            "inventory_roll_sum": "110.000",
+            "signed_ledger": "110.000",
+            "cache": "110.000"
+          },
+          {
+            "producto_id": 2078,
+            "ubicacion_id": 837,
+            "unidad": "METRO",
+            "available_roll_sum": "80.000",
+            "inventory_roll_sum": "80.000",
+            "signed_ledger": "80.000",
+            "cache": "80.000"
+          }
+        ],
+        "roll": [
+          {
+            "id": 6332,
+            "producto_id": 2078,
+            "ubicacion_id": 836,
+            "estado": "DISPONIBLE",
+            "cantidad_actual": "10.000"
+          }
+        ],
+        "movements": [
+          {
+            "id": "7482",
+            "tipo": "RECEPCION",
+            "cantidad": "10.000",
+            "ubicacion_id": 835,
+            "movimiento_origen_id": null,
+            "documento_tipo": null,
+            "documento_id": null
+          },
+          {
+            "id": "7483",
+            "tipo": "TRANSFERENCIA_SALIDA",
+            "cantidad": "-10.000",
+            "ubicacion_id": 835,
+            "movimiento_origen_id": null,
+            "documento_tipo": "SALIDA",
+            "documento_id": "32"
+          },
+          {
+            "id": "7484",
+            "tipo": "TRANSFERENCIA_ENTRADA",
+            "cantidad": "10.000",
+            "ubicacion_id": 8,
+            "movimiento_origen_id": null,
+            "documento_tipo": "SALIDA",
+            "documento_id": "32"
+          },
+          {
+            "id": "7485",
+            "tipo": "TRANSFERENCIA_SALIDA",
+            "cantidad": "-10.000",
+            "ubicacion_id": 8,
+            "movimiento_origen_id": null,
+            "documento_tipo": "RECEPCION_SALIDA",
+            "documento_id": "32"
+          },
+          {
+            "id": "7486",
+            "tipo": "TRANSFERENCIA_ENTRADA",
+            "cantidad": "10.000",
+            "ubicacion_id": 836,
+            "movimiento_origen_id": null,
+            "documento_tipo": "RECEPCION_SALIDA",
+            "documento_id": "32"
+          }
+        ],
+        "documents": [
+          {
+            "id": 32,
+            "estado": "RECIBIDA",
+            "origen_id": 835,
+            "destino_id": 836
+          }
+        ]
+      }
+    }
+  ],
+  "identity": {
+    "db": "tanda_g_candidate",
+    "directory": "/home/runner/workspace/.local/tanda-g/cluster",
+    "port": 55441,
+    "pid": 280
+  },
+  "fixture": {
+    "id": 6332,
+    "serie": "10000744",
+    "productId": 2078,
+    "siteId": 835,
+    "unit": "METRO",
+    "entryId": null,
+    "supplierId": 226,
+    "movementId": 7482,
+    "provenance": "native crearRollo PROGRAMADO -> candidate activarRollo RECEPCION; existing supplier"
+  },
+  "activationEvidence": "fresh candidate-produced activation and movement evidence",
+  "baseline": {
+    "balance": [
+      {
+        "producto_id": 2078,
+        "ubicacion_id": 8,
+        "unidad": "METRO",
+        "available_roll_sum": "0",
+        "inventory_roll_sum": "0",
+        "signed_ledger": "0.000",
+        "cache": "0.000"
+      },
+      {
+        "producto_id": 2078,
+        "ubicacion_id": 835,
+        "unidad": "METRO",
+        "available_roll_sum": "90.000",
+        "inventory_roll_sum": "90.000",
+        "signed_ledger": "90.000",
+        "cache": "90.000"
+      },
+      {
+        "producto_id": 2078,
+        "ubicacion_id": 836,
+        "unidad": "METRO",
+        "available_roll_sum": "100.000",
+        "inventory_roll_sum": "100.000",
+        "signed_ledger": "100.000",
+        "cache": "100.000"
+      },
+      {
+        "producto_id": 2078,
+        "ubicacion_id": 837,
+        "unidad": "METRO",
+        "available_roll_sum": "80.000",
+        "inventory_roll_sum": "80.000",
+        "signed_ledger": "80.000",
+        "cache": "80.000"
+      }
+    ],
+    "roll": [
+      {
+        "id": 6332,
+        "producto_id": 2078,
+        "ubicacion_id": 835,
+        "estado": "DISPONIBLE",
+        "cantidad_actual": "10.000"
+      }
+    ],
+    "movements": [
+      {
+        "id": "7482",
+        "tipo": "RECEPCION",
+        "cantidad": "10.000",
+        "ubicacion_id": 835,
+        "movimiento_origen_id": null,
+        "documento_tipo": null,
+        "documento_id": null
+      }
+    ],
+    "documents": []
+  },
+  "status": "BLOCKED_OR_REJECTED",
+  "error": "No se puede revertir: falta evidencia íntegra del estado anterior y posterior del rollo para este movimiento. Un tramo aislado de traslado o un reverso encadenado no acredita la operación completa. Cancela primero las operaciones posteriores en orden inverso o registra un ajuste nuevo con motivo.",
+  "finished": "2026-09-24T04:38:12.196Z"
+}
