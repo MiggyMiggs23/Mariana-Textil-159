@@ -1,0 +1,269 @@
+{
+  "identity": {
+    "db": "tanda_ga_template",
+    "dir": "/home/runner/workspace/.local/tanda-g-ampliada/cluster",
+    "port": 55442
+  },
+  "pid": 5727,
+  "checks": {
+    "active_actors": 9,
+    "auth_sessions": 0,
+    "restored_active_actors": 0
+  },
+  "inventory": [
+    {
+      "unidad": "METRO",
+      "ubicacion_id": 836,
+      "producto_id": 2078,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "KILO",
+      "ubicacion_id": 836,
+      "producto_id": 2079,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "BOLSA",
+      "ubicacion_id": 836,
+      "producto_id": 2081,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "PIEZA",
+      "ubicacion_id": 836,
+      "producto_id": 2080,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "METRO",
+      "ubicacion_id": 837,
+      "producto_id": 2078,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "KILO",
+      "ubicacion_id": 837,
+      "producto_id": 2079,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "BOLSA",
+      "ubicacion_id": 837,
+      "producto_id": 2081,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "PIEZA",
+      "ubicacion_id": 837,
+      "producto_id": 2080,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "METRO",
+      "ubicacion_id": 838,
+      "producto_id": 2078,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "KILO",
+      "ubicacion_id": 838,
+      "producto_id": 2079,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "BOLSA",
+      "ubicacion_id": 838,
+      "producto_id": 2081,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "PIEZA",
+      "ubicacion_id": 838,
+      "producto_id": 2080,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "METRO",
+      "ubicacion_id": 839,
+      "producto_id": 2078,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "KILO",
+      "ubicacion_id": 839,
+      "producto_id": 2079,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "BOLSA",
+      "ubicacion_id": 839,
+      "producto_id": 2081,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "PIEZA",
+      "ubicacion_id": 839,
+      "producto_id": 2080,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "METRO",
+      "ubicacion_id": 840,
+      "producto_id": 2078,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "KILO",
+      "ubicacion_id": 840,
+      "producto_id": 2079,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "BOLSA",
+      "ubicacion_id": 840,
+      "producto_id": 2081,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "PIEZA",
+      "ubicacion_id": 840,
+      "producto_id": 2080,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "METRO",
+      "ubicacion_id": 841,
+      "producto_id": 2078,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "KILO",
+      "ubicacion_id": 841,
+      "producto_id": 2079,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "BOLSA",
+      "ubicacion_id": 841,
+      "producto_id": 2081,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "PIEZA",
+      "ubicacion_id": 841,
+      "producto_id": 2080,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "METRO",
+      "ubicacion_id": 842,
+      "producto_id": 2078,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "KILO",
+      "ubicacion_id": 842,
+      "producto_id": 2079,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "BOLSA",
+      "ubicacion_id": 842,
+      "producto_id": 2081,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    },
+    {
+      "unidad": "PIEZA",
+      "ubicacion_id": 842,
+      "producto_id": 2080,
+      "rolls": 8,
+      "quantity": "80.000",
+      "cache": "80.000",
+      "ledger": "80.000"
+    }
+  ],
+  "provenance": 224,
+  "permissions": "Natural roles; restored matrix unchanged; no actor overrides inserted"
+}

@@ -1,0 +1,2 @@
+// Frozen, previously audited local-only static/API proxy. No app initialization.
+await import("/home/runner/workspace/.local/tanda-g-ampliada/frozen-source/reports/tanda-e-20260923/tarea-1/proxy.mjs");

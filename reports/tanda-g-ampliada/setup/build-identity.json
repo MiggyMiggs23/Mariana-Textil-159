@@ -1,0 +1,54 @@
+{
+  "commit": "ee1bb641e0513b7df18027ad351a72ebbe99af74",
+  "sourceArchiveSha256": "f823aa8a7f5560240ea9b2811c9a2fc73df6b3a72c8d016a148b947725694fc4",
+  "apiSha256": "d4a5a83bbaa5fc130f68217df5da4039d26db325f59345ee2958adabdcc0b0a9",
+  "uiAssets": [
+    {
+      "path": "artifacts/mariana-textil/dist/public/assets/index-BSBOvmu4.js",
+      "sha256": "cbb34ab7a36dbc8f513766e49c1106eec672fb61f754f8e0fe20a26d647f9a41"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/assets/index-CJ5sQYvB.js",
+      "sha256": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/assets/index-xneRQu8F.css",
+      "sha256": "ba3035f692f7c5435266c1a60b8038576f8b37784aa1e79f14f070128a56425e"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/assets/mariana-textil-logo-FFOiXRd3.png",
+      "sha256": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/assets/mariana-textil-logo-monochrome-_7AVoW2A.png",
+      "sha256": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/favicon.png",
+      "sha256": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/index.html",
+      "sha256": "975d137698b66d6b891aa3895b028ea69c8a70f90c4de9fcf32f0535bd9c6bf2"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/robots.txt",
+      "sha256": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/sounds/alerta.ogg",
+      "sha256": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/sounds/aviso.ogg",
+      "sha256": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/sounds/solicitud.ogg",
+      "sha256": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+    }
+  ],
+  "applicationStarted": false,
+  "testsRun": false,
+  "freeze": "git archive; workspace library links resolve to frozen source"
+}

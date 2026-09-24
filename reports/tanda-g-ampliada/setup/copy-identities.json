@@ -1,0 +1,352 @@
+{
+  "identities": [
+    {
+      "db": "tanda_ga_template",
+      "directory": "/home/runner/workspace/.local/tanda-g-ampliada/cluster",
+      "port": 55442,
+      "version": "160010",
+      "metrage": 0,
+      "roles": [
+        "ADMIN",
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "sites": [
+        {
+          "tipo": "BODEGA",
+          "n": 4
+        },
+        {
+          "tipo": "TIENDA",
+          "n": 3
+        }
+      ],
+      "admin": 1
+    },
+    {
+      "db": "tanda_ga_permissions",
+      "directory": "/home/runner/workspace/.local/tanda-g-ampliada/cluster",
+      "port": 55442,
+      "version": "160010",
+      "metrage": 0,
+      "roles": [
+        "ADMIN",
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "sites": [
+        {
+          "tipo": "TIENDA",
+          "n": 3
+        },
+        {
+          "tipo": "BODEGA",
+          "n": 4
+        }
+      ],
+      "admin": 1
+    },
+    {
+      "db": "tanda_ga_inventory",
+      "directory": "/home/runner/workspace/.local/tanda-g-ampliada/cluster",
+      "port": 55442,
+      "version": "160010",
+      "metrage": 0,
+      "roles": [
+        "ADMIN",
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "sites": [
+        {
+          "tipo": "TIENDA",
+          "n": 3
+        },
+        {
+          "tipo": "BODEGA",
+          "n": 4
+        }
+      ],
+      "admin": 1
+    },
+    {
+      "db": "tanda_ga_month",
+      "directory": "/home/runner/workspace/.local/tanda-g-ampliada/cluster",
+      "port": 55442,
+      "version": "160010",
+      "metrage": 0,
+      "roles": [
+        "ADMIN",
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "sites": [
+        {
+          "tipo": "BODEGA",
+          "n": 4
+        },
+        {
+          "tipo": "TIENDA",
+          "n": 3
+        }
+      ],
+      "admin": 1
+    },
+    {
+      "db": "tanda_ga_performance",
+      "directory": "/home/runner/workspace/.local/tanda-g-ampliada/cluster",
+      "port": 55442,
+      "version": "160010",
+      "metrage": 0,
+      "roles": [
+        "ADMIN",
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "sites": [
+        {
+          "tipo": "BODEGA",
+          "n": 4
+        },
+        {
+          "tipo": "TIENDA",
+          "n": 3
+        }
+      ],
+      "admin": 1
+    },
+    {
+      "db": "tanda_ga_failure",
+      "directory": "/home/runner/workspace/.local/tanda-g-ampliada/cluster",
+      "port": 55442,
+      "version": "160010",
+      "metrage": 0,
+      "roles": [
+        "ADMIN",
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "sites": [
+        {
+          "tipo": "TIENDA",
+          "n": 3
+        },
+        {
+          "tipo": "BODEGA",
+          "n": 4
+        }
+      ],
+      "admin": 1
+    },
+    {
+      "db": "tanda_ga_witness",
+      "directory": "/home/runner/workspace/.local/tanda-g-ampliada/cluster",
+      "port": 55442,
+      "version": "160010",
+      "tables": 0
+    }
+  ],
+  "connectMatrix": [
+    {
+      "rolname": "ga_failure",
+      "datname": "tanda_ga_failure",
+      "allowed": true
+    },
+    {
+      "rolname": "ga_failure",
+      "datname": "tanda_ga_inventory",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_failure",
+      "datname": "tanda_ga_month",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_failure",
+      "datname": "tanda_ga_performance",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_failure",
+      "datname": "tanda_ga_permissions",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_failure",
+      "datname": "tanda_ga_template",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_failure",
+      "datname": "tanda_ga_witness",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_inventory",
+      "datname": "tanda_ga_failure",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_inventory",
+      "datname": "tanda_ga_inventory",
+      "allowed": true
+    },
+    {
+      "rolname": "ga_inventory",
+      "datname": "tanda_ga_month",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_inventory",
+      "datname": "tanda_ga_performance",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_inventory",
+      "datname": "tanda_ga_permissions",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_inventory",
+      "datname": "tanda_ga_template",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_inventory",
+      "datname": "tanda_ga_witness",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_month",
+      "datname": "tanda_ga_failure",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_month",
+      "datname": "tanda_ga_inventory",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_month",
+      "datname": "tanda_ga_month",
+      "allowed": true
+    },
+    {
+      "rolname": "ga_month",
+      "datname": "tanda_ga_performance",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_month",
+      "datname": "tanda_ga_permissions",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_month",
+      "datname": "tanda_ga_template",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_month",
+      "datname": "tanda_ga_witness",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_performance",
+      "datname": "tanda_ga_failure",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_performance",
+      "datname": "tanda_ga_inventory",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_performance",
+      "datname": "tanda_ga_month",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_performance",
+      "datname": "tanda_ga_performance",
+      "allowed": true
+    },
+    {
+      "rolname": "ga_performance",
+      "datname": "tanda_ga_permissions",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_performance",
+      "datname": "tanda_ga_template",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_performance",
+      "datname": "tanda_ga_witness",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_permissions",
+      "datname": "tanda_ga_failure",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_permissions",
+      "datname": "tanda_ga_inventory",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_permissions",
+      "datname": "tanda_ga_month",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_permissions",
+      "datname": "tanda_ga_performance",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_permissions",
+      "datname": "tanda_ga_permissions",
+      "allowed": true
+    },
+    {
+      "rolname": "ga_permissions",
+      "datname": "tanda_ga_template",
+      "allowed": false
+    },
+    {
+      "rolname": "ga_permissions",
+      "datname": "tanda_ga_witness",
+      "allowed": false
+    }
+  ],
+  "schemaSha256": "ba17ebed63b142b9c88b8ae95c57f9b688c7cdd384d26d8f45a004f265e9e239",
+  "testsRun": false
+}

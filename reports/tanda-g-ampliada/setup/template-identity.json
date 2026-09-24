@@ -1,0 +1,13 @@
+{
+  "sha256": "f6ce728b132b82b3760d75b35f33ba039677eee1de50de6ac588937d239b75e4",
+  "databases": [
+    "tanda_ga_template",
+    "tanda_ga_permissions",
+    "tanda_ga_inventory",
+    "tanda_ga_month",
+    "tanda_ga_performance",
+    "tanda_ga_failure",
+    "tanda_ga_witness"
+  ],
+  "port": 55442
+}

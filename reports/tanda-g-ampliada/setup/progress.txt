@@ -1,0 +1,2 @@
+2026-09-24T04:59:24.653Z Fresh effective API dump captured read-only; private cluster initialized. No application writes.
+2026-09-24T05:01:42.322Z Verified template and five independent copies prepared: 9 natural-role synthetic actors, 3 stores and 4 warehouses, shared credit customer, 224 traced multiunit rolls. PostgreSQL will stop cleanly; MAIN owns launch/teardown.

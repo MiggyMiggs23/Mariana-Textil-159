@@ -1,0 +1,8 @@
+{
+  "apiPid": 3575,
+  "command": "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node artifacts/api-server/dist-tanda-g-strict-candidate/index.mjs ",
+  "identity": "heliumdb|on|160010",
+  "sha256": "511e78cd733aa3239bfbf7e4b13835f3ac895a0bf7e72acfa1c8d5f7d62e6306",
+  "readOnly": true,
+  "quiescenceClaim": false
+}
