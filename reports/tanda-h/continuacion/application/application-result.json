@@ -1,0 +1,1754 @@
+{
+  "startedAt": "2026-09-24T16:33:35.137Z",
+  "status": "applied_verified",
+  "sqlSha256": "e5bc527636c4e31b7028fd55bb3aa5c9018df08e1eae03b3e4a8378aab5d35e0",
+  "authorization": "User resumed PAUSA and explicitly authorized application of only the two previously approved indexes; MAIN delegated actual execution after proof gates.",
+  "mode": "authorized_application",
+  "rowWriteStatements": 0,
+  "appAuthRequests": 0,
+  "operationalTests": 0,
+  "quiescenceClaim": false,
+  "rollbackPolicy": "Additive indexes only; prior source dump destroyed at pause. Preserve catalog and exact DROP INDEX CONCURRENTLY proposal, never execute rollback or restore data.",
+  "actions": [
+    {
+      "name": "tickets_pendientes_corte_ga_candidate",
+      "status": "created_concurrently",
+      "elapsedMs": 310.68418500000007,
+      "sql": "CREATE INDEX CONCURRENTLY tickets_pendientes_corte_ga_candidate\nON public.tickets (ubicacion_id, created_at, id)\nWHERE estado = 'VENDIDO'\n  AND ((documento_tipo = 'TICKET' AND cobrado = false)\n    OR (documento_tipo = 'NOTA' AND autorizacion_estado = 'PENDIENTE'))"
+    },
+    {
+      "name": "tickets_contabilizados_sitio_fecha_ga_candidate",
+      "status": "created_concurrently",
+      "elapsedMs": 29.37777099999994,
+      "sql": "CREATE INDEX CONCURRENTLY tickets_contabilizados_sitio_fecha_ga_candidate\nON public.tickets\n  (ubicacion_id, (CASE WHEN documento_tipo = 'TICKET' THEN cobrado_at ELSE autorizado_at END))\nWHERE estado = 'VENDIDO'\n  AND ((documento_tipo = 'TICKET' AND cobrado = true)\n    OR (documento_tipo = 'NOTA' AND autorizacion_estado = 'AUTORIZADA'))"
+    }
+  ],
+  "qualifiedCopyEvidence": {
+    "fullDatasetEqual": false,
+    "changedTables": [
+      "sesiones"
+    ],
+    "businessDatasetEqual": true,
+    "orderedQueryResultsEqual": true,
+    "querySamples": 78,
+    "orderedOperationResultsEqual": true,
+    "operationSamples": 6,
+    "qualification": "Only authentication storage public.sesiones differs from authenticated measurements; public.sesiones_caja and every other business table remain identical. Query SQL, bound values and ordered result digests match. Operation semantic digests match with generatedAt metadata alone excluded by the prior harness. This is qualified semantic evidence, not full-dataset equality or a latency SLA.",
+    "files": {
+      "pre.json": "c6595267a5004c578f5cc7662d28f329937299556ddf86eb065463028597330d",
+      "post.json": "39fc3db4bf5110bdda08f89774a95f69c2668c40e35d8f748681515d48d7c6f7",
+      "paired-proof.json": "3737ef25b6a0d3e1f48cd5676d1f8365542ca1ffc94686f1cc8dc5c33eddb625",
+      "business-paired-proof.json": "9f26f4892ef1187c839e56d7a66a87106cf82e5247adc73285491d696aa27b3c",
+      "copy-ddl.json": "b12ed2737a33bd5b5fd7746ce7c262771e2d1c3014388c5bda0d194f0a8281b0"
+    }
+  },
+  "runtime": {
+    "pid": 284,
+    "entry": "artifacts/api-server/dist-tanda-g-strict-candidate/index.mjs",
+    "connectionSource": "effective API process environment, memory only; never logged or persisted"
+  },
+  "identity": {
+    "database": "heliumdb",
+    "version": "160010",
+    "priorIdentityMatched": true,
+    "fingerprint": "cb892f512cd590071de83a2c0b8625eb01b857309ac600c8580c7d9d697df724",
+    "serverStart": "2026-09-24 16:10:13.29197+00",
+    "priorServerStart": "2026-09-24T06:16:58.304Z",
+    "serverStartIsRuntimeMetadata": true
+  },
+  "checkBefore": [
+    {
+      "conname": "rollos_physical_quantity_nonnegative_check",
+      "convalidated": true,
+      "definition": "CHECK (((cantidad_actual >= (0)::numeric) AND (cantidad_actual <> 'NaN'::numeric)))"
+    }
+  ],
+  "catalogBefore": [
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_cliente_created_at_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 2,
+      "definition": "CREATE INDEX tickets_cliente_created_at_idx ON public.tickets USING btree (cliente_id, created_at)",
+      "predicate": null,
+      "keys": [
+        "cliente_id",
+        "created_at"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_cobrado_created_at_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 2,
+      "definition": "CREATE INDEX tickets_cobrado_created_at_idx ON public.tickets USING btree (created_at, ubicacion_id) WHERE (cobrado = true)",
+      "predicate": "(cobrado = true)",
+      "keys": [
+        "created_at",
+        "ubicacion_id"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_cobrado_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 1,
+      "definition": "CREATE INDEX tickets_cobrado_idx ON public.tickets USING btree (cobrado)",
+      "predicate": null,
+      "keys": [
+        "cobrado"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_created_at_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 1,
+      "definition": "CREATE INDEX tickets_created_at_idx ON public.tickets USING btree (created_at)",
+      "predicate": null,
+      "keys": [
+        "created_at"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_estado_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 1,
+      "definition": "CREATE INDEX tickets_estado_idx ON public.tickets USING btree (estado)",
+      "predicate": null,
+      "keys": [
+        "estado"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_folio_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 1,
+      "definition": "CREATE INDEX tickets_folio_idx ON public.tickets USING btree (folio)",
+      "predicate": null,
+      "keys": [
+        "folio"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_folio_unique",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": true,
+      "indnkeyatts": 1,
+      "definition": "CREATE UNIQUE INDEX tickets_folio_unique ON public.tickets USING btree (folio)",
+      "predicate": null,
+      "keys": [
+        "folio"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_pkey",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": true,
+      "indnkeyatts": 1,
+      "definition": "CREATE UNIQUE INDEX tickets_pkey ON public.tickets USING btree (id)",
+      "predicate": null,
+      "keys": [
+        "id"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_sesion_estado_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 2,
+      "definition": "CREATE INDEX tickets_sesion_estado_idx ON public.tickets USING btree (sesion_caja_id, estado)",
+      "predicate": null,
+      "keys": [
+        "sesion_caja_id",
+        "estado"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_ubicacion_created_at_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 2,
+      "definition": "CREATE INDEX tickets_ubicacion_created_at_idx ON public.tickets USING btree (ubicacion_id, created_at)",
+      "predicate": null,
+      "keys": [
+        "ubicacion_id",
+        "created_at"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_uuid_cliente_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 1,
+      "definition": "CREATE INDEX tickets_uuid_cliente_idx ON public.tickets USING btree (uuid_cliente)",
+      "predicate": null,
+      "keys": [
+        "uuid_cliente"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_uuid_cliente_unique",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": true,
+      "indnkeyatts": 1,
+      "definition": "CREATE UNIQUE INDEX tickets_uuid_cliente_unique ON public.tickets USING btree (uuid_cliente)",
+      "predicate": null,
+      "keys": [
+        "uuid_cliente"
+      ]
+    }
+  ],
+  "prefixReview": "All existing noncandidate index definitions, ordered keys, predicates, uniqueness and valid/ready flags equal reviewed copy baseline. Existing (ubicacion_id,created_at) is nonpartial, lacks id and cut predicate; (created_at,ubicacion_id) WHERE cobrado=true has different order/predicate. No accounted-date CASE expression prefix exists. No existing definitions replaced.",
+  "before": {
+    "snapshot": "97631:97631:",
+    "serialization": "Native SQL row_to_json(full row), UTC, COLLATE C sorted, newline separator, MD5 plus counts; no exclusions",
+    "tables": [
+      {
+        "schema": "public",
+        "name": "aplicaciones_credito",
+        "count": "3",
+        "digest": "ccbb78db566b7d6d65a400e5c8b0126c"
+      },
+      {
+        "schema": "public",
+        "name": "aplicaciones_pago_proveedor",
+        "count": "1",
+        "digest": "65bfd21ebf11769d01cae6ee9e182768"
+      },
+      {
+        "schema": "public",
+        "name": "atribuciones_credito_e1",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "auditoria",
+        "count": "3617",
+        "digest": "547e2ff81f2d9e370c80b8b8b1f46a0f"
+      },
+      {
+        "schema": "public",
+        "name": "auditoria_faltante_reactivaciones",
+        "count": "5",
+        "digest": "16b5849d98c96ff1a753b73736e04cc7"
+      },
+      {
+        "schema": "public",
+        "name": "auditoria_inventario_escaneos",
+        "count": "140",
+        "digest": "edbbcfecdee49a22c5a9354fa07eb6c9"
+      },
+      {
+        "schema": "public",
+        "name": "auditoria_inventario_folio",
+        "count": "11",
+        "digest": "6a51f7639364032a354be14a0253b69c"
+      },
+      {
+        "schema": "public",
+        "name": "auditoria_inventario_participantes",
+        "count": "5",
+        "digest": "c0264bd6379240b6c4ef46a6d30afcff"
+      },
+      {
+        "schema": "public",
+        "name": "auditoria_inventario_snapshot",
+        "count": "178",
+        "digest": "d7a9dc1d43eb03eb788bdc4790524df6"
+      },
+      {
+        "schema": "public",
+        "name": "auditoria_sobrante_contextos",
+        "count": "1",
+        "digest": "e18154e01b5f5bfd4709d6926c24c603"
+      },
+      {
+        "schema": "public",
+        "name": "auditoria_sobrante_decisiones",
+        "count": "2",
+        "digest": "9e50a5f5c5ce2ba8906ef065be2701b7"
+      },
+      {
+        "schema": "public",
+        "name": "auditorias_inventario",
+        "count": "5",
+        "digest": "3b2f4289cfd5fb88c317d82f343038f6"
+      },
+      {
+        "schema": "public",
+        "name": "autorizaciones_nota",
+        "count": "2",
+        "digest": "1468ac0118c754aa8e4dfba2a5d186a6"
+      },
+      {
+        "schema": "public",
+        "name": "caja_desbloqueos_e12",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "caja_retornos_proveedor_e12",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "caja_salidas_e4",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "caja_salidas_e4_operaciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "camionetas",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "choferes",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "cliente_documentos",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "clientes",
+        "count": "7",
+        "digest": "f4415ced9dabf5d844c34d812b00cd8c"
+      },
+      {
+        "schema": "public",
+        "name": "cobros_credito_pendientes_e1",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "contenedor_lineas",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "contenedores",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "cuadre_fiscal_registros",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_avisos",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_cambios_usuario",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_conciliacion_ventas",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_conciliaciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_decisiones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_e5_definiciones",
+        "count": "5",
+        "digest": "798e1b34b51c084c041fed1299a4d9f7"
+      },
+      {
+        "schema": "public",
+        "name": "e11_e5_preparaciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_notificacion_origen",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_operaciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_perfil_eventos",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_perfiles",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_resoluciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_aplicaciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_cobros",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_ddl_originales",
+        "count": "4",
+        "digest": "f97620430daeab3c9eccfb6f213e7a77"
+      },
+      {
+        "schema": "public",
+        "name": "e5_devoluciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_documentos",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_impresiones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_nacimientos",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_operaciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_recepciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_salidas_bancarias",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_vinculos_credito",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e9_entregas",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e9_operaciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "entrada_folio",
+        "count": "11",
+        "digest": "22b225db9cbcb5403e855918ca9cf8cc"
+      },
+      {
+        "schema": "public",
+        "name": "entradas",
+        "count": "3",
+        "digest": "d731de16911e4179efb77495891ef27d"
+      },
+      {
+        "schema": "public",
+        "name": "equipos",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "equipos_checklist",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "evidencia_no_aplicada_e2",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "existencias",
+        "count": "45",
+        "digest": "17e99ca66cb5429b75409b2317daf8b8"
+      },
+      {
+        "schema": "public",
+        "name": "finalizaciones_abono_e2",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "fondo_arqueos",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "fondo_mariana",
+        "count": "1",
+        "digest": "1ef357639e5949460b7d52ef8e8720f1"
+      },
+      {
+        "schema": "public",
+        "name": "fondo_movimientos",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "movimientos",
+        "count": "818",
+        "digest": "deb53bfb4f3e7d7662ff671fda8cb1bc"
+      },
+      {
+        "schema": "public",
+        "name": "movimientos_credito",
+        "count": "4",
+        "digest": "28881839e87ad8874186ffbc28f5c45b"
+      },
+      {
+        "schema": "public",
+        "name": "notificaciones_credito",
+        "count": "2",
+        "digest": "afe589746ce1182e78f21e0761128be7"
+      },
+      {
+        "schema": "public",
+        "name": "notificaciones_sistema",
+        "count": "14",
+        "digest": "02c0946e3181ddd346ff3d2cc817d514"
+      },
+      {
+        "schema": "public",
+        "name": "operaciones_credito_e1",
+        "count": "1",
+        "digest": "4076963b0e8b00adc07ebabce6d5561c"
+      },
+      {
+        "schema": "public",
+        "name": "pagos_proveedor",
+        "count": "4",
+        "digest": "68ee308f429342157bf51dd9c8c8f93c"
+      },
+      {
+        "schema": "public",
+        "name": "permisos_rol",
+        "count": "204",
+        "digest": "60aece787557ce0f06f3e49d2021fa4a"
+      },
+      {
+        "schema": "public",
+        "name": "permisos_ubicacion",
+        "count": "54",
+        "digest": "67a96a94ac49d127c3d5c62e007d23e0"
+      },
+      {
+        "schema": "public",
+        "name": "permisos_usuario",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "pisos",
+        "count": "2",
+        "digest": "43a9cd3d2b2deb135d620bbddf18e69e"
+      },
+      {
+        "schema": "public",
+        "name": "precio_historial",
+        "count": "1102",
+        "digest": "24470181640ecd616ab0b5b845656440"
+      },
+      {
+        "schema": "public",
+        "name": "productos",
+        "count": "1234",
+        "digest": "f3509fa646efc470095e405978942f7e"
+      },
+      {
+        "schema": "public",
+        "name": "proveedor_efectivo_e12",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "proveedor_operaciones_e12",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "proveedor_solicitudes_e12",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "proveedores",
+        "count": "27",
+        "digest": "241653f8c70301ee5af2349f68b99fb3"
+      },
+      {
+        "schema": "public",
+        "name": "recibo_folio_e3",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "recibos_abono_e3",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "reimpresiones_etiqueta",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "revisiones_etiqueta",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "rollos",
+        "count": "740",
+        "digest": "bad4c40d88cb1c82796b94fe9dd12851"
+      },
+      {
+        "schema": "public",
+        "name": "salida_folio",
+        "count": "11",
+        "digest": "77b98ac23283b5087de0d31496650360"
+      },
+      {
+        "schema": "public",
+        "name": "salida_lineas",
+        "count": "4",
+        "digest": "3eebeac78a5611b843ab7580790e716e"
+      },
+      {
+        "schema": "public",
+        "name": "salida_rollos",
+        "count": "19",
+        "digest": "78a88371c5577568aece79fa632962b0"
+      },
+      {
+        "schema": "public",
+        "name": "salidas",
+        "count": "4",
+        "digest": "afbb2e43bf6d36104ff539ead3bd9f88"
+      },
+      {
+        "schema": "public",
+        "name": "salidas_dinero_caja",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "series_consecutivo",
+        "count": "1",
+        "digest": "14b8cb8490428576c3d80831f6332347"
+      },
+      {
+        "schema": "public",
+        "name": "sesiones",
+        "count": "15",
+        "digest": "afd5d7a7e972ec14f217e652989ee02d"
+      },
+      {
+        "schema": "public",
+        "name": "sesiones_caja",
+        "count": "3",
+        "digest": "1b407cc3acdd51c2257820531e759716"
+      },
+      {
+        "schema": "public",
+        "name": "sesiones_caja_dias",
+        "count": "3",
+        "digest": "a5d7f444e8ed14056bb6c0265f8b6e1a"
+      },
+      {
+        "schema": "public",
+        "name": "solicitudes_pago_dirigido",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "stock_minimo_episodios",
+        "count": "3",
+        "digest": "1443cd58211c13c32f643cea6588de55"
+      },
+      {
+        "schema": "public",
+        "name": "stock_minimo_sitios",
+        "count": "1",
+        "digest": "a5d55f561d839f76cd137764bf46e07f"
+      },
+      {
+        "schema": "public",
+        "name": "stock_minimos",
+        "count": "3",
+        "digest": "085e7fac5b18f1fa201fd80435688ab1"
+      },
+      {
+        "schema": "public",
+        "name": "tarea4_rollo_remate",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "ticket_folio",
+        "count": "1",
+        "digest": "a2605c32f4ce15b2116b59bf1bb0409e"
+      },
+      {
+        "schema": "public",
+        "name": "ticket_linea_consumos",
+        "count": "18",
+        "digest": "989d9cbbf89e6fe5e20d682dc8c3974a"
+      },
+      {
+        "schema": "public",
+        "name": "ticket_lineas",
+        "count": "15",
+        "digest": "416587b0c4a4758f29258a5e349c3a8d"
+      },
+      {
+        "schema": "public",
+        "name": "ticket_pagos",
+        "count": "1",
+        "digest": "3346d312521408515fa1cf6764a97ff4"
+      },
+      {
+        "schema": "public",
+        "name": "tickets",
+        "count": "3",
+        "digest": "3db11f6f2039a6e9fbe55ad250b53129"
+      },
+      {
+        "schema": "public",
+        "name": "ubicaciones",
+        "count": "11",
+        "digest": "255fb0840346acc6608b125f5c0dfbc9"
+      },
+      {
+        "schema": "public",
+        "name": "usuarios",
+        "count": "31",
+        "digest": "793604d195e2ffe3ee38a479e7f5e8a0"
+      },
+      {
+        "schema": "public",
+        "name": "viaje_folio",
+        "count": "11",
+        "digest": "3f492dedd866cd2314cd7fb0f27bb7ac"
+      },
+      {
+        "schema": "public",
+        "name": "viaje_salidas",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "viaje_tickets",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "viajes",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "vistas_abono_e3",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      }
+    ],
+    "manifestSha256": "3ddf15e913ab50d4ebaa75157a924c9dd29bbb9ab97156d76f7cec80475ba8dd"
+  },
+  "catalogAfter": [
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_cliente_created_at_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 2,
+      "definition": "CREATE INDEX tickets_cliente_created_at_idx ON public.tickets USING btree (cliente_id, created_at)",
+      "predicate": null,
+      "keys": [
+        "cliente_id",
+        "created_at"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_cobrado_created_at_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 2,
+      "definition": "CREATE INDEX tickets_cobrado_created_at_idx ON public.tickets USING btree (created_at, ubicacion_id) WHERE (cobrado = true)",
+      "predicate": "(cobrado = true)",
+      "keys": [
+        "created_at",
+        "ubicacion_id"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_cobrado_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 1,
+      "definition": "CREATE INDEX tickets_cobrado_idx ON public.tickets USING btree (cobrado)",
+      "predicate": null,
+      "keys": [
+        "cobrado"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_contabilizados_sitio_fecha_ga_candidate",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 2,
+      "definition": "CREATE INDEX tickets_contabilizados_sitio_fecha_ga_candidate ON public.tickets USING btree (ubicacion_id, (\nCASE\n    WHEN (documento_tipo = 'TICKET'::text) THEN cobrado_at\n    ELSE autorizado_at\nEND)) WHERE ((estado = 'VENDIDO'::estado_ticket) AND (((documento_tipo = 'TICKET'::text) AND (cobrado = true)) OR ((documento_tipo = 'NOTA'::text) AND (autorizacion_estado = 'AUTORIZADA'::text))))",
+      "predicate": "((estado = 'VENDIDO'::estado_ticket) AND (((documento_tipo = 'TICKET'::text) AND (cobrado = true)) OR ((documento_tipo = 'NOTA'::text) AND (autorizacion_estado = 'AUTORIZADA'::text))))",
+      "keys": [
+        "ubicacion_id",
+        "(\nCASE\n    WHEN documento_tipo = 'TICKET'::text THEN cobrado_at\n    ELSE autorizado_at\nEND)"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_created_at_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 1,
+      "definition": "CREATE INDEX tickets_created_at_idx ON public.tickets USING btree (created_at)",
+      "predicate": null,
+      "keys": [
+        "created_at"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_estado_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 1,
+      "definition": "CREATE INDEX tickets_estado_idx ON public.tickets USING btree (estado)",
+      "predicate": null,
+      "keys": [
+        "estado"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_folio_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 1,
+      "definition": "CREATE INDEX tickets_folio_idx ON public.tickets USING btree (folio)",
+      "predicate": null,
+      "keys": [
+        "folio"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_folio_unique",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": true,
+      "indnkeyatts": 1,
+      "definition": "CREATE UNIQUE INDEX tickets_folio_unique ON public.tickets USING btree (folio)",
+      "predicate": null,
+      "keys": [
+        "folio"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_pendientes_corte_ga_candidate",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 3,
+      "definition": "CREATE INDEX tickets_pendientes_corte_ga_candidate ON public.tickets USING btree (ubicacion_id, created_at, id) WHERE ((estado = 'VENDIDO'::estado_ticket) AND (((documento_tipo = 'TICKET'::text) AND (cobrado = false)) OR ((documento_tipo = 'NOTA'::text) AND (autorizacion_estado = 'PENDIENTE'::text))))",
+      "predicate": "((estado = 'VENDIDO'::estado_ticket) AND (((documento_tipo = 'TICKET'::text) AND (cobrado = false)) OR ((documento_tipo = 'NOTA'::text) AND (autorizacion_estado = 'PENDIENTE'::text))))",
+      "keys": [
+        "ubicacion_id",
+        "created_at",
+        "id"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_pkey",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": true,
+      "indnkeyatts": 1,
+      "definition": "CREATE UNIQUE INDEX tickets_pkey ON public.tickets USING btree (id)",
+      "predicate": null,
+      "keys": [
+        "id"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_sesion_estado_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 2,
+      "definition": "CREATE INDEX tickets_sesion_estado_idx ON public.tickets USING btree (sesion_caja_id, estado)",
+      "predicate": null,
+      "keys": [
+        "sesion_caja_id",
+        "estado"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_ubicacion_created_at_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 2,
+      "definition": "CREATE INDEX tickets_ubicacion_created_at_idx ON public.tickets USING btree (ubicacion_id, created_at)",
+      "predicate": null,
+      "keys": [
+        "ubicacion_id",
+        "created_at"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_uuid_cliente_idx",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": false,
+      "indnkeyatts": 1,
+      "definition": "CREATE INDEX tickets_uuid_cliente_idx ON public.tickets USING btree (uuid_cliente)",
+      "predicate": null,
+      "keys": [
+        "uuid_cliente"
+      ]
+    },
+    {
+      "schema": "public",
+      "relation": "tickets",
+      "index": "tickets_uuid_cliente_unique",
+      "indisvalid": true,
+      "indisready": true,
+      "indisunique": true,
+      "indnkeyatts": 1,
+      "definition": "CREATE UNIQUE INDEX tickets_uuid_cliente_unique ON public.tickets USING btree (uuid_cliente)",
+      "predicate": null,
+      "keys": [
+        "uuid_cliente"
+      ]
+    }
+  ],
+  "checkAfter": [
+    {
+      "conname": "rollos_physical_quantity_nonnegative_check",
+      "convalidated": true,
+      "definition": "CHECK (((cantidad_actual >= (0)::numeric) AND (cantidad_actual <> 'NaN'::numeric)))"
+    }
+  ],
+  "after": {
+    "snapshot": "97637:97637:",
+    "serialization": "Native SQL row_to_json(full row), UTC, COLLATE C sorted, newline separator, MD5 plus counts; no exclusions",
+    "tables": [
+      {
+        "schema": "public",
+        "name": "aplicaciones_credito",
+        "count": "3",
+        "digest": "ccbb78db566b7d6d65a400e5c8b0126c"
+      },
+      {
+        "schema": "public",
+        "name": "aplicaciones_pago_proveedor",
+        "count": "1",
+        "digest": "65bfd21ebf11769d01cae6ee9e182768"
+      },
+      {
+        "schema": "public",
+        "name": "atribuciones_credito_e1",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "auditoria",
+        "count": "3617",
+        "digest": "547e2ff81f2d9e370c80b8b8b1f46a0f"
+      },
+      {
+        "schema": "public",
+        "name": "auditoria_faltante_reactivaciones",
+        "count": "5",
+        "digest": "16b5849d98c96ff1a753b73736e04cc7"
+      },
+      {
+        "schema": "public",
+        "name": "auditoria_inventario_escaneos",
+        "count": "140",
+        "digest": "edbbcfecdee49a22c5a9354fa07eb6c9"
+      },
+      {
+        "schema": "public",
+        "name": "auditoria_inventario_folio",
+        "count": "11",
+        "digest": "6a51f7639364032a354be14a0253b69c"
+      },
+      {
+        "schema": "public",
+        "name": "auditoria_inventario_participantes",
+        "count": "5",
+        "digest": "c0264bd6379240b6c4ef46a6d30afcff"
+      },
+      {
+        "schema": "public",
+        "name": "auditoria_inventario_snapshot",
+        "count": "178",
+        "digest": "d7a9dc1d43eb03eb788bdc4790524df6"
+      },
+      {
+        "schema": "public",
+        "name": "auditoria_sobrante_contextos",
+        "count": "1",
+        "digest": "e18154e01b5f5bfd4709d6926c24c603"
+      },
+      {
+        "schema": "public",
+        "name": "auditoria_sobrante_decisiones",
+        "count": "2",
+        "digest": "9e50a5f5c5ce2ba8906ef065be2701b7"
+      },
+      {
+        "schema": "public",
+        "name": "auditorias_inventario",
+        "count": "5",
+        "digest": "3b2f4289cfd5fb88c317d82f343038f6"
+      },
+      {
+        "schema": "public",
+        "name": "autorizaciones_nota",
+        "count": "2",
+        "digest": "1468ac0118c754aa8e4dfba2a5d186a6"
+      },
+      {
+        "schema": "public",
+        "name": "caja_desbloqueos_e12",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "caja_retornos_proveedor_e12",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "caja_salidas_e4",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "caja_salidas_e4_operaciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "camionetas",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "choferes",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "cliente_documentos",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "clientes",
+        "count": "7",
+        "digest": "f4415ced9dabf5d844c34d812b00cd8c"
+      },
+      {
+        "schema": "public",
+        "name": "cobros_credito_pendientes_e1",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "contenedor_lineas",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "contenedores",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "cuadre_fiscal_registros",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_avisos",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_cambios_usuario",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_conciliacion_ventas",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_conciliaciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_decisiones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_e5_definiciones",
+        "count": "5",
+        "digest": "798e1b34b51c084c041fed1299a4d9f7"
+      },
+      {
+        "schema": "public",
+        "name": "e11_e5_preparaciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_notificacion_origen",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_operaciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_perfil_eventos",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_perfiles",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e11_resoluciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_aplicaciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_cobros",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_ddl_originales",
+        "count": "4",
+        "digest": "f97620430daeab3c9eccfb6f213e7a77"
+      },
+      {
+        "schema": "public",
+        "name": "e5_devoluciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_documentos",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_impresiones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_nacimientos",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_operaciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_recepciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_salidas_bancarias",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e5_vinculos_credito",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e9_entregas",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "e9_operaciones",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "entrada_folio",
+        "count": "11",
+        "digest": "22b225db9cbcb5403e855918ca9cf8cc"
+      },
+      {
+        "schema": "public",
+        "name": "entradas",
+        "count": "3",
+        "digest": "d731de16911e4179efb77495891ef27d"
+      },
+      {
+        "schema": "public",
+        "name": "equipos",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "equipos_checklist",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "evidencia_no_aplicada_e2",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "existencias",
+        "count": "45",
+        "digest": "17e99ca66cb5429b75409b2317daf8b8"
+      },
+      {
+        "schema": "public",
+        "name": "finalizaciones_abono_e2",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "fondo_arqueos",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "fondo_mariana",
+        "count": "1",
+        "digest": "1ef357639e5949460b7d52ef8e8720f1"
+      },
+      {
+        "schema": "public",
+        "name": "fondo_movimientos",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "movimientos",
+        "count": "818",
+        "digest": "deb53bfb4f3e7d7662ff671fda8cb1bc"
+      },
+      {
+        "schema": "public",
+        "name": "movimientos_credito",
+        "count": "4",
+        "digest": "28881839e87ad8874186ffbc28f5c45b"
+      },
+      {
+        "schema": "public",
+        "name": "notificaciones_credito",
+        "count": "2",
+        "digest": "afe589746ce1182e78f21e0761128be7"
+      },
+      {
+        "schema": "public",
+        "name": "notificaciones_sistema",
+        "count": "14",
+        "digest": "02c0946e3181ddd346ff3d2cc817d514"
+      },
+      {
+        "schema": "public",
+        "name": "operaciones_credito_e1",
+        "count": "1",
+        "digest": "4076963b0e8b00adc07ebabce6d5561c"
+      },
+      {
+        "schema": "public",
+        "name": "pagos_proveedor",
+        "count": "4",
+        "digest": "68ee308f429342157bf51dd9c8c8f93c"
+      },
+      {
+        "schema": "public",
+        "name": "permisos_rol",
+        "count": "204",
+        "digest": "60aece787557ce0f06f3e49d2021fa4a"
+      },
+      {
+        "schema": "public",
+        "name": "permisos_ubicacion",
+        "count": "54",
+        "digest": "67a96a94ac49d127c3d5c62e007d23e0"
+      },
+      {
+        "schema": "public",
+        "name": "permisos_usuario",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "pisos",
+        "count": "2",
+        "digest": "43a9cd3d2b2deb135d620bbddf18e69e"
+      },
+      {
+        "schema": "public",
+        "name": "precio_historial",
+        "count": "1102",
+        "digest": "24470181640ecd616ab0b5b845656440"
+      },
+      {
+        "schema": "public",
+        "name": "productos",
+        "count": "1234",
+        "digest": "f3509fa646efc470095e405978942f7e"
+      },
+      {
+        "schema": "public",
+        "name": "proveedor_efectivo_e12",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "proveedor_operaciones_e12",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "proveedor_solicitudes_e12",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "proveedores",
+        "count": "27",
+        "digest": "241653f8c70301ee5af2349f68b99fb3"
+      },
+      {
+        "schema": "public",
+        "name": "recibo_folio_e3",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "recibos_abono_e3",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "reimpresiones_etiqueta",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "revisiones_etiqueta",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "rollos",
+        "count": "740",
+        "digest": "bad4c40d88cb1c82796b94fe9dd12851"
+      },
+      {
+        "schema": "public",
+        "name": "salida_folio",
+        "count": "11",
+        "digest": "77b98ac23283b5087de0d31496650360"
+      },
+      {
+        "schema": "public",
+        "name": "salida_lineas",
+        "count": "4",
+        "digest": "3eebeac78a5611b843ab7580790e716e"
+      },
+      {
+        "schema": "public",
+        "name": "salida_rollos",
+        "count": "19",
+        "digest": "78a88371c5577568aece79fa632962b0"
+      },
+      {
+        "schema": "public",
+        "name": "salidas",
+        "count": "4",
+        "digest": "afbb2e43bf6d36104ff539ead3bd9f88"
+      },
+      {
+        "schema": "public",
+        "name": "salidas_dinero_caja",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "series_consecutivo",
+        "count": "1",
+        "digest": "14b8cb8490428576c3d80831f6332347"
+      },
+      {
+        "schema": "public",
+        "name": "sesiones",
+        "count": "15",
+        "digest": "afd5d7a7e972ec14f217e652989ee02d"
+      },
+      {
+        "schema": "public",
+        "name": "sesiones_caja",
+        "count": "3",
+        "digest": "1b407cc3acdd51c2257820531e759716"
+      },
+      {
+        "schema": "public",
+        "name": "sesiones_caja_dias",
+        "count": "3",
+        "digest": "a5d7f444e8ed14056bb6c0265f8b6e1a"
+      },
+      {
+        "schema": "public",
+        "name": "solicitudes_pago_dirigido",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "stock_minimo_episodios",
+        "count": "3",
+        "digest": "1443cd58211c13c32f643cea6588de55"
+      },
+      {
+        "schema": "public",
+        "name": "stock_minimo_sitios",
+        "count": "1",
+        "digest": "a5d55f561d839f76cd137764bf46e07f"
+      },
+      {
+        "schema": "public",
+        "name": "stock_minimos",
+        "count": "3",
+        "digest": "085e7fac5b18f1fa201fd80435688ab1"
+      },
+      {
+        "schema": "public",
+        "name": "tarea4_rollo_remate",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "ticket_folio",
+        "count": "1",
+        "digest": "a2605c32f4ce15b2116b59bf1bb0409e"
+      },
+      {
+        "schema": "public",
+        "name": "ticket_linea_consumos",
+        "count": "18",
+        "digest": "989d9cbbf89e6fe5e20d682dc8c3974a"
+      },
+      {
+        "schema": "public",
+        "name": "ticket_lineas",
+        "count": "15",
+        "digest": "416587b0c4a4758f29258a5e349c3a8d"
+      },
+      {
+        "schema": "public",
+        "name": "ticket_pagos",
+        "count": "1",
+        "digest": "3346d312521408515fa1cf6764a97ff4"
+      },
+      {
+        "schema": "public",
+        "name": "tickets",
+        "count": "3",
+        "digest": "3db11f6f2039a6e9fbe55ad250b53129"
+      },
+      {
+        "schema": "public",
+        "name": "ubicaciones",
+        "count": "11",
+        "digest": "255fb0840346acc6608b125f5c0dfbc9"
+      },
+      {
+        "schema": "public",
+        "name": "usuarios",
+        "count": "31",
+        "digest": "793604d195e2ffe3ee38a479e7f5e8a0"
+      },
+      {
+        "schema": "public",
+        "name": "viaje_folio",
+        "count": "11",
+        "digest": "3f492dedd866cd2314cd7fb0f27bb7ac"
+      },
+      {
+        "schema": "public",
+        "name": "viaje_salidas",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "viaje_tickets",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "viajes",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "name": "vistas_abono_e3",
+        "count": "0",
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      }
+    ],
+    "manifestSha256": "3ddf15e913ab50d4ebaa75157a924c9dd29bbb9ab97156d76f7cec80475ba8dd"
+  },
+  "rowsUnchanged": true,
+  "rowPreservation": "No row-writing SQL, login, operational request or startup issued. Snapshot equality is reported without claiming quiescence or excluding transient concurrent changes.",
+  "finishedAt": "2026-09-24T16:33:36.491Z"
+}
