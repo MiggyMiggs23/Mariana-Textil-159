@@ -185,6 +185,13 @@ export const ticketsTable = pgTable(
     ),
     index("tickets_created_at_idx").on(table.createdAt),
     index("tickets_sesion_estado_idx").on(table.sesionCajaId, table.estado),
+    // Explicit operator DDL only; never use a broad schema push to install these.
+    index("tickets_pendientes_corte_ga_candidate")
+      .on(table.ubicacionId, table.createdAt, table.id)
+      .where(sql`${table.estado} = 'VENDIDO' AND ((${table.documentoTipo} = 'TICKET' AND ${table.cobrado} = false) OR (${table.documentoTipo} = 'NOTA' AND ${table.autorizacionEstado} = 'PENDIENTE'))`),
+    index("tickets_contabilizados_sitio_fecha_ga_candidate")
+      .on(table.ubicacionId, sql`(CASE WHEN ${table.documentoTipo} = 'TICKET' THEN ${table.cobradoAt} ELSE ${table.autorizadoAt} END)`)
+      .where(sql`${table.estado} = 'VENDIDO' AND ((${table.documentoTipo} = 'TICKET' AND ${table.cobrado} = true) OR (${table.documentoTipo} = 'NOTA' AND ${table.autorizacionEstado} = 'AUTORIZADA'))`),
     check(
       "tickets_autorizacion_documento_check",
       sql`(${table.documentoTipo} = 'TICKET' AND ${table.autorizacionEstado} = 'NO_APLICA')
