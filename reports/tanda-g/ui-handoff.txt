@@ -1,0 +1,46 @@
+UI candidate handoff — outgoing transfer unit totals
+
+UI commit: 347b179
+Owner decision documentation commit: 93b84e3
+
+Evidence inspected: reports/tanda-f/tarea-2/INFORME.md and screenshots
+26-multiunit-preview.png / 27-multiunit-transfer.png.
+Creation omitted BOLSA and PIEZA from its display-only reduction and summary.
+Saved detail already displayed BOLSA, but omitted the existing totalPiezas field.
+No API contract, persisted value, request, permission, or inventory logic changed.
+Creation shows all four totals including zeros; detail retains positive-only totals.
+
+Offline verification:
+- Canonical runner: salida-unit-totals.dom.test.tsx, 5/5 passed.
+- Combined with salidas-venta-errors.contract.test.ts, 9/9 passed.
+- Actual production page modules mounted in DOM; only infrastructure hooks/layout
+  isolated. Fixtures pass exact GetSalidaResponse / GetBorradorSalidaResponse.
+  Route import/mount linkage checked. Distinct 12.50m, 7.25kg, 3 bags, 9 pieces
+  prevent mixed-unit totals from passing accidentally. Empty cases cover both pages.
+- Defect sensitivity: creation PIEZA reduction changed to zero and saved PIEZA
+  hidden. Both mixed tests failed terminally with their precise PIEZA assertions.
+  Restored production code; 5/5 passed again.
+- Frontend typecheck passed after final test typing fix.
+- Vite production build passed (existing sourcemap/chunk-size warnings).
+- git diff --check passed.
+
+Isolated candidate: .local/tanda-g-ui-candidate/
+Command:
+pnpm --filter @workspace/mariana-textil exec vite build --config vite.config.ts --outDir ../../.local/tanda-g-ui-candidate --emptyOutDir
+SHA256:
+index.html 8ec97388fd328068233eb0f0c6fbb89a82e5d16f72be50f3345e1049ee52292f
+assets/index-CJ5sQYvB.js b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c
+assets/index-D2hgQ6S3.js cbb34ab7a36dbc8f513766e49c1106eec672fb61f754f8e0fe20a26d647f9a41
+The candidate was not served or released; active dist untouched.
+
+Visual limit: existing preview screenshot at /salidas/nueva only showed
+“Comprobando sesión…” (unauthenticated), not the candidate totals. Do not report
+this as a verified authenticated browser flow or layout check. DOM tests do not
+measure responsive CSS. No workflow, server, or DB operations were performed.
+
+Document audit replaced the obsolete Bloque 2 proposal and both pending
+reversibility decisions, plus broad inverse-only inventory correction clauses.
+Both requested documents now record owner acceptance of legitimate corrections
+being blocked, requiring inverse order or a motivated adjustment. Inventory-only;
+financial ledger/E10 policy unchanged. Routes 3 (zero eligible catalog) and 10
+remain out of scope. Documentation does not certify backend implementation.
