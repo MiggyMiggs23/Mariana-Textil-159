@@ -201,3 +201,9 @@ Esta preparación no autoriza fase B, SQL en la base de la API, reinicios ni cam
 ## BODEGA y Contenedores — decisión del propietario (2026-09-23)
 
 BODEGA no debe ver contenedores con costo pendiente. La regla vigente es la revocación predeterminada de `contenedores` establecida por la actualización de costos pendientes: el rol BODEGA no recibe `contenedores.ver`. El seed debe declarar el mismo default y no contradecir la revocación. Se conserva la regla general de defaults: las filas sin `updated_por` se corrigen al valor vigente y una personalización administrativa explícita, identificada por `updated_por`, no se sobrescribe.
+
+## Movimientos de inventario — decisión vigente del propietario
+
+Un movimiento de inventario solo puede revertirse si el rollo sigue en el mismo sitio, cantidad y estado en que lo dejó ese movimiento. En caso contrario debe bloquearse con un mensaje claro y realizarse un ajuste nuevo con motivo. El propietario acepta que esto bloquee correcciones legítimas: deberán deshacerse los movimientos en orden inverso o realizarse un ajuste.
+
+Sustituye la propuesta del Bloque 2 y los pendientes de reversibilidad en `replit.md`: ya no se exige conservar la posibilidad de corregir movimientos independientes si no se cumple esa condición. No basta comparar IDs y no se inventa procedencia. La regla es exclusiva de inventario: no sustituye las decisiones sobre inversos del ledger financiero ni E10. Registrar la decisión no implementa backend ni autoriza cambios de datos. Quedan fuera de este alcance la vía 3 (venta parcial, catálogo confirmado con cero productos activos elegibles) y la vía 10; no se reanuda el Prompt P.
