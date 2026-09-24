@@ -1,0 +1,1294 @@
+{
+  "started": "2026-09-24T05:08:23.430Z",
+  "cluster": {
+    "db": "tanda_ga_failure",
+    "role": "ga_failure",
+    "port": 55442,
+    "dir": "/home/runner/workspace/.local/tanda-g-ampliada/cluster",
+    "postmasterPid": 6420
+  },
+  "nativeGuards": true,
+  "frozen": "ee1bb641e0513b7df18027ad351a72ebbe99af74",
+  "cases": [
+    {
+      "name": "sale-mid-inventory",
+      "started": "2026-09-24T05:08:23.433Z",
+      "before": {
+        "business": {
+          "aplicaciones_credito": {
+            "n": 3,
+            "hash": "ccbb78db566b7d6d65a400e5c8b0126c"
+          },
+          "aplicaciones_pago_proveedor": {
+            "n": 1,
+            "hash": "65bfd21ebf11769d01cae6ee9e182768"
+          },
+          "atribuciones_credito_e1": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "auditoria": {
+            "n": 3619,
+            "hash": "5ee881df56edd54e4c864ef9a50b235b"
+          },
+          "auditoria_faltante_reactivaciones": {
+            "n": 5,
+            "hash": "16b5849d98c96ff1a753b73736e04cc7"
+          },
+          "auditoria_inventario_escaneos": {
+            "n": 140,
+            "hash": "edbbcfecdee49a22c5a9354fa07eb6c9"
+          },
+          "auditoria_inventario_folio": {
+            "n": 11,
+            "hash": "6a51f7639364032a354be14a0253b69c"
+          },
+          "auditoria_inventario_participantes": {
+            "n": 5,
+            "hash": "c0264bd6379240b6c4ef46a6d30afcff"
+          },
+          "auditoria_inventario_snapshot": {
+            "n": 178,
+            "hash": "d7a9dc1d43eb03eb788bdc4790524df6"
+          },
+          "auditoria_sobrante_contextos": {
+            "n": 1,
+            "hash": "e18154e01b5f5bfd4709d6926c24c603"
+          },
+          "auditoria_sobrante_decisiones": {
+            "n": 2,
+            "hash": "9e50a5f5c5ce2ba8906ef065be2701b7"
+          },
+          "auditorias_inventario": {
+            "n": 5,
+            "hash": "3b2f4289cfd5fb88c317d82f343038f6"
+          },
+          "autorizaciones_nota": {
+            "n": 2,
+            "hash": "1468ac0118c754aa8e4dfba2a5d186a6"
+          },
+          "caja_desbloqueos_e12": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "caja_retornos_proveedor_e12": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "caja_salidas_e4": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "caja_salidas_e4_operaciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "camionetas": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "choferes": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "cliente_documentos": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "clientes": {
+            "n": 8,
+            "hash": "2c3adce2eff19ee57b5ccf8be14186cf"
+          },
+          "cobros_credito_pendientes_e1": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "contenedor_lineas": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "contenedores": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "cuadre_fiscal_registros": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_avisos": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_cambios_usuario": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_conciliacion_ventas": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_conciliaciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_decisiones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_e5_definiciones": {
+            "n": 5,
+            "hash": "798e1b34b51c084c041fed1299a4d9f7"
+          },
+          "e11_e5_preparaciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_notificacion_origen": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_operaciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_perfil_eventos": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_perfiles": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_resoluciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_aplicaciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_cobros": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_ddl_originales": {
+            "n": 4,
+            "hash": "f97620430daeab3c9eccfb6f213e7a77"
+          },
+          "e5_devoluciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_documentos": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_impresiones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_nacimientos": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_operaciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_recepciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_salidas_bancarias": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_vinculos_credito": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e9_entregas": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e9_operaciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "entrada_folio": {
+            "n": 18,
+            "hash": "699f747648e73809dc8e52ecd1202a15"
+          },
+          "entradas": {
+            "n": 10,
+            "hash": "c6171a94ee53ac5e7c097337e0a66148"
+          },
+          "equipos": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "equipos_checklist": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "evidencia_no_aplicada_e2": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "existencias": {
+            "n": 73,
+            "hash": "07b0831e8631c489098387e26b0ed2da"
+          },
+          "finalizaciones_abono_e2": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "fondo_arqueos": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "fondo_mariana": {
+            "n": 1,
+            "hash": "1ef357639e5949460b7d52ef8e8720f1"
+          },
+          "fondo_movimientos": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "movimientos": {
+            "n": 1043,
+            "hash": "2b4e3db56746fbc8d54f2aefe4d3c143"
+          },
+          "movimientos_credito": {
+            "n": 4,
+            "hash": "28881839e87ad8874186ffbc28f5c45b"
+          },
+          "notificaciones_credito": {
+            "n": 2,
+            "hash": "afe589746ce1182e78f21e0761128be7"
+          },
+          "notificaciones_sistema": {
+            "n": 14,
+            "hash": "02c0946e3181ddd346ff3d2cc817d514"
+          },
+          "operaciones_credito_e1": {
+            "n": 1,
+            "hash": "4076963b0e8b00adc07ebabce6d5561c"
+          },
+          "pagos_proveedor": {
+            "n": 4,
+            "hash": "68ee308f429342157bf51dd9c8c8f93c"
+          },
+          "permisos_rol": {
+            "n": 204,
+            "hash": "60aece787557ce0f06f3e49d2021fa4a"
+          },
+          "permisos_ubicacion": {
+            "n": 54,
+            "hash": "67a96a94ac49d127c3d5c62e007d23e0"
+          },
+          "permisos_usuario": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "pisos": {
+            "n": 2,
+            "hash": "43a9cd3d2b2deb135d620bbddf18e69e"
+          },
+          "precio_historial": {
+            "n": 1102,
+            "hash": "24470181640ecd616ab0b5b845656440"
+          },
+          "productos": {
+            "n": 1238,
+            "hash": "1329926511847fd6939301ea8e733768"
+          },
+          "proveedor_efectivo_e12": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "proveedor_operaciones_e12": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "proveedor_solicitudes_e12": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "proveedores": {
+            "n": 29,
+            "hash": "5874eadd6cfb1e763d3675103e4e2914"
+          },
+          "recibo_folio_e3": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "recibos_abono_e3": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "reimpresiones_etiqueta": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "revisiones_etiqueta": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "rollos": {
+            "n": 964,
+            "hash": "add14b7138bc2a7ca33f333ba5b777bf"
+          },
+          "salida_folio": {
+            "n": 11,
+            "hash": "77b98ac23283b5087de0d31496650360"
+          },
+          "salida_lineas": {
+            "n": 4,
+            "hash": "3eebeac78a5611b843ab7580790e716e"
+          },
+          "salida_rollos": {
+            "n": 19,
+            "hash": "78a88371c5577568aece79fa632962b0"
+          },
+          "salidas": {
+            "n": 4,
+            "hash": "afbb2e43bf6d36104ff539ead3bd9f88"
+          },
+          "salidas_dinero_caja": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "series_consecutivo": {
+            "n": 1,
+            "hash": "14b8cb8490428576c3d80831f6332347"
+          },
+          "sesiones_caja": {
+            "n": 6,
+            "hash": "94337e41321dab4a6bdd4cfb7dd76821"
+          },
+          "sesiones_caja_dias": {
+            "n": 6,
+            "hash": "a91f4d0642d5a539d41c5f4df0be52ee"
+          },
+          "solicitudes_pago_dirigido": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "stock_minimo_episodios": {
+            "n": 3,
+            "hash": "1443cd58211c13c32f643cea6588de55"
+          },
+          "stock_minimo_sitios": {
+            "n": 1,
+            "hash": "a5d55f561d839f76cd137764bf46e07f"
+          },
+          "stock_minimos": {
+            "n": 3,
+            "hash": "085e7fac5b18f1fa201fd80435688ab1"
+          },
+          "tarea4_rollo_remate": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "ticket_folio": {
+            "n": 1,
+            "hash": "7be513b4f72e6bd59a872c908575113d"
+          },
+          "ticket_linea_consumos": {
+            "n": 19,
+            "hash": "a3e6918259f2809d0c5b7df9b7939b81"
+          },
+          "ticket_lineas": {
+            "n": 16,
+            "hash": "3a9298adb08785c74900b92edb9eb604"
+          },
+          "ticket_pagos": {
+            "n": 1,
+            "hash": "3346d312521408515fa1cf6764a97ff4"
+          },
+          "tickets": {
+            "n": 4,
+            "hash": "c476efe16680fe37892440e27f228f99"
+          },
+          "ubicaciones": {
+            "n": 18,
+            "hash": "fa79f4c33de176fd236545e61bed5f2c"
+          },
+          "usuarios": {
+            "n": 40,
+            "hash": "211d3c169d29c73c20b717f94619c9c6"
+          },
+          "viaje_folio": {
+            "n": 11,
+            "hash": "3f492dedd866cd2314cd7fb0f27bb7ac"
+          },
+          "viaje_salidas": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "viaje_tickets": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "viajes": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "vistas_abono_e3": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        },
+        "auth": {
+          "sesiones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        },
+        "sequences": [
+          {
+            "sequencename": "aplicaciones_credito_id_seq",
+            "last_value": "9"
+          },
+          {
+            "sequencename": "aplicaciones_pago_proveedor_id_seq",
+            "last_value": "19"
+          },
+          {
+            "sequencename": "auditoria_faltante_reactivaciones_id_seq",
+            "last_value": "5"
+          },
+          {
+            "sequencename": "auditoria_id_seq",
+            "last_value": "4330"
+          },
+          {
+            "sequencename": "auditoria_sobrante_decisiones_id_seq",
+            "last_value": "2"
+          },
+          {
+            "sequencename": "auditorias_inventario_id_seq",
+            "last_value": "5"
+          },
+          {
+            "sequencename": "autorizaciones_nota_id_seq",
+            "last_value": "8"
+          },
+          {
+            "sequencename": "caja_retornos_proveedor_e12_id_seq",
+            "last_value": null
+          },
+          {
+            "sequencename": "camionetas_id_seq",
+            "last_value": null
+          },
+          {
+            "sequencename": "choferes_id_seq",
+            "last_value": null
+          },
+          {
+            "sequencename": "cliente_documentos_id_seq",
+            "last_value": "4"
+          },
+          {
+            "sequencename": "clientes_id_seq",
+            "last_value": "8"
+          },
+          {
+            "sequencename": "contenedor_lineas_id_seq",
+            "last_value": "2"
+          },
+          {
+            "sequencename": "contenedores_folio_seq",
+            "last_value": null
+          },
+          {
+            "sequencename": "contenedores_id_seq",
+            "last_value": "2"
+          },
+          {
+            "sequencename": "cuadre_fiscal_registros_id_seq",
+            "last_value": null
+          },
+          {
+            "sequencename": "entradas_id_seq",
+            "last_value": "474"
+          },
+          {
+            "sequencename": "equipos_id_seq",
+            "last_value": null
+          },
+          {
+            "sequencename": "fondo_movimientos_ordinal_seq",
+            "last_value": null
+          },
+          {
+            "sequencename": "movimientos_credito_id_seq",
+            "last_value": "54"
+          },
+          {
+            "sequencename": "movimientos_id_seq",
+            "last_value": "7594"
+          },
+          {
+            "sequencename": "notificaciones_credito_id_seq",
+            "last_value": "10"
+          },
+          {
+            "sequencename": "notificaciones_sistema_id_seq",
+            "last_value": "42"
+          },
+          {
+            "sequencename": "pagos_proveedor_id_seq",
+            "last_value": "486"
+          },
+          {
+            "sequencename": "permisos_rol_id_seq",
+            "last_value": "34016"
+          },
+          {
+            "sequencename": "permisos_ubicacion_id_seq",
+            "last_value": "9828"
+          },
+          {
+            "sequencename": "permisos_usuario_id_seq",
+            "last_value": "125"
+          },
+          {
+            "sequencename": "pisos_id_seq",
+            "last_value": "2"
+          },
+          {
+            "sequencename": "precio_historial_id_seq",
+            "last_value": "1102"
+          },
+          {
+            "sequencename": "productos_id_seq",
+            "last_value": "2081"
+          },
+          {
+            "sequencename": "proveedores_id_seq",
+            "last_value": "227"
+          },
+          {
+            "sequencename": "reimpresiones_etiqueta_id_seq",
+            "last_value": "170"
+          },
+          {
+            "sequencename": "revisiones_etiqueta_id_seq",
+            "last_value": "31"
+          },
+          {
+            "sequencename": "rollos_id_seq",
+            "last_value": "6456"
+          },
+          {
+            "sequencename": "salida_lineas_id_seq",
+            "last_value": "30"
+          },
+          {
+            "sequencename": "salida_rollos_id_seq",
+            "last_value": "132"
+          },
+          {
+            "sequencename": "salidas_dinero_caja_id_seq",
+            "last_value": null
+          },
+          {
+            "sequencename": "salidas_id_seq",
+            "last_value": "28"
+          },
+          {
+            "sequencename": "sesiones_caja_id_seq",
+            "last_value": "48"
+          },
+          {
+            "sequencename": "solicitudes_pago_dirigido_id_seq",
+            "last_value": "1"
+          },
+          {
+            "sequencename": "stock_minimo_episodios_id_seq",
+            "last_value": "10"
+          },
+          {
+            "sequencename": "stock_minimos_id_seq",
+            "last_value": "3"
+          },
+          {
+            "sequencename": "ticket_linea_consumos_id_seq",
+            "last_value": "39"
+          },
+          {
+            "sequencename": "ticket_lineas_id_seq",
+            "last_value": "369"
+          },
+          {
+            "sequencename": "ticket_pagos_id_seq",
+            "last_value": "90"
+          },
+          {
+            "sequencename": "tickets_id_seq",
+            "last_value": "109"
+          },
+          {
+            "sequencename": "ubicaciones_id_seq",
+            "last_value": "842"
+          },
+          {
+            "sequencename": "usuarios_id_seq",
+            "last_value": "242"
+          },
+          {
+            "sequencename": "viajes_id_seq",
+            "last_value": null
+          }
+        ],
+        "businessHash": "47e81beca187003969945f41394654496fbd104600c7ff4fbf581d41d4f9c616"
+      },
+      "error": {
+        "message": "El rollo serie 996000001 no está DISPONIBLE.",
+        "code": "ROLLO_NOT_AVAILABLE"
+      },
+      "after": {
+        "business": {
+          "aplicaciones_credito": {
+            "n": 3,
+            "hash": "ccbb78db566b7d6d65a400e5c8b0126c"
+          },
+          "aplicaciones_pago_proveedor": {
+            "n": 1,
+            "hash": "65bfd21ebf11769d01cae6ee9e182768"
+          },
+          "atribuciones_credito_e1": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "auditoria": {
+            "n": 3619,
+            "hash": "5ee881df56edd54e4c864ef9a50b235b"
+          },
+          "auditoria_faltante_reactivaciones": {
+            "n": 5,
+            "hash": "16b5849d98c96ff1a753b73736e04cc7"
+          },
+          "auditoria_inventario_escaneos": {
+            "n": 140,
+            "hash": "edbbcfecdee49a22c5a9354fa07eb6c9"
+          },
+          "auditoria_inventario_folio": {
+            "n": 11,
+            "hash": "6a51f7639364032a354be14a0253b69c"
+          },
+          "auditoria_inventario_participantes": {
+            "n": 5,
+            "hash": "c0264bd6379240b6c4ef46a6d30afcff"
+          },
+          "auditoria_inventario_snapshot": {
+            "n": 178,
+            "hash": "d7a9dc1d43eb03eb788bdc4790524df6"
+          },
+          "auditoria_sobrante_contextos": {
+            "n": 1,
+            "hash": "e18154e01b5f5bfd4709d6926c24c603"
+          },
+          "auditoria_sobrante_decisiones": {
+            "n": 2,
+            "hash": "9e50a5f5c5ce2ba8906ef065be2701b7"
+          },
+          "auditorias_inventario": {
+            "n": 5,
+            "hash": "3b2f4289cfd5fb88c317d82f343038f6"
+          },
+          "autorizaciones_nota": {
+            "n": 2,
+            "hash": "1468ac0118c754aa8e4dfba2a5d186a6"
+          },
+          "caja_desbloqueos_e12": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "caja_retornos_proveedor_e12": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "caja_salidas_e4": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "caja_salidas_e4_operaciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "camionetas": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "choferes": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "cliente_documentos": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "clientes": {
+            "n": 8,
+            "hash": "2c3adce2eff19ee57b5ccf8be14186cf"
+          },
+          "cobros_credito_pendientes_e1": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "contenedor_lineas": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "contenedores": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "cuadre_fiscal_registros": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_avisos": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_cambios_usuario": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_conciliacion_ventas": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_conciliaciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_decisiones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_e5_definiciones": {
+            "n": 5,
+            "hash": "798e1b34b51c084c041fed1299a4d9f7"
+          },
+          "e11_e5_preparaciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_notificacion_origen": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_operaciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_perfil_eventos": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_perfiles": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e11_resoluciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_aplicaciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_cobros": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_ddl_originales": {
+            "n": 4,
+            "hash": "f97620430daeab3c9eccfb6f213e7a77"
+          },
+          "e5_devoluciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_documentos": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_impresiones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_nacimientos": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_operaciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_recepciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_salidas_bancarias": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e5_vinculos_credito": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e9_entregas": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "e9_operaciones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "entrada_folio": {
+            "n": 18,
+            "hash": "699f747648e73809dc8e52ecd1202a15"
+          },
+          "entradas": {
+            "n": 10,
+            "hash": "c6171a94ee53ac5e7c097337e0a66148"
+          },
+          "equipos": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "equipos_checklist": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "evidencia_no_aplicada_e2": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "existencias": {
+            "n": 73,
+            "hash": "07b0831e8631c489098387e26b0ed2da"
+          },
+          "finalizaciones_abono_e2": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "fondo_arqueos": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "fondo_mariana": {
+            "n": 1,
+            "hash": "1ef357639e5949460b7d52ef8e8720f1"
+          },
+          "fondo_movimientos": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "movimientos": {
+            "n": 1043,
+            "hash": "2b4e3db56746fbc8d54f2aefe4d3c143"
+          },
+          "movimientos_credito": {
+            "n": 4,
+            "hash": "28881839e87ad8874186ffbc28f5c45b"
+          },
+          "notificaciones_credito": {
+            "n": 2,
+            "hash": "afe589746ce1182e78f21e0761128be7"
+          },
+          "notificaciones_sistema": {
+            "n": 14,
+            "hash": "02c0946e3181ddd346ff3d2cc817d514"
+          },
+          "operaciones_credito_e1": {
+            "n": 1,
+            "hash": "4076963b0e8b00adc07ebabce6d5561c"
+          },
+          "pagos_proveedor": {
+            "n": 4,
+            "hash": "68ee308f429342157bf51dd9c8c8f93c"
+          },
+          "permisos_rol": {
+            "n": 204,
+            "hash": "60aece787557ce0f06f3e49d2021fa4a"
+          },
+          "permisos_ubicacion": {
+            "n": 54,
+            "hash": "67a96a94ac49d127c3d5c62e007d23e0"
+          },
+          "permisos_usuario": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "pisos": {
+            "n": 2,
+            "hash": "43a9cd3d2b2deb135d620bbddf18e69e"
+          },
+          "precio_historial": {
+            "n": 1102,
+            "hash": "24470181640ecd616ab0b5b845656440"
+          },
+          "productos": {
+            "n": 1238,
+            "hash": "1329926511847fd6939301ea8e733768"
+          },
+          "proveedor_efectivo_e12": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "proveedor_operaciones_e12": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "proveedor_solicitudes_e12": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "proveedores": {
+            "n": 29,
+            "hash": "5874eadd6cfb1e763d3675103e4e2914"
+          },
+          "recibo_folio_e3": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "recibos_abono_e3": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "reimpresiones_etiqueta": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "revisiones_etiqueta": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "rollos": {
+            "n": 964,
+            "hash": "add14b7138bc2a7ca33f333ba5b777bf"
+          },
+          "salida_folio": {
+            "n": 11,
+            "hash": "77b98ac23283b5087de0d31496650360"
+          },
+          "salida_lineas": {
+            "n": 4,
+            "hash": "3eebeac78a5611b843ab7580790e716e"
+          },
+          "salida_rollos": {
+            "n": 19,
+            "hash": "78a88371c5577568aece79fa632962b0"
+          },
+          "salidas": {
+            "n": 4,
+            "hash": "afbb2e43bf6d36104ff539ead3bd9f88"
+          },
+          "salidas_dinero_caja": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "series_consecutivo": {
+            "n": 1,
+            "hash": "14b8cb8490428576c3d80831f6332347"
+          },
+          "sesiones_caja": {
+            "n": 6,
+            "hash": "94337e41321dab4a6bdd4cfb7dd76821"
+          },
+          "sesiones_caja_dias": {
+            "n": 6,
+            "hash": "a91f4d0642d5a539d41c5f4df0be52ee"
+          },
+          "solicitudes_pago_dirigido": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "stock_minimo_episodios": {
+            "n": 3,
+            "hash": "1443cd58211c13c32f643cea6588de55"
+          },
+          "stock_minimo_sitios": {
+            "n": 1,
+            "hash": "a5d55f561d839f76cd137764bf46e07f"
+          },
+          "stock_minimos": {
+            "n": 3,
+            "hash": "085e7fac5b18f1fa201fd80435688ab1"
+          },
+          "tarea4_rollo_remate": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "ticket_folio": {
+            "n": 1,
+            "hash": "7be513b4f72e6bd59a872c908575113d"
+          },
+          "ticket_linea_consumos": {
+            "n": 19,
+            "hash": "a3e6918259f2809d0c5b7df9b7939b81"
+          },
+          "ticket_lineas": {
+            "n": 16,
+            "hash": "3a9298adb08785c74900b92edb9eb604"
+          },
+          "ticket_pagos": {
+            "n": 1,
+            "hash": "3346d312521408515fa1cf6764a97ff4"
+          },
+          "tickets": {
+            "n": 4,
+            "hash": "c476efe16680fe37892440e27f228f99"
+          },
+          "ubicaciones": {
+            "n": 18,
+            "hash": "fa79f4c33de176fd236545e61bed5f2c"
+          },
+          "usuarios": {
+            "n": 40,
+            "hash": "211d3c169d29c73c20b717f94619c9c6"
+          },
+          "viaje_folio": {
+            "n": 11,
+            "hash": "3f492dedd866cd2314cd7fb0f27bb7ac"
+          },
+          "viaje_salidas": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "viaje_tickets": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "viajes": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          },
+          "vistas_abono_e3": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        },
+        "auth": {
+          "sesiones": {
+            "n": 0,
+            "hash": "d41d8cd98f00b204e9800998ecf8427e"
+          }
+        },
+        "sequences": [
+          {
+            "sequencename": "aplicaciones_credito_id_seq",
+            "last_value": "9"
+          },
+          {
+            "sequencename": "aplicaciones_pago_proveedor_id_seq",
+            "last_value": "19"
+          },
+          {
+            "sequencename": "auditoria_faltante_reactivaciones_id_seq",
+            "last_value": "5"
+          },
+          {
+            "sequencename": "auditoria_id_seq",
+            "last_value": "4330"
+          },
+          {
+            "sequencename": "auditoria_sobrante_decisiones_id_seq",
+            "last_value": "2"
+          },
+          {
+            "sequencename": "auditorias_inventario_id_seq",
+            "last_value": "5"
+          },
+          {
+            "sequencename": "autorizaciones_nota_id_seq",
+            "last_value": "8"
+          },
+          {
+            "sequencename": "caja_retornos_proveedor_e12_id_seq",
+            "last_value": null
+          },
+          {
+            "sequencename": "camionetas_id_seq",
+            "last_value": null
+          },
+          {
+            "sequencename": "choferes_id_seq",
+            "last_value": null
+          },
+          {
+            "sequencename": "cliente_documentos_id_seq",
+            "last_value": "4"
+          },
+          {
+            "sequencename": "clientes_id_seq",
+            "last_value": "8"
+          },
+          {
+            "sequencename": "contenedor_lineas_id_seq",
+            "last_value": "2"
+          },
+          {
+            "sequencename": "contenedores_folio_seq",
+            "last_value": null
+          },
+          {
+            "sequencename": "contenedores_id_seq",
+            "last_value": "2"
+          },
+          {
+            "sequencename": "cuadre_fiscal_registros_id_seq",
+            "last_value": null
+          },
+          {
+            "sequencename": "entradas_id_seq",
+            "last_value": "474"
+          },
+          {
+            "sequencename": "equipos_id_seq",
+            "last_value": null
+          },
+          {
+            "sequencename": "fondo_movimientos_ordinal_seq",
+            "last_value": null
+          },
+          {
+            "sequencename": "movimientos_credito_id_seq",
+            "last_value": "54"
+          },
+          {
+            "sequencename": "movimientos_id_seq",
+            "last_value": "7594"
+          },
+          {
+            "sequencename": "notificaciones_credito_id_seq",
+            "last_value": "10"
+          },
+          {
+            "sequencename": "notificaciones_sistema_id_seq",
+            "last_value": "42"
+          },
+          {
+            "sequencename": "pagos_proveedor_id_seq",
+            "last_value": "486"
+          },
+          {
+            "sequencename": "permisos_rol_id_seq",
+            "last_value": "34016"
+          },
+          {
+            "sequencename": "permisos_ubicacion_id_seq",
+            "last_value": "9828"
+          },
+          {
+            "sequencename": "permisos_usuario_id_seq",
+            "last_value": "125"
+          },
+          {
+            "sequencename": "pisos_id_seq",
+            "last_value": "2"
+          },
+          {
+            "sequencename": "precio_historial_id_seq",
+            "last_value": "1102"
+          },
+          {
+            "sequencename": "productos_id_seq",
+            "last_value": "2081"
+          },
+          {
+            "sequencename": "proveedores_id_seq",
+            "last_value": "227"
+          },
+          {
+            "sequencename": "reimpresiones_etiqueta_id_seq",
+            "last_value": "170"
+          },
+          {
+            "sequencename": "revisiones_etiqueta_id_seq",
+            "last_value": "31"
+          },
+          {
+            "sequencename": "rollos_id_seq",
+            "last_value": "6456"
+          },
+          {
+            "sequencename": "salida_lineas_id_seq",
+            "last_value": "30"
+          },
+          {
+            "sequencename": "salida_rollos_id_seq",
+            "last_value": "132"
+          },
+          {
+            "sequencename": "salidas_dinero_caja_id_seq",
+            "last_value": null
+          },
+          {
+            "sequencename": "salidas_id_seq",
+            "last_value": "28"
+          },
+          {
+            "sequencename": "sesiones_caja_id_seq",
+            "last_value": "48"
+          },
+          {
+            "sequencename": "solicitudes_pago_dirigido_id_seq",
+            "last_value": "1"
+          },
+          {
+            "sequencename": "stock_minimo_episodios_id_seq",
+            "last_value": "10"
+          },
+          {
+            "sequencename": "stock_minimos_id_seq",
+            "last_value": "3"
+          },
+          {
+            "sequencename": "ticket_linea_consumos_id_seq",
+            "last_value": "39"
+          },
+          {
+            "sequencename": "ticket_lineas_id_seq",
+            "last_value": "369"
+          },
+          {
+            "sequencename": "ticket_pagos_id_seq",
+            "last_value": "90"
+          },
+          {
+            "sequencename": "tickets_id_seq",
+            "last_value": "109"
+          },
+          {
+            "sequencename": "ubicaciones_id_seq",
+            "last_value": "842"
+          },
+          {
+            "sequencename": "usuarios_id_seq",
+            "last_value": "242"
+          },
+          {
+            "sequencename": "viajes_id_seq",
+            "last_value": null
+          }
+        ],
+        "businessHash": "47e81beca187003969945f41394654496fbd104600c7ff4fbf581d41d4f9c616"
+      },
+      "rollbackExact": true,
+      "status": "FAIL"
+    }
+  ],
+  "blocker": {
+    "message": "sale-mid-inventory fault did not prove rollback\n\n'FAIL' !== 'PASS'\n",
+    "stack": "AssertionError [ERR_ASSERTION]: sale-mid-inventory fault did not prove rollback\n\n'FAIL' !== 'PASS'\n\n    at fault (file:///home/runner/workspace/reports/tanda-g-ampliada/tarea-5/run.mjs:79:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async file:///home/runner/workspace/reports/tanda-g-ampliada/tarea-5/run.mjs:93:2"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "identity": {
+    "db": "tanda_ga_failure",
+    "role": "ga_failure",
+    "port": 55442
+  },
+  "at": "2026-09-24T05:08:59.986Z",
+  "checks": {
+    "soldRolls": {
+      "sold": 2,
+      "without_ticket": 0
+    },
+    "cashAbonos": {
+      "movements": 1,
+      "without_receipt": 0
+    },
+    "closedCash": [
+      {
+        "id": 46,
+        "estado": "CERRADA",
+        "snapshotPresent": true,
+        "documents": [
+          {
+            "origen": "FONDO_INICIAL",
+            "id": "46",
+            "importe": "5000.00"
+          },
+          {
+            "origen": "ABONO",
+            "id": "ABONO_ORDINARIO:cf60d5fa-7f3d-4db0-ba0c-73ed26257ced",
+            "importe": "100.00"
+          }
+        ],
+        "expected": "5100.00"
+      }
+    ]
+  },
+  "status": "PASS"
+}
