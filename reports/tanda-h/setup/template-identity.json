@@ -1,0 +1,11 @@
+{
+  "sha256": "4db63dea794f902b803533a152f7a98bfb528077c4d73b2295fcdff5696aa643",
+  "databases": [
+    "tanda_h_template",
+    "tanda_h_inventory",
+    "tanda_h_performance",
+    "tanda_h_permissions",
+    "tanda_h_witness"
+  ],
+  "port": 55444
+}

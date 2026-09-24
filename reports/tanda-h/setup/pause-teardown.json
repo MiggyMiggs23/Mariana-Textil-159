@@ -1,0 +1,14 @@
+{
+  "at": "2026-09-24T06:41:20.983951+00:00",
+  "privateRootRemoved": true,
+  "portsListening": {
+    "55444": false,
+    "43871": false,
+    "43872": false,
+    "43873": false,
+    "43881": false,
+    "43882": false,
+    "43883": false
+  },
+  "applicationBuildsUnchanged": true
+}

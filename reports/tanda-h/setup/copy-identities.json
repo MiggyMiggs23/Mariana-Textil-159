@@ -1,0 +1,178 @@
+{
+  "identities": [
+    {
+      "db": "tanda_h_template",
+      "directory": "/home/runner/workspace/.local/tanda-h/cluster",
+      "port": 55444,
+      "version": "160010",
+      "roles": [
+        "ADMIN",
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "sites": [
+        {
+          "tipo": "TIENDA",
+          "n": 3
+        }
+      ],
+      "admin": 1
+    },
+    {
+      "db": "tanda_h_inventory",
+      "directory": "/home/runner/workspace/.local/tanda-h/cluster",
+      "port": 55444,
+      "version": "160010",
+      "roles": [
+        "ADMIN",
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "sites": [
+        {
+          "tipo": "TIENDA",
+          "n": 3
+        }
+      ],
+      "admin": 1
+    },
+    {
+      "db": "tanda_h_performance",
+      "directory": "/home/runner/workspace/.local/tanda-h/cluster",
+      "port": 55444,
+      "version": "160010",
+      "roles": [
+        "ADMIN",
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "sites": [
+        {
+          "tipo": "TIENDA",
+          "n": 3
+        }
+      ],
+      "admin": 1
+    },
+    {
+      "db": "tanda_h_permissions",
+      "directory": "/home/runner/workspace/.local/tanda-h/cluster",
+      "port": 55444,
+      "version": "160010",
+      "roles": [
+        "ADMIN",
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "sites": [
+        {
+          "tipo": "TIENDA",
+          "n": 3
+        }
+      ],
+      "admin": 1
+    },
+    {
+      "db": "tanda_h_witness",
+      "directory": "/home/runner/workspace/.local/tanda-h/cluster",
+      "port": 55444,
+      "version": "160010",
+      "tables": 0
+    }
+  ],
+  "connectMatrix": [
+    {
+      "rolname": "h_inventory",
+      "datname": "tanda_h_inventory",
+      "allowed": true
+    },
+    {
+      "rolname": "h_inventory",
+      "datname": "tanda_h_performance",
+      "allowed": false
+    },
+    {
+      "rolname": "h_inventory",
+      "datname": "tanda_h_permissions",
+      "allowed": false
+    },
+    {
+      "rolname": "h_inventory",
+      "datname": "tanda_h_template",
+      "allowed": false
+    },
+    {
+      "rolname": "h_inventory",
+      "datname": "tanda_h_witness",
+      "allowed": false
+    },
+    {
+      "rolname": "h_performance",
+      "datname": "tanda_h_inventory",
+      "allowed": false
+    },
+    {
+      "rolname": "h_performance",
+      "datname": "tanda_h_performance",
+      "allowed": true
+    },
+    {
+      "rolname": "h_performance",
+      "datname": "tanda_h_permissions",
+      "allowed": false
+    },
+    {
+      "rolname": "h_performance",
+      "datname": "tanda_h_template",
+      "allowed": false
+    },
+    {
+      "rolname": "h_performance",
+      "datname": "tanda_h_witness",
+      "allowed": false
+    },
+    {
+      "rolname": "h_permissions",
+      "datname": "tanda_h_inventory",
+      "allowed": false
+    },
+    {
+      "rolname": "h_permissions",
+      "datname": "tanda_h_performance",
+      "allowed": false
+    },
+    {
+      "rolname": "h_permissions",
+      "datname": "tanda_h_permissions",
+      "allowed": true
+    },
+    {
+      "rolname": "h_permissions",
+      "datname": "tanda_h_template",
+      "allowed": false
+    },
+    {
+      "rolname": "h_permissions",
+      "datname": "tanda_h_witness",
+      "allowed": false
+    }
+  ],
+  "schemaSha256": "9d81fa0aadb424ac4720e4807cd27c983b5916a2835237553d6f2db2f44b6db4",
+  "testsRun": false
+}

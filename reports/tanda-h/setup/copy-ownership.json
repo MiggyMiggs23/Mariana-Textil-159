@@ -1,0 +1,22 @@
+[
+  {
+    "identity": {
+      "db": "tanda_h_inventory",
+      "directory": "/home/runner/workspace/.local/tanda-h/cluster",
+      "port": 55444
+    },
+    "owner": "h_inventory",
+    "tableCount": 107,
+    "purpose": "Worker may apply constraints/indexes on its own copy only; no proposed DDL applied"
+  },
+  {
+    "identity": {
+      "db": "tanda_h_performance",
+      "directory": "/home/runner/workspace/.local/tanda-h/cluster",
+      "port": 55444
+    },
+    "owner": "h_performance",
+    "tableCount": 107,
+    "purpose": "Worker may apply constraints/indexes on its own copy only; no proposed DDL applied"
+  }
+]

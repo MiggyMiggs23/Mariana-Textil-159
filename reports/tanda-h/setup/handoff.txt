@@ -1,0 +1,54 @@
+Setup only. No workflow/app start, live DDL, metraje changes, gates, or application writes.
+
+Private material (0700 directory; credentials/dumps 0600):
+  .local/tanda-h/source.dump — fresh effective API native database, READ ONLY
+  .local/tanda-h/template.dump — isolated native fixture template
+  .local/tanda-h/credentials.json — natural-role synthetic login credentials
+  .local/tanda-h/worker-databases.json — segregated worker database URLs
+  .local/tanda-h/frozen-source — HEAD source and API/UI builds
+
+Evidence:
+  quantity-preflight.json — fresh effective API PID, database identity, exact
+    negative/NULL/NaN/Infinity counts, physical quantity scope
+  source-identity.json — source dump SHA-256; not a quiescence claim
+  template-identity.json, copy-identities.json, copy-ownership.json
+  source-files.json, build-identity.json — source/build SHA-256 proofs
+  fixture-manifest-redacted.json, verification.json — receipt provenance
+
+PostgreSQL: localhost:55444, stopped at handoff.
+Databases: tanda_h_template, tanda_h_inventory, tanda_h_performance,
+           tanda_h_permissions, tanda_h_witness (empty safety destination).
+Ports (inventory/performance/permissions):
+  API 43871/43872/43873; UI 43881/43882/43883.
+
+MAIN lifecycle (from workspace root; foreground API/UI in separate terminals):
+  node reports/tanda-h/setup/lifecycle.mjs start
+  node reports/tanda-h/setup/lifecycle.mjs api inventory
+  node reports/tanda-h/setup/lifecycle.mjs ui inventory
+  node reports/tanda-h/setup/lifecycle.mjs api performance
+  node reports/tanda-h/setup/lifecycle.mjs ui performance
+  node reports/tanda-h/setup/lifecycle.mjs api permissions
+  node reports/tanda-h/setup/lifecycle.mjs ui permissions
+  node reports/tanda-h/setup/lifecycle.mjs teardown
+  node reports/tanda-h/setup/lifecycle.mjs teardown --remove
+The last command deletes private backups too: preserve authorized rollback
+material first. Normal teardown retains source/template dumps and frozen build.
+
+Performance worker: recreate prior 54,750 ticket / 89,750 roll, year dataset
+with node reports/tanda-h/setup/performance-load.mjs after cluster start.
+This adapts reports/tanda-g-ampliada/tarea-4/load.mjs as provenance/reference.
+Do not run that original script unchanged: its paths, database, role, port and
+seven-site roll distribution refer to the previous setup. This template has
+three stores, four product units, 96 fully traced rolls and nine native-role
+actors. No performance load has been executed by setup.
+
+Inventory/performance roles own only their copy's public tables, allowing
+worker constraint/index application. Permissions role retains native grants.
+CONNECT to siblings, template and witness is denied for every worker role.
+The API runner points ordinary application URL aliases at the empty witness
+and selects only the named worker through the isolated database guard.
+
+MAIN alone handles application fixes, browser testing and final live DDL.
+The source backup is not proof of a write-frozen live interval. Recheck live
+identity/quantities and obtain the appropriate final rollback point before
+live DDL. No credentials appear in these reports.

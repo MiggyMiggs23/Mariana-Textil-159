@@ -1,0 +1,10 @@
+import fs from "node:fs";
+const r="/home/runner/workspace/.local/tanda-h";
+const cfg=JSON.parse(fs.readFileSync(r+"/worker-databases.json","utf8"))[process.env.WORKER];
+if(!cfg||process.env.TEST_DATABASE_URL!==cfg.url||process.env.NODE_ENV!=="test"||process.env.REQUIRE_ISOLATED_TEST_DATABASE!=="1")throw Error("Worker isolation guard failed");
+if(process.env.DATABASE_URL!=="postgresql://postgres@127.0.0.1:55444/tanda_h_witness"||process.env.APPLICATION_DATABASE_URL!==process.env.DATABASE_URL)throw Error("Witness guard failed");
+const api=await import(r+"/frozen-source/artifacts/api-server/dist/index.mjs");
+if(typeof api.startServer!=="function")throw Error("Missing inspection entry");
+process.env.NODE_ENV="development";
+process.env.API_INSPECTION_BOOT="1";
+await api.startServer();

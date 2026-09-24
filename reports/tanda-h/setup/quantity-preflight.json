@@ -1,0 +1,44 @@
+{
+  "at": "2026-09-24T06:23:15.813Z",
+  "apiPid": 177,
+  "identity": {
+    "database": "heliumdb",
+    "db_user": "postgres",
+    "server_address": null,
+    "server_port": null,
+    "version": "160010",
+    "read_only": "on",
+    "server_start": "2026-09-24T06:16:58.304Z"
+  },
+  "counts": [
+    {
+      "table": "rollos",
+      "column": "cantidad_inicial",
+      "total": "740",
+      "negative": "0",
+      "nulls": "0",
+      "nan": "0",
+      "infinity": "0"
+    },
+    {
+      "table": "rollos",
+      "column": "cantidad_actual",
+      "total": "740",
+      "negative": "0",
+      "nulls": "0",
+      "nan": "0",
+      "infinity": "0"
+    },
+    {
+      "table": "existencias",
+      "column": "cantidad_total",
+      "total": "45",
+      "negative": "0",
+      "nulls": "0",
+      "nan": "0",
+      "infinity": "0"
+    }
+  ],
+  "readOnly": true,
+  "scope": "Physical roll initial/current quantities and inventory cache; signed ledger excluded"
+}

@@ -1,0 +1,103 @@
+{
+  "commit": "de4f31cbba1de2350503e275c5c801cb30056bbf",
+  "sourceArchiveSha256": "4adca8dd59976325d7a42957f465bcd62561c8cb789c08219b05bb76c33797d8",
+  "sourceManifestSha256": "9e5557a2061d10209d564c191051db9856c6d753946099471da32ce543e13c91",
+  "assets": [
+    {
+      "path": "artifacts/api-server/dist/assets/fonts/DEJAVU-LICENSE.txt",
+      "sha256": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9"
+    },
+    {
+      "path": "artifacts/api-server/dist/assets/fonts/DejaVuSans.ttf",
+      "sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280"
+    },
+    {
+      "path": "artifacts/api-server/dist/index.mjs",
+      "sha256": "ee6a46fd1223b45275e4814c2f78f478fce82a00eaeeffa931a0b12d383819aa"
+    },
+    {
+      "path": "artifacts/api-server/dist/index.mjs.map",
+      "sha256": "e61bc987bb0b1b3044e2f7a3f8f3c48f127691787f461e803dd5c160af503ab1"
+    },
+    {
+      "path": "artifacts/api-server/dist/pino-file.mjs",
+      "sha256": "220c096272c4597b8099dbb1a163dd5fdb2517343a17856c74e391265f14da18"
+    },
+    {
+      "path": "artifacts/api-server/dist/pino-file.mjs.map",
+      "sha256": "1f407452986ecc0db7ac7adaead0c22097a7ff70ec0d7db872a0c8879060cfd6"
+    },
+    {
+      "path": "artifacts/api-server/dist/pino-pretty.mjs",
+      "sha256": "a0e84eadb04888316e0a4c65e21dabc36554fc396206ba962b65c63d31e11b03"
+    },
+    {
+      "path": "artifacts/api-server/dist/pino-pretty.mjs.map",
+      "sha256": "d83688a9052aebbf9d6b0dca4f6da925e402cf4d3d2222199b730aa9d92c89af"
+    },
+    {
+      "path": "artifacts/api-server/dist/pino-worker.mjs",
+      "sha256": "aa34a4a9f4f72acdd22b7be4ce412b8ffc9a30af1ac1639013c77f4f49c5dad9"
+    },
+    {
+      "path": "artifacts/api-server/dist/pino-worker.mjs.map",
+      "sha256": "7794653810198c52503ff311629414c6ab1e3be64a89d134c36c95555c3c7af7"
+    },
+    {
+      "path": "artifacts/api-server/dist/thread-stream-worker.mjs",
+      "sha256": "682af21c74dcff21d325b5e7856bba74ed0c660dbd6f4a0f737a2f9c3cbd9e8b"
+    },
+    {
+      "path": "artifacts/api-server/dist/thread-stream-worker.mjs.map",
+      "sha256": "c16a22e4ea62c0930ab0b84aa72544a341729eadd04195756e751ca7624bfeb3"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/assets/index-B_RNSytF.js",
+      "sha256": "cbb34ab7a36dbc8f513766e49c1106eec672fb61f754f8e0fe20a26d647f9a41"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/assets/index-CJ5sQYvB.js",
+      "sha256": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/assets/index-lqImlWin.css",
+      "sha256": "c06114a473d10c56803c05f28a6a34bfd656e2bd6f28e90dfe90cbc81fe74820"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/assets/mariana-textil-logo-FFOiXRd3.png",
+      "sha256": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/assets/mariana-textil-logo-monochrome-_7AVoW2A.png",
+      "sha256": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/favicon.png",
+      "sha256": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/index.html",
+      "sha256": "ebdb3f14a390d8844a91511aa7e41201726faea2b8051facbc90dc9e923088c0"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/robots.txt",
+      "sha256": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/sounds/alerta.ogg",
+      "sha256": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/sounds/aviso.ogg",
+      "sha256": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4"
+    },
+    {
+      "path": "artifacts/mariana-textil/dist/public/sounds/solicitud.ogg",
+      "sha256": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+    }
+  ],
+  "applicationStarted": false,
+  "testsRun": false,
+  "dependencies": "Existing installed external packages symlinked; workspace packages resolve to frozen source",
+  "lockfileSha256": "a7a54d756eb12b9f33e6bec8d70872026de72bee9567aa640a021324a0fcbc6d"
+}
