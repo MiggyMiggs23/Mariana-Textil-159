@@ -74,6 +74,11 @@ for (const file of files.sort()) {
 }
 // Explicitly reviewed action-parameter wrappers, not invented operations.
 for (const operation of operations) {
+  if (/\/routes\/(inventario|auditorias-inventario)\.ts$/.test(operation.file)) {
+    operation.routerLocalPath = operation.endpoint;
+    operation.endpoint = '/inventario' + operation.endpoint;
+    operation.mountCitation = 'artifacts/api-server/src/routes/index.ts:77-78';
+  }
   for (const module of ['camionetas', 'choferes']) {
     const wrapper = module === 'camionetas' ? 'requiereGestorCamionetas' : 'requiereGestorChoferes';
     for (const middleware of operation.middleware) {
@@ -114,15 +119,16 @@ if (new Set(mapped.map(c => c.id)).size !== residual.length) throw Error('Duplic
 const count = rows => rows.reduce((a, c) => (a[c.status] = (a[c.status] || 0) + 1, a), {});
 const summary = {
   source, sourceMode: source === root ? 'CURRENT_WORKTREE_HASHED_NOT_ISOLATED_FROZEN_COPY' : 'EXPLICIT_SOURCE_PATH_HASHED',
-  head: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
+  workspaceHeadAtExtraction: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
+  frozenBuildCommit: source !== root ? JSON.parse(fs.readFileSync(path.join(root, 'reports/tanda-g-ampliada/setup/build-identity.json'))).commit : null,
   sourceManifestSha256: sha(JSON.stringify(manifest)),
   baselineSha256: sha(fs.readFileSync(baselineFile)), residualUniqueCells: residual.length,
   priorResidualStatuses: residual.reduce((a, c) => (a[c.status] = (a[c.status] || 0) + 1, a), {}),
   staticStatuses: count(mapped), uniqueModuleActions: groups.length,
   newlyCoveredUniqueCells: 0, remainingUniqueCells: residual.length,
   actualApiRequests: 0, actualRoleBrowsers: 0, rolesRequired: ['ADMIN', 'TERMINAL', 'CAJA', 'SUPERVISOR', 'BODEGA', 'SISTEMAS', 'CONTADOR'],
-  blockers: ['Dedicated permissions-copy setup handoff and API/proxy not yet supplied.',
-    'Need approved synthetic lifecycle fixtures for valid denied mutations.',
+  runtimeEvidence: 'See runtime-summary.json; counts here intentionally describe static extraction only.',
+  staticLimitations: [
     'Unconsumed flags require owner semantics; do not substitute arbitrary 403 routes.',
     'Static extraction does not expand arbitrary computed factory routes; review dynamic references.'],
 };

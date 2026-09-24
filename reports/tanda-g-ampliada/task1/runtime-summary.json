@@ -1,0 +1,72 @@
+{
+  "originalResidualUniqueCells": 433,
+  "operationDenialRequests": 70,
+  "operationDeniedUniqueResidualCells": 70,
+  "directActionGuardCoveredUniqueCells": 52,
+  "directActionGuardResidualUniqueCells": 381,
+  "outerBoundaryOnlyUniqueCells": 18,
+  "strictCombinedApiAndActionUiCoveredUniqueCells": 12,
+  "strictCombinedResidualUniqueCells": 421,
+  "ownerSemanticsRequiredUniqueCells": 357,
+  "legacyGateResidualUniqueCells": 6,
+  "rolesActuallyBrowsed": [
+    "ADMIN",
+    "TERMINAL",
+    "CAJA",
+    "SUPERVISOR",
+    "BODEGA",
+    "SISTEMAS",
+    "CONTADOR"
+  ],
+  "uniqueRolePageObservations": 77,
+  "browserErrors": 0,
+  "actualCreateOrTabClicks": 8,
+  "actualEditDialogClicks": 6,
+  "screenshots": 89,
+  "successfulPositiveControlOperations": 12,
+  "legacyProbeRequests": 7,
+  "legacyOutcome": "ADMIN and five natural roles receive E3 dedicated-capture 409; CONTADOR receives E11 403. Neither closes clientes_finanzas.crear.",
+  "tableChecks": [
+    {
+      "evidence": "permissions-state.json",
+      "changedTables": [],
+      "results": 5
+    },
+    {
+      "evidence": "denials-state.json",
+      "changedTables": [],
+      "results": 34
+    },
+    {
+      "evidence": "denials2-state.json",
+      "changedTables": [],
+      "results": 31
+    },
+    {
+      "evidence": "legacy-state.json",
+      "changedTables": []
+    }
+  ],
+  "bypassesDemonstrated": 0,
+  "sourceFixes": 0,
+  "matrixChanges": 0,
+  "gatesChanged": 0,
+  "environment": {
+    "db": "tanda_ga_permissions",
+    "actor": "ga_permissions",
+    "port": 55442,
+    "apiPid": 8108,
+    "clusterPid": 6420,
+    "buildCommit": "ee1bb641e0513b7df18027ad351a72ebbe99af74",
+    "apiSha256": "d4a5a83bbaa5fc130f68217df5da4039d26db325f59345ee2958adabdcc0b0a9",
+    "uiHashesVerified": true,
+    "at": "2026-09-24T05:24:51.025Z"
+  },
+  "conclusion": "All seven roles browsed sequentially with real clicks/screenshots; 70 valid operation requests denied without business writes. Only 52 directly attribute the selected permission; 18 are outer boundaries. Strict action-specific UI+API closure is 12 cells, not 70 or 433. Remaining flags cannot be closed by arbitrary route 403s.",
+  "remainingWork": [
+    "Owner semantics for 357 configured flags with no identified consuming operation; this is not a proof of impossible coverage.",
+    "Six legacy capture flags remain behind released E3/E11 gates; no gate changes authorized.",
+    "Eighteen valid-operation denials were intercepted by outer guards; no changes made to force inner coverage.",
+    "Action-specific eligible-state UI coverage beyond catalog edits remains incomplete; page screenshots do not inflate those cells."
+  ]
+}

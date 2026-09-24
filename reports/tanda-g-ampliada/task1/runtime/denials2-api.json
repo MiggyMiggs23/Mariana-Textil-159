@@ -1,0 +1,592 @@
+[
+  {
+    "role": "TERMINAL",
+    "module": "entradas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/entradas/475/costos",
+    "body": {
+      "costosProductos": [
+        {
+          "productoId": 2078,
+          "costoUnitario": "100.00"
+        }
+      ],
+      "costosRollos": []
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'entradas'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "CAJA",
+    "module": "entradas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/entradas/475/costos",
+    "body": {
+      "costosProductos": [
+        {
+          "productoId": 2078,
+          "costoUnitario": "100.00"
+        }
+      ],
+      "costosRollos": []
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'entradas'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "BODEGA",
+    "module": "entradas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/entradas/475/costos",
+    "body": {
+      "costosProductos": [
+        {
+          "productoId": 2078,
+          "costoUnitario": "100.00"
+        }
+      ],
+      "costosRollos": []
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'entradas'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "entradas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/entradas/475/costos",
+    "body": {
+      "costosProductos": [
+        {
+          "productoId": 2078,
+          "costoUnitario": "100.00"
+        }
+      ],
+      "costosRollos": []
+    },
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "e63b3801-aab0-47cc-bb7f-a940f4495617"
+    },
+    "limitation": "E11 outer boundary, not inner guard isolation"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "salidas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/salidas-extraordinarias/7595/revertir",
+    "body": {
+      "justificacion": "TANDA GA TASK1 valid denied reversal",
+      "uuidCliente": "1c1cb5b0-834b-4ee9-a0cc-88ae0352a71f"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'salidas'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "CAJA",
+    "module": "salidas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/salidas-extraordinarias/7595/revertir",
+    "body": {
+      "justificacion": "TANDA GA TASK1 valid denied reversal",
+      "uuidCliente": "1c1cb5b0-834b-4ee9-a0cc-88ae0352a71f"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'salidas'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "BODEGA",
+    "module": "salidas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/salidas-extraordinarias/7595/revertir",
+    "body": {
+      "justificacion": "TANDA GA TASK1 valid denied reversal",
+      "uuidCliente": "1c1cb5b0-834b-4ee9-a0cc-88ae0352a71f"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'salidas'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "salidas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/salidas-extraordinarias/7595/revertir",
+    "body": {
+      "justificacion": "TANDA GA TASK1 valid denied reversal",
+      "uuidCliente": "1c1cb5b0-834b-4ee9-a0cc-88ae0352a71f"
+    },
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "23cdfb38-7f39-4af0-a6af-47607d441371"
+    },
+    "limitation": "E11 outer boundary, not inner guard isolation"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "salidas",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/salidas/29/cancelar",
+    "body": {
+      "motivo": "TANDA GA TASK1 valid denied cancel"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'autorizar' en el módulo 'salidas'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "CAJA",
+    "module": "salidas",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/salidas/29/cancelar",
+    "body": {
+      "motivo": "TANDA GA TASK1 valid denied cancel"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'autorizar' en el módulo 'salidas'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "salidas",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/salidas/29/cancelar",
+    "body": {
+      "motivo": "TANDA GA TASK1 valid denied cancel"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'autorizar' en el módulo 'salidas'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "BODEGA",
+    "module": "salidas",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/salidas/29/cancelar",
+    "body": {
+      "motivo": "TANDA GA TASK1 valid denied cancel"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'autorizar' en el módulo 'salidas'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "salidas",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/salidas/29/cancelar",
+    "body": {
+      "motivo": "TANDA GA TASK1 valid denied cancel"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'autorizar' en el módulo 'salidas'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "salidas",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/salidas/29/cancelar",
+    "body": {
+      "motivo": "TANDA GA TASK1 valid denied cancel"
+    },
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "32c72c9f-7b33-43f8-9fe5-4decf72fdf8e"
+    },
+    "limitation": "E11 outer boundary, not inner guard isolation"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "salidas_venta",
+    "action": "crear",
+    "method": "POST",
+    "url": "/salidas/venta-cliente/generar-venta",
+    "body": {
+      "uuidCliente": "3eac0a0b-0cb3-479c-9795-cc668eafecc8",
+      "documentoTipo": "TICKET",
+      "ubicacionId": 836,
+      "clienteId": 8,
+      "salidaIds": [
+        30
+      ],
+      "precios": [
+        {
+          "salidaRolloId": 134,
+          "precioUnitario": 150
+        }
+      ]
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'crear' en el módulo 'salidas_venta'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "CAJA",
+    "module": "salidas_venta",
+    "action": "crear",
+    "method": "POST",
+    "url": "/salidas/venta-cliente/generar-venta",
+    "body": {
+      "uuidCliente": "3eac0a0b-0cb3-479c-9795-cc668eafecc8",
+      "documentoTipo": "TICKET",
+      "ubicacionId": 836,
+      "clienteId": 8,
+      "salidaIds": [
+        30
+      ],
+      "precios": [
+        {
+          "salidaRolloId": 134,
+          "precioUnitario": 150
+        }
+      ]
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'crear' en el módulo 'salidas_venta'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "salidas_venta",
+    "action": "crear",
+    "method": "POST",
+    "url": "/salidas/venta-cliente/generar-venta",
+    "body": {
+      "uuidCliente": "3eac0a0b-0cb3-479c-9795-cc668eafecc8",
+      "documentoTipo": "TICKET",
+      "ubicacionId": 836,
+      "clienteId": 8,
+      "salidaIds": [
+        30
+      ],
+      "precios": [
+        {
+          "salidaRolloId": 134,
+          "precioUnitario": 150
+        }
+      ]
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'crear' en el módulo 'salidas_venta'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "BODEGA",
+    "module": "salidas_venta",
+    "action": "crear",
+    "method": "POST",
+    "url": "/salidas/venta-cliente/generar-venta",
+    "body": {
+      "uuidCliente": "3eac0a0b-0cb3-479c-9795-cc668eafecc8",
+      "documentoTipo": "TICKET",
+      "ubicacionId": 836,
+      "clienteId": 8,
+      "salidaIds": [
+        30
+      ],
+      "precios": [
+        {
+          "salidaRolloId": 134,
+          "precioUnitario": 150
+        }
+      ]
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'crear' en el módulo 'salidas_venta'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "salidas_venta",
+    "action": "crear",
+    "method": "POST",
+    "url": "/salidas/venta-cliente/generar-venta",
+    "body": {
+      "uuidCliente": "3eac0a0b-0cb3-479c-9795-cc668eafecc8",
+      "documentoTipo": "TICKET",
+      "ubicacionId": 836,
+      "clienteId": 8,
+      "salidaIds": [
+        30
+      ],
+      "precios": [
+        {
+          "salidaRolloId": 134,
+          "precioUnitario": 150
+        }
+      ]
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'crear' en el módulo 'salidas_venta'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "salidas_venta",
+    "action": "crear",
+    "method": "POST",
+    "url": "/salidas/venta-cliente/generar-venta",
+    "body": {
+      "uuidCliente": "3eac0a0b-0cb3-479c-9795-cc668eafecc8",
+      "documentoTipo": "TICKET",
+      "ubicacionId": 836,
+      "clienteId": 8,
+      "salidaIds": [
+        30
+      ],
+      "precios": [
+        {
+          "salidaRolloId": 134,
+          "precioUnitario": 150
+        }
+      ]
+    },
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "7afb96f7-28f8-49cd-b017-c175c7eb83ae"
+    },
+    "limitation": "E11 outer boundary, not inner guard isolation"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "cobros_pagos",
+    "action": "crear",
+    "method": "POST",
+    "url": "/tickets/109/cobrar",
+    "body": {
+      "pagos": [
+        {
+          "formaPago": "EFECTIVO",
+          "importe": 1500
+        }
+      ]
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'crear' en el módulo 'cobros_pagos'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "cobros_pagos",
+    "action": "crear",
+    "method": "POST",
+    "url": "/tickets/109/cobrar",
+    "body": {
+      "pagos": [
+        {
+          "formaPago": "EFECTIVO",
+          "importe": 1500
+        }
+      ]
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'crear' en el módulo 'cobros_pagos'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "BODEGA",
+    "module": "cobros_pagos",
+    "action": "crear",
+    "method": "POST",
+    "url": "/tickets/109/cobrar",
+    "body": {
+      "pagos": [
+        {
+          "formaPago": "EFECTIVO",
+          "importe": 1500
+        }
+      ]
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'crear' en el módulo 'cobros_pagos'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "cobros_pagos",
+    "action": "crear",
+    "method": "POST",
+    "url": "/tickets/109/cobrar",
+    "body": {
+      "pagos": [
+        {
+          "formaPago": "EFECTIVO",
+          "importe": 1500
+        }
+      ]
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'crear' en el módulo 'cobros_pagos'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "cobros_pagos",
+    "action": "crear",
+    "method": "POST",
+    "url": "/tickets/109/cobrar",
+    "body": {
+      "pagos": [
+        {
+          "formaPago": "EFECTIVO",
+          "importe": 1500
+        }
+      ]
+    },
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "4497c42a-950a-43fa-920b-278fc94c6c4e"
+    },
+    "limitation": "E11 outer boundary, not inner guard isolation"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/inventario/auditorias/6/confirmar",
+    "body": {},
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'autorizar' en el módulo 'auditoria_inventario'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "CAJA",
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/inventario/auditorias/6/confirmar",
+    "body": {},
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'autorizar' en el módulo 'auditoria_inventario'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/inventario/auditorias/6/confirmar",
+    "body": {},
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'autorizar' en el módulo 'auditoria_inventario'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "BODEGA",
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/inventario/auditorias/6/confirmar",
+    "body": {},
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'autorizar' en el módulo 'auditoria_inventario'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/inventario/auditorias/6/confirmar",
+    "body": {},
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'autorizar' en el módulo 'auditoria_inventario'."
+    },
+    "limitation": "Natural role; fixture and body independently checked"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/inventario/auditorias/6/confirmar",
+    "body": {},
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "6208f2b1-7d32-46a1-a791-14083b99d08f"
+    },
+    "limitation": "E11 outer boundary, not inner guard isolation"
+  }
+]

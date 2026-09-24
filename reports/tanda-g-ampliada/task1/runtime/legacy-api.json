@@ -1,0 +1,122 @@
+[
+  {
+    "role": "ADMIN",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "method": "POST",
+    "url": "/clientes/8/pagos/vista-previa",
+    "body": {
+      "importe": 1,
+      "fechaEfectiva": "2026-09-01T12:00:00.000Z"
+    },
+    "status": 409,
+    "response": {
+      "code": "E3_DEDICATED_CAPTURE_REQUIRED",
+      "error": "Usa Caja para dinero recibido ahora. Para recapturas usa la pantalla del cliente: exige motivo y permiso clientes_recapturas."
+    },
+    "qualification": "Legacy capture gate probe; neither 409 nor E11 outer rejection proves clientes_finanzas.crear guard."
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "method": "POST",
+    "url": "/clientes/8/pagos/vista-previa",
+    "body": {
+      "importe": 1,
+      "fechaEfectiva": "2026-09-01T12:00:00.000Z"
+    },
+    "status": 409,
+    "response": {
+      "code": "E3_DEDICATED_CAPTURE_REQUIRED",
+      "error": "Usa Caja para dinero recibido ahora. Para recapturas usa la pantalla del cliente: exige motivo y permiso clientes_recapturas."
+    },
+    "qualification": "Legacy capture gate probe; neither 409 nor E11 outer rejection proves clientes_finanzas.crear guard."
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "method": "POST",
+    "url": "/clientes/8/pagos/vista-previa",
+    "body": {
+      "importe": 1,
+      "fechaEfectiva": "2026-09-01T12:00:00.000Z"
+    },
+    "status": 409,
+    "response": {
+      "code": "E3_DEDICATED_CAPTURE_REQUIRED",
+      "error": "Usa Caja para dinero recibido ahora. Para recapturas usa la pantalla del cliente: exige motivo y permiso clientes_recapturas."
+    },
+    "qualification": "Legacy capture gate probe; neither 409 nor E11 outer rejection proves clientes_finanzas.crear guard."
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "method": "POST",
+    "url": "/clientes/8/pagos/vista-previa",
+    "body": {
+      "importe": 1,
+      "fechaEfectiva": "2026-09-01T12:00:00.000Z"
+    },
+    "status": 409,
+    "response": {
+      "code": "E3_DEDICATED_CAPTURE_REQUIRED",
+      "error": "Usa Caja para dinero recibido ahora. Para recapturas usa la pantalla del cliente: exige motivo y permiso clientes_recapturas."
+    },
+    "qualification": "Legacy capture gate probe; neither 409 nor E11 outer rejection proves clientes_finanzas.crear guard."
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "method": "POST",
+    "url": "/clientes/8/pagos/vista-previa",
+    "body": {
+      "importe": 1,
+      "fechaEfectiva": "2026-09-01T12:00:00.000Z"
+    },
+    "status": 409,
+    "response": {
+      "code": "E3_DEDICATED_CAPTURE_REQUIRED",
+      "error": "Usa Caja para dinero recibido ahora. Para recapturas usa la pantalla del cliente: exige motivo y permiso clientes_recapturas."
+    },
+    "qualification": "Legacy capture gate probe; neither 409 nor E11 outer rejection proves clientes_finanzas.crear guard."
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "method": "POST",
+    "url": "/clientes/8/pagos/vista-previa",
+    "body": {
+      "importe": 1,
+      "fechaEfectiva": "2026-09-01T12:00:00.000Z"
+    },
+    "status": 409,
+    "response": {
+      "code": "E3_DEDICATED_CAPTURE_REQUIRED",
+      "error": "Usa Caja para dinero recibido ahora. Para recapturas usa la pantalla del cliente: exige motivo y permiso clientes_recapturas."
+    },
+    "qualification": "Legacy capture gate probe; neither 409 nor E11 outer rejection proves clientes_finanzas.crear guard."
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "method": "POST",
+    "url": "/clientes/8/pagos/vista-previa",
+    "body": {
+      "importe": 1,
+      "fechaEfectiva": "2026-09-01T12:00:00.000Z"
+    },
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "838f3be8-298a-4ed0-9ffa-3ed820c53378"
+    },
+    "qualification": "Legacy capture gate probe; neither 409 nor E11 outer rejection proves clientes_finanzas.crear guard."
+  }
+]

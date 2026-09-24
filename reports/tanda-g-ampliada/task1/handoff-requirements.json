@@ -1,14 +1,14 @@
 {
-  "stage": "STATIC_COMPLETE_RUNTIME_BLOCKED",
+  "stage": "RUNTIME_TRANCHES_EXECUTED_SEE_RUNTIME_SUMMARY",
   "scope": "Only tanda_ga_permissions; never application DB or other workers' copies.",
   "mainStartsApiAndProxy": true,
-  "requiredHandoff": [
+  "receivedHandoffContract": [
     "Frozen source/build identity and absolute source path",
     "Permissions database identity, cluster path/port and dedicated API PID/port",
     "Dedicated browser proxy origin bound only to the permissions API",
     "Private seven-role credentials path and role-key mapping",
     "Approved fixture manifest for pending entry cost, reversible extraordinary exit, cancellable salida, immutable label reprint, audit lifecycle/faltante, modifiable container, pending ticket, vehicle, driver, sale source and equipment",
-    "Decision whether denied permission-update probes are authorized when no permission row may change"
+    "MAIN authorized denied permission-update probes with existing unchanged values; executed with unchanged fingerprints"
   ],
   "runtimeAcceptance": [
     "Verify exact copy and API identity before requests",
@@ -21,7 +21,7 @@
     "Stop a tranche after twelve minutes without new evidence; report blocker",
     "Report any demonstrated bypass immediately; no speculative source changes or release"
   ],
-  "coverageAtHandoff": {
+  "historicalCoverageBeforeRuntimeHandoff": {
     "residualUniqueCells": 433,
     "staticallyMappedNotExecuted": 76,
     "ownerSemanticsRequired": 357,

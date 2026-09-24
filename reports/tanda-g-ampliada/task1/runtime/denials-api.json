@@ -1,0 +1,566 @@
+[
+  {
+    "role": "TERMINAL",
+    "module": "camionetas",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/camionetas/1",
+    "body": {
+      "nombre": "TANDA GA TASK1 VAN"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'camionetas'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "CAJA",
+    "module": "camionetas",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/camionetas/1",
+    "body": {
+      "nombre": "TANDA GA TASK1 VAN"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'camionetas'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "camionetas",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/camionetas/1",
+    "body": {
+      "nombre": "TANDA GA TASK1 VAN"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'camionetas'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "BODEGA",
+    "module": "camionetas",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/camionetas/1",
+    "body": {
+      "nombre": "TANDA GA TASK1 VAN"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'camionetas'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "camionetas",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/camionetas/1",
+    "body": {
+      "nombre": "TANDA GA TASK1 VAN"
+    },
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "928a56be-4ecd-47af-9ee1-dab2b2a354ea"
+    },
+    "limitation": "E11 outer boundary, not inner guard isolation"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "choferes",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/choferes/1",
+    "body": {
+      "nombreCompleto": "TANDA GA TASK1 DRIVER"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'choferes'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "CAJA",
+    "module": "choferes",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/choferes/1",
+    "body": {
+      "nombreCompleto": "TANDA GA TASK1 DRIVER"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'choferes'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "choferes",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/choferes/1",
+    "body": {
+      "nombreCompleto": "TANDA GA TASK1 DRIVER"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'choferes'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "BODEGA",
+    "module": "choferes",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/choferes/1",
+    "body": {
+      "nombreCompleto": "TANDA GA TASK1 DRIVER"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'choferes'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "choferes",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/choferes/1",
+    "body": {
+      "nombreCompleto": "TANDA GA TASK1 DRIVER"
+    },
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "b1845bc3-cd35-4632-96a7-ba55a4e7df8b"
+    },
+    "limitation": "E11 outer boundary, not inner guard isolation"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "equipos",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/equipos/1",
+    "body": {
+      "marca": "TASK1"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'equipos'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "CAJA",
+    "module": "equipos",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/equipos/1",
+    "body": {
+      "marca": "TASK1"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'equipos'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "equipos",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/equipos/1",
+    "body": {
+      "marca": "TASK1"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'equipos'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "BODEGA",
+    "module": "equipos",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/equipos/1",
+    "body": {
+      "marca": "TASK1"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'equipos'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "equipos",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/equipos/1",
+    "body": {
+      "marca": "TASK1"
+    },
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "6fdbd49d-32e4-4a16-83f6-9d2b914f6a47"
+    },
+    "limitation": "E11 outer boundary, not inner guard isolation"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "contenedores",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/contenedores/3",
+    "body": {
+      "proveedorId": 227,
+      "referencia": "TANDA GA TASK1 CONTAINER",
+      "fechaEstimadaLlegada": "2026-10-01",
+      "sitioDestinoId": 836,
+      "lineas": [
+        {
+          "productoId": 2078,
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1
+        }
+      ]
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'contenedores'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "CAJA",
+    "module": "contenedores",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/contenedores/3",
+    "body": {
+      "proveedorId": 227,
+      "referencia": "TANDA GA TASK1 CONTAINER",
+      "fechaEstimadaLlegada": "2026-10-01",
+      "sitioDestinoId": 836,
+      "lineas": [
+        {
+          "productoId": 2078,
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1
+        }
+      ]
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'contenedores'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "BODEGA",
+    "module": "contenedores",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/contenedores/3",
+    "body": {
+      "proveedorId": 227,
+      "referencia": "TANDA GA TASK1 CONTAINER",
+      "fechaEstimadaLlegada": "2026-10-01",
+      "sitioDestinoId": 836,
+      "lineas": [
+        {
+          "productoId": 2078,
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1
+        }
+      ]
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'contenedores'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "contenedores",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/contenedores/3",
+    "body": {
+      "proveedorId": 227,
+      "referencia": "TANDA GA TASK1 CONTAINER",
+      "fechaEstimadaLlegada": "2026-10-01",
+      "sitioDestinoId": 836,
+      "lineas": [
+        {
+          "productoId": 2078,
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1
+        }
+      ]
+    },
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "abdabced-eaa2-4b7c-9bd9-0d94ae350a34"
+    },
+    "limitation": "E11 outer boundary, not inner guard isolation"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "contenedores",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/contenedores/3/cancelar",
+    "body": {
+      "motivo": "TANDA GA valid denied cancellation"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'autorizar' en el módulo 'contenedores'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "CAJA",
+    "module": "contenedores",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/contenedores/3/cancelar",
+    "body": {
+      "motivo": "TANDA GA valid denied cancellation"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'autorizar' en el módulo 'contenedores'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "contenedores",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/contenedores/3/cancelar",
+    "body": {
+      "motivo": "TANDA GA valid denied cancellation"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'autorizar' en el módulo 'contenedores'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "BODEGA",
+    "module": "contenedores",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/contenedores/3/cancelar",
+    "body": {
+      "motivo": "TANDA GA valid denied cancellation"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'autorizar' en el módulo 'contenedores'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "contenedores",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/contenedores/3/cancelar",
+    "body": {
+      "motivo": "TANDA GA valid denied cancellation"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'autorizar' en el módulo 'contenedores'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "contenedores",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/contenedores/3/cancelar",
+    "body": {
+      "motivo": "TANDA GA valid denied cancellation"
+    },
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "24bc4cf9-f1a5-420d-9f14-93c77afaa611"
+    },
+    "limitation": "E11 outer boundary, not inner guard isolation"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "auditoria_inventario",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/auditorias/6/escaneos",
+    "body": {
+      "serie": "996000001"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'auditoria_inventario'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "CAJA",
+    "module": "auditoria_inventario",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/auditorias/6/escaneos",
+    "body": {
+      "serie": "996000001"
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'auditoria_inventario'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "auditoria_inventario",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/auditorias/6/escaneos",
+    "body": {
+      "serie": "996000001"
+    },
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "1bf327d4-127b-49ea-b8c4-fe57a27ce15c"
+    },
+    "limitation": "E11 outer boundary, not inner guard isolation"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "etiquetas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/etiquetas/rollos/6233/revisar",
+    "body": {
+      "ultimaReimpresionId": 173
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'etiquetas'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "CAJA",
+    "module": "etiquetas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/etiquetas/rollos/6233/revisar",
+    "body": {
+      "ultimaReimpresionId": 173
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'etiquetas'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "etiquetas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/etiquetas/rollos/6233/revisar",
+    "body": {
+      "ultimaReimpresionId": 173
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'etiquetas'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "BODEGA",
+    "module": "etiquetas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/etiquetas/rollos/6233/revisar",
+    "body": {
+      "ultimaReimpresionId": 173
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'etiquetas'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "etiquetas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/etiquetas/rollos/6233/revisar",
+    "body": {
+      "ultimaReimpresionId": 173
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'etiquetas'."
+    },
+    "limitation": "Natural role, outer guards may reject first; fixture and body verified separately"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "etiquetas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/etiquetas/rollos/6233/revisar",
+    "body": {
+      "ultimaReimpresionId": 173
+    },
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "29d5dc7b-2c98-43e8-aeec-dfe324c611b9"
+    },
+    "limitation": "E11 outer boundary, not inner guard isolation"
+  }
+]

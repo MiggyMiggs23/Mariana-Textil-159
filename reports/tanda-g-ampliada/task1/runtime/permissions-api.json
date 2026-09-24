@@ -1,0 +1,94 @@
+[
+  {
+    "role": "TERMINAL",
+    "module": "permisos",
+    "action": "editar",
+    "method": "PUT",
+    "url": "/permisos/roles/TERMINAL/dashboard",
+    "body": {
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'ver' en el módulo 'permisos'."
+    },
+    "qualification": "Existing row unchanged desired values; outer permisos.ver or E11 boundary may reject before editar."
+  },
+  {
+    "role": "CAJA",
+    "module": "permisos",
+    "action": "editar",
+    "method": "PUT",
+    "url": "/permisos/roles/TERMINAL/dashboard",
+    "body": {
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'ver' en el módulo 'permisos'."
+    },
+    "qualification": "Existing row unchanged desired values; outer permisos.ver or E11 boundary may reject before editar."
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "permisos",
+    "action": "editar",
+    "method": "PUT",
+    "url": "/permisos/roles/TERMINAL/dashboard",
+    "body": {
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'ver' en el módulo 'permisos'."
+    },
+    "qualification": "Existing row unchanged desired values; outer permisos.ver or E11 boundary may reject before editar."
+  },
+  {
+    "role": "BODEGA",
+    "module": "permisos",
+    "action": "editar",
+    "method": "PUT",
+    "url": "/permisos/roles/TERMINAL/dashboard",
+    "body": {
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'ver' en el módulo 'permisos'."
+    },
+    "qualification": "Existing row unchanged desired values; outer permisos.ver or E11 boundary may reject before editar."
+  },
+  {
+    "role": "CONTADOR",
+    "module": "permisos",
+    "action": "editar",
+    "method": "PUT",
+    "url": "/permisos/roles/TERMINAL/dashboard",
+    "body": {
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "72fc12f1-1dac-4b28-b339-e3a25e9cbf5a"
+    },
+    "qualification": "Existing row unchanged desired values; outer permisos.ver or E11 boundary may reject before editar."
+  }
+]

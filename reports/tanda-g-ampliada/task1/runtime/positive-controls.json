@@ -1,0 +1,265 @@
+[
+  {
+    "module": "camionetas",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/camionetas/1",
+    "body": {
+      "nombre": "TANDA GA TASK1 VAN"
+    },
+    "status": 200,
+    "response": {
+      "id": 1,
+      "nombre": "TANDA GA TASK1 VAN",
+      "placas": "GA-T1",
+      "marca": null,
+      "modelo": null,
+      "tipo": "PROPIA",
+      "activa": true,
+      "createdAt": "2026-09-24T05:16:50.290Z",
+      "updatedAt": "2026-09-24T05:17:11.277Z"
+    }
+  },
+  {
+    "module": "choferes",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/choferes/1",
+    "body": {
+      "nombreCompleto": "TANDA GA TASK1 DRIVER"
+    },
+    "status": 200,
+    "response": {
+      "id": 1,
+      "nombreCompleto": "TANDA GA TASK1 DRIVER",
+      "telefono": "5550001234",
+      "activo": true,
+      "createdAt": "2026-09-24T05:16:50.413Z",
+      "updatedAt": "2026-09-24T05:17:11.308Z"
+    }
+  },
+  {
+    "module": "equipos",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/equipos/1",
+    "body": {
+      "marca": "TASK1"
+    },
+    "status": 200,
+    "response": {
+      "id": 1,
+      "ubicacionId": 836,
+      "ubicacionNombre": "TANDA GA TIENDA 1",
+      "tipo": "PISTOLA_ESCANER",
+      "tipoLabel": "Pistola Escáner",
+      "identificador": "TANDA-GA-TASK1",
+      "marca": "TASK1",
+      "modelo": "TEST",
+      "numeroSerie": null,
+      "notas": null,
+      "activo": false,
+      "faltantes": 2,
+      "checklist": [
+        {
+          "key": "TECLADO_ESPANOL",
+          "label": "Configurada a teclado español",
+          "checked": false,
+          "actorId": null,
+          "actorNombre": null,
+          "checkedAt": null
+        },
+        {
+          "key": "QR_ROLLO",
+          "label": "Probada leyendo un QR de rollo del sistema",
+          "checked": false,
+          "actorId": null,
+          "actorNombre": null,
+          "checkedAt": null
+        }
+      ],
+      "creadoPor": 234,
+      "actualizadoPor": 234,
+      "createdAt": "2026-09-24T05:16:50.443Z",
+      "updatedAt": "2026-09-24T05:17:11.333Z"
+    }
+  },
+  {
+    "module": "contenedores",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/contenedores/3",
+    "body": {
+      "proveedorId": 227,
+      "referencia": "TANDA GA TASK1 CONTAINER",
+      "fechaEstimadaLlegada": "2026-10-01",
+      "sitioDestinoId": 836,
+      "lineas": [
+        {
+          "productoId": 2078,
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1
+        }
+      ]
+    },
+    "status": 200,
+    "response": {
+      "id": 3,
+      "folio": 1,
+      "proveedorId": 227,
+      "proveedor": "TANDA GA IMPORTADOR",
+      "referencia": "TANDA GA TASK1 CONTAINER",
+      "fechaPedido": null,
+      "fechaEstimadaLlegada": "2026-10-01",
+      "fechaRealLlegada": null,
+      "sitioDestinoId": 836,
+      "sitioDestino": "TANDA GA TIENDA 1",
+      "entradaId": null,
+      "estado": "EN_TRANSITO",
+      "notas": null,
+      "motivoCancelacion": null,
+      "usuarioId": 234,
+      "createdAt": "2026-09-24T05:16:50.486Z",
+      "updatedAt": "2026-09-24T05:17:11.363Z",
+      "diasTransito": null,
+      "diferenciaFechaEstimada": null,
+      "totalesEsperados": {
+        "lineas": 1,
+        "rollos": 1,
+        "metros": "10.000",
+        "kilos": "0.000",
+        "bolsas": "0.000",
+        "piezas": "0.000"
+      },
+      "totalesRecibidos": {
+        "lineas": 0,
+        "rollos": 0,
+        "metros": "0.000",
+        "kilos": "0.000",
+        "bolsas": "0.000",
+        "piezas": "0.000"
+      },
+      "lineas": [
+        {
+          "id": 4,
+          "productoId": 2078,
+          "sku": "TANDA-GA-METRO",
+          "tela": "TANDA GA METRO",
+          "color": "AZUL GA",
+          "unidad": "METRO",
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1,
+          "nota": null,
+          "cantidadRecibida": "0.000",
+          "rollosRecibidos": 0,
+          "diferencia": "-10.000",
+          "costoTotal": null,
+          "costoUnitarioReal": null
+        }
+      ],
+      "costoTotal": null
+    }
+  },
+  {
+    "module": "contenedores",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/contenedores/3/cancelar",
+    "body": {
+      "motivo": "TANDA GA valid denied cancellation"
+    },
+    "status": 200,
+    "response": {
+      "id": 3,
+      "folio": 1,
+      "proveedorId": 227,
+      "proveedor": "TANDA GA IMPORTADOR",
+      "referencia": "TANDA GA TASK1 CONTAINER",
+      "fechaPedido": null,
+      "fechaEstimadaLlegada": "2026-10-01",
+      "fechaRealLlegada": null,
+      "sitioDestinoId": 836,
+      "sitioDestino": "TANDA GA TIENDA 1",
+      "entradaId": null,
+      "estado": "CANCELADO",
+      "notas": null,
+      "motivoCancelacion": "TANDA GA valid denied cancellation",
+      "usuarioId": 234,
+      "createdAt": "2026-09-24T05:16:50.486Z",
+      "updatedAt": "2026-09-24T05:17:11.391Z",
+      "diasTransito": null,
+      "diferenciaFechaEstimada": null,
+      "totalesEsperados": {
+        "lineas": 1,
+        "rollos": 1,
+        "metros": "10.000",
+        "kilos": "0.000",
+        "bolsas": "0.000",
+        "piezas": "0.000"
+      },
+      "totalesRecibidos": {
+        "lineas": 0,
+        "rollos": 0,
+        "metros": "0.000",
+        "kilos": "0.000",
+        "bolsas": "0.000",
+        "piezas": "0.000"
+      },
+      "lineas": [
+        {
+          "id": 4,
+          "productoId": 2078,
+          "sku": "TANDA-GA-METRO",
+          "tela": "TANDA GA METRO",
+          "color": "AZUL GA",
+          "unidad": "METRO",
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1,
+          "nota": null,
+          "cantidadRecibida": "0.000",
+          "rollosRecibidos": 0,
+          "diferencia": "-10.000",
+          "costoTotal": null,
+          "costoUnitarioReal": null
+        }
+      ],
+      "costoTotal": null
+    }
+  },
+  {
+    "module": "auditoria_inventario",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/auditorias/6/escaneos",
+    "body": {
+      "serie": "996000001"
+    },
+    "status": 200,
+    "response": {
+      "serie": "996000001",
+      "duplicado": false,
+      "clasificacion": "CUADRO",
+      "estadoActual": "DISPONIBLE"
+    }
+  },
+  {
+    "module": "etiquetas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/etiquetas/rollos/6233/revisar",
+    "body": {
+      "ultimaReimpresionId": 173
+    },
+    "status": 201,
+    "response": {
+      "id": 32,
+      "rolloId": 6233,
+      "reimpresionId": 173,
+      "revisadoPorId": 234,
+      "revisadoPor": "TANDA GA ADMIN",
+      "revisadoPorUsuario": "admin",
+      "revisadoEn": "2026-09-24T05:17:11.456Z",
+      "idempotente": false
+    }
+  }
+]

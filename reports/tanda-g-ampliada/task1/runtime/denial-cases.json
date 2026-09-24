@@ -1,0 +1,75 @@
+[
+  {
+    "module": "camionetas",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/camionetas/1",
+    "body": {
+      "nombre": "TANDA GA TASK1 VAN"
+    }
+  },
+  {
+    "module": "choferes",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/choferes/1",
+    "body": {
+      "nombreCompleto": "TANDA GA TASK1 DRIVER"
+    }
+  },
+  {
+    "module": "equipos",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/equipos/1",
+    "body": {
+      "marca": "TASK1"
+    }
+  },
+  {
+    "module": "contenedores",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/contenedores/3",
+    "body": {
+      "proveedorId": 227,
+      "referencia": "TANDA GA TASK1 CONTAINER",
+      "fechaEstimadaLlegada": "2026-10-01",
+      "sitioDestinoId": 836,
+      "lineas": [
+        {
+          "productoId": 2078,
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1
+        }
+      ]
+    }
+  },
+  {
+    "module": "contenedores",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/contenedores/3/cancelar",
+    "body": {
+      "motivo": "TANDA GA valid denied cancellation"
+    }
+  },
+  {
+    "module": "auditoria_inventario",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/auditorias/6/escaneos",
+    "body": {
+      "serie": "996000001"
+    }
+  },
+  {
+    "module": "etiquetas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/etiquetas/rollos/6233/revisar",
+    "body": {
+      "ultimaReimpresionId": 173
+    }
+  }
+]

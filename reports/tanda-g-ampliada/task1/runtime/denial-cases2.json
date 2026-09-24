@@ -1,0 +1,78 @@
+[
+  {
+    "module": "entradas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/entradas/475/costos",
+    "body": {
+      "costosProductos": [
+        {
+          "productoId": 2078,
+          "costoUnitario": "100.00"
+        }
+      ],
+      "costosRollos": []
+    }
+  },
+  {
+    "module": "salidas",
+    "action": "editar",
+    "method": "POST",
+    "url": "/inventario/salidas-extraordinarias/7595/revertir",
+    "body": {
+      "justificacion": "TANDA GA TASK1 valid denied reversal",
+      "uuidCliente": "1c1cb5b0-834b-4ee9-a0cc-88ae0352a71f"
+    }
+  },
+  {
+    "module": "salidas",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/salidas/29/cancelar",
+    "body": {
+      "motivo": "TANDA GA TASK1 valid denied cancel"
+    }
+  },
+  {
+    "module": "salidas_venta",
+    "action": "crear",
+    "method": "POST",
+    "url": "/salidas/venta-cliente/generar-venta",
+    "body": {
+      "uuidCliente": "3eac0a0b-0cb3-479c-9795-cc668eafecc8",
+      "documentoTipo": "TICKET",
+      "ubicacionId": 836,
+      "clienteId": 8,
+      "salidaIds": [
+        30
+      ],
+      "precios": [
+        {
+          "salidaRolloId": 134,
+          "precioUnitario": 150
+        }
+      ]
+    }
+  },
+  {
+    "module": "cobros_pagos",
+    "action": "crear",
+    "method": "POST",
+    "url": "/tickets/109/cobrar",
+    "body": {
+      "pagos": [
+        {
+          "formaPago": "EFECTIVO",
+          "importe": 1500
+        }
+      ]
+    }
+  },
+  {
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/inventario/auditorias/6/confirmar",
+    "body": {}
+  }
+]

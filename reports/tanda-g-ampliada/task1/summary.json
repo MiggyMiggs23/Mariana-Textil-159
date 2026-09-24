@@ -1,7 +1,8 @@
 {
-  "source": "/home/runner/workspace",
-  "sourceMode": "CURRENT_WORKTREE_HASHED_NOT_ISOLATED_FROZEN_COPY",
-  "head": "ee1bb641e0513b7df18027ad351a72ebbe99af74",
+  "source": "/home/runner/workspace/.local/tanda-g-ampliada/frozen-source",
+  "sourceMode": "EXPLICIT_SOURCE_PATH_HASHED",
+  "workspaceHeadAtExtraction": "2614165570186f219ab2deb5eb1c26592972bf09",
+  "frozenBuildCommit": "ee1bb641e0513b7df18027ad351a72ebbe99af74",
   "sourceManifestSha256": "1ef0cf42d67e0c493cf0193a98305852dbb4dfd9f2b90f8bea5cbc8463a7c147",
   "baselineSha256": "67c3787f2a204769ede83f43f2c145f03bd817d346d4049ffa52bc68542c2ad2",
   "residualUniqueCells": 433,
@@ -29,9 +30,8 @@
     "SISTEMAS",
     "CONTADOR"
   ],
-  "blockers": [
-    "Dedicated permissions-copy setup handoff and API/proxy not yet supplied.",
-    "Need approved synthetic lifecycle fixtures for valid denied mutations.",
+  "runtimeEvidence": "See runtime-summary.json; counts here intentionally describe static extraction only.",
+  "staticLimitations": [
     "Unconsumed flags require owner semantics; do not substitute arbitrary 403 routes.",
     "Static extraction does not expand arbitrary computed factory routes; review dynamic references."
   ]
