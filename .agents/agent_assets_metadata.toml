@@ -2187,3 +2187,59 @@ mtime_ms = 1790200424945
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/9efbfe67-92da-4acc-be8b-45fa840edb6a/55179495-6142-457c-820a-7e2d1fa09fb5"
 storage_version_token = "1790206877811503"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "Ls6g88RwLocjK3xzMNNkh"
+uri = "file://reports/tanda-e-continuacion/INFORME-descargable.html"
+type = "html"
+title = "Tanda E: resultados y capturas"
+description = "Informe descargable con evidencia de cobros, crédito, remate, salida, cancelación e impresión corregida."
+logical_id = "dd17da18-c875-408a-912d-1ff30d854c0f"
+content_hash = "sha256:22cc96e8fd96c0a6e197333d97ec406a8bf3882ab78ba53bccc73fc7cee4314c"
+size = 1360331
+mtime_ms = 1790221304830
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/dd17da18-c875-408a-912d-1ff30d854c0f/17371c3b-db75-4936-b80b-15d4b153eeb4"
+storage_version_token = "1790221332618886"
+content_type = "text/html"
+
+[[outputs]]
+id = "FfGTyAZGPH8M66I0hdfa2"
+uri = "file://reports/tanda-e-continuacion/evidence/print-resize-fixed-chromium140.pdf"
+type = "pdf"
+title = "Recibo E3: dos copias A5 verificadas"
+description = "PDF obtenido del botón real en la copia desechable; Cliente y Tienda. No acredita impresión física."
+logical_id = "36f30cde-da66-4d3a-b819-85a660fe2ac8"
+content_hash = "sha256:f6c7ea017ef50ef2ead86014be01e8d23875865761cd718ba667cbfe3ed8cfed"
+size = 23200
+mtime_ms = 1790220933247
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/36f30cde-da66-4d3a-b819-85a660fe2ac8/b8358aa8-6da1-4166-a45e-3cf098889eb6"
+storage_version_token = "1790221333232300"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "OpsAnlktfaWLMu22rJdRW"
+uri = "file://reports/tanda-f/GALERIA.html"
+type = "html"
+title = "Tanda F — informe y capturas"
+description = "Resultados de las cinco tareas, hallazgos, límites y capturas sintéticas. Documento autocontenido para descargar."
+logical_id = "04a4265e-b5a1-4918-ad53-66edbc47d2ae"
+content_hash = "sha256:ce5c8a0f01b407d3ddbcaf1fe4d2f1a068f81137eb7a99e2b48022c553ab2b1c"
+size = 7053
+mtime_ms = 1790223570706
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/04a4265e-b5a1-4918-ad53-66edbc47d2ae/0dbc562e-0daf-4aa8-a1df-b07ccccb293c"
+storage_version_token = "1790223614662201"
+content_type = "text/html"
+
+[[outputs]]
+id = "KOM6DwILnyY8i_rGpbQZf"
+uri = "file://reports/tanda-f/INFORME.md"
+type = "text"
+title = "Tanda F — informe técnico consolidado"
+description = "Detalle de crédito, inventario, concurrencia, permisos, diez reversos, commits y eliminación verificada de los entornos desechables."
+logical_id = "7e89aa53-698d-4c57-ace8-26252a42f46a"
+content_hash = "sha256:fb0f4984fb6352fd4fcc652f5ef85b1460914c3d20c8f2f930ec1a611ecd4749"
+size = 14118
+mtime_ms = 1790223594722
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/7e89aa53-698d-4c57-ace8-26252a42f46a/e82e8b89-0630-4111-b5f9-3d329b1cc6c3"
+storage_version_token = "1790223615205526"
+content_type = "text/markdown"

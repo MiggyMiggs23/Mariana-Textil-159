@@ -1,0 +1,13 @@
+Tanda F, trabajo largo para toda la noche. Procedimiento simple. Cada tarea en su propio commit. No abras puertas nuevas y no hagas operaciones de prueba en la base de la aplicación. Si una tarea se atora, documéntala y pasa a la siguiente.
+
+1. Recorrido completo de crédito en copia desechable, el que más dinero mueve: venta a crédito, abono parcial, abono que liquida, anticipo sin nota, saldo a favor, y comprobar que el reparto por antigüedad toma las notas de las tres tiendas en orden correcto y sin importar de cuál sean. Comprueba también el límite de crédito duro, validado global y no por tienda. Reporta con capturas.
+
+2. Recorrido completo de inventario en copia desechable: entrada de contenedor con series, traslado entre sitios, recepción, venta parcial de un rollo con sobrante, cancelación, y devolución donde exista. Después de cada paso, comprueba que la existencia por sitio cuadra con la suma de rollos y que metros, kilos, piezas y bolsas nunca se suman entre sí. Reporta cualquier caso donde el inventario quede descuadrado, con el paso exacto que lo provocó.
+
+3. Prueba de concurrencia en copia desechable: dos cajeros cobrando al mismo tiempo en la misma sesión, dos usuarios vendiendo el mismo rollo, dos abonos simultáneos del mismo cliente, y dos salidas extraordinarias contra el mismo efectivo. Comprueba que el candado por producto y ubicación aguanta y que no se duplica inventario ni dinero.
+
+4. Revisión de permisos contra la matriz: para cada rol, comprueba en copia desechable que las acciones que la matriz le niega quedan bloqueadas también en la API, no solo escondidas en la pantalla. Reporta toda diferencia entre lo que la pantalla oculta y lo que la API permite.
+
+5. Revisión de las diez vías de reverso documentadas en replit.md líneas 822 a 844: reprodúcelas en copia desechable, una por una, y dime cuáles duplican inventario hoy y cuáles ya no. No corrijas nada: es diagnóstico para la decisión del propietario.
+
+Informe único en reports/ con resultado por tarea, capturas, commits y lo detenido con su motivo. Todas las copias, credenciales y servidores se eliminan al terminar.
