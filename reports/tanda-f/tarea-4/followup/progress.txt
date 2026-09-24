@@ -1,0 +1,2 @@
+2026-09-24T04:15:50.988Z Tranche 1: identity guarded; seven authenticated natural matrices captured; literal endpoint inventory + static UI predicates evaluated. No permission edits.
+2026-09-24T04:16:02.231Z Tranche 2: deny probes complete; all seven roles accounted; snapshots saved. Results and explicit gaps in summary/coverage.

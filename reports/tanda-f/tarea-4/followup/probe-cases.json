@@ -1,0 +1,243 @@
+[
+  {
+    "module": "productos",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/productos/2078",
+    "body": {
+      "tela": "TANDA F DENIED PRODUCT EDIT"
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "productos",
+    "action": "crear",
+    "method": "POST",
+    "url": "/productos",
+    "body": {
+      "tela": "TANDA F DENIED NEW FABRIC",
+      "color": "AZUL",
+      "unidad": "METRO"
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "marcar_remate",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/inventario/rollos/6233/remate",
+    "body": {
+      "motivo": "TANDA F denied remate authorization"
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "etiquetas",
+    "action": "crear",
+    "method": "POST",
+    "url": "/etiquetas/reimpresiones",
+    "body": {
+      "rolloIds": [
+        6233
+      ],
+      "motivo": "TANDA F denied label reprint"
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "inventario",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/inventario/rollos/6233/piso",
+    "body": {
+      "pisoId": null
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "auditoria_inventario",
+    "action": "crear",
+    "method": "POST",
+    "url": "/inventario/auditorias",
+    "body": {
+      "ubicacionId": 836
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "ajustes",
+    "action": "crear",
+    "method": "POST",
+    "url": "/inventario/rollos/6233/ajustar",
+    "body": {
+      "cantidadNueva": "9.000",
+      "justificacion": "TANDA F denied adjustment"
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "conciliacion",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/inventario/conciliacion/recalcular",
+    "body": {
+      "productoId": 2078,
+      "ubicacionId": 836
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "proveedores_finanzas",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/proveedores/226/ajustes",
+    "body": {
+      "importe": 1,
+      "notas": "TANDA F denied supplier adjustment"
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "clientes_finanzas",
+    "action": "autorizar",
+    "method": "POST",
+    "url": "/clientes/8/ajustes",
+    "body": {
+      "importe": 1,
+      "motivo": "TANDA F denied client adjustment"
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "usuarios",
+    "action": "editar",
+    "method": "PATCH",
+    "url": "/users/235",
+    "body": {
+      "nombre": "TANDA F DENIED USER NAME"
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "usuarios",
+    "action": "crear",
+    "method": "POST",
+    "url": "/users",
+    "body": {
+      "nombre": "TANDA F DENIED USER",
+      "usuario": "tandaf-denied-new-user",
+      "rol": "TERMINAL",
+      "ubicacionId": 836,
+      "alcanceConsulta": "PROPIA"
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "cortes",
+    "action": "crear",
+    "method": "POST",
+    "url": "/sesiones-caja/46/cerrar",
+    "body": {
+      "efectivoContado": 5000
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "contenedores",
+    "action": "crear",
+    "method": "POST",
+    "url": "/contenedores",
+    "body": {
+      "proveedorId": 227,
+      "referencia": "TANDA F DENIED CONTAINER",
+      "fechaEstimadaLlegada": "2026-10-01",
+      "sitioDestinoId": 836,
+      "lineas": [
+        {
+          "productoId": 2078,
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1
+        }
+      ]
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "camionetas",
+    "action": "crear",
+    "method": "POST",
+    "url": "/camionetas",
+    "body": {
+      "nombre": "TANDA F DENIED VAN",
+      "placas": "TF-DENIED",
+      "tipo": "PROPIA"
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "choferes",
+    "action": "crear",
+    "method": "POST",
+    "url": "/choferes",
+    "body": {
+      "nombreCompleto": "TANDA F DENIED DRIVER",
+      "telefono": "5550001234"
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "equipos",
+    "action": "crear",
+    "method": "POST",
+    "url": "/equipos",
+    "body": {
+      "ubicacionId": 836,
+      "tipo": "PISTOLA_ESCANER",
+      "identificador": "TANDA-F-DENIED",
+      "marca": "TANDA F TEST",
+      "modelo": "DENIED"
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "caja_abonos",
+    "action": "crear",
+    "method": "GET",
+    "url": "/caja/abonos-e3/contexto?buscar=TANDA&sitioId=836",
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "caja_abonos",
+    "action": "crear",
+    "method": "POST",
+    "url": "/caja/abonos-e3/vista-previa",
+    "body": {
+      "clienteId": 8,
+      "importeCentavos": 100,
+      "formaPago": "EFECTIVO",
+      "cuentaDestino": "CAJA_FISICA",
+      "sitioId": 836,
+      "sesionCajaId": 46,
+      "operacionClave": "af000001-0000-4000-8000-000000000001"
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  },
+  {
+    "module": "clientes_recapturas",
+    "action": "crear",
+    "method": "POST",
+    "url": "/clientes/8/recapturas-e3/vista-previa",
+    "body": {
+      "clienteId": 8,
+      "importeCentavos": 100,
+      "formaPago": "EFECTIVO",
+      "cuentaDestino": "CAJA_FISICA",
+      "sitioId": 836,
+      "sesionCajaId": null,
+      "operacionClave": "af000002-0000-4000-8000-000000000001",
+      "motivo": "TANDA F denied recapture",
+      "fechaRecepcion": "2026-09-22T12:00:00-06:00"
+    },
+    "validation": "Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven."
+  }
+]

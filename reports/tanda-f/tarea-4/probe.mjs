@@ -3,7 +3,8 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import vm from 'node:vm';
 import pg from '../../../lib/db/node_modules/pg/lib/index.js';
-const root='/home/runner/workspace', out=path.join(root,'reports/tanda-f/tarea-4');
+const root='/home/runner/workspace', out=path.join(root,'reports/tanda-f/tarea-4',process.env.TASK4_FOLLOWUP==='1'?'followup':'');
+fs.mkdirSync(out,{recursive:true});
 const privateRoot=path.join(root,'.local/tanda-f'), source=path.join(privateRoot,'source');
 const api='http://127.0.0.1:43831/api';
 const db=new pg.Client({connectionString:'postgresql://postgres@127.0.0.1:55440/tanda_f_permissions'});
@@ -109,7 +110,7 @@ for(const r of inventory.filter(r=>r.method==='GET'&&r.guards.length===1)){
  cases.push({module:g.module,action:g.action,method:'GET',url,validation:'Literal guard extracted from frozen source; actual fixture IDs where required. Query-dependent schemas not universally validated; 400/404 remain gaps.'});
 }
 const edits=[
- ['productos','/productos/2078',{nombre:'TANDA F DENIED PRODUCT EDIT'}],
+ ['productos','/productos/2078',{tela:'TANDA F DENIED PRODUCT EDIT'}],
  ['clientes','/clientes/8',{nombre:'TANDA F DENIED CLIENT EDIT'}],
  ['proveedores','/proveedores/226',{nombre:'TANDA F DENIED SUPPLIER EDIT'}],
  ['ubicaciones','/locations/836',{nombre:'TANDA F DENIED LOCATION EDIT'}],
@@ -122,13 +123,40 @@ for(const [module,url,body]of [
  ['proveedores','/proveedores',{nombre:'TANDA F DENIED CREATE SUPPLIER',tipo:'NACIONAL'}],
  ['ubicaciones','/locations',{nombre:'TANDA F DENIED CREATE SITE',tipo:'TIENDA',iniciales:'TFD'}],
 ])cases.push({module,action:'crear',method:'POST',url,body,validation:'Named fields verified against schema; positive-control not executed.'});
+if(process.env.TASK4_FOLLOWUP==='1'){
+ cases.splice(0);
+ const add=(module,action,method,url,body)=>cases.push({module,action,method,url,body,
+  validation:'Frozen route/schema inspected; synthetic fixture identifiers; no positive control. Deeper business preconditions not independently proven.'});
+ add('productos','editar','PATCH','/productos/2078',{tela:'TANDA F DENIED PRODUCT EDIT'});
+ add('productos','crear','POST','/productos',{tela:'TANDA F DENIED NEW FABRIC',color:'AZUL',unidad:'METRO'});
+ add('marcar_remate','autorizar','POST','/inventario/rollos/6233/remate',{motivo:'TANDA F denied remate authorization'});
+ add('etiquetas','crear','POST','/etiquetas/reimpresiones',{rolloIds:[6233],motivo:'TANDA F denied label reprint'});
+ const floors=await db.query('select id from pisos where ubicacion_id=836 and activo=true order by id limit 1');
+ add('inventario','editar','PATCH','/inventario/rollos/6233/piso',{pisoId:floors.rows[0]?.id??null});
+ add('auditoria_inventario','crear','POST','/inventario/auditorias',{ubicacionId:836});
+ add('ajustes','crear','POST','/inventario/rollos/6233/ajustar',{cantidadNueva:'9.000',justificacion:'TANDA F denied adjustment'});
+ add('conciliacion','autorizar','POST','/inventario/conciliacion/recalcular',{productoId:2078,ubicacionId:836});
+ add('proveedores_finanzas','autorizar','POST','/proveedores/226/ajustes',{importe:1,notas:'TANDA F denied supplier adjustment'});
+ add('clientes_finanzas','autorizar','POST','/clientes/8/ajustes',{importe:1,motivo:'TANDA F denied client adjustment'});
+ add('usuarios','editar','PATCH','/users/235',{nombre:'TANDA F DENIED USER NAME'});
+ add('usuarios','crear','POST','/users',{nombre:'TANDA F DENIED USER',usuario:'tandaf-denied-new-user',rol:'TERMINAL',ubicacionId:836,alcanceConsulta:'PROPIA'});
+ add('cortes','crear','POST','/sesiones-caja/46/cerrar',{efectivoContado:5000});
+ add('contenedores','crear','POST','/contenedores',{proveedorId:227,referencia:'TANDA F DENIED CONTAINER',fechaEstimadaLlegada:'2026-10-01',sitioDestinoId:836,lineas:[{productoId:2078,cantidadEsperada:'10.000',rollosEsperados:1}]});
+ add('camionetas','crear','POST','/camionetas',{nombre:'TANDA F DENIED VAN',placas:'TF-DENIED',tipo:'PROPIA'});
+ add('choferes','crear','POST','/choferes',{nombreCompleto:'TANDA F DENIED DRIVER',telefono:'5550001234'});
+ add('equipos','crear','POST','/equipos',{ubicacionId:836,tipo:'PISTOLA_ESCANER',identificador:'TANDA-F-DENIED',marca:'TANDA F TEST',modelo:'DENIED'});
+ add('caja_abonos','crear','GET','/caja/abonos-e3/contexto?buscar=TANDA&sitioId=836');
+ add('caja_abonos','crear','POST','/caja/abonos-e3/vista-previa',{clienteId:8,importeCentavos:100,formaPago:'EFECTIVO',cuentaDestino:'CAJA_FISICA',sitioId:836,sesionCajaId:46,operacionClave:'af000001-0000-4000-8000-000000000001'});
+ add('clientes_recapturas','crear','POST','/clientes/8/recapturas-e3/vista-previa',{clienteId:8,importeCentavos:100,formaPago:'EFECTIVO',cuentaDestino:'CAJA_FISICA',sitioId:836,sesionCajaId:null,operacionClave:'af000002-0000-4000-8000-000000000001',motivo:'TANDA F denied recapture',fechaRecepcion:'2026-09-22T12:00:00-06:00'});
+}
 save('probe-cases.json',cases);
 const results=[],beforeAll=await snapshot();
 save('before-denials.json',beforeAll);
 for(const role of roles) for(const c of cases){
  if(allowed(role,c.module,c.action)) continue;
  const before=c.method==='GET'?null:await snapshot();
- const response=await fetch(api+c.url,{method:c.method,headers:{cookie:sessions[role],'content-type':'application/json'},body:c.body?JSON.stringify(c.body):undefined});
+ const requestBody=c.module==='usuarios'&&c.action==='crear'?{...c.body,password:crypto.randomBytes(24).toString('hex')}:c.body;
+ const response=await fetch(api+c.url,{method:c.method,headers:{cookie:sessions[role],'content-type':'application/json'},body:requestBody?JSON.stringify(requestBody):undefined});
  const text=await response.text();
  let error;try{error=JSON.parse(text).error;}catch{}
  const after=before?await snapshot():null;

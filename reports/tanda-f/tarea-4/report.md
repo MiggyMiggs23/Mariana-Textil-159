@@ -1,5 +1,37 @@
 # Tanda F — Task 4: natural permissions versus API
 
+## Final bounded follow-up — authoritative combined result
+
+The final completeness tranche expanded the actionable cases rather than leaving all 524 earlier gaps unexplained. It added **102 final authenticated requests (96 mutation-method requests)**, all **403**, with unchanged immediate/aggregate 106-table fingerprints. The retained 91-request intermediate expansion is separate duplicate evidence, not added to final coverage.
+
+Across the original finalized run and the new finalized expansion: **483 requests, 136 mutation-method attempts, all 403**, covering **289 of 722 denied cells** (**91 newly covered cells**). Of these 289 cells, **64 are CONTADOR E11 legacy-boundary observations**, not inner permission proofs. No business-table row change was observed. The status is still **PARTIAL**, not full matrix PASS.
+
+All **433 residual cells now have a per-cell reason** in `followup/combined-cell-classification.json`; none remains an unexplained “time gap”:
+
+| Classification | Cells | Meaning |
+|---|---:|---|
+| NO_OPERATION_FOUND_STATIC | 357 | Configured false action flag has no consuming operation discovered in frozen-source review; not an API PASS and not proof no dynamic endpoint can exist. |
+| BLOCKED_SYNTHETIC_FIXTURE | 65 | Concrete endpoint exists but setup supplies no required pending ticket, container, audit state, reprint watermark, reversible exit, or editable synthetic equipment/driver/vehicle. Exact prerequisite is listed per cell. No unrelated positive setup mutations or restored-data mutation targets were introduced. |
+| BLOCKED_LEGACY_CAPTURE_GATE | 6 | `clientes_finanzas.crear` legacy capture routes are intercepted by the released E3 migration guard. E3's real `caja_abonos.crear` and `clientes_recapturas.crear` were tested separately, not miscounted as the legacy permission. |
+| UNTESTED_SCOPE_RESTRICTION | 5 | `permisos.editar` endpoints exist, but configuration mutation attempts were withheld under the no-matrix-changes instruction. They are expressly untested, not blocked by missing endpoints. |
+
+The `NO_OPERATION_FOUND_STATIC` reasons explain action aliases precisely—for example, remate only consumes `autorizar`, price changes consume `editar`, cash closure consumes `cortes.crear`, and ticket authorization consumes `cobros_pagos.crear`, not their similarly named `autorizar` cells. These distinctions avoid inventing endpoints solely because the 4-column matrix contains a false flag.
+
+Expanded request groups: product creation/corrected product edit, remate authorization, label reprint, roll floor editing, inventory audit creation, quantity adjustment, reconciliation authorization, supplier/client financial adjustments, user name editing and creation, container creation, vehicle/driver/equipment creation, cash closure, E3 cash context/preview and customer recapture preview.
+
+**Input correction:** the first run's product-edit request used `nombre`, which is not the product update field. Its 403 was permission-first evidence only, not a valid-input probe. The expansion resent `tela` against the actual frozen schema and obtained 403 for every applicable natural denied role. This supersedes the original validity claim for that case. User-creation passwords in the expansion were generated randomly in request memory and never persisted in the report; `probe-cases.json` intentionally omits that secret field.
+
+Run expansion and regenerate classifications:
+
+    TASK4_FOLLOWUP=1 node reports/tanda-f/tarea-4/probe.mjs
+    node reports/tanda-f/tarea-4/classify-followup.mjs
+
+`followup/combined-summary.json` contains role-by-role counts. Follow-up matrices, identity, request cases, all statuses and before/after fingerprints are retained independently of the original run. API lifecycle remains owned by MAIN; it may now shut down port43831. This worker never stopped the shared cluster.
+
+---
+
+## Original tranche evidence (historical; expanded above)
+
 ## Verdict: bounded denial evidence, NOT complete authorization PASS
 
 All **seven natural roles** were authenticated against the isolated API on **127.0.0.1:43831**, bound to **tanda_f_permissions** on the private cluster at **55440**. No permission rows, role assignments, gates or product code were changed. MAIN launched and owns shutdown of this API. No production/development application endpoint was used.

@@ -1,0 +1,437 @@
+[
+  {
+    "file": "artifacts/mariana-textil/src/App.tsx",
+    "line": 201,
+    "text": "? allowedAnyModules.some((module) => hasPermission(user, module, allowedAction))"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/App.tsx",
+    "line": 202,
+    "text": ": allowedModule ? hasPermission(user, allowedModule, allowedAction) : true;"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/caja-abono-e3-dialog.tsx",
+    "line": 16,
+    "text": "if (!E3_ENABLED || !hasPermission(user, \"caja_abonos\", \"crear\")) return null;"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/client-selector.tsx",
+    "line": 58,
+    "text": "const canCreate = hasPermission(user, Modules.CLIENTES, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-credit-evidence.tsx",
+    "line": 23,
+    "text": "const canPrepare = privileged && hasPermission(user, Modules.CLIENTES_FINANZAS, \"autorizar\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-e3-recaptura-dialog.tsx",
+    "line": 142,
+    "text": "if (!E3_ENABLED || !hasPermission(user, \"clientes_recapturas\", \"crear\")) return null;"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-e3-recaptura-dialog.tsx",
+    "line": 316,
+    "text": "{asig.ticketId && asig.folio && ([\"ADMIN\", \"CONTADOR\", \"SISTEMAS\"].includes(user?.rol ?? \"\") || [Modules.COBROS_PAGOS, Modules.POS, Modules.SALIDAS].some(module => hasPermission(user, module, \"ver\"))) ? <Link className=\"text-primary underline\" href={`/tickets/${asig.ticketId}`}>Folio {asig.folio}</Link> : <>Folio {asig.folio ?? \"sin documento identificable\"}</>} - Aplica {formatNumber(asig.aplicadoCentavos / 100, { kind: \"money\" })}"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-nota-credito.tsx",
+    "line": 264,
+    "text": ") : hasPermission(user, Modules.CLIENTES_FINANZAS, 'autorizar') && ("
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/cliente-pago-dialog.tsx",
+    "line": 535,
+    "text": "{asig.ticketId && asig.folio && ([\"ADMIN\", \"CONTADOR\", \"SISTEMAS\"].includes(e3User?.rol ?? \"\") || [Modules.COBROS_PAGOS, Modules.POS, Modules.SALIDAS].some(module => hasPermission(e3User, module, \"ver\"))) ? <Link className=\"font-black text-sm text-primary underline\" href={`/tickets/${asig.ticketId}`}>#{asig.folio}</Link> : <span className=\"font-black text-sm text-sidebar\">#{asig.folio || asig.ticketId || \"Nota\"}</span>}"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e7-readers.tsx",
+    "line": 46,
+    "text": "? hasPermission(user.data, Modules.CLIENTES_FINANZAS, \"ver\")"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e9-entregas-panel.tsx",
+    "line": 26,
+    "text": "if (!user || !hasPermission(user, Modules.CORTES, \"ver\")) return null;"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/e9-envio-panel.tsx",
+    "line": 21,
+    "text": "if (!user || ![\"ADMIN\", \"SUPERVISOR\"].includes(user.rol) || !hasPermission(user, Modules.CORTES, \"ver\") || e9Site(user, ubicacionId) !== ubicacionId) return null;"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/layout/app-layout.tsx",
+    "line": 62,
+    "text": "enabled: hasPermission(user, Modules.AJUSTES, \"autorizar\"),"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/layout/app-navigation.ts",
+    "line": 139,
+    "text": "hasPermission(user, module, \"ver\") ||"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/layout/app-navigation.ts",
+    "line": 140,
+    "text": "hasPermission(user, module, \"crear\"),"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/layout/app-navigation.ts",
+    "line": 142,
+    "text": ": hasPermission(user, item.module, \"ver\")),"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/proveedor-compra-detalle.tsx",
+    "line": 144,
+    "text": "{!asig.revertido && hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'autorizar') && ("
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/proveedor-compra-detalle.tsx",
+    "line": 192,
+    "text": "{E12_ENABLED && !pagoDetalle.pago.revertido && !pagoDetalle.pago.efectivoE12?.retorno && hasPermission(user, Modules.PROVEEDORES_FINANZAS, \"autorizar\") && <Button variant=\"destructive\" data-testid=\"button-retorno-proveedor\" onClick={() => { setServerRequiresReturn(false); setNaturalezaRetorno(\"\"); setReversoPagoId(pagoDetalle.pago.id); }}>Reversar pago completo</Button>}"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/reprint-labels-dialog.tsx",
+    "line": 83,
+    "text": "const canPrint = hasPermission(user, Modules.ETIQUETAS, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/rollo-remate-panel.tsx",
+    "line": 16,
+    "text": "canMark={hasPermission(user, \"marcar_remate\", \"autorizar\")} canRemove={user?.rol === \"ADMIN\"}"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/components/salidas-dinero-e4-panel.tsx",
+    "line": 45,
+    "text": "const canViewCorte = hasPermission(user, Modules.CORTES, \"ver\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e5-authorization.ts",
+    "line": 17,
+    "text": "&& hasPermission(user, entrada === \"CAJA\" ? Modules.CAJA_ABONOS : Modules.CLIENTES_FINANZAS, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e5-authorization.ts",
+    "line": 22,
+    "text": "return E5_READ_MODULES.some(module => hasPermission(user, module, \"ver\"));"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/home-route.ts",
+    "line": 8,
+    "text": "if (hasPermission(user, Modules.DASHBOARD, \"ver\")) {"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/home-route.ts",
+    "line": 11,
+    "text": "if (hasPermission(user, Modules.POS, \"ver\")) return \"/pos\";"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/home-route.ts",
+    "line": 12,
+    "text": "if (hasPermission(user, Modules.COBROS_PAGOS, \"ver\")) return \"/cobros\";"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/permisos.ts",
+    "line": 53,
+    "text": "export function hasPermission("
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/auditorias-inventario.tsx",
+    "line": 101,
+    "text": "const canCreateProduct = hasPermission(user, Modules.PRODUCTOS, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 337,
+    "text": "const canCredit = hasPermission(user, Modules.CLIENTES_CREDITO, \"ver\") && user?.rol !== \"SUPERVISOR\";"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 338,
+    "text": "const canPrices = hasPermission(user, Modules.CLIENTES_PRECIOS, \"ver\") && user?.rol !== \"SUPERVISOR\";"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 339,
+    "text": "const canFinances = hasPermission(user, Modules.CLIENTES_FINANZAS, \"ver\") && user?.rol !== \"SUPERVISOR\";"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 340,
+    "text": "const canViewSaleExits = hasPermission(user, Modules.SALIDAS_VENTA, \"ver\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 341,
+    "text": "const canCreatePayment = hasPermission(user, Modules.CLIENTES_FINANZAS, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 342,
+    "text": "const canAdjust = hasPermission(user, Modules.CLIENTES_FINANZAS, \"autorizar\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 343,
+    "text": "const canEditCredit = hasPermission(user, Modules.CLIENTES_CREDITO, \"editar\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 344,
+    "text": "const canEditClient = hasPermission(user, Modules.CLIENTES, \"editar\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "line": 534,
+    "text": "{E3_ENABLED && hasPermission(user, \"clientes_recapturas\", \"crear\") && ubicaciones && ("
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/clientes.tsx",
+    "line": 67,
+    "text": "const canFinances = hasPermission(user, Modules.CLIENTES_FINANZAS, \"ver\") && user?.rol !== \"SUPERVISOR\";"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/clientes.tsx",
+    "line": 68,
+    "text": "const canCredit = hasPermission(user, Modules.CLIENTES_CREDITO, \"ver\") && user?.rol !== \"SUPERVISOR\";"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/clientes.tsx",
+    "line": 69,
+    "text": "const canCreate = hasPermission(user, Modules.CLIENTES, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros.tsx",
+    "line": 159,
+    "text": "const canViewFinances = hasPermission(currentUser, Modules.CLIENTES_FINANZAS, \"ver\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros.tsx",
+    "line": 160,
+    "text": "const canCreatePayment = hasPermission(currentUser, Modules.CLIENTES_FINANZAS, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros.tsx",
+    "line": 1252,
+    "text": "const canViewCashManagement = hasPermission(currentUser, Modules.CORTES, \"ver\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros.tsx",
+    "line": 1256,
+    "text": "hasPermission(currentUser, Modules.CORTES, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros.tsx",
+    "line": 1257,
+    "text": "const canViewE4 = hasPermission(currentUser, Modules.COBROS_PAGOS, \"ver\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros.tsx",
+    "line": 1258,
+    "text": "const canCreateE4 = hasPermission(currentUser, Modules.COBROS_PAGOS, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/cobros.tsx",
+    "line": 1920,
+    "text": "const canUseCartera = hasPermission(currentUser, Modules.CLIENTES_FINANZAS, \"ver\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/configuracion/camionetas.tsx",
+    "line": 58,
+    "text": "const canEdit = hasPermission(user, Modules.CAMIONETAS, 'crear');"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/configuracion/choferes.tsx",
+    "line": 69,
+    "text": "isCatalogManager && hasPermission(user, Modules.CHOFERES, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/configuracion/choferes.tsx",
+    "line": 71,
+    "text": "isCatalogManager && hasPermission(user, Modules.CHOFERES, \"editar\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/entradas.tsx",
+    "line": 203,
+    "text": "const canCreate = hasPermission(user, Modules.ENTRADAS, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/equipos/index.tsx",
+    "line": 64,
+    "text": "const canCreate = hasPermission(user, Modules.EQUIPOS, \"crear\") || user?.rol === \"ADMIN\";"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/equipos/index.tsx",
+    "line": 65,
+    "text": "const canEdit = hasPermission(user, Modules.EQUIPOS, \"editar\") || user?.rol === \"ADMIN\";"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/etiquetas.tsx",
+    "line": 60,
+    "text": "const canPrint = hasPermission(user, Modules.ETIQUETAS, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/inventario.tsx",
+    "line": 138,
+    "text": "const canPrintLabels = hasPermission(user, Modules.ETIQUETAS, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/movimientos.tsx",
+    "line": 216,
+    "text": "((hasPermission(user, Modules.COBROS_PAGOS, \"ver\") ||"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/movimientos.tsx",
+    "line": 217,
+    "text": "hasPermission(user, Modules.POS, \"ver\")) &&"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/pos.tsx",
+    "line": 1333,
+    "text": "if (showSalidasVenta && hasPermission(currentUser, Modules.SALIDAS_VENTA, \"ver\")) {"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/pos.tsx",
+    "line": 1353,
+    "text": "{hasPermission(currentUser, Modules.SALIDAS_VENTA, \"ver\") && ("
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/producto-detail.tsx",
+    "line": 176,
+    "text": "const canEditProduct = hasPermission(user, Modules.PRODUCTOS, \"editar\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/productos.tsx",
+    "line": 210,
+    "text": "const canCreate = hasPermission(user, Modules.PRODUCTOS, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 143,
+    "text": "const canEdit = hasPermission(user, Modules.PROVEEDORES, 'editar');"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 145,
+    "text": "const canVerFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, \"ver\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 146,
+    "text": "const canCrearFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 147,
+    "text": "const canViewFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'ver') && user?.rol !== \"SUPERVISOR\";"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 367,
+    "text": "{saldoDeudorProveedor > 0 && hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && ("
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 559,
+    "text": "{hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && <TableHead className=\"w-[100px] text-right no-print\">Acciones</TableHead>}"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 564,
+    "text": "<TableRow><TableCell colSpan={hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') ? 9 : 8} className=\"text-center h-24\">Cargando compras...</TableCell></TableRow>"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 566,
+    "text": "<TableRow><TableCell colSpan={hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') ? 9 : 8} className=\"text-center h-24 text-muted-foreground\">No hay compras registradas para este estado.</TableCell></TableRow>"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 613,
+    "text": "{hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && ("
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 639,
+    "text": "<TableCell colSpan={hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') ? 4 : 3} className=\"text-right text-xs text-muted-foreground\">"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "line": 651,
+    "text": "{hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && ("
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedores.tsx",
+    "line": 85,
+    "text": "const canEdit = hasPermission(user, Modules.PROVEEDORES, 'crear');"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/proveedores.tsx",
+    "line": 86,
+    "text": "const canViewFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'ver') && user?.rol !== \"SUPERVISOR\";"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/rollo-detail.tsx",
+    "line": 42,
+    "text": "const canEdit = hasPermission(user, Modules.INVENTARIO, \"editar\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/rollo-detail.tsx",
+    "line": 43,
+    "text": "const canViewLabels = hasPermission(user, Modules.ETIQUETAS, \"ver\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/rollo-detail.tsx",
+    "line": 44,
+    "text": "const canPrintLabels = hasPermission(user, Modules.ETIQUETAS, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/salidas.tsx",
+    "line": 124,
+    "text": "const canCreate = !isCaja && user ? hasPermission(user, Modules.SALIDAS, 'crear') : false;"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/stock-minimos.tsx",
+    "line": 109,
+    "text": "hasPermission(user, Modules.INVENTARIO, \"editar\") &&"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/stock-minimos.tsx",
+    "line": 111,
+    "text": "const canViewProductDetails = hasPermission(user, Modules.PRODUCTOS, \"ver\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/ticket-detail.tsx",
+    "line": 149,
+    "text": "(user != null && hasPermission(user, Modules.POS, \"crear\"));"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/ticket-detail.tsx",
+    "line": 394,
+    "text": "{ticket.remate && <p role=\"status\" className=\"font-semibold text-amber-700\">Venta de remate · Rollos {ticket.rollosRemate?.map((rolloId, index) => <span key={rolloId}>{index > 0 && \", \"}{hasPermission(user, Modules.INVENTARIO, \"ver\") ? <Link className=\"underline\" href={`/inventario/rollos/${rolloId}`}>{rolloId}</Link> : rolloId}</span>)}</p>}"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/ubicaciones.tsx",
+    "line": 159,
+    "text": "const canCreate = hasPermission(user, Modules.UBICACIONES, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/ubicaciones.tsx",
+    "line": 160,
+    "text": "const canEdit = hasPermission(user, Modules.UBICACIONES, \"editar\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/usuarios.tsx",
+    "line": 45,
+    "text": "const canCreate = hasPermission(currentUser, Modules.USUARIOS, \"crear\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/usuarios.tsx",
+    "line": 46,
+    "text": "const canEdit = hasPermission(currentUser, Modules.USUARIOS, \"editar\");"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/pages/viajes.tsx",
+    "line": 14,
+    "text": "const canCreate = hasPermission(user, Modules.VIAJES, \"crear\");"
+  }
+]

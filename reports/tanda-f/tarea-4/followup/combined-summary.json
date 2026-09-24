@@ -1,0 +1,68 @@
+{
+  "originalRequests": 381,
+  "followupRequests": 102,
+  "retainedInterimFollowupRequests": 91,
+  "combinedFinalRequests": 483,
+  "combinedFinalWriteAttempts": 136,
+  "cells": {
+    "NO_OPERATION_FOUND_STATIC": 357,
+    "DENIED_OBSERVED": 225,
+    "BLOCKED_SYNTHETIC_FIXTURE": 65,
+    "BLOCKED_LEGACY_CAPTURE_GATE": 6,
+    "UNTESTED_SCOPE_RESTRICTION": 5,
+    "DENIED_AT_E11_LEGACY_BOUNDARY": 64
+  },
+  "roles": [
+    {
+      "role": "ADMIN"
+    },
+    {
+      "role": "TERMINAL",
+      "NO_OPERATION_FOUND_STATIC": 61,
+      "DENIED_OBSERVED": 53,
+      "BLOCKED_SYNTHETIC_FIXTURE": 13,
+      "BLOCKED_LEGACY_CAPTURE_GATE": 1,
+      "UNTESTED_SCOPE_RESTRICTION": 1
+    },
+    {
+      "role": "CAJA",
+      "NO_OPERATION_FOUND_STATIC": 61,
+      "DENIED_OBSERVED": 63,
+      "BLOCKED_SYNTHETIC_FIXTURE": 12,
+      "BLOCKED_LEGACY_CAPTURE_GATE": 1,
+      "UNTESTED_SCOPE_RESTRICTION": 1
+    },
+    {
+      "role": "SUPERVISOR",
+      "NO_OPERATION_FOUND_STATIC": 60,
+      "DENIED_OBSERVED": 40,
+      "BLOCKED_SYNTHETIC_FIXTURE": 9,
+      "BLOCKED_LEGACY_CAPTURE_GATE": 1,
+      "UNTESTED_SCOPE_RESTRICTION": 1
+    },
+    {
+      "role": "BODEGA",
+      "NO_OPERATION_FOUND_STATIC": 59,
+      "DENIED_OBSERVED": 52,
+      "BLOCKED_SYNTHETIC_FIXTURE": 12,
+      "BLOCKED_LEGACY_CAPTURE_GATE": 1,
+      "UNTESTED_SCOPE_RESTRICTION": 1
+    },
+    {
+      "role": "SISTEMAS",
+      "NO_OPERATION_FOUND_STATIC": 55,
+      "DENIED_OBSERVED": 17,
+      "BLOCKED_SYNTHETIC_FIXTURE": 6,
+      "BLOCKED_LEGACY_CAPTURE_GATE": 1
+    },
+    {
+      "role": "CONTADOR",
+      "NO_OPERATION_FOUND_STATIC": 61,
+      "DENIED_AT_E11_LEGACY_BOUNDARY": 64,
+      "BLOCKED_SYNTHETIC_FIXTURE": 13,
+      "BLOCKED_LEGACY_CAPTURE_GATE": 1,
+      "UNTESTED_SCOPE_RESTRICTION": 1
+    }
+  ],
+  "boundaries": "All classifications remain partial evidence; no blanket PASS. Exact no-operation findings are static, not impossible endpoint proofs."
+}
