@@ -1,0 +1,545 @@
+{
+  "origin": "http://127.0.0.1:43864",
+  "firstTouchOnly": true,
+  "results": [
+    {
+      "name": "cashier",
+      "role": "caja",
+      "sample": 0,
+      "elapsedMs": 20544.978582,
+      "error": "page.waitForFunction: Timeout 20000ms exceeded.",
+      "ready": false
+    },
+    {
+      "name": "cash_cut",
+      "role": "caja",
+      "sample": 0,
+      "elapsedMs": 20572.912554,
+      "error": "page.waitForFunction: Timeout 20000ms exceeded.",
+      "ready": false
+    }
+  ],
+  "requests": [
+    {
+      "sample": "cashier-0",
+      "url": "/favicon.png",
+      "failure": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/css2",
+      "failure": {
+        "errorText": "net::ERR_FAILED"
+      }
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227092548.4368,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.273,
+        "responseStart": 18.827,
+        "responseEnd": 24.55
+      }
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227092607.749,
+        "domainLookupStart": 0.052,
+        "domainLookupEnd": 0.056,
+        "connectStart": 0.056,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.39,
+        "requestStart": 0.755,
+        "responseStart": 27.91,
+        "responseEnd": 37.149
+      }
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/notificaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227092607.557,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.538,
+        "responseStart": 36.24,
+        "responseEnd": 45.841
+      }
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/inventario/ubicaciones",
+      "status": 403
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227092608.1792,
+        "domainLookupStart": 0.051,
+        "domainLookupEnd": 0.054,
+        "connectStart": 0.054,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.246,
+        "requestStart": 0.472,
+        "responseStart": 39.792,
+        "responseEnd": 48.142
+      }
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/notificaciones/feed",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227092605.916,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.144,
+        "responseStart": 52.791,
+        "responseEnd": 63.139
+      }
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/sesiones-caja/actual?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227092607.964,
+        "domainLookupStart": 0.049,
+        "domainLookupEnd": 0.051,
+        "connectStart": 0.051,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.183,
+        "requestStart": 0.618,
+        "responseStart": 213.359,
+        "responseEnd": 224.758
+      }
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227092898.6702,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.43,
+        "responseStart": 46.515,
+        "responseEnd": 84.273
+      }
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/caja/tickets?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227092900.279,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.339,
+        "responseStart": 109.419,
+        "responseEnd": 146.083
+      }
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/sesiones-caja/actual?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227092900.1702,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.434,
+        "responseStart": 138.962,
+        "responseEnd": 175.776
+      }
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/sesiones-caja/46/salidas-dinero",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227092899.7488,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.598,
+        "responseStart": 140.321,
+        "responseEnd": 176.152
+      }
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/inventario/ubicaciones",
+      "status": 403
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227093653.8591,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.556,
+        "responseStart": 19.09,
+        "responseEnd": 23.592
+      }
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/caja/tickets?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227103034.5728,
+        "domainLookupStart": 1.135,
+        "domainLookupEnd": 1.141,
+        "connectStart": 1.141,
+        "secureConnectionStart": -1,
+        "connectEnd": 1.313,
+        "requestStart": 1.804,
+        "responseStart": 111.553,
+        "responseEnd": 129.363
+      }
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/notificaciones/feed",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227107685.1348,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.242,
+        "responseStart": 48.567,
+        "responseEnd": 73.788
+      }
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/sesiones-caja/46/salidas-dinero",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227108210.096,
+        "domainLookupStart": 0.231,
+        "domainLookupEnd": 0.236,
+        "connectStart": 0.236,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.4,
+        "requestStart": 0.517,
+        "responseStart": 93.983,
+        "responseEnd": 101.67
+      }
+    },
+    {
+      "sample": "cashier-0",
+      "url": "/api/sesiones-caja/actual?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227108209.301,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.23,
+        "responseStart": 90.831,
+        "responseEnd": 102.797
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/css2",
+      "failure": {
+        "errorText": "net::ERR_FAILED"
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227113353.4229,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.313,
+        "responseStart": 23.15,
+        "responseEnd": 33.617
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/notificaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227113411.505,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.508,
+        "responseStart": 51.146,
+        "responseEnd": 64.734
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/notificaciones/feed",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227113408.7473,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.158,
+        "responseStart": 61.694,
+        "responseEnd": 75.043
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227113411.379,
+        "domainLookupStart": 0.05,
+        "domainLookupEnd": 0.053,
+        "connectStart": 0.053,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.707,
+        "requestStart": 0.757,
+        "responseStart": 52.602,
+        "responseEnd": 70.738
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/inventario/ubicaciones",
+      "status": 403
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227113411.8171,
+        "domainLookupStart": 0.082,
+        "domainLookupEnd": 0.084,
+        "connectStart": 0.084,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.258,
+        "requestStart": 0.607,
+        "responseStart": 63.298,
+        "responseEnd": 74.816
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/sesiones-caja/actual?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227113411.684,
+        "domainLookupStart": 0.05,
+        "domainLookupEnd": 0.052,
+        "connectStart": 0.052,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.526,
+        "requestStart": 0.705,
+        "responseStart": 109.428,
+        "responseEnd": 121.33
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227113561.6638,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.337,
+        "responseStart": 28.162,
+        "responseEnd": 51.303
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/caja/tickets?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227113562.579,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.239,
+        "responseStart": 87.213,
+        "responseEnd": 111.311
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/sesiones-caja/46/salidas-dinero",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227113561.787,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.24,
+        "responseStart": 102.287,
+        "responseEnd": 124.869
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/sesiones-caja/actual?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227113561.873,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.194,
+        "responseStart": 142.781,
+        "responseEnd": 164.706
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/inventario/ubicaciones",
+      "status": 403
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227114492.317,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.549,
+        "responseStart": 20.583,
+        "responseEnd": 26.612
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/caja/tickets?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227123662.324,
+        "domainLookupStart": 0.664,
+        "domainLookupEnd": 0.67,
+        "connectStart": 0.67,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.981,
+        "requestStart": 1.064,
+        "responseStart": 61.024,
+        "responseEnd": 65.771
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/notificaciones/feed",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227128480.9912,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.529,
+        "responseStart": 25.646,
+        "responseEnd": 31.185
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/sesiones-caja/actual?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227128803.716,
+        "domainLookupStart": 0.099,
+        "domainLookupEnd": 0.103,
+        "connectStart": 0.103,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.213,
+        "requestStart": 0.278,
+        "responseStart": 90.64,
+        "responseEnd": 94.054
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/sesiones-caja/46/salidas-dinero",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227128801.985,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.312,
+        "responseStart": 95.26,
+        "responseEnd": 99.499
+      }
+    }
+  ]
+}

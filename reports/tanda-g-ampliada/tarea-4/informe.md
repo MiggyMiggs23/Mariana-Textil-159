@@ -1,5 +1,9 @@
 # Tarea 4 — rendimiento SQL/servidor, escenario anual sintético
 
+**Ampliación posterior con navegador real:** ver `browser-informe.md`. Allí sí
+aparecen pantallas >2s. La conclusión siguiente se limita al benchmark SQL inicial,
+no sustituye los resultados de navegador ni implica que las pantallas cumplan.
+
 ## Conclusión y alcance
 
 **Ninguna de las 126 ejecuciones medidas excedió dos segundos.** Esto es evidencia

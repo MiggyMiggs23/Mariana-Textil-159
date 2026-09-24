@@ -1,0 +1,629 @@
+{
+  "origin": "http://127.0.0.1:43864",
+  "firstTouchOnly": true,
+  "results": [
+    {
+      "name": "grouped_stock",
+      "role": "admin",
+      "sample": 0,
+      "elapsedMs": 1274.6077650000002,
+      "error": null,
+      "ready": true
+    },
+    {
+      "name": "grouped_stock",
+      "role": "admin",
+      "sample": 1,
+      "elapsedMs": 790.1518880000003,
+      "error": null,
+      "ready": true
+    },
+    {
+      "name": "grouped_stock",
+      "role": "admin",
+      "sample": 2,
+      "elapsedMs": 1289.1990749999995,
+      "error": null,
+      "ready": true
+    }
+  ],
+  "requests": [
+    {
+      "sample": "grouped_stock-0",
+      "url": "/css2",
+      "failure": {
+        "errorText": "net::ERR_FAILED"
+      }
+    },
+    {
+      "sample": "grouped_stock-0",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227087343.287,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.341,
+        "responseStart": 19.326,
+        "responseEnd": 47.849
+      }
+    },
+    {
+      "sample": "grouped_stock-0",
+      "url": "/api/e11/disponibilidad",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227087418.406,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.136,
+        "responseStart": 1.261,
+        "responseEnd": 7.969
+      }
+    },
+    {
+      "sample": "grouped_stock-0",
+      "url": "/api/e11/identidad",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227087424.1538,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.142,
+        "responseStart": 16.247,
+        "responseEnd": 29.907
+      }
+    },
+    {
+      "sample": "grouped_stock-0",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227087510.998,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.148,
+        "responseStart": 70.741,
+        "responseEnd": 120.268
+      }
+    },
+    {
+      "sample": "grouped_stock-0",
+      "url": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227087511.3499,
+        "domainLookupStart": 0.048,
+        "domainLookupEnd": 0.05,
+        "connectStart": 0.05,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.734,
+        "requestStart": 0.907,
+        "responseStart": 123.016,
+        "responseEnd": 146.097
+      }
+    },
+    {
+      "sample": "grouped_stock-0",
+      "url": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227087511.149,
+        "domainLookupStart": 0.041,
+        "domainLookupEnd": 0.044,
+        "connectStart": 0.044,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.974,
+        "requestStart": 1.116,
+        "responseStart": 139.775,
+        "responseEnd": 180.103
+      }
+    },
+    {
+      "sample": "grouped_stock-0",
+      "url": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227087511.5461,
+        "domainLookupStart": 0.042,
+        "domainLookupEnd": 0.044,
+        "connectStart": 0.044,
+        "secureConnectionStart": -1,
+        "connectEnd": 0.58,
+        "requestStart": 0.787,
+        "responseStart": 170.963,
+        "responseEnd": 194.649
+      }
+    },
+    {
+      "sample": "grouped_stock-0",
+      "url": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227087511.893,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 95.875,
+        "responseStart": 174.033,
+        "responseEnd": 198.197
+      }
+    },
+    {
+      "sample": "grouped_stock-0",
+      "url": "/api/notificaciones/feed",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227087506.747,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.253,
+        "responseStart": 310.741,
+        "responseEnd": 333.919
+      }
+    },
+    {
+      "sample": "grouped_stock-0",
+      "url": "/api/notificaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227087510.843,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.867,
+        "responseStart": 455.214,
+        "responseEnd": 506.554
+      }
+    },
+    {
+      "sample": "grouped_stock-0",
+      "url": "/api/inventario/existencias/agrupadas",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227087511.983,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 123.513,
+        "responseStart": 464.896,
+        "responseEnd": 486.326
+      }
+    },
+    {
+      "sample": "grouped_stock-0",
+      "url": "/api/inventario/rollos?page=1&pageSize=100",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227087512.0283,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 156.801,
+        "responseStart": 764.315,
+        "responseEnd": 785.469
+      }
+    },
+    {
+      "sample": "grouped_stock-1",
+      "url": "/css2",
+      "failure": {
+        "errorText": "net::ERR_FAILED"
+      }
+    },
+    {
+      "sample": "grouped_stock-1",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227088973.978,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.263,
+        "responseStart": 23.239,
+        "responseEnd": 33.89
+      }
+    },
+    {
+      "sample": "grouped_stock-1",
+      "url": "/api/e11/disponibilidad",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089063.4229,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.173,
+        "responseStart": 1.684,
+        "responseEnd": 5.513
+      }
+    },
+    {
+      "sample": "grouped_stock-1",
+      "url": "/api/e11/identidad",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089070.212,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.205,
+        "responseStart": 17.657,
+        "responseEnd": 20.844
+      }
+    },
+    {
+      "sample": "grouped_stock-1",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089133.3389,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.251,
+        "responseStart": 53.313,
+        "responseEnd": 71.369
+      }
+    },
+    {
+      "sample": "grouped_stock-1",
+      "url": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089133.9788,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.007,
+        "responseStart": 71.274,
+        "responseEnd": 89.705
+      }
+    },
+    {
+      "sample": "grouped_stock-1",
+      "url": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089134.293,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.909,
+        "responseStart": 108.564,
+        "responseEnd": 127.319
+      }
+    },
+    {
+      "sample": "grouped_stock-1",
+      "url": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089133.476,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.21,
+        "responseStart": 110.358,
+        "responseEnd": 128.378
+      }
+    },
+    {
+      "sample": "grouped_stock-1",
+      "url": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089134.633,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 53.255,
+        "responseStart": 119.39,
+        "responseEnd": 137.251
+      }
+    },
+    {
+      "sample": "grouped_stock-1",
+      "url": "/api/inventario/existencias/agrupadas",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089134.8572,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 72.291,
+        "responseStart": 143.797,
+        "responseEnd": 160.652
+      }
+    },
+    {
+      "sample": "grouped_stock-1",
+      "url": "/api/inventario/rollos?page=1&pageSize=100",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089134.897,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 110.361,
+        "responseStart": 339.505,
+        "responseEnd": 366.569
+      }
+    },
+    {
+      "sample": "grouped_stock-1",
+      "url": "/api/notificaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089133.169,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.396,
+        "responseStart": 287.178,
+        "responseEnd": 401.36
+      }
+    },
+    {
+      "sample": "grouped_stock-1",
+      "url": "/api/notificaciones/feed",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089129,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.169,
+        "responseStart": 386.557,
+        "responseEnd": 402.704
+      }
+    },
+    {
+      "sample": "grouped_stock-2",
+      "url": "/css2",
+      "failure": {
+        "errorText": "net::ERR_FAILED"
+      }
+    },
+    {
+      "sample": "grouped_stock-2",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089773.6357,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.405,
+        "responseStart": 18.413,
+        "responseEnd": 33.457
+      }
+    },
+    {
+      "sample": "grouped_stock-2",
+      "url": "/api/e11/disponibilidad",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089850.025,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.135,
+        "responseStart": 1.468,
+        "responseEnd": 5.274
+      }
+    },
+    {
+      "sample": "grouped_stock-2",
+      "url": "/api/e11/identidad",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089858.9238,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.127,
+        "responseStart": 15.028,
+        "responseEnd": 18.317
+      }
+    },
+    {
+      "sample": "grouped_stock-2",
+      "url": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089912.51,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.97,
+        "responseStart": 30.432,
+        "responseEnd": 47.055
+      }
+    },
+    {
+      "sample": "grouped_stock-2",
+      "url": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089912.644,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.877,
+        "responseStart": 50.482,
+        "responseEnd": 89.703
+      }
+    },
+    {
+      "sample": "grouped_stock-2",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089912.3928,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.017,
+        "responseStart": 41.918,
+        "responseEnd": 90.694
+      }
+    },
+    {
+      "sample": "grouped_stock-2",
+      "url": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089912.944,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.642,
+        "responseStart": 63.525,
+        "responseEnd": 89.679
+      }
+    },
+    {
+      "sample": "grouped_stock-2",
+      "url": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089913.064,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 31.363,
+        "responseStart": 120.708,
+        "responseEnd": 146.593
+      }
+    },
+    {
+      "sample": "grouped_stock-2",
+      "url": "/api/notificaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089912.234,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.547,
+        "responseStart": 280.135,
+        "responseEnd": 326.52
+      }
+    },
+    {
+      "sample": "grouped_stock-2",
+      "url": "/api/inventario/existencias/agrupadas",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089913.1738,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 74.48,
+        "responseStart": 285.33,
+        "responseEnd": 300.922
+      }
+    },
+    {
+      "sample": "grouped_stock-2",
+      "url": "/api/notificaciones/feed",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089907.585,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.228,
+        "responseStart": 399.746,
+        "responseEnd": 412.932
+      }
+    },
+    {
+      "sample": "grouped_stock-2",
+      "url": "/api/inventario/rollos?page=1&pageSize=100",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227089913.29,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 74.44,
+        "responseStart": 401.25,
+        "responseEnd": 417.041
+      }
+    }
+  ]
+}

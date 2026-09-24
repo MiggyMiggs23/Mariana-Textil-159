@@ -1,0 +1,76 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Vista Global
+Activar sonido
+T
+
+TANDA GA ADMIN
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Conciliaciones documentales
+Administrar perfiles A/F
+Control de Inventario
+
+Vista Consolidada (Todos los sitios)
+
+Agrupado por Producto
+Detalle de Rollos
+Expandir todos
+Mostrar sin existencias
+	Tela / Producto	Sitio	Rollos	Total Mts.	Total Kg.	Total Bolsas
+
+	Fieltro2 colores		400	20,000.00	-	-
+
+	Gabardina Metepec 1.702 colores		35	3,500.00	-	-
+
+	Licra Metalica2 colores		150	15,418.00	-	-
+
+	TANDA GA BOLSA1 colores		8,806	-	-	9,310.00
+
+	TANDA GA KILO1 colores		8,806	-	9,310.00	-
+
+	TANDA GA METRO1 colores		8,806	9,310.00	-	-
+
+	TANDA GA PIEZA1 colores		8,806	-	-	-
+
+	Tul Estrella2 colores		143	7,150.00	-	-
+	TOTALESfiltro actual		35,952	55,378.00	9,310.00	9,310.00

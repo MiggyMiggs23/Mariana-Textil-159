@@ -1,0 +1,828 @@
+{
+  "origin": "http://127.0.0.1:43864",
+  "firstTouchOnly": true,
+  "results": [
+    {
+      "name": "cash_cut",
+      "role": "admin",
+      "sample": 0,
+      "elapsedMs": 3094.036365,
+      "error": null,
+      "ready": true
+    },
+    {
+      "name": "cash_cut",
+      "role": "admin",
+      "sample": 1,
+      "elapsedMs": 2587.2041980000004,
+      "error": null,
+      "ready": true
+    },
+    {
+      "name": "cash_cut",
+      "role": "admin",
+      "sample": 2,
+      "elapsedMs": 2514.72585,
+      "error": null,
+      "ready": true
+    }
+  ],
+  "requests": [
+    {
+      "sample": "cash_cut-0",
+      "url": "/favicon.png",
+      "failure": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/css2",
+      "failure": {
+        "errorText": "net::ERR_FAILED"
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227161866.99,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.175,
+        "responseStart": 25.433,
+        "responseEnd": 40.17
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/e11/disponibilidad",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227161918.032,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.18,
+        "responseStart": 1.718,
+        "responseEnd": 6.865
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/e11/identidad",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227161926.5679,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.159,
+        "responseStart": 19.966,
+        "responseEnd": 24.142
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227162010.025,
+        "domainLookupStart": 0.04,
+        "domainLookupEnd": 0.044,
+        "connectStart": 0.044,
+        "secureConnectionStart": -1,
+        "connectEnd": 2.761,
+        "requestStart": 7.919,
+        "responseStart": 205.021,
+        "responseEnd": 258.083
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227162009.8591,
+        "domainLookupStart": 0.052,
+        "domainLookupEnd": 0.059,
+        "connectStart": 0.059,
+        "secureConnectionStart": -1,
+        "connectEnd": 2.927,
+        "requestStart": 8.023,
+        "responseStart": 188.158,
+        "responseEnd": 259.715
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227162010.7788,
+        "domainLookupStart": 0.074,
+        "domainLookupEnd": 0.084,
+        "connectStart": 0.084,
+        "secureConnectionStart": -1,
+        "connectEnd": 2.012,
+        "requestStart": 7.248,
+        "responseStart": 264.072,
+        "responseEnd": 334.925
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227162010.2288,
+        "domainLookupStart": 0.403,
+        "domainLookupEnd": 0.41,
+        "connectStart": 0.41,
+        "secureConnectionStart": -1,
+        "connectEnd": 2.624,
+        "requestStart": 7.815,
+        "responseStart": 237.112,
+        "responseEnd": 309.897
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227162012.417,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 227.277,
+        "responseStart": 281.102,
+        "responseEnd": 334.521
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/notificaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227162009.701,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 2.18,
+        "responseStart": 536.113,
+        "responseEnd": 647.932
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/notificaciones/feed",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227162000.665,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.188,
+        "responseStart": 746.345,
+        "responseEnd": 771.281
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/sesiones-caja/actual?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227162567.7942,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.993,
+        "responseStart": 383.765,
+        "responseEnd": 435.559
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227163073.248,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.212,
+        "responseStart": 61.428,
+        "responseEnd": 135.704
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/caja/tickets?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227163075.6453,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.255,
+        "responseStart": 134.472,
+        "responseEnd": 181.216
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/sesiones-caja/46/salidas-dinero",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227163074.446,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.498,
+        "responseStart": 155.033,
+        "responseEnd": 217.74
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/sesiones-caja/actual?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227163074.783,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.111,
+        "responseStart": 156.573,
+        "responseEnd": 217.298
+      }
+    },
+    {
+      "sample": "cash_cut-0",
+      "url": "/api/sesiones-caja/46/corte",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227164475.7659,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.425,
+        "responseStart": 65.331,
+        "responseEnd": 190
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/css2",
+      "failure": {
+        "errorText": "net::ERR_FAILED"
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227165293.3098,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.239,
+        "responseStart": 21.596,
+        "responseEnd": 30.714
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/api/e11/disponibilidad",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227165327.707,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.269,
+        "responseStart": 1.593,
+        "responseEnd": 5.111
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/api/e11/identidad",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227165335.7273,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.163,
+        "responseStart": 13.201,
+        "responseEnd": 16.58
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227165408.772,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.825,
+        "responseStart": 109.31,
+        "responseEnd": 152.113
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227165409.1968,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.013,
+        "responseStart": 110.988,
+        "responseEnd": 149.693
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227165409.3918,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.944,
+        "responseStart": 125.148,
+        "responseEnd": 162.812
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/api/notificaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227165392.282,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.182,
+        "responseStart": 291.827,
+        "responseEnd": 321.493
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/api/notificaciones/feed",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227165392.045,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.29,
+        "responseStart": 428.033,
+        "responseEnd": 452.052
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/api/sesiones-caja/actual?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227165409.067,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.075,
+        "responseStart": 422.594,
+        "responseEnd": 461.284
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227165409.9478,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 113.65,
+        "responseStart": 442.278,
+        "responseEnd": 479.233
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227165409.492,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 113.862,
+        "responseStart": 453.563,
+        "responseEnd": 490.817
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227165894.832,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.199,
+        "responseStart": 47.019,
+        "responseEnd": 77.383
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/api/caja/tickets?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227165895.8418,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.466,
+        "responseStart": 93.37,
+        "responseEnd": 124.469
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/api/sesiones-caja/46/salidas-dinero",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227165895.119,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.043,
+        "responseStart": 104.928,
+        "responseEnd": 135.255
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/api/sesiones-caja/actual?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227165895.574,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.674,
+        "responseStart": 108.886,
+        "responseEnd": 139.638
+      }
+    },
+    {
+      "sample": "cash_cut-1",
+      "url": "/api/sesiones-caja/46/corte",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227167305.26,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.378,
+        "responseStart": 57.518,
+        "responseEnd": 168.744
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/css2",
+      "failure": {
+        "errorText": "net::ERR_FAILED"
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227167859.8599,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.21,
+        "responseStart": 23.462,
+        "responseEnd": 32.966
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/api/e11/disponibilidad",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227167902.898,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.248,
+        "responseStart": 1.449,
+        "responseEnd": 5.333
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/api/e11/identidad",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227167909.5093,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.144,
+        "responseStart": 15.011,
+        "responseEnd": 18.186
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227167967.378,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.67,
+        "responseStart": 48.411,
+        "responseEnd": 69.492
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227167967.0042,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.883,
+        "responseStart": 102.635,
+        "responseEnd": 124.299
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227167967.482,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.622,
+        "responseStart": 137.192,
+        "responseEnd": 157.853
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/api/notificaciones/feed",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227167967.012,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.507,
+        "responseStart": 255.033,
+        "responseEnd": 279.269
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/api/notificaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227167966.8289,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.913,
+        "responseStart": 407.81,
+        "responseEnd": 437.476
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/api/sesiones-caja/actual?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227167967.263,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.703,
+        "responseStart": 426.187,
+        "responseEnd": 449.673
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227167968.369,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 103.225,
+        "responseStart": 426.499,
+        "responseEnd": 447.83
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227167967.58,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 49.887,
+        "responseStart": 432.719,
+        "responseEnd": 453.027
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/api/auth/me",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227168499.5798,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.538,
+        "responseStart": 49.638,
+        "responseEnd": 94.752
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/api/caja/tickets?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227168500.671,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.271,
+        "responseStart": 137.229,
+        "responseEnd": 183.464
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/api/sesiones-caja/46/salidas-dinero",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227168499.907,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.292,
+        "responseStart": 160.388,
+        "responseEnd": 206.717
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/api/sesiones-caja/actual?ubicacionId=836",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227168500.481,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.38,
+        "responseStart": 164.978,
+        "responseEnd": 211.084
+      }
+    },
+    {
+      "sample": "cash_cut-2",
+      "url": "/api/sesiones-caja/46/corte",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790227169859.8909,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.425,
+        "responseStart": 59.692,
+        "responseEnd": 189.359
+      }
+    }
+  ]
+}
