@@ -1,0 +1,62 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Informe de trabajo nocturno</title><style>body{max-width:1100px;margin:32px auto;padding:0 24px;font-family:system-ui;color:#17213a;background:#f8fafc}pre{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6;font-family:inherit;background:white;padding:24px;border:1px solid #dde2ea;border-radius:8px}</style><h1>Informe de trabajo nocturno</h1><pre># Trabajo nocturno 25/09/2026 — estado canónico y límites
+
+Autorización literal: `autorizacion-propietario.txt`. MAIN aplicó a la base
+efectiva de la API ambos SQL ensayados: E5 `tarea-1/apply-task1-operator-result.json`
+y E11 (dos correcciones y apertura documental)
+`tarea-1/apply-task2-operator-result.json`, ambos `COMMITTED`. No reinstalar
+SQL base ni reejecutar estos candidatos. El antiguo PID 192 y sus nueve/ocho
+cierres son **preflight histórico**, no el estado normativo posterior. Se
+conservan las guardas de devolución y salida bancaria; no se asignó perfil A
+en appDB (inventario preflight: cero CONTADOR, cero perfiles).
+
+MAIN activó API/UI `dist-night-task12` con inspección preservada; PID API
+39225, web 39258; health HTTP 200 a 2026-09-25T05:09:38Z; SHA-256
+`index.mjs` API `a20509b6a2b050262a50dc3852f9a76f94aac8726f6ee16efad594e4be23b206`.
+Inspection pausa inicializadores, backfill y poller, **no** convierte toda
+la API en solo lectura (GET autenticado puede renovar sesión). Builds de
+API/UI candidatos aprobaron. El typecheck global posterior a la activación
+terminó PASS con cero diagnósticos y todos los paquetes seleccionados
+completados (`typecheck-final.log`). No se modificó la distribución de la UI
+ya aprobada. MAIN detuvo los procesos propios y destruyó la copia desechable
+de tareas 5/6/7; verificó que PostgreSQL no corría y que el PID del archivo
+residual ya no existía. Evidencia: `tarea-5/teardown.json`.
+
+| Tarea | Estado y prueba exacta | Pendiente / propietario |
+|---|---|---|
+| 1 E5 | Fuente `c0865b96ae6198dd9aec13a9ac43c37fae825717`; API/UI dirigidos y retenidos ON, SQL appDB COMMITTED. Productores PostgreSQL en copia propia destruida: recepción → rechazo → repropuesta → parcial → preparación A → aplicación final ADMIN, sin devolución; `tarea-1/positive-final-source.log`. 122/122 pruebas E5/E11, 6/6 dirigidos, mutante refund ON 3 fallos/51 y restauración 51/51. `tarea-1/fixture-before.png` y `fixture-after.png` son React sintético, no sesión. | MAIN/propietario: E2E autenticado del **nuevo** bundle con productor E5 aún no hecho. Devolución `E5_REFUND_ENABLED=false`; refund SQL cerrado, ni E12 ni Fondo. La suite HTTP legacy no está acreditada. |
+| 2 E11 | Fuente `4287adc2d13754810444f8b4d422f15ec8d20ecf`; SQL COMMITTED, default F sin asignación A, perfil A puede preparar E5 pero solo ADMIN aplica. Ensayo positivo PostgreSQL no vacío y mutante default A rojo (6 fallos/62, restaurado 62/62): `tarea-2/READINESS.md`. | Propietario asigna A manualmente a una cuenta real cuando corresponda; **ninguna** asignación appDB realizada. Conciliación autenticada integral en bundle nuevo aún no acreditada. |
+| 3 devolución por rollo | `f50c4613decb72e0dd6820b753c593a1f13913fc`; `tarea-3/conflicto-monetario.md`. Alcance físico decidido pero implementación detenida. | Propietario: resolver devolución de nota parcial/pagada frente a regla de importe de recepción íntegro nunca aplicado y cierre expreso refund E5, antes de construir devolución monetaria o física. No inventar favor, modificar corte ni abrir gate. |
+| 4 etiqueta | `d4c94de1e803770022c3b86b4f10154f7bb22cf5`; `tarea-4/resultado.md`. 20 nombres largos del catálogo histórico, 22/22 offline, 4/4 contrato, typecheck frontend y build candidato PASS. Mutante no-wrap rojo; `before-label.png`, `after-label.png`, `after-print-page-2.png`, PDF de dos etiquetas válidas. | MAIN/operador: comprobar flujo autenticado y etiqueta impresa físicamente en Wasp. `beforeprint` no garantiza cancelar diálogo nativo; ante valor imposible se cubre etiqueta con página de error. No se midieron 1234 etiquetas. |
+| 5 recorrido | `tarea-5/final-results.json`: **parcial**, navegador real en `night56_test` con fuente congelada anterior. ADMIN login, proveedor/producto/entrada cinco rollos, caja cero, cobros efectivo/transferencia, Nota autorizada, abono único, recibo/reimpresión, E4 negativos/desbloqueo/salida normal, remate y cierre 2498 esperado/contado. Persistencia: `final-db-readback.json`; capturas `entry-saved.png`, `receipt-after.png`, `e4-verify-persisted.png`, `close-after.png`. | No E5 dirigido/retenido allí: nueve guardas E5 seguían cerradas; no refund ni retorno. Clics impresión/auditoría 200 no prueban papel físico. El arnés esperó URL incorrecta tras abono POST 201; no se repitió. No presentar como validación del candidato nuevo. |
+| 6 perfiles | `tarea-6/final-results.json`: **parcial**, dos CONTADOR *sintéticos* sólo en `night56_test`, login nativo y llamadas autenticadas: F factura visible y no facturada 404, A fiscal 403, ambos Fondo/pagos proveedor/legacy 403; `F-invoiced-list.png`, `F-invoiced-detail.png`, `A-fondo-denied.png`. Snapshot día vacío POST 200. | Interrupción de arnés al navegar antes del acuse UI dejó `RESULTADO_INCIERTO`: no repetir ni declarar aceptación día/semana/mes, NO_CUADRA o aviso ADMIN. Fuente congelada anterior tenía preparación A/E5 OFF. Resolver resultado antes de continuar; ensayo de productores no vacíos de tarea 2 no es navegador fiscal completo. |
+| 7 matriz | `tarea-7/resultado.md`, `ledger.json`, `owner-357.csv`, `auth-tranche-results.json`: ocho peticiones negativas autenticadas nuevas, todas detenidas por guardas exteriores; cero nuevas celdas cubiertas. 433 residuales, 52 API históricas directas, 12 UI+API históricas, **381** API y **421** combinadas pendientes; **357** requieren semántica del propietario. Cinco mutantes rojos del ledger detectan reclasificación/falsas pruebas, no prueban permisos del servidor. | Propietario especifica operación/botón/estado para 357; campaña posterior aislada para guard exacto y UI, sin forzar guard exterior. |
+| 8 índices | `f16e5f52316ee89bd9e29111c3abec97fe8decaa`; `tarea-8/resultado.md`: índices ya válidos, sin DDL nuevo. | Medición anual en navegador **no realizada**; no inferir rendimiento de plan SQL o fixtures. |
+| 9 purga | `032982a5536314d87186142453507f42eaf0a473`; `tarea-9/plan-purga-final.md`: preparación documental **NO-GO**, sin SQL de purga ni ejecución. | Propietario: política de retención/historia monetaria y auditoría, #51–53, clasificación fila por fila, conflicto tarea 3, autorización nueva para mecanismo, respaldo/restauración y ventana. MAIN no debe purgar sin GO y procedimiento completo. |
+
+Los commits de tareas 1/2 son posteriores al commit documental 9; este
+informe registra su estado, no los reemplaza. Los archivos `READINESS.md` de
+tareas 1/2 fueron actualizados para sustituir sus frases antiguas «pendiente
+de aplicar/servir». Los demás informes conservan sus fechas y límites como
+evidencia histórica. **No se afirma que las nueve tareas estén terminadas.**
+
+## Commits de las verificaciones restantes
+
+- Tarea 5: `d18d5ec4` — recorrido parcial y evidencia de navegador.
+- Tarea 6: `84775876` — perfiles, restricciones y conciliación interrumpida.
+- Tarea 7: `aba67706` — solicitudes negativas reales y pendientes sin reclasificación.
+
+## Qué puede comprobar el propietario en pantalla
+
+1. Etiqueta con nombre largo y serie completa; ante un valor imposible debe
+   aparecer el valor íntegro en el error, no una etiqueta ambigua.
+2. Recepción dirigida/retenida y su propuesta; ADMIN puede autorizar
+   parcialmente o rechazar sin que el dinero desaparezca. Devolver dinero E5
+   no está habilitado.
+3. Perfil F y conciliación desde administración; el propietario puede asignar
+   A expresamente desde la pantalla y comprobar que prepara, pero no aplica.
+   Estas comprobaciones manuales no sustituyen la cobertura automática pendiente.
+
+No probar todavía devolución de mercancía por rollo ni purga: continúan
+detenidas por las decisiones monetarias y de conservación indicadas arriba.
+No hubo desconexión del entorno en esta ejecución; los fallos de preparación
+y del arnés se conservaron y no se contabilizaron como éxitos.</pre></html>

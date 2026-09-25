@@ -2369,3 +2369,73 @@ mtime_ms = 1790309073679
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c0a11625-a7ec-42b8-b199-1780e1ee2225/a39060ce-1717-4601-b0db-c1bdb5c5ed36"
 storage_version_token = "1790309244538639"
 content_type = "image/png"
+
+[[outputs]]
+id = "VxvkF34SotgsendFAiDi6"
+uri = "file://reports/trabajo-nocturno-20260925/tarea-4/before-label.png"
+type = "image"
+title = "Etiqueta · antes"
+description = "Componente real en ensayo aislado con nombres largos de la exportación de catálogo; no es una prueba con impresora física."
+logical_id = "842bd5f9-60c1-4f57-bbfa-c90938a7dc37"
+content_hash = "sha256:5c4fda4799f8ad0456be7cb9633bf5687497d504d5f5c7909d6d734ca2e89b8a"
+size = 122570
+mtime_ms = 1790311503091
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/842bd5f9-60c1-4f57-bbfa-c90938a7dc37/b96d41e1-e121-4605-ad22-5c4e4af0f853"
+storage_version_token = "1790311634870266"
+content_type = "image/png"
+
+[[outputs]]
+id = "V_UuDXCCS4r0dLeCHDnZ6"
+uri = "file://reports/trabajo-nocturno-20260925/tarea-4/after-label.png"
+type = "image"
+title = "Etiqueta · después"
+description = "Componente real en ensayo aislado con nombres largos de la exportación de catálogo; no es una prueba con impresora física."
+logical_id = "b7916d0d-3d31-4aa5-a71d-59880da3eaef"
+content_hash = "sha256:3b329814faf29fd1a9fc3597b820b1218ba31123048e5949954c039dfc3715bf"
+size = 123170
+mtime_ms = 1790311506055
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/b7916d0d-3d31-4aa5-a71d-59880da3eaef/a6a1df69-495f-4bdc-876f-16cab12cfdbb"
+storage_version_token = "1790311635772490"
+content_type = "image/png"
+
+[[outputs]]
+id = "oOmstrnQFThFVnDnxa9DZ"
+uri = "file://reports/trabajo-nocturno-20260925/tarea-4/after-two-labels-print.pdf"
+type = "pdf"
+title = "Etiqueta · PDF de comprobación"
+description = "Componente real en ensayo aislado con nombres largos de la exportación de catálogo; no es una prueba con impresora física."
+logical_id = "d61b60d5-0031-4835-8f8e-5a63411bcd64"
+content_hash = "sha256:31e117c735e116679ab0778f457f12ed106280e7ec8127a14d4fa5a9584f6b2e"
+size = 310357
+mtime_ms = 1790311507018
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/d61b60d5-0031-4835-8f8e-5a63411bcd64/8ac9f4de-5392-4a95-b5ef-0f412bd7ae36"
+storage_version_token = "1790311636606291"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "dk0lusPgX7sdNg8KpIdUN"
+uri = "file://reports/trabajo-nocturno-20260925/informe-descargable.html"
+type = "html"
+title = "Informe único · trabajo nocturno"
+description = "Resultado por tarea, commits, capturas referenciadas, puertas abiertas y límites de la verificación. No declara completadas las nueve tareas."
+logical_id = "c18fff29-936c-44b0-8aed-04394d732222"
+content_hash = "sha256:bdd97ad7aa9b7d3bdcc2f367e1bf2f5f7908c73d7d08cf8ecfd17eb1aa906508"
+size = 8427
+mtime_ms = 1790313376907
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c18fff29-936c-44b0-8aed-04394d732222/c25b1d24-ab57-44c0-9dac-da30fe5a6786"
+storage_version_token = "1790313377340066"
+content_type = "text/html"
+
+[[outputs]]
+id = "FCQp5tLcefQDsvYD-3I5j"
+uri = "file://reports/trabajo-nocturno-20260925/tarea-5/close-after.png"
+type = "image"
+title = "Ensayo aislado · cierre de caja"
+description = "Recorrido con sesión real y datos sintéticos en PostgreSQL desechable: cierre esperado y contado $2,498.00, diferencia $0.00."
+logical_id = "6d058a4b-2d5b-4e9a-b65d-528a8705ef47"
+content_hash = "sha256:0349dd6886d5456b75b28b114a034b8ad17c419f609aa9dee7d3b7c433954da7"
+size = 229089
+mtime_ms = 1790312829303
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/6d058a4b-2d5b-4e9a-b65d-528a8705ef47/fe6ec10e-9117-4e0d-bbb2-e0897ccbe9fa"
+storage_version_token = "1790313377860933"
+content_type = "image/png"
