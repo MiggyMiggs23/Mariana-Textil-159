@@ -2537,3 +2537,31 @@ mtime_ms = 1790369576069
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/9a6140fb-4388-42b6-a235-ad761e843e4e/bb53323d-0704-4e6a-aac4-e2c0ba3735e8"
 storage_version_token = "1790369792102207"
 content_type = "image/png"
+
+[[outputs]]
+id = "9DUKMb9qnQQfKF0PNV-cy"
+uri = "file://artifacts/mariana-textil/reports/test-reset-scroll-20260925/sidebar-config-bottom.png"
+type = "image"
+title = "Menú desplazado hasta el final"
+description = "Verificación con usuario ADMIN de prueba: perfiles A/F completo y botón rojo debajo, dentro de la lista desplazable."
+logical_id = "35180c9d-2a31-487b-b6f7-80fa34027a1b"
+content_hash = "sha256:bd8ba1857c25f9d7524a78a9e974932a4596df6e33e4eed24d458a09c58069e5"
+size = 117807
+mtime_ms = 1790373151092
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/35180c9d-2a31-487b-b6f7-80fa34027a1b/5306dcf4-58b4-4c8c-9eb4-35e13710345e"
+storage_version_token = "1790373235736184"
+content_type = "image/png"
+
+[[outputs]]
+id = "CcTHUN-1Up0UNBiWkx_vm"
+uri = "file://artifacts/mariana-textil/reports/test-reset-scroll-20260925/sidebar-config-bottom-mobile.png"
+type = "image"
+title = "Menú al final en móvil"
+description = "Comprobación del mismo comportamiento en pantalla móvil, con datos de prueba."
+logical_id = "3bff63f9-44a6-4ccb-ae45-7938912fb1f4"
+content_hash = "sha256:2d9da7d07cc1c7c289c1e2fd9a16083f788545484e89c04a03c830e53d59bdaa"
+size = 56418
+mtime_ms = 1790373187736
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/3bff63f9-44a6-4ccb-ae45-7938912fb1f4/9aaf2702-e464-44d2-9d44-6fd8d04d9cac"
+storage_version_token = "1790373236703800"
+content_type = "image/png"
