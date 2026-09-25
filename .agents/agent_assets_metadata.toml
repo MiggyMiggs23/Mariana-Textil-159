@@ -2467,3 +2467,17 @@ mtime_ms = 1790356755311
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/edcde975-67f1-4f22-a3ff-ef026e299b7c/7673588b-7b2e-496e-b1d8-0b80c480d702"
 storage_version_token = "1790356801154108"
 content_type = "image/png"
+
+[[outputs]]
+id = "f8HSleIPz5U1WjCYS6HtO"
+uri = "file://export.zip"
+type = "unspecified"
+title = "Descargar export.zip"
+description = "ZIP para revisión de código · 101.64 MB · Mismos archivos, con mayor compresión."
+logical_id = "78879000-8048-4c4a-826f-a7331d274cb3"
+content_hash = "sha256:e1fbcf628e75e44bec756264575107f570fa3f26215f5c798b5ed4226a5ee421"
+size = 101639934
+mtime_ms = 1790358891811
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/78879000-8048-4c4a-826f-a7331d274cb3/8214f72e-63f0-4078-9e1e-d897fc883d53"
+storage_version_token = "1790358898579832"
+content_type = "application/octet-stream"
