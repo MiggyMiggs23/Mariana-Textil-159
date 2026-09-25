@@ -1,0 +1,6 @@
+{
+  "claimedAt": "2026-09-25T21:42:13.623Z",
+  "fileSha256": "847e6e3305e66508bf7c5eefce1b73d107364e4ccd3d78852961a86f72fbed50",
+  "payloadSha256": "32bb1d84c7234bcc4a31997c477d366fc9447734a7d5b729ecde89862fe79612",
+  "warning": "Do not retry automatically. Retain even after an error until database state is reconciled."
+}

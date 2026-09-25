@@ -1,0 +1,79 @@
+{
+  "passed": true,
+  "createdAt": "2026-09-25T21:37:20.366Z",
+  "fileSha256": "847e6e3305e66508bf7c5eefce1b73d107364e4ccd3d78852961a86f72fbed50",
+  "payloadSha256": "32bb1d84c7234bcc4a31997c477d366fc9447734a7d5b729ecde89862fe79612",
+  "schemaSha256": "756e37fc4bbb9dd8f21405d89431a2a5b2bcb38b1794ffbc6ca15d1c5bcb35b8",
+  "sourceHashes": {
+    "workbook.mjs": "9b62983d077da47cb2fe14a08b1504c00ad57a72cc540ca7ab63047d10a207ae",
+    "importer.mjs": "21fc0cfced08424c7940cbcd16d54ac260f313b408f96bbe1a81a2000d870f6f",
+    "disposable-test.mjs": "7adb0fe53818737fdf73dcfa82e644318f2a5a694191aa98fd701571deb9233b",
+    "autorizacion-propietario.txt": "27c5fa35e8819d377c9a33d2e74895a3dfc417d523e609ed7452ffaeab551d78"
+  },
+  "summary": {
+    "fileSha256": "847e6e3305e66508bf7c5eefce1b73d107364e4ccd3d78852961a86f72fbed50",
+    "payloadSha256": "32bb1d84c7234bcc4a31997c477d366fc9447734a7d5b729ecde89862fe79612",
+    "total": 2575,
+    "withRFC": 2277,
+    "withAddress": 2007,
+    "withPhone": 1924,
+    "genericRFC": 7,
+    "lengths": {
+      "nombre": 97,
+      "rfc": 14,
+      "direccion_particular": 69,
+      "telefono": 42
+    },
+    "corrections": [
+      {
+        "row": 439,
+        "original": "CAC160222-RC6",
+        "corrected": "CAC160222RC6"
+      },
+      {
+        "row": 1120,
+        "original": "IAR 161104PI0",
+        "corrected": "IAR161104PI0"
+      },
+      {
+        "row": 1302,
+        "original": "COSA 591101FL4",
+        "corrected": "COSA591101FL4"
+      },
+      {
+        "row": 1535,
+        "original": "LOS101130 S83",
+        "corrected": "LOS101130S83"
+      },
+      {
+        "row": 2167,
+        "original": "JILR850422 IUA",
+        "corrected": "JILR850422IUA"
+      }
+    ],
+    "duplicateNameRows": []
+  },
+  "finance": {
+    "total": 2575,
+    "with_rfc": 2277,
+    "with_address": 2007,
+    "with_phone": 1924,
+    "generic_rfc": 7,
+    "invalid_defaults": 0,
+    "longest_name": 97
+  },
+  "inserted": 2575,
+  "excluded": [],
+  "assertions": {
+    "fullEffectiveSchema": true,
+    "actual2575RowsCommittedInDisposable": true,
+    "exactEveryFieldCompared": true,
+    "onlyCustomerRowsAdded": true,
+    "everyOtherTableUnchanged": true,
+    "existingCustomerUnchanged": true,
+    "retryRejectedWithZeroChanges": true,
+    "lateFailureRolledBack": true,
+    "noAppWrites": true
+  },
+  "schemaTables": 108
+}

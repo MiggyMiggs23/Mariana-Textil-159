@@ -1,0 +1,230 @@
+{
+  "fileSha256": "847e6e3305e66508bf7c5eefce1b73d107364e4ccd3d78852961a86f72fbed50",
+  "payloadSha256": "32bb1d84c7234bcc4a31997c477d366fc9447734a7d5b729ecde89862fe79612",
+  "total": 2575,
+  "withRFC": 2277,
+  "withAddress": 2007,
+  "withPhone": 1924,
+  "genericRFC": 7,
+  "lengths": {
+    "nombre": 97,
+    "rfc": 14,
+    "direccion_particular": 69,
+    "telefono": 42
+  },
+  "corrections": [
+    {
+      "row": 439,
+      "original": "CAC160222-RC6",
+      "corrected": "CAC160222RC6"
+    },
+    {
+      "row": 1120,
+      "original": "IAR 161104PI0",
+      "corrected": "IAR161104PI0"
+    },
+    {
+      "row": 1302,
+      "original": "COSA 591101FL4",
+      "corrected": "COSA591101FL4"
+    },
+    {
+      "row": 1535,
+      "original": "LOS101130 S83",
+      "corrected": "LOS101130S83"
+    },
+    {
+      "row": 2167,
+      "original": "JILR850422 IUA",
+      "corrected": "JILR850422IUA"
+    }
+  ],
+  "duplicateNameRows": [],
+  "columns": [
+    {
+      "column_name": "id",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_nullable": "NO",
+      "column_default": "nextval('clientes_id_seq'::regclass)"
+    },
+    {
+      "column_name": "nombre",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "column_name": "telefono",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "column_name": "correo",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "column_name": "direccion_particular",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "column_name": "rfc",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "column_name": "notas",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "column_name": "activo",
+      "data_type": "boolean",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_nullable": "NO",
+      "column_default": "true"
+    },
+    {
+      "column_name": "limite_credito",
+      "data_type": "numeric",
+      "character_maximum_length": null,
+      "numeric_precision": 14,
+      "numeric_scale": 2,
+      "is_nullable": "NO",
+      "column_default": "0.00"
+    },
+    {
+      "column_name": "saldo_credito",
+      "data_type": "numeric",
+      "character_maximum_length": null,
+      "numeric_precision": 14,
+      "numeric_scale": 2,
+      "is_nullable": "NO",
+      "column_default": "0.00"
+    },
+    {
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "column_name": "es_sistema",
+      "data_type": "boolean",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_nullable": "NO",
+      "column_default": "false"
+    },
+    {
+      "column_name": "contacto_nombre",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "column_name": "dias_credito",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "numeric_precision": 32,
+      "numeric_scale": 0,
+      "is_nullable": "NO",
+      "column_default": "0"
+    },
+    {
+      "column_name": "direccion_entrega",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "column_name": "recibe_nota_sin_precios",
+      "data_type": "boolean",
+      "character_maximum_length": null,
+      "numeric_precision": null,
+      "numeric_scale": null,
+      "is_nullable": "NO",
+      "column_default": "false"
+    }
+  ],
+  "indexes": [
+    {
+      "indexdef": "CREATE UNIQUE INDEX clientes_activos_no_sistema_nombre_normalizado_uidx ON public.clientes USING btree (lower(btrim(nombre))) WHERE (activo AND (NOT es_sistema))"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX clientes_pkey ON public.clientes USING btree (id)"
+    }
+  ],
+  "constraints": [
+    {
+      "conname": "clientes_pkey",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "conname": "e11_graph",
+      "definition": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+    }
+  ],
+  "triggers": [
+    {
+      "tgname": "e11_graph",
+      "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.clientes DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+    },
+    {
+      "tgname": "e11_no_truncate",
+      "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.clientes FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+    }
+  ],
+  "existing": {
+    "total": 1,
+    "non_system": 0
+  }
+}

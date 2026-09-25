@@ -1,3 +1,7 @@
+### Clientes reales — carga única completada 25/09/2026
+
+Importación autorizada de 2,575 clientes realizada una sola vez, después de comunicar la prueba PostgreSQL desechable. Cada cliente: límite MXN150,000 y días de crédito 0; sin truncamientos ni exclusiones. Verificación independiente posterior en transacción READ ONLY: los 2,575 registros coinciden campo por campo; cliente de sistema existente y otras 107 tablas conservados íntegros (huellas de las 108 tablas). Total catálogo: 2,576. Informe y autorización literal: `reports/importacion-clientes-reales-20260925/resultado-carga.md`. **NO reimportar, NO retirar `apply-once.claim.json`, NO ejecutar reset.** No se modificó esquema ni workflows.
+
 ### Tanda E continuación — estado 24/09/2026
 
 Recorrido aislado conciliado: efectivo765, transferencia150, deuda100; sesión46 abierta antes de destruir la copia privada autorizada. E3 PDF real servido: dos A5 horizontales Cliente/Tienda en Chromium140/153, botón auditado y screenshot antes del PDF; impresión física no probada. Signo CANCELACION+1 corregido. Informe y descarga autocontenida en `reports/tanda-e-continuacion/`; evidencia de candidatos fallidos conservada. UI `dist-tanda-e-print-resize-final-20260924` liberada en el runtime del workspace con TOML validado y un reinicio web; API sin cambios ni reinicio por esta continuación. No reusar los scripts de mutación ni credenciales desechadas.

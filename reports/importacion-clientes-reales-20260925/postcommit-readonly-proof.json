@@ -1,0 +1,63 @@
+{
+  "passed": true,
+  "capturedAt": "2026-09-25T21:43:07.324Z",
+  "transactionReadOnly": true,
+  "applicationWrites": 0,
+  "fileSha256": "847e6e3305e66508bf7c5eefce1b73d107364e4ccd3d78852961a86f72fbed50",
+  "payloadSha256": "32bb1d84c7234bcc4a31997c477d366fc9447734a7d5b729ecde89862fe79612",
+  "exactSourceAndDefaultsCompared": 2575,
+  "importedIds": 2575,
+  "totals": {
+    "total": 2576,
+    "system_customers": 1,
+    "non_system_customers": 2575
+  },
+  "originalCustomerPreserved": true,
+  "all107OtherTablesUnchanged": true,
+  "all108HashesMatchAfterExcludingNewCustomers": true,
+  "summary": {
+    "fileSha256": "847e6e3305e66508bf7c5eefce1b73d107364e4ccd3d78852961a86f72fbed50",
+    "payloadSha256": "32bb1d84c7234bcc4a31997c477d366fc9447734a7d5b729ecde89862fe79612",
+    "total": 2575,
+    "withRFC": 2277,
+    "withAddress": 2007,
+    "withPhone": 1924,
+    "genericRFC": 7,
+    "lengths": {
+      "nombre": 97,
+      "rfc": 14,
+      "direccion_particular": 69,
+      "telefono": 42
+    },
+    "corrections": [
+      {
+        "row": 439,
+        "original": "CAC160222-RC6",
+        "corrected": "CAC160222RC6"
+      },
+      {
+        "row": 1120,
+        "original": "IAR 161104PI0",
+        "corrected": "IAR161104PI0"
+      },
+      {
+        "row": 1302,
+        "original": "COSA 591101FL4",
+        "corrected": "COSA591101FL4"
+      },
+      {
+        "row": 1535,
+        "original": "LOS101130 S83",
+        "corrected": "LOS101130S83"
+      },
+      {
+        "row": 2167,
+        "original": "JILR850422 IUA",
+        "corrected": "JILR850422IUA"
+      }
+    ],
+    "duplicateNameRows": []
+  },
+  "excluded": [],
+  "authorizationFile": "autorizacion-propietario.txt"
+}
