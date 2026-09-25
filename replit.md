@@ -1681,6 +1681,12 @@ restricciones globales del corredor de pruebas siguen vigentes.
 
 ### Evidencia de verificación vinculada a una revisión exacta
 
+### Devolución por rollo — decisión recibida, construcción detenida por dinero
+
+El 2026-09-24 (CDMX) el propietario pidió aceptar únicamente rollos completos con su serie y cantidad originales, recibidos en la tienda receptora mediante un movimiento nuevo, sin editar venta/corte original, sin saldo a favor y sin registrar cambios por tela/color. Para nota con deuda pidió cancelar la deuda por ese rollo; para nota liquidada, devolver dinero desde caja abierta del día, solo ADMIN y con motivo. Esta decisión acota la anterior sobre devolución de dinero, pero no se implementa mientras subsista el conflicto que el propio propietario ordenó revisar antes de construir: su autorización mantiene cerrada la devolución E5, la regla de devolución de recepción exige importe nunca aplicado y no define la parte ya pagada de una nota parcialmente liquidada. No se abre ninguna guarda ni se elige un tratamiento monetario por inferencia. Transcripción y bloqueo: `reports/trabajo-nocturno-20260925/tarea-3/conflicto-monetario.md`; también registrado en `reports/prompt-u-respuestas-2026-09-18.md`.
+
+### Identidad exacta de la evidencia
+
 Toda afirmación de verificación debe registrar el hash completo de la revisión
 exacta sobre la que se ejecutó, junto con el comando, alcance y código de salida.
 Un log sin su hash no acredita la verificación: no permite reproducirla ni

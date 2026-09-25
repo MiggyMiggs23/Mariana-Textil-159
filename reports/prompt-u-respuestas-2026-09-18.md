@@ -204,6 +204,14 @@ BODEGA no debe ver contenedores con costo pendiente. La regla vigente es la revo
 
 ## Movimientos de inventario — decisión vigente del propietario
 
+### Devolución de mercancía por rollo — decisión recibida el 2026-09-24, pendiente de aclaración monetaria
+
+El propietario distingue devolución física de reversión: acepta únicamente el rollo completo con su cantidad y serie originales, en la tienda receptora, mediante un movimiento nuevo que no edite la venta ni el corte original; nunca genera saldo a favor ni registra cambios por otra tela/color. Ordena cancelar deuda por el rollo si la nota debe y devolver dinero de la caja abierta del día, solo ADMIN y con motivo, si está liquidada. Esta decisión acota la anterior sobre devolución de dinero, pero contiene una instrucción expresa de detenerse antes de construir ante conflicto monetario.
+
+La tarea queda detenida: el mismo mensaje mantiene cerrada la devolución de dinero E5, la devolución de recepción anterior requiere importe nunca aplicado y falta resolver la nota parcialmente pagada. No se asume una apertura ni un tratamiento del excedente. Transcripción literal y conflicto en `reports/trabajo-nocturno-20260925/tarea-3/conflicto-monetario.md`. Las otras operaciones autorizadas se tramitan por separado.
+
+### Reversión de inventario (se conserva)
+
 Un movimiento de inventario solo puede revertirse si el rollo sigue en el mismo sitio, cantidad y estado en que lo dejó ese movimiento. En caso contrario debe bloquearse con un mensaje claro y realizarse un ajuste nuevo con motivo. El propietario acepta que esto bloquee correcciones legítimas: deberán deshacerse los movimientos en orden inverso o realizarse un ajuste.
 
 Sustituye la propuesta del Bloque 2 y los pendientes de reversibilidad en `replit.md`: ya no se exige conservar la posibilidad de corregir movimientos independientes si no se cumple esa condición. No basta comparar IDs y no se inventa procedencia. La regla es exclusiva de inventario: no sustituye las decisiones sobre inversos del ledger financiero ni E10. Registrar la decisión no implementa backend ni autoriza cambios de datos. Quedan fuera de este alcance la vía 3 (venta parcial, catálogo confirmado con cero productos activos elegibles) y la vía 10; no se reanuda el Prompt P.
