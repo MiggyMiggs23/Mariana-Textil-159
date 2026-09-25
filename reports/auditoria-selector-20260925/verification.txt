@@ -1,0 +1,26 @@
+Auditoría de inventario: mounted selector regression verification
+Captured 2026-09-25. No workflow or backend/database was used.
+
+Baseline source: git HEAD 3f376b6ea5a89d60f4da1546fa2f6a2e6453111c
+Baseline source SHA256: 96f39dd621fc9b1d31aa83fb767fe9f2352050030b24c1e509d7b92be0db3e78
+Baseline location: /tmp/audit-baseline-z0uTDi (isolated copy; no watched source replaced)
+
+Exact baseline preparation and test command (run from workspace root):
+
+BASE=$(mktemp -d /tmp/audit-baseline-XXXXXX); cp -a artifacts/mariana-textil/src "$BASE/src"; cp artifacts/mariana-textil/vite.config.ts artifacts/mariana-textil/package.json "$BASE/"; ln -s /home/runner/workspace/artifacts/mariana-textil/node_modules "$BASE/node_modules"; git show HEAD:artifacts/mariana-textil/src/pages/auditorias-inventario.tsx > "$BASE/src/pages/auditorias-inventario.tsx"; printf '%s\n' "$BASE" > /tmp/audit-baseline-site-path; sha256sum "$BASE/src/pages/auditorias-inventario.tsx"; cd "$BASE" && PORT=48765 BASE_PATH=/ NODE_ENV=test ./node_modules/.bin/vitest run src/pages/auditorias-inventario-site.test.tsx --config vite.config.ts --environment jsdom --maxWorkers=1 --reporter=verbose > /tmp/audit-site-baseline.log 2>&1; rc=$?; grep -E '(^ [×✓]|^ Test Files|^      Tests|AssertionError|expected.*to be|Unable to find|FAIL)' /tmp/audit-site-baseline.log | head -35; echo "baseline_exit=$rc"
+
+Baseline exit: 1. 1 passed, 2 failed on explicit assertions:
+expected '1' to be '2' // Object.is equality
+expected true to be false // Object.is equality
+Full baseline stdout/stderr: baseline-vitest.log (SHA256 3d127137d2e5e5f1649be102171a5e8c0ba750e546f6ccac6691108694fc37e8).
+
+Exact final test command (run from workspace root):
+
+cd artifacts/mariana-textil && PORT=48765 BASE_PATH=/ NODE_ENV=test ./node_modules/.bin/vitest run src/pages/auditorias-inventario.test.tsx src/pages/auditorias-inventario-site.test.tsx --config vite.config.ts --environment jsdom --maxWorkers=1 --reporter=verbose > /tmp/audit-site-combined-final.log 2>&1; rc=$?; grep -E '(^ [×✓]|^ Test Files|^      Tests)' /tmp/audit-site-combined-final.log | head -12; echo "exit=$rc"; git status --short -- artifacts/mariana-textil/src/pages/auditorias-inventario*
+
+Final exit: 0. 2 files passed, 5 tests passed.
+Full final stdout/stderr: final-vitest.log (SHA256 1c09691ccfa501756e1b25bad2b8a152ad91435bd018d28ac786b321fa8d9edf).
+
+The existing safe manifest is used by scripts/src/frontend-test-runner.mjs,
+which launches node --test via tsx, not Vitest. The new .test.tsx suite uses
+Vitest's vi.mock and was deliberately not added to that incompatible manifest.

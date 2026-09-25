@@ -55,7 +55,7 @@ describe("AuditoriasInventario Component", () => {
 
     vi.spyOn(apiClient, "useGetCurrentUser").mockReturnValue(hookResult({ rol: "ADMIN" }) as any);
     vi.spyOn(apiClient, "useListSitiosAuditoriaInventario").mockReturnValue(hookResult([{ id: 1, nombre: "Bodega Centro", iniciales: "BC" }]) as any);
-    vi.spyOn(apiClient, "useListAuditoriasInventario").mockReturnValue(hookResult([{ id: 41, estado: "CONFIRMADA", folioFormateado: "BC-AI-000041", nombreUbicacion: "Bodega Centro", totalEscaneados: 2, totalSnapshot: 1 }]) as any);
+    vi.spyOn(apiClient, "useListAuditoriasInventario").mockReturnValue(hookResult([{ id: 41, ubicacionId: 1, estado: "CONFIRMADA", folioFormateado: "BC-AI-000041", nombreUbicacion: "Bodega Centro", totalEscaneados: 2, totalSnapshot: 1 }]) as any);
     vi.spyOn(apiClient, "useListProductos").mockReturnValue(hookResult([]) as any);
     vi.spyOn(apiClient, "useListPisosLocation").mockReturnValue(hookResult([]) as any);
     vi.spyOn(apiClient, "useCreateProducto").mockReturnValue({ mutate: vi.fn(), isPending: false } as any);

@@ -90,6 +90,8 @@ export default function AuditoriasInventario() {
     );
     return Number.isInteger(requested) && requested > 0 ? requested : null;
   });
+  const selectionInitialized = useRef(selectedId != null);
+  const syncedAuditId = useRef<number | null>(null);
   const [scan, setScan] = useState("");
   const [cancelOpen, setCancelOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
@@ -147,19 +149,22 @@ export default function AuditoriasInventario() {
 
   useEffect(() => {
     const requested = Number(new URLSearchParams(search).get("auditoriaId"));
-    if (Number.isInteger(requested) && requested > 0 && requested !== selectedId) {
+    if (Number.isInteger(requested) && requested > 0) {
+      selectionInitialized.current = true;
       setSelectedId(requested);
     }
-  }, [search, selectedId]);
+  }, [search]);
 
   useEffect(() => {
-    if (selectedId == null && audits.data?.length) {
+    if (!selectionInitialized.current && selectedId == null && audits.data?.length) {
+      selectionInitialized.current = true;
       setSelectedId(audits.data.find((item) => item.estado === "ABIERTA")?.id ?? audits.data[0]!.id);
     }
   }, [audits.data, selectedId]);
 
   useEffect(() => {
     setSelectedPiso("none");
+    setScan("");
   }, [selectedId, siteId]);
 
   const detail = useGetAuditoriaInventario(selectedId ?? 0, {
@@ -172,10 +177,26 @@ export default function AuditoriasInventario() {
   });
 
   useEffect(() => {
-    if (detail.data && siteId !== String(detail.data.ubicacionId)) {
+    if (selectedId == null) {
+      syncedAuditId.current = null;
+    } else if (detail.data?.id === selectedId && syncedAuditId.current !== selectedId) {
+      syncedAuditId.current = selectedId;
       setSiteId(String(detail.data.ubicacionId));
     }
-  }, [detail.data, siteId]);
+  }, [selectedId, detail.data?.id, detail.data?.ubicacionId]);
+
+  const siteAudits = useMemo(
+    () => audits.data?.filter((audit) => !siteId || String(audit.ubicacionId) === siteId) ?? [],
+    [audits.data, siteId],
+  );
+
+  const changeSite = (id: string) => {
+    if (id === siteId) return;
+    selectionInitialized.current = true;
+    syncedAuditId.current = null;
+    setSelectedId(null);
+    setSiteId(id);
+  };
 
   const { data: pisos } = useListPisosLocation(detail.data?.ubicacionId ?? 0, {
     query: { enabled: !!detail.data?.ubicacionId, queryKey: ['pisosLocation', detail.data?.ubicacionId ?? 0] }
@@ -238,7 +259,7 @@ export default function AuditoriasInventario() {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
-          <Select value={siteId} onValueChange={setSiteId}>
+          <Select value={siteId} onValueChange={changeSite}>
             <SelectTrigger className="w-full sm:w-[260px] bg-card h-11" data-testid="select-audit-site">
               <SelectValue placeholder="Seleccionar sitio" />
             </SelectTrigger>
@@ -293,7 +314,12 @@ export default function AuditoriasInventario() {
           <div className="flex flex-col gap-4">
             <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground ml-1">Historial del Sitio</h2>
             <div className="flex flex-col gap-2 max-h-[calc(100dvh-12rem)] overflow-y-auto pr-1 pb-4 scrollbar-thin">
-              {audits.data.map((item) => {
+              {siteAudits.length === 0 && (
+                <p className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground" data-testid="status-site-audits-empty">
+                  No hay auditorías en este sitio. Puedes iniciar una auditoría aquí.
+                </p>
+              )}
+              {siteAudits.map((item) => {
                 const isSelected = selectedId === item.id;
                 const isAbierta = item.estado === "ABIERTA";
                 return (

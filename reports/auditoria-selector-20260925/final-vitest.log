@@ -1,0 +1,18 @@
+
+ RUN  v5.0.1 /home/runner/workspace/artifacts/mariana-textil
+
+ ✓ src/pages/auditorias-inventario.test.tsx > AuditoriasInventario Component > a CONFIRMADA origin separates financial/unknown surplus and opens its exact missing reactivation 564ms
+ ✓ src/pages/auditorias-inventario.test.tsx > AuditoriasInventario Component > notification deep-link changes select the exact audit on the mounted route 92ms
+ ✓ src/pages/auditorias-inventario-site.test.tsx > mounted audit site/selection ownership > initial audit A, manual B, refresh and stale URL never select A again; B starts B 118ms
+ ✓ src/pages/auditorias-inventario-site.test.tsx > mounted audit site/selection ownership > site switch is read-only; reopening A restores its own detail, floors and scan id 99ms
+ ✓ src/pages/auditorias-inventario-site.test.tsx > mounted audit site/selection ownership > delayed detail synchronizes site once per new selected audit, not on subsequent refresh 101ms
+
+ Test Files  2 passed (2)
+      Tests  5 passed (5)
+   Start at  18:15:22
+   Duration  8.43s (transform 56%, import 17%, environment 15%, tests 12%)
+
+  Transform  transforming modules took 4.61s · 56% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

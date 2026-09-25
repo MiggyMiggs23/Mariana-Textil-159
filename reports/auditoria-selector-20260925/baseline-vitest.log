@@ -1,0 +1,530 @@
+
+ RUN  v5.0.1 /tmp/audit-baseline-z0uTDi
+
+ × src/pages/auditorias-inventario-site.test.tsx > mounted audit site/selection ownership > initial audit A, manual B, refresh and stale URL never select A again; B starts B 1114ms
+   → expected '1' to be '2' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mdata-component-name[39m=[32m"div"[39m
+        [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:14:62"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"max-w-[1600px] mx-auto p-4 md:p-6"[39m
+          [33mdata-component-name[39m=[32m"div"[39m
+          [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:231:4"[39m
+          [33mdata-testid[39m=[32m"page-auditorias-inventario"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"no-print flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between mb-8"[39m
+            [33mdata-component-name[39m=[32m"header"[39m
+            [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:232:6"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-component-name[39m=[32m"div"[39m
+              [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:233:8"[39m
+            [36m>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-[10px] font-bold uppercase tracking-widest text-primary/80 mb-1"[39m
+                [33mdata-component-name[39m=[32m"p"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:234:10"[39m
+              [36m>[39m
+                [0mOperación de Almacén[0m
+              [36m</p>[39m
+              [36m<h1[39m
+                [33mclass[39m=[32m"text-3xl font-extrabold tracking-tight text-foreground"[39m
+                [33mdata-component-name[39m=[32m"h1"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:235:10"[39m
+              [36m>[39m
+                [0mAuditoría de Inventario[0m
+              [36m</h1>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-sm text-muted-foreground mt-1 max-w-xl"[39m
+                [33mdata-component-name[39m=[32m"p"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:236:10"[39m
+              [36m>[39m
+                [0mControl físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0"[39m
+              [33mdata-component-name[39m=[32m"div"[39m
+              [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:240:8"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33mdata-component-name[39m=[32m"select"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:21:11"[39m
+                [33mdata-testid[39m=[32m"select-audit-site"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mdata-component-name[39m=[32m"option"[39m
+                  [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:23:6"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mSeleccionar[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mdata-component-name[39m=[32m"option"[39m
+                  [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:30:44"[39m
+                  [33mvalue[39m=[32m"1"[39m
+                [36m>[39m
+                  [0mCE[0m
+                  [0m · [0m
+                  [0mCentro[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mdata-component-name[39m=[32m"option"[39m
+                  [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:30:44"[39m
+                  [33mvalue[39m=[32m"2"[39m
+                [36m>[39m
+                  [0mNO[0m
+                  [0m · [0m
+                  [0mNorte[0m
+                [36m</option>[39m
+              [36m</select>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"inline-flex items-center justify-center whitespace-nowrap text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-8 w-full sm:w-auto font-bold shadow-sm h-11"[39m
+                [33mdata-component-name[39m=[32m"Button"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:249:10"[39m
+                [33mdata-testid[39m=[32m"button-open-audit"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-play mr-2 h-5 w-5 fill-current"[39m
+                  [33mdata-component-name[39m=[32m"Play"[39m
+                  [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:263:84"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"24"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"24"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mIniciar auditoría[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"no-print grid grid-cols-1 xl:grid-cols-[340px_minmax(0,1fr)] gap-6 items-start"[39m
+            [33mdata-component-name[39m=[32m"div"[39m
+            [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/sr...
+ × src/pages/auditorias-inventario-site.test.tsx > mounted audit site/selection ownership > site switch is read-only; reopening A restores its own detail, floors and scan id 1059ms
+   → expected true to be false // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mdata-component-name[39m=[32m"div"[39m
+        [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:14:62"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"max-w-[1600px] mx-auto p-4 md:p-6"[39m
+          [33mdata-component-name[39m=[32m"div"[39m
+          [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:231:4"[39m
+          [33mdata-testid[39m=[32m"page-auditorias-inventario"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"no-print flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between mb-8"[39m
+            [33mdata-component-name[39m=[32m"header"[39m
+            [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:232:6"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-component-name[39m=[32m"div"[39m
+              [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:233:8"[39m
+            [36m>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-[10px] font-bold uppercase tracking-widest text-primary/80 mb-1"[39m
+                [33mdata-component-name[39m=[32m"p"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:234:10"[39m
+              [36m>[39m
+                [0mOperación de Almacén[0m
+              [36m</p>[39m
+              [36m<h1[39m
+                [33mclass[39m=[32m"text-3xl font-extrabold tracking-tight text-foreground"[39m
+                [33mdata-component-name[39m=[32m"h1"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:235:10"[39m
+              [36m>[39m
+                [0mAuditoría de Inventario[0m
+              [36m</h1>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-sm text-muted-foreground mt-1 max-w-xl"[39m
+                [33mdata-component-name[39m=[32m"p"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:236:10"[39m
+              [36m>[39m
+                [0mControl físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0"[39m
+              [33mdata-component-name[39m=[32m"div"[39m
+              [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:240:8"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33mdata-component-name[39m=[32m"select"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:21:11"[39m
+                [33mdata-testid[39m=[32m"select-audit-site"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mdata-component-name[39m=[32m"option"[39m
+                  [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:23:6"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mSeleccionar[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mdata-component-name[39m=[32m"option"[39m
+                  [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:30:44"[39m
+                  [33mvalue[39m=[32m"1"[39m
+                [36m>[39m
+                  [0mCE[0m
+                  [0m · [0m
+                  [0mCentro[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mdata-component-name[39m=[32m"option"[39m
+                  [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:30:44"[39m
+                  [33mvalue[39m=[32m"2"[39m
+                [36m>[39m
+                  [0mNO[0m
+                  [0m · [0m
+                  [0mNorte[0m
+                [36m</option>[39m
+              [36m</select>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"inline-flex items-center justify-center whitespace-nowrap text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-8 w-full sm:w-auto font-bold shadow-sm h-11"[39m
+                [33mdata-component-name[39m=[32m"Button"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:249:10"[39m
+                [33mdata-testid[39m=[32m"button-open-audit"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-play mr-2 h-5 w-5 fill-current"[39m
+                  [33mdata-component-name[39m=[32m"Play"[39m
+                  [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:263:84"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"24"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"24"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mIniciar auditoría[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"no-print grid grid-cols-1 xl:grid-cols-[340px_minmax(0,1fr)] gap-6 items-start"[39m
+            [33mdata-component-name[39m=[32m"div"[39m
+            [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/sr...
+ ✓ src/pages/auditorias-inventario-site.test.tsx > mounted audit site/selection ownership > delayed detail synchronizes site once per new selected audit, not on subsequent refresh 95ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/pages/auditorias-inventario-site.test.tsx > mounted audit site/selection ownership > initial audit A, manual B, refresh and stale URL never select A again; B starts B
+AssertionError: expected '1' to be '2' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mdata-component-name[39m=[32m"div"[39m
+        [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:14:62"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"max-w-[1600px] mx-auto p-4 md:p-6"[39m
+          [33mdata-component-name[39m=[32m"div"[39m
+          [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:231:4"[39m
+          [33mdata-testid[39m=[32m"page-auditorias-inventario"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"no-print flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between mb-8"[39m
+            [33mdata-component-name[39m=[32m"header"[39m
+            [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:232:6"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-component-name[39m=[32m"div"[39m
+              [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:233:8"[39m
+            [36m>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-[10px] font-bold uppercase tracking-widest text-primary/80 mb-1"[39m
+                [33mdata-component-name[39m=[32m"p"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:234:10"[39m
+              [36m>[39m
+                [0mOperación de Almacén[0m
+              [36m</p>[39m
+              [36m<h1[39m
+                [33mclass[39m=[32m"text-3xl font-extrabold tracking-tight text-foreground"[39m
+                [33mdata-component-name[39m=[32m"h1"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:235:10"[39m
+              [36m>[39m
+                [0mAuditoría de Inventario[0m
+              [36m</h1>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-sm text-muted-foreground mt-1 max-w-xl"[39m
+                [33mdata-component-name[39m=[32m"p"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:236:10"[39m
+              [36m>[39m
+                [0mControl físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0"[39m
+              [33mdata-component-name[39m=[32m"div"[39m
+              [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:240:8"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33mdata-component-name[39m=[32m"select"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:21:11"[39m
+                [33mdata-testid[39m=[32m"select-audit-site"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mdata-component-name[39m=[32m"option"[39m
+                  [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:23:6"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mSeleccionar[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mdata-component-name[39m=[32m"option"[39m
+                  [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:30:44"[39m
+                  [33mvalue[39m=[32m"1"[39m
+                [36m>[39m
+                  [0mCE[0m
+                  [0m · [0m
+                  [0mCentro[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mdata-component-name[39m=[32m"option"[39m
+                  [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:30:44"[39m
+                  [33mvalue[39m=[32m"2"[39m
+                [36m>[39m
+                  [0mNO[0m
+                  [0m · [0m
+                  [0mNorte[0m
+                [36m</option>[39m
+              [36m</select>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"inline-flex items-center justify-center whitespace-nowrap text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-8 w-full sm:w-auto font-bold shadow-sm h-11"[39m
+                [33mdata-component-name[39m=[32m"Button"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:249:10"[39m
+                [33mdata-testid[39m=[32m"button-open-audit"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-play mr-2 h-5 w-5 fill-current"[39m
+                  [33mdata-component-name[39m=[32m"Play"[39m
+                  [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:263:84"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"24"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"24"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mIniciar auditoría[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"no-print grid grid-cols-1 xl:grid-cols-[340px_minmax(0,1fr)] gap-6 items-start"[39m
+            [33mdata-component-name[39m=[32m"div"[39m
+            [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/sr...
+
+Expected: "2"
+Received: "1"
+
+ ❯ src/pages/auditorias-inventario-site.test.tsx:105:33
+    103|     page.changeSite(2);
+    104|     await waitFor(() => {
+    105|       expect(page.site().value).toBe("2");
+       |                                 ^
+    106|       expect(Boolean(screen.queryByTestId("text-audit-folio"))).toBe(f…
+    107|       expect(Boolean(screen.queryByTestId("button-audit-41"))).toBe(fa…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/pages/auditorias-inventario-site.test.tsx > mounted audit site/selection ownership > site switch is read-only; reopening A restores its own detail, floors and scan id
+AssertionError: expected true to be false // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mdata-component-name[39m=[32m"div"[39m
+        [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:14:62"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"max-w-[1600px] mx-auto p-4 md:p-6"[39m
+          [33mdata-component-name[39m=[32m"div"[39m
+          [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:231:4"[39m
+          [33mdata-testid[39m=[32m"page-auditorias-inventario"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"no-print flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between mb-8"[39m
+            [33mdata-component-name[39m=[32m"header"[39m
+            [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:232:6"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mdata-component-name[39m=[32m"div"[39m
+              [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:233:8"[39m
+            [36m>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-[10px] font-bold uppercase tracking-widest text-primary/80 mb-1"[39m
+                [33mdata-component-name[39m=[32m"p"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:234:10"[39m
+              [36m>[39m
+                [0mOperación de Almacén[0m
+              [36m</p>[39m
+              [36m<h1[39m
+                [33mclass[39m=[32m"text-3xl font-extrabold tracking-tight text-foreground"[39m
+                [33mdata-component-name[39m=[32m"h1"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:235:10"[39m
+              [36m>[39m
+                [0mAuditoría de Inventario[0m
+              [36m</h1>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-sm text-muted-foreground mt-1 max-w-xl"[39m
+                [33mdata-component-name[39m=[32m"p"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:236:10"[39m
+              [36m>[39m
+                [0mControl físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0"[39m
+              [33mdata-component-name[39m=[32m"div"[39m
+              [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:240:8"[39m
+            [36m>[39m
+              [36m<select[39m
+                [33mdata-component-name[39m=[32m"select"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:21:11"[39m
+                [33mdata-testid[39m=[32m"select-audit-site"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mdata-component-name[39m=[32m"option"[39m
+                  [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:23:6"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mSeleccionar[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mdata-component-name[39m=[32m"option"[39m
+                  [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:30:44"[39m
+                  [33mvalue[39m=[32m"1"[39m
+                [36m>[39m
+                  [0mCE[0m
+                  [0m · [0m
+                  [0mCentro[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mdata-component-name[39m=[32m"option"[39m
+                  [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario-site.test.tsx:30:44"[39m
+                  [33mvalue[39m=[32m"2"[39m
+                [36m>[39m
+                  [0mNO[0m
+                  [0m · [0m
+                  [0mNorte[0m
+                [36m</option>[39m
+              [36m</select>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"inline-flex items-center justify-center whitespace-nowrap text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-8 w-full sm:w-auto font-bold shadow-sm h-11"[39m
+                [33mdata-component-name[39m=[32m"Button"[39m
+                [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:249:10"[39m
+                [33mdata-testid[39m=[32m"button-open-audit"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-play mr-2 h-5 w-5 fill-current"[39m
+                  [33mdata-component-name[39m=[32m"Play"[39m
+                  [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/src/pages/auditorias-inventario.tsx:263:84"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"24"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"24"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mIniciar auditoría[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"no-print grid grid-cols-1 xl:grid-cols-[340px_minmax(0,1fr)] gap-6 items-start"[39m
+            [33mdata-component-name[39m=[32m"div"[39m
+            [33mdata-replit-metadata[39m=[32m"tmp/audit-baseline-z0uTDi/sr...
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/pages/auditorias-inventario-site.test.tsx:126:83
+    124|     await waitFor(() => expect(page.site().value).toBe("1"));
+    125|     page.changeSite(2);
+    126|     await waitFor(() => expect(Boolean(screen.queryByTestId("text-audi…
+       |                                                                                   ^
+    127|     page.noWrites();
+    128|     fireEvent.click(screen.getByTestId("button-audit-42"));
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  18:14:33
+   Duration  9.53s (transform 53%, tests 24%, import 12%, environment 10%)
+
+  Transform  transforming modules took 4.97s · 53% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
