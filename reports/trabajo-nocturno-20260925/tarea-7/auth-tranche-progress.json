@@ -1,0 +1,228 @@
+{
+  "stage": "complete",
+  "source": "MAIN-exclusively-handed-off night56_test; synthetic canonical seed only",
+  "responses": [
+    {
+      "cellId": "CONTADOR:camionetas:editar",
+      "role": "CONTADOR",
+      "method": "PATCH",
+      "url": "/camionetas/1",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "0df0b5ec-f85c-4f4c-996f-907beb109707"
+      },
+      "selectedGuard": false,
+      "before": {
+        "n": 1,
+        "digest": "7ab60f657b27f6c367645173920de134"
+      },
+      "after": {
+        "n": 1,
+        "digest": "7ab60f657b27f6c367645173920de134"
+      },
+      "classification": "OUTER_403_NOT_COVERAGE"
+    },
+    {
+      "cellId": "CONTADOR:choferes:editar",
+      "role": "CONTADOR",
+      "method": "PATCH",
+      "url": "/choferes/1",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "e8a989cd-08ad-4985-b244-3831635c42a3"
+      },
+      "selectedGuard": false,
+      "before": {
+        "n": 1,
+        "digest": "314d325f9b10286afc618237f1bb9803"
+      },
+      "after": {
+        "n": 1,
+        "digest": "314d325f9b10286afc618237f1bb9803"
+      },
+      "classification": "OUTER_403_NOT_COVERAGE"
+    },
+    {
+      "cellId": "CONTADOR:equipos:editar",
+      "role": "CONTADOR",
+      "method": "PATCH",
+      "url": "/equipos/1",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "c19823e1-d34a-475b-85f0-641f6d3752c0"
+      },
+      "selectedGuard": false,
+      "before": {
+        "n": 1,
+        "digest": "9db36f71bd10206bd43e53b6e988cf1b"
+      },
+      "after": {
+        "n": 1,
+        "digest": "9db36f71bd10206bd43e53b6e988cf1b"
+      },
+      "classification": "OUTER_403_NOT_COVERAGE"
+    },
+    {
+      "cellId": "TERMINAL:permisos:editar",
+      "role": "TERMINAL",
+      "method": "PUT",
+      "url": "/permisos/roles/TERMINAL/dashboard",
+      "status": 403,
+      "response": {
+        "error": "No tienes permiso para 'ver' en el módulo 'permisos'."
+      },
+      "selectedGuard": false,
+      "before": {
+        "n": 204,
+        "digest": "64d67dee10045265908ba6c6930bc327"
+      },
+      "after": {
+        "n": 204,
+        "digest": "64d67dee10045265908ba6c6930bc327"
+      },
+      "classification": "OUTER_403_NOT_COVERAGE"
+    },
+    {
+      "cellId": "CAJA:permisos:editar",
+      "role": "CAJA",
+      "method": "PUT",
+      "url": "/permisos/roles/TERMINAL/dashboard",
+      "status": 403,
+      "response": {
+        "error": "No tienes permiso para 'ver' en el módulo 'permisos'."
+      },
+      "selectedGuard": false,
+      "before": {
+        "n": 204,
+        "digest": "64d67dee10045265908ba6c6930bc327"
+      },
+      "after": {
+        "n": 204,
+        "digest": "64d67dee10045265908ba6c6930bc327"
+      },
+      "classification": "OUTER_403_NOT_COVERAGE"
+    },
+    {
+      "cellId": "SUPERVISOR:permisos:editar",
+      "role": "SUPERVISOR",
+      "method": "PUT",
+      "url": "/permisos/roles/TERMINAL/dashboard",
+      "status": 403,
+      "response": {
+        "error": "No tienes permiso para 'ver' en el módulo 'permisos'."
+      },
+      "selectedGuard": false,
+      "before": {
+        "n": 204,
+        "digest": "64d67dee10045265908ba6c6930bc327"
+      },
+      "after": {
+        "n": 204,
+        "digest": "64d67dee10045265908ba6c6930bc327"
+      },
+      "classification": "OUTER_403_NOT_COVERAGE"
+    },
+    {
+      "cellId": "BODEGA:permisos:editar",
+      "role": "BODEGA",
+      "method": "PUT",
+      "url": "/permisos/roles/TERMINAL/dashboard",
+      "status": 403,
+      "response": {
+        "error": "No tienes permiso para 'ver' en el módulo 'permisos'."
+      },
+      "selectedGuard": false,
+      "before": {
+        "n": 204,
+        "digest": "64d67dee10045265908ba6c6930bc327"
+      },
+      "after": {
+        "n": 204,
+        "digest": "64d67dee10045265908ba6c6930bc327"
+      },
+      "classification": "OUTER_403_NOT_COVERAGE"
+    },
+    {
+      "cellId": "CONTADOR:permisos:editar",
+      "role": "CONTADOR",
+      "method": "PUT",
+      "url": "/permisos/roles/TERMINAL/dashboard",
+      "status": 403,
+      "response": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "7e0a1c6f-6b1a-457f-8692-1a40ca713046"
+      },
+      "selectedGuard": false,
+      "before": {
+        "n": 204,
+        "digest": "64d67dee10045265908ba6c6930bc327"
+      },
+      "after": {
+        "n": 204,
+        "digest": "64d67dee10045265908ba6c6930bc327"
+      },
+      "classification": "OUTER_403_NOT_COVERAGE"
+    }
+  ],
+  "roles": [
+    {
+      "role": "TERMINAL",
+      "id": 4,
+      "meHttp": 200
+    },
+    {
+      "role": "CAJA",
+      "id": 5,
+      "meHttp": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "id": 6,
+      "meHttp": 200
+    },
+    {
+      "role": "BODEGA",
+      "id": 7,
+      "meHttp": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "id": 8,
+      "meHttp": 200
+    },
+    {
+      "role": "CONTADOR",
+      "id": 9,
+      "meHttp": 200
+    }
+  ],
+  "positiveControls": [
+    {
+      "forCell": "CONTADOR:camionetas:editar",
+      "status": 200
+    },
+    {
+      "forCell": "CONTADOR:choferes:editar",
+      "status": 200
+    },
+    {
+      "forCell": "CONTADOR:equipos:editar",
+      "status": 200
+    }
+  ],
+  "counts": {
+    "authenticatedNaturalRoles": 6,
+    "actualDenialRequests": 8,
+    "newlyCoveredDirect": 0,
+    "outerOrBlocked": 8,
+    "uiActionNew": 0,
+    "newCombined": 0
+  }
+}
