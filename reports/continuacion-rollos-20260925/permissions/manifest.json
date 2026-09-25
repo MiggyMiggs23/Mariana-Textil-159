@@ -1,0 +1,15 @@
+{
+  "baseline": "reports/trabajo-nocturno-20260925/tarea-7/ledger.json",
+  "cases": [
+    {"cellId":"TERMINAL:permisos:editar","role":"TERMINAL","module":"permisos","action":"editar","outer":"permisos:ver"},
+    {"cellId":"CAJA:permisos:editar","role":"CAJA","module":"permisos","action":"editar","outer":"permisos:ver"},
+    {"cellId":"SUPERVISOR:permisos:editar","role":"SUPERVISOR","module":"permisos","action":"editar","outer":"permisos:ver"},
+    {"cellId":"BODEGA:permisos:editar","role":"BODEGA","module":"permisos","action":"editar","outer":"permisos:ver"}
+  ],
+  "excluded": {
+    "owner357": "No operation/eligible button identified by owner; do not request or reclassify.",
+    "contador": "E11 hard denial precedes configurable permission; never bypass it.",
+    "legacy409": "E3 gate is not a selected-action guard; do not force release.",
+    "ui40": "Existing direct API evidence; requires individual eligible control identification, not a screenshot of a page."
+  }
+}

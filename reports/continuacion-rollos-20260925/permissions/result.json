@@ -1,0 +1,227 @@
+{
+  "readyPath": "/home/runner/workspace/reports/continuacion-rollos-20260925/preparation/ready.json",
+  "cases": [
+    {
+      "cellId": "TERMINAL:permisos:editar",
+      "method": "PUT",
+      "path": "/permisos/usuarios/8/dashboard",
+      "status": 403,
+      "response": {
+        "error": "No tienes permiso para 'editar' en el módulo 'permisos'."
+      },
+      "exact": true,
+      "before": {
+        "count": 8,
+        "digest": "d71d50b4367ff015c3caf3b1631d444d"
+      },
+      "after": {
+        "count": 8,
+        "digest": "d71d50b4367ff015c3caf3b1631d444d"
+      },
+      "classification": "SELECTED_GUARD"
+    },
+    {
+      "cellId": "CAJA:permisos:editar",
+      "method": "PUT",
+      "path": "/permisos/usuarios/8/dashboard",
+      "status": 403,
+      "response": {
+        "error": "No tienes permiso para 'editar' en el módulo 'permisos'."
+      },
+      "exact": true,
+      "before": {
+        "count": 8,
+        "digest": "d71d50b4367ff015c3caf3b1631d444d"
+      },
+      "after": {
+        "count": 8,
+        "digest": "d71d50b4367ff015c3caf3b1631d444d"
+      },
+      "classification": "SELECTED_GUARD"
+    },
+    {
+      "cellId": "SUPERVISOR:permisos:editar",
+      "method": "PUT",
+      "path": "/permisos/usuarios/8/dashboard",
+      "status": 403,
+      "response": {
+        "error": "No tienes permiso para 'editar' en el módulo 'permisos'."
+      },
+      "exact": true,
+      "before": {
+        "count": 8,
+        "digest": "d71d50b4367ff015c3caf3b1631d444d"
+      },
+      "after": {
+        "count": 8,
+        "digest": "d71d50b4367ff015c3caf3b1631d444d"
+      },
+      "classification": "SELECTED_GUARD"
+    },
+    {
+      "cellId": "BODEGA:permisos:editar",
+      "method": "PUT",
+      "path": "/permisos/usuarios/8/dashboard",
+      "status": 403,
+      "response": {
+        "error": "No tienes permiso para 'editar' en el módulo 'permisos'."
+      },
+      "exact": true,
+      "before": {
+        "count": 8,
+        "digest": "d71d50b4367ff015c3caf3b1631d444d"
+      },
+      "after": {
+        "count": 8,
+        "digest": "d71d50b4367ff015c3caf3b1631d444d"
+      },
+      "classification": "SELECTED_GUARD"
+    }
+  ],
+  "ui": [
+    {
+      "cellId": "TERMINAL:permisos:editar",
+      "classification": "UI_ERROR_NOT_COVERED",
+      "error": "TimeoutError: locator.waitFor: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('row').filter({ has: getByRole('cell', { name: 'dashboard', exact: true }) }) to be visible\u001b[22m\n"
+    },
+    {
+      "cellId": "CAJA:permisos:editar",
+      "classification": "UI_ERROR_NOT_COVERED",
+      "error": "TimeoutError: locator.waitFor: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('row').filter({ has: getByRole('cell', { name: 'dashboard', exact: true }) }) to be visible\u001b[22m\n"
+    },
+    {
+      "cellId": "SUPERVISOR:permisos:editar",
+      "classification": "UI_ERROR_NOT_COVERED",
+      "error": "TimeoutError: locator.waitFor: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('row').filter({ has: getByRole('cell', { name: 'dashboard', exact: true }) }) to be visible\u001b[22m\n"
+    },
+    {
+      "cellId": "BODEGA:permisos:editar",
+      "classification": "UI_ERROR_NOT_COVERED",
+      "error": "TimeoutError: locator.waitFor: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('row').filter({ has: getByRole('cell', { name: 'dashboard', exact: true }) }) to be visible\u001b[22m\n"
+    }
+  ],
+  "setup": [
+    {
+      "role": "TERMINAL",
+      "id": 4,
+      "http": 201,
+      "login": 200,
+      "me": 200
+    },
+    {
+      "role": "CAJA",
+      "id": 5,
+      "http": 201,
+      "login": 200,
+      "me": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "id": 6,
+      "http": 201,
+      "login": 200,
+      "me": 200
+    },
+    {
+      "role": "BODEGA",
+      "id": 7,
+      "http": 201,
+      "login": 200,
+      "me": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "id": 8,
+      "http": 201,
+      "login": 200,
+      "me": 200
+    },
+    {
+      "cellId": "TERMINAL:permisos:editar",
+      "override": 200,
+      "usersRead": 200,
+      "prerequisiteGet": 200,
+      "permission": {
+        "modulo": "permisos",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      }
+    },
+    {
+      "cellId": "CAJA:permisos:editar",
+      "override": 200,
+      "usersRead": 200,
+      "prerequisiteGet": 200,
+      "permission": {
+        "modulo": "permisos",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      }
+    },
+    {
+      "cellId": "SUPERVISOR:permisos:editar",
+      "override": 200,
+      "usersRead": 200,
+      "prerequisiteGet": 200,
+      "permission": {
+        "modulo": "permisos",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      }
+    },
+    {
+      "cellId": "BODEGA:permisos:editar",
+      "override": 200,
+      "usersRead": 200,
+      "prerequisiteGet": 200,
+      "permission": {
+        "modulo": "permisos",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      }
+    }
+  ],
+  "controls": [
+    {
+      "role": "ADMIN",
+      "method": "PUT",
+      "path": "/permisos/usuarios/8/dashboard",
+      "status": 200,
+      "before": {
+        "count": 8,
+        "digest": "d71d50b4367ff015c3caf3b1631d444d"
+      },
+      "after": {
+        "count": 9,
+        "digest": "857fc9306d3326339b29668a052e146a"
+      },
+      "targetRow": {
+        "puede_ver": true
+      }
+    }
+  ],
+  "counts": {
+    "baselinePendingApi": 381,
+    "baselinePendingCombined": 421,
+    "newExactApi": 4,
+    "newCombined": 0,
+    "ownerUnmappedUntouched": 357,
+    "remainingApi": 377,
+    "remainingCombined": 421
+  },
+  "state": "complete",
+  "identity": {
+    "database": "continue_test",
+    "port": 55536,
+    "directory": "/home/runner/workspace/private.local/roll-return-continuation/cluster",
+    "adminId": 1
+  }
+}
