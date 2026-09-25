@@ -1,0 +1,38 @@
+{
+  "origin": "served API effective DATABASE_URL via explicitly selected PID; read-only identity and pg_dump --schema-only; zero application rows",
+  "servedPid": 198,
+  "servedBundle": "artifacts/api-server/dist-night-task12/index.mjs",
+  "servedIdentity": {
+    "database": "heliumdb",
+    "db_user": "postgres",
+    "address": null,
+    "port": null,
+    "version": "160010",
+    "started": "2026-09-25T13:12:14.356Z",
+    "read_only": "on"
+  },
+  "schemaSha256": "7f184ee5a06de34e198277d0c21035502ea59c5bcd5de23697eb8526ef98d8c5",
+  "startupSchemaSha256": "9138e4e26c7b16d6891a8ee041980dd455ee04e735552a686cdf3c43bb0045e1",
+  "restoredInto": {
+    "database": "continue_test",
+    "db_user": "postgres",
+    "address": "127.0.0.1/32",
+    "port": 55536,
+    "directory": "/home/runner/workspace/private.local/roll-return-continuation/cluster",
+    "started": "2026-09-25T13:22:02.714Z",
+    "admin_count": 1,
+    "e5_closed": 2,
+    "e11_closed": 0
+  },
+  "witnessIdentity": {
+    "database": "continue_witness",
+    "db_user": "postgres",
+    "port": 55536,
+    "directory": "/home/runner/workspace/private.local/roll-return-continuation/cluster",
+    "public_tables": 0
+  },
+  "canonicalSeed": true,
+  "schemaPushSkipped": true,
+  "apiBoot": "NODE_ENV=development API_INSPECTION_BOOT=1; no initializer, backfill or stock monitor",
+  "annual": "continue_annual (separate, unpopulated annual dataset)"
+}

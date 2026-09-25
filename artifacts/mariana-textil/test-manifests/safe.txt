@@ -7,6 +7,7 @@ src/components/cliente-nota-credito.render.contract.test.ts
 src/components/cliente-nota-estado-badge.contract.test.ts
 src/components/cliente-nota-estado-badge.render.test.ts
 src/components/cliente-saldo-a-favor.contract.test.ts
+src/components/commercial-return.render.test.ts
 src/components/confirmacion-texto-exacto.contract.test.ts
 src/components/entrada-history.contract.test.ts
 src/components/label-print.contract.test.ts

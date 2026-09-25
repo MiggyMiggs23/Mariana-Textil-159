@@ -1,0 +1,19 @@
+{
+  "owner": "MAIN",
+  "state": "READY_FOR_VERIFICATION_NOT_TESTED",
+  "origin": "http://127.0.0.1:43937",
+  "apiOrigin": "http://127.0.0.1:43936",
+  "postgresPort": 55536,
+  "testDatabase": "continue_test",
+  "witnessDatabase": "continue_witness",
+  "annualDatabase": "continue_annual",
+  "annualDatasetLoaded": false,
+  "annualLoadPhase": "MAIN-only later exclusive phase; no fixture load into continue_test",
+  "apiBoot": "development inspection (no startup initializers/backfill/monitor)",
+  "apiPid": 2450,
+  "uiPid": 2475,
+  "credentials": "private.local/roll-return-continuation/credentials.json",
+  "schemaProvenance": "reports/continuacion-rollos-20260925/preparation/schema-provenance.json",
+  "flagsForced": [],
+  "applicationRowsCopied": false
+}
