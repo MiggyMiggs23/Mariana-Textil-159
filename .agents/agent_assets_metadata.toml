@@ -2565,3 +2565,17 @@ mtime_ms = 1790373187736
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/3bff63f9-44a6-4ccb-ae45-7938912fb1f4/9aaf2702-e464-44d2-9d44-6fd8d04d9cac"
 storage_version_token = "1790373236703800"
 content_type = "image/png"
+
+[[outputs]]
+id = "B6-orsWHl77Y8B3oqbCT8"
+uri = "file://artifacts/mariana-textil/reports/clientes-lista-20260925/clientes-desktop.png"
+type = "image"
+title = "Clientes: búsqueda, actividad y deuda"
+description = "Nueva interfaz comprobada con datos sintéticos. Pendiente de activar en la aplicación."
+logical_id = "bec82a89-996b-4e51-9e91-e89b96ba46f6"
+content_hash = "sha256:2fde4169788bd4c7b554b7417678964f86f936b049a61b056071c8efbaa04deb"
+size = 154922
+mtime_ms = 1790374585720
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/bec82a89-996b-4e51-9e91-e89b96ba46f6/04e84a99-2770-4d48-9415-875fe1c82b0e"
+storage_version_token = "1790374652380745"
+content_type = "image/png"
