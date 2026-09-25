@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { z } from "zod";
-import { E5_ENABLED } from "./e5-feature";
+import { E5_ENABLED, E5_REFUND_ENABLED } from "./e5-feature";
 import { e11Runtime } from "./e11-runtime";
 import type { E5Cobro as Cobro, E5Contexto as Contexto, E5Nota as Nota, E5Propuesta as Propuesta,
   E5Asignacion as Asignacion, E5Aplicacion as Aplicacion, E5Documento as Documento, E5FuenteDevolucion as Fuente } from "@workspace/api-zod";
@@ -91,7 +91,7 @@ export function e5Capabilities(actor: E5Actor, detail?: E5Cobro) {
     && actor.rol === "CONTADOR" && actor.capacidadAE11 === true && actor.e11PerfilVersion !== undefined;
   return { puedeRecibir: ["ADMIN", "SUPERVISOR", "CAJA", "TERMINAL"].includes(actor.rol) && (actor.recibirCaja || actor.recibirCliente),
     puedePreparar: (admin || a) && pending, puedeAutorizar: admin && pending && (!detail || !!detail.propuestaVigenteId),
-    puedeRechazar: admin && !!detail?.propuestaVigenteId, puedeDevolver: admin && pending && detail?.algunaVezAplicado === false,
+    puedeRechazar: admin && !!detail?.propuestaVigenteId, puedeDevolver: E5_REFUND_ENABLED && admin && pending && detail?.algunaVezAplicado === false,
     puedeVerAvisos: admin, puedeImprimir: admin, preparacionADisponible: a };
 }
 export function e5View(detail: E5Cobro, actor: E5Actor, now = e11Runtime().now()) {
@@ -182,6 +182,9 @@ function makeDocument(detail: E5Cobro, id: string, application?: E5Aplicacion): 
 }
 async function apply(repo: E5Repository, detail: E5Cobro, proposal: E5Propuesta, rows: E5Asignacion[],
   favor: string, context: E5Context, actor: E5Actor, evidence: z.infer<typeof e5Evidence>, now: string) {
+  if (rows.some(row => !detail.notasIndicadas.some(note =>
+    note.notaId === row.notaId && note.movimientoVentaId === row.movimientoVentaId)))
+    throw new E5Error("E5_STATE_CONFLICT", "No se cambia el destino indicado al recibir el dinero.", 409);
   const amount = validateE5Allocations(rows, context, detail.importePendiente, favor);
   if (rows.some(row => !proposal.asignaciones.some(p => p.notaId === row.notaId &&
       p.movimientoVentaId === row.movimientoVentaId && e5Cents(row.importe) <= e5Cents(p.importe))) ||
@@ -204,6 +207,8 @@ async function apply(repo: E5Repository, detail: E5Cobro, proposal: E5Propuesta,
 export async function e5Command(repo: E5Repository, actor: E5Actor, action: E5Action, raw: unknown,
   id?: string, enabled = E5_ENABLED) {
   requireE5(enabled);
+  if (action === "DEVOLVER" && !E5_REFUND_ENABLED)
+    throw new E5Error("E5_DISABLED", "La devolución de dinero E5 permanece cerrada.", 403);
   if (action === "PROPONER" ? !e5Capabilities(actor).puedePreparar : action !== "RECIBIR" && actor.rol !== "ADMIN")
     throw new E5Error("E5_FORBIDDEN", "Acción no autorizada.", 403);
   const schema = action === "RECIBIR" ? e5Receive : action === "PROPONER" ? e5Proposal :
@@ -254,6 +259,9 @@ export async function e5Command(repo: E5Repository, actor: E5Actor, action: E5Ac
       contextCurrent(context, value.versionContexto);
       const favor = value.importeFavorPropuesto ?? "0.00";
       if (e5Cents(favor) > 0n && actor.rol !== "ADMIN") throw new E5Error("E5_FORBIDDEN", "Solo ADMIN propone favor explícito.", 403);
+      if (value.asignaciones.some(row => !detail.notasIndicadas.some(note =>
+        note.notaId === row.notaId && note.movimientoVentaId === row.movimientoVentaId)))
+        throw new E5Error("E5_STATE_CONFLICT", "No se cambia el destino indicado al recibir el dinero.", 409);
       validateE5Allocations(value.asignaciones, context, detail.importePendiente, favor);
       const proposal: E5Propuesta = { id: randomUUID(), version: detail.propuestas.length + 1,
         asignaciones: value.asignaciones, importeFavorPropuesto: favor,

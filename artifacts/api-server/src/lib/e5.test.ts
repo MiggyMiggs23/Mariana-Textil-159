@@ -72,21 +72,24 @@ async function proposed() {
 }
 
 test("E5-OFF-COMMAND", async () => {
-  await assert.rejects(() => e5Command(new Memory(), admin, "RECIBIR", receive()), code("E5_DISABLED"));
+  await assert.rejects(() => e5Command(new Memory(), admin, "RECIBIR", receive(), undefined, false), code("E5_DISABLED"));
 });
 test("E5-OFF-PREVIEW", async () => {
-  const m = new Memory(); await assert.rejects(() => e5Preview(m, admin, receive()), code("E5_DISABLED"));
+  const m = new Memory(); await assert.rejects(() => e5Preview(m, admin, receive(), false), code("E5_DISABLED"));
   assert.equal(m.sessionsChecked, 0);
 });
-test("E5-OFF-HTTP", () => {
-  let status = 0, body: any; e5OffBoundary({ method: "POST", path: "/cobros" } as any,
-    { status(n: number) { status = n; return this; }, json(v: any) { body = v; } } as any, () => assert.fail());
-  assert.equal(status, 403); assert.equal(body.error.code, "E5_DISABLED");
+test("E5-OPEN-HTTP-REQUIRES-NEXT-AUTH-BOUNDARY", () => {
+  let called = false;
+  e5OffBoundary({ method: "POST", path: "/cobros" } as any, {} as any, () => { called = true; });
+  assert.equal(called, true);
 });
-test("E5-OFF-AVAILABILITY", () => {
-  let body: any; e5OffBoundary({ method: "GET", path: "/disponibilidad" } as any,
-    { status() { assert.fail(); }, json(v: any) { body = v; } } as any, () => assert.fail());
-  assert.equal(body.enabled, false); assert.equal(Object.values(body.capacidades).every(v => v === false), true);
+test("E5-OPEN-AVAILABILITY-USES-AUTHORIZED-CAPABILITIES", () => {
+  let called = false;
+  e5OffBoundary({ method: "GET", path: "/disponibilidad" } as any, {} as any, () => { called = true; });
+  assert.equal(called, true);
+});
+test("E5-REFUND-STAYS-INDEPENDENTLY-CLOSED", () => {
+  assert.equal(e5Capabilities(admin, { importePendiente: "10.00", algunaVezAplicado: false } as E5Cobro).puedeDevolver, false);
 });
 test("E5-MONEY-POSITIVE", async () => {
   assert.equal(e5Cents("10.09"), 1009n);
@@ -133,6 +136,18 @@ test("E5-NONADMIN-NO-APPLY-NOW", async () => {
 test("E5-PROPOSAL-EXPLICIT-FUTURE", async () => {
   const x = await proposed(); assert.equal(x.proposal.aplicaciones.length, 0);
   assert.equal(x.proposal.importePendiente, "10.00"); assert.equal(x.m.applyCalls, 0);
+});
+test("E5-RECEPTION-DESTINATION-CANNOT-BE-REASSIGNED", async () => {
+  const x = await pending();
+  x.m.ctx = context([note(10, 100, "10.00"), note(11, 101, "10.00")], "20.00");
+  await assert.rejects(() => run(x.m, "PROPONER", {
+    claveOperacion: key(2), revisionEsperada: 1, versionContexto: "opaque-v1",
+    asignaciones: [{ notaId: 11, movimientoVentaId: 101, importe: "10.00" }],
+    evidencia: evidence,
+  }, x.detail.id), code("E5_STATE_CONFLICT"));
+  assert.equal(x.m.applyCalls, 0);
+  assert.equal(x.m.state.detail?.importePendiente, "10.00");
+  assert.equal(x.m.state.detail?.propuestas.length, 0);
 });
 test("E5-PREPARE-ADMIN-OR-A", () => {
   assert.equal(e5Capabilities(admin).puedePreparar, true);
@@ -187,11 +202,14 @@ test("E5-FAVOR-NO-AUTO-WITH-DEBT", () => {
   assert.throws(() => validateE5Allocations([{ notaId: 10, movimientoVentaId: 100, importe: "4.00" }],
     context([note(10, 100, "10.00")], "10.00"), "10.00", "6.00"), code("E5_STATE_CONFLICT"));
 });
-test("E5-REFUND-NEVER-APPLIED-FULL", async () => {
-  const x = await pending(); const d = await run(x.m, "DEVOLVER", { claveOperacion: key(4), revisionEsperada: 1,
+test("E5-REFUND-CLOSED-EVEN-NEVER-APPLIED", async () => {
+  const x = await pending();
+  assert.equal(e5Capabilities(admin, x.detail).puedeDevolver, false);
+  await assert.rejects(() => run(x.m, "DEVOLVER", { claveOperacion: key(4), revisionEsperada: 1,
     peticionCliente: "Solicitud expresa del cliente", evidencia: evidence,
-    fuente: { tipo: "CAJA", ubicacionId: 2, sesionCajaId: 22, cuentaOrigen: "CAJA_FISICA" } }, x.detail.id);
-  assert.equal(d.estado, "DEVUELTO"); assert.equal(d.importeDevuelto, "10.00"); assert.equal(x.m.refundCalls, 1);
+    fuente: { tipo: "CAJA", ubicacionId: 2, sesionCajaId: 22, cuentaOrigen: "CAJA_FISICA" } }, x.detail.id), code("E5_DISABLED"));
+  assert.equal(x.m.refundCalls, 0);
+  assert.equal(x.detail.importePendiente, "10.00");
 });
 test("E5-REFUND-AFTER-PARTIAL-NO", async () => {
   const x = await proposed(); await run(x.m, "AUTORIZAR", { claveOperacion: key(3), revisionEsperada: 2,
@@ -199,7 +217,8 @@ test("E5-REFUND-AFTER-PARTIAL-NO", async () => {
     asignaciones: [{ notaId: 10, movimientoVentaId: 100, importe: "4.00" }], evidencia: evidence }, x.detail.id);
   await assert.rejects(() => run(x.m, "DEVOLVER", { claveOperacion: key(4), revisionEsperada: 3,
     peticionCliente: "Petición", evidencia: evidence, fuente: { tipo: "CAJA", ubicacionId: 2, sesionCajaId: 2,
-      cuentaOrigen: "CAJA_FISICA" } }, x.detail.id), code("E5_REFUND_INELIGIBLE"));
+      cuentaOrigen: "CAJA_FISICA" } }, x.detail.id), code("E5_DISABLED"));
+  assert.equal(x.m.refundCalls, 0);
 });
 test("E5-IDEMPOTENCY-CONTENT", async () => {
   const x = await pending(); const replay = await run(x.m, "RECIBIR", receive());

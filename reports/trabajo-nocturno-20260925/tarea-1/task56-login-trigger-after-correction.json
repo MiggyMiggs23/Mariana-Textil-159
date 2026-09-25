@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "identity": {
+    "db": "night56_test",
+    "port": 55526,
+    "directory": "/home/runner/workspace/private.local/night-t56/cluster",
+    "graph_md5": "39dc276e7192e01691011f271882c09b",
+    "old_alias": 0
+  },
+  "write": "no-op seed ADMIN UPDATE rolled back",
+  "fix": "Current prepared graph already includes both exact Tanda E replacements; no blind duplicate patch applied"
+}

@@ -1,2 +1,2 @@
-/** Construction only. No environment or user override; activation needs authorization. */
-export const E5_ENABLED = false;
+/** Directed/retained release authorized 2026-09-25; monetary refund stays closed. */
+export const E5_ENABLED = true;

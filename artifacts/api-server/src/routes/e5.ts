@@ -11,6 +11,7 @@ import { e5OffBoundary, e5DatabaseError } from "../lib/e5-http";
 import { E5Error, e5Command, e5Preview, e5Scope, e5Capabilities, e5Print, e5Canonical, type E5Actor, type E5Action } from "../lib/e5";
 import { e5Repository, e5Context, readE5Cobro, listE5Cobros, readE5Document, e5RefundOptions, type E5Dependencies } from "../lib/e5-repository";
 import { FondoError } from "../lib/fondo";
+import { E5_REFUND_ENABLED } from "../lib/e5-feature";
 
 const router = Router();
 router.use("/e5", e5OffBoundary);
@@ -95,6 +96,10 @@ router.post("/e5/cobros/:id/autorizar", command("AUTORIZAR"));
 router.post("/e5/cobros/:id/rechazar", command("RECHAZAR"));
 router.post("/e5/cobros/:id/devolver", command("DEVOLVER"));
 router.get("/e5/cobros/:id/devolucion/opciones", async (req, res, next) => {
+  if (!E5_REFUND_ENABLED) {
+    res.status(403).json({ error: { code: "E5_DISABLED", message: "La devolución de dinero E5 permanece cerrada." } });
+    return;
+  }
   try { res.json(await e5RefundOptions(db, id(req), actor(req))); } catch (error) { next(error); }
 });
 router.get("/e5/cobros/:id/documentos/:documentoId", async (req, res, next) => {

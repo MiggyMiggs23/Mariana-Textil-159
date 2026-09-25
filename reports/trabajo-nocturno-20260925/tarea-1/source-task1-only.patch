@@ -1,0 +1,185 @@
+diff --git a/artifacts/api-server/src/lib/e5-feature.ts b/artifacts/api-server/src/lib/e5-feature.ts
+index 12b2ea55..8875afa5 100644
+--- a/artifacts/api-server/src/lib/e5-feature.ts
++++ b/artifacts/api-server/src/lib/e5-feature.ts
+@@ -1,4 +1,6 @@
+-/** Construction only. No environment or user override; activation needs authorization. */
+-export const E5_ENABLED = false;
++/** Directed/retained release authorized 2026-09-25. No runtime override. */
++export const E5_ENABLED = true;
++/** Monetary refunds remain explicitly outside the directed/retained release. */
++export const E5_REFUND_ENABLED: boolean = false;
+ /** E11 is later: never infer ContadorA from legacy CONTADOR or generic create permission. */
+ export const E5_CONTADOR_A_ENABLED = false;
+\ No newline at end of file
+diff --git a/artifacts/api-server/src/lib/e5.test.ts b/artifacts/api-server/src/lib/e5.test.ts
+index 714aa116..3dd2e663 100644
+--- a/artifacts/api-server/src/lib/e5.test.ts
++++ b/artifacts/api-server/src/lib/e5.test.ts
+@@ -72,21 +72,24 @@ async function proposed() {
+ }
+ 
+ test("E5-OFF-COMMAND", async () => {
+-  await assert.rejects(() => e5Command(new Memory(), admin, "RECIBIR", receive()), code("E5_DISABLED"));
++  await assert.rejects(() => e5Command(new Memory(), admin, "RECIBIR", receive(), undefined, false), code("E5_DISABLED"));
+ });
+ test("E5-OFF-PREVIEW", async () => {
+-  const m = new Memory(); await assert.rejects(() => e5Preview(m, admin, receive()), code("E5_DISABLED"));
++  const m = new Memory(); await assert.rejects(() => e5Preview(m, admin, receive(), false), code("E5_DISABLED"));
+   assert.equal(m.sessionsChecked, 0);
+ });
+-test("E5-OFF-HTTP", () => {
+-  let status = 0, body: any; e5OffBoundary({ method: "POST", path: "/cobros" } as any,
+-    { status(n: number) { status = n; return this; }, json(v: any) { body = v; } } as any, () => assert.fail());
+-  assert.equal(status, 403); assert.equal(body.error.code, "E5_DISABLED");
++test("E5-OPEN-HTTP-REQUIRES-NEXT-AUTH-BOUNDARY", () => {
++  let called = false;
++  e5OffBoundary({ method: "POST", path: "/cobros" } as any, {} as any, () => { called = true; });
++  assert.equal(called, true);
+ });
+-test("E5-OFF-AVAILABILITY", () => {
+-  let body: any; e5OffBoundary({ method: "GET", path: "/disponibilidad" } as any,
+-    { status() { assert.fail(); }, json(v: any) { body = v; } } as any, () => assert.fail());
+-  assert.equal(body.enabled, false); assert.equal(Object.values(body.capacidades).every(v => v === false), true);
++test("E5-OPEN-AVAILABILITY-USES-AUTHORIZED-CAPABILITIES", () => {
++  let called = false;
++  e5OffBoundary({ method: "GET", path: "/disponibilidad" } as any, {} as any, () => { called = true; });
++  assert.equal(called, true);
++});
++test("E5-REFUND-STAYS-INDEPENDENTLY-CLOSED", () => {
++  assert.equal(e5Capabilities(admin, { importePendiente: "10.00", algunaVezAplicado: false } as E5Cobro).puedeDevolver, false);
+ });
+ test("E5-MONEY-POSITIVE", async () => {
+   assert.equal(e5Cents("10.09"), 1009n);
+@@ -134,6 +137,18 @@ test("E5-PROPOSAL-EXPLICIT-FUTURE", async () => {
+   const x = await proposed(); assert.equal(x.proposal.aplicaciones.length, 0);
+   assert.equal(x.proposal.importePendiente, "10.00"); assert.equal(x.m.applyCalls, 0);
+ });
++test("E5-RECEPTION-DESTINATION-CANNOT-BE-REASSIGNED", async () => {
++  const x = await pending();
++  x.m.ctx = context([note(10, 100, "10.00"), note(11, 101, "10.00")], "20.00");
++  await assert.rejects(() => run(x.m, "PROPONER", {
++    claveOperacion: key(2), revisionEsperada: 1, versionContexto: "opaque-v1",
++    asignaciones: [{ notaId: 11, movimientoVentaId: 101, importe: "10.00" }],
++    evidencia: evidence,
++  }, x.detail.id), code("E5_STATE_CONFLICT"));
++  assert.equal(x.m.applyCalls, 0);
++  assert.equal(x.m.state.detail?.importePendiente, "10.00");
++  assert.equal(x.m.state.detail?.propuestas.length, 0);
++});
+ test("E5-PREPARE-ADMIN-OR-A", () => {
+   assert.equal(e5Capabilities(admin).puedePreparar, true);
+   assert.equal(e5Capabilities({ ...cashier, rol: "CONTADOR", capacidadAE11: false }).puedePreparar, false);
+@@ -187,11 +202,14 @@ test("E5-FAVOR-NO-AUTO-WITH-DEBT", () => {
+   assert.throws(() => validateE5Allocations([{ notaId: 10, movimientoVentaId: 100, importe: "4.00" }],
+     context([note(10, 100, "10.00")], "10.00"), "10.00", "6.00"), code("E5_STATE_CONFLICT"));
+ });
+-test("E5-REFUND-NEVER-APPLIED-FULL", async () => {
+-  const x = await pending(); const d = await run(x.m, "DEVOLVER", { claveOperacion: key(4), revisionEsperada: 1,
++test("E5-REFUND-CLOSED-EVEN-NEVER-APPLIED", async () => {
++  const x = await pending();
++  assert.equal(e5Capabilities(admin, x.detail).puedeDevolver, false);
++  await assert.rejects(() => run(x.m, "DEVOLVER", { claveOperacion: key(4), revisionEsperada: 1,
+     peticionCliente: "Solicitud expresa del cliente", evidencia: evidence,
+-    fuente: { tipo: "CAJA", ubicacionId: 2, sesionCajaId: 22, cuentaOrigen: "CAJA_FISICA" } }, x.detail.id);
+-  assert.equal(d.estado, "DEVUELTO"); assert.equal(d.importeDevuelto, "10.00"); assert.equal(x.m.refundCalls, 1);
++    fuente: { tipo: "CAJA", ubicacionId: 2, sesionCajaId: 22, cuentaOrigen: "CAJA_FISICA" } }, x.detail.id), code("E5_DISABLED"));
++  assert.equal(x.m.refundCalls, 0);
++  assert.equal(x.detail.importePendiente, "10.00");
+ });
+ test("E5-REFUND-AFTER-PARTIAL-NO", async () => {
+   const x = await proposed(); await run(x.m, "AUTORIZAR", { claveOperacion: key(3), revisionEsperada: 2,
+@@ -199,7 +217,8 @@ test("E5-REFUND-AFTER-PARTIAL-NO", async () => {
+     asignaciones: [{ notaId: 10, movimientoVentaId: 100, importe: "4.00" }], evidencia: evidence }, x.detail.id);
+   await assert.rejects(() => run(x.m, "DEVOLVER", { claveOperacion: key(4), revisionEsperada: 3,
+     peticionCliente: "Petición", evidencia: evidence, fuente: { tipo: "CAJA", ubicacionId: 2, sesionCajaId: 2,
+-      cuentaOrigen: "CAJA_FISICA" } }, x.detail.id), code("E5_REFUND_INELIGIBLE"));
++      cuentaOrigen: "CAJA_FISICA" } }, x.detail.id), code("E5_DISABLED"));
++  assert.equal(x.m.refundCalls, 0);
+ });
+ test("E5-IDEMPOTENCY-CONTENT", async () => {
+   const x = await pending(); const replay = await run(x.m, "RECIBIR", receive());
+diff --git a/artifacts/api-server/src/lib/e5.ts b/artifacts/api-server/src/lib/e5.ts
+index b5af5b65..4a2f743a 100644
+--- a/artifacts/api-server/src/lib/e5.ts
++++ b/artifacts/api-server/src/lib/e5.ts
+@@ -1,6 +1,6 @@
+ import { createHash } from "node:crypto";
+ import { z } from "zod";
+-import { E5_ENABLED } from "./e5-feature";
++import { E5_ENABLED, E5_REFUND_ENABLED } from "./e5-feature";
+ import { e11Runtime } from "./e11-runtime";
+ import type { E5Cobro as Cobro, E5Contexto as Contexto, E5Nota as Nota, E5Propuesta as Propuesta,
+   E5Asignacion as Asignacion, E5Aplicacion as Aplicacion, E5Documento as Documento, E5FuenteDevolucion as Fuente } from "@workspace/api-zod";
+@@ -91,7 +91,7 @@ export function e5Capabilities(actor: E5Actor, detail?: E5Cobro) {
+     && actor.rol === "CONTADOR" && actor.capacidadAE11 === true && actor.e11PerfilVersion !== undefined;
+   return { puedeRecibir: ["ADMIN", "SUPERVISOR", "CAJA", "TERMINAL"].includes(actor.rol) && (actor.recibirCaja || actor.recibirCliente),
+     puedePreparar: (admin || a) && pending, puedeAutorizar: admin && pending && (!detail || !!detail.propuestaVigenteId),
+-    puedeRechazar: admin && !!detail?.propuestaVigenteId, puedeDevolver: admin && pending && detail?.algunaVezAplicado === false,
++    puedeRechazar: admin && !!detail?.propuestaVigenteId, puedeDevolver: E5_REFUND_ENABLED && admin && pending && detail?.algunaVezAplicado === false,
+     puedeVerAvisos: admin, puedeImprimir: admin, preparacionADisponible: a };
+ }
+ export function e5View(detail: E5Cobro, actor: E5Actor, now = e11Runtime().now()) {
+@@ -182,6 +182,9 @@ function makeDocument(detail: E5Cobro, id: string, application?: E5Aplicacion):
+ }
+ async function apply(repo: E5Repository, detail: E5Cobro, proposal: E5Propuesta, rows: E5Asignacion[],
+   favor: string, context: E5Context, actor: E5Actor, evidence: z.infer<typeof e5Evidence>, now: string) {
++  if (rows.some(row => !detail.notasIndicadas.some(note =>
++    note.notaId === row.notaId && note.movimientoVentaId === row.movimientoVentaId)))
++    throw new E5Error("E5_STATE_CONFLICT", "No se cambia el destino indicado al recibir el dinero.", 409);
+   const amount = validateE5Allocations(rows, context, detail.importePendiente, favor);
+   if (rows.some(row => !proposal.asignaciones.some(p => p.notaId === row.notaId &&
+       p.movimientoVentaId === row.movimientoVentaId && e5Cents(row.importe) <= e5Cents(p.importe))) ||
+@@ -204,6 +207,8 @@ async function apply(repo: E5Repository, detail: E5Cobro, proposal: E5Propuesta,
+ export async function e5Command(repo: E5Repository, actor: E5Actor, action: E5Action, raw: unknown,
+   id?: string, enabled = E5_ENABLED) {
+   requireE5(enabled);
++  if (action === "DEVOLVER" && !E5_REFUND_ENABLED)
++    throw new E5Error("E5_DISABLED", "La devolución de dinero E5 permanece cerrada.", 403);
+   if (action === "PROPONER" ? !e5Capabilities(actor).puedePreparar : action !== "RECIBIR" && actor.rol !== "ADMIN")
+     throw new E5Error("E5_FORBIDDEN", "Acción no autorizada.", 403);
+   const schema = action === "RECIBIR" ? e5Receive : action === "PROPONER" ? e5Proposal :
+@@ -254,6 +259,9 @@ export async function e5Command(repo: E5Repository, actor: E5Actor, action: E5Ac
+       contextCurrent(context, value.versionContexto);
+       const favor = value.importeFavorPropuesto ?? "0.00";
+       if (e5Cents(favor) > 0n && actor.rol !== "ADMIN") throw new E5Error("E5_FORBIDDEN", "Solo ADMIN propone favor explícito.", 403);
++      if (value.asignaciones.some(row => !detail.notasIndicadas.some(note =>
++        note.notaId === row.notaId && note.movimientoVentaId === row.movimientoVentaId)))
++        throw new E5Error("E5_STATE_CONFLICT", "No se cambia el destino indicado al recibir el dinero.", 409);
+       validateE5Allocations(value.asignaciones, context, detail.importePendiente, favor);
+       const proposal: E5Propuesta = { id: randomUUID(), version: detail.propuestas.length + 1,
+         asignaciones: value.asignaciones, importeFavorPropuesto: favor,
+diff --git a/artifacts/api-server/src/routes/e5.ts b/artifacts/api-server/src/routes/e5.ts
+index d8090da9..dca1610f 100644
+--- a/artifacts/api-server/src/routes/e5.ts
++++ b/artifacts/api-server/src/routes/e5.ts
+@@ -11,6 +11,7 @@ import { e5OffBoundary, e5DatabaseError } from "../lib/e5-http";
+ import { E5Error, e5Command, e5Preview, e5Scope, e5Capabilities, e5Print, e5Canonical, type E5Actor, type E5Action } from "../lib/e5";
+ import { e5Repository, e5Context, readE5Cobro, listE5Cobros, readE5Document, e5RefundOptions, type E5Dependencies } from "../lib/e5-repository";
+ import { FondoError } from "../lib/fondo";
++import { E5_REFUND_ENABLED } from "../lib/e5-feature";
+ 
+ const router = Router();
+ router.use("/e5", e5OffBoundary);
+@@ -95,6 +96,10 @@ router.post("/e5/cobros/:id/autorizar", command("AUTORIZAR"));
+ router.post("/e5/cobros/:id/rechazar", command("RECHAZAR"));
+ router.post("/e5/cobros/:id/devolver", command("DEVOLVER"));
+ router.get("/e5/cobros/:id/devolucion/opciones", async (req, res, next) => {
++  if (!E5_REFUND_ENABLED) {
++    res.status(403).json({ error: { code: "E5_DISABLED", message: "La devolución de dinero E5 permanece cerrada." } });
++    return;
++  }
+   try { res.json(await e5RefundOptions(db, id(req), actor(req))); } catch (error) { next(error); }
+ });
+ router.get("/e5/cobros/:id/documentos/:documentoId", async (req, res, next) => {
+diff --git a/artifacts/mariana-textil/src/lib/e5-feature-flags.ts b/artifacts/mariana-textil/src/lib/e5-feature-flags.ts
+index 2790e65c..cf7079b3 100644
+--- a/artifacts/mariana-textil/src/lib/e5-feature-flags.ts
++++ b/artifacts/mariana-textil/src/lib/e5-feature-flags.ts
+@@ -1,2 +1,2 @@
+-/** Construction only. No environment or user override; activation needs authorization. */
+-export const E5_ENABLED = false;
+\ No newline at end of file
++/** Directed/retained release authorized 2026-09-25; monetary refund stays closed. */
++export const E5_ENABLED = true;
+\ No newline at end of file

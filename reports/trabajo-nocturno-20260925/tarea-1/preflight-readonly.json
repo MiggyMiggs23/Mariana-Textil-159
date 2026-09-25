@@ -1,0 +1,6 @@
+{
+  "exitCode": 0,
+  "exitReason": null,
+  "output": "BEGIN\ncurrent_database,current_user,inet_server_addr,inet_server_port\nheliumdb,postgres,,\nproname,definition_md5\ne11_closed,55dedd9891e653136d5f69aec3c7112c\ne5_closed,63fd07f335bbaac42c6bcf8795a70f9f\ne5_graph_guard,5333a5027dfadf8d459e057035ef76e7\ne5_insert_authority,d935fcdbca85767bef85c6541d7406f2\nrelname,tgname,tgenabled\ne11_avisos,e11_closed,O\ne11_conciliacion_ventas,e11_closed,O\ne11_conciliaciones,e11_closed,O\ne11_decisiones,e11_closed,O\ne11_operaciones,e11_closed,O\ne11_perfil_eventos,e11_closed,O\ne11_perfiles,e11_closed,O\ne11_resoluciones,e11_closed,O\ne5_aplicaciones,e5_closed,O\ne5_cobros,e5_closed,O\ne5_devoluciones,e5_closed,O\ne5_documentos,e5_closed,O\ne5_impresiones,e5_closed,O\ne5_operaciones,e5_closed,O\ne5_recepciones,e5_closed,O\ne5_salidas_bancarias,e5_closed,O\ne5_vinculos_credito,e5_closed,O\nrol,count\nSUPERVISOR,1\nADMIN,22\nCAJA,5\nTERMINAL,1\nBODEGA,2\nperfil,count\nCOMMIT\n",
+  "success": true
+}

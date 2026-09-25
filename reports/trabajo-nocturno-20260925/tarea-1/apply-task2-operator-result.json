@@ -1,0 +1,38 @@
+{
+  "pid": 192,
+  "bundle": "artifacts/api-server/dist-tanda-h-entry-guard/index.mjs",
+  "identity": {
+    "database": "heliumdb",
+    "db_user": "postgres",
+    "address": null,
+    "port": null,
+    "directory": "/var/lib/postgresql/data",
+    "started": "2026-09-25T03:40:41.478Z"
+  },
+  "graph": {
+    "e5": "5333a5027dfadf8d459e057035ef76e7",
+    "e11": "39dc276e7192e01691011f271882c09b"
+  },
+  "closures": [
+    {
+      "tgname": "e11_closed",
+      "count": 8
+    },
+    {
+      "tgname": "e5_closed",
+      "count": 2
+    }
+  ],
+  "accountants": {
+    "users": 0,
+    "profiles": 0
+  },
+  "provenance": "read-only connection using served API PID effective DATABASE_URL; URL never emitted",
+  "status": "COMMITTED",
+  "files": [
+    "reports/trabajo-nocturno-20260925/tarea-2/00-graph-correction-candidate.sql",
+    "reports/trabajo-nocturno-20260925/tarea-2/00b-fiscal-folio-correction-candidate.sql",
+    "reports/trabajo-nocturno-20260925/tarea-2/01-candidate-not-approved.sql"
+  ],
+  "forbiddenClosures": 2
+}

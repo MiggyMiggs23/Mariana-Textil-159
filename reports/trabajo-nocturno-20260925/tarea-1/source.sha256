@@ -1,0 +1,5 @@
+c046100607a691e7e4f4073921e676c9ae2879144663a1c06b2e423cf2bbfb9f  artifacts/api-server/src/lib/e5-feature.ts
+acabafad8dc01df41716bf0f81d69c2eafcb007ce30246badb49624d197caf5b  artifacts/api-server/src/lib/e5.ts
+a95f6e87651bb3eec6e95d96ff1391959cdaa338500de92b344fde0a7a99ceed  artifacts/api-server/src/lib/e5.test.ts
+cda4a24731c8256f609202d9052d6d3e41e2d73a01452fe8ab9d6fa1aa56b10e  artifacts/api-server/src/routes/e5.ts
+49a269578a80449c9365945d3002243116fc06640c9a9bfc265af3f131156ae7  artifacts/mariana-textil/src/lib/e5-feature-flags.ts
