@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "purpose": "visual only, served frontend, synthetic intercepted API responses",
+  "realApiRequests": 0,
+  "menu": [
+    {
+      "href": "/caja/cortes",
+      "text": "Cortes"
+    },
+    {
+      "href": "/caja/atribucion-e7",
+      "text": "Atribución E7"
+    },
+    {
+      "href": "/alertas",
+      "text": "Alertas"
+    }
+  ],
+  "explanation": "Esta pantalla te dice cuánto dinero de crédito entró de verdad en el periodo, y cuánto fue solo acomodo de papel.\n\nCobranza del periodo: todo el dinero de crédito que se registró.\nRecepciones físicas: de ese dinero, cuánto llegó de verdad a una caja, con su comprobante. Lo demás son registros de pagos viejos o correcciones, no dinero nuevo.\nAplicaciones a notas: cuánto de ese dinero ya se le descontó a una nota. No es dinero nuevo que entró; por eso no se suma a la cobranza.\nDinero retenido: dinero que ya entró pero que todavía no se le descuenta a ninguna nota, porque espera que un ADMIN decida a cuál va.\n\nSirve para dos cosas: cuadrar con tu contador, porque separa el dinero real de los ajustes, y ver si hay dinero parado sin aplicarse a las notas de algún cliente.",
+  "unchangedCardLabels": true
+}

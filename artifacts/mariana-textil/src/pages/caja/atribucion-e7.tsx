@@ -27,7 +27,6 @@ export default function CajaAtribucionE7() {
               <Scale className="h-6 w-6 text-primary" />
               Atribución de cobranza y aplicaciones
             </h1>
-            <p className="text-muted-foreground text-sm">Lectura E7 por periodo y alcance autorizado.</p>
           </div>
           <div className="flex flex-wrap items-end gap-3">
             <div className="space-y-1">
@@ -43,6 +42,16 @@ export default function CajaAtribucionE7() {
             </Link>
           </div>
         </div>
+        <section aria-label="Para qué sirve esta pantalla" className="rounded-lg border bg-card p-4 text-sm leading-relaxed space-y-3 md:p-5" data-testid="e7-explanation">
+          <p>Esta pantalla te dice cuánto dinero de crédito entró de verdad en el periodo, y cuánto fue solo acomodo de papel.</p>
+          <ul className="list-disc pl-5 space-y-2">
+            <li><strong>Cobranza del periodo:</strong> todo el dinero de crédito que se registró.</li>
+            <li><strong>Recepciones físicas:</strong> de ese dinero, cuánto llegó de verdad a una caja, con su comprobante. Lo demás son registros de pagos viejos o correcciones, no dinero nuevo.</li>
+            <li><strong>Aplicaciones a notas:</strong> cuánto de ese dinero ya se le descontó a una nota. No es dinero nuevo que entró; por eso no se suma a la cobranza.</li>
+            <li><strong>Dinero retenido:</strong> dinero que ya entró pero que todavía no se le descuenta a ninguna nota, porque espera que un ADMIN decida a cuál va.</li>
+          </ul>
+          <p>Sirve para dos cosas: cuadrar con tu contador, porque separa el dinero real de los ajustes, y ver si hay dinero parado sin aplicarse a las notas de algún cliente.</p>
+        </section>
         {e7On()
           ? <E7Attribution desde={desde} hasta={hasta} surface="cuentas" />
           : <p role="alert" className="text-sm text-muted-foreground">La lectura E7 está cerrada.</p>}

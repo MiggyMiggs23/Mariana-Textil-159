@@ -83,9 +83,9 @@ export const NAV_GROUPS: NavGroup[] = [
     title: "CAJA",
     items: [
       { name: "Cuentas", path: "/caja/cuentas-destino", icon: Wallet, module: Modules.COBROS_PAGOS, allowedRoles: ["ADMIN", "CONTADOR", "SISTEMAS"], isClickable: true },
-      ...(e7On() ? [{ name: "Atribución E7", path: "/caja/atribucion-e7", icon: Scale, module: Modules.COBROS_PAGOS, allowedRoles: ["ADMIN", "SISTEMAS"] as NavItem["allowedRoles"], isClickable: true }] : []),
       { name: "Cobros", path: "/cobros", icon: Banknote, module: Modules.COBROS_PAGOS, isClickable: true },
       { name: "Cortes", path: "/caja/cortes", icon: FileBarChart, module: Modules.CORTES, isClickable: true },
+      ...(e7On() ? [{ name: "Atribución E7", path: "/caja/atribucion-e7", icon: Scale, module: Modules.COBROS_PAGOS, allowedRoles: ["ADMIN", "SISTEMAS"] as NavItem["allowedRoles"], isClickable: true }] : []),
       { name: "Alertas", path: "/alertas", icon: AlertTriangle, module: Modules.COBROS_PAGOS, allowedRoles: ["ADMIN"], isClickable: true },
     ],
   },
