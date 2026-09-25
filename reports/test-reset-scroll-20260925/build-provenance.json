@@ -1,0 +1,12 @@
+{
+  "source": "isolated .local/e7-text-baseline, not whole HEAD",
+  "changedSource": "artifacts/mariana-textil/src/components/layout/app-layout.tsx",
+  "sha256": "f64b9afcb0c3ab521d07273c6b73798377c01af5f1eea8431af8174b532b13c6",
+  "command": "NODE_ENV=production BASE_PATH=/ pnpm exec vite build --config vite.config.ts --outDir /home/runner/workspace/artifacts/mariana-textil/dist-test-reset-scroll-20260925",
+  "checks": [
+    "HEAD and safe AppLayout identical",
+    "desktop/mobile reset inside scrollable nav after all menu content",
+    "ADMIN gate unchanged"
+  ],
+  "buildDirectory": "artifacts/mariana-textil/dist-test-reset-scroll-20260925"
+}

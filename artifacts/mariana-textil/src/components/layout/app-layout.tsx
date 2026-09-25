@@ -338,10 +338,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             </Link>
           </div>
 
-          <nav className="flex-1 overflow-y-auto custom-scrollbar" data-history-scroll-key="sidebar-desktop">
+          <nav className="min-h-0 flex-1 overflow-y-auto custom-scrollbar" data-history-scroll-key="sidebar-desktop">
             {renderNavContent()}
+            {user.rol === Role.ADMIN && <TestSystemResetButton />}
           </nav>
-          {user.rol === Role.ADMIN && <TestSystemResetButton />}
         </aside>
       )}
 
@@ -448,10 +448,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 </Button>
               </div>
 
-              <nav className="flex-1 overflow-y-auto" data-history-scroll-key="sidebar-mobile">
+              <nav className="min-h-0 flex-1 overflow-y-auto" data-history-scroll-key="sidebar-mobile">
                 {renderNavContent(() => setMobileMenuOpen(false))}
+                {user.rol === Role.ADMIN && <TestSystemResetButton />}
               </nav>
-              {user.rol === Role.ADMIN && <TestSystemResetButton />}
             </div>
           </div>
         )}
