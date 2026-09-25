@@ -24,16 +24,16 @@ beforeEach(() => {
   }));
 });
 afterEach(() => { cleanup(); client.clear(); vi.unstubAllGlobals(); });
-it("uses activity desc by default, one paged query and no per-row credit requests", async () => {
+it("uses name A–Z by default, one paged query and no per-row credit requests", async () => {
   mount();
   await screen.findByText("Aarón Arvizu Rodríguez");
   expect(requests).toHaveLength(1);
-  expect(Object.fromEntries(requests[0])).toMatchObject({ sort: "lastActivity", direction: "desc", pageSize: "50", period: "all" });
-  expect(screen.getByTestId("sort-clients-lastActivity").closest("th")?.getAttribute("aria-sort")).toBe("descending");
-  expect(screen.getAllByTestId(/^quick-order-/).map(button => button.getAttribute("data-testid"))).toEqual([
-    "quick-order-nombre", "quick-order-movementCount", "quick-order-lastActivity", "quick-order-saldoActual",
-  ]);
-  expect(screen.getByTestId("quick-order-lastActivity").getAttribute("aria-pressed")).toBe("true");
+  expect(Object.fromEntries(requests[0])).toMatchObject({ sort: "nombre", direction: "asc", pageSize: "50", period: "all" });
+  expect(screen.getByTestId("sort-clients-nombre").closest("th")?.getAttribute("aria-sort")).toBe("ascending");
+  expect(Array.from((screen.getByTestId("select-client-order") as HTMLSelectElement).options).map(option => option.textContent)).toEqual(["Nombre A–Z", "Mayor demanda"]);
+  expect(screen.queryByTestId("quick-order-lastActivity")).toBeNull();
+  expect(screen.getByTestId("sort-clients-lastActivity")).toBeTruthy();
+  expect(screen.getByText("7")).toBeTruthy();
   expect(screen.getByText("Con deuda")).toBeTruthy();
   expect(screen.getByText("Sin deuda")).toBeTruthy();
   expect(screen.getByText("A favor: $100.00")).toBeTruthy();
@@ -41,6 +41,8 @@ it("uses activity desc by default, one paged query and no per-row credit request
 it("inverts sortable columns and exposes the active direction", async () => {
   mount();
   await screen.findByText("Aarón Arvizu Rodríguez");
+  fireEvent.click(screen.getByTestId("sort-clients-nombre"));
+  await waitFor(() => expect(requests.at(-1)?.get("direction")).toBe("desc"));
   for (const sort of ["nombre", "rfc", "telefono", "limiteCredito", "saldoActual", "movementCount", "lastActivity"]) {
     fireEvent.click(screen.getByTestId(`sort-clients-${sort}`));
     await waitFor(() => expect(requests.at(-1)?.get("sort")).toBe(sort));
@@ -68,17 +70,26 @@ it("debounces typing without delaying the input and resets pagination", async ()
 it("quick filters and period changes reset page and transmit exact criteria", async () => {
   mount();
   await screen.findByText("Aarón Arvizu Rodríguez");
-  fireEvent.click(screen.getByTestId("quick-order-movementCount"));
+  fireEvent.change(screen.getByTestId("select-client-order"), { target: { value: "movementCount" } });
   await waitFor(() => expect(requests.at(-1)?.get("sort")).toBe("movementCount"));
   await waitFor(() => expect((screen.getByLabelText("Página siguiente") as HTMLButtonElement).disabled).toBe(false));
   expect(requests.at(-1)?.get("direction")).toBe("desc");
+  for (const value of ["1m", "3m", "1y"]) {
+    fireEvent.change(screen.getByTestId("select-movement-period"), { target: { value } });
+    await waitFor(() => expect(requests.at(-1)?.get("period")).toBe(value));
+    await waitFor(() => expect(screen.queryByText("Buscando…")).toBeNull());
+  }
+  fireEvent.change(screen.getByTestId("select-movement-period"), { target: { value: "all" } });
+  expect((screen.getByTestId("select-movement-period") as HTMLSelectElement).value).toBe("all");
   fireEvent.click(screen.getByLabelText("Página siguiente"));
   await waitFor(() => expect(requests.at(-1)?.get("page")).toBe("2"));
+  expect(requests.at(-1)?.get("period")).toBe("all");
   fireEvent.change(screen.getByTestId("select-movement-period"), { target: { value: "3m" } });
-  await waitFor(() => expect(requests.at(-1)?.get("period")).toBe("3m"));
-  expect(requests.at(-1)?.get("page")).toBe("1");
+  expect((screen.getByTestId("select-movement-period") as HTMLSelectElement).value).toBe("3m");
+  expect(screen.getByText("Página 1 de 52")).toBeTruthy();
   fireEvent.click(screen.getByTestId("quick-order-saldoActual"));
   await waitFor(() => expect(requests.at(-1)?.get("sort")).toBe("saldoActual"));
+  expect(Object.fromEntries(requests.at(-1)!)).toMatchObject({ page: "1", period: "3m", direction: "desc" });
 });
 it("does not render finances or activity controls for catalog-only users", async () => {
   mount(false);
@@ -86,5 +97,6 @@ it("does not render finances or activity controls for catalog-only users", async
   expect(requests[0].get("sort")).toBe("nombre");
   expect(screen.queryByTestId("sort-clients-saldoActual")).toBeNull();
   expect(screen.queryByTestId("select-movement-period")).toBeNull();
+  expect(Array.from((screen.getByTestId("select-client-order") as HTMLSelectElement).options).map(option => option.textContent)).toEqual(["Nombre A–Z"]);
   expect(screen.queryByText("Con deuda")).toBeNull();
 });

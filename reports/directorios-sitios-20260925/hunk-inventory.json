@@ -1,0 +1,855 @@
+[
+  {
+    "mode": "api",
+    "path": "artifacts/api-server/src/routes/clientes.ts",
+    "headSourceSha256": "b7cd120a72127b5292d32516d7458d397e66c1cb3b7ad319f649817eec0d7bba",
+    "headDiffSha256": "04e01ca9db30fb32f3af5a3f5465499c718d3b50b5e15636287142fef097bb4c",
+    "baseSha256": "8e10ce9ebeef9b0d2a28c415218328a50cde6703c1e66df9074821e7b4322793",
+    "resultSha256": "9fdd00d9b12fb27284f436e4f903a67c918cbf814255986c48ef57cc00a3b002",
+    "hunks": [
+      {
+        "header": "@@ -1698,7 +1698,7 @@ router.get(",
+        "method": "full-context",
+        "removedSha256": "4acf51556b050b590599b3339b2d3096c98ff156e80dda31191110de69e1b5b9",
+        "insertedSha256": "5ef742a754cd9449c13b2b8544f586d5db1e5ce9296bca340c12444618a09874",
+        "beforeSha256": "8e10ce9ebeef9b0d2a28c415218328a50cde6703c1e66df9074821e7b4322793",
+        "afterSha256": "1b8963eab9cf3dd22fbeb0e164b37e0f4ce2693d78a3f6ffc11274961a26fa9c"
+      },
+      {
+        "header": "@@ -1718,7 +1718,7 @@ router.get(",
+        "method": "full-context",
+        "removedSha256": "839dc89daa383e1f5dac2a741f03d5ed14359068e46d33a26ab03d688681b9aa",
+        "insertedSha256": "af8f800ca8041c9af55d8b70b2018cc5736e104a27964b6836c97bf0a3b73368",
+        "beforeSha256": "1b8963eab9cf3dd22fbeb0e164b37e0f4ce2693d78a3f6ffc11274961a26fa9c",
+        "afterSha256": "9fdd00d9b12fb27284f436e4f903a67c918cbf814255986c48ef57cc00a3b002"
+      }
+    ]
+  },
+  {
+    "mode": "api",
+    "path": "artifacts/api-server/src/routes/proveedores.ts",
+    "headSourceSha256": "3a56953d26e59d5e92097dd9f3e4c125889254968d3eff77e98fd5887db78f3f",
+    "headDiffSha256": "f239ba11438652e171ab46963abc78ee9187fe8115c3d93fe6107fadcb363c5b",
+    "baseSha256": "0e70f450bf9200a608096af09e9d2590172e601f305afcffeb8e2eaa4b1cfd44",
+    "resultSha256": "3a56953d26e59d5e92097dd9f3e4c125889254968d3eff77e98fd5887db78f3f",
+    "hunks": [
+      {
+        "header": "@@ -28,6 +28,8 @@ import {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "ba444d4fd9032bc8e598c05d1011748da4bdd480190ee0809ce7f8281e063f1f",
+        "beforeSha256": "0e70f450bf9200a608096af09e9d2590172e601f305afcffeb8e2eaa4b1cfd44",
+        "afterSha256": "0c8eccbab4f8bc69df725ae2e996e04a4c0cb26d082afe81900713f71080fbb1"
+      },
+      {
+        "header": "@@ -85,6 +87,7 @@ function presentProveedor(row: typeof proveedoresTable.$inferSelect) {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "3a2d630ff7577769650579fa1959579cd5c0ef41412ba190690823192151b76e",
+        "beforeSha256": "0c8eccbab4f8bc69df725ae2e996e04a4c0cb26d082afe81900713f71080fbb1",
+        "afterSha256": "b64ce78e9ab3fd6d3e7731297d88f31a3ba001d3b96da9c97767ce676f888431"
+      },
+      {
+        "header": "@@ -223,6 +226,52 @@ router.get(",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "f081189fbf793054d069d059f7c2dd3d3e2812c25904fcab500d87bff58beb68",
+        "beforeSha256": "b64ce78e9ab3fd6d3e7731297d88f31a3ba001d3b96da9c97767ce676f888431",
+        "afterSha256": "4af5664113afbe8da3678ed9c51d33526b97a8200ebad851ab7f5db77217e9a0"
+      },
+      {
+        "header": "@@ -306,6 +355,7 @@ router.post(",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "409d8d809c795b388c0f17ba1ec35ac57d5d1cadabf0e898eff53924dd6a48c8",
+        "beforeSha256": "4af5664113afbe8da3678ed9c51d33526b97a8200ebad851ab7f5db77217e9a0",
+        "afterSha256": "b3374cf1776b07d0647cfb820120f778d9b8d893fc94db7387f5621431038966"
+      },
+      {
+        "header": "@@ -399,6 +449,7 @@ router.patch(",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "408d5fbfd1cedc8abb4f1940042f6b958a496a9415bd47f4e061fef07c4deb2c",
+        "beforeSha256": "b3374cf1776b07d0647cfb820120f778d9b8d893fc94db7387f5621431038966",
+        "afterSha256": "92f62f4d617ee4f85955c79257cb76d8fbe6d5143bc283c6f0dd8f3fd7ec8dcb"
+      },
+      {
+        "header": "@@ -410,6 +461,7 @@ router.patch(",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "d3a244457df6a9b8c2fb5b85522d645c97429969c614e74dd384f6e886be411a",
+        "beforeSha256": "92f62f4d617ee4f85955c79257cb76d8fbe6d5143bc283c6f0dd8f3fd7ec8dcb",
+        "afterSha256": "3a56953d26e59d5e92097dd9f3e4c125889254968d3eff77e98fd5887db78f3f"
+      }
+    ]
+  },
+  {
+    "mode": "api",
+    "path": "lib/api-zod/src/generated/api.ts",
+    "headSourceSha256": "17e151e897a76f7963e3e3d22a70e5f046952c60eaaf8990607b98ee3509b920",
+    "headDiffSha256": "2ab862158e3f12f7b2f24f7836171bb6b78c585724a47983ab652763e8f5a519",
+    "baseSha256": "695ed6876bce400683deeea3343728d4ef52bd88ddad662d4e571d38dfdf21ed",
+    "resultSha256": "16b016e7e9c65c7ade6312a6685569b4fac42f5cf77ce60ebfc157139c4dd01a",
+    "hunks": [
+      {
+        "header": "@@ -6508,6 +6508,7 @@ export const GetProveedoresResumenResponse = zod.object({",
+        "method": "narrow-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "7c7ae26d059b5a29440065e2036a3e031d9911ac2ab05e6f3261f4df7277d74f",
+        "beforeSha256": "695ed6876bce400683deeea3343728d4ef52bd88ddad662d4e571d38dfdf21ed",
+        "afterSha256": "c9e39a4fb077e98779b6b0502da983ff48e104c50d1a118c69d0c669b3ad220d"
+      },
+      {
+        "header": "@@ -6631,6 +6632,24 @@ export const ListHistorialComprasProveedoresResponse = zod.object({",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "099d037d5ee8a1f523cbea6a9c425cdea700ab4fa4247099ce8f84c6fe143ea2",
+        "beforeSha256": "c9e39a4fb077e98779b6b0502da983ff48e104c50d1a118c69d0c669b3ad220d",
+        "afterSha256": "ded3ac4b542d7e2395833fef9daefe55ea92ef2195e28111746fbb993aefaf40"
+      },
+      {
+        "header": "@@ -6643,6 +6662,7 @@ export const ListProveedoresResponse = zod.object({",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "7c7ae26d059b5a29440065e2036a3e031d9911ac2ab05e6f3261f4df7277d74f",
+        "beforeSha256": "ded3ac4b542d7e2395833fef9daefe55ea92ef2195e28111746fbb993aefaf40",
+        "afterSha256": "fd3ba0c1acb38df5c7d026746d8af06b0086b39c4e033e7b8f0b35c68d1f4f4f"
+      },
+      {
+        "header": "@@ -6672,6 +6692,7 @@ export const createProveedorBodyNombreMax = 200;",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "899ae4b4e12fe4e630d9d19ba3aced9d39bf765472d9edec498c1d21440ff907",
+        "beforeSha256": "fd3ba0c1acb38df5c7d026746d8af06b0086b39c4e033e7b8f0b35c68d1f4f4f",
+        "afterSha256": "340c47a0bcae999c772b9d09fe2a15b13f9bbd059dbd90083f5eb5d91ef14b8a"
+      },
+      {
+        "header": "@@ -6684,6 +6705,7 @@ export const CreateProveedorBody = zod.object({",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "7c7ae26d059b5a29440065e2036a3e031d9911ac2ab05e6f3261f4df7277d74f",
+        "beforeSha256": "340c47a0bcae999c772b9d09fe2a15b13f9bbd059dbd90083f5eb5d91ef14b8a",
+        "afterSha256": "2894d01bb315365cae1a4837fe1d600b4a76d0449718ee27633ee8ffb9f1b0df"
+      },
+      {
+        "header": "@@ -6706,6 +6728,7 @@ export const GetProveedorParams = zod.object({",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "7c7ae26d059b5a29440065e2036a3e031d9911ac2ab05e6f3261f4df7277d74f",
+        "beforeSha256": "2894d01bb315365cae1a4837fe1d600b4a76d0449718ee27633ee8ffb9f1b0df",
+        "afterSha256": "a922858985ebec8021ce858ef2af93e5229669a16b71c311749d426b2a566ba4"
+      },
+      {
+        "header": "@@ -6731,6 +6754,7 @@ export const updateProveedorBodyNombreMax = 200;",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "899ae4b4e12fe4e630d9d19ba3aced9d39bf765472d9edec498c1d21440ff907",
+        "beforeSha256": "a922858985ebec8021ce858ef2af93e5229669a16b71c311749d426b2a566ba4",
+        "afterSha256": "d88ea7ff3ecd7a41a0dae8b7b88b6c2c3bf084a0e0d2cdc822d41f768374e03b"
+      },
+      {
+        "header": "@@ -6744,6 +6768,7 @@ export const UpdateProveedorBody = zod.object({",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "7c7ae26d059b5a29440065e2036a3e031d9911ac2ab05e6f3261f4df7277d74f",
+        "beforeSha256": "d88ea7ff3ecd7a41a0dae8b7b88b6c2c3bf084a0e0d2cdc822d41f768374e03b",
+        "afterSha256": "16b016e7e9c65c7ade6312a6685569b4fac42f5cf77ce60ebfc157139c4dd01a"
+      }
+    ]
+  },
+  {
+    "mode": "api",
+    "path": "lib/db/src/schema/proveedores.ts",
+    "headSourceSha256": "7dbe9a4f7a9fafa3448864e7d13f9edfb9ef23599b02b4d00c16ff93daeb0e6a",
+    "headDiffSha256": "955b30c390a42f8cadf685830a840dd1c4a76357d2672134f256fb0bb5792347",
+    "baseSha256": "e25249f40758fd34bcb12c9f6be6a24baf8c3ad5a7db6f13f532785d622b6676",
+    "resultSha256": "7dbe9a4f7a9fafa3448864e7d13f9edfb9ef23599b02b4d00c16ff93daeb0e6a",
+    "hunks": [
+      {
+        "header": "@@ -12,6 +12,7 @@ import { tipoProveedorEnum, monedaEnum } from \"./enums\";",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "36040392407f24a83add4da08a7fa86c882568ce6019397f1a267aa0fbf6c436",
+        "beforeSha256": "e25249f40758fd34bcb12c9f6be6a24baf8c3ad5a7db6f13f532785d622b6676",
+        "afterSha256": "7dbe9a4f7a9fafa3448864e7d13f9edfb9ef23599b02b4d00c16ff93daeb0e6a"
+      }
+    ]
+  },
+  {
+    "mode": "front",
+    "path": "artifacts/mariana-textil/src/components/client-directory.tsx",
+    "headSourceSha256": "2f319fb3b19f94a4d0d70661ba278a37a756bf5054b0e794da1649ae6d8137c2",
+    "headDiffSha256": "d6074c110014f8d4b361f22f7bfac9253cb32075e9ba09d669264f1b8d469721",
+    "baseSha256": "aa0ba42acd853d5c42f9cadff15e289ea507844ebebf88f1c76c6f0baf8668a4",
+    "resultSha256": "2f319fb3b19f94a4d0d70661ba278a37a756bf5054b0e794da1649ae6d8137c2",
+    "hunks": [
+      {
+        "header": "@@ -26,8 +26,8 @@ export function ClientDirectory({ enabled, canFinances, isAdmin, authPartition }",
+        "method": "full-context",
+        "removedSha256": "47c2ec4b9901b434f0540daeb41f9ad2f37ae46e1a50583449eb3dfc0086eb7c",
+        "insertedSha256": "cbc9da926e32fef0f468c250117907a8e2d6fa2e358409e13b99d8c373e7f399",
+        "beforeSha256": "aa0ba42acd853d5c42f9cadff15e289ea507844ebebf88f1c76c6f0baf8668a4",
+        "afterSha256": "42f6e56d7b2a9345ab18fffdeac3427b43aa3395c24fa3bb8bbe1b2acf0b1d1e"
+      },
+      {
+        "header": "@@ -93,13 +93,14 @@ export function ClientDirectory({ enabled, canFinances, isAdmin, authPartition }",
+        "method": "full-context",
+        "removedSha256": "c9a2850f913b7a0834bcf663980a87d15e85ce320bcebbbbd2ddb21dde904809",
+        "insertedSha256": "66089523a62db65df776ddf41d1d6e0904bd3ed6887a4bb25438c19bff401d2d",
+        "beforeSha256": "42f6e56d7b2a9345ab18fffdeac3427b43aa3395c24fa3bb8bbe1b2acf0b1d1e",
+        "afterSha256": "2f319fb3b19f94a4d0d70661ba278a37a756bf5054b0e794da1649ae6d8137c2"
+      }
+    ]
+  },
+  {
+    "mode": "front",
+    "path": "artifacts/mariana-textil/src/components/e7-readers.tsx",
+    "headSourceSha256": "59738547b1183264530126ba0c2717ea390b8c1e24706486dce4617562e2f0fd",
+    "headDiffSha256": "3cf9cc16bb23f7486627c4c7f3e679911ee29fa42a536d67d395253c671c7122",
+    "baseSha256": "bba04b250f99f0f0582653846ca02f6d2505101cf0cb14d90b278240993f716b",
+    "resultSha256": "59738547b1183264530126ba0c2717ea390b8c1e24706486dce4617562e2f0fd",
+    "hunks": [
+      {
+        "header": "@@ -8,7 +8,7 @@ import {",
+        "method": "full-context",
+        "removedSha256": "199ac2181e642cb72cc6eb1f170fa3c380f7265cebe05a11d7a304b7f0db3168",
+        "insertedSha256": "e0dd422a50948ee0789cd68f62f2ee72971278da64bd226db87859cacca05c9b",
+        "beforeSha256": "bba04b250f99f0f0582653846ca02f6d2505101cf0cb14d90b278240993f716b",
+        "afterSha256": "e96c642fe97b2c2aa7e2c8392adc4f3b1f27bce7f9ee0153258f5e2301ac9c5b"
+      },
+      {
+        "header": "@@ -86,15 +86,18 @@ function Retained({ rows, total, scope, generated }: { rows: E7Retenido[]; total",
+        "method": "full-context",
+        "removedSha256": "8c001bf65a16de9e7c0f35100ab88a8ab8de6ac46787707e7c82bec8a1bea677",
+        "insertedSha256": "5590ef891e512c89dea8f041c8ecd96cbfe2502b243f666529dc8b108f5bce83",
+        "beforeSha256": "e96c642fe97b2c2aa7e2c8392adc4f3b1f27bce7f9ee0153258f5e2301ac9c5b",
+        "afterSha256": "f5f79ec09a2836a0eaa6384f3b44b452bbcce244d1dbe2f59bcfa4568ec5600e"
+      },
+      {
+        "header": "@@ -173,8 +176,11 @@ function FigureCard({ testId, icon, label, value, sub }: { testId: string; icon:",
+        "method": "full-context",
+        "removedSha256": "bb925750fc88831996c290546ec4b0b8ab45e5db1dfef3b5a250b74452a5c122",
+        "insertedSha256": "8395ea10847d1ad13012a75570cb7be14d7cba64d47411bda0bf98dc15639ff8",
+        "beforeSha256": "f5f79ec09a2836a0eaa6384f3b44b452bbcce244d1dbe2f59bcfa4568ec5600e",
+        "afterSha256": "59738547b1183264530126ba0c2717ea390b8c1e24706486dce4617562e2f0fd"
+      }
+    ]
+  },
+  {
+    "mode": "front",
+    "path": "artifacts/mariana-textil/src/lib/clientes-api.ts",
+    "headSourceSha256": "0dde46378fd69db0abd459b1a99ab9889c3360c63b110ccfb2da6c64afe06a55",
+    "headDiffSha256": "56c48bbbc50da4c8276645883b357d30545cef7d79aa9eea807a18867a1da0bf",
+    "baseSha256": "488bd67a8103ed42cf16da79ff2a55ec25bd03a5d966cb821686c3334d2eb225",
+    "resultSha256": "0dde46378fd69db0abd459b1a99ab9889c3360c63b110ccfb2da6c64afe06a55",
+    "hunks": [
+      {
+        "header": "@@ -3,7 +3,10 @@ import type { ClienteCarteraItem, ClientesCartera, CurrentUser, ClienteAjusteInp",
+        "method": "full-context",
+        "removedSha256": "5910f5d0ea1035f1fbd3b55bd78fbac4a6c6a14da6fc014854bf11282339f0cf",
+        "insertedSha256": "5d7859e48d6cb0597330d400ccef0919af70c94abe5abdecab2691d897ef292c",
+        "beforeSha256": "488bd67a8103ed42cf16da79ff2a55ec25bd03a5d966cb821686c3334d2eb225",
+        "afterSha256": "0dde46378fd69db0abd459b1a99ab9889c3360c63b110ccfb2da6c64afe06a55"
+      }
+    ]
+  },
+  {
+    "mode": "front",
+    "path": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "headSourceSha256": "4c94603e4d9984a3ae4fcdbd8c55fe6459cd1e412475756ba221a87f1b331b9d",
+    "headDiffSha256": "5c0d1c8632e878183ac29299fe6bdbd3633d4691bde122dc35a7e575da9a6ce0",
+    "baseSha256": "068b8254fcb6abc66e7796379feb79e9df1a359de9806070c3d6b0617a2fe578",
+    "resultSha256": "8a2a59cb077cf9c14a9e5c980027dbe2ed30dd47a07d1c5a35566ac381d6a0e0",
+    "hunks": [
+      {
+        "header": "@@ -49,7 +49,7 @@ import { getApiErrorMessage } from \"@/lib/api-error\";",
+        "method": "full-context",
+        "removedSha256": "404808385b95d78918aaf560d0a684349d0ebd80e0e9bb1cc363b4921cce1ccd",
+        "insertedSha256": "df20075d3e1dfb671ba590588747a98e6aaaf0465e2d7b80feeace502122ec4a",
+        "beforeSha256": "068b8254fcb6abc66e7796379feb79e9df1a359de9806070c3d6b0617a2fe578",
+        "afterSha256": "7e3b2bdcd782c9ebda728ef56fd62166c140f5d9ea2a0237d2543d8120ce150b"
+      },
+      {
+        "header": "@@ -595,7 +595,7 @@ export default function ClienteDetail() {",
+        "method": "full-context",
+        "removedSha256": "f0ad7d9170aef9fc6ab78fd47c8da2fed0981271d4bee5ccb1dd3d6eed0d04fc",
+        "insertedSha256": "5d02cfc20b0a902537e008737cc7abfaa73800596aa302907dad12b4ba0ff897",
+        "beforeSha256": "7e3b2bdcd782c9ebda728ef56fd62166c140f5d9ea2a0237d2543d8120ce150b",
+        "afterSha256": "19cf431bde104bb04c61ec1c70c5d3a0b76c8c6e924086d29e33b815ad04a864"
+      },
+      {
+        "header": "@@ -624,7 +624,7 @@ export default function ClienteDetail() {",
+        "method": "full-context",
+        "removedSha256": "5eb6febb901da48f8f2ed9cc0e4f2f2d35964bd774828f3b0c43932b71dfc703",
+        "insertedSha256": "15a96a423a940f6959fee3331d3bc86641da21dd10969a37ca368e6b7dbb6319",
+        "beforeSha256": "19cf431bde104bb04c61ec1c70c5d3a0b76c8c6e924086d29e33b815ad04a864",
+        "afterSha256": "8a2a59cb077cf9c14a9e5c980027dbe2ed30dd47a07d1c5a35566ac381d6a0e0"
+      }
+    ]
+  },
+  {
+    "mode": "front",
+    "path": "artifacts/mariana-textil/src/pages/clientes.tsx",
+    "headSourceSha256": "1a33820e0213860f54a9e0b75c6f92d2ca313f2d9da1523deb3d655e15c55a3a",
+    "headDiffSha256": "b04f7a5f8a4834f1f19a5881bc8ca9f710730a6fc74a186e89cbfdee92b0f1b4",
+    "baseSha256": "953ab7da9a0ea60d40b9683bc3579496e80d06ff8005573753564b5427b4a4b4",
+    "resultSha256": "1a33820e0213860f54a9e0b75c6f92d2ca313f2d9da1523deb3d655e15c55a3a",
+    "hunks": [
+      {
+        "header": "@@ -8,6 +8,8 @@ import {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "67c97561390ad215bdbdba8b71cc8b8c64446818ef89735cee81f7f94afafde1",
+        "beforeSha256": "953ab7da9a0ea60d40b9683bc3579496e80d06ff8005573753564b5427b4a4b4",
+        "afterSha256": "0c11ac23e410bf3344f1333ae4fa1ec0e7ce630e6fa23a0198f54631160ff4de"
+      },
+      {
+        "header": "@@ -70,6 +72,9 @@ export default function Clientes() {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "04a12018116987c6f1e83fbb22c353af893c1fb82c86663b17740169d39672e9",
+        "beforeSha256": "0c11ac23e410bf3344f1333ae4fa1ec0e7ce630e6fa23a0198f54631160ff4de",
+        "afterSha256": "9f4540b802268adc6a9174fab9878c952497d457182462cb9c0a07e0556490b9"
+      },
+      {
+        "header": "@@ -77,18 +82,19 @@ export default function Clientes() {",
+        "method": "full-context",
+        "removedSha256": "dfe10fb0e67acd135c259c9481d2acb8da95fd42d096a51d56b5032890741253",
+        "insertedSha256": "86b5fce0b6a9c24febc33248d4ad2058b43debc93bc29827935515bcc55ee048",
+        "beforeSha256": "9f4540b802268adc6a9174fab9878c952497d457182462cb9c0a07e0556490b9",
+        "afterSha256": "7ac1c9f5159f3135c518a2ea335187737231e8cc449aded13ddd2247c87e23cf"
+      },
+      {
+        "header": "@@ -459,13 +465,15 @@ function CarteraScopeSelector({",
+        "method": "full-context",
+        "removedSha256": "3686bf728019c01c55b6c4e8e405af3639bf2910ee4b4077696f06043a6e9c4f",
+        "insertedSha256": "137ac99d7bb29e4b7284a213f17e7021fb45e8de2248572f2e02ab8c0d3f79b3",
+        "beforeSha256": "7ac1c9f5159f3135c518a2ea335187737231e8cc449aded13ddd2247c87e23cf",
+        "afterSha256": "b35da1ba2af61a9dc817542c7711088822650b8c499f97bbd0aac0eadd75854d"
+      },
+      {
+        "header": "@@ -480,7 +488,7 @@ function CarteraScopeSelector({",
+        "method": "full-context",
+        "removedSha256": "2c8cb21121d21056faac45abbac110d2e75f039eaec2a887e90f678bcc5d01fc",
+        "insertedSha256": "f84e87b62d9bffc0108452ff090732342afd743544d1b4711e8755916fce0410",
+        "beforeSha256": "b35da1ba2af61a9dc817542c7711088822650b8c499f97bbd0aac0eadd75854d",
+        "afterSha256": "1a33820e0213860f54a9e0b75c6f92d2ca313f2d9da1523deb3d655e15c55a3a"
+      }
+    ]
+  },
+  {
+    "mode": "front",
+    "path": "artifacts/mariana-textil/src/pages/cobros.tsx",
+    "headSourceSha256": "caeb00fe908599df010d388a04278216d2776d8b8bfb5af6ad9865d59c684f42",
+    "headDiffSha256": "eea203b326551ad7bec2ce3c8fdeea654fa1ca5137bfb5a4f7e915db8aec73de",
+    "baseSha256": "a303420ba322134da00623f29b5fcb8ef70003b9968ace3c9aefa305b45c96ba",
+    "resultSha256": "caeb00fe908599df010d388a04278216d2776d8b8bfb5af6ad9865d59c684f42",
+    "hunks": [
+      {
+        "header": "@@ -38,6 +38,8 @@ import {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "e53f478d70131c32aa18d01e4490833c2d36647a4ce833e521e457725b97b18d",
+        "beforeSha256": "a303420ba322134da00623f29b5fcb8ef70003b9968ace3c9aefa305b45c96ba",
+        "afterSha256": "a62406be53c9d966e7dc696f85345658cdc00f913dddb8811a610035e095f5fd"
+      },
+      {
+        "header": "@@ -152,9 +154,28 @@ function mexicoCityDate(date: Date): string {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "7da94ac42553461c993054f4461cdef37d04842d7890c298339575e6ccb53c4d",
+        "beforeSha256": "a62406be53c9d966e7dc696f85345658cdc00f913dddb8811a610035e095f5fd",
+        "afterSha256": "449eb28ec84b8af1558662e9b637ef45faef1b63bfb4ad0635c9d29f865ba0de"
+      },
+      {
+        "header": "@@ -169,32 +190,35 @@ function CarteraContent() {",
+        "method": "full-context",
+        "removedSha256": "50ac10de9d6d3b4039f57aa7de55bbcb9b6b5910558b31a4bb80424b60b5c105",
+        "insertedSha256": "4c4390a2e34a2971dd2d51a8d77a409c21fdfe598dae43f68452a2cb614c7d7b",
+        "beforeSha256": "449eb28ec84b8af1558662e9b637ef45faef1b63bfb4ad0635c9d29f865ba0de",
+        "afterSha256": "649a1e74790733c38b0724e1de6aa2057643c3a37f076474da3e48ad756d06b6"
+      },
+      {
+        "header": "@@ -225,9 +249,14 @@ function CarteraContent() {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "0bbabaaf6cdd2c778a04c731c5e71f385f2ad128faebc7a58be19479d848c9c6",
+        "beforeSha256": "649a1e74790733c38b0724e1de6aa2057643c3a37f076474da3e48ad756d06b6",
+        "afterSha256": "f91339e6b02e3afbcba6b105135826e402f4e2e83d58fb1b07e68955f0d07962"
+      },
+      {
+        "header": "@@ -247,6 +276,9 @@ function CarteraContent() {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "d5ecc3b0f950cfdb513f4a3741b3bc6f9a09efe2fabe6d3c13c3c03d92a1b9b8",
+        "beforeSha256": "f91339e6b02e3afbcba6b105135826e402f4e2e83d58fb1b07e68955f0d07962",
+        "afterSha256": "7a26ea2e790fcba311aa4d4dbe80d1bef4364d0e2386cff42adeb1e4631fc0ec"
+      },
+      {
+        "header": "@@ -277,7 +309,7 @@ function CarteraContent() {",
+        "method": "full-context",
+        "removedSha256": "efca59ceaabf8b3da614f3eafd07a58441d36ec518d616f137082b0c9cf65b0a",
+        "insertedSha256": "a0a6799a14320ab2e2055bc328c5a17cd896d1cee0bc73adbb238933d4d98bcb",
+        "beforeSha256": "7a26ea2e790fcba311aa4d4dbe80d1bef4364d0e2386cff42adeb1e4631fc0ec",
+        "afterSha256": "d325630a754eace7362a52375b765fac0d64fd31a9ad0f2d31ac692c4886ea46"
+      },
+      {
+        "header": "@@ -290,7 +322,7 @@ function CarteraContent() {",
+        "method": "full-context",
+        "removedSha256": "2f190e3b6755c00f44225fb05e5193165fcaadeff2471b72c9b4d36a29e9b0e5",
+        "insertedSha256": "10509f56ee0d040fd606ef91f03b2a789f0b1729c7e45e7c8de14b7269ee1119",
+        "beforeSha256": "d325630a754eace7362a52375b765fac0d64fd31a9ad0f2d31ac692c4886ea46",
+        "afterSha256": "caeb00fe908599df010d388a04278216d2776d8b8bfb5af6ad9865d59c684f42"
+      }
+    ]
+  },
+  {
+    "mode": "front",
+    "path": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+    "headSourceSha256": "ca74b34db6ee8a57939d56ae96426b6646e65e63d58e2bb255272fccfb2874e4",
+    "headDiffSha256": "a0e7a69659e5b4bde59808da19a3291497226318ef2a88c6b8ca3a697082b4f8",
+    "baseSha256": "78dd1b8da3835708ce2c9b0d4de780fc7d70fe74a545bf0848740790d5ce8f81",
+    "resultSha256": "ca74b34db6ee8a57939d56ae96426b6646e65e63d58e2bb255272fccfb2874e4",
+    "hunks": [
+      {
+        "header": "@@ -103,6 +103,7 @@ export default function ProveedorDetail() {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "425e5e1914f53780509ca37429fe72f3084ceb0a0d8e74643db9f4c8c1e8b5b8",
+        "beforeSha256": "78dd1b8da3835708ce2c9b0d4de780fc7d70fe74a545bf0848740790d5ce8f81",
+        "afterSha256": "a21408ac45a0eadbdc8d18cad07fb972aead0f25abaa1c8c24ab9a4192bb3f64"
+      },
+      {
+        "header": "@@ -113,6 +114,7 @@ export default function ProveedorDetail() {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "8cc31330081523fb9a401da7c93525b059b473fc7798f20ec04f46c7687ccb50",
+        "beforeSha256": "a21408ac45a0eadbdc8d18cad07fb972aead0f25abaa1c8c24ab9a4192bb3f64",
+        "afterSha256": "9623083f6c9ef7409d35009d90d43e93e3fc51704eaa8fc3b1e0d19b23e6b98b"
+      },
+      {
+        "header": "@@ -128,6 +130,7 @@ export default function ProveedorDetail() {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "f8cb63359c29472e400f8c7086c5343022d31d28b92f4fa91db26144c24d3aac",
+        "beforeSha256": "9623083f6c9ef7409d35009d90d43e93e3fc51704eaa8fc3b1e0d19b23e6b98b",
+        "afterSha256": "a337722efae3e42e6065608193035da6346ae93ab7b0aa50e4fe61707057c2c2"
+      },
+      {
+        "header": "@@ -157,6 +160,7 @@ export default function ProveedorDetail() {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "053a537dce04d0ef7eaf66d89caff608033686dbf332fce3aa9bc10454b5dccf",
+        "beforeSha256": "a337722efae3e42e6065608193035da6346ae93ab7b0aa50e4fe61707057c2c2",
+        "afterSha256": "b1453509eeb2e204541b0eb1b442ba5bd07ffc0b51f13db2b0bb91be0a06ebd0"
+      },
+      {
+        "header": "@@ -170,6 +174,7 @@ export default function ProveedorDetail() {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "aa7982d1f2535edd6984915a97cf3e3a674ce4d0f01d093c4b4f4d68d08daf67",
+        "beforeSha256": "b1453509eeb2e204541b0eb1b442ba5bd07ffc0b51f13db2b0bb91be0a06ebd0",
+        "afterSha256": "af704207c9dac258de30c04117b9f4bbe8f588d5f299db8e100631d0aeb070ab"
+      },
+      {
+        "header": "@@ -388,6 +393,10 @@ export default function ProveedorDetail() {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "7819185024abb9b0f9cdf3994bb214411849adaa5c56edd395917f948fe77c15",
+        "beforeSha256": "af704207c9dac258de30c04117b9f4bbe8f588d5f299db8e100631d0aeb070ab",
+        "afterSha256": "64b36242655c90fbc5fdfeea050380b1e1e7c38235edda865699cd0e7e56a358"
+      },
+      {
+        "header": "@@ -442,6 +451,12 @@ export default function ProveedorDetail() {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "90b683c492bb7f797fc3f8e4467152dd4e4671f355e23b2a70c7e2600d421aaf",
+        "beforeSha256": "64b36242655c90fbc5fdfeea050380b1e1e7c38235edda865699cd0e7e56a358",
+        "afterSha256": "4957e558f4c9bf42d6ae723e56d52c44b61f4b89009d8e8e1a3c71b6b6a99427"
+      },
+      {
+        "header": "@@ -465,6 +480,13 @@ export default function ProveedorDetail() {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "1b6d1622e478b425eedd2f79fcb453a0eb5ef138bfeca449a1a9f121b20e9e09",
+        "beforeSha256": "4957e558f4c9bf42d6ae723e56d52c44b61f4b89009d8e8e1a3c71b6b6a99427",
+        "afterSha256": "ca74b34db6ee8a57939d56ae96426b6646e65e63d58e2bb255272fccfb2874e4"
+      }
+    ]
+  },
+  {
+    "mode": "front",
+    "path": "artifacts/mariana-textil/src/pages/proveedores.tsx",
+    "headSourceSha256": "9930beb1a320bec8f98cd6fe82e727688fa068609bc79adb220da1ce711fe042",
+    "headDiffSha256": "7c6f18272e9071c07dccda319d9ef10bf9acc52f2b3a8a096a32d32c0fa78a8d",
+    "baseSha256": "acc1aa591c6e6009f491b4414e5170f6fbd53b6a260e84b250f987cff607e0e0",
+    "resultSha256": "9930beb1a320bec8f98cd6fe82e727688fa068609bc79adb220da1ce711fe042",
+    "hunks": [
+      {
+        "header": "@@ -4,6 +4,8 @@ import { AppLayout } from \"@/components/layout/app-layout\";",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "69b3ceb37f428ccfaedb447e967ce1aedaabd1ec9fa4bbdd34265a404f61cae3",
+        "beforeSha256": "acc1aa591c6e6009f491b4414e5170f6fbd53b6a260e84b250f987cff607e0e0",
+        "afterSha256": "c2b5a7e401bad72a34995fa38ff1b51046713abc23eaf4e500bbefdd8a51c07a"
+      },
+      {
+        "header": "@@ -25,7 +27,7 @@ import { Label } from \"@/components/ui/label\";",
+        "method": "full-context",
+        "removedSha256": "29dac8187d5cb3ed6b8e0286c293978a9376c5b36ac91ee8a94c7266eb6c434a",
+        "insertedSha256": "23baacf15575c28190699c8fbec175fdcda6f1fec073c436d0c94df777442962",
+        "beforeSha256": "c2b5a7e401bad72a34995fa38ff1b51046713abc23eaf4e500bbefdd8a51c07a",
+        "afterSha256": "5840faf125d7711548208d39b56da8ecef8c849b534c89e5174cf90c0b28d24e"
+      },
+      {
+        "header": "@@ -35,6 +37,7 @@ import {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "9c4f3edabc0853f0ba93dd158aa324368be54724a9c5a248d5c86a0cf8dd5412",
+        "beforeSha256": "5840faf125d7711548208d39b56da8ecef8c849b534c89e5174cf90c0b28d24e",
+        "afterSha256": "ede68fc72d5d1b5e796dc97821214f6930f47f0e1bc4d8dce7e9a27347a5e012"
+      },
+      {
+        "header": "@@ -66,6 +69,11 @@ function formatDate(dateStr: string | null): string {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "ef8f37e3822eb9af341efb2faa31c75838001878688d2dd99076aba65d433af1",
+        "beforeSha256": "ede68fc72d5d1b5e796dc97821214f6930f47f0e1bc4d8dce7e9a27347a5e012",
+        "afterSha256": "e024e70f1cf7f232a21c71a0995cbbbd6eb2e4c3725ff4d79a226ea6bc7201e3"
+      },
+      {
+        "header": "@@ -79,7 +87,10 @@ export default function Proveedores() {",
+        "method": "full-context",
+        "removedSha256": "8662e2feeba25f6ceec4215ddd368426b1ca1eb2300f86ac104423908f42dbe3",
+        "insertedSha256": "15c70d1e46f40590890119aa367ea10746f8e71314aaae098d2af28e43655515",
+        "beforeSha256": "e024e70f1cf7f232a21c71a0995cbbbd6eb2e4c3725ff4d79a226ea6bc7201e3",
+        "afterSha256": "16646510a158e563e1d2e5003eb1cab2a67351f8bbb6900a40d23781e3ed58b4"
+      },
+      {
+        "header": "@@ -87,12 +98,41 @@ export default function Proveedores() {",
+        "method": "full-context",
+        "removedSha256": "ff0d047d872d4a760914d79841225410f5904e97e59e400167808482bf79f885",
+        "insertedSha256": "43cb25e3bd4a4098b565e9971bdb5fc9a446d5d38e9fd7aa49683cde3651ca52",
+        "beforeSha256": "16646510a158e563e1d2e5003eb1cab2a67351f8bbb6900a40d23781e3ed58b4",
+        "afterSha256": "3bc0242e5f99ff7c95ca91540536b4289e37cdcef12b9c2a40a39c49501e302c"
+      },
+      {
+        "header": "@@ -100,20 +140,14 @@ export default function Proveedores() {",
+        "method": "full-context",
+        "removedSha256": "c62dd4486ea9ee02c71f91c12b4d40130855b6ae534c32f138de527dde6ebe0b",
+        "insertedSha256": "2120ec1516e6c7c4c1b5e5844b79eecffd589b41a485cacda33af7f3c860565d",
+        "beforeSha256": "3bc0242e5f99ff7c95ca91540536b4289e37cdcef12b9c2a40a39c49501e302c",
+        "afterSha256": "0ab8f8fb3e2f2c15a9c98d42336febf42bc2abc8fe256288baa79f51955c011c"
+      },
+      {
+        "header": "@@ -167,7 +201,7 @@ export default function Proveedores() {",
+        "method": "full-context",
+        "removedSha256": "180effd935fcc21274913033bd9cc7fce154361e1b3c40247e91d14ac1f96015",
+        "insertedSha256": "10a04f9e82e14724eab23fb652a57bf038e78a61f9ee2cbf860e46135b020869",
+        "beforeSha256": "0ab8f8fb3e2f2c15a9c98d42336febf42bc2abc8fe256288baa79f51955c011c",
+        "afterSha256": "03cb33c4f92d1be77564b930cb2045b4e852961ff535155e37d897c43647eabf"
+      },
+      {
+        "header": "@@ -176,7 +210,7 @@ export default function Proveedores() {",
+        "method": "full-context",
+        "removedSha256": "3c73ba15951bd51eb95c237eee37cef97f7beae5e4f3a09ebdff2f6f66ce9ee9",
+        "insertedSha256": "d1cf33e374ef3cec683bb46400d5ca45d107d83385d7dcef6604ede73ef0f89e",
+        "beforeSha256": "03cb33c4f92d1be77564b930cb2045b4e852961ff535155e37d897c43647eabf",
+        "afterSha256": "e12d04349a3792c6fd06b6b7c99dc3bc2906c250f9ee1e766a86655c89ece9cf"
+      },
+      {
+        "header": "@@ -203,41 +237,52 @@ export default function Proveedores() {",
+        "method": "full-context",
+        "removedSha256": "403221ef9f46dde6edd8691a586e021b3b39bbc233e50d81f9028d3adb0e457a",
+        "insertedSha256": "214b18d47ec06084f73441486d91257a5ccf415aabd6e8d50476f06c8a97b0be",
+        "beforeSha256": "e12d04349a3792c6fd06b6b7c99dc3bc2906c250f9ee1e766a86655c89ece9cf",
+        "afterSha256": "99a66f18b114bd2c6d6807ac93973b0de4fc1c97b8926d5c4b1f8a3da6937dae"
+      },
+      {
+        "header": "@@ -246,7 +291,7 @@ export default function Proveedores() {",
+        "method": "full-context",
+        "removedSha256": "09e32cb07f3bb8ab79ebe00d54853182863ea25bfe162911f1562005be92cb56",
+        "insertedSha256": "66d8d49862aa72618d8abd969346c454590706ba31a734a4b886c037763628e4",
+        "beforeSha256": "99a66f18b114bd2c6d6807ac93973b0de4fc1c97b8926d5c4b1f8a3da6937dae",
+        "afterSha256": "98ea2f622e69ce29f47a7d36cf1394662f3c1aea5d2f050ac0db8a820f3b338b"
+      },
+      {
+        "header": "@@ -292,6 +337,10 @@ export default function Proveedores() {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "37d23745315b22f46ffe696e0bce8ea096cee1aaf6ea15afcce604205b835352",
+        "beforeSha256": "98ea2f622e69ce29f47a7d36cf1394662f3c1aea5d2f050ac0db8a820f3b338b",
+        "afterSha256": "4b1e99f9558cd33ed48e725fb44d2b727b0d75b8dd26cfa634fb4991ecb7dae7"
+      },
+      {
+        "header": "@@ -353,6 +402,7 @@ function CreateProveedorDialog({ open, onClose }: { open: boolean, onClose: () =",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "425e5e1914f53780509ca37429fe72f3084ceb0a0d8e74643db9f4c8c1e8b5b8",
+        "beforeSha256": "4b1e99f9558cd33ed48e725fb44d2b727b0d75b8dd26cfa634fb4991ecb7dae7",
+        "afterSha256": "b75126113d3fa6144195f1063d803b094c55ed7e18eb6327e3bc3aaf7d957d82"
+      },
+      {
+        "header": "@@ -362,6 +412,7 @@ function CreateProveedorDialog({ open, onClose }: { open: boolean, onClose: () =",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "8cc31330081523fb9a401da7c93525b059b473fc7798f20ec04f46c7687ccb50",
+        "beforeSha256": "b75126113d3fa6144195f1063d803b094c55ed7e18eb6327e3bc3aaf7d957d82",
+        "afterSha256": "9a851ca3640d0708c1f2077f89059ab1c9e774cc1e2eb7fa7812db5611713d8e"
+      },
+      {
+        "header": "@@ -380,6 +431,7 @@ function CreateProveedorDialog({ open, onClose }: { open: boolean, onClose: () =",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "053a537dce04d0ef7eaf66d89caff608033686dbf332fce3aa9bc10454b5dccf",
+        "beforeSha256": "9a851ca3640d0708c1f2077f89059ab1c9e774cc1e2eb7fa7812db5611713d8e",
+        "afterSha256": "033ce7ea6006c6f9ca09257a052ff8905fa45c5010a3853c2f5f7c2955d4cddf"
+      },
+      {
+        "header": "@@ -392,8 +444,9 @@ function CreateProveedorDialog({ open, onClose }: { open: boolean, onClose: () =",
+        "method": "full-context",
+        "removedSha256": "8adb64182bc2b9b51e9fbca9c88bd5f7b0e12ed9979263ef60052aed3c79a293",
+        "insertedSha256": "12c20731932578308fb17cf4778d2e4a9bc6b9f35de3b5c40b44fd2dc624125b",
+        "beforeSha256": "033ce7ea6006c6f9ca09257a052ff8905fa45c5010a3853c2f5f7c2955d4cddf",
+        "afterSha256": "4ab99318b5721948192413b8420182c1b1bbac8c3c63fcc984fa815c2efd789c"
+      },
+      {
+        "header": "@@ -422,6 +475,13 @@ function CreateProveedorDialog({ open, onClose }: { open: boolean, onClose: () =",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "80c2883346c1058814fcb83921499be423c1f59d974213d0c909629cff5bdd55",
+        "beforeSha256": "4ab99318b5721948192413b8420182c1b1bbac8c3c63fcc984fa815c2efd789c",
+        "afterSha256": "9930beb1a320bec8f98cd6fe82e727688fa068609bc79adb220da1ce711fe042"
+      }
+    ]
+  },
+  {
+    "mode": "front",
+    "path": "artifacts/mariana-textil/src/pages/reportes.tsx",
+    "headSourceSha256": "52dbaee464d66ca5b54761be97790abecfcf68a63bf646648eb9b80a6a5d9804",
+    "headDiffSha256": "d71fbe61b111d14f1d481f25ff6e771d1115735401c8aa009252146521a70412",
+    "baseSha256": "184c53d393e3eb19aa4eae11a5dbf7900647a7f47847c2d223abdd7edb6721a1",
+    "resultSha256": "52dbaee464d66ca5b54761be97790abecfcf68a63bf646648eb9b80a6a5d9804",
+    "hunks": [
+      {
+        "header": "@@ -15,6 +15,7 @@ import { ClientesTab } from \"@/components/reportes/tabs/clientes-tab\";",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "e0dd422a50948ee0789cd68f62f2ee72971278da64bd226db87859cacca05c9b",
+        "beforeSha256": "184c53d393e3eb19aa4eae11a5dbf7900647a7f47847c2d223abdd7edb6721a1",
+        "afterSha256": "b490cf1b54699d7a5d853402291d03bfb40def55fe1156c0b68e0c3f5adde352"
+      },
+      {
+        "header": "@@ -80,13 +81,15 @@ export default function Reportes() {",
+        "method": "full-context",
+        "removedSha256": "6a63eb60382f5df255678740483a4a7832583368d1d6315154764b0fd8b11cd2",
+        "insertedSha256": "ab1c76c2c4dd5fa1a2998a9ac3653c8c1154791264391dc74f0f894b94b346e8",
+        "beforeSha256": "b490cf1b54699d7a5d853402291d03bfb40def55fe1156c0b68e0c3f5adde352",
+        "afterSha256": "dbbd64a326de6781abbbb6dab2794834a32c76655fe69d50da371b8f2e0bacd8"
+      },
+      {
+        "header": "@@ -95,10 +98,11 @@ export default function Reportes() {",
+        "method": "full-context",
+        "removedSha256": "b7267370288c76e45ee2daee4b090bd3b35bf6035296a58f34a6654a35c05eb1",
+        "insertedSha256": "2ba4c36fe2ea248b5a72c992edfe9d7b70f786356c22e0115c893bd4be745f24",
+        "beforeSha256": "dbbd64a326de6781abbbb6dab2794834a32c76655fe69d50da371b8f2e0bacd8",
+        "afterSha256": "16ad854f96885d91ef464b099d15c20e885e923e818e191a2ff06da69ad2b4c4"
+      },
+      {
+        "header": "@@ -257,10 +261,14 @@ export default function Reportes() {",
+        "method": "full-context",
+        "removedSha256": "615200b2b42ccece40d2d89e2427e1074dceabbb13766bc3052ececea58ff542",
+        "insertedSha256": "e4e32e29e10d84d3d4d44afa74bd0dcd50314feebd5dc4440e3a8103efa02a37",
+        "beforeSha256": "16ad854f96885d91ef464b099d15c20e885e923e818e191a2ff06da69ad2b4c4",
+        "afterSha256": "626395f2adecfc5e630357293e7d55199eb386e53dc70ce69817f9e6bfb45b4e"
+      },
+      {
+        "header": "@@ -268,13 +276,15 @@ export default function Reportes() {",
+        "method": "full-context",
+        "removedSha256": "4b8a05b346225110b4f816a39aabdf66c683de75346d06398359787565556b05",
+        "insertedSha256": "9c582d241e5406221db5d80c6b7d962275238a06bac4ac4cacdf13e4c029ed0a",
+        "beforeSha256": "626395f2adecfc5e630357293e7d55199eb386e53dc70ce69817f9e6bfb45b4e",
+        "afterSha256": "23e3a9e6a0e7e8abd0bf028619ebe4c7e5930c0bd992ba3f1e9b35cd620c03f1"
+      },
+      {
+        "header": "@@ -313,9 +323,14 @@ export default function Reportes() {",
+        "method": "full-context",
+        "removedSha256": "f054af0beba59a808a1a90a8cf685a3a389c66aaa273d39b3a44d4dd455c71e9",
+        "insertedSha256": "fd83a29254a89d15a82dbc83ac821addcd3b745a0bd6a7de2e5a48640c15a87f",
+        "beforeSha256": "23e3a9e6a0e7e8abd0bf028619ebe4c7e5930c0bd992ba3f1e9b35cd620c03f1",
+        "afterSha256": "020639cb51f87f8a24ce2df7a6fbbfb660a6b9a1116c1b5da9fa99d3e7f1b2a8"
+      },
+      {
+        "header": "@@ -327,7 +342,7 @@ export default function Reportes() {",
+        "method": "full-context",
+        "removedSha256": "04b9c29bd71f0f47f6b12668608915b442b1cc6c9c4d9b0d4702a4e41bb1fc84",
+        "insertedSha256": "d66e6a5348c47b713fe41b652abb17ecfb14b47f850b8bdcb92c9a9673f73d53",
+        "beforeSha256": "020639cb51f87f8a24ce2df7a6fbbfb660a6b9a1116c1b5da9fa99d3e7f1b2a8",
+        "afterSha256": "be94c4f0d2e0265ff4ad4c7149bb2d93899cb62912a5c3a2a6dc10cac51fbc01"
+      },
+      {
+        "header": "@@ -352,7 +367,7 @@ export default function Reportes() {",
+        "method": "full-context",
+        "removedSha256": "2ee5e7d7fc4b0b03867d943299a3aeeb10c7f141deea75a0d98c810c59f5f6e0",
+        "insertedSha256": "78133933e76f772da2a8539f6a716d78de466d984e6a0b44b68a7c2035dedc4c",
+        "beforeSha256": "be94c4f0d2e0265ff4ad4c7149bb2d93899cb62912a5c3a2a6dc10cac51fbc01",
+        "afterSha256": "0cf07dfe1be1e253f766d0bd764e67921a618134dd673807e4e415757a40f8de"
+      },
+      {
+        "header": "@@ -394,8 +409,10 @@ export default function Reportes() {",
+        "method": "full-context",
+        "removedSha256": "938bbc27d8b0f5cec0af1c034b332bfbc21c88f9e148aa627d2499f40e991198",
+        "insertedSha256": "b41610cd76d58d47b058d75866442673e79a9feabb60aacd0ed81865def7d6ca",
+        "beforeSha256": "0cf07dfe1be1e253f766d0bd764e67921a618134dd673807e4e415757a40f8de",
+        "afterSha256": "689aae3de344a27728b272c88f64942809c2704fb7b40bfade981a714d075041"
+      },
+      {
+        "header": "@@ -403,7 +420,9 @@ export default function Reportes() {",
+        "method": "full-context",
+        "removedSha256": "ec7da8b16ef0f86bb4401585055ddb759eeb348afd753fd42be978e71f3f52c7",
+        "insertedSha256": "05f9578738d8f5ed2b028bcf3be737d86687fd0a2d548f5730196e695ac4f87f",
+        "beforeSha256": "689aae3de344a27728b272c88f64942809c2704fb7b40bfade981a714d075041",
+        "afterSha256": "e865d33d6b702e7d88888725ec4375f5ffa97bbdd9d54ee84befed1baa308ce4"
+      },
+      {
+        "header": "@@ -433,10 +452,10 @@ export default function Reportes() {",
+        "method": "full-context",
+        "removedSha256": "9e20a680c57a113b91ff027463aa84c81e214f4de25ed1d4c04835719f79d69a",
+        "insertedSha256": "51359a52f0c4703359c4b49c3f381b954dabd6fac390206294579947febb905b",
+        "beforeSha256": "e865d33d6b702e7d88888725ec4375f5ffa97bbdd9d54ee84befed1baa308ce4",
+        "afterSha256": "52dbaee464d66ca5b54761be97790abecfcf68a63bf646648eb9b80a6a5d9804"
+      }
+    ]
+  },
+  {
+    "mode": "front",
+    "path": "lib/api-client-react/src/generated/api.schemas.ts",
+    "headSourceSha256": "6d3912f6bfcb081835270020213f5ecc05a7c27fea31a469e7763c7c1a20d064",
+    "headDiffSha256": "a8418a6ade082fd0d3ecf23a030a0665ba2364dddad2123cac5078a3ed8afeea",
+    "baseSha256": "7b0036f3506efccc73f5996686ed632d9c8b96f7220aac8ea60f01fdceec0210",
+    "resultSha256": "f164f6bb1b16b7a8bb581c938f222e44c048475edf8e8e54be91877534586d5e",
+    "hunks": [
+      {
+        "header": "@@ -6532,6 +6532,8 @@ export interface ImportResult {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "57139f35d4bcfba7f2377f63a7416859293f7f00ff4882fb85976b74994839a9",
+        "beforeSha256": "7b0036f3506efccc73f5996686ed632d9c8b96f7220aac8ea60f01fdceec0210",
+        "afterSha256": "63dc9921369bd7ad5cb038fbe119ab630d52f032725fd051bdae5dab86ec1424"
+      },
+      {
+        "header": "@@ -6554,6 +6556,8 @@ export interface ProveedorInput {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "c76f5df8c5e6dd3f074a3780b0141e367b3a4755f7d23cb178b8cfca0ae36177",
+        "beforeSha256": "63dc9921369bd7ad5cb038fbe119ab630d52f032725fd051bdae5dab86ec1424",
+        "afterSha256": "3448b77664787d294c8a447772bae76231c14121b013babeb0beab427961fbda"
+      },
+      {
+        "header": "@@ -6574,6 +6578,8 @@ export interface ProveedorUpdate {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "c76f5df8c5e6dd3f074a3780b0141e367b3a4755f7d23cb178b8cfca0ae36177",
+        "beforeSha256": "3448b77664787d294c8a447772bae76231c14121b013babeb0beab427961fbda",
+        "afterSha256": "ac4361af7256864e1e2fee9281abce2e7e3e43cc58d23df76448f1ca2a52c099"
+      },
+      {
+        "header": "@@ -7878,6 +7884,8 @@ export interface AjusteProveedorInput {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "57139f35d4bcfba7f2377f63a7416859293f7f00ff4882fb85976b74994839a9",
+        "beforeSha256": "ac4361af7256864e1e2fee9281abce2e7e3e43cc58d23df76448f1ca2a52c099",
+        "afterSha256": "f4a89557561a8d557a5ff374c95172876a4dcaca7ce5a3bd2c67ff5ead9906dc"
+      },
+      {
+        "header": "@@ -7925,6 +7933,26 @@ export interface ProveedoresListResult {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "542da3fd2fcfb1c3942cef3869d4c74a33278efddeccea194cde38d2a052cfc3",
+        "beforeSha256": "f4a89557561a8d557a5ff374c95172876a4dcaca7ce5a3bd2c67ff5ead9906dc",
+        "afterSha256": "545d5191a18504da29b6fb803e9dedca780380edc589c3c4caff3fa76a31d794"
+      },
+      {
+        "header": "@@ -10270,6 +10298,20 @@ export const ListHistorialComprasProveedoresDirection = {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "6b9fe9cab2013ad327a5aa5684b17702ed9ef1d3556c52f35eb32ba579d225fd",
+        "beforeSha256": "545d5191a18504da29b6fb803e9dedca780380edc589c3c4caff3fa76a31d794",
+        "afterSha256": "f164f6bb1b16b7a8bb581c938f222e44c048475edf8e8e54be91877534586d5e"
+      }
+    ]
+  },
+  {
+    "mode": "front",
+    "path": "lib/api-client-react/src/generated/api.ts",
+    "headSourceSha256": "860f69d6a95a5b2e4acaca1683ae685c3e5e77bdbfa1c0ff6b58402fde38c5a4",
+    "headDiffSha256": "c4b85c88a93b11b6b4044baeb93d36a6bdfbac28300c8a91ea1d57ab7067f612",
+    "baseSha256": "0f430ed069c0a0b53a7993dc0497b0662f2948b094329a72b321002ad5c31d48",
+    "resultSha256": "d2f11d0feb720275822c4053e7e72399d523cb9f2119a9c00ada4478458a8d0a",
+    "hunks": [
+      {
+        "header": "@@ -305,6 +305,7 @@ import type {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "6e6fcd78d227dbef3781fd2a44ec749911ef5125c6beec6b0e50637182c7cb92",
+        "beforeSha256": "0f430ed069c0a0b53a7993dc0497b0662f2948b094329a72b321002ad5c31d48",
+        "afterSha256": "23172efc4a3007583aa32060d8ef7f91ab6a2a2655b41e7816dcc900779e8f9b"
+      },
+      {
+        "header": "@@ -372,6 +373,7 @@ import type {",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "24a38154bc7fb75bd37bbf1c2eab447d732e72e27f3e4a6d24088e4be53e18eb",
+        "beforeSha256": "23172efc4a3007583aa32060d8ef7f91ab6a2a2655b41e7816dcc900779e8f9b",
+        "afterSha256": "9738a6941296f952290ff3b8d12149d07c1f5b1284817934bf4951a58d87e1a2"
+      },
+      {
+        "header": "@@ -8641,6 +8643,90 @@ export function useListHistorialComprasProveedores<TData = Awaited<ReturnType<ty",
+        "method": "full-context",
+        "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "insertedSha256": "b11dc43e8a1cc19dcbf11284eb094e850f7945511ac81fc2c649a42a9e68155d",
+        "beforeSha256": "9738a6941296f952290ff3b8d12149d07c1f5b1284817934bf4951a58d87e1a2",
+        "afterSha256": "d2f11d0feb720275822c4053e7e72399d523cb9f2119a9c00ada4478458a8d0a"
+      }
+    ]
+  },
+  {
+    "mode": "front",
+    "path": "artifacts/mariana-textil/src/components/credit-site-scope.tsx",
+    "baseSha256": null,
+    "resultSha256": "81cad55d04059037eba234939c866d92221ee94c5b9bc3e706cfb2623f7e7a68",
+    "hunks": [
+      {
+        "header": "NEW task-owned module",
+        "beforeSha256": null,
+        "afterSha256": "81cad55d04059037eba234939c866d92221ee94c5b9bc3e706cfb2623f7e7a68"
+      }
+    ]
+  },
+  {
+    "mode": "front",
+    "path": "artifacts/mariana-textil/src/lib/credit-folio-scope.ts",
+    "baseSha256": null,
+    "resultSha256": "177e31dcb52afeb7a87069340279ea182e7ba1ebedc7ec415966ff20afdbeb15",
+    "hunks": [
+      {
+        "header": "NEW task-owned module",
+        "beforeSha256": null,
+        "afterSha256": "177e31dcb52afeb7a87069340279ea182e7ba1ebedc7ec415966ff20afdbeb15"
+      }
+    ]
+  },
+  {
+    "mode": "front",
+    "path": "artifacts/mariana-textil/src/lib/supplier-directory-sort.ts",
+    "baseSha256": null,
+    "resultSha256": "2a9e96b67cb37cddd997309e758d6ffa319afabb9fffa7caa272b9b25a9e3a36",
+    "hunks": [
+      {
+        "header": "NEW task-owned module",
+        "beforeSha256": null,
+        "afterSha256": "2a9e96b67cb37cddd997309e758d6ffa319afabb9fffa7caa272b9b25a9e3a36"
+      }
+    ]
+  }
+]

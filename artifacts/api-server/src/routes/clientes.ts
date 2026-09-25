@@ -1698,7 +1698,7 @@ router.get(
 
       const { desde, hasta } = period(req);
       const result = await pool.query(
-        `SELECT t.id, t.folio, ${accountedDocumentAt("t")} AS fecha, t.subtotal::text,
+        `SELECT t.id, t.folio, ${accountedDocumentAt("t")} AS fecha, t.documento_tipo AS "documentoTipo", t.subtotal::text,
           t.iva::text, t.total::text,
           COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='METRO'), 0)::text AS metros,
           COALESCE(SUM(l.cantidad) FILTER (WHERE p.unidad='KILO'), 0)::text AS kilos,
@@ -1718,7 +1718,7 @@ router.get(
           WHERE t.cliente_id=$1 AND ${accountedDocumentPredicate("t")}
            AND ($2::date IS NULL OR ${accountedDocumentAt("t")} >= $2::date)
            AND ($3::date IS NULL OR ${accountedDocumentAt("t")} < $3::date + interval '1 day')
-         GROUP BY t.id ORDER BY ${accountedDocumentAt("t")} DESC`,
+         GROUP BY t.id ORDER BY ${accountedDocumentAt("t")} DESC NULLS LAST, t.id DESC`,
         [id, desde, hasta],
       );
       res.json({

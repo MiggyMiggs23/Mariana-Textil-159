@@ -11,6 +11,8 @@ import type { TipoProveedor } from './tipoProveedor';
 export interface Proveedor {
   id: number;
   nombre: string;
+  /** @nullable */
+  rfc: string | null;
   tipo: TipoProveedor;
   monedaDefault: Moneda;
   /** @nullable */

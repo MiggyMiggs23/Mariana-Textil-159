@@ -305,6 +305,7 @@ import type {
   ListPreciosParams,
   ListProductosParams,
   ListProveedorPagosParams,
+  ListProveedoresDirectorioParams,
   ListRollosParams,
   ListSalidasExtraordinariasParams,
   ListSalidasParams,
@@ -372,6 +373,7 @@ import type {
   ProveedorPagosResult,
   ProveedorUpdate,
   ProveedorUtilidadResult,
+  ProveedoresDirectorioResult,
   ProveedoresListResult,
   ProveedoresResumen,
   PurgaConfirmacion,
@@ -8629,6 +8631,90 @@ export function useListHistorialComprasProveedores<TData = Awaited<ReturnType<ty
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getListHistorialComprasProveedoresQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListProveedoresDirectorioUrl = (params?: ListProveedoresDirectorioParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/proveedores/directorio?${stringifiedParams}` : `/api/proveedores/directorio`
+}
+
+/**
+ * @summary Conteo de entradas por proveedor en el periodo y sitio autorizados
+ */
+export const listProveedoresDirectorio = async (params?: ListProveedoresDirectorioParams, options?: Parameters<typeof customFetch>[1]): Promise<ProveedoresDirectorioResult> => {
+
+  return customFetch<ProveedoresDirectorioResult>(getListProveedoresDirectorioUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListProveedoresDirectorioQueryKey = (params?: ListProveedoresDirectorioParams,) => {
+    return [
+    `/api/proveedores/directorio`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListProveedoresDirectorioQueryOptions = <TData = Awaited<ReturnType<typeof listProveedoresDirectorio>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params?: ListProveedoresDirectorioParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listProveedoresDirectorio>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListProveedoresDirectorioQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listProveedoresDirectorio>>> = ({ signal }) => listProveedoresDirectorio(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listProveedoresDirectorio>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListProveedoresDirectorioQueryResult = NonNullable<Awaited<ReturnType<typeof listProveedoresDirectorio>>>
+export type ListProveedoresDirectorioQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Conteo de entradas por proveedor en el periodo y sitio autorizados
+ */
+
+export function useListProveedoresDirectorio<TData = Awaited<ReturnType<typeof listProveedoresDirectorio>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListProveedoresDirectorioParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listProveedoresDirectorio>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListProveedoresDirectorioQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

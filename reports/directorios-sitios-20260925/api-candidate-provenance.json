@@ -1,0 +1,27 @@
+{
+  "status": "candidate-not-activated",
+  "parent": "a53d9a0d31c1713db1e57409a74d2c894935fa7327ec3617b5b58717b63eb5cd",
+  "candidateSha256": "b870909beced1957603ccbac785983d4c129c8438715d0e206c0e72fb1d90dbe",
+  "sourceDeltas": [
+    {
+      "file": "artifacts/api-server/src/routes/clientes.ts",
+      "baseSha256": "8e10ce9ebeef9b0d2a28c415218328a50cde6703c1e66df9074821e7b4322793",
+      "sha256": "9fdd00d9b12fb27284f436e4f903a67c918cbf814255986c48ef57cc00a3b002"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/proveedores.ts",
+      "baseSha256": "0e70f450bf9200a608096af09e9d2590172e601f305afcffeb8e2eaa4b1cfd44",
+      "sha256": "3a56953d26e59d5e92097dd9f3e4c125889254968d3eff77e98fd5887db78f3f"
+    },
+    {
+      "file": "lib/api-zod/src/generated/api.ts",
+      "baseSha256": "695ed6876bce400683deeea3343728d4ef52bd88ddad662d4e571d38dfdf21ed",
+      "sha256": "16b016e7e9c65c7ade6312a6685569b4fac42f5cf77ce60ebfc157139c4dd01a"
+    },
+    {
+      "file": "lib/db/src/schema/proveedores.ts",
+      "baseSha256": "e25249f40758fd34bcb12c9f6be6a24baf8c3ad5a7db6f13f532785d622b6676",
+      "sha256": "7dbe9a4f7a9fafa3448864e7d13f9edfb9ef23599b02b4d00c16ff93daeb0e6a"
+    }
+  ]
+}

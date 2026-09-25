@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
   carteraAuthPartition,
@@ -7,7 +8,27 @@ import {
   carteraScopeKey,
   carteraScopePath,
   carteraScopeQuery,
+  saleTypeLabel,
 } from "./clientes-api";
+
+test("sales labels use the original document type without guessing from payment status", () => {
+  assert.equal(saleTypeLabel("TICKET"), "Contado");
+  assert.equal(saleTypeLabel("NOTA"), "Crédito");
+  assert.equal(saleTypeLabel(undefined), "No disponible");
+});
+
+test("latest sales retain purchase detail and navigate to the original document", async () => {
+  const [route, detail] = await Promise.all([
+    readFile(new URL("../../../../artifacts/api-server/src/routes/clientes.ts", import.meta.url), "utf8"),
+    readFile(new URL("../pages/cliente-detail.tsx", import.meta.url), "utf8"),
+  ]);
+  const purchaseRoute = route.slice(route.indexOf('"/clientes/:id/compras"'), route.indexOf('"/clientes/:id/analitica"'));
+  assert.match(purchaseRoute, /t\.documento_tipo AS "documentoTipo"/);
+  assert.match(purchaseRoute, /ORDER BY \$\{accountedDocumentAt\("t"\)\} DESC NULLS LAST, t\.id DESC/);
+  assert.match(detail, /<TabsTrigger value="compras">Últimas ventas<\/TabsTrigger>/);
+  assert.match(detail, /ticketId: item\.id, cells: \[date\(item\.fecha\), formatNumber\(item\.folio \?\? item\.id,[\s\S]*?saleTypeLabel\(item\.documentoTipo\)/);
+  assert.match(detail, /"Venta", "Subtotal", "IVA", "Total"/);
+});
 
 test("cartera scope serializes global, single-site, and multi-site requests", () => {
   assert.deepEqual(carteraScopeQuery({}), {});

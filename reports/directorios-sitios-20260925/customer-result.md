@@ -1,0 +1,11 @@
+# Clientes — resultado de implementación
+
+Se cambió únicamente el directorio de clientes y la ficha de cliente, su llamada auxiliar y pruebas propias; el servidor solo se tocó para añadir la clasificación de venta que faltaba en la respuesta de compras.
+
+- Directorio: selector con **Nombre A–Z** y **Mayor demanda**; **Deuda pendiente primero** permanece como control separado. Se retiró el acceso rápido **Última actividad**, no la columna ni su dato. Siguen disponibles las cuatro ventanas (mes, tres meses, año, todo el tiempo), el conteo visible por cliente y los encabezados de tabla ordenables. El listado continúa consultando `/clientes/listado`, con paginación. Nombre A–Z es ahora el criterio inicial.
+- Ficha: la pestaña existente `compras` se presenta como **Últimas ventas**, con fecha, folio enlazado al ticket/nota original, importe total y tipo **Contado** o **Crédito**. Se conservan subtotal, IVA, cantidades por unidad, utilidad, período y total del período. La respuesta ya ordenaba por fecha descendente; las fechas ausentes van al final y se añadió el identificador descendente para desempates estables.
+- **Cambio mínimo de servidor:** `artifacts/api-server/src/routes/clientes.ts`, únicamente dos líneas dentro de `GET /clientes/:id/compras`: la consulta agrega `t.documento_tipo AS "documentoTipo"` al `SELECT` y `NULLS LAST, t.id DESC` al `ORDER BY`. `documento_tipo` distingue ticket cobrado de nota autorizada según la regla existente del mismo endpoint. Ninguna escritura ni cambio de esquema.
+
+**Archivos propios cambiados:** `artifacts/mariana-textil/src/components/client-directory.tsx`, `client-directory.test.tsx`, `src/pages/cliente-detail.tsx`, `src/lib/clientes-api.ts`, `clientes-api.contract.test.ts`, y `artifacts/api-server/src/routes/clientes.ts`. Este informe es el único archivo nuevo propio.
+
+**Comprobaciones:** directorio 5/5 pruebas; contrato de cliente 10/10; verificaciones de tipos del frontend y servidor sin errores; `git diff --check` sin errores. No se ejecutaron flujos de escritura, reinicios, compilaciones de distribución ni publicación. La versión activa congelada `dist-clientes-lista-20260925` no se alteró: los cambios de fuentes **no** se ven todavía en la versión activa. No se probó navegación autenticada en navegador.

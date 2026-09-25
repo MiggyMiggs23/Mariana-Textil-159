@@ -14,6 +14,8 @@ export interface ProveedorUpdate {
      * @maxLength 200
      */
   nombre?: string;
+  /** @nullable */
+  rfc?: string | null;
   tipo?: TipoProveedor;
   monedaDefault?: Moneda;
   /** @nullable */

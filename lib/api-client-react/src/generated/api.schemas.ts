@@ -6532,6 +6532,8 @@ export interface ImportResult {
 export interface Proveedor {
   id: number;
   nombre: string;
+  /** @nullable */
+  rfc: string | null;
   tipo: TipoProveedor;
   monedaDefault: Moneda;
   /** @nullable */
@@ -6554,6 +6556,8 @@ export interface ProveedorInput {
      * @maxLength 200
      */
   nombre: string;
+  /** @nullable */
+  rfc?: string | null;
   tipo: TipoProveedor;
   monedaDefault?: Moneda;
   /** @nullable */
@@ -6574,6 +6578,8 @@ export interface ProveedorUpdate {
      * @maxLength 200
      */
   nombre?: string;
+  /** @nullable */
+  rfc?: string | null;
   tipo?: TipoProveedor;
   monedaDefault?: Moneda;
   /** @nullable */
@@ -7878,6 +7884,8 @@ export interface AjusteProveedorInput {
 export interface ProveedorMetricas {
   id: number;
   nombre: string;
+  /** @nullable */
+  rfc: string | null;
   tipo: TipoProveedor;
   monedaDefault: Moneda;
   /** @nullable */
@@ -7923,6 +7931,26 @@ export interface ProveedoresListResult {
   /** Total comprado al conjunto de proveedores en el mes actual */
   comprasMes?: string;
   items: ProveedorMetricas[];
+}
+
+export type ProveedoresDirectorioResultPeriod = typeof ProveedoresDirectorioResultPeriod[keyof typeof ProveedoresDirectorioResultPeriod];
+
+
+export const ProveedoresDirectorioResultPeriod = {
+  '1m': '1m',
+  '3m': '3m',
+  '1y': '1y',
+  all: 'all',
+} as const;
+
+export type ProveedoresDirectorioResultItemsItem = {
+  proveedorId: number;
+  purchaseCount: number;
+};
+
+export interface ProveedoresDirectorioResult {
+  period: ProveedoresDirectorioResultPeriod;
+  items: ProveedoresDirectorioResultItemsItem[];
 }
 
 export type CompraConEstadoEstado = typeof CompraConEstadoEstado[keyof typeof CompraConEstadoEstado];
@@ -10268,6 +10296,20 @@ export type ListHistorialComprasProveedoresDirection = typeof ListHistorialCompr
 export const ListHistorialComprasProveedoresDirection = {
   asc: 'asc',
   desc: 'desc',
+} as const;
+
+export type ListProveedoresDirectorioParams = {
+period?: ListProveedoresDirectorioPeriod;
+};
+
+export type ListProveedoresDirectorioPeriod = typeof ListProveedoresDirectorioPeriod[keyof typeof ListProveedoresDirectorioPeriod];
+
+
+export const ListProveedoresDirectorioPeriod = {
+  '1m': '1m',
+  '3m': '3m',
+  '1y': '1y',
+  all: 'all',
 } as const;
 
 export type ListComprasProveedorParams = {

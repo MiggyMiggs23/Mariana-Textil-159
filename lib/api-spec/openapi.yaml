@@ -2122,6 +2122,24 @@ paths:
         "400": { $ref: "#/components/responses/ValidationError" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+  /proveedores/directorio:
+    get:
+      operationId: listProveedoresDirectorio
+      tags: [proveedores]
+      summary: Conteo de entradas por proveedor en el periodo y sitio autorizados
+      description: Requiere proveedores.ver y proveedores_finanzas.ver. El alcance territorial restringe los conteos.
+      parameters:
+        - { in: query, name: period, schema: { type: string, enum: [1m, 3m, 1y, all], default: all } }
+      responses:
+        "200":
+          description: Conteos de compras por proveedor; los ausentes tienen cero
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProveedoresDirectorioResult"
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /proveedores:
     get:
       operationId: listProveedores
@@ -13084,6 +13102,7 @@ components:
         [
           id,
           nombre,
+          rfc,
           tipo,
           monedaDefault,
           contactoNombre,
@@ -13097,6 +13116,7 @@ components:
       properties:
         id: { type: number }
         nombre: { type: string }
+        rfc: { type: ["string", "null"] }
         tipo:
           $ref: "#/components/schemas/TipoProveedor"
         monedaDefault:
@@ -13118,6 +13138,7 @@ components:
       required: [nombre, tipo]
       properties:
         nombre: { type: string, minLength: 1, maxLength: 200 }
+        rfc: { type: ["string", "null"] }
         tipo:
           $ref: "#/components/schemas/TipoProveedor"
         monedaDefault:
@@ -13136,6 +13157,7 @@ components:
       type: object
       properties:
         nombre: { type: string, minLength: 1, maxLength: 200 }
+        rfc: { type: ["string", "null"] }
         tipo:
           $ref: "#/components/schemas/TipoProveedor"
         monedaDefault:
@@ -14812,6 +14834,7 @@ components:
         [
           id,
           nombre,
+          rfc,
           tipo,
           monedaDefault,
           contactoNombre,
@@ -14825,6 +14848,7 @@ components:
       properties:
         id: { type: number }
         nombre: { type: string }
+        rfc: { type: ["string", "null"] }
         tipo:
           $ref: "#/components/schemas/TipoProveedor"
         monedaDefault:
@@ -14897,6 +14921,19 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ProveedorMetricas"
+    ProveedoresDirectorioResult:
+      type: object
+      required: [period, items]
+      properties:
+        period: { type: string, enum: [1m, 3m, 1y, all] }
+        items:
+          type: array
+          items:
+            type: object
+            required: [proveedorId, purchaseCount]
+            properties:
+              proveedorId: { type: integer }
+              purchaseCount: { type: integer }
     CompraConEstado:
       type: object
       required:

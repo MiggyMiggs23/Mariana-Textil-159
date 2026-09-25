@@ -91,3 +91,4 @@
 - [Precedencia de operadores JSON en SQL](sql-json-operator-precedence.md) — parentetizar la extracción JSON antes de restar claves y diagnosticar el valor/tipo exactos ante 22P02.
 - [Procedencia de fixtures de navegador](browser-fixture-provenance.md) — validar entrada/proveedor/recepción antes de vender; cerrar al final o usar otro sitio sintético.
 - [Reanudación con reloj controlado](controlled-clock-resume.md) — no reiniciar el reloj sobre una historia avanzada; archivar intentos contaminados y repetir desde copia fresca.
+- [Capturas entregables](browser-evidence-delivery.md) — comprobar archivos y contenido; un ID de observación o una pantalla de sesión no acredita el estado solicitado.
