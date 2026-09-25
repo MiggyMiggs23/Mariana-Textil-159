@@ -9,8 +9,37 @@ import { formatPackageQuantityLabel } from "@workspace/number-format";
  */
 export const LABEL_PRODUCT_NAME_FONT_STEPS_PX = [30, 24, 18, 14] as const;
 export const LABEL_QUANTITY_FONT_STEPS_PX = [29, 24, 19, 13] as const;
-const LABEL_SKU_FONT_STEPS_PX = [15, 12, 9, 6] as const;
-const LABEL_QR_PAYLOAD_FONT_STEPS_PX = [9, 7, 5, 4] as const;
+const LABEL_SKU_FONT_STEPS_PX = [15, 12, 9] as const;
+const LABEL_SERIE_FONT_STEPS_PX = [21, 18, 15, 12] as const;
+const LABEL_QR_PAYLOAD_FONT_STEPS_PX = [9, 7] as const;
+
+const labelErrors = new WeakMap<HTMLElement, Map<string, string>>();
+
+// A failed measurement must never produce an apparently valid, clipped label.
+// Keep the physical page but replace its contents with the complete offending value.
+function reportLabelFit(page: HTMLElement, field: string, value: string, fits: boolean) {
+  let errors = labelErrors.get(page);
+  if (!errors) {
+    errors = new Map();
+    labelErrors.set(page, errors);
+  }
+  if (fits) errors.delete(field);
+  else errors.set(field, value);
+  let notice = page.querySelector<HTMLElement>('[data-testid="label-print-error"]');
+  if (!errors.size) {
+    notice?.remove();
+    page.removeAttribute("data-print-blocked");
+    return;
+  }
+  page.dataset.printBlocked = "true";
+  if (!notice) {
+    notice = document.createElement("div");
+    notice.dataset.testid = "label-print-error";
+    notice.style.cssText = "position:absolute;inset:0;z-index:10;background:white;color:black;padding:3mm;box-sizing:border-box;font:12px/1.3 sans-serif;white-space:pre-wrap;overflow-wrap:anywhere;overflow:auto;print-color-adjust:exact;";
+    page.appendChild(notice);
+  }
+  notice.textContent = `ERROR: etiqueta no imprimible. Valor completo que no cabe:\n${[...errors].map(([key, text]) => `${key}: ${text}`).join("\n")}`;
+}
 
 export interface LabelData {
   sku: string;
@@ -32,11 +61,13 @@ function AutoFitText({
   className,
   fontSteps,
   testId,
+  wrapTwoLines = false,
 }: {
   children: string;
   className: string;
   fontSteps: readonly number[];
   testId?: string;
+  wrapTwoLines?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
@@ -59,19 +90,46 @@ function AutoFitText({
           container.getBoundingClientRect().width -
           Number.parseFloat(styles.paddingLeft || "0") -
           Number.parseFloat(styles.paddingRight || "0");
-        const textWidth = text.getBoundingClientRect().width;
-        fits = textWidth <= availableWidth + 0.5;
+        // The name span is constrained to the available width. Its scrollWidth
+        // detects an unbreakable word, unlike the unconstrained flex measurement.
+        const textWidth = wrapTwoLines ? text.scrollWidth : text.getBoundingClientRect().width;
+        const availableHeight = container.getBoundingClientRect().height -
+          Number.parseFloat(styles.paddingTop || "0") -
+          Number.parseFloat(styles.paddingBottom || "0");
+        fits = textWidth <= availableWidth + 0.5 &&
+          (!wrapTwoLines || (text.scrollHeight <= availableHeight + 0.5 &&
+            text.scrollHeight <= fontSize * 2.1 + 2));
         container.dataset.textWidth = textWidth.toFixed(2);
         container.dataset.availableWidth = availableWidth.toFixed(2);
         if (fits) break;
       }
       container.dataset.fontStep = String(selectedStep);
       container.dataset.fitState = fits ? "fits" : "overflow";
+      const page = container.closest<HTMLElement>(".label-page");
+      if (page) reportLabelFit(page, testId ?? "campo", children, fits);
     };
 
     fit();
     void document.fonts?.ready.then(() => requestAnimationFrame(fit));
-    window.addEventListener("beforeprint", fit);
+    const beforePrint = (event: Event) => {
+      fit();
+      const page = container.closest<HTMLElement>(".label-page");
+      if (page?.dataset.printBlocked === "true") {
+        // Some browsers do not cancel their native print dialog on
+        // preventDefault. The opaque error page above is the safety net.
+        event.preventDefault();
+        const error = page.querySelector<HTMLElement>('[data-testid="label-print-error"]');
+        if (error && !page.dataset.printErrorAnnounced) {
+          page.dataset.printErrorAnnounced = "true";
+          window.alert(error.textContent ?? "ERROR: etiqueta no imprimible");
+        }
+      }
+    };
+    window.addEventListener("beforeprint", beforePrint);
+    const afterPrint = () => {
+      container.closest<HTMLElement>(".label-page")?.removeAttribute("data-print-error-announced");
+    };
+    window.addEventListener("afterprint", afterPrint);
     const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(fit);
     observer?.observe(container);
     const clippingAncestor = container.closest(".label-page");
@@ -79,7 +137,8 @@ function AutoFitText({
     return () => {
       cancelled = true;
       observer?.disconnect();
-      window.removeEventListener("beforeprint", fit);
+      window.removeEventListener("beforeprint", beforePrint);
+      window.removeEventListener("afterprint", afterPrint);
     };
   }, [children, fontSteps]);
 
@@ -90,8 +149,17 @@ function AutoFitText({
       style={{ fontSize: `${fontSteps[0] ?? 1}px` }}
       data-testid={testId}
     >
-      <span ref={textRef} className="inline-block whitespace-nowrap">
-        {children}
+      <span
+        ref={textRef}
+        className={wrapTwoLines
+          ? "block w-full whitespace-normal break-normal [overflow-wrap:normal] leading-[1.05]"
+          : "inline-block whitespace-nowrap"}
+        style={wrapTwoLines ? { lineHeight: 1.05 } : undefined}
+      >
+        {wrapTwoLines
+          ? children.split(/(\s+)/).map((part, index) =>
+              /^\s+$/.test(part) ? part : <span key={index} className="whitespace-nowrap">{part}</span>)
+          : children}
       </span>
     </div>
   );
@@ -108,9 +176,10 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
       style={{ width: '100mm', height: '70mm', boxSizing: 'border-box' }}
     >
       <AutoFitText
-        className="h-[11mm] px-[1mm] flex items-center justify-center font-black uppercase whitespace-nowrap w-full flex-shrink-0 text-center leading-none tracking-[-0.02em]"
+        className="h-[11mm] px-[1mm] flex items-center justify-center font-black uppercase w-full flex-shrink-0 text-center tracking-[-0.02em]"
         fontSteps={LABEL_PRODUCT_NAME_FONT_STEPS_PX}
         testId="label-product-name"
+        wrapTwoLines
       >
         {productName}
       </AutoFitText>
@@ -131,7 +200,13 @@ export function LabelPrint({ data, className = "" }: { data: LabelData; classNam
           </div>
           <div className="flex-1 border-b border-gray-400 flex flex-col justify-center">
             <div className="text-[8px] font-medium text-gray-600 uppercase leading-none">NO. DE SERIE</div>
-            <div className="text-[21px] font-black truncate leading-none mt-[1.5mm] tracking-tight">{data.serie}</div>
+            <AutoFitText
+              className="w-full font-black whitespace-nowrap leading-none mt-[1.5mm] tracking-tight"
+              fontSteps={LABEL_SERIE_FONT_STEPS_PX}
+              testId="label-serie"
+            >
+              {data.serie}
+            </AutoFitText>
           </div>
           <div className="flex-[1.25] flex flex-col justify-center">
             <div className="text-[8px] font-medium text-gray-600 uppercase leading-none">{unitLabel}</div>

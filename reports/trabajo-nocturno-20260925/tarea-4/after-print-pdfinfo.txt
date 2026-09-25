@@ -1,0 +1,19 @@
+Title:           print-valid.html
+Creator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36
+Producer:        Skia/PDF m152
+CreationDate:    Fri Sep 25 04:45:06 2026 UTC
+ModDate:         Fri Sep 25 04:45:06 2026 UTC
+Custom Metadata: no
+Metadata Stream: no
+Tagged:          yes
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           2
+Encrypted:       no
+Page size:       282.96 x 198 pts
+Page rot:        0
+File size:       310357 bytes
+Optimized:       no
+PDF version:     1.4

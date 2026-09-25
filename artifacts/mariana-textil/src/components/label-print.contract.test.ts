@@ -36,6 +36,12 @@ test("product name and quantity use named discrete font steps without silent tru
   assert.match(source, /text\.getBoundingClientRect\(\)\.width/);
   assert.match(source, /container\.getBoundingClientRect\(\)\.width/);
   assert.match(source, /container\.closest\("\.label-page"\)/);
+  assert.match(source, /text\.scrollWidth/);
+  assert.match(source, /text\.scrollHeight/);
+  assert.match(source, /wrapTwoLines/);
+  assert.match(source, /reportLabelFit\(page, testId \?\? "campo", children, fits\)/);
+  assert.match(source, /testId="label-serie"/);
+  assert.doesNotMatch(source, /font-black truncate/);
   assert.doesNotMatch(source, /element\.scrollWidth <= element\.clientWidth/);
   assert.doesNotMatch(source, /fontSize -= 1/);
 });
@@ -44,7 +50,8 @@ test("label refits after fonts load and before print while preserving three deci
   const source = await readFile(componentFile, "utf8");
 
   assert.match(source, /document\.fonts\?\.ready\.then\(\(\) => requestAnimationFrame\(fit\)\)/);
-  assert.match(source, /window\.addEventListener\("beforeprint", fit\)/);
+  assert.match(source, /window\.addEventListener\("beforeprint", beforePrint\)/);
+  assert.match(source, /event\.preventDefault\(\)/);
   assert.match(source, /parsed\.toFixed\(3\)/);
   assert.match(source, /testId="label-sku"/);
   assert.match(source, /testId="label-qr-payload"/);
