@@ -30,6 +30,10 @@ it("uses activity desc by default, one paged query and no per-row credit request
   expect(requests).toHaveLength(1);
   expect(Object.fromEntries(requests[0])).toMatchObject({ sort: "lastActivity", direction: "desc", pageSize: "50", period: "all" });
   expect(screen.getByTestId("sort-clients-lastActivity").closest("th")?.getAttribute("aria-sort")).toBe("descending");
+  expect(screen.getAllByTestId(/^quick-order-/).map(button => button.getAttribute("data-testid"))).toEqual([
+    "quick-order-nombre", "quick-order-movementCount", "quick-order-lastActivity", "quick-order-saldoActual",
+  ]);
+  expect(screen.getByTestId("quick-order-lastActivity").getAttribute("aria-pressed")).toBe("true");
   expect(screen.getByText("Con deuda")).toBeTruthy();
   expect(screen.getByText("Sin deuda")).toBeTruthy();
   expect(screen.getByText("A favor: $100.00")).toBeTruthy();

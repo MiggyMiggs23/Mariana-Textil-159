@@ -95,8 +95,8 @@ export function ClientDirectory({ enabled, canFinances, isAdmin, authPartition }
       </div>
       <div className="flex flex-wrap items-center gap-2" aria-label="Orden rápido">
         {([
-          ...(canFinances ? [["lastActivity", "Última actividad", "desc"], ["movementCount", "Más movimientos", "desc"]] : []),
           ["nombre", "Nombre A–Z", "asc"],
+          ...(canFinances ? [["movementCount", "Más movimientos", "desc"], ["lastActivity", "Última actividad", "desc"]] : []),
           ...(canFinances ? [["saldoActual", "Deuda pendiente primero", "desc"]] : []),
         ] as Array<[Sort, string, "asc" | "desc"]>).map(([column, label, order]) =>
           <Button key={column} size="sm" variant={effectiveSort === column && effectiveDirection === order ? "default" : "outline"} aria-pressed={effectiveSort === column && effectiveDirection === order} onClick={() => setOrder(column, order)} data-testid={`quick-order-${column}`}>{label}</Button>)}

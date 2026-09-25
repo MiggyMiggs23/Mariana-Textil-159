@@ -1,0 +1,447 @@
+{
+  "capturedAt": "2026-09-25T22:27:16.187Z",
+  "transactionReadOnly": "on",
+  "databaseFingerprint": "4beec2e8dbd518e779a8da7e0453eb5f6a387151b98f55144f942a67756f23c8",
+  "schemaFingerprint": "57930ef7d1391416b8a86a7b3a85928c582433af1ea4a5d85fa173fd1c9e1e04",
+  "tables": {
+    "aplicaciones_credito": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "aplicaciones_pago_proveedor": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "atribuciones_credito_e1": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "auditoria": {
+      "count": "1",
+      "sha256": "0005276d5e844ee022b5032af15a782ba49c68eb0018257d15e378219cd17d23"
+    },
+    "auditoria_faltante_reactivaciones": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "auditoria_inventario_escaneos": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "auditoria_inventario_folio": {
+      "count": "11",
+      "sha256": "4b400028d71a094e773e94af020562fe1612f6bc09f044c20d990d73b6d4ed4f"
+    },
+    "auditoria_inventario_participantes": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "auditoria_inventario_snapshot": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "auditoria_sobrante_contextos": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "auditoria_sobrante_decisiones": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "auditorias_inventario": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "autorizaciones_nota": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "caja_desbloqueos_e12": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "caja_retornos_proveedor_e12": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "caja_salidas_e4": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "caja_salidas_e4_operaciones": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "camionetas": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "choferes": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cliente_documentos": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "clientes": {
+      "count": "2576",
+      "sha256": "b78bc29de4b7f27eb5570751ee71f937ae0deb0cb83af3bfc6f228f66bf71e93"
+    },
+    "cobros_credito_pendientes_e1": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "contenedor_lineas": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "contenedores": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cuadre_fiscal_registros": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e11_avisos": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e11_cambios_usuario": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e11_conciliacion_ventas": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e11_conciliaciones": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e11_decisiones": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e11_e5_definiciones": {
+      "count": "5",
+      "sha256": "35571a176fd23201d314da4f17cb96d1e0da72ba33a752b3de3afd12019d31c1"
+    },
+    "e11_e5_preparaciones": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e11_notificacion_origen": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e11_operaciones": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e11_perfil_eventos": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e11_perfiles": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e11_resoluciones": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e5_aplicaciones": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e5_cobros": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e5_ddl_originales": {
+      "count": "4",
+      "sha256": "04cc20165a73aad50e9253d50ce1cf64aef4352cd19065c8a156276826edbc90"
+    },
+    "e5_devoluciones": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e5_documentos": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e5_impresiones": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e5_nacimientos": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e5_operaciones": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e5_recepciones": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e5_salidas_bancarias": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e5_vinculos_credito": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e9_entregas": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e9_operaciones": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "entrada_folio": {
+      "count": "11",
+      "sha256": "4b400028d71a094e773e94af020562fe1612f6bc09f044c20d990d73b6d4ed4f"
+    },
+    "entradas": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "equipos": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "equipos_checklist": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidencia_no_aplicada_e2": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "existencias": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "finalizaciones_abono_e2": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fondo_arqueos": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fondo_mariana": {
+      "count": "1",
+      "sha256": "64a50396f0501014b3e88a1ba154f6df4808d6bef422812297dc8a0b1d9d7585"
+    },
+    "fondo_movimientos": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "movimientos": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "movimientos_credito": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "notificaciones_credito": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "notificaciones_sistema": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "operaciones_credito_e1": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pagos_proveedor": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "permisos_rol": {
+      "count": "204",
+      "sha256": "b2a5f7b160801a21954512b72b278d6213545764f55978df86d0059a7796c267"
+    },
+    "permisos_ubicacion": {
+      "count": "54",
+      "sha256": "70022ddaf2cfedaf27134bad9f70ce77120179aab2fa22c3649f15710209af95"
+    },
+    "permisos_usuario": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pisos": {
+      "count": "13",
+      "sha256": "4b7cb334b65df60bbc3bf80173a2dd078e44cd760c4520d10b7137bc1fab4ab7"
+    },
+    "precio_historial": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "productos": {
+      "count": "1234",
+      "sha256": "40c3824a5a8fd31cd8e9f43690f1edd011eda892313481eb012780898c9bd0e5"
+    },
+    "proveedor_efectivo_e12": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "proveedor_operaciones_e12": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "proveedor_solicitudes_e12": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "proveedores": {
+      "count": "27",
+      "sha256": "b7800f6ddf4fa508e6e9ec15b36cfe415ed9a9999c642b273a70a2086e10fd9f"
+    },
+    "recibo_folio_e3": {
+      "count": "11",
+      "sha256": "1f462309619fccd9a40ce0c5a46b7b0d6a9ebfd781f351de01c5ab30c1ee54fe"
+    },
+    "recibos_abono_e3": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reimpresiones_etiqueta": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "revisiones_etiqueta": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "rollos": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "salida_folio": {
+      "count": "11",
+      "sha256": "4b400028d71a094e773e94af020562fe1612f6bc09f044c20d990d73b6d4ed4f"
+    },
+    "salida_lineas": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "salida_rollos": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "salidas": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "salidas_dinero_caja": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "series_consecutivo": {
+      "count": "1",
+      "sha256": "a8fc9a8d92ec90fc601a8b3082b2b8da4f26bae52e9a2a67565a1a2a3d46f3cc"
+    },
+    "sesiones": {
+      "count": "1",
+      "sha256": "1b8c47c70733c5f1dec0d74d8356267a949fa696bd05857923ccc98ef08a51fd"
+    },
+    "sesiones_caja": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "sesiones_caja_dias": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "solicitudes_pago_dirigido": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stock_minimo_episodios": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stock_minimo_sitios": {
+      "count": "1",
+      "sha256": "8c6ecc0538ba3600a74564249d05b492ce6e13c22475ceda020adc789875e7ad"
+    },
+    "stock_minimos": {
+      "count": "3",
+      "sha256": "461966d5b4f3b156fe73826632ae166ab0133b6164003f1eb912f0ea2a22ea15"
+    },
+    "tarea4_rollo_remate": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "test_reset_history": {
+      "count": "1",
+      "sha256": "9df1bcd6e43ffcb127e5b6b00a6e42c4b385f3ce2e1e72d2aebe0016d73578c8"
+    },
+    "ticket_folio": {
+      "count": "1",
+      "sha256": "b325bd326cab1370b934f437eb5aae709a491eb52e0f398ebb070b62cd79e5ca"
+    },
+    "ticket_linea_consumos": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ticket_lineas": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ticket_pagos": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tickets": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ubicaciones": {
+      "count": "11",
+      "sha256": "6ccbcd0b474963d86e7767f507ef5fb4c87212b433bbaa14642b66fa5720ceff"
+    },
+    "usuarios": {
+      "count": "31",
+      "sha256": "87eeb00c3d06944b085fb654f6b5bca07fe4ff30d6675b1d148b6f1dd85cfb92"
+    },
+    "viaje_folio": {
+      "count": "11",
+      "sha256": "4b400028d71a094e773e94af020562fe1612f6bc09f044c20d990d73b6d4ed4f"
+    },
+    "viaje_salidas": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "viaje_tickets": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "viajes": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vistas_abono_e3": {
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "comparison": {
+    "sameDatabase": true,
+    "sameSchema": true,
+    "changedCounts": [],
+    "changedHashes": []
+  },
+  "passed": true
+}
