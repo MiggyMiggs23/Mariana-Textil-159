@@ -2495,3 +2495,17 @@ mtime_ms = 1790360277922
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/ad66e8a5-8656-43e8-aeec-0b67a2770d7c/d6708e1a-4f62-4e91-ab74-e9f5d7aafb3b"
 storage_version_token = "1790360371814516"
 content_type = "image/png"
+
+[[outputs]]
+id = "1QiuDU8wsxEf7oKlwuSaC"
+uri = "file://reports/notification-audio-20260925/menu-campanita.png"
+type = "image"
+title = "Campanita — control de sonido"
+description = "Menú real actualizado con activar/desactivar sonido. Captura con datos de ejemplo, sin operaciones reales."
+logical_id = "7c946329-c0ce-48d7-baaa-1c5acb968ef7"
+content_hash = "sha256:e353dfd53dd0a43323ac4c02ba40bc02811f683c5f0392ca482fb2f526cf9dce"
+size = 190251
+mtime_ms = 1790362722538
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/7c946329-c0ce-48d7-baaa-1c5acb968ef7/9cb07065-fd77-44a3-8ef6-4afdc661ce73"
+storage_version_token = "1790362836664694"
+content_type = "image/png"
