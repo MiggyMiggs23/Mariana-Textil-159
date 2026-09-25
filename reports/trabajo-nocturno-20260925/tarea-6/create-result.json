@@ -1,0 +1,17 @@
+{
+  "stage": "create",
+  "status": "BLOCKED",
+  "steps": [
+    {
+      "action": "create-F",
+      "status": 201,
+      "id": 2
+    },
+    {
+      "action": "create-A",
+      "status": 201,
+      "id": 3
+    }
+  ],
+  "error": "locator.selectOption: Timeout 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Perfil', { exact: true })\u001b[22m\n"
+}

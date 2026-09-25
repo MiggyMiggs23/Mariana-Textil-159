@@ -1,0 +1,13 @@
+{
+  "cases": [
+    {
+      "type": "DIA",
+      "start": "2026-08-01",
+      "outcome": "ACEPTADA",
+      "status": "BLOCKED",
+      "snapshotStatus": 200,
+      "id": "9873be81-6133-4856-a6aa-5e73171e543f",
+      "error": "locator.selectOption: Timeout 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('select')\u001b[22m\n\u001b[2m    - locator resolved to <select class=\"w-full rounded-md border bg-background p-2\">…</select>\u001b[22m\n\u001b[2m  - attempting select option action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying select option action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    24 × waiting for element to be visible and enabled\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying select option action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+    }
+  ]
+}

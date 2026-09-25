@@ -1,0 +1,21 @@
+{
+  "stage": "assign",
+  "status": "PASS_STEPS_ONLY",
+  "steps": [
+    {
+      "action": "assign-A",
+      "status": 200,
+      "body": {
+        "id": "fae6fcf2-148c-481d-bf5c-b406708e1301",
+        "uuid": "36fd10d0-b275-4a19-a968-fc470d83bca5",
+        "usuarioId": 3,
+        "actorId": 1,
+        "anterior": "F",
+        "posterior": "A",
+        "revision": 1,
+        "motivo": "ENSAYO56 perfil A autorizado solo desechable",
+        "creadoEn": "2026-09-25T05:02:19.841Z"
+      }
+    }
+  ]
+}

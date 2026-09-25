@@ -1,0 +1,41 @@
+Recuperación E11 pendiente — no crear otra intención
+
+Entrega estos UUID a ADMIN para consultar la evidencia del servidor con autorización vigente. Cambiar perfil o iniciar sesión no prueba que la operación no ocurrió. No se muestra ni recupera aquí el contenido privado anterior.
+
+Actor original 2 · 9c21c4bd-3d5b-4408-abb7-ca2eead309e0 · SNAPSHOT · RESULTADO_INCIERTO
+
+Los marcadores no se descartan por confirmación manual: requieren verificación autorizada del resultado. No hay reenvío automático ni botón para generar otro UUID.
+
+Contabilidad · F
+
+Perfil v0 · proyección autorizada, sin documentos operativos privados.
+
+Cerrar sesión
+Ventas y clientes facturados
+Snapshot documental · revisión 1
+
+DIA · [2026-08-01, 2026-08-02) · America/Mexico_City
+
+Cifra congelada: $0.00 · 0 documentos · 24/9/2026, 11:03:48 p.m. · actor #2
+
+Hash de evidencia: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+
+Revisión vigente · CONGELADO
+
+Periodos / revisar nueva versión si cambió la fuente
+Ventas congeladas (no se recalculan)
+
+Sin renglones en esta página del snapshot.
+
+Primera página / reiniciar cursor
+Siguiente
+Conciliar con registro externo F
+Resultado
+Cuadra — aceptar
+No cuadra — avisar a ADMIN
+Total del registro externo
+Referencia externa obligatoria (texto)
+Observación (obligatoria si no cuadra; sin datos sensibles)
+Revisar decisión documental
+ADMINISTRACIÓN Y AJUSTES
+Conciliaciones documentales

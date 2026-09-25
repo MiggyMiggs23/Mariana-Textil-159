@@ -1,0 +1,36 @@
+{
+  "status":"PARTIAL_ACTUAL_BROWSER_AND_AUTHENTICATED_API",
+  "database":"night56_test only",
+  "accounts":[
+    {"id":2,"username":"night56f","profile":"F canonical default","createdVia":"ADMIN native users UI"},
+    {"id":3,"username":"night56a","profile":"A explicit revision1","createdVia":"ADMIN native users UI and profile review/confirm buttons"}
+  ],
+  "passes":[
+    {"case":"Exactly two authorized disposable synthetic accountants, real native login and effective identity","evidence":["create-result.json","assign-result.json","F-result.json","A-result.json"]},
+    {"case":"ContadorF fiscal UI list and clicked invoice detail include invoiced1001 and exclude non-invoiced1000","evidence":["F-invoiced-list.png","F-invoiced-detail.png","F-result.json"]},
+    {"case":"ContadorF same-browser authenticated API distinguishes non-invoiced invoice1=404, invoiced invoice2=200, sanitized fiscal projection","evidence":"F-result.json"},
+    {"case":"Both profiles API deny Fondo, supplier payments, private ticket detail and legacy customer detail with403","evidence":["F-result.json","A-result.json"]},
+    {"case":"Both profiles browser direct Fondo navigation denied; no legacy operational page mounted","evidence":["F-fondo-denied.png","A-fondo-denied.png"]},
+    {"case":"ContadorA fiscal endpoints denied403; effective identity only FINANZAS_LIMITADAS_LEER","evidence":"A-result.json"},
+    {"case":"ContadorF real day-period review and immutable snapshot POST200; source zero only because August disposable history is empty","evidence":"reconciliation-result.json"}
+  ],
+  "blockedOrIncomplete":[
+    {
+      "case":"Day/week/month acceptance and NO_CUADRA ADMIN notification",
+      "reason":"After day snapshot HTTP200 harness immediately navigated before UI mutation acknowledgement. Snapshot persisted, but browser displayed RESULTADO_INCIERTO marker and disabled decision controls. Preserved evidence and stopped financial/documentary writes rather than clearing marker or creating another UUID. This may be harness-induced navigation interruption, not a proven product defect; requires authorized outcome recovery before resuming.",
+      "snapshotId":"9873be81-6133-4856-a6aa-5e73171e543f",
+      "actor":2,
+      "operation":"SNAPSHOT",
+      "uuid":"9c21c4bd-3d5b-4408-abb7-ca2eead309e0",
+      "evidence":["reconciliation-result.json","reconcile-DIA-ACEPTADA-blocked.png","reconcile-DIA-ACEPTADA-blocked.txt"]
+    },
+    {"case":"ContadorA E5 preparation and ADMIN approval","reason":"Frozen source intentionally keeps E11_E5_PREPARATION_ENABLED=false and E5 closures. UI restricted route shown; not claimed as pass."},
+    {"case":"Nonempty historical reconciliation and notification delivery","reason":"No fabricated historical documents or controlled-clock reset; not tested"}
+  ],
+  "harnessCorrections":[
+    "Implicit label selector corrected before profile assignment; no duplicated account creation.",
+    "Playwright context.request did not send secure cookie over plain HTTP; browser fetch with credentials include used instead, from the actual logged-in browser. Initial401 probe is not a product permission defect.",
+    "No private sessions injected; authenticated state originates from actual login clicks."
+  ],
+  "guards":"Only explicit MAIN-authorized disposable documentary E11 closures opened. Nine E5 closure triggers retained. No application identities/data or business-code changes."
+}

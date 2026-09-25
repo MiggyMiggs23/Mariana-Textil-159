@@ -1,0 +1,22 @@
+{
+  "status": "SUPERSEDED_BY_FINAL_RESULTS",
+  "authoritativeReport": "final-results.json",
+  "owner": "night-task56-browser",
+  "runner": "../tarea-5/runner.mjs",
+  "coverage": [],
+  "screenshots": [],
+  "accountsCreated": [],
+  "accountPolicy": "After task2 candidate readiness, create exactly one synthetic ContadorF and one synthetic ContadorA in disposable night56_test using canonical ADMIN's real user-management UI. Never assign an application user; never import application identities or cookies.",
+  "plan": [
+    "Before creating accounts capture ADMIN user-management screen; after creation capture both assigned profiles. Native login for each; never inject sessions.",
+    "Prepare invoiced and non-invoiced documents in disposable copy with canonical actors and full inventory provenance; record IDs privately for negative access probes.",
+    "ContadorF sees only invoiced invoices/customers/sales; test list, detail, search and exports.",
+    "Click reconciliation day/week/month and verify persisted accepted states; click no cuadra and verify ADMIN receives notification in a separate real session.",
+    "ContadorA prepares directed destination; ADMIN alone approves. ContadorA application attempt must be denied.",
+    "Both profiles: UI must hide Fondo, margin, supplier payments and sensitive customer data. Make authenticated same-session API probes for each actual route identified from candidate source; record HTTP status and sanitized absence of sensitive fields, including direct IDs for hidden records.",
+    "Capture before/after and failure screenshots per assertion. API probes supplement browser clicks, never substitute.",
+    "Retain explicit pending status until E11 candidate and exact selectors/endpoints are available; do not force profile flags."
+  ],
+  "blockers": ["Task1/task2 release worker preparing, not declared ready", "MAIN explicitly holds profile writes until additional E11 profile graph alias correction. Login now passes; no synthetic profile writes attempted while held."],
+  "notClaimed": ["permissions verified", "fiscal reconciliation verified", "synthetic profiles created", "before/after screenshots captured"]
+}

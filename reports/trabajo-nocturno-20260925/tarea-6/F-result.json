@@ -1,0 +1,100 @@
+{
+  "stage": "F",
+  "status": "PASS_STEPS_ONLY",
+  "steps": [
+    {
+      "action": "identity",
+      "status": 200,
+      "body": {
+        "usuarioId": 2,
+        "rolBase": "CONTADOR",
+        "perfil": "F",
+        "perfilVersion": 0,
+        "permisosVersion": "a8d8826d08b332e845d62603201ca8083e78b15e589205f91b529f2fd1beaa06",
+        "capacidades": [
+          "FISCAL_LEER",
+          "FISCAL_CONCILIAR"
+        ]
+      }
+    },
+    {
+      "action": "authenticated-probe",
+      "endpoint": "/api/fondo",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "be5370c7-61ea-4dd9-9708-5ca6b162bb22"
+      }
+    },
+    {
+      "action": "authenticated-probe",
+      "endpoint": "/api/proveedores/1/pagos",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "9db29253-ed33-4dce-aa8d-ccca39e9d9ec"
+      }
+    },
+    {
+      "action": "authenticated-probe",
+      "endpoint": "/api/tickets/1",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "05fcd2b5-1b9c-473b-b24e-d4e506040f9f"
+      }
+    },
+    {
+      "action": "authenticated-probe",
+      "endpoint": "/api/clientes/1",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "dbdc2529-fd7f-4390-9947-f0c83fd52527"
+      }
+    },
+    {
+      "action": "authenticated-probe",
+      "endpoint": "/api/e11/fiscal/facturas/1",
+      "status": 404,
+      "body": {
+        "code": "NO_ENCONTRADO",
+        "message": "Documento fiscal no encontrado.",
+        "requestId": "50f6f441-6a6b-4187-9a0f-65a5d09fecda"
+      }
+    },
+    {
+      "action": "authenticated-probe",
+      "endpoint": "/api/e11/fiscal/facturas/2",
+      "status": 200,
+      "body": {
+        "facturaId": 2,
+        "ventaId": 2,
+        "folioFactura": "1001",
+        "cliente": {
+          "clienteId": 1,
+          "nombre": "Venta a Público"
+        },
+        "fechaFacturacion": "2026-09-25T05:01:05.575Z",
+        "totalFacturado": "1160.00",
+        "moneda": "MXN",
+        "estado": "VIGENTE"
+      }
+    },
+    {
+      "action": "native-invoiced-list-and-detail",
+      "status": "PASS",
+      "included": 1001,
+      "excluded": 1000
+    },
+    {
+      "action": "navigation-link-count",
+      "role": "F",
+      "count": 0
+    }
+  ]
+}

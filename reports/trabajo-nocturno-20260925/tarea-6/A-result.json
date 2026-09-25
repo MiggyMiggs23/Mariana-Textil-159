@@ -1,0 +1,85 @@
+{
+  "stage": "A",
+  "status": "PASS_STEPS_ONLY",
+  "steps": [
+    {
+      "action": "identity",
+      "status": 200,
+      "body": {
+        "usuarioId": 3,
+        "rolBase": "CONTADOR",
+        "perfil": "A",
+        "perfilVersion": 1,
+        "permisosVersion": "1ace91f8249a942c8123511911c8d138fecbcb8e03a92e24cfd107971206c55b",
+        "capacidades": [
+          "FINANZAS_LIMITADAS_LEER"
+        ]
+      }
+    },
+    {
+      "action": "authenticated-probe",
+      "endpoint": "/api/fondo",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "9856ce5f-2afe-44e2-baac-113c66f905a3"
+      }
+    },
+    {
+      "action": "authenticated-probe",
+      "endpoint": "/api/proveedores/1/pagos",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "c169c86b-522d-4405-92ba-afa4743cf67a"
+      }
+    },
+    {
+      "action": "authenticated-probe",
+      "endpoint": "/api/tickets/1",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "11d59821-ce9d-45a6-87e6-bdb127936021"
+      }
+    },
+    {
+      "action": "authenticated-probe",
+      "endpoint": "/api/clientes/1",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "659db22d-89e9-4f8c-a064-121950d4ee46"
+      }
+    },
+    {
+      "action": "authenticated-probe",
+      "endpoint": "/api/e11/fiscal/facturas/1",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "El perfil vigente no autoriza esta operación.",
+        "requestId": "d5d04dce-deef-4fb3-a5a1-f5b32bc5338e"
+      }
+    },
+    {
+      "action": "authenticated-probe",
+      "endpoint": "/api/e11/fiscal/facturas/2",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "El perfil vigente no autoriza esta operación.",
+        "requestId": "7b555bdf-8fd2-4e10-ad06-752645b48727"
+      }
+    },
+    {
+      "action": "navigation-link-count",
+      "role": "A",
+      "count": 0
+    }
+  ]
+}

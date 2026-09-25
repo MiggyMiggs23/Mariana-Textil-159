@@ -1,0 +1,117 @@
+Contabilidad · F
+
+Perfil v0 · proyección autorizada, sin documentos operativos privados.
+
+Cerrar sesión
+Ventas y clientes facturados
+Conciliaciones de ventas facturadas
+
+Día opcional; semana calendario (lunes a lunes) y mes obligatorios, independientemente de días aceptados. Sin vencimientos ni efectos monetarios.
+
+Desde (día CDMX)
+Hasta, exclusivo (día CDMX)
+Consultar intervalo
+DIA · 2026-08-01 a 2026-08-02 (exclusivo)
+
+Aceptación opcional · CONGELADO · America/Mexico_City
+
+Ver snapshot y decisiónRevisar nueva versión vinculada
+MES · 2026-08-01 a 2026-09-01 (exclusivo)
+
+Aceptación obligatoria · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+DIA · 2026-08-02 a 2026-08-03 (exclusivo)
+
+Aceptación opcional · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+DIA · 2026-08-03 a 2026-08-04 (exclusivo)
+
+Aceptación opcional · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+SEMANA · 2026-08-03 a 2026-08-10 (exclusivo)
+
+Aceptación obligatoria · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+DIA · 2026-08-04 a 2026-08-05 (exclusivo)
+
+Aceptación opcional · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+DIA · 2026-08-05 a 2026-08-06 (exclusivo)
+
+Aceptación opcional · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+DIA · 2026-08-06 a 2026-08-07 (exclusivo)
+
+Aceptación opcional · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+DIA · 2026-08-07 a 2026-08-08 (exclusivo)
+
+Aceptación opcional · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+DIA · 2026-08-08 a 2026-08-09 (exclusivo)
+
+Aceptación opcional · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+DIA · 2026-08-09 a 2026-08-10 (exclusivo)
+
+Aceptación opcional · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+DIA · 2026-08-10 a 2026-08-11 (exclusivo)
+
+Aceptación opcional · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+SEMANA · 2026-08-10 a 2026-08-17 (exclusivo)
+
+Aceptación obligatoria · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+DIA · 2026-08-11 a 2026-08-12 (exclusivo)
+
+Aceptación opcional · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+DIA · 2026-08-12 a 2026-08-13 (exclusivo)
+
+Aceptación opcional · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+DIA · 2026-08-13 a 2026-08-14 (exclusivo)
+
+Aceptación opcional · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+DIA · 2026-08-14 a 2026-08-15 (exclusivo)
+
+Aceptación opcional · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+DIA · 2026-08-15 a 2026-08-16 (exclusivo)
+
+Aceptación opcional · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+DIA · 2026-08-16 a 2026-08-17 (exclusivo)
+
+Aceptación opcional · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+DIA · 2026-08-17 a 2026-08-18 (exclusivo)
+
+Aceptación opcional · PENDIENTE · America/Mexico_City
+
+Revisar y congelar periodo
+Primera página / reiniciar cursor
+Siguiente
+ADMINISTRACIÓN Y AJUSTES
+Conciliaciones documentales
