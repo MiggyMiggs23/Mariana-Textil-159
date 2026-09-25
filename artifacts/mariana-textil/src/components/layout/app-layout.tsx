@@ -41,6 +41,7 @@ import { NotificationsBell } from "@/components/notifications-bell";
 import { getVisibleNavGroups } from "@/components/layout/app-navigation";
 import { getHomeRoute } from "@/lib/home-route";
 import { E11Navigation, useE11AdminNavLinks } from "@/pages/e11";
+import { TestSystemResetButton } from "@/components/test-system-reset";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const [location, setLocation] = useLocation();
@@ -340,6 +341,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           <nav className="flex-1 overflow-y-auto custom-scrollbar" data-history-scroll-key="sidebar-desktop">
             {renderNavContent()}
           </nav>
+          {user.rol === Role.ADMIN && <TestSystemResetButton />}
         </aside>
       )}
 
@@ -449,6 +451,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <nav className="flex-1 overflow-y-auto" data-history-scroll-key="sidebar-mobile">
                 {renderNavContent(() => setMobileMenuOpen(false))}
               </nav>
+              {user.rol === Role.ADMIN && <TestSystemResetButton />}
             </div>
           </div>
         )}

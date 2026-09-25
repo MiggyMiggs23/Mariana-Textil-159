@@ -5,6 +5,31 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+export type TestResetInputConfirmation = typeof TestResetInputConfirmation[keyof typeof TestResetInputConfirmation];
+
+
+export const TestResetInputConfirmation = {
+  BORRAR: 'BORRAR',
+} as const;
+
+export interface TestResetInput {
+  confirmation: TestResetInputConfirmation;
+}
+
+export interface TestResetResult {
+  success: boolean;
+  requiresLogin: boolean;
+  message: string;
+}
+
+export interface TestResetStatus {
+  enabled: boolean;
+  protectCustomers: boolean;
+  confirmation: string;
+  preserves: string[];
+  clears: string[];
+}
+
 export interface RolloRemateInput {
   /** @minLength 1 */
   motivo: string;

@@ -212,6 +212,9 @@ importers:
       pdfkit:
         specifier: ^0.20.2
         version: 0.20.2
+      pg:
+        specifier: ^8.22.0
+        version: 8.22.0
       pino:
         specifier: ^9.14.0
         version: 9.14.0
@@ -237,6 +240,9 @@ importers:
       '@types/pdfkit':
         specifier: ^0.17.6
         version: 0.17.6
+      '@types/pg':
+        specifier: ^8.20.0
+        version: 8.20.0
       esbuild:
         specifier: 0.27.3
         version: 0.27.3

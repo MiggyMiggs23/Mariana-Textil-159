@@ -140,6 +140,7 @@ test("shutdown is idempotent, aborts backfill, and closes the pool", async () =>
   let ended = 0;
   let aborted = 0;
   let closeCalls = 0;
+  let leaseClosed = 0;
   let resolveBackfill!: () => void;
   const backfill = new Promise<void>((resolve) => { resolveBackfill = resolve; });
   const server = {
@@ -153,10 +154,16 @@ test("shutdown is idempotent, aborts backfill, and closes the pool", async () =>
     backfill: { promise: backfill, abort() { aborted += 1; resolveBackfill(); } },
     logger: { info() {}, warn() {}, error() {} },
     timeoutMs: 50,
+    afterPoolClose: async () => {
+      assert.equal(ended, 1);
+      assert.equal(aborted, 1);
+      leaseClosed += 1;
+    },
   });
   await Promise.all([lifecycle.shutdown("SIGTERM"), lifecycle.shutdown("SIGINT")]);
   assert.equal(aborted, 1);
   assert.equal(closeCalls, 1);
   assert.equal(ended, 1);
+  assert.equal(leaseClosed, 1);
   lifecycle.dispose();
 });

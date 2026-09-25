@@ -12,6 +12,9 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { BrandLogo } from "@/components/brand-logo";
+import {
+  TEST_RESET_LOGIN_MESSAGE, TEST_RESET_LOGIN_NOTICE_KEY,
+} from "@/components/test-system-reset";
 
 const loginSchema = z.object({
   usuario: z.string().min(1, "El usuario es requerido"),
@@ -44,6 +47,18 @@ export default function Login() {
 
   const login = useLogin();
   const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
+  const [resetNotice] = useState(() => {
+    try {
+      const stored = sessionStorage.getItem(TEST_RESET_LOGIN_NOTICE_KEY);
+      if (stored) return stored;
+    } catch {
+      // Fallback below still works when session storage is unavailable.
+    }
+    const marker = new URLSearchParams(window.location.search).get("testReset");
+    return marker === "complete" ? TEST_RESET_LOGIN_MESSAGE
+      : marker === "session" ? "Tu sesión se cerró. Vuelve a iniciar sesión antes de consultar los datos."
+        : null;
+  });
 
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -55,6 +70,7 @@ export default function Login() {
 
   useEffect(() => {
     if (user && !isChecking && !sessionError) {
+      try { sessionStorage.removeItem(TEST_RESET_LOGIN_NOTICE_KEY); } catch { /* Browser storage unavailable. */ }
       setLocation(returnTo);
     }
   }, [user, isChecking, sessionError, returnTo, setLocation]);
@@ -64,6 +80,7 @@ export default function Login() {
       { data: { ...data, usuario: normalizeUsername(data.usuario) } },
       {
         onSuccess: () => {
+          try { sessionStorage.removeItem(TEST_RESET_LOGIN_NOTICE_KEY); } catch { /* Browser storage unavailable. */ }
           queryClient.invalidateQueries();
           setLocation(returnTo);
         },
@@ -100,6 +117,12 @@ export default function Login() {
           </div>
         </CardHeader>
         <CardContent>
+          {resetNotice && (
+            <p role="status" data-testid="test-reset-login-notice"
+              className="mb-5 rounded-md border border-amber-500/50 bg-amber-50 p-3 text-sm text-amber-950">
+              {resetNotice}
+            </p>
+          )}
           <Form {...form}>
             <form
               onSubmitCapture={() => setPasswordVisibilityResetKey((current) => current + 1)}

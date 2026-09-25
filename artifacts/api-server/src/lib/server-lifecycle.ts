@@ -183,6 +183,7 @@ export function installGracefulShutdown(opts: {
   backfill: { promise: Promise<unknown>; abort(): void } | null;
   logger: Log;
   timeoutMs?: number;
+  afterPoolClose?: () => Promise<void>;
 }): { shutdown: (signal?: NodeJS.Signals) => Promise<void>; dispose(): void } {
   const timeoutMs = opts.timeoutMs ?? 30_000;
   let shutdownPromise: Promise<void> | undefined;
@@ -206,6 +207,7 @@ export function installGracefulShutdown(opts: {
         (opts.server as Server & { closeAllConnections?: () => void }).closeAllConnections?.();
       }
       await opts.pool.end();
+      await opts.afterPoolClose?.();
       opts.logger.info({ signal }, "Server shutdown complete");
     })();
     return shutdownPromise;

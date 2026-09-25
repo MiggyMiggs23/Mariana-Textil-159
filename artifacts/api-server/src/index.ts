@@ -1,6 +1,8 @@
 // Keep the existing cyclic HTTP graph eager; lazy loading deadlocks esbuild's
 // async module initializers. Startup checks still finish before listening.
 import app, { requestDrain } from "./app";
+import { acquireResetProcessLease } from "./lib/test-reset/process-lease";
+import { TEST_RESET_ENABLED } from "./lib/test-reset/manifest";
 import {
   ensurePendingCostsSchema,
   ensureClientesSchema,
@@ -167,6 +169,11 @@ export async function startServer() {
     historicalAttribution: CREDIT_HISTORICAL_ATTRIBUTION_ENABLED,
   });
   const nonWritingBoot = mode.kind !== "normal";
+  if (TEST_RESET_ENABLED && mode.kind !== "inspection") {
+    throw new Error("El reinicio temporal requiere inspection boot: no puede coexistir con escritores de mantenimiento.");
+  }
+  const resetLease = await acquireResetProcessLease(pool.options, TEST_RESET_ENABLED);
+  try {
   if (mode.kind === "inspection") {
     // Fail explicitly if the already-provisioned database cannot be read.
     await pool.query("SELECT 1");
@@ -197,6 +204,7 @@ export async function startServer() {
   server.on("error", async (err) => {
     logger.error({ err }, "Error listening on port");
     await pool.end();
+    await resetLease.close();
     process.exitCode = 1;
   });
   server.on("listening", () => {
@@ -209,6 +217,7 @@ export async function startServer() {
       pool,
       drain: requestDrain,
       backfill: { promise: Promise.resolve(), abort() {} },
+      afterPoolClose: () => resetLease.close(),
       logger,
     });
     return;
@@ -259,8 +268,13 @@ export async function startServer() {
     pool,
     drain: requestDrain,
     backfill: backgroundTasks,
+    afterPoolClose: () => resetLease.close(),
     logger,
   });
+  } catch (error) {
+    await resetLease.close();
+    throw error;
+  }
 }
 
 if (process.env["NODE_ENV"] !== "test") {

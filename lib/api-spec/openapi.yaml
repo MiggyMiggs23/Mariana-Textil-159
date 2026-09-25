@@ -77,6 +77,47 @@ tags:
   - name: equipos
     description: Registro de equipo del sistema y su configuración por sitio
 paths:
+  /admin/test-reset:
+    get:
+      operationId: getTestResetStatus
+      tags: [admin]
+      summary: Reinicio temporal de datos de prueba, solo ADMIN
+      responses:
+        "200":
+          description: Lista fija revisada de tablas; no ejecuta cambios
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TestResetStatus"
+        "404":
+          description: Excepción temporal deshabilitada
+        "409":
+          description: Esquema sin clasificar, no se permite reiniciar
+    post:
+      operationId: resetTestSystem
+      tags: [admin]
+      summary: Borra datos de prueba y cierra todas las sesiones, solo ADMIN
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TestResetInput"
+      responses:
+        "200":
+          description: Reinicio confirmado y sesión cerrada; mostrar mensaje y volver al acceso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TestResetResult"
+        "400":
+          description: Falta confirmación exacta BORRAR
+        "403":
+          description: No autorizado o sesión ADMIN vencida
+        "404":
+          description: Excepción temporal deshabilitada
+        "409":
+          description: Reinicio bloqueado; no se borró nada
   /devoluciones-comerciales/vista-previa:
     post:
       operationId: previewCommercialReturn
@@ -7646,6 +7687,28 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    TestResetInput:
+      type: object
+      additionalProperties: false
+      required: [confirmation]
+      properties:
+        confirmation: { type: string, enum: [BORRAR] }
+    TestResetResult:
+      type: object
+      required: [success, requiresLogin, message]
+      properties:
+        success: { type: boolean }
+        requiresLogin: { type: boolean }
+        message: { type: string }
+    TestResetStatus:
+      type: object
+      required: [enabled, protectCustomers, confirmation, preserves, clears]
+      properties:
+        enabled: { type: boolean }
+        protectCustomers: { type: boolean }
+        confirmation: { type: string }
+        preserves: { type: array, items: { type: string } }
+        clears: { type: array, items: { type: string } }
     RolloRemateInput:
       type: object
       additionalProperties: false

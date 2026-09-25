@@ -9,6 +9,32 @@ import * as zod from 'zod';
 
 
 /**
+ * @summary Reinicio temporal de datos de prueba, solo ADMIN
+ */
+export const GetTestResetStatusResponse = zod.object({
+  "enabled": zod.boolean(),
+  "protectCustomers": zod.boolean(),
+  "confirmation": zod.string(),
+  "preserves": zod.array(zod.string()),
+  "clears": zod.array(zod.string())
+})
+
+
+/**
+ * @summary Borra datos de prueba y cierra todas las sesiones, solo ADMIN
+ */
+export const ResetTestSystemBody = zod.object({
+  "confirmation": zod.enum(['BORRAR'])
+})
+
+export const ResetTestSystemResponse = zod.object({
+  "success": zod.boolean(),
+  "requiresLogin": zod.boolean(),
+  "message": zod.string()
+})
+
+
+/**
  * Solo ADMIN, CLOSED. Revalida nota, cantidad íntegra, pagos monetarios, caja del día y efectivo. No reserva los importes.
  * @summary Revisar importes exactos y elegibilidad sin registrar movimientos
  */

@@ -1,5 +1,7 @@
 import { Router, type IRouter } from "express";
 import healthRouter from "./health";
+import testResetRouter from "./test-reset";
+import { testResetBarrier } from "../lib/test-reset/barrier";
 import commercialReturnsRouter from "./commercial-returns";
 import authRouter from "./auth";
 import dashboardRouter from "./dashboard";
@@ -47,6 +49,8 @@ import { E11_ENABLED } from "../lib/e11-feature";
 import { createE11LegacyBoundary } from "../middlewares/e11-legacy";
 
 const router: IRouter = Router();
+router.use(testResetBarrier);
+router.use(testResetRouter);
 // Closed commercial-return boundary must precede authentication and DB reads.
 router.use(commercialReturnsRouter);
 // OFF route boundary must run before auth or sidecar access.

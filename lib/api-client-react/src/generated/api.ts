@@ -431,6 +431,9 @@ import type {
   StockMinimoConfigUpdate,
   StockMinimoList,
   StockMinimoUpdate,
+  TestResetInput,
+  TestResetResult,
+  TestResetStatus,
   TicketCajaResumen,
   TicketCancelacionInput,
   TicketCobroInput,
@@ -483,6 +486,154 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getGetTestResetStatusUrl = () => {
+
+
+
+
+  return `/api/admin/test-reset`
+}
+
+/**
+ * @summary Reinicio temporal de datos de prueba, solo ADMIN
+ */
+export const getTestResetStatus = async ( options?: Parameters<typeof customFetch>[1]): Promise<TestResetStatus> => {
+
+  return customFetch<TestResetStatus>(getGetTestResetStatusUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetTestResetStatusQueryKey = () => {
+    return [
+    `/api/admin/test-reset`
+    ] as const;
+    }
+
+
+export const getGetTestResetStatusQueryOptions = <TData = Awaited<ReturnType<typeof getTestResetStatus>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getTestResetStatus>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetTestResetStatusQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTestResetStatus>>> = ({ signal }) => getTestResetStatus({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getTestResetStatus>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetTestResetStatusQueryResult = NonNullable<Awaited<ReturnType<typeof getTestResetStatus>>>
+export type GetTestResetStatusQueryError = ErrorType<void>
+
+
+/**
+ * @summary Reinicio temporal de datos de prueba, solo ADMIN
+ */
+
+export function useGetTestResetStatus<TData = Awaited<ReturnType<typeof getTestResetStatus>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getTestResetStatus>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetTestResetStatusQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getResetTestSystemUrl = () => {
+
+
+
+
+  return `/api/admin/test-reset`
+}
+
+/**
+ * @summary Borra datos de prueba y cierra todas las sesiones, solo ADMIN
+ */
+export const resetTestSystem = async (testResetInput: TestResetInput, options?: Parameters<typeof customFetch>[1]): Promise<TestResetResult> => {
+
+  return customFetch<TestResetResult>(getResetTestSystemUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(testResetInput)
+  }
+);}
+
+
+
+
+
+export const getResetTestSystemMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resetTestSystem>>, TError,{data: BodyType<TestResetInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof resetTestSystem>>, TError,{data: BodyType<TestResetInput>}, TContext> => {
+
+const mutationKey = ['resetTestSystem'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof resetTestSystem>>, {data: BodyType<TestResetInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  resetTestSystem(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ResetTestSystemMutationResult = NonNullable<Awaited<ReturnType<typeof resetTestSystem>>>
+    export type ResetTestSystemMutationBody = BodyType<TestResetInput>
+    export type ResetTestSystemMutationError = ErrorType<void>
+
+    /**
+ * @summary Borra datos de prueba y cierra todas las sesiones, solo ADMIN
+ */
+export const useResetTestSystem = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resetTestSystem>>, TError,{data: BodyType<TestResetInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof resetTestSystem>>,
+        TError,
+        {data: BodyType<TestResetInput>},
+        TContext
+      > => {
+      return useMutation(getResetTestSystemMutationOptions(options));
+    }
 
 export const getPreviewCommercialReturnUrl = () => {
 
