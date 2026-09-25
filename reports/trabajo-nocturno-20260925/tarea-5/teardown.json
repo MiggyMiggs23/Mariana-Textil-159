@@ -1,0 +1,9 @@
+{
+  "owner": "night-task56-browser",
+  "clusterStoppedVerified": true,
+  "stalePidFile": true,
+  "recordedPidAbsent": 21404,
+  "directoryDeleted": "/home/runner/workspace/private.local/night-t56",
+  "applicationDatabaseTouchedByCleanup": false,
+  "at": "2026-09-25T05:12:18.219506+00:00"
+}

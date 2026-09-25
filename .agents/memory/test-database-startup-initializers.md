@@ -13,6 +13,16 @@ En PostgreSQL local desechable, esta imagen no garantiza `/run/postgresql`: inic
 
 ### Encargos con prohibición de toda escritura
 
+### Esquemas financieros instalados por liberaciones separadas
+
+El arranque normal después de esquema y seed no demuestra que una copia tenga todos los esquemas auxiliares de las funciones ya liberadas. Preparar también la cadena de SQL y correcciones efectivamente instaladas, sin abrir puertas por inferencia.
+
+**Why:** Una copia permitió healthz pero falló al iniciar sesión por E11 ausente; instalar solo el SQL base dejó colisiones de alias ya corregidas en la aplicación. El POS falló después por faltar el esquema de remate. Eran defectos de preparación de la copia, no evidencia de una regresión en producción.
+
+**How to apply:** Inventariar dependencias desde las capacidades habilitadas, cotejar funciones corregidas y probar una operación con restricciones diferidas antes del recorrido. No exigir solo tablas existentes o healthz ni reejecutar SQL base sobre una instalación parcialmente preparada.
+
+### Restricción de solo lectura
+
 No reiniciar una API con inicializadores mutadores para verificar un cambio de interfaz sujeto a cero escrituras. Reiniciar solo el frontend y ejecutar los lectores necesarios en una transacción explícita READ ONLY, sin arrancar la aplicación completa.
 
 **Why:** El reinicio recomendado para validar código puede violar el alcance de solo lectura antes de que llegue la primera petición HTTP; consultar únicamente endpoints GET no protege frente al arranque.
