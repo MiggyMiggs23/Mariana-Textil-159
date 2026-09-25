@@ -16,7 +16,7 @@ import {
 } from "@workspace/api-client-react";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { MapPin, LogOut, Menu, X } from "lucide-react";
+import { MapPin, LogOut, Menu, Settings, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -41,7 +41,7 @@ import { NotificationsBell } from "@/components/notifications-bell";
 import { NotificationAudioController } from "@/components/notification-audio-controller";
 import { getVisibleNavGroups } from "@/components/layout/app-navigation";
 import { getHomeRoute } from "@/lib/home-route";
-import { E11Navigation } from "@/pages/e11";
+import { E11Navigation, useE11AdminNavLinks } from "@/pages/e11";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const [location, setLocation] = useLocation();
@@ -91,6 +91,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const isCaja = user?.rol === Role.CAJA;
   const isTerminal = user?.rol === Role.TERMINAL;
+  const e11AdminLinks = useE11AdminNavLinks();
   const assignedLocationId = user?.ubicacion?.id;
   const { data: sesionCajaData } = useObtenerSesionCajaActual(
     { ubicacionId: assignedLocationId ?? 0 },
@@ -288,6 +289,33 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         );
       })}
+      {e11AdminLinks.length > 0 && (
+        <div className="px-3 space-y-1" data-testid="nav-group-administracion-contable">
+          <h4 className="px-3 text-xs font-semibold text-sidebar-foreground/50 tracking-wider mb-2">
+            ADMINISTRACIÓN CONTABLE
+          </h4>
+          {e11AdminLinks.map((item) => {
+            const isActive = location === item.path || location.startsWith(`${item.path}/`);
+            return (
+              <Link
+                key={item.path}
+                href={item.path}
+                onClick={onItemClick}
+                data-testid={`nav-item-${item.path.replace(/[^a-z0-9]+/g, "-")}`}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative",
+                  isActive
+                    ? "bg-sidebar-primary text-sidebar-primary-foreground font-semibold"
+                    : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground/80 font-medium",
+                )}
+              >
+                <Settings className={cn("w-4 h-4", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70")} />
+                <span className="text-sm">{item.name}</span>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 
@@ -433,7 +461,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         )}
 
-        <main className="flex-1 p-4 md:p-8 overflow-y-auto" data-history-scroll-key="content"><E11Navigation />{children}</main>
+        <main className="flex-1 p-4 md:p-8 overflow-y-auto" data-history-scroll-key="content"><E11Navigation operational />{children}</main>
       </div>
       <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
         <DialogContent>

@@ -1,6 +1,6 @@
 # Cantidad física y ocho reversos estrictos
 
-Fecha de revisión: 2026-09-24. Estado: correcciones existentes y evidencia histórica verificadas; nueva ejecución y comprobación operativa detenidas. No se declara una nueva liberación.
+Fecha de revisión: 2026-09-24. Estado: correcciones existentes y evidencia histórica verificadas; datos sintéticos autorizados posteriormente por el propietario; nueva ejecución y comprobación operativa detenidas por desconexiones del entorno. No se declara una nueva liberación.
 
 ## 1. Cantidad no negativa, incluida NaN
 
@@ -47,13 +47,25 @@ El archivo genérico `artifacts/api-server/dist/index.mjs` es antiguo. No se usa
 
 **Nueva copia de pruebas:** el procedimiento G/F/H anterior restaura datos de la aplicación y añade nueve actores sintéticos. La regla vigente de pruebas en replit.md prohíbe copiar identidades o ampliar seed/fixtures por iniciativa del agente. El seed canónico no contiene los productos METRO/KILO, proveedor y rollos trazados necesarios para el manifiesto de los ocho casos.
 
-Se detuvo antes de aprovisionar una copia o insertar datos. Hace falta identificar un procedimiento ya aprobado que aporte esos datos, o autorización explícita para preparar únicamente datos de negocio sintéticos en la base desechable usando actores del seed autorizado, sin copiar identidades de la aplicación.
+El propietario resolvió este límite el 2026-09-24: **autorizó únicamente datos de negocio sintéticos en una base desechable, usando los actores del seed aprobado**. No autoriza copiar identidades, añadir actores, modificar datos de la aplicación ni abrir compuertas. No hace falta volver a solicitar esta misma autorización.
+
+Al continuar con ese permiso, el entorno volvió a interrumpir tanto el arranque como las herramientas de trabajo. Se detuvo ante fallos reiterados, sin una nueva corrida completa. Por tanto, no hay un nuevo resultado verde ni una nueva prueba roja. La evidencia histórica permanece identificada como histórica.
 
 **Runtime y catálogo actuales:** los intentos de arranque tuvieron una desconexión de herramientas y el estado posterior mostró ambos workflows no iniciados, sin proceso API. No se confirma salud actual, catálogo actual ni una nueva liberación. No se modificaron los TOML, bundles ni código del producto en esta revisión.
 
+Errores observados durante la continuación autorizada:
+
+- `WorkflowsRestart`: `SERVER unexpectedly disconnected`.
+- Shell: `Failed to spawn shell: SERVER unexpectedly disconnected`.
+- Recuperación del resultado del agente: `DurablePTC snapshot blob not found`; el identificador de trabajo dejó de estar disponible después.
+
+No se atribuye una causa de código a estas interrupciones sin evidencia. Comprobación final: no existe `private.local/reversal-recheck` y no se observaron procesos `postgres`, `initdb` ni `pg_ctl`. El estado comunicado por el entorno conserva los dos workflows como no iniciados.
+
+**Para reanudar:** conservar el permiso anterior, preparar la base desechable vacía con el seed aprobado y solo los datos de negocio autorizados, ejecutar los ocho casos y el control positivo, comprobar el catálogo efectivo y confirmar el bundle servido. No repetir DDL confirmado ni confundir integridad de un archivo con liberación en ejecución.
+
 ## 4. Alcance y commits
 
-Correcciones previas relevantes: `61d8216` (reversión estricta), `c5ad7db` (crearEntrada), `111c347` (CHECK aplicado), `c637d33` (API de Tanda H liberada).
+Correcciones previas relevantes: `61d8216` (reversión estricta), `c5ad7db` (crearEntrada), `111c347` (CHECK aplicado), `c637d33` (API de Tanda H liberada). La documentación inicial de esta revisión quedó conservada en `88aa31af`; no es una corrección de producto.
 
 Esta solicitud no produjo un nuevo commit de producto ni repitió un DDL confirmado. Se conserva la evidencia anterior con su fecha y alcance, sin contabilizarla como nueva corrida.
 

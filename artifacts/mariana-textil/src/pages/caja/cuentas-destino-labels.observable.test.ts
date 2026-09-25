@@ -97,6 +97,8 @@ async function mount(source: string, data: ReturnType<typeof fixture>, collectio
       if (name.endsWith(".css")) return {};
       if (name === "./attention-card-tone") return attention;
       if (name === "@/lib/date-only") return dateOnly;
+      // E7 off: the E6 labels under test are the non-E7 presentation.
+      if (name === "@/lib/e7-feature-flags") return { e7On: () => false };
       if (name === "@tanstack/react-query") return {
         useQuery: () => ({ data: undefined, isLoading: false, isError: false }),
       };
@@ -194,7 +196,14 @@ test("E6 mounted labels preserve every numeric component, total and filter at th
     checkLabels(newView);
     assert.deepEqual(newView.numbers, oldView.numbers);
     assert.deepEqual(newView.links, oldView.links);
-    assert.deepEqual(newView.amounts, oldView.amounts);
+    // Screen placement: the six Cobranza cards always render. This fixture has no
+    // account rows (resumen: []), so five cards say "Sin dato" (never $0.00) and
+    // add no links or numbers. Every pre-existing amount stays identical.
+    const sinDato = Object.keys(newView.amounts).filter(k => k.startsWith("text-sin-dato-")).sort();
+    assert.deepEqual(sinDato, ["text-sin-dato-cuentas-fiscales", "text-sin-dato-cuentas-no-fiscales",
+      "text-sin-dato-efectivo-facturado", "text-sin-dato-efectivo-sin-factura", "text-sin-dato-total-en-efectivo"]);
+    for (const k of sinDato) assert.equal(newView.amounts[k], "Sin dato");
+    assert.deepEqual(Object.fromEntries(Object.entries(newView.amounts).filter(([k]) => !k.startsWith("text-sin-dato-"))), oldView.amounts);
     assert.deepEqual(newView.observedCalls, oldView.observedCalls);
     assert.equal(JSON.stringify(data), originalData, "API contract payload must remain unchanged");
     console.log("RESTORED PASS cents", JSON.stringify(data.encabezado), JSON.stringify(newView.numbers));

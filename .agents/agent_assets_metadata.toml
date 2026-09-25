@@ -2299,3 +2299,73 @@ mtime_ms = 1790268877763
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e1faca38-8c35-4aeb-af53-c287440a35aa/b7af429f-227f-456f-82cf-74c56901e197"
 storage_version_token = "1790268910581486"
 content_type = "text/html"
+
+[[outputs]]
+id = "Rq8DH2_VsqXqisCLiQ2K3"
+uri = "file://artifacts/mariana-textil/reports/screen-placement/before/tiempo-real-desktop.png"
+type = "image"
+title = "Antes · Tiempo real"
+description = "Referencia reconstruida del código anterior con datos sintéticos; incluye el bloque E7 incrustado."
+logical_id = "b52191fa-d810-4507-89af-2d3959d4243c"
+content_hash = "sha256:60002b59ad561632916c5a43228267d0aa43f581d6a9e4736f569b27ae31c841"
+size = 242646
+mtime_ms = 1790309055562
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/b52191fa-d810-4507-89af-2d3959d4243c/01ca7cdc-6ff2-4c8f-bd21-3e2ae5d331c1"
+storage_version_token = "1790309242240649"
+content_type = "image/png"
+
+[[outputs]]
+id = "FpmPk_EQlOESwI_OwbPmr"
+uri = "file://artifacts/mariana-textil/reports/screen-placement/before/cuentas-destino-desktop.png"
+type = "image"
+title = "Antes · Cuentas Destino"
+description = "Referencia reconstruida del código anterior con datos sintéticos; incluye E7 antes de separarlo."
+logical_id = "39241949-38fd-46ac-a6a4-157d3a3c3ba3"
+content_hash = "sha256:a82d9ec23abf120c368f113c830c41373df399904ee0d42a522609036ec18ed0"
+size = 222765
+mtime_ms = 1790309055561
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/39241949-38fd-46ac-a6a4-157d3a3c3ba3/ceaedc9b-4739-4574-928e-f628ca7a846c"
+storage_version_token = "1790309242816512"
+content_type = "image/png"
+
+[[outputs]]
+id = "guK0pgTkAkyy2jad5H1q4"
+uri = "file://artifacts/mariana-textil/reports/screen-placement/after/tiempo-real-desktop.png"
+type = "image"
+title = "Después · Tiempo real"
+description = "Pantalla real renderizada con datos sintéticos: monitoreo sin el bloque E7."
+logical_id = "88138fda-05bc-4f5b-b4ca-47c5580884b2"
+content_hash = "sha256:76562e54aa32d718357bd6154bc9e96e78f3f37eec05feac0d4e1d7019adf67a"
+size = 131993
+mtime_ms = 1790309061627
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/88138fda-05bc-4f5b-b4ca-47c5580884b2/3a65a096-19d0-4ba6-87b7-2066669a9d64"
+storage_version_token = "1790309243481326"
+content_type = "image/png"
+
+[[outputs]]
+id = "uLb6nXCJ76wJYGzztcohq"
+uri = "file://artifacts/mariana-textil/reports/screen-placement/after/cuentas-destino-desktop.png"
+type = "image"
+title = "Después · Cuentas Destino"
+description = "Datos sintéticos: Cobranza con seis tarjetas, Matriz de Operaciones y Ventas con tres tarjetas."
+logical_id = "0654281c-081c-4b72-90cc-3b7b8567ca14"
+content_hash = "sha256:dac93291d664539e8cb03b78ea9a27cb876a0dcdb74c8cdaa658f4e343ce6591"
+size = 156216
+mtime_ms = 1790309068048
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/0654281c-081c-4b72-90cc-3b7b8567ca14/6a7541c9-3b08-4195-8010-6f79d2d2313d"
+storage_version_token = "1790309244005346"
+content_type = "image/png"
+
+[[outputs]]
+id = "jIbAHDQ-iuCc_2jPbz9hd"
+uri = "file://artifacts/mariana-textil/reports/screen-placement/after/atribucion-e7-desktop.png"
+type = "image"
+title = "Nueva pantalla · Atribución E7"
+description = "Pantalla real con datos sintéticos. No existe captura anterior independiente porque la página es nueva."
+logical_id = "c0a11625-a7ec-42b8-b199-1780e1ee2225"
+content_hash = "sha256:c65fe8222a92e4d9d42bdc533bd682353d7f1156df9522d83e89114a5a12db7b"
+size = 115678
+mtime_ms = 1790309073679
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c0a11625-a7ec-42b8-b199-1780e1ee2225/a39060ce-1717-4601-b0db-c1bdb5c5ed36"
+storage_version_token = "1790309244538639"
+content_type = "image/png"

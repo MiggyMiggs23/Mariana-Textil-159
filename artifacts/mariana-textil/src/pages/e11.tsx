@@ -101,20 +101,47 @@ function E11Shell({ children }: { children: ReactNode }) {
       <div><h1 className="text-2xl font-bold">Contabilidad · {s.identity.perfil ?? s.identity.rolBase}</h1><p>Perfil v{s.identity.perfilVersion} · proyección autorizada, sin documentos operativos privados.</p></div>
       <Button variant="outline" disabled={logout.isPending} onClick={() => logout.mutate(undefined, { onSuccess: () => { client.clear(); navigate("/login"); } })}>Cerrar sesión</Button>
     </header>
-    <E11Navigation />
+    <E11Navigation operational />
     {children}
+    <E11AdminNavGroup />
   </main>;
 }
-export function E11Navigation() {
+/**
+ * `operational` omits the administrative links (Conciliaciones documentales,
+ * Administrar perfiles A/F); those render in the sidebar via E11AdminNavLinks
+ * with exactly the same session/profile/flag predicates.
+ */
+export function E11Navigation({ operational = false }: { operational?: boolean }) {
   const s = useE11Session();
   if (!e11On() || !s) return null;
-  return <nav aria-label="Contabilidad" className="flex flex-wrap gap-4 py-2">
-    {fiscal(s) && <Link className="underline" href="/contabilidad/fiscal">Ventas y clientes facturados</Link>}
-    {financial(s) && <Link className="underline" href="/contabilidad/finanzas">Finanzas saneadas</Link>}
-    {(fiscal(s) || admin(s)) && s.flags.conciliacion && E11_RECONCILIATION_ENABLED && <Link className="underline" href="/contabilidad/conciliaciones">Conciliaciones documentales</Link>}
-    {preparation(s) && <Link className="underline" href="/contabilidad/preparaciones">Preparaciones E5 (sin aplicar)</Link>}
-    {admin(s) && <Link className="underline" href="/usuarios">Administrar perfiles A/F</Link>}
+  const links = [
+    fiscal(s) && <Link key="f" className="underline" href="/contabilidad/fiscal">Ventas y clientes facturados</Link>,
+    financial(s) && <Link key="a" className="underline" href="/contabilidad/finanzas">Finanzas saneadas</Link>,
+    !operational && (fiscal(s) || admin(s)) && s.flags.conciliacion && E11_RECONCILIATION_ENABLED && <Link key="c" className="underline" href="/contabilidad/conciliaciones">Conciliaciones documentales</Link>,
+    preparation(s) && <Link key="p" className="underline" href="/contabilidad/preparaciones">Preparaciones E5 (sin aplicar)</Link>,
+    !operational && admin(s) && <Link key="u" className="underline" href="/usuarios">Administrar perfiles A/F</Link>,
+  ].filter(Boolean);
+  if (!links.length) return null;
+  return <nav aria-label="Contabilidad" className="flex flex-wrap gap-4 py-2">{links}</nav>;
+}
+/** Administration/settings group of the accounting shell; outside the header, same predicates. */
+function E11AdminNavGroup() {
+  const links = useE11AdminNavLinks();
+  if (!links.length) return null;
+  return <nav aria-label="Administración contable" data-testid="e11-admin-nav" className="mt-8 rounded-lg border border-dashed p-4">
+    <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Administración y ajustes</h2>
+    <ul className="flex flex-wrap gap-4">{links.map(l => <li key={l.path}><Link className="underline" href={l.path}>{l.name}</Link></li>)}</ul>
   </nav>;
+}
+export type E11AdminNavLink = { name: string; path: string };
+/** Administrative E11 destinations for the sidebar; same predicates as the former header links. */
+export function useE11AdminNavLinks(): E11AdminNavLink[] {
+  const s = useE11Session();
+  if (!e11On() || !s) return [];
+  return [
+    ...((fiscal(s) || admin(s)) && s.flags.conciliacion && E11_RECONCILIATION_ENABLED ? [{ name: "Conciliaciones documentales", path: "/contabilidad/conciliaciones" }] : []),
+    ...(admin(s) ? [{ name: "Administrar perfiles A/F", path: "/usuarios" }] : []),
+  ];
 }
 export function E11RoutePage() {
   const s = useE11Session();

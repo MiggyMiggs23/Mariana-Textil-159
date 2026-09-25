@@ -11,6 +11,8 @@ import { hasPermission, Modules } from "@/lib/permisos";
 import { useLocationScope } from "@/lib/location-scope";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Banknote, FileText, MapPin, Wallet } from "lucide-react";
 
 const legends = [
   "El resumen global de crédito considera todos los sitios.",
@@ -71,9 +73,9 @@ export function e7ClientMovementHref(clienteId: number | undefined, href: string
 export function e7DocumentHref(href: string | null | undefined): string | null {
   return href && /^\/tickets\/[1-9]\d*$/.test(href) ? href : null;
 }
-function Movements({ rows, scope, clienteId }: { rows: E7Movimiento[]; scope: CarteraAlcance; clienteId?: number }) {
+function Movements({ rows, scope, clienteId, testId = "e7-movements" }: { rows: E7Movimiento[]; scope: CarteraAlcance; clienteId?: number; testId?: string }) {
   // Primary plus underline identifies navigable folios and figures; it is never a financial state.
-  return <div className="overflow-x-auto"><table className="w-full text-sm" data-testid="e7-movements"><thead><tr>{["Fecha", "Concepto", "Sitio", "Cuenta de origen comprobada", "Folio", "Importe", "Saldo pendiente de nota"].map(t => <th className="p-2 text-left" key={t}>{t}</th>)}</tr></thead><tbody>{rows.map(r => {
+  return <div className="overflow-x-auto"><table className="w-full text-sm" data-testid={testId}><thead><tr>{["Fecha", "Concepto", "Sitio", "Cuenta de origen comprobada", "Folio", "Importe", "Saldo pendiente de nota"].map(t => <th className="p-2 text-left" key={t}>{t}</th>)}</tr></thead><tbody>{rows.map(r => {
     const detailHref = clienteId ? e7ClientMovementHref(clienteId, r.detailHref) : e7DocumentHref(r.detailHref);
     const documentHref = e7DocumentHref(r.documentHref);
     return <tr key={r.id}><td className="p-2 border-t">{String(r.fecha)}</td><td className="p-2 border-t">{r.tipo}</td><td className="p-2 border-t">{site(r.ubicacionId, scope)}</td><td className="p-2 border-t">{r.cuentaDestino ?? "Sin cuenta determinada"}</td><td className="p-2 border-t">{documentHref && r.folio ? <Link className="font-semibold text-primary underline" href={documentHref}>{r.folio}</Link> : r.folio ?? "Sin folio"}</td><td className="p-2 border-t">{detailHref ? <Link className="font-semibold text-primary underline" href={detailHref} aria-label={`Abrir detalle del movimiento ${r.id}`}>{money(r.importe)}</Link> : money(r.importe)}</td><td className="p-2 border-t">{r.saldoPendiente == null ? "No corresponde" : money(r.saldoPendiente)}</td></tr>;
@@ -81,7 +83,7 @@ function Movements({ rows, scope, clienteId }: { rows: E7Movimiento[]; scope: Ca
 }
 function Retained({ rows, total, scope, generated }: { rows: E7Retenido[]; total: string; scope: CarteraAlcance; generated: string }) {
   // Primary plus underline marks the expandable total; amber marks retained money aged 3+ days that requires ADMIN attention.
-  return <details data-testid="e7-retained" className="space-y-2 rounded border p-3"><summary className="cursor-pointer font-semibold">Dinero retenido pendiente de aplicación: <span className="text-primary underline">{money(total)}</span></summary><p>Stock del alcance al {generated}; no limitado al periodo de recepción seleccionado. No es deuda ni favor.</p><ul>{rows.map(r => <li key={r.cobroId} className={r.antiguedadDias >= 3 ? "border-l-4 border-amber-500 pl-2" : ""}>Recepción {r.fechaRecepcion} · {site(r.ubicacionId, scope)} · {money(r.importePendiente)} · {r.antiguedadDias} días{r.antiguedadDias >= 3 ? " · Desde 3 días: requiere atención ADMIN" : ""}</li>)}</ul>{!rows.length && <p>Sin dinero retenido en el alcance.</p>}</details>;
+  return <details data-testid="e7-retained" className="space-y-2 rounded-lg border border-dashed bg-card p-4 text-sm"><summary className="cursor-pointer font-semibold">Dinero retenido pendiente de aplicación: <span className="text-primary underline">{money(total)}</span></summary><p className="text-muted-foreground">Stock del alcance al {generated}; no limitado al periodo de recepción seleccionado. No es deuda ni favor.</p><ul>{rows.map(r => <li key={r.cobroId} className={r.antiguedadDias >= 3 ? "border-l-4 border-amber-500 pl-2" : ""}>Recepción {r.fechaRecepcion} · {site(r.ubicacionId, scope)} · {money(r.importePendiente)} · {r.antiguedadDias} días{r.antiguedadDias >= 3 ? " · Desde 3 días: requiere atención ADMIN" : ""}</li>)}</ul>{!rows.length && <p>Sin dinero retenido en el alcance.</p>}</details>;
 }
 function Attribution({ desde, hasta, identity }: { desde: string; hasta: string; identity: string }) {
   const { selectedLocationId } = useLocationScope();
@@ -114,14 +116,61 @@ function AttributionScope({ params, identity }: { params: GetE7AtribucionParams;
   if (q.error) return <section data-testid="e7-attribution"><p role="alert">{message(q.error)}</p><Button onClick={() => void q.refetch()}>Reintentar E7</Button></section>;
   if (!q.data || !q.isFetchedAfterMount) return <p role="status">Consultando atribución E7…</p>;
   const d = q.data;
-  // Primary plus underline marks expandable/drill-down figures throughout this reader, never category or status.
-  return <section data-testid="e7-attribution" className="space-y-4 rounded border p-4"><h2 className="text-xl font-semibold">Atribución de cobranza y aplicaciones</h2><Scope scope={d.alcance} generated={d.generadoEn} /><p>Periodo inclusivo CDMX: {params.desde} — {params.hasta}</p>
-    <div className="grid gap-3 md:grid-cols-3">{d.alcance.tipo === "GLOBAL" ? <><details data-testid="e7-collection"><summary className="cursor-pointer">Cobranza del periodo: <span className="text-primary underline">{money(d.cobranzaTotal)}</span></summary><Movements rows={d.movimientos.filter(r => ["VENTA_CONTADO", "RECEPCION", "RECEPCION_RETENIDA", "DEVOLUCION", "DEVOLUCION_RETENIDA"].includes(r.tipo))} scope={d.alcance} /></details><details><summary className="cursor-pointer">Recepciones físicas comprobadas: <span className="text-primary underline">{money(d.recepcionesFisicas)}</span></summary><Movements rows={d.movimientos.filter(r => ["VENTA_CONTADO", "RECEPCION"].includes(r.tipo))} scope={d.alcance} /></details></> : <p>No se atribuye recepción física ni cobranza global a esta selección de sitios.</p>}<details data-testid="e7-applications"><summary className="cursor-pointer">Aplicaciones comprobables a notas: <span className="text-primary underline">{money(d.aplicacionesNotas)}</span></summary><Movements rows={d.movimientos.filter(r => ["APLICACION", "REVERSO_APLICACION"].includes(r.tipo))} scope={d.alcance} /></details></div>
-    <Legends extra={d.leyendas} /><p>El registro histórico y las correcciones no acreditan nuevo ingreso físico. No se suman aplicaciones a cobranza.</p>
-    <div className="flex gap-3"><Button disabled={busy} onClick={() => void download("pdf")} data-testid="e7-export-pdf">Descargar PDF E7</Button><Button disabled={busy} onClick={() => void download("xlsx")} data-testid="e7-export-xlsx">Descargar XLSX E7</Button><Button variant="outline" onClick={() => void q.refetch()}>Actualizar E7</Button></div>{error && <p role="alert">{error}</p>}
-    <h3 className="font-semibold">Puente por fuente, cuenta y sitio</h3><ul data-testid="e7-bridge">{d.puente.map((r, i) => <li key={i}><details><summary className="cursor-pointer">{r.tipo} · {r.cuentaDestino ?? "Sin cuenta determinada"} · {site(r.ubicacionId, d.alcance)} · <span className="text-primary underline">{money(r.total)}</span></summary><Movements rows={d.movimientos.filter(m => m.tipo === r.tipo && m.cuentaDestino === r.cuentaDestino && m.ubicacionId === r.ubicacionId)} scope={d.alcance} /></details></li>)}</ul>{!d.puente.length && <p>Sin filas en el puente del periodo.</p>}
-    <Movements rows={d.movimientos} scope={d.alcance} /><Retained rows={d.retenidos} total={d.totalRetenido} scope={d.alcance} generated={d.generadoEn} />
+  const collectionTypes = ["VENTA_CONTADO", "RECEPCION", "RECEPCION_RETENIDA", "DEVOLUCION", "DEVOLUCION_RETENIDA"];
+  const physicalTypes = ["VENTA_CONTADO", "RECEPCION"];
+  const applicationTypes = ["APLICACION", "REVERSO_APLICACION"];
+  // Primary plus underline marks drill-down figures throughout this reader, never category or status.
+  return <section data-testid="e7-attribution" className="e7-attribution space-y-6">
+    <div className="flex flex-col gap-3 rounded-lg border bg-card p-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-wrap items-center gap-2 text-xs">
+        <span className="rounded border bg-sidebar/5 px-2 py-1 font-medium" data-testid="e7-scope"><Scope scope={d.alcance} generated={d.generadoEn} /></span>
+        <span className="rounded border bg-sidebar/5 px-2 py-1 font-medium" data-testid="e7-period">Periodo inclusivo CDMX: {params.desde} — {params.hasta}</span>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <Button size="sm" disabled={busy} onClick={() => void download("pdf")} data-testid="e7-export-pdf">Descargar PDF E7</Button>
+        <Button size="sm" disabled={busy} onClick={() => void download("xlsx")} data-testid="e7-export-xlsx">Descargar XLSX E7</Button>
+        <Button size="sm" variant="outline" onClick={() => void q.refetch()}>Actualizar E7</Button>
+      </div>
+    </div>
+    {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3 auto-rows-fr">
+      {d.alcance.tipo === "GLOBAL" ? <>
+        <FigureCard testId="e7-collection" icon={<Banknote className="h-6 w-6" />} label="Cobranza del periodo" value={money(d.cobranzaTotal)} sub="Incluye puente histórico y correcciones" />
+        <FigureCard testId="e7-physical" icon={<Wallet className="h-6 w-6" />} label="Recepciones físicas comprobadas" value={money(d.recepcionesFisicas)} sub="Solo POS y recepción física explícita" />
+      </> : <Card className="recon-top-card md:col-span-2 border-sidebar/10 shadow-sm" data-testid="e7-sites-notice"><div className="recon-icon-box blue"><MapPin className="h-6 w-6" /></div><div className="recon-top-card-content"><span className="recon-top-card-label">Selección por sitios</span><span className="recon-top-card-sub">No se atribuye recepción física ni cobranza global a esta selección de sitios.</span></div></Card>}
+      <FigureCard testId="e7-applications" icon={<FileText className="h-6 w-6" />} label="Aplicaciones comprobables a notas" value={money(d.aplicacionesNotas)} sub="No son nuevos ingresos ni se suman a cobranza" />
+    </div>
+    <Retained rows={d.retenidos} total={d.totalRetenido} scope={d.alcance} generated={d.generadoEn} />
+    <Card className="border-sidebar/10 shadow-sm">
+      <CardHeader className="pb-2"><CardTitle className="text-base">Movimientos del periodo</CardTitle></CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground" data-testid="e7-movement-counts">
+          {d.alcance.tipo === "GLOBAL" && <span className="rounded border px-2 py-1">Cobranza: {d.movimientos.filter(r => collectionTypes.includes(r.tipo)).length}</span>}
+          {d.alcance.tipo === "GLOBAL" && <span className="rounded border px-2 py-1">Recepciones físicas: {d.movimientos.filter(r => physicalTypes.includes(r.tipo)).length}</span>}
+          <span className="rounded border px-2 py-1">Aplicaciones: {d.movimientos.filter(r => applicationTypes.includes(r.tipo)).length}</span>
+        </div>
+        <Movements rows={d.movimientos} scope={d.alcance} />
+      </CardContent>
+    </Card>
+    <Card className="border-sidebar/10 shadow-sm">
+      <CardHeader className="pb-2"><CardTitle className="text-base">Puente por fuente, cuenta y sitio</CardTitle></CardHeader>
+      <CardContent>
+        <ul data-testid="e7-bridge" className="divide-y">{d.puente.map((r, i) => <li key={i} className="py-2"><details><summary className="flex cursor-pointer flex-wrap items-center justify-between gap-2 text-sm"><span>{r.tipo} · {r.cuentaDestino ?? "Sin cuenta determinada"} · {site(r.ubicacionId, d.alcance)}</span><span className="font-mono font-semibold text-primary underline">{money(r.total)}</span></summary><div className="pt-2"><Movements rows={d.movimientos.filter(m => m.tipo === r.tipo && m.cuentaDestino === r.cuentaDestino && m.ubicacionId === r.ubicacionId)} scope={d.alcance} testId="e7-bridge-movements" /></div></details></li>)}</ul>
+        {!d.puente.length && <p className="text-sm text-muted-foreground">Sin filas en el puente del periodo.</p>}
+      </CardContent>
+    </Card>
+    <details className="rounded-lg border bg-card p-4 text-sm"><summary className="cursor-pointer font-medium">Notas de lectura E7</summary><div className="pt-2"><Legends extra={[...d.leyendas, "El registro histórico y las correcciones no acreditan nuevo ingreso físico. No se suman aplicaciones a cobranza."]} /></div></details>
   </section>;
+}
+function FigureCard({ testId, icon, label, value, sub }: { testId: string; icon: ReactNode; label: string; value: string; sub: string }) {
+  return <Card className="recon-top-card border-sidebar/10 shadow-sm h-full" data-testid={testId}>
+    <div className="recon-icon-box blue">{icon}</div>
+    <div className="recon-top-card-content min-w-0">
+      <span className="recon-top-card-label">{label}</span>
+      <span className="recon-top-card-value">{value}</span>
+      <span className="recon-top-card-sub">{sub}</span>
+    </div>
+  </Card>;
 }
 function ClientExport({ clienteId, identity }: { clienteId: number; identity: string }) {
   const { selectedLocationId } = useLocationScope();

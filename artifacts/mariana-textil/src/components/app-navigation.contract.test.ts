@@ -66,7 +66,7 @@ test("SISTEMAS navigation follows its matrix without POS and with its account-de
   assert.ok(!names.includes("Ventas / POS"));
   assert.deepEqual(
     groups.find((group) => group.title === "CAJA")?.items.map((item) => item.name),
-    ["Cuentas"],
+    ["Cuentas", "Atribución E7"],
   );
   assert.deepEqual(
     names.filter((name) =>

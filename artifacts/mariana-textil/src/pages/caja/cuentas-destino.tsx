@@ -1,5 +1,4 @@
 import { AppLayout } from "@/components/layout/app-layout";
-import { E7Attribution } from "@/components/e7-readers";
 import { e7On } from "@/lib/e7-feature-flags";
 import {
   exportAdminCuentasDestinoXlsx,
@@ -62,6 +61,7 @@ import {
   CreditCard,
   Clock,
   Building2,
+  Scale,
 } from "lucide-react";
 import {
   ACCOUNT_DESTINATION_ORDER,
@@ -487,10 +487,18 @@ export default function CajaCuentasDestino() {
             {!e7On() && <Button variant="outline" size="sm" onClick={handleExportPdf}>
               <FileText className="h-4 w-4 mr-2" /> PDF
             </Button>}
+            {e7On() && (
+              <Link
+                href="/caja/atribucion-e7"
+                className="inline-flex h-9 items-center gap-2 rounded-md border px-3 text-sm font-medium hover:bg-sidebar/5 hover:text-primary"
+                data-testid="link-atribucion-e7"
+              >
+                <Scale className="h-4 w-4" /> Atribución E7
+              </Link>
+            )}
           </div>
         </div>
 
-        <E7Attribution desde={desde} hasta={hasta} surface="cuentas" />
         {isLoading ? (
           <div className="h-[400px] flex items-center justify-center">
             <Loader2 className="h-12 w-12 animate-spin text-primary opacity-50" />
@@ -516,10 +524,11 @@ export default function CajaCuentasDestino() {
             <div className="space-y-12">
 
               {/* SECTION: COBRANZA (FIRST) */}
-              {!e7On() && <section className="space-y-6">
-                <h2 className="text-2xl font-bold tracking-tight text-sidebar border-b pb-2 mb-4">Cobranza del periodo</h2>
+              <section className="space-y-6" aria-label="Cobranza">
+                <h2 className="recon-heading border-b pb-2 mb-4">Cobranza</h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
+                {/* Under E7 the period collection total is read from the dedicated E7 page; this card stays as before. */}
+                {!e7On() && <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
                   {topStats.filter((stat) => stat.title === "Cobranza del periodo").map((stat) => {
                     const currentHref = detailHref("TODAS", stat.fuentes);
                     const previousHref = data.encabezado.previousDesde && data.encabezado.previousHasta
@@ -582,7 +591,7 @@ export default function CajaCuentasDestino() {
                       </Card>
                     );
                   })}
-                </div>
+                </div>}
 
 
                 <div>
@@ -693,7 +702,7 @@ export default function CajaCuentasDestino() {
                       title: string,
                       icon: React.ReactNode,
                       colorClass: string,
-                      importe: string,
+                      importe: string | null,
                       importeAnterior: string | null,
                       porcentaje: string | null,
                       variation: string | null,
@@ -712,6 +721,15 @@ export default function CajaCuentasDestino() {
                         </div>
                         <div className="recon-top-card-content flex-1 w-full min-w-0">
                           <span className="recon-top-card-label">{title}</span>
+                          {importe === null ? (
+                            // Missing source row: never shown as $0.00.
+                            <span
+                              className="recon-top-card-value block mb-1 text-muted-foreground"
+                              data-testid={`text-sin-dato-${title.toLowerCase().replace(/\s+/g, "-")}`}
+                            >
+                              Sin dato
+                            </span>
+                          ) : (
                           <Link
                             href={currentHref}
                             className={`recon-top-card-value hover:text-primary hover:underline block mb-1 ${dashed ? "text-amber-700 dark:text-amber-500" : ""}`}
@@ -719,13 +737,14 @@ export default function CajaCuentasDestino() {
                           >
                             {formatNumber(importe, { kind: "money" })}
                           </Link>
+                          )}
                           {subtitle && (
                             <span className="recon-top-card-sub mb-2">{subtitle}</span>
                           )}
 
                           <div className="mt-auto flex flex-col gap-1.5 pt-2 border-t w-full border-sidebar/10">
                             <div className="h-5 flex items-center">
-                              {porcentaje !== null ? (
+                              {porcentaje !== null && importe !== null ? (
                                 <Link href={currentHref} className="text-xs font-bold text-muted-foreground bg-sidebar/5 px-1.5 py-0.5 rounded hover:text-primary hover:underline">
                                   {formatNumber(porcentaje, { kind: "percentage", percentageInput: "percent" })} DEL TOTAL
                                 </Link>
@@ -756,7 +775,7 @@ export default function CajaCuentasDestino() {
                             )}
                             {compare && (
                               <div className="h-5 flex items-center justify-end">
-                                {showVariation ? (
+                                {showVariation && importe !== null ? (
                                   <Link href={currentHref} className="flex justify-end hover:opacity-80">
                                     {renderVariation(variation)}
                                   </Link>
@@ -772,81 +791,81 @@ export default function CajaCuentasDestino() {
 
                     return (
                       <div className="grid grid-cols-1 md:grid-cols-3 auto-rows-fr gap-4 md:gap-6">
-                        {row && sinFactura !== null ? renderDestinationCard(
+                        {renderDestinationCard(
                           "Total en efectivo",
                           <Banknote className="h-6 w-6" />,
                           "blue",
-                          row.importe,
-                          row.importeAnterior,
-                          row.porcentaje,
-                          row.variacionPorcentaje,
+                          row && sinFactura !== null ? row.importe : null,
+                          row?.importeAnterior ?? null,
+                          row?.porcentaje ?? null,
+                          row?.variacionPorcentaje ?? null,
                           currentHrefEF,
                           previousHrefEF,
                           true
-                        ) : <div />}
-                        {row && sinFactura !== null ? renderDestinationCard(
+                        )}
+                        {renderDestinationCard(
                           "Efectivo facturado",
                           <FileText className="h-6 w-6" />,
                           "blue",
-                          row.cajaFisicaFacturado,
+                          row && sinFactura !== null ? row.cajaFisicaFacturado : null,
                           null,
                           pctFacturado.toString(),
                           null,
                           currentHrefEF_Fact,
                           null,
                           false
-                        ) : <div />}
-                        {row && sinFactura !== null ? renderDestinationCard(
+                        )}
+                        {renderDestinationCard(
                           "Efectivo sin factura",
                           <Wallet className="h-6 w-6" />,
                           "blue",
-                          sinFactura,
+                          row ? sinFactura : null,
                           null,
                           pctSinFactura.toString(),
                           null,
                           currentHrefEF_Sin,
                           null,
                           false
-                        ) : <div />}
-                        {rowNF ? renderDestinationCard(
-                          formatAccountDestination(rowNF.cuentaDestino),
+                        )}
+                        {renderDestinationCard(
+                          formatAccountDestination(rowNF?.cuentaDestino ?? "CUENTA_NO_FISCAL"),
                           <Building2 className="h-6 w-6" />,
                           "blue",
-                          rowNF.importe,
-                          rowNF.importeAnterior,
-                          rowNF.porcentaje,
-                          rowNF.variacionPorcentaje,
+                          rowNF?.importe ?? null,
+                          rowNF?.importeAnterior ?? null,
+                          rowNF?.porcentaje ?? null,
+                          rowNF?.variacionPorcentaje ?? null,
                           currentHrefNF,
                           previousHrefNF,
                           true
-                        ) : <div />}
-                        {rowF ? renderDestinationCard(
-                          formatAccountDestination(rowF.cuentaDestino),
+                        )}
+                        {renderDestinationCard(
+                          formatAccountDestination(rowF?.cuentaDestino ?? "CUENTA_FISCAL"),
                           <CreditCard className="h-6 w-6" />,
                           "blue",
-                          rowF.importe,
-                          rowF.importeAnterior,
-                          rowF.porcentaje,
-                          rowF.variacionPorcentaje,
+                          rowF?.importe ?? null,
+                          rowF?.importeAnterior ?? null,
+                          rowF?.porcentaje ?? null,
+                          rowF?.variacionPorcentaje ?? null,
                           currentHrefF,
                           previousHrefF,
                           true
-                        ) : <div />}
-                        {header ? renderDestinationCard(
+                        )}
+                        {renderDestinationCard(
                           "Por cobrar",
                           <Clock className="h-6 w-6" />,
                           "amber",
-                          header.porCobrar.periodo,
-                          header.porCobrar.periodoAnterior,
+                          header?.porCobrar.periodo ?? null,
+                          header?.porCobrar.periodoAnterior ?? null,
                           null,
-                          header.porCobrar.variacionPorcentaje,
+                          header?.porCobrar.variacionPorcentaje ?? null,
                           detailHref("TODAS", ["CREDITO"]),
                           detailHref("TODAS", ["CREDITO"], {
-                            desde: header.previousDesde
-                              ? format(parseISO(header.previousDesde), "yyyy-MM-dd")
+                            desde: header?.previousDesde
+                              ? format(parseISO(header?.previousDesde), "yyyy-MM-dd")
                               : null,
-                            hasta: header.previousHasta
-                              ? format(parseISO(header.previousHasta), "yyyy-MM-dd")
+                            hasta: header?.previousHasta
+                              ? format(parseISO(header?.previousHasta), "yyyy-MM-dd")
                               : null,
                             compare: null,
                             preset: "custom",
@@ -854,13 +873,13 @@ export default function CajaCuentasDestino() {
                           true,
                           "Notas de crédito al día",
                           true
-                        ) : <div />}
+                        )}
                       </div>
                     );
                   })()}
                 </div>
 
-              </section>}
+              </section>
 
               <section className="space-y-6">
                 <div>

@@ -14,3 +14,9 @@ Con un bloqueo estricto de sockets, ejecutar TypeScript mediante Node nativo con
 **Why:** La CLI de `tsx` abre un servidor IPC incluso para pruebas puras. El bloqueo correcto de sockets puede impedir que arranque antes de ejecutar una sola prueba. Además, el paquete frontend no necesariamente tiene una dependencia directa de `tsx`.
 
 **How to apply:** Resolver el loader desde el paquete de herramientas instalado, preservar el preload de aislamiento en hijos y pasar la configuración JSX mediante `TSX_TSCONFIG_PATH`. Un manifiesto seguro para no tocar datos puede incluir fixtures visuales con HTTP local; no confundir esa clasificación con “cero sockets”.
+
+Las capturas comparativas deben conservar una línea base inmutable y comprobar explícitamente la fase recibida por el proceso hijo.
+
+**Why:** Un runner que limpia variables de entorno puede descartar el selector antes/después y sobrescribir capturas anteriores con la versión nueva, aun cuando el comando termine correctamente.
+
+**How to apply:** Pasar la fase por un mecanismo admitido por el runner, exigir confirmación de fase y directorio antes de guardar, y reconstruir una referencia perdida solo en un árbol aislado, declarándola reconstruida.

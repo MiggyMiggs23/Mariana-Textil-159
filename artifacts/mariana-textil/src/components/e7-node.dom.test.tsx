@@ -45,7 +45,7 @@ const seen = (path: string) => t.requests.some(r => r.path === path);
 const e7Requests = () => t.requests.filter(r => r.path.startsWith("/api/e7/"));
 const check = (value: unknown) => assert.equal(Boolean(value), true, id);
 const until = (predicate: () => unknown) => waitFor(() => check(predicate()), { timeout: 3000, interval: 10 });
-async function app(caseId: string, route = "/caja/cuentas-destino") {
+async function app(caseId: string, route = "/caja/atribucion-e7") {
   id = caseId; window.history.replaceState(null, "", route); render(<App />);
   await waitFor(() => {
     if (!seen("/api/auth/me") || !document.querySelector("h1")) throw Error(`E7_ANCESTOR_CONTROL ${caseId}`);
@@ -63,16 +63,22 @@ async function directParent(element: React.ReactNode, actor: ReturnType<typeof t
 }
 
 test("E7-PARENT-CUENTAS", async () => {
-  await app("E7-PARENT-CUENTAS"); await attribution();
+  // Cuentas Destino no longer embeds E7; the dedicated page owns the reader.
+  await app("E7-PARENT-CUENTAS", "/caja/cuentas-destino");
   await until(() => node("text-monto-ventas-totales")?.textContent?.includes("1,000"));
-  check(!node("text-monto-cobrado"));
+  check(!node("text-monto-cobrado") && !node("e7-attribution") && e7Requests().length === 0);
+  check(node("link-atribucion-e7")?.getAttribute("href") === "/caja/atribucion-e7");
+  // All nine cards stay mounted with E7 on: six Cobranza cards and three Ventas cards.
+  const six = [...document.querySelectorAll("[data-destination]")].map(el => el.getAttribute("data-destination"));
+  check(["Total en efectivo", "Efectivo facturado", "Efectivo sin factura", "Cuentas No Fiscales", "Cuentas Fiscales", "Por cobrar"].every(n => six.includes(n)));
+  check(["text-monto-ventas-totales", "text-monto-ventas-contado", "text-monto-ventas-credito"].every(n => node(n)));
+  cleanup(); await app("E7-PARENT-CUENTAS"); await attribution();
   t.fail("/api/e7/atribucion", "E7_READ_DENIED"); await click("Actualizar E7");
   await until(() => text().includes("E7_READ_DENIED"));
   check(!node("text-monto-cobrado") && !node("e7-collection"));
-  check(node("text-monto-ventas-totales")?.textContent?.includes("1,000"));
 });
 test("E7-OFF", async () => {
-  t.e7Gates(false); await app("E7-OFF");
+  t.e7Gates(false); await app("E7-OFF", "/caja/cuentas-destino");
   await until(() => node("text-monto-cobrado")?.textContent?.includes("875"));
   check(!node("e7-attribution") && e7Requests().length === 0);
 });
@@ -100,7 +106,7 @@ test("E7-RETAINED-STOCK", async () => {
 test("E7-PHYSICAL-HISTORY", async () => {
   t.respond("/api/e7/atribucion", t.f.mixedProvenance); await app("E7-PHYSICAL-HISTORY"); await attribution();
   check(node("e7-collection")?.textContent?.includes("130.00"));
-  check(text().includes("Recepciones físicas comprobadas: $120.00"));
+  check(node("e7-physical")?.textContent?.includes("Recepciones físicas comprobadas") && node("e7-physical")?.textContent?.includes("$120.00"));
   check(node("e7-applications")?.textContent?.includes("30.00"));
   check(node("e7-bridge")?.textContent?.includes("REGISTRO_HISTORICO") && node("e7-bridge")?.textContent?.includes("REVERSO_APLICACION"));
 });
@@ -111,11 +117,11 @@ test("E7-QUERY-ERROR", async () => {
   check(!node("e7-movements") && !node("e7-retained") && !node("text-monto-cobrado"));
 });
 test("E7-PARENT-TIEMPO", async () => {
-  await app("E7-PARENT-TIEMPO", "/caja/tiempo-real"); await attribution();
+  // Tiempo real only monitors collections; it no longer mounts the E7 reader.
+  await app("E7-PARENT-TIEMPO", "/caja/tiempo-real");
   await until(() => text().includes("1,000"));
   check(!node("text-monto-cobranza-del-periodo") && !text().includes("$875") && !text().includes("875.00"));
-  const request = t.requests.find(r => r.path === "/api/e7/atribucion");
-  check(request?.params.get("desde") === request?.params.get("hasta"));
+  check(!node("e7-attribution") && !t.requests.some(r => r.path === "/api/e7/atribucion"));
 });
 test("E7-GROUP1-FOUR", async () => {
   t.respond("/api/auth/me", t.actorAtSite(2)); await app("E7-GROUP1-FOUR", "/clientes/21?tab=estado");
@@ -168,7 +174,7 @@ test("E7-OPERATIONAL-BOUNDARY", async () => {
 });
 test("E7-RANGE", async () => {
   // The real parent only mounts date inputs for the custom preset.
-  await app("E7-RANGE", "/caja/cuentas-destino?preset=custom&desde=2026-09-22&hasta=2026-09-24"); await attribution();
+  await app("E7-RANGE", "/caja/atribucion-e7?desde=2026-09-22&hasta=2026-09-24"); await attribution();
   const count = t.requests.filter(r => r.path === "/api/e7/atribucion").length;
   const dates = document.querySelectorAll<HTMLInputElement>('input[type="date"]');
   check(dates.length === 2 && dates[0].value === "2026-09-22" && dates[1].value === "2026-09-24");
@@ -217,7 +223,6 @@ test("E7-SISTEMAS-TIEMPO", async () => {
   t.respond("/api/auth/me", actor); await app("E7-SISTEMAS-TIEMPO"); await attribution();
   t.requests.length = 0;
   await directParent(<CajaTiempoReal />, actor, "/caja/tiempo-real");
-  await until(() => text().includes("Consulta E7 no autorizada."));
   check(!node("e7-attribution") && e7Requests().length === 0);
 });
 test("E7-LEGENDS", async () => {

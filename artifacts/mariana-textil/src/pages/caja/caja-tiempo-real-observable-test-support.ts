@@ -1,6 +1,7 @@
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { createRequire } from "node:module";
 import {
   GetAdminCuentasDestinoResponse,
   GetAdminRealtimeDashboardResponse,
@@ -285,12 +286,17 @@ export async function createCajaTiempoRealBrowserFixture() {
   const locationScopePath = join(directory, "location-scope.ts");
   const layoutPath = join(directory, "layout.tsx");
   const cuentasDestinoPath = join(directory, "cuentas-destino.ts");
+  const e7FlagsPath = join(directory, "e7-feature-flags.ts");
   const pagePath = new URL("./tiempo-real.tsx", import.meta.url).pathname;
 
   await Promise.all([
     writeFile(
       apiClientPath,
       `
+        // Components that Tiempo real mounts (for example the abono dialog) import
+        // other generated hooks. The real client is re-exported so they resolve;
+        // only the realtime readers below are replaced (local exports shadow export *).
+        export * from ${JSON.stringify(createRequire(import.meta.url).resolve("@workspace/api-client-react"))};
         const dashboard = ${JSON.stringify(dashboard)};
         const pending = ${JSON.stringify(pending)};
         export const getGetAdminRealtimeDashboardQueryKey = () => ["realtime-dashboard"];
@@ -304,6 +310,9 @@ export async function createCajaTiempoRealBrowserFixture() {
       `,
       "utf8",
     ),
+    // The row-order contract covers the non-E7 branch, where the collection card
+    // is mounted. With E7 on, that figure moves to /caja/atribucion-e7.
+    writeFile(e7FlagsPath, `export const e7On = () => false; export const e7ClientFinancialOn = () => false;`, "utf8"),
     writeFile(
       locationScopePath,
       `export const useLocationScope = () => ({ selectedLocationId: null, setSelectedLocationId() {} });`,
@@ -356,6 +365,7 @@ export async function createCajaTiempoRealBrowserFixture() {
         "@/components/layout/app-layout": layoutPath,
         "@/hooks/use-shared-cuentas-destino": cuentasDestinoPath,
         "@/lib/location-scope": locationScopePath,
+        "@/lib/e7-feature-flags": e7FlagsPath,
       },
     },
     async dispose() {

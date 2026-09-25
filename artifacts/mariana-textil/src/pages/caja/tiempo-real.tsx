@@ -10,7 +10,6 @@ import {
   AdminPendingSummaryTiendasItem
 } from "@workspace/api-client-react";
 import { useSharedCuentasDestino } from "@/hooks/use-shared-cuentas-destino";
-import { E7Attribution } from "@/components/e7-readers";
 import { e7On } from "@/lib/e7-feature-flags";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useLocationScope } from "@/lib/location-scope";
@@ -239,7 +238,6 @@ export default function CajaTiempoReal() {
           </div>
         </div>
 
-        <E7Attribution desde={todayStr} hasta={todayStr} surface="tiempo-real" />
         {isLoading ? (
           <div className="h-[400px] flex items-center justify-center">
             <Loader2 className="h-12 w-12 animate-spin text-primary opacity-50" />

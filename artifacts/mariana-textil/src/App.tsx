@@ -55,6 +55,7 @@ import CajaTiempoReal from "@/pages/caja/tiempo-real";
 import TiendaVentas from "@/pages/caja/tienda-ventas";
 import CajaCortes from "@/pages/caja/cortes";
 import CajaCuentasDestino from "@/pages/caja/cuentas-destino";
+import CajaAtribucionE7 from "@/pages/caja/atribucion-e7";
 import CuentaDestinoDetalle from "@/pages/caja/cuenta-destino-detalle";
 import ReciboE3 from "@/pages/caja/recibo-e3";
 import { E3_ENABLED } from "@/lib/e3-feature-flags";
@@ -559,6 +560,17 @@ function Router() {
             />
           )}
         />
+        {e7On() && <Route
+          path="/caja/atribucion-e7"
+          component={() => (
+            <ProtectedRoute
+              component={CajaAtribucionE7}
+              allowedModule={Modules.COBROS_PAGOS}
+              allowedRoles={["ADMIN", "SISTEMAS"]}
+              requiredRoles={["ADMIN", "SISTEMAS"]}
+            />
+          )}
+        />}
         <Route
           path="/caja/cuentas-destino"
           component={() => (
