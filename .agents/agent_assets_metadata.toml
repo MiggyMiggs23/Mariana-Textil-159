@@ -2453,3 +2453,17 @@ mtime_ms = 1790347560961
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/9224c5a9-a0c7-4471-8891-88ee76ae8083/52a8e312-477c-4384-b716-739ea769df6c"
 storage_version_token = "1790347561638813"
 content_type = "text/html"
+
+[[outputs]]
+id = "EprNJjulOoCF3LGVGYNN8"
+uri = "file://reports/e7-texto-20260925/resultado.png"
+type = "image"
+title = "Atribución E7 — texto y menú actualizados"
+description = "Captura de la pantalla actualizada con datos de ejemplo; no son cifras reales del negocio."
+logical_id = "edcde975-67f1-4f22-a3ff-ef026e299b7c"
+content_hash = "sha256:909ae4dc060b5115f7e69f2621c656ceb3436638764404ff9ed7450540e61fab"
+size = 252039
+mtime_ms = 1790356755311
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/edcde975-67f1-4f22-a3ff-ef026e299b7c/7673588b-7b2e-496e-b1d8-0b80c480d702"
+storage_version_token = "1790356801154108"
+content_type = "image/png"
