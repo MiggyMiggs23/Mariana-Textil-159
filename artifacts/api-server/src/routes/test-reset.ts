@@ -23,8 +23,8 @@ router.get("/admin/test-reset", async (_req, res) => {
   try {
     const names = await inspectResetSchema(pool);
     res.json({ enabled: true, protectCustomers: PROTECT_CUSTOMERS, confirmation: "BORRAR",
-      preserves: PRESERVED_TABLES.filter(name => names.includes(name)),
-      clears: CLEARED_TABLES.filter(name => names.includes(name)) });
+      preserves: [...PRESERVED_TABLES, ...(PROTECT_CUSTOMERS ? ["clientes", "cliente_documentos"] : [])].filter(name => names.includes(name)),
+      clears: CLEARED_TABLES.filter(name => names.includes(name) && !(PROTECT_CUSTOMERS && name === "cliente_documentos")) });
   } catch (error) {
     if (error instanceof TestResetError) { res.status(error.status).json({ error: error.message }); return; }
     throw error;

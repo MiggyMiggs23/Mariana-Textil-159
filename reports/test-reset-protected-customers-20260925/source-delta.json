@@ -1,0 +1,12 @@
+{
+  "workspaceChanges": [
+    "../src/routes/test-reset.ts",
+    "../src/lib/test-reset/manifest.ts",
+    "../src/lib/test-reset/service.ts"
+  ],
+  "workerPathOnlyChanges": [
+    "../../../node_modules/.pnpm/pino@9.14.0/node_modules/pino/pino.js"
+  ],
+  "addedSources": [],
+  "removedSources": []
+}

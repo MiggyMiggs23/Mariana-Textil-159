@@ -5,7 +5,7 @@
  */
 export const TEST_RESET_ENABLED = true;
 // ONE-LINE SWITCH: set true BEFORE importing the owner's real customer list.
-export const PROTECT_CUSTOMERS = false;
+export const PROTECT_CUSTOMERS = true;
 export const RESET_CONFIRMATION = "BORRAR";
 export const RESET_MESSAGE = "Datos de prueba borrados. Todas las sesiones se cerraron. Vuelve a iniciar sesión.";
 

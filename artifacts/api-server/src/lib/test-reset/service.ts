@@ -76,7 +76,10 @@ export async function resetTestData(
     [input.actorId, input.sessionId]);
     if (!actor.rows[0]) throw new TestResetError("La sesión ADMIN ya no está vigente. Vuelve a iniciar sesión.", 403);
     await ensureHistory(client);
-    const cleared = CLEARED_TABLES.filter(name => names.includes(name));
+    // INE/profile attachments are customer master data, not credit documents.
+    // Keep their metadata and storage references whenever customers are protected.
+    const cleared = CLEARED_TABLES.filter(name => names.includes(name)
+      && !(protectCustomers && name === "cliente_documentos"));
     const changed = [...cleared, ...COUNTER_TABLES.filter(name => names.includes(name)),
       ...MIXED_TABLES.filter(name => names.includes(name))];
     const triggers = await client.query<{ relation: string; name: string; mode: string }>(`

@@ -45,6 +45,11 @@ incluso de reinicios posteriores. Un fallo antes del commit revierte el reset.
 
 ## Protección futura de clientes
 
+**Actualización vigente:** la protección ya está activada, no pendiente.
+Todos los clientes y sus documentos de identificación se conservan.
+Evidencia y versión activa en
+`../test-reset-protected-customers-20260925/README.md`.
+
 En `artifacts/api-server/src/lib/test-reset/manifest.ts`, cambiar:
 
 ```ts

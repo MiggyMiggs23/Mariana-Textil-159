@@ -13,7 +13,7 @@ const frozenMapPath = path.join(api, "dist-night-task12/index.mjs.map");
 const frozen = JSON.parse(fs.readFileSync(frozenMapPath, "utf8"));
 const originals = new Map(frozen.sources.map((p, i) => [path.resolve(api, "dist-night-task12", p), frozen.sourcesContent[i]]));
 const safeRoot = path.join(root, ".local/reset-safe-source");
-const output = path.join(api, "dist-test-reset-active-20260925");
+const output = path.join(api, process.env.RESET_BUILD_DIR ?? "dist-test-reset-active-20260925");
 const allowedChanged = new Set([
   "artifacts/api-server/src/index.ts",
   "artifacts/api-server/src/routes/index.ts",
@@ -59,7 +59,7 @@ const unexpected = resultMap.sources.filter(source => {
     && relative !== "artifacts/api-server/src/routes/test-reset.ts";
 });
 if (unexpected.length) throw new Error(`Unexpected emitted project sources: ${unexpected.join(", ")}`);
-fs.writeFileSync(path.join(root, "reports/test-reset-20260925/activation-build-inputs.json"), JSON.stringify({
+fs.writeFileSync(path.join(root, process.env.RESET_BUILD_EVIDENCE ?? "reports/test-reset-20260925/activation-build-inputs.json"), JSON.stringify({
   retainedMapSha256: crypto.createHash("sha256").update(fs.readFileSync(frozenMapPath)).digest("hex"),
   retainedBundleSha256: crypto.createHash("sha256").update(fs.readFileSync(path.join(api, "dist-night-task12/index.mjs"))).digest("hex"),
   candidateSha256: crypto.createHash("sha256").update(fs.readFileSync(path.join(output, "index.mjs"))).digest("hex"),

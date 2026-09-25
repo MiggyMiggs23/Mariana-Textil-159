@@ -118,10 +118,36 @@ test("real PostgreSQL disposable reset: preservation, deletion, counters, rollba
     // New login works against the same preserved user, with new test data.
     await pool.query("INSERT INTO sesiones(id,usuario_id,expira_at,ip,user_agent) VALUES('00000000-0000-4000-8000-000000000001',1,now()+interval '1 hour','local','test')");
     await pool.query("INSERT INTO clientes(id,nombre,telefono,notas,dias_credito,limite_credito,saldo_credito) VALUES(3,'Cliente real protegido','123456','Conservar',30,900,123)");
+    await pool.query(`INSERT INTO clientes(id,nombre,telefono,correo,rfc,direccion_particular,direccion_entrega,contacto_nombre,notas,activo,dias_credito,limite_credito,saldo_credito)
+      VALUES(4,'Cliente con saldo a favor','987654','fixture@example.invalid','TEST010101ABC','Particular','Entrega','Contacto','Perfil conservado',false,45,4500,-250);
+      INSERT INTO cliente_documentos(cliente_id,lado,nombre_archivo,ruta_archivo,mime_type,tamano_bytes,subido_por)
+      VALUES(3,'FRENTE','identificacion.pdf','fixture/cliente-3/ine.pdf','application/pdf',100,1),
+        (4,'REVERSO','identificacion.pdf','fixture/cliente-4/ine.pdf','application/pdf',101,1);
+      INSERT INTO tickets(id,cliente_id,folio,subtotal,total,ubicacion_id,usuario_terminal_id,uuid_cliente,documento_tipo)
+      VALUES(20,3,20,500,500,1,1,'00000000-0000-4000-8000-000000000050','NOTA'),
+        (21,4,21,100,100,1,1,'00000000-0000-4000-8000-000000000051','NOTA');
+      INSERT INTO ticket_pagos(ticket_id,forma_pago,importe,usuario_id) VALUES(20,'EFECTIVO',50,1),(21,'EFECTIVO',100,1);
+      INSERT INTO operaciones_credito_e1(productor,clave,naturaleza,usuario_id,solicitud_canonica)
+      VALUES('AJUSTE_MANUAL','00000000-0000-4000-8000-000000000052','CORRECCION_CONTABLE',1,'{"fixture":true}'),
+        ('ABONO_ORDINARIO','00000000-0000-4000-8000-000000000053','CORRECCION_CONTABLE',1,'{"fixture":true}');
+      INSERT INTO movimientos_credito(cliente_id,ticket_id,tipo,importe,usuario_id,sitio_origen_id,naturaleza,operacion_productor,operacion_clave,origen_justificacion)
+      VALUES(3,20,'AJUSTE',500,1,1,'CORRECCION_CONTABLE','AJUSTE_MANUAL','00000000-0000-4000-8000-000000000052','Saldo sintético de prueba'),
+        (4,21,'ABONO',-250,1,1,'CORRECCION_CONTABLE','ABONO_ORDINARIO','00000000-0000-4000-8000-000000000053','Abono sintético de prueba');`);
+    assert.deepEqual((await pool.query("SELECT cliente_id,sum(importe)::text saldo FROM movimientos_credito GROUP BY cliente_id ORDER BY cliente_id")).rows,
+      [{ cliente_id: 3, saldo: "500.00" }, { cliente_id: 4, saldo: "-250.00" }]);
+    const customerDocuments = (await pool.query("SELECT to_jsonb(d) AS row FROM cliente_documentos d ORDER BY id")).rows;
     const customerProfiles = (await pool.query("SELECT to_jsonb(c)-'saldo_credito' AS row FROM clientes c ORDER BY id")).rows;
-    await resetTestData(pool, input, { enabled: true, protectCustomers: true });
-    assert.deepEqual((await pool.query("SELECT id FROM clientes ORDER BY id")).rows, [{ id: 1 }, { id: 3 }]);
+    // Exercise the deployed default, not an explicit test override.
+    await resetTestData(pool, input, { enabled: true });
+    assert.deepEqual((await pool.query("SELECT id FROM clientes ORDER BY id")).rows, [{ id: 1 }, { id: 3 }, { id: 4 }]);
     assert.deepEqual((await pool.query("SELECT to_jsonb(c)-'saldo_credito' AS row FROM clientes c ORDER BY id")).rows, customerProfiles);
+    assert.deepEqual((await pool.query("SELECT to_jsonb(d) AS row FROM cliente_documentos d ORDER BY id")).rows, customerDocuments);
+    for (const name of CLEARED_TABLES.filter(name => tables.includes(name) && name !== "cliente_documentos")) {
+      assert.equal((await pool.query(`SELECT count(*)::int AS n FROM "${name}"`)).rows[0].n, 0, name);
+    }
+    assert.equal((await pool.query("SELECT count(*)::int n FROM cliente_documentos d LEFT JOIN clientes c ON c.id=d.cliente_id WHERE c.id IS NULL")).rows[0].n, 0);
+    assert.equal((await pool.query("SELECT coalesce(sum(importe),0)::int saldo FROM movimientos_credito")).rows[0].saldo, 0);
+    assert.equal((await pool.query("SELECT protected_customers FROM test_reset_history ORDER BY id DESC LIMIT 1")).rows[0].protected_customers, true);
     assert.equal((await pool.query("SELECT count(*)::int AS n FROM clientes WHERE saldo_credito<>0")).rows[0].n, 0);
     assert.equal((await pool.query("SELECT count(*)::int AS n FROM test_reset_history")).rows[0].n, 2);
     // Failure AFTER truncation must roll back operations, sessions and guards.
@@ -136,7 +162,7 @@ test("real PostgreSQL disposable reset: preservation, deletion, counters, rollba
     assert.equal((await pool.query("SELECT count(*)::int AS n FROM sesiones")).rows[0].n, 1);
     assert.equal((await pool.query("SELECT count(*)::int AS n FROM entradas")).rows[0].n, 1);
     assert.equal((await pool.query("SELECT count(*)::int AS n FROM rollos")).rows[0].n, 1);
-    assert.equal((await pool.query("SELECT count(*)::int AS n FROM clientes")).rows[0].n, 2);
+    assert.equal((await pool.query("SELECT count(*)::int AS n FROM clientes")).rows[0].n, 3);
     assert.deepEqual((await pool.query("SELECT tgname,tgenabled FROM pg_trigger WHERE NOT tgisinternal AND tgname<>'test_reset_history_immutable' ORDER BY tgname")).rows, triggerBefore);
     if (fullSchema) {
       await pool.query("ALTER TABLE test_reset_history DROP CONSTRAINT fail_rollback");
