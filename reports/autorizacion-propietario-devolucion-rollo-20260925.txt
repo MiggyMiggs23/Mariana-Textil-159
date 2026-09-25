@@ -1,0 +1,11 @@
+miguelestza: Autorización del propietario. Guarda este texto tal cual en reports/ antes de la primera escritura.
+
+Resuelvo el conflicto monetario de la devolución por rollo. Esta decisión acota la regla anterior de que el dinero aplicado a una nota no se devuelve nunca, y manda sobre ella solo en este caso.
+
+Cuando un rollo regresa completo, con los mismos metros, kilos, piezas o bolsas con que salió, y solo así: si su nota todavía tiene deuda, se cancela la deuda por ese rollo. Si su nota ya está liquidada, se devuelve el dinero de la caja abierta del día, solo ADMIN y con motivo obligatorio. Nunca queda saldo a favor. Fuera de este caso, la regla anterior sigue igual: el dinero aplicado a una nota no se devuelve.
+
+El rollo regresa al inventario con su misma serie, en la tienda que lo recibe. La devolución es un movimiento nuevo, no un reverso: no toca el corte original ni edita la venta. Los cambios físicos por otra tela o color se arreglan en persona y no se registran en el sistema.
+
+Regístralo en replit.md y en reports/prompt-u-respuestas-2026-09-18.md, constrúyelo y libéralo con el procedimiento simple.
+
+Después continúa con lo que quedó pendiente de la noche: recorrido en navegador de E5 y E11 con la conciliación por día, semana y mes; las celdas de permisos que faltan; y las mediciones de rendimiento con carga anual.

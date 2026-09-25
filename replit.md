@@ -266,8 +266,11 @@ globalmente de solo lectura.
 **No declarar nueve tareas completas ni E2E E5 autenticado del nuevo
 candidato:** tareas 5/6 usaron la fuente congelada previa (nueve cierres E5)
 y terminaron parcialmente; la conciliación de navegador quedó incierta tras
-interrupción del arnés y no se repitió. Tarea 3 está bloqueada por conflicto
-monetario; tarea 9 es NO-GO documental, no purga; tarea 8 no añadió DDL ni
+interrupción del arnés y no se repitió. Para tarea 3, la autorización posterior
+en `reports/autorizacion-propietario-devolucion-rollo-20260925.txt` resuelve
+la prohibición general de devolución aplicada únicamente para retorno de rollo
+completo; falta precisar el importe del caso parcialmente pagado con valor
+devuelto superior a deuda. Tarea 9 es NO-GO documental, no purga; tarea 8 no añadió DDL ni
 realizó medición anual en navegador. El procedimiento de liberación simple
 termina antes de datos reales; reinstaurar controles completos y resolver con
 el propietario retención, mecanismo y devolución física antes de purgar.
@@ -1709,9 +1712,13 @@ restricciones globales del corredor de pruebas siguen vigentes.
 
 ### Evidencia de verificación vinculada a una revisión exacta
 
-### Devolución por rollo — decisión recibida, construcción detenida por dinero
+### Devolución por rollo — excepción autorizada; importe parcial por precisar
 
-El 2026-09-24 (CDMX) el propietario pidió aceptar únicamente rollos completos con su serie y cantidad originales, recibidos en la tienda receptora mediante un movimiento nuevo, sin editar venta/corte original, sin saldo a favor y sin registrar cambios por tela/color. Para nota con deuda pidió cancelar la deuda por ese rollo; para nota liquidada, devolver dinero desde caja abierta del día, solo ADMIN y con motivo. Esta decisión acota la anterior sobre devolución de dinero, pero no se implementa mientras subsista el conflicto que el propio propietario ordenó revisar antes de construir: su autorización mantiene cerrada la devolución E5, la regla de devolución de recepción exige importe nunca aplicado y no define la parte ya pagada de una nota parcialmente liquidada. No se abre ninguna guarda ni se elige un tratamiento monetario por inferencia. Transcripción y bloqueo: `reports/trabajo-nocturno-20260925/tarea-3/conflicto-monetario.md`; también registrado en `reports/prompt-u-respuestas-2026-09-18.md`.
+El 2026-09-24 (CDMX), mediante la autorización posterior literal `reports/autorizacion-propietario-devolucion-rollo-20260925.txt`, el propietario resolvió el conflicto general: únicamente para devolución de un rollo completo, con los mismos metros, kilos, piezas o bolsas con que salió, prevalece esta excepción sobre la prohibición de devolver dinero aplicado. Si la nota tiene deuda, se cancela la deuda por ese rollo; si está liquidada, se devuelve dinero desde la caja abierta del día, solo ADMIN y con motivo obligatorio. Nunca queda saldo a favor. Fuera de este caso, el dinero aplicado a una nota no se devuelve.
+
+El rollo vuelve con su misma serie al inventario de la tienda que lo recibe. La devolución es un movimiento nuevo, no un reverso; no toca el corte original ni edita la venta. No se registran cambios por otra tela/color. Está autorizada su construcción y liberación con el procedimiento simple, sin abrir devolución general E5, Fondo, E12 ni atribución histórica. Esta decisión también consta en `reports/prompt-u-respuestas-2026-09-18.md`; el conflicto anterior es histórico.
+
+Importe aún por precisar: cuando una nota parcialmente pagada conserva menos deuda que el valor del rollo devuelto, no se ha definido expresamente qué ocurre con la parte ya pagada. No inventar devolución de excedente, retención de dinero ni saldo a favor para ese caso. Registrar la autorización no equivale a declarar implementado o liberado el flujo.
 
 ### Identidad exacta de la evidencia
 

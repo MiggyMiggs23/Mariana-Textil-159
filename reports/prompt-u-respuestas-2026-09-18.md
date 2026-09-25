@@ -204,11 +204,13 @@ BODEGA no debe ver contenedores con costo pendiente. La regla vigente es la revo
 
 ## Movimientos de inventario — decisión vigente del propietario
 
-### Devolución de mercancía por rollo — decisión recibida el 2026-09-24, pendiente de aclaración monetaria
+### Devolución de mercancía por rollo — excepción monetaria autorizada el 2026-09-24 (CDMX)
 
-El propietario distingue devolución física de reversión: acepta únicamente el rollo completo con su cantidad y serie originales, en la tienda receptora, mediante un movimiento nuevo que no edite la venta ni el corte original; nunca genera saldo a favor ni registra cambios por otra tela/color. Ordena cancelar deuda por el rollo si la nota debe y devolver dinero de la caja abierta del día, solo ADMIN y con motivo, si está liquidada. Esta decisión acota la anterior sobre devolución de dinero, pero contiene una instrucción expresa de detenerse antes de construir ante conflicto monetario.
+Autorización literal posterior: `reports/autorizacion-propietario-devolucion-rollo-20260925.txt`, guardada como primera escritura de esta continuación. El propietario resuelve el conflicto con la prohibición de devolver dinero aplicado: la excepción prevalece únicamente cuando se devuelve un rollo completo, con los mismos metros, kilos, piezas o bolsas con que salió. Si la nota tiene deuda, se cancela la deuda por ese rollo; si está liquidada, se devuelve dinero de la caja abierta del día, solo ADMIN y con motivo obligatorio. Nunca se genera saldo a favor. Fuera de esta excepción, el dinero aplicado a una nota no se devuelve.
 
-La tarea queda detenida: el mismo mensaje mantiene cerrada la devolución de dinero E5, la devolución de recepción anterior requiere importe nunca aplicado y falta resolver la nota parcialmente pagada. No se asume una apertura ni un tratamiento del excedente. Transcripción literal y conflicto en `reports/trabajo-nocturno-20260925/tarea-3/conflicto-monetario.md`. Las otras operaciones autorizadas se tramitan por separado.
+El rollo vuelve al inventario con su misma serie, en la tienda receptora. Es un movimiento nuevo, no un reverso: no edita la venta ni el corte original. No se registran cambios físicos por otra tela o color. Se autoriza construir y liberar con el procedimiento simple; esto no abre la devolución general E5 ni el retorno de abonos nunca aplicados.
+
+La prohibición general anterior ya no bloquea esta excepción. Queda por precisar únicamente el importe cuando una nota está parcialmente pagada y el valor del rollo supera la deuda restante: no se inferirá si la parte ya pagada se conserva o se devuelve. El informe anterior de conflicto se conserva como antecedente, no como decisión vigente.
 
 ### Reversión de inventario (se conserva)
 

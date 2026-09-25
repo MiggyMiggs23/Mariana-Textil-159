@@ -1,13 +1,13 @@
 ---
-name: Devolución física construida pero inactiva
-description: La preparación del flujo no autoriza eludir las guardas que bloquean su operación.
+name: Separación de devoluciones comerciales y de recepción
+description: No reutilizar evidencia de dinero nunca aplicado ni reversos para un retorno comercial nuevo.
 ---
 
-La devolución física puede construirse completa, pero debe permanecer inactiva mientras sigan las guardas de efectivo de crédito. No se eluden mediante otra naturaleza, otra tabla o un camino alternativo.
+No confundir el flujo de devolución de una recepción nunca aplicada con la devolución comercial de mercancía: su evidencia y sus efectos contables son distintos.
 
-**Why:** El propietario reconoció expresamente que pedir devolución operativa y conservar la guarda que la bloquea era contradictorio; autorizó construirla inactiva, no abrir esa guarda.
+**Why:** La preparación histórica de devoluciones de recepción exigía dinero íntegro nunca aplicado y utilizaba reversos. Reutilizarla para un retorno comercial puede invertir la venta o el corte, aunque la interfaz parezca equivalente.
 
-**How to apply:** Separar preparación de código, activación y aceptación operativa. Conservar los bloqueos de aplicación y SQL; cualquier activación necesita autorización posterior. Autorizar código tampoco autoriza escrituras de pruebas, migraciones o inicializadores.
+**How to apply:** Consultar la autorización vigente en replit.md y distinguir los productores y sus restricciones antes de abrir guardas. La antigua decisión de mantener toda devolución física inactiva fue sustituida por una autorización específica de rollo completo; no usar esta memoria como prohibición monetaria.
 
 ## Reversión después de aceptar dinero
 
