@@ -38,7 +38,6 @@ import {
 } from "@/components/ui/dialog";
 import { etiquetasApi } from "@/lib/etiquetas-api";
 import { NotificationsBell } from "@/components/notifications-bell";
-import { NotificationAudioController } from "@/components/notification-audio-controller";
 import { getVisibleNavGroups } from "@/components/layout/app-navigation";
 import { getHomeRoute } from "@/lib/home-route";
 import { E11Navigation, useE11AdminNavLinks } from "@/pages/e11";
@@ -321,11 +320,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-[100dvh] flex bg-background">
-      <NotificationAudioController
-        userId={user.id}
-        role={user.rol}
-        navigationKey={location}
-      />
       {/* Sidebar for Desktop */}
       {!isTerminal && (
         <aside className="no-print hidden md:flex w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border h-[100dvh] sticky top-0">
@@ -363,7 +357,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <span className="font-bold text-lg">Mariana Textil</span>
             </Link>
             <div className="flex items-center gap-1">
-              <span id="notification-audio-mobile-slot" className="contents" />
               <NotificationsBell isAdmin={user.rol === Role.ADMIN} mobile />
               <Button
                 variant="ghost"
@@ -400,7 +393,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <header className="no-print hidden md:flex h-16 shrink-0 items-center justify-end gap-5 border-b bg-card px-8">
           {renderLocationControl()}
           <div className="h-8 w-px bg-border" />
-          <span id="notification-audio-desktop-slot" className="contents" />
           <NotificationsBell isAdmin={user.rol === Role.ADMIN} />
           <div className="flex items-center gap-3">
             <div className="grid h-9 w-9 place-items-center rounded-full bg-sidebar text-sm font-bold text-white">

@@ -9,6 +9,7 @@ import {
   type E5RechazarInput, type E5DevolverInput, type E5Cobro,
 } from "@workspace/api-client-react";
 import { E5_ENABLED } from "@/lib/e5-feature-flags";
+import { requestAppSound } from "@/components/notification-audio-controller";
 import { useE11Session } from "@/lib/e11-session";
 import { e5AuthorizationContext, e5CanRead, e5CanReceive, e5CanPrepare, assertE5Context, assertE5Detail } from "@/lib/e5-authorization";
 
@@ -209,6 +210,7 @@ export function useE5Actions(scope: string, target: Target) {
       pendingRef.current = null;
       setPending(null);
       setResult(next);
+      if (command.kind === "recibir") requestAppSound("PAGO", `payment:e5:${next.id}`);
       try { await refresh(); }
       catch (refreshError) { if (alive.current) setError(`Operación confirmada; no se pudo actualizar la consulta: ${e5Error(refreshError)}. No repitas el movimiento; actualiza la vista.`); }
     } catch (err) {

@@ -22,6 +22,7 @@ import {
   getGetCurrentUserQueryKey,
 } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
+import { requestAppSound } from "@/components/notification-audio-controller";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { formatAccountDestination, formatNumber } from "@workspace/number-format";
 import {
@@ -283,6 +284,7 @@ export function ClientePagoDialog({
            setE3Uncertain(false);
           setE3Receipt(data.recibo);
           setStep("success");
+           requestAppSound("PAGO", `payment:e3:${data.recibo.movimientoId}`);
           queryClient.invalidateQueries({ predicate: query => typeof query.queryKey[0] === "string" && query.queryKey[0].startsWith("/api/clientes") });
           onSuccess?.();
         },
@@ -344,6 +346,7 @@ export function ClientePagoDialog({
         onSuccess: (data) => {
           setRealResult(data);
           setStep("success");
+           requestAppSound("PAGO", `payment:customer:${data.id}`);
           accepted();
         },
         onError: (error) => {

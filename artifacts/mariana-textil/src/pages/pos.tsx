@@ -80,7 +80,6 @@ import {
   type CreditTerm,
 } from "@/lib/credit-terms";
 import { CampoEscaneo } from "@/components/campo-escaneo";
-import { requestAppSound } from "@/components/notification-audio-controller";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import {
   advertenciaSkuEscaneado,
@@ -763,7 +762,6 @@ export default function PosPage() {
   const crearTicket = useCrearTicket();
   const addToCart = useCallback((item: any, automatic = false) => {
     if (!hasCapturedSuggestedPrice(item)) {
-      if (automatic) requestAppSound("ALERTA");
       toast({
         title: PRODUCT_WITHOUT_PRICE_TITLE,
         description: PRODUCT_WITHOUT_PRICE_DESCRIPTION,
@@ -776,7 +774,6 @@ export default function PosPage() {
     if (tipoTicket === TipoTicket.NORMAL) {
       const current = cartRef.current;
       if (current.some((group) => group.rollos?.some((rollo: PosRolloDisponible) => rollo.id === item.id))) {
-        if (automatic) requestAppSound("ALERTA");
         toast({
           title: "El rollo ya está en el ticket",
           variant: "destructive",
@@ -857,7 +854,6 @@ export default function PosPage() {
       setCart(nextCart);
     }
     if (automatic) {
-      requestAppSound("AVISO");
       toast({
         title: "Rollo agregado",
         description: `${item.tela} - ${item.color} · Serie ${item.serie}`,
@@ -901,7 +897,6 @@ export default function PosPage() {
           (rollo) => rollo.serie === codigo.serie,
         );
         if (exactMatches.length !== 1) {
-          requestAppSound("ALERTA");
           toast({
             title:
               exactMatches.length > 1
@@ -919,7 +914,6 @@ export default function PosPage() {
         setSkuWarning(advertenciaSkuEscaneado(codigo, rollo.sku));
         addToCart(rollo, true);
       } catch (error) {
-        requestAppSound("ALERTA");
         toast({
           title: "No se pudo verificar el rollo",
           description: <ApiErrorDetails error={error} />,

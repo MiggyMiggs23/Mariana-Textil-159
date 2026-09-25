@@ -3,12 +3,14 @@ import { e7On } from "@/lib/e7-feature-flags";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { AppLayout } from "@/components/layout/app-layout";
+import { NotificationAudioController } from "@/components/notification-audio-controller";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Route, Switch, useLocation, Router as WouterRouter } from "wouter";
 import {
   useGetCurrentUser,
   getGetCurrentUserQueryKey,
+  Role,
 } from "@workspace/api-client-react";
 import { Loader2 } from "lucide-react";
 
@@ -776,13 +778,26 @@ function RoutedErrorBoundary({ children }: { children: ReactNode }) {
   return <ErrorBoundary resetKey={location}>{children}</ErrorBoundary>;
 }
 
+function AuthenticatedAudioBoundary({ children }: { children: ReactNode }) {
+  const [location] = useLocation();
+  const { data: user } = useGetCurrentUser({
+    query: { retry: false, queryKey: getGetCurrentUserQueryKey(), enabled: !location.startsWith("/login") },
+  });
+  if (!user || location.startsWith("/login") || (e11On() && user.rol === Role.CONTADOR)) return <>{children}</>;
+  return (
+    <NotificationAudioController key={user.id} userId={user.id} role={user.rol}>
+      {children}
+    </NotificationAudioController>
+  );
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <LocationScopeProvider>
-            <E11ApplicationBoundary><Router /></E11ApplicationBoundary>
+            <E11ApplicationBoundary><AuthenticatedAudioBoundary><Router /></AuthenticatedAudioBoundary></E11ApplicationBoundary>
           </LocationScopeProvider>
         </WouterRouter>
         <Toaster />

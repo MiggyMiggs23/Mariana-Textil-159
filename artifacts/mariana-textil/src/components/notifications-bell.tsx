@@ -24,6 +24,8 @@ import {
   ExternalLink,
   Info,
   Loader2,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -37,6 +39,7 @@ import { getApiErrorMessage } from "@/lib/api-error";
 import { pickCreditEvidence } from "@/lib/credit-evidence";
 import { e11On, useE11Session } from "@/lib/e11-session";
 import { E11_RECONCILIATION_ENABLED } from "@/lib/e11-feature-flags";
+import { useNotificationAudio } from "@/components/notification-audio-controller";
 
 const FAMILY_LABELS: Record<NotificationFamily, string> = {
   AVISO: "Aviso",
@@ -75,6 +78,7 @@ export function NotificationsBell({
   isAdmin?: boolean;
 }) {
   const e11 = useE11Session();
+  const audio = useNotificationAudio();
   const e11LinkAllowed = e11On() && E11_RECONCILIATION_ENABLED && e11?.flags.conciliacion && e11.identity.rolBase === "ADMIN";
   const [open, setOpen] = useState(false);
   const [rejecting, setRejecting] = useState<number | null>(null);
@@ -209,6 +213,30 @@ export function NotificationsBell({
           <p className="mt-0.5 text-xs text-muted-foreground">
             {events.length ? `${events.length} evento(s) activos` : "Sin eventos activos"}
           </p>
+          <div className="mt-3 flex items-center justify-between gap-2 border-t pt-3">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              {audio.enabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+              <span>
+                Sonido: {audio.enabled
+                  ? audio.status === "ready" ? "activado"
+                    : audio.status === "unavailable" ? "no disponible"
+                    : "toca para activar"
+                  : "desactivado"}
+              </span>
+            </div>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              data-testid="button-enable-notification-sound"
+              onClick={() => audio.setEnabled(!audio.enabled)}
+            >
+              {audio.enabled ? "Desactivar sonido" : "Activar sonido"}
+            </Button>
+            {audio.enabled && audio.status !== "ready" && (
+              <Button size="sm" variant="ghost" onClick={() => audio.setEnabled(true)}>Reintentar</Button>
+            )}
+          </div>
         </div>
 
         <ScrollArea className="h-[380px]">

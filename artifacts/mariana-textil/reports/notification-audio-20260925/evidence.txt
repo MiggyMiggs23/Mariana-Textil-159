@@ -1,0 +1,16 @@
+Notification audio mounted regression — 2026-09-25
+
+Baseline original commit: 814346c23d872ec8b6dd73f2a9bbe03fc76d83e6
+The historical controller was exported with git show into a /tmp snapshot, not substituted into any watched production source. Vitest's test-only alias points to that exact snapshot; workspace packages are resolved from the app's installed dependencies. The real controller component was mounted in jsdom with a functional AudioContext stub whose decoded buffers retain the fetched URL.
+
+From artifacts/mariana-textil:
+  git show HEAD:artifacts/mariana-textil/src/components/notification-audio-controller.tsx > /tmp/notification-audio-controller-head-814346c.tsx
+  NOTIFICATION_AUDIO_HEAD=/tmp/notification-audio-controller-head-814346c.tsx pnpm exec vitest run --config vitest.notification-audio.config.ts --reporter=verbose -t 'HEAD baseline'
+
+Baseline exit 1: one actual mounted assertion failed (not an import/timeout): expected 0 sounds following activation and navigation, received ['/sounds/aviso.ogg']; 1 failed, 6 skipped. Original HEAD's auto-activation replayed AVISO.
+
+Candidate commands:
+  pnpm exec vitest run --config vitest.notification-audio.config.ts --reporter=verbose
+  node ../../scripts/src/frontend-test-runner.mjs src/components/notification-audio-controller.contract.test.ts
+
+Final candidate: Vitest exit 0, 6 passed and baseline-only case skipped; Node contract exit 0, 4 passed. The final Vitest execution included the stable-payment-ID duplicate assertion. Cases assert silent route/remount/reload and manual/automatic activation; new alert audible exactly once; same-feed/updatedAt/read transitions silent; off/on no backlog and user preference persists; ALERTA/AVISO/PAGO distinct decoded file URLs and payment ID dedupe; lock unavailable fails closed; two mounted tabs with exclusive lock produce one tone; auth scope. No backend/database/workflows or browser execution used.

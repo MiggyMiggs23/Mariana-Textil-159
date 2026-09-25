@@ -84,6 +84,7 @@ import { es } from "date-fns/locale";
 import { formatAccountDestination, formatNumber, formatUnit } from "@workspace/number-format";
 import { CampoEscaneo } from "@/components/campo-escaneo";
 import { ClientePagoDialog } from "@/components/cliente-pago-dialog";
+import { requestAppSound } from "@/components/notification-audio-controller";
 import { SolicitudPagoDirigidoDialog } from "@/components/solicitud-pago-dirigido-dialog";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { Textarea } from "@/components/ui/textarea";
@@ -761,6 +762,9 @@ function CobroDialog({
       },
       {
         onSuccess: (data) => {
+          if (data.cobrado && data.pagos?.length) {
+            requestAppSound("PAGO", `payment:pos:${data.id}`);
+          }
           if (data && data.convertidoANotaPorCobro) {
             toast({
               title: "Documento actualizado a NOTA",

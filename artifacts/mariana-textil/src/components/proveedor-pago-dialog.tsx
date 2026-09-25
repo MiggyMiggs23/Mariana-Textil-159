@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Wallet, ArrowRight, CheckCircle2, ChevronLeft } from "lucide-react";
 import { usePreviewPagoProveedor, useRegistrarPagoProveedor, useCreateSolicitudPagoDirigido, PreviewPagoProveedor, FormaPagoProveedor } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
+import { requestAppSound } from "@/components/notification-audio-controller";
 import { useQueryClient } from "@tanstack/react-query";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { formatNumber } from "@workspace/number-format";
@@ -168,6 +169,7 @@ export function ProveedorPagoDialog({
           if (cash.enabled) void invalidateE12(queryClient, cash.admin);
           setRealResult(data);
           setStep("success");
+          requestAppSound("PAGO", `payment:supplier:${data.id}`);
 
           queryClient.invalidateQueries({ queryKey: ["/api/proveedores", proveedorId, "pagos"] });
           queryClient.invalidateQueries({ queryKey: ["/api/proveedores", proveedorId, "compras"] });
