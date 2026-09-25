@@ -3,7 +3,7 @@
  * route and request barrier when the owner starts real operation.
  * CLOSED until deployment deliberately enables this single feature flag.
  */
-export const TEST_RESET_ENABLED = false;
+export const TEST_RESET_ENABLED = true;
 // ONE-LINE SWITCH: set true BEFORE importing the owner's real customer list.
 export const PROTECT_CUSTOMERS = false;
 export const RESET_CONFIRMATION = "BORRAR";

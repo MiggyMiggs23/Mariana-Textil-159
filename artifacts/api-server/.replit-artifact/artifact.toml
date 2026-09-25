@@ -10,7 +10,7 @@ name = "API Server"
 paths = ["/api"]
 
 [services.development]
-run = "cd /home/runner/workspace && API_STARTUP_MODE=NORMAL API_INSPECTION_BOOT=1 NODE_ENV=development exec node artifacts/api-server/dist-night-task12/index.mjs"
+run = "cd /home/runner/workspace && sha256sum -c reports/test-reset-20260925/api-artifact.sha256 && API_STARTUP_MODE=NORMAL API_INSPECTION_BOOT=1 NODE_ENV=development exec node artifacts/api-server/dist-test-reset-active-20260925/index.mjs"
 
 [services.development.env]
 API_STARTUP_MODE = "NORMAL"

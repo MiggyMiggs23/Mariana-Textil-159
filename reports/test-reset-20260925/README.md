@@ -2,11 +2,22 @@
 
 ## Estado
 
-Implementado y ensayado; **no activado en la aplicación**.
-`TEST_RESET_ENABLED = false` en `artifacts/api-server/src/lib/test-reset/manifest.ts`.
-No se ejecutó ningún reset, instalación de DDL o reinicio de la API de la aplicación.
+Implementado, ensayado y **activado con autorización expresa del propietario**.
+`TEST_RESET_ENABLED = true` en `artifacts/api-server/src/lib/test-reset/manifest.ts`.
+Se reiniciaron API y frontend para activar el botón; **no se ejecutó ningún
+reset ni instalación de DDL en la base de la aplicación**. La comparación
+`activation-before.json` / `activation-after.json` de las 107 tablas no detectó
+diferencias de conteos ni huellas de contenido. `test_reset_history` sigue
+ausente: se creará atómicamente únicamente en el primer uso confirmado.
 El esquema se leyó con pg_dump schema-only para ensayar una copia estructural
 completa; no se copiaron datos de negocio ni actores.
+
+La API activa se construyó desde las fuentes embebidas del bundle retenido,
+agregando exclusivamente el reinicio. No se liberó el candidato comercial.
+Procedencia en `activation-build-inputs.json`; verificación de bytes al arrancar
+en `api-artifact.sha256`. API y frontend sirven `dist-test-reset-active-20260925`.
+Arranque efectivo: inspection, sin inicializadores, backfill ni monitor.
+Salud HTTP 200; GET del reinicio sin autenticación rechaza con 401.
 
 ## Uso después de una activación autorizada
 
@@ -67,9 +78,10 @@ En ambos modos se elimina el crédito y se conserva el cliente interno.
 
 ## Activación y retiro
 
-La activación requiere autorización separada por la restricción vigente de
-arranque del proyecto. No reconstruir/publicar todo HEAD: contiene un candidato
-comercial no liberado. Integrar solo este cambio sobre el bundle autorizado.
+La activación del 25 de septiembre de 2026 fue autorizada expresamente
+«Sí, activar sin borrar datos». No autoriza ejecutar el borrado ni futuros
+reinicios ajenos. No reconstruir/publicar todo HEAD: contiene un candidato
+comercial no liberado. Integrar solo cambios autorizados sobre el bundle retenido.
 Retirar las instancias antiguas antes de arrancar una API habilitada: los
 binarios anteriores no conocen el protocolo de exclusión.
 La API habilitada exige inspection boot y lease exclusivo, sin inicializadores

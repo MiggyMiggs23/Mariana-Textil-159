@@ -1,0 +1,466 @@
+{
+  "capturedAt": "2026-09-25T21:03:03.206Z",
+  "databaseFingerprint": "b16c8200a28f13211b00c8a7b69ea862da3027c7febbc6a34ba63de84a70262e",
+  "schemaFingerprint": "18b4f2364b58c63749dc75be4844b423954f9824cc817516ac38071085534b64",
+  "historyExists": false,
+  "historyCount": null,
+  "tables": {
+    "aplicaciones_credito": {
+      "category": "operational",
+      "count": "3"
+    },
+    "aplicaciones_pago_proveedor": {
+      "category": "operational",
+      "count": "1"
+    },
+    "atribuciones_credito_e1": {
+      "category": "operational",
+      "count": "0"
+    },
+    "auditoria": {
+      "category": "operational",
+      "count": "3638"
+    },
+    "auditoria_faltante_reactivaciones": {
+      "category": "operational",
+      "count": "5"
+    },
+    "auditoria_inventario_escaneos": {
+      "category": "operational",
+      "count": "140"
+    },
+    "auditoria_inventario_folio": {
+      "category": "counter",
+      "count": "11",
+      "sha256": "5246e211a0ee0be021f3a2fac472ae8e6b1276c0386be94cb1c2d1aa1d7f3666"
+    },
+    "auditoria_inventario_participantes": {
+      "category": "operational",
+      "count": "5"
+    },
+    "auditoria_inventario_snapshot": {
+      "category": "operational",
+      "count": "214"
+    },
+    "auditoria_sobrante_contextos": {
+      "category": "operational",
+      "count": "1"
+    },
+    "auditoria_sobrante_decisiones": {
+      "category": "operational",
+      "count": "2"
+    },
+    "auditorias_inventario": {
+      "category": "operational",
+      "count": "6"
+    },
+    "autorizaciones_nota": {
+      "category": "operational",
+      "count": "2"
+    },
+    "caja_desbloqueos_e12": {
+      "category": "operational",
+      "count": "0"
+    },
+    "caja_retornos_proveedor_e12": {
+      "category": "operational",
+      "count": "0"
+    },
+    "caja_salidas_e4": {
+      "category": "operational",
+      "count": "0"
+    },
+    "caja_salidas_e4_operaciones": {
+      "category": "operational",
+      "count": "0"
+    },
+    "camionetas": {
+      "category": "protected",
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "choferes": {
+      "category": "protected",
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cliente_documentos": {
+      "category": "operational",
+      "count": "0"
+    },
+    "clientes": {
+      "category": "mixed",
+      "count": "7",
+      "sha256": "e70a6243ad34acb75c895823eb9f5437e98cb44f39d4408641e821cc124d3a42"
+    },
+    "cobros_credito_pendientes_e1": {
+      "category": "operational",
+      "count": "0"
+    },
+    "contenedor_lineas": {
+      "category": "operational",
+      "count": "0"
+    },
+    "contenedores": {
+      "category": "operational",
+      "count": "0"
+    },
+    "cuadre_fiscal_registros": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e11_avisos": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e11_cambios_usuario": {
+      "category": "protected",
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e11_conciliacion_ventas": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e11_conciliaciones": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e11_decisiones": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e11_e5_definiciones": {
+      "category": "protected",
+      "count": "5",
+      "sha256": "35571a176fd23201d314da4f17cb96d1e0da72ba33a752b3de3afd12019d31c1"
+    },
+    "e11_e5_preparaciones": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e11_notificacion_origen": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e11_operaciones": {
+      "category": "mixed",
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e11_perfil_eventos": {
+      "category": "protected",
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e11_perfiles": {
+      "category": "protected",
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e11_resoluciones": {
+      "category": "mixed",
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "e5_aplicaciones": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e5_cobros": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e5_ddl_originales": {
+      "category": "protected",
+      "count": "4",
+      "sha256": "04cc20165a73aad50e9253d50ce1cf64aef4352cd19065c8a156276826edbc90"
+    },
+    "e5_devoluciones": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e5_documentos": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e5_impresiones": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e5_nacimientos": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e5_operaciones": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e5_recepciones": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e5_salidas_bancarias": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e5_vinculos_credito": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e9_entregas": {
+      "category": "operational",
+      "count": "0"
+    },
+    "e9_operaciones": {
+      "category": "operational",
+      "count": "0"
+    },
+    "entrada_folio": {
+      "category": "counter",
+      "count": "11",
+      "sha256": "25d55eb3cf6b1e8d88cb13382b135a1e46be09ac8aefcb2fbbd7d892cb096ea5"
+    },
+    "entradas": {
+      "category": "operational",
+      "count": "3"
+    },
+    "equipos": {
+      "category": "protected",
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "equipos_checklist": {
+      "category": "operational",
+      "count": "0"
+    },
+    "evidencia_no_aplicada_e2": {
+      "category": "operational",
+      "count": "0"
+    },
+    "existencias": {
+      "category": "operational",
+      "count": "45"
+    },
+    "finalizaciones_abono_e2": {
+      "category": "operational",
+      "count": "0"
+    },
+    "fondo_arqueos": {
+      "category": "operational",
+      "count": "0"
+    },
+    "fondo_mariana": {
+      "category": "protected",
+      "count": "1",
+      "sha256": "64a50396f0501014b3e88a1ba154f6df4808d6bef422812297dc8a0b1d9d7585"
+    },
+    "fondo_movimientos": {
+      "category": "operational",
+      "count": "0"
+    },
+    "movimientos": {
+      "category": "operational",
+      "count": "818"
+    },
+    "movimientos_credito": {
+      "category": "operational",
+      "count": "4"
+    },
+    "notificaciones_credito": {
+      "category": "operational",
+      "count": "2"
+    },
+    "notificaciones_sistema": {
+      "category": "operational",
+      "count": "14"
+    },
+    "operaciones_credito_e1": {
+      "category": "operational",
+      "count": "1"
+    },
+    "pagos_proveedor": {
+      "category": "operational",
+      "count": "4"
+    },
+    "permisos_rol": {
+      "category": "protected",
+      "count": "204",
+      "sha256": "b2a5f7b160801a21954512b72b278d6213545764f55978df86d0059a7796c267"
+    },
+    "permisos_ubicacion": {
+      "category": "protected",
+      "count": "54",
+      "sha256": "70022ddaf2cfedaf27134bad9f70ce77120179aab2fa22c3649f15710209af95"
+    },
+    "permisos_usuario": {
+      "category": "protected",
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pisos": {
+      "category": "protected",
+      "count": "13",
+      "sha256": "4b7cb334b65df60bbc3bf80173a2dd078e44cd760c4520d10b7137bc1fab4ab7"
+    },
+    "precio_historial": {
+      "category": "operational",
+      "count": "1102"
+    },
+    "productos": {
+      "category": "protected",
+      "count": "1234",
+      "sha256": "40c3824a5a8fd31cd8e9f43690f1edd011eda892313481eb012780898c9bd0e5"
+    },
+    "proveedor_efectivo_e12": {
+      "category": "operational",
+      "count": "0"
+    },
+    "proveedor_operaciones_e12": {
+      "category": "operational",
+      "count": "0"
+    },
+    "proveedor_solicitudes_e12": {
+      "category": "operational",
+      "count": "0"
+    },
+    "proveedores": {
+      "category": "protected",
+      "count": "27",
+      "sha256": "b7800f6ddf4fa508e6e9ec15b36cfe415ed9a9999c642b273a70a2086e10fd9f"
+    },
+    "recibo_folio_e3": {
+      "category": "counter",
+      "count": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "recibos_abono_e3": {
+      "category": "operational",
+      "count": "0"
+    },
+    "reimpresiones_etiqueta": {
+      "category": "operational",
+      "count": "0"
+    },
+    "revisiones_etiqueta": {
+      "category": "operational",
+      "count": "0"
+    },
+    "rollos": {
+      "category": "operational",
+      "count": "740"
+    },
+    "salida_folio": {
+      "category": "counter",
+      "count": "11",
+      "sha256": "873248106be091b78d21123635436801ecd49a8df77913bb2ec25887f2cb5b1c"
+    },
+    "salida_lineas": {
+      "category": "operational",
+      "count": "4"
+    },
+    "salida_rollos": {
+      "category": "operational",
+      "count": "19"
+    },
+    "salidas": {
+      "category": "operational",
+      "count": "4"
+    },
+    "salidas_dinero_caja": {
+      "category": "operational",
+      "count": "0"
+    },
+    "series_consecutivo": {
+      "category": "counter",
+      "count": "1",
+      "sha256": "07f37c4effd23eec95459721d2856ed8964074023e37958159904bb3917827e0"
+    },
+    "sesiones": {
+      "category": "operational",
+      "count": "17"
+    },
+    "sesiones_caja": {
+      "category": "operational",
+      "count": "3"
+    },
+    "sesiones_caja_dias": {
+      "category": "operational",
+      "count": "3"
+    },
+    "solicitudes_pago_dirigido": {
+      "category": "operational",
+      "count": "0"
+    },
+    "stock_minimo_episodios": {
+      "category": "operational",
+      "count": "3"
+    },
+    "stock_minimo_sitios": {
+      "category": "protected",
+      "count": "1",
+      "sha256": "8c6ecc0538ba3600a74564249d05b492ce6e13c22475ceda020adc789875e7ad"
+    },
+    "stock_minimos": {
+      "category": "protected",
+      "count": "3",
+      "sha256": "461966d5b4f3b156fe73826632ae166ab0133b6164003f1eb912f0ea2a22ea15"
+    },
+    "tarea4_rollo_remate": {
+      "category": "operational",
+      "count": "0"
+    },
+    "ticket_folio": {
+      "category": "counter",
+      "count": "1",
+      "sha256": "25221d43d1c3736bd124cf6d5f90f3c05774e7e624ac6a20555e62b4a65640aa"
+    },
+    "ticket_linea_consumos": {
+      "category": "operational",
+      "count": "18"
+    },
+    "ticket_lineas": {
+      "category": "operational",
+      "count": "15"
+    },
+    "ticket_pagos": {
+      "category": "operational",
+      "count": "1"
+    },
+    "tickets": {
+      "category": "operational",
+      "count": "3"
+    },
+    "ubicaciones": {
+      "category": "protected",
+      "count": "11",
+      "sha256": "6ccbcd0b474963d86e7767f507ef5fb4c87212b433bbaa14642b66fa5720ceff"
+    },
+    "usuarios": {
+      "category": "protected",
+      "count": "31",
+      "sha256": "f8b590db2835781be87c9811b9e5068d642bf32c37297e2755a187a961dc1177"
+    },
+    "viaje_folio": {
+      "category": "counter",
+      "count": "11",
+      "sha256": "4b400028d71a094e773e94af020562fe1612f6bc09f044c20d990d73b6d4ed4f"
+    },
+    "viaje_salidas": {
+      "category": "operational",
+      "count": "0"
+    },
+    "viaje_tickets": {
+      "category": "operational",
+      "count": "0"
+    },
+    "viajes": {
+      "category": "operational",
+      "count": "0"
+    },
+    "vistas_abono_e3": {
+      "category": "operational",
+      "count": "0"
+    }
+  }
+}
