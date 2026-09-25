@@ -2481,3 +2481,17 @@ mtime_ms = 1790358891811
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/78879000-8048-4c4a-826f-a7331d274cb3/8214f72e-63f0-4078-9e1e-d897fc883d53"
 storage_version_token = "1790358898579832"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "89Rutp2pX2KBTlisTNCCi"
+uri = "file://reports/auditoria-selector-20260925/resultado.png"
+type = "image"
+title = "Auditorías — cambio de sitio corregido"
+description = "Captura con datos de ejemplo: sitio Norte, historial filtrado y auditoría anterior deseleccionada. No se modificaron auditorías reales."
+logical_id = "ad66e8a5-8656-43e8-aeec-0b67a2770d7c"
+content_hash = "sha256:a65ff5aa758cd67dc15f826ee2be7583a61dfb4a430e33792b1428c07a0f86e2"
+size = 92917
+mtime_ms = 1790360277922
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/ad66e8a5-8656-43e8-aeec-0b67a2770d7c/d6708e1a-4f62-4e91-ab74-e9f5d7aafb3b"
+storage_version_token = "1790360371814516"
+content_type = "image/png"
