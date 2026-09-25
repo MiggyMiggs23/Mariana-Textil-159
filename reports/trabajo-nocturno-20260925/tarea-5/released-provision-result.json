@@ -1,0 +1,52 @@
+{
+  "files": [
+    {
+      "path": "reports/tanda-d-20260923/tarea1-up.sql",
+      "sha256": "b413d0212c339913f89bb5e74a67964b8044987a15eacbaf8981fd610c144bf4",
+      "applied": true
+    },
+    {
+      "path": "reports/trabajo-nocturno-20260925/tarea-2/01-candidate-not-approved.sql",
+      "sha256": "d65edee0ab2b392f861a645e98e087a7def7112e75665a7cce938ba7c81a5281",
+      "applied": true
+    }
+  ],
+  "status": "PASS_DISPOSABLE_ONLY",
+  "identity": {
+    "database": "night56_test",
+    "port": 55526,
+    "directory": "/home/runner/workspace/private.local/night-t56/cluster",
+    "started": "2026-09-25T04:42:28.740Z"
+  },
+  "before": {
+    "e11_graph": "085a297c1439f5b0dde4e99df36e4edf"
+  },
+  "alreadyAppliedGraphCorrection": {
+    "status": "PASS",
+    "identity": {
+      "database": "night56_test",
+      "port": 55526,
+      "directory": "/home/runner/workspace/private.local/night-t56/cluster",
+      "started": "2026-09-25T04:42:28.740Z"
+    },
+    "graph": {
+      "md5": "085a297c1439f5b0dde4e99df36e4edf"
+    },
+    "closures": [
+      {
+        "tgname": "e11_closed",
+        "count": 8
+      },
+      {
+        "tgname": "e5_closed",
+        "count": 9
+      }
+    ],
+    "changes": "Only ambiguous SQL aliases renamed; no gate changed"
+  },
+  "after": {
+    "e11_graph": "085a297c1439f5b0dde4e99df36e4edf",
+    "e5_closed": 9,
+    "e11_closed": 0
+  }
+}

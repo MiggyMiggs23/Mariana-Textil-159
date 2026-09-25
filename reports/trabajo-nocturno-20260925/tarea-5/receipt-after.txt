@@ -1,0 +1,105 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Vista Global
+Activar sonido
+1
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Recibo E3-1-00000001
+
+Dos copias A5. La solicitud se audita; cancelar la impresora no vuelve a cobrar.
+
+Ver detalle del movimiento #2
+
+Solicitar impresión / reimpresión
+Mariana Textil · Recibo de abono
+Copia Cliente · Página 1 / 1
+E3-1-00000001
+$100.00
+
+Cliente: Jesús López
+
+Sitio receptor: Mariana · Recibió / registró: Administrador
+
+Recepción: 24/9/2026, 11:05:34 p.m. · Registro: 24/9/2026, 11:05:34 p.m.
+
+Medio: Efectivo · Cuenta: CAJA FISICA
+
+Nota	Saldo anterior	Aplicado	Saldo posterior
+1002	$1,000.00	$100.00	$900.00
+
+Remanente del abono: $0.00 · Saldo a favor total: $0.00 · Deuda total posterior: $900.00
+
+Firma de quien entrega
+Firma de quien recibe
+
+REIMPRESIÓN / copia de evidencia emitida · 24/9/2026, 11:05:58 p.m. · Movimiento 2
+
+Mariana Textil · Recibo de abono
+Copia Tienda · Página 1 / 1
+E3-1-00000001
+$100.00
+
+Cliente: Jesús López
+
+Sitio receptor: Mariana · Recibió / registró: Administrador
+
+Recepción: 24/9/2026, 11:05:34 p.m. · Registro: 24/9/2026, 11:05:34 p.m.
+
+Medio: Efectivo · Cuenta: CAJA FISICA
+
+Nota	Saldo anterior	Aplicado	Saldo posterior
+1002	$1,000.00	$100.00	$900.00
+
+Remanente del abono: $0.00 · Saldo a favor total: $0.00 · Deuda total posterior: $900.00
+
+Firma de quien entrega
+Firma de quien recibe
+
+REIMPRESIÓN / copia de evidencia emitida · 24/9/2026, 11:05:58 p.m. · Movimiento 2

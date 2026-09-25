@@ -1,0 +1,91 @@
+{
+  "identity": {
+    "db": "night56_test",
+    "port": 55526,
+    "directory": "/home/runner/workspace/private.local/night-t56/cluster"
+  },
+  "cash": [
+    {
+      "id": 1,
+      "estado": "CERRADA",
+      "fondo_inicial": "0.00",
+      "efectivo_contado": "2498.00"
+    }
+  ],
+  "tickets": [
+    {
+      "id": 1,
+      "folio": 1000,
+      "documento_tipo": "TICKET",
+      "cobrado": true,
+      "total": "1000.00",
+      "credito": "false",
+      "remate": null
+    },
+    {
+      "id": 2,
+      "folio": 1001,
+      "documento_tipo": "TICKET",
+      "cobrado": true,
+      "total": "1160.00",
+      "credito": "false",
+      "remate": null
+    },
+    {
+      "id": 3,
+      "folio": 1002,
+      "documento_tipo": "NOTA",
+      "cobrado": false,
+      "total": "1000.00",
+      "credito": "true",
+      "remate": null
+    },
+    {
+      "id": 4,
+      "folio": 1003,
+      "documento_tipo": "TICKET",
+      "cobrado": true,
+      "total": "1000.00",
+      "credito": "false",
+      "remate": null
+    },
+    {
+      "id": 5,
+      "folio": 1004,
+      "documento_tipo": "TICKET",
+      "cobrado": true,
+      "total": "400.00",
+      "credito": "false",
+      "remate": null
+    }
+  ],
+  "profiles": [
+    {
+      "id": 1,
+      "usuario": "admin",
+      "rol": "ADMIN",
+      "perfil": null,
+      "version": null
+    },
+    {
+      "id": 2,
+      "usuario": "night56f",
+      "rol": "CONTADOR",
+      "perfil": null,
+      "version": null
+    },
+    {
+      "id": 3,
+      "usuario": "night56a",
+      "rol": "CONTADOR",
+      "perfil": "A",
+      "version": 1
+    }
+  ],
+  "closures": [
+    {
+      "tgname": "e5_closed",
+      "n": 9
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Mariana
+Activar sonido
+1
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Caja operativa
+Cartera / Estado de cuenta
+Historial de cortes
+Caja Operativa
+
+Cobro de tickets pendientes y cortes de caja.
+
+Sesión Abierta
+Realizar Corte
+Salidas de dinero
+
+Pagos operativos y extraordinarios (E4).
+
+Tipo de Salida
+Extraordinaria
+Extraordinaria
+Proveedor
+Monto
+Cuenta de origen
+Efectivo
+Efectivo
+
+E4 opera exclusivamente con Caja Física; Fondo y mezcla E12 están desactivados.
+
+Proveedor
+Sin proveedor
+Sin proveedor
+NOCTURNO56 PROVEEDOR
+Motivo
+
+Saldo Caja (servidor): 2499.00. Se revalida al confirmar; la API conserva la autoridad final.
+
+Motivo de desbloqueo extraordinario (solo si hay insuficiencia)
+Registrar salida extraordinaria
+Registro de Salidas
+ENSAYO56 salida extraordinaria
+Efectivo
+·
+04:58
+·
+EXTRAORDINARIA
+$1.00
+Pendiente
+
+Desbloqueo extraordinario de Caja
+
+ENSAYO56 ADMIN autoriza insuficiencia desechable
+
+Usuario #1 · saldo $0.00 · egreso $1.00 · 25 sep 2026, 04:58
+
+Aceptar
+Reclamar
+Tickets de Caja
+Nota folio 1002
+5:04 AM
+$1,000.00
+Ticket folio 1000
+5:00 AM
+•
+Cobrado a las 5:00 AM
+Efectivo
+$1,000.00
+VENTA FACTURADA folio 1001
+5:01 AM
+•
+Cobrado a las 5:01 AM
+Transferencia
+$1,160.00
+Ticket folio 1003
+5:04 AM
+•
+Cobrado a las 5:05 AM
+Efectivo
+$1,000.00
+Ticket folio 1004
+5:06 AM
+•
+Cobrado a las 5:06 AM
+Efectivo
+$400.00

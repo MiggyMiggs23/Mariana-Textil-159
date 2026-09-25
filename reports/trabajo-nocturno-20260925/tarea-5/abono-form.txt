@@ -1,0 +1,81 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Mariana
+Activar sonido
+1
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Caja operativa
+Cartera / Estado de cuenta
+Historial de cortes
+Estado de Cuenta
+
+Escanea el QR de la nota de crédito o ingresa el folio para consultar y abonar a la cartera.
+
+Registrar Abono
+Escáner / Folio de Nota
+
+Escanea una nota de crédito para cargar el estado de cuenta.
+
+Registrar Abono
+
+El abono se aplicará a las notas más antiguas de manera automática (FIFO).
+
+IMPORTE A ABONAR
+$
+FORMA DE PAGO
+Transferencia
+CUENTA DESTINO
+Selecciona...
+REFERENCIA (OPCIONAL)
+FECHA EFECTIVA
+NOTAS (OPCIONAL)
+Cancelar
+Vista Previa
+Cerrar

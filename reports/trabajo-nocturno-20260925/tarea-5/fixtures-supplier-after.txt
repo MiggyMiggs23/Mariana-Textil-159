@@ -1,0 +1,84 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Vista Global
+Activar sonido
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Proveedores
+
+Gestión de proveedores nacionales y de importación.
+
+Nuevo Proveedor
+Total Deuda
+$0.00
+Compras del Mes
+$0.00
+Proveedores con Saldo
+0
+Total Proveedores
+1
+Proveedores
+Historial de compras
+Análisis global
+Todos (Tipo)
+Activos
+Nombre A-Z
+Proveedor / Contacto	Tipo	Saldo	Comprado (12m)	Última Compra	Estado	Acciones
+
+NOCTURNO56 PROVEEDOR
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	Activo	
+Proveedor creado exitosamente

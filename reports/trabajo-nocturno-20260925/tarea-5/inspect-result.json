@@ -1,0 +1,22 @@
+{
+  "stage": "inspect",
+  "status": "PASS",
+  "steps": [],
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "method": "GET"
+    }
+  ]
+}

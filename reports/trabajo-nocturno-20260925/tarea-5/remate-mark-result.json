@@ -1,0 +1,100 @@
+{
+  "stage": "remate-mark",
+  "status": "PASS",
+  "steps": [
+    {
+      "status": 201,
+      "body": {
+        "rolloId": 5,
+        "remate": true
+      }
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/rollos/5",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/etiquetas/rollos/5",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/rollos/5/remate",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/locations/1/pisos",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/rollos/5/remate",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "path": "/api/inventario/rollos/5/remate",
+      "status": 200,
+      "method": "GET"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "scope": "night56_test only; no-op ADMIN ultimo_acceso UPDATE with unconditional rollback; mirrors login trigger boundary",
+  "identity": {
+    "db": "night56_test",
+    "port": 55526,
+    "directory": "/home/runner/workspace/private.local/night-t56/cluster"
+  },
+  "status": "FAIL",
+  "code": "42702",
+  "message": "column reference \"a.conciliacion_id\" is ambiguous",
+  "where": "PL/pgSQL function public.e11_graph() line 162 at IF"
+}

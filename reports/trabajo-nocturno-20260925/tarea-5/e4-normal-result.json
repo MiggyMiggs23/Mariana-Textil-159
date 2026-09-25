@@ -1,0 +1,144 @@
+{
+  "stage": "e4-normal",
+  "status": "PASS",
+  "steps": [
+    {
+      "status": 201,
+      "body": {
+        "id": 2,
+        "sesionCajaId": 1,
+        "monto": "1.00",
+        "motivo": "ENSAYO56 gasto ordinario extraordinario con saldo suficiente",
+        "proveedorId": null,
+        "cuentaOrigen": "CAJA_FISICA",
+        "creadoPorId": 1,
+        "createdAt": "2026-09-25T05:07:01.554Z",
+        "e4": {
+          "tipo": "EXTRAORDINARIA",
+          "estado": "PENDIENTE",
+          "version": 0,
+          "claveOperacion": "93bec23f-75ce-4230-97d9-6168391cbb3e",
+          "historial": [],
+          "desbloqueoCaja": null
+        }
+      }
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/caja/proveedores-activos",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/caja/tickets",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/1/salidas-dinero",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/1/salidas-dinero",
+      "status": 201,
+      "method": "POST"
+    },
+    {
+      "path": "/api/caja/proveedores-activos",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/caja/tickets",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/1/salidas-dinero",
+      "status": 200,
+      "method": "GET"
+    }
+  ]
+}

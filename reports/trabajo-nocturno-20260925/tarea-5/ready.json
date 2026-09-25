@@ -1,0 +1,9 @@
+{
+  "healthz": 200,
+  "origin": "http://127.0.0.1:43927",
+  "state": "READY_FOR_BROWSER_NOT_TESTED",
+  "apiPid": 21597,
+  "forcedFlags": [],
+  "credentials": "private.local/night-t56/credentials.json",
+  "note": "No app database discovery, dump, auth or identities. Canonical seed only."
+}

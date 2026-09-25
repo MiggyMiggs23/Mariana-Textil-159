@@ -1,0 +1,104 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Mariana
+Activar sonido
+1
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Terminal POS
+TICKET
+
+Escanea o busca artículos para la venta.
+
+Venta de Rollos (NORMAL)
+Cortes (METREADO)
+Escanea o escribe para buscar...
+Ticket de Venta
+1 renglones
+NOCTURNO56 ALGODON - AZUL
+ROLLO
+1 rollo
+NOCALG-AZU
+Precio / Mts.
+10.00 Mts.
+$400.00
+Ver series
+Requiere Factura
+
+El precio negociado es antes de IVA.
+
+Imprimir tabulares
+
+Agrega una tira por color de los rollos identificados.
+
+Total
+$400.00
+Cliente *
+Venta a Público
+
+El ticket se emitirá a nombre de Venta a Público.
+
+Venta a Público no admite compras a crédito.
+
+Confirmar Venta
+Clientes
+VENTA AL PÚBLICO
+#1
+Hilario Bonifacio
+#4
+Jacinta Mendoza
+#7
+Jesús López
+#2
+José López
+#3
+Miguel Esteban
+#6
+Rafael Flores
+#5

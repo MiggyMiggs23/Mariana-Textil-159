@@ -1,0 +1,28 @@
+Ticket #1004
+
+Mariana
+
+Cancelar Ticket
+Imprimir Ticket (80mm)
+Detalle de Operación
+
+Venta de remate · Rollos 5
+
+Emitido por Administrador
+
+Ver rollos
+Ticket por cobrar
+Cliente: VENTA AL PÚBLICO
+Producto	Rollos	Cantidad	Precio Unit.	Importe	Costo	Margen
+ROLLOS
+
+NOCTURNO56 ALGODON - AZUL
+NOCALG-AZU
+	1	10.00 Mts.	$40.00	$400.00	$500.00	-$100.00
+Subtotal Rollos	$400.00		
+Subtotal:
+$400.00
+Total:
+$400.00
+TICKET creado correctamente
+Folio: 1004

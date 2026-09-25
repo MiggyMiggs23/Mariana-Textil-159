@@ -1,0 +1,166 @@
+{
+  "stage": "sale",
+  "status": "PASS",
+  "steps": [
+    {
+      "action": "create-sale-native",
+      "status": 201,
+      "body": {
+        "id": 2,
+        "folio": 1001,
+        "ubicacionId": 1,
+        "nombreUbicacion": "Mariana",
+        "usuarioTerminalId": 1,
+        "nombreUsuarioTerminal": "Administrador",
+        "clienteId": 1,
+        "nombreCliente": "Venta a Público",
+        "notaSinPrecios": false,
+        "direccionEntregaEfectiva": null,
+        "subtotal": "1000.00",
+        "iva": "160.00",
+        "tasaIva": "0.1600",
+        "total": "1160.00",
+        "estado": "VENDIDO",
+        "cobrado": false,
+        "cobradoAt": null,
+        "usuarioCajaId": null,
+        "nombreUsuarioCaja": null,
+        "facturado": true,
+        "sesionCajaId": null,
+        "uuidCliente": "3ee345e5-8961-403b-8e9d-95c04a8a3688",
+        "createdAt": "2026-09-25T05:01:02.933Z",
+        "canceladoAt": null,
+        "canceladoPor": null,
+        "nombreUsuarioCancelacion": null,
+        "motivoCancelacion": null,
+        "autorizadoPor": null,
+        "nombreUsuarioAutorizacion": null,
+        "esCredito": false,
+        "importeCredito": "0.00",
+        "diasPlazo": null,
+        "fechaVencimiento": null,
+        "saldoPendiente": "0.00",
+        "estadoNota": null,
+        "telefonoCliente": null,
+        "correoCliente": null,
+        "direccionCliente": null,
+        "remate": false,
+        "rollosRemate": [],
+        "documentoTipo": "TICKET",
+        "autorizacionEstado": "NO_APLICA",
+        "nombreDestinatario": null,
+        "direccionEntregaSnapshot": null,
+        "convertidoANotaPorCobro": false,
+        "diasCreditoCliente": null,
+        "viaje": null,
+        "salidas": [],
+        "lineas": [
+          {
+            "id": 2,
+            "ticketId": 2,
+            "rolloId": 2,
+            "productoId": 1,
+            "tipo": "NORMAL",
+            "cantidad": "10.000",
+            "precioUnitario": "100.00",
+            "precioSugerido": "100.00",
+            "importe": "1000.00",
+            "skuProducto": "NOCALG-AZU",
+            "telaProducto": "NOCTURNO56 ALGODON",
+            "colorProducto": "AZUL",
+            "unidadProducto": "METRO",
+            "serieRollo": "10000002",
+            "nombreUbicacion": "Mariana",
+            "costoUnitarioCongelado": "50.00",
+            "costoTotalCongelado": "500.00",
+            "costoFuente": "EXACT_ROLL",
+            "margen": "500.00"
+          }
+        ],
+        "pagos": []
+      }
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/locations",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/pos/buscar",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/pos/validar-precio",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/api/tickets",
+      "status": 201,
+      "method": "POST"
+    }
+  ]
+}

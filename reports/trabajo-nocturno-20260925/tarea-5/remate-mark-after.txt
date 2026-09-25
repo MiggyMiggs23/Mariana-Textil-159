@@ -1,0 +1,86 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Vista Global
+Activar sonido
+1
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Motivo obligatorio para rollo 5Retirar remate
+Volver a inventario
+NOCTURNO56 ALGODON
+/
+AZUL
+SKU: NOCALG-AZU
+Mariana
+Sin piso
+Cambiar
+DISPONIBLE
+Cantidad Actual
+10.00 Mts.
+Costo Total
+$500.00
+$50.00 / Mts.
+Fecha de Ingreso
+25 sep 2026
+Notas
+Sin notas
+10000005
+Reimprimir Etiqueta
+Estado Operativo
+
+El rollo está marcado como DISPONIBLE y está intacto.
+
+Historial de Movimientos
+
+Trazabilidad completa desde el alta hasta el estado actual.
+
+Fecha	Tipo	Sitio	Cantidad	Saldo Posterior	Referencia	
+25/09/2026 04:55	RECEPCION		+10.00	50.00	
+Entrada MA-000001
+	

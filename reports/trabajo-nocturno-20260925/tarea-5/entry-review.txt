@@ -1,0 +1,119 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Vista Global
+Activar sonido
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+ENTRADAS
+
+Registra la mercancía que llega a un sitio. Cada rollo se da de alta con su cantidad propia y su número de serie.
+
+Costos Pendientes
+Nueva entrada
+Historial
+Captura
+Detalle del artículo
+Producto *
+
+Busca al instante; usa ↑ ↓ y Enter para seleccionar.
+
+SKU
+Cantidad de rollos *
+Costo por unidad *
+$
+Fecha y hora de entrada
+
+Fijada por el servidor · America/Mexico_City
+
+Sitio *
+Mariana
+Proveedor
+NOCTURNO56 PROVEEDOR
+Cambiar proveedor
+
+Bloqueado mientras haya líneas capturadas. Cambiarlo vaciará la captura.
+
+Notas
+Cantidad por rollo (Previsualización)
+Ingresa la cantidad de rollos para ver la previsualización.
+Agregar a la lista
+Lista de Entrada
+Mostrar filtros
+	Producto	SKU	Sitio	Rollos	Unidad	Cantidad total	Costo por metro / kilo	Costo total	Detalle
+	NOCTURNO56 ALGODON - AZUL	NOCALG-AZU	Mariana	5	METRO	50.00	$50.00 / metro	$2,500.00	
+
+TOTAL GENERAL:	5		
+METRO: 50.00
+		$2,500.00	
+Imprimir Documento
+Imprimir Etiquetas
+Cancelar
+Guardar entrada
+Línea agregada a la lista
+Se aplicó 10 a 5 rollos sin capturar
+Revisar entrada antes de guardar
+
+Verifica los datos. La entrada no se guardará ni se imprimirá hasta confirmar.
+
+PROVEEDOR
+NOCTURNO56 PROVEEDOR
+SITIO
+Mariana
+LÍNEAS
+1
+TOTAL DE ROLLOS
+5
+Cantidad total por unidad
+METRO
+50.00
+Productos
+NOCTURNO56 ALGODON - AZUL
+Cancelar y volver
+Confirmar y guardar
+Cerrar

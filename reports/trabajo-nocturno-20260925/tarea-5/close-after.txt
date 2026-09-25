@@ -1,0 +1,261 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Mariana
+Activar sonido
+1
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Caja operativa
+Cartera / Estado de cuenta
+Historial de cortes
+Caja Operativa
+
+Cobro de tickets pendientes y cortes de caja.
+
+Sesión Abierta
+Realizar Corte
+Salidas de dinero
+
+Pagos operativos y extraordinarios (E4).
+
+Tipo de Salida
+Extraordinaria
+Extraordinaria
+Proveedor
+Monto
+Cuenta de origen
+Efectivo
+Efectivo
+
+E4 opera exclusivamente con Caja Física; Fondo y mezcla E12 están desactivados.
+
+Proveedor
+Sin proveedor
+Sin proveedor
+NOCTURNO56 PROVEEDOR
+Motivo
+
+Saldo Caja (servidor): 2498.00. Se revalida al confirmar; la API conserva la autoridad final.
+
+Motivo de desbloqueo extraordinario (solo si hay insuficiencia)
+Registrar salida extraordinaria
+Registro de Salidas
+ENSAYO56 salida extraordinaria
+Efectivo
+·
+04:58
+·
+EXTRAORDINARIA
+$1.00
+Pendiente
+
+Desbloqueo extraordinario de Caja
+
+ENSAYO56 ADMIN autoriza insuficiencia desechable
+
+Usuario #1 · saldo $0.00 · egreso $1.00 · 25 sep 2026, 04:58
+
+Aceptar
+Reclamar
+ENSAYO56 gasto ordinario extraordinario con saldo suficiente
+Efectivo
+·
+05:07
+·
+EXTRAORDINARIA
+$1.00
+Pendiente
+Aceptar
+Reclamar
+Tickets de Caja
+Nota folio 1002
+5:04 AM
+$1,000.00
+Ticket folio 1000
+5:00 AM
+•
+Cobrado a las 5:00 AM
+Efectivo
+$1,000.00
+VENTA FACTURADA folio 1001
+5:01 AM
+•
+Cobrado a las 5:01 AM
+Transferencia
+$1,160.00
+Ticket folio 1003
+5:04 AM
+•
+Cobrado a las 5:05 AM
+Efectivo
+$1,000.00
+Ticket folio 1004
+5:06 AM
+•
+Cobrado a las 5:06 AM
+Efectivo
+$400.00
+Caja cerrada correctamente
+Corte y Cierre de Caja
+Fondo Inicial
+$0.00
+Total Cobrado
+$3,560.00
+IVA Cobrado
+$160.00
+Efectivo Esperado:
+$2,498.00
+
+Consulta abajo la versión del cálculo y sus documentos.
+
+Trazabilidad del efectivo esperado
+FÓRMULA E2
+
+Fondo inicial + tickets en efectivo + abonos físicos + cobros retenidos − salidas físicas.
+
+Fondo inicial
+$0.00
+Cobros físicos de tickets
+$2,400.00
+Abonos físicos de crédito
+$100.00
+Cobros físicos retenidos
+$0.00
+Salidas físicas
+− $2.00
+Efectivo esperado
+$2,498.00
+DOCUMENTOS QUE COMPONEN EL CÁLCULO
+Origen	Documento y evidencia	Importe
+Fondo inicial	
+ID 1
+Referencia: Sesión de caja #1
+Fecha: 25 sep 2026, 4:56 a.m.
+Registró: Administrador
+	$0.00
+Ticket	
+1000
+	$1,000.00
+Ticket	
+1003
+	$1,000.00
+Ticket	
+1004
+	$400.00
+Abono de crédito	
+ID ABONO_ORDINARIO:9f89fad7-27d6-4bbf-beea-370e52ab9311
+Motivo: Abono real recibido desde Caja
+Fecha: 25 sep 2026, 5:05 a.m.
+Registró: Administrador
+	$100.00
+Salida física	
+ID 1
+Motivo: ENSAYO56 salida extraordinaria
+Fecha: 25 sep 2026, 4:58 a.m.
+Registró: Administrador
+	− $1.00
+Salida física	
+ID 2
+Motivo: ENSAYO56 gasto ordinario extraordinario con saldo suficiente
+Fecha: 25 sep 2026, 5:07 a.m.
+Registró: Administrador
+	− $1.00
+
+Efectivo físico contado
+
+$2,498.00
+
+Diferencia de cierre
+
+$0.00
+
+Formas de pago
+EFECTIVO (3 tickets)
+$2,400.00
+TRANSFERENCIA (1 tickets)
+$1,160.00
+FACTURADO (0 tickets)
+$0.00
+CREDITO (0 tickets)
+$0.00
+Cuentas destino
+Efectivo
+$2,398.00
+Cuentas No Fiscales
+$0.00
+Cuentas Fiscales
+$1,160.00
+Ventas a Crédito
+$0.00
+Facturación
+Facturado (1)
+$1,160.00
+Subtotal
+$1,000.00
+IVA
+$160.00
+No facturado (3)
+$2,400.00
+Subtotal
+$2,400.00
+IVA
+$0.00
+Rollos / Metraje
+ROLLOS · 50.00 Mts.
+$4,400.00
+Productos vendidos
+ROLLO · NOCALG-AZU · NOCTURNO56 ALGODON AZUL · 50.00 Mts.
+$4,400.00
+Tickets pendientes (0)
+
+Sin tickets pendientes.
+
+Imprimir Corte
+Finalizar
+Cerrar

@@ -1,0 +1,20 @@
+{
+  "owner": "night-task56-browser",
+  "ports": {
+    "postgres": 55526,
+    "api": 43926,
+    "ui": 43927
+  },
+  "source": "/home/runner/workspace/private.local/night-t56/source",
+  "identity": {
+    "database": "night56_test",
+    "db_user": "postgres",
+    "address": "127.0.0.1",
+    "port": 55526,
+    "directory": "/home/runner/workspace/private.local/night-t56/cluster",
+    "started": "2026-09-25T04:42:28.740Z"
+  },
+  "clock": "real wall clock; no replay or reset",
+  "applicationDbAccess": false,
+  "forcedReleaseFlags": []
+}

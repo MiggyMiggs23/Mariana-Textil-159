@@ -1,0 +1,194 @@
+{
+  "stage": "pay-cash",
+  "status": "PASS",
+  "steps": [
+    {
+      "action": "pay-cash",
+      "status": 200,
+      "body": {
+        "id": 5,
+        "folio": 1004,
+        "ubicacionId": 1,
+        "nombreUbicacion": "Mariana",
+        "usuarioTerminalId": 1,
+        "nombreUsuarioTerminal": "Administrador",
+        "clienteId": 1,
+        "nombreCliente": "Venta a Público",
+        "notaSinPrecios": false,
+        "direccionEntregaEfectiva": null,
+        "subtotal": "400.00",
+        "iva": "0.00",
+        "tasaIva": "0.1600",
+        "total": "400.00",
+        "estado": "VENDIDO",
+        "cobrado": true,
+        "cobradoAt": "2026-09-25T05:06:28.219Z",
+        "usuarioCajaId": 1,
+        "nombreUsuarioCaja": null,
+        "facturado": false,
+        "sesionCajaId": 1,
+        "uuidCliente": "9057328e-6e17-4fbf-bd9f-53373419055d",
+        "createdAt": "2026-09-25T05:06:25.526Z",
+        "canceladoAt": null,
+        "canceladoPor": null,
+        "nombreUsuarioCancelacion": null,
+        "motivoCancelacion": null,
+        "autorizadoPor": null,
+        "nombreUsuarioAutorizacion": null,
+        "esCredito": false,
+        "importeCredito": "0.00",
+        "diasPlazo": null,
+        "fechaVencimiento": null,
+        "saldoPendiente": "0.00",
+        "estadoNota": null,
+        "telefonoCliente": null,
+        "correoCliente": null,
+        "direccionCliente": null,
+        "remate": true,
+        "rollosRemate": [
+          5
+        ],
+        "documentoTipo": "TICKET",
+        "autorizacionEstado": "NO_APLICA",
+        "nombreDestinatario": null,
+        "direccionEntregaSnapshot": null,
+        "convertidoANotaPorCobro": false,
+        "diasCreditoCliente": null,
+        "viaje": null,
+        "salidas": [],
+        "lineas": [
+          {
+            "id": 5,
+            "ticketId": 5,
+            "rolloId": 5,
+            "productoId": 1,
+            "tipo": "NORMAL",
+            "cantidad": "10.000",
+            "precioUnitario": "40.00",
+            "precioSugerido": "100.00",
+            "importe": "400.00",
+            "skuProducto": "NOCALG-AZU",
+            "telaProducto": "NOCTURNO56 ALGODON",
+            "colorProducto": "AZUL",
+            "unidadProducto": "METRO",
+            "serieRollo": "10000005",
+            "nombreUbicacion": "Mariana",
+            "costoUnitarioCongelado": "50.00",
+            "costoTotalCongelado": "500.00",
+            "costoFuente": "EXACT_ROLL",
+            "margen": "-100.00"
+          }
+        ],
+        "pagos": [
+          {
+            "id": 4,
+            "ticketId": 5,
+            "formaPago": "EFECTIVO",
+            "importe": "400.00",
+            "referencia": null,
+            "createdAt": "2026-09-25T05:06:28.217Z",
+            "usuarioId": 1,
+            "nombreUsuario": "Administrador"
+          }
+        ]
+      }
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/caja/proveedores-activos",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/1/salidas-dinero",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/caja/tickets",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/tickets/5",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/tickets/5/cobrar",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/api/caja/tickets",
+      "status": 200,
+      "method": "GET"
+    }
+  ]
+}

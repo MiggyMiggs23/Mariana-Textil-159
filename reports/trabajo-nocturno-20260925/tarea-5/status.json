@@ -1,0 +1,27 @@
+{
+  "status": "SUPERSEDED_BY_FINAL_RESULTS",
+  "authoritativeReport": "final-results.json",
+  "owner": "night-task56-browser",
+  "reason": "After MAIN graph correction native login passes. Actual browser created supplier/product/entry of five rolls, opened zero-initial cash, rejected E4 missing reason and insufficient balance without unlock, then ADMIN explicit unlock created a 1.00 extraordinary exit and reload verified persisted record. POS sale blocked by /api/pos/validar-precio HTTP500; read-only confirms missing tarea4_rollo_remate table used by released validator. No ticket created, no gate forced. Source/business SQL fixes belong to MAIN.",
+  "runner": "reports/trabajo-nocturno-20260925/tarea-5/runner.mjs",
+  "browser": "reports/trabajo-nocturno-20260925/tarea-5/browser-smoke.mjs",
+  "portsReservedByPlanOnly": {"postgres": 55526, "api": 43926, "ui": 43927},
+  "privateRoot": "private.local/night-t56",
+  "database": "night56_test",
+  "witnessDatabase": "night56_witness",
+  "coverage": ["native ADMIN login", "UI supplier and product creation", "UI received entry with supplier and five full rolls", "UI cash opening", "E4 missing reason HTML rejection", "E4 insufficient balance rejection without unlock", "E4 ADMIN explicit unlock HTTP201 and persisted UI readback"],
+  "screenshots": ["login-before.png", "login-after.png", "fixtures-supplier-before.png", "fixtures-supplier-after.png", "fixtures-product-before.png", "fixtures-product-after.png", "entry-review.png", "entry-saved.png", "cash-open-before.png", "cash-open-after.png", "sale-blocked.png", "e4-missing-reason.png", "e4-insufficient.png", "e4-unlock-before.png", "e4-verify-persisted.png"],
+  "pendingBrowserCases": [
+    "Create complete supplier/entry/reception/stock provenance using canonical seeded ADMIN, without synthetic actors.",
+    "Native cash sale; transfer sale; credit note; ordinary abono; receipt and reprint, asserting persisted evidence and before/after screenshot for each.",
+    "Extraordinary exit: missing reason, valid reason, insufficient cash, ADMIN unlock.",
+    "Remate roll sale. Close caja LAST; assert counted versus expected and cut totals. Never reopen same site/day.",
+    "Directed and retained: await task1 candidate, real ADMIN approve/reject, exact outstanding amount and partial authorization; no flag forcing."
+  ],
+  "blockedCases": [
+    {"case":"roll return with debt","reason":"Task3 monetary rule conflict STOP; no physical-return implementation or bypass authorized"},
+    {"case":"roll return paid/refund","reason":"Task3 monetary rule conflict and E5 refund gate closed"}
+  ],
+  "gatesNeverForced": ["E5refund", "Fondo", "E12", "historicalAttribution"],
+  "safety": "Fresh canonical seed only; no application DB discovery or auth; no restarts, reconnect retries, commits, business source edits, mocked network, or API-only monetary substitutes."
+}

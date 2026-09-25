@@ -1,0 +1,17 @@
+{
+  "status": "STOP",
+  "coverage": "canonical ADMIN native login only",
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/login",
+      "status": 500,
+      "method": "POST"
+    }
+  ],
+  "error": "page.waitForURL: Timeout 15000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================"
+}

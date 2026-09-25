@@ -1,0 +1,34 @@
+{
+  "status": "PARTIAL_ACTUAL_BROWSER_COVERAGE",
+  "database": "night56_test",
+  "ports": {"postgres": 55526, "api": 43926, "ui": 43927},
+  "identityEvidence": "final-db-readback.json",
+  "source": "unchanged private.local/night-t56/source; no rebuild or workflow restart",
+  "passes": [
+    {"case":"Native canonical ADMIN session","evidence":"browser-login.json"},
+    {"case":"Supplier, product, five full rolls received with supplier provenance via UI","evidence":["fixtures-result.json","entry-result.json"]},
+    {"case":"Cash opening, zero initial cash","evidence":"cash-open-result.json"},
+    {"case":"Cash sale and actual collection, ticket1000, 1000.00","evidence":["sale-cash-result.json","pay-cash-ticket1-result.json"]},
+    {"case":"Invoiced transfer sale and collection, ticket1001, 1160.00 including160 IVA","evidence":["sale-transfer-result.json","pay-transfer-result.json"]},
+    {"case":"Credit terms and credit note1002 authorized by ADMIN, 1000.00, seven days","evidence":["credit-terms-result.json","credit-sale-result.json","authorize-credit-result.json"]},
+    {"case":"Ordinary FIFO cash abono100.00 actually registered once; receipt E3-1-00000001","evidence":["abono-blocked.png","abono-blocked.txt","receipt-before.png","close-result.json"],"caveat":"Abono runner erroneously waited for URL containing confirm; actual POST /api/caja/abonos-e3 returned201 and UI showed Abono Registrado. Never resubmitted. Matcher corrected for future runs; this is harness timing/status error, not product failure."},
+    {"case":"Receipt display and two real print/reprint button clicks; both print audit responses200","evidence":"receipt-result.json","caveat":"No claim of physical printer output"},
+    {"case":"E4 missing-reason rejection, insufficient-cash rejection without unlock, ADMIN reason+unlock accepted","evidence":["e4-result.json","e4-verify-result.json"]},
+    {"case":"E4 sufficient-cash extraordinary exit with reason accepted without unlock","evidence":"e4-normal-result.json"},
+    {"case":"Roll5 marked remate, discounted below cost to40/m, remate sale400 and cash collection","evidence":["remate-mark-result.json","sale-result.json","pay-cash-result.json"],"assertion":"Ticket5 response remate=true, rollosRemate=[5]"},
+    {"case":"Cash closure LAST; expected2498, counted2498, difference0.00, state CERRADA","evidence":["close-result.json","close-before.png","close-after.png","final-db-readback.json"]}
+  ],
+  "blocked": [
+    {"case":"E5 directed/retained approve/reject","reason":"Frozen source E5 not enabled; all nine e5_closed triggers retained. No new candidate swapped into running frozen tree."},
+    {"case":"Physical return with debt and paid refund","reason":"Task3 monetary conflict STOP; E5 refund remains closed"}
+  ],
+  "disposableDDL": {
+    "evidence":"released-provision-result.json",
+    "remate":"Exact released reports/tanda-d-20260923/tarea1-up.sql",
+    "E11":"Exact MAIN-authorized rehearsed task2 candidate removes eight documentary closures only",
+    "graph":"Worker-applied fingerprint085a297c1439f5b0dde4e99df36e4edf verified, not overwritten",
+    "E5closed":9
+  },
+  "operationalState": "Cash session closed; API/UI/PostgreSQL processes still owned by MAIN for final teardown. Do not reopen same site/day.",
+  "claimsExcluded": ["application DB changes", "new release validation", "physical printer success", "E5 open", "Fondo open", "E12 open", "historical attribution open"]
+}

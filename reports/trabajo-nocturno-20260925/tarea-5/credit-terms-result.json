@@ -1,0 +1,151 @@
+{
+  "stage": "credit-terms",
+  "status": "PASS",
+  "steps": [
+    {
+      "status": 200,
+      "body": {
+        "clienteId": 2,
+        "limiteCredito": "5000.00",
+        "diasCredito": 7
+      }
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/2/credito",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/2",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/2/compras",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/2/comportamiento-pago",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/cartera",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/2/analitica",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/2/estadisticas",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/locations",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/2/pagos",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/2/precios",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/2/evidencia-credito",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/2/documentos",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/pagos-dirigidos",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/2/credito",
+      "status": 200,
+      "method": "PATCH"
+    },
+    {
+      "path": "/api/clientes/2/credito",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/clientes/2",
+      "status": 200,
+      "method": "GET"
+    }
+  ]
+}

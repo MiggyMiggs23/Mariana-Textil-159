@@ -1,0 +1,92 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Vista Global
+Activar sonido
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Catálogo de Productos
+
+Gestión de telas, colores, SKUs e inventario general.
+
+Importar
+Nuevo Producto
+Todos los prod.
+Todos los colores
+Todas las unid.
+Activos
+Columnas:
+Ancho
+Composición
+Gramaje
+
+No se encontraron productos que coincidan con la búsqueda.
+
+Nuevo Producto
+
+Agrega una nueva combinación de tela y color al catálogo.
+
+Tela
+Color
+Unidad de Medida
+Mts.
+Precio Sugerido (opcional)
+SKU del Producto
+Personalizar
+NOCALG-AZU
+
+Vista previa no autoritativa. El servidor asignará el SKU definitivo y resolverá colisiones al guardar.
+
+Especificaciones (opcionales)
+Ancho (cm)
+Gramaje (g/m²)
+Composición
+Notas (Opcional)
+Cancelar
+Guardar Producto
+Cerrar

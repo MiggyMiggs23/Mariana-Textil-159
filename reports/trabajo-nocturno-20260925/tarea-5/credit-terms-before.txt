@@ -1,0 +1,178 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Vista Global
+Activar sonido
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Jesús López
+Activo
+
+Cliente #2 · Alta 25 sep 2026
+
+Comportamiento de pago
+Historial insuficiente
+
+0% · 0 notas evaluadas, 0 liquidadas
+
+Abiertas vigentes excluidas: 0 · Vencidas impagas: 0
+
+Todo el historial autorizado hasta hoy. Mide por nota liquidada si se pagó a más tardar en su vencimiento; incluye vencidas impagas como tardías y excluye abiertas aún no vencidas.
+
+Editar datos
+Dar de baja
+Recaptura Histórica
+Utilidad acumulada
+
+••••••
+
+Se excluyeron 0 línea(s) sin costo asignado.
+
+Saldos del cliente
+
+SALDO DEUDOR
+
+—
+
+Rojo significa dinero pendiente de cobro.
+
+SALDO A FAVOR
+
+—
+
+Verde significa dinero recibido disponible para aplicar.
+
+Datos
+Crédito
+Estado de cuenta
+Compras
+Analítica
+Editar términos
+Límite
+
+$0.00
+
+Saldo actual
+
+$0.00
+
+Saldo a favor
+
+—
+
+Disponible
+
+$0.00
+
+Plazo habitual
+
+Sin plazo
+
+Total vencido
+
+$0.00
+
+Utilización
+0.00%
+Antigüedad real
+
+Sin saldo pendiente.
+
+Actividad del periodo
+
+ÚLTIMA COMPRA
+
+Sin compras
+
+TICKETS
+
+0
+
+TICKET PROMEDIO
+
+—
+
+TICKET MÁXIMO
+
+—
+
+Resume tickets y montos monetarios del cliente en el periodo elegido.
+
+Mezcla de pagos
+
+Sin pagos en el periodo.
+
+Suma importes monetarios y movimientos por forma de pago del cliente en el periodo elegido.
+
+Tendencia mensual
+
+Sin tendencia disponible.
+
+Agrupa tickets y ventas monetarias del cliente por mes dentro del periodo elegido.
+
+Productos por unidad, tela y color
+
+Sin productos en el periodo.
+
+Agrupa cantidad por unidad, ventas y utilidad monetaria del cliente por producto en el periodo elegido; la utilidad requiere costo.
+
+Origen y evidencia de crédito
+
+No hay evidencia visible en tu alcance.
+
+Ver salidas pendientes a cobro de este cliente
+Solicitudes de pago dirigido
+
+Sin solicitudes para esta entidad.
+
+Editar términos de crédito
+Límite de crédito
+Plazo habitual de crédito
+7 días
+Guardar términos
+Cerrar
