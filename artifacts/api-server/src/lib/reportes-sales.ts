@@ -1,4 +1,5 @@
 import { pool } from "@workspace/db";
+import { COMMERCIAL_RETURN_HISTORICAL_SALES_NOTICE } from "./commercial-return-contract";
 import { accountedDocumentAt, accountedDocumentPredicate } from "./accounted-document";
 
 export interface DomainReportContext {
@@ -270,7 +271,7 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
         number(ago?.tickets) ? number(ago?.ventas) / number(ago?.tickets) : 0, true),
     ];
   });
-  const warnings: string[] = [];
+  const warnings: string[] = [COMMERCIAL_RETURN_HISTORICAL_SALES_NOTICE];
 
   const dimensions = async (id: string, title: string, expression: string, group = expression, extra = "") => {
     const result = await pool.query(`SELECT ${expression} dimension,l.tipo,p.unidad,COALESCE(SUM(l.cantidad),0)::float cantidad,

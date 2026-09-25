@@ -13,4 +13,5 @@ export const ClientePagoDetalleTipo = {
   ABONO: 'ABONO',
   REVERSO: 'REVERSO',
   AJUSTE: 'AJUSTE',
+  DEVOLUCION_COMERCIAL: 'DEVOLUCION_COMERCIAL',
 } as const;

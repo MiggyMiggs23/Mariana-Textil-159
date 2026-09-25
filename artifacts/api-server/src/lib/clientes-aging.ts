@@ -96,7 +96,7 @@ export type TicketCreditMovement = {
   ticketId: number | null;
   directedMovimientoId?: number | null;
   movimientoOrigenId?: number | null;
-  tipo: "VENTA_CREDITO" | "ABONO" | "REVERSO" | "AJUSTE";
+  tipo: "VENTA_CREDITO" | "ABONO" | "REVERSO" | "AJUSTE" | "DEVOLUCION_COMERCIAL";
   importe: string | number;
   diasPlazo?: number | null;
   fechaVencimiento?: string | Date | null;

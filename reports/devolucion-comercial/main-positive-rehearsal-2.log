@@ -1,0 +1,33 @@
+/home/runner/workspace/node_modules/.pnpm/pg@8.22.0/node_modules/pg/lib/client.js:652
+          Error.captureStackTrace(err)
+                ^
+
+error: new row for relation "operaciones_credito_e1" violates check constraint "operaciones_json_ck_e1"
+    at /home/runner/workspace/node_modules/.pnpm/pg@8.22.0/node_modules/pg/lib/client.js:652:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async insert (/home/runner/workspace/reports/devolucion-comercial/run-positive-rehearsal.ts:38:18)
+    at async seed (/home/runner/workspace/reports/devolucion-comercial/run-positive-rehearsal.ts:81:5)
+    at async <anonymous> (/home/runner/workspace/reports/devolucion-comercial/run-positive-rehearsal.ts:183:19) {
+  length: 360,
+  severity: 'ERROR',
+  code: '23514',
+  detail: 'Failing row contains (VENTA_CREDITO, d2586c86-7886-468c-a3fb-af4f319bd07f, OPERACION_CREDITO_SIN_DINERO, 1, {}, 2026-09-25 14:33:46.502378+00).',
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: 'public',
+  table: 'operaciones_credito_e1',
+  column: undefined,
+  dataType: undefined,
+  constraint: 'operaciones_json_ck_e1',
+  file: 'execMain.c',
+  line: '2062',
+  routine: 'ExecConstraints'
+}
+
+Node.js v24.13.0
+undefined
+/home/runner/workspace/artifacts/api-server:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: tsx ../../reports/devolucion-comercial/run-positive-rehearsal.ts

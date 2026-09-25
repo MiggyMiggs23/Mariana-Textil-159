@@ -77,6 +77,114 @@ tags:
   - name: equipos
     description: Registro de equipo del sistema y su configuración por sitio
 paths:
+  /devoluciones-comerciales/vista-previa:
+    post:
+      operationId: previewCommercialReturn
+      tags: [pos]
+      summary: Revisar importes exactos y elegibilidad sin registrar movimientos
+      description: Solo ADMIN, CLOSED. Revalida nota, cantidad íntegra, pagos monetarios, caja del día y efectivo. No reserva los importes.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [uuidCliente, ticketId, lineaId, ubicacionRecepcionId, sesionCajaId, cantidad, motivo]
+              properties:
+                uuidCliente: { type: string, format: uuid }
+                ticketId: { type: integer, minimum: 1 }
+                lineaId: { type: integer, minimum: 1 }
+                ubicacionRecepcionId: { type: integer, minimum: 1 }
+                sesionCajaId: { type: integer, minimum: 1 }
+                cantidad: { type: string, pattern: '^(0|[1-9][0-9]{0,6})\.[0-9]{3}$' }
+                motivo: { type: string, minLength: 1, maxLength: 400 }
+      responses:
+        "200":
+          description: Revisión exacta del servidor, sin movimiento nuevo
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required: [ticketId, lineaId, serie, ubicacionRecepcionId, sesionCajaId, cantidad, importeRollo, deudaCancelada, efectivoDevuelto]
+                properties:
+                  ticketId: { type: integer }
+                  lineaId: { type: integer }
+                  serie: { type: string }
+                  ubicacionRecepcionId: { type: integer }
+                  sesionCajaId: { type: integer }
+                  cantidad: { type: string }
+                  importeRollo: { type: string }
+                  deudaCancelada: { type: string }
+                  efectivoDevuelto: { type: string }
+        "403": { description: CLOSED o no ADMIN }
+        "409": { description: Elegibilidad o reparto no comprobables }
+  /devoluciones-comerciales:
+    post:
+      operationId: createCommercialReturn
+      tags: [pos]
+      summary: Recibir un rollo completo y registrar su devolución comercial
+      description: |
+        Candidato CLOSED. Solo ADMIN. Movimiento nuevo: no revierte venta ni corte.
+        Deuda dirigida sin saldo a favor; dinero pagado sale de la caja abierta del día.
+        No admite fracciones de centavo ni liquidaciones no monetarias.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [uuidCliente, ticketId, lineaId, ubicacionRecepcionId, sesionCajaId, cantidad, motivo, revision]
+              properties:
+                uuidCliente: { type: string, format: uuid }
+                ticketId: { type: integer, minimum: 1 }
+                lineaId: { type: integer, minimum: 1 }
+                ubicacionRecepcionId: { type: integer, minimum: 1 }
+                sesionCajaId: { type: integer, minimum: 1 }
+                cantidad: { type: string, pattern: '^(0|[1-9][0-9]{0,6})\.[0-9]{3}$' }
+                motivo: { type: string, minLength: 1, maxLength: 400 }
+                revision:
+                  type: object
+                  additionalProperties: false
+                  required: [importeRollo, deudaCancelada, efectivoDevuelto]
+                  description: Importes revisados; cualquier cambio al confirmar rechaza toda la operación.
+                  properties:
+                    importeRollo: { type: string, pattern: '^(0|[1-9][0-9]*)\.[0-9]{2}$' }
+                    deudaCancelada: { type: string, pattern: '^(0|[1-9][0-9]*)\.[0-9]{2}$' }
+                    efectivoDevuelto: { type: string, pattern: '^(0|[1-9][0-9]*)\.[0-9]{2}$' }
+      responses:
+        "201":
+          description: Evidencia inmutable de la devolución, o misma respuesta para reintento idéntico
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required: [id, ticketId, lineaId, rolloId, serie, ubicacionRecepcionId, sesionCajaId, cantidad, importeRollo, deudaCancelada, efectivoDevuelto, motivo, createdAt]
+                properties:
+                  id: { type: string, format: uuid }
+                  ticketId: { type: integer }
+                  lineaId: { type: integer }
+                  rolloId: { type: integer }
+                  serie: { type: string }
+                  ubicacionRecepcionId: { type: integer }
+                  sesionCajaId: { type: integer }
+                  cantidad: { type: string }
+                  importeRollo: { type: string }
+                  deudaCancelada: { type: string }
+                  efectivoDevuelto: { type: string }
+                  motivo: { type: string }
+                  createdAt: { type: string, format: date-time }
+        "400":
+          description: Datos inválidos
+        "403":
+          description: CLOSED o no ADMIN
+        "404":
+          description: Documento o sitio fuera de alcance
+        "409":
+          description: Cantidad, conciliación, reparto exacto, procedencia de pago, caja o idempotencia incompatibles
   /inventario/rollos/{id}/remate:
     parameters:
       - in: path
@@ -6082,7 +6190,7 @@ paths:
             in: query,
             name: fuente,
             description: Filtra el mismo detalle canónico que alimenta los agregados.,
-            schema: { type: array, uniqueItems: true, items: { type: string, enum: [POS, CREDITO, ABONO, ABONO_SALDO_FAVOR] } },
+            schema: { type: array, uniqueItems: true, items: { type: string, enum: [POS, CREDITO, ABONO, ABONO_SALDO_FAVOR, DEVOLUCION_COMERCIAL] } },
           }
         - {
             in: query,
@@ -10673,7 +10781,7 @@ components:
         registro: { type: string }
         formaPago: { type: string }
         facturado: { type: boolean }
-        fuente: { type: string, enum: [POS, CREDITO, ABONO, ABONO_SALDO_FAVOR, REVERSO_ABONO, REVERSO_ABONO_SALDO_FAVOR, E5_RECEPCION, E5_DEVOLUCION] }
+        fuente: { type: string, enum: [POS, CREDITO, ABONO, ABONO_SALDO_FAVOR, REVERSO_ABONO, REVERSO_ABONO_SALDO_FAVOR, E5_RECEPCION, E5_DEVOLUCION, DEVOLUCION_COMERCIAL] }
         e5CobroId: { type: ["string", "null"], format: uuid, description: "Identidad documental E5; no confundir con el ID numérico del cliente." }
         incongruente: { type: boolean }
     AdminCuentaDestinoMovimientos:
@@ -10773,6 +10881,7 @@ components:
                 saldosFavor: { type: string }
                 recepcionesRetenidas: { type: string, description: Recepciones E5 reales del periodo; no aplicaciones. }
                 devolucionesRetenidas: { type: string, description: Salidas E5 de caja o cuenta del periodo, importe positivo a restar; excluye Fondo. }
+                devolucionesComerciales: { type: string, description: Efectivo devuelto por devoluciones comerciales registradas en el periodo y tienda receptora; positivo a restar, nunca deuda cancelada. }
                 total: { type: string }
                 totalAnterior: { type: ["string", "null"] }
                 variacionPorcentaje: { type: ["string", "null"] }
@@ -11868,7 +11977,11 @@ components:
         clienteNombre:
           { type: string, description: Nombre del cliente al que pertenece el movimiento. }
         tipo:
-          { type: string, enum: [ABONO, REVERSO, AJUSTE] }
+          { type: string, enum: [ABONO, REVERSO, AJUSTE, DEVOLUCION_COMERCIAL] }
+        devolucionComercial:
+          type: object
+          description: Documento inmutable nuevo; no es un abono ni un reverso.
+          additionalProperties: true
         importe:
           { type: string, description: Importe firmado del movimiento. }
         fechaEfectiva:

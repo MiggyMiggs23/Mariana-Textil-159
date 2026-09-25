@@ -8,6 +8,7 @@
 import type { ClientePagoAplicacionDetalle } from './clientePagoAplicacionDetalle';
 import type { ClientePagoAuditoria } from './clientePagoAuditoria';
 import type { ClientePagoDetalleCuentaDestino } from './clientePagoDetalleCuentaDestino';
+import type { ClientePagoDetalleDevolucionComercial } from './clientePagoDetalleDevolucionComercial';
 import type { ClientePagoDetalleFormaPago } from './clientePagoDetalleFormaPago';
 import type { ClientePagoDetalleReparto } from './clientePagoDetalleReparto';
 import type { ClientePagoDetalleTipo } from './clientePagoDetalleTipo';
@@ -34,6 +35,8 @@ export interface ClientePagoDetalle {
   /** Nombre del cliente al que pertenece el movimiento. */
   clienteNombre?: string;
   tipo?: ClientePagoDetalleTipo;
+  /** Documento inmutable nuevo; no es un abono ni un reverso. */
+  devolucionComercial?: ClientePagoDetalleDevolucionComercial;
   /** Importe firmado del movimiento. */
   importe?: string;
   fechaEfectiva?: Date;

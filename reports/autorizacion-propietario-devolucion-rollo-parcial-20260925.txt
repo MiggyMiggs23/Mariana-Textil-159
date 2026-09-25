@@ -1,0 +1,7 @@
+Autorización del propietario. Guarda este texto tal cual en reports/ antes de la primera escritura.
+
+Nota parcialmente pagada cuyo rollo se devuelve completo: se cancela la deuda que quedaba por ese rollo y se devuelve desde la caja abierta del día lo que el cliente ya había pagado por él, solo ADMIN y con motivo obligatorio. Nunca queda saldo a favor. En el ejemplo de $1,000 con $800 pagados y $200 de deuda: se cancelan los $200 y se devuelven los $800.
+
+Si la nota ampara varios rollos y solo se devuelve uno, aplica lo mismo proporcionalmente a ese rollo: se cancela su parte de deuda y se devuelve lo que ya se había pagado de él. Si el reparto de lo pagado entre los rollos de una nota no se puede determinar con certeza, detente y repórtamelo en vez de suponerlo.
+
+Regístralo en replit.md y en reports/prompt-u-respuestas-2026-09-18.md, constrúyelo y libéralo con el procedimiento simple. Después continúa con lo pendiente de la noche.

@@ -29,7 +29,7 @@ export type CreditLedgerMovement = {
   ticketId: number | null;
   directedMovimientoId?: number | null;
   movimientoOrigenId?: number | null;
-  tipo: "VENTA_CREDITO" | "ABONO" | "REVERSO" | "AJUSTE";
+  tipo: "VENTA_CREDITO" | "ABONO" | "REVERSO" | "AJUSTE" | "DEVOLUCION_COMERCIAL";
   importe: string | number;
   createdAt: Date;
   fechaVencimiento?: string | Date | null;
@@ -259,7 +259,7 @@ function projectCreditLedgerCore(movements: CreditLedgerMovement[]): {
   }
   const sourceMovements = ordered.filter((movement) => {
     const amount = cents(movement.importe);
-    return (movement.tipo === "ABONO" &&
+    return movement.tipo === "DEVOLUCION_COMERCIAL" || (movement.tipo === "ABONO" &&
       !reversedAbonos.has(movement.id)) ||
       (movement.tipo === "AJUSTE" && amount < 0);
   });
@@ -325,6 +325,24 @@ function projectCreditLedgerCore(movements: CreditLedgerMovement[]): {
     !target.preventImplicitFavor || movementPrecedes(target, source);
 
   for (const source of sourceMovements) {
+    // Commercial returns extinguish only this note's debt at this chronological
+    // point. They are NOT receipts, reversals, or reusable customer credit.
+    // In particular, never shrink the original charge before allocating the
+    // older receipts: that would release refunded money into customer favor.
+    if (source.tipo === "DEVOLUCION_COMERCIAL") {
+      const targetId = source.movimientoOrigenId;
+      const target = targetId == null ? undefined : targetById.get(targetId);
+      const reduction = -cents(source.importe);
+      const pending = targetId == null ? undefined : balances.get(targetId);
+      if (!target || target.tipo !== "VENTA_CREDITO" ||
+          target.ticketId !== source.ticketId || !movementPrecedes(target, source) ||
+          !Number.isSafeInteger(reduction) || reduction < 0 ||
+          pending == null || reduction > pending) {
+        throw new Error("DEVOLUCION_COMERCIAL_LEDGER_INVALIDO: cancelación dirigida incompatible con la deuda.");
+      }
+      balances.set(target.id, pending - reduction);
+      continue;
+    }
     let remainingCents = Math.max(
       0,
       Math.max(0, -cents(source.importe)) -
@@ -417,7 +435,7 @@ function projectCreditLedgerCore(movements: CreditLedgerMovement[]): {
     allCharges,
     allocations: [...allocations, ...explicitAllocations],
     overpaymentCents,
-    overpaymentSources: sourceMovements.map((movement) => ({
+    overpaymentSources: sourceMovements.filter(movement => movement.tipo !== "DEVOLUCION_COMERCIAL").map((movement) => ({
       movementId: movement.id,
       availableCents: overpaymentSources.get(movement.id) ?? 0,
       tipo: movement.tipo,
@@ -540,7 +558,7 @@ export function projectCreditLedger(
     options.includeAllocationTraces === true;
   const movementProjections = options.includeMovementProjections === true
     ? ordered.some((movement) =>
-        movement.tipo === "REVERSO" ||
+        movement.tipo === "REVERSO" || movement.tipo === "DEVOLUCION_COMERCIAL" ||
         movement.directedMovimientoId != null ||
         (movement.explicitFavorApplications?.length ?? 0) > 0)
       ? ordered.map((_, index) => {

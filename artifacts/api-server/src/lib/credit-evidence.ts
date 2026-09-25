@@ -66,6 +66,9 @@ export async function insertCreditMovementE1(
   input: CreditEvidenceInput,
   productor: CreditProducer,
 ): Promise<typeof movimientosCreditoTable.$inferSelect> {
+  if (movement.tipo === "DEVOLUCION_COMERCIAL") {
+    throw new CreditEvidenceError("La devolución comercial requiere su productor dedicado y evidencia completa.");
+  }
   const evidence = readCreditEvidenceInput(input);
   assertCreditProducerNature(productor, evidence.naturaleza);
   assertCreditCaptureEnabled(evidence, movement.formaPago, productor, movement.tipo);

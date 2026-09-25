@@ -319,7 +319,7 @@ export const operacionesCreditoE1Table = pgTable("operaciones_credito_e1", {
   check("operaciones_json_ck_e1", sql`jsonb_typeof(${table.solicitudCanonica}) = 'object' AND ${table.solicitudCanonica} <> '{}'::jsonb`),
   check("operaciones_fecha_ck_e1", sql`isfinite(${table.createdAt})`),
   check("operaciones_productor_naturaleza_ck_e1", sql`
-    (${table.productor} IN ('VENTA_CREDITO', 'CANCELACION_VENTA_CREDITO', 'E5_APLICACION_RETENIDA') AND ${table.naturaleza} = 'OPERACION_CREDITO_SIN_DINERO')
+    (${table.productor} IN ('VENTA_CREDITO', 'CANCELACION_VENTA_CREDITO', 'E5_APLICACION_RETENIDA', 'DEVOLUCION_COMERCIAL') AND ${table.naturaleza} = 'OPERACION_CREDITO_SIN_DINERO')
     OR (${table.productor} IN ('AJUSTE_MANUAL', 'BAJA_INCOBRABLE') AND ${table.naturaleza} = 'CORRECCION_CONTABLE')
     OR (${table.productor} IN ('ABONO_ORDINARIO', 'ABONO_DIRIGIDO') AND ${table.naturaleza} IN ('INGRESO_FISICO', 'CORRECCION_CONTABLE'))
     OR (${table.productor} = 'REVERSO_ABONO' AND ${table.naturaleza} IN ('DEVOLUCION_FISICA', 'CORRECCION_CONTABLE'))
@@ -420,7 +420,8 @@ export const movimientosCreditoTable = pgTable(
       sql`(${table.tipo} = 'VENTA_CREDITO' AND ${table.importe} > 0)
         OR (${table.tipo} = 'ABONO' AND ${table.importe} < 0)
         OR (${table.tipo} = 'REVERSO' AND ${table.importe} <> 0)
-        OR (${table.tipo} = 'AJUSTE' AND ${table.importe} <> 0)`,
+        OR (${table.tipo} = 'AJUSTE' AND ${table.importe} <> 0)
+        OR (${table.tipo} = 'DEVOLUCION_COMERCIAL' AND ${table.importe} <= 0)`,
     ),
     check(
       "movimientos_credito_plazo_check",

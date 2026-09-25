@@ -1893,6 +1893,43 @@ export const DOCUMENTO_TICKET_PIEZA_NORMAL = "TICKET_PIEZA_NORMAL";
  * DISPONIBLE → VENDIDO. Records VENTA (negative).
  * Must be DISPONIBLE – MOSTRADOR rolls already left inventory.
  */
+/** New commercial inbound movement; never reverse the original VENTA. */
+export async function recibirDevolucionComercial(
+  tx: Tx,
+  input: { rolloId: number; ticketId: number; ubicacionId: number; cantidad: string; usuarioId: number; id: string; motivo: string; validarSolo?: boolean },
+): Promise<typeof movimientosTable.$inferSelect> {
+  const [candidate] = await tx.select().from(rollosTable).where(eq(rollosTable.id, input.rolloId)).limit(1);
+  if (!candidate) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  await lockInventoryPairs(tx, [candidate, { productoId: candidate.productoId, ubicacionId: input.ubicacionId }]);
+  const [rollo] = await tx.select().from(rollosTable).where(eq(rollosTable.id, input.rolloId)).for("update");
+  if (!rollo || rollo.productoId !== candidate.productoId || rollo.ubicacionId !== candidate.ubicacionId) {
+    throw new InventarioError("El rollo cambió; vuelve a consultar.", "ROLLO_CAMBIO");
+  }
+  await assertNoActiveVentaClienteReservation(tx, [input.rolloId]);
+  const [last] = await tx.select().from(movimientosTable).where(eq(movimientosTable.rolloId, input.rolloId))
+    .orderBy(desc(movimientosTable.id)).limit(1);
+  const quantity = quantityToThousandthsBigInt(input.cantidad);
+  if (rollo.estado !== "VENDIDO" || quantity <= 0n || !last || last.tipo !== "VENTA" ||
+      last.documentoId !== String(input.ticketId) ||
+      !["TICKET", DOCUMENTO_TICKET_BOLSA_NORMAL, DOCUMENTO_TICKET_PIEZA_NORMAL].includes(last.documentoTipo ?? "") ||
+      quantityToThousandthsBigInt(last.cantidad) !== -quantity) {
+    throw new InventarioError("Solo se admite el rollo completo, con la cantidad exacta de su última venta.", "DEVOLUCION_NO_INTEGRA");
+  }
+  if (input.validarSolo) return last;
+  await tx.update(rollosTable).set({
+    estado: "DISPONIBLE", cantidadActual: input.cantidad, ubicacionId: input.ubicacionId, pisoId: null,
+  }).where(eq(rollosTable.id, input.rolloId));
+  const movement = await insertMovimiento(tx, {
+    rolloId: input.rolloId, productoId: rollo.productoId, ubicacionId: input.ubicacionId,
+    tipo: "DEVOLUCION", cantidad: input.cantidad, usuarioId: input.usuarioId,
+    justificacion: input.motivo, documentoTipo: "DEVOLUCION_COMERCIAL", documentoId: input.id,
+    estadoRolloAntes: physicalRollState(rollo),
+  });
+  await refreshCache(tx, rollo.productoId, rollo.ubicacionId);
+  if (rollo.ubicacionId !== input.ubicacionId) await refreshCache(tx, rollo.productoId, input.ubicacionId);
+  return movement;
+}
+
 export async function venderRollo(
   tx: Tx,
   input: VenderRolloInput,

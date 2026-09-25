@@ -3777,6 +3777,7 @@ export const AdminCuentaDestinoMovimientoFuente = {
   REVERSO_ABONO_SALDO_FAVOR: 'REVERSO_ABONO_SALDO_FAVOR',
   E5_RECEPCION: 'E5_RECEPCION',
   E5_DEVOLUCION: 'E5_DEVOLUCION',
+  DEVOLUCION_COMERCIAL: 'DEVOLUCION_COMERCIAL',
 } as const;
 
 export interface AdminCuentaDestinoMovimiento {
@@ -3879,6 +3880,8 @@ export type AdminCuentasDestinoEncabezadoCobrado = {
   recepcionesRetenidas?: string;
   /** Salidas E5 de caja o cuenta del periodo */
   devolucionesRetenidas?: string;
+  /** Efectivo devuelto por devoluciones comerciales registradas en el periodo y tienda receptora; positivo a restar */
+  devolucionesComerciales?: string;
   total: string;
   /** @nullable */
   totalAnterior: string | null;
@@ -5447,7 +5450,13 @@ export const ClientePagoDetalleTipo = {
   ABONO: 'ABONO',
   REVERSO: 'REVERSO',
   AJUSTE: 'AJUSTE',
+  DEVOLUCION_COMERCIAL: 'DEVOLUCION_COMERCIAL',
 } as const;
+
+/**
+ * Documento inmutable nuevo; no es un abono ni un reverso.
+ */
+export type ClientePagoDetalleDevolucionComercial = { [key: string]: unknown };
 
 export interface ClientePagoDetalle {
   id: number;
@@ -5471,6 +5480,8 @@ export interface ClientePagoDetalle {
   /** Nombre del cliente al que pertenece el movimiento. */
   clienteNombre?: string;
   tipo?: ClientePagoDetalleTipo;
+  /** Documento inmutable nuevo; no es un abono ni un reverso. */
+  devolucionComercial?: ClientePagoDetalleDevolucionComercial;
   /** Importe firmado del movimiento. */
   importe?: string;
   fechaEfectiva?: string;
@@ -9718,6 +9729,86 @@ export type AnalyticsHastaParameter = string;
 
 export type AnalyticsUbicacionIdParameter = number;
 
+export type PreviewCommercialReturnBody = {
+  uuidCliente: string;
+  /** @minimum 1 */
+  ticketId: number;
+  /** @minimum 1 */
+  lineaId: number;
+  /** @minimum 1 */
+  ubicacionRecepcionId: number;
+  /** @minimum 1 */
+  sesionCajaId: number;
+  /** @pattern ^(0|[1-9][0-9]{0,6})\.[0-9]{3}$ */
+  cantidad: string;
+  /**
+     * @minLength 1
+     * @maxLength 400
+     */
+  motivo: string;
+};
+
+export type PreviewCommercialReturn200 = {
+  ticketId: number;
+  lineaId: number;
+  serie: string;
+  ubicacionRecepcionId: number;
+  sesionCajaId: number;
+  cantidad: string;
+  importeRollo: string;
+  deudaCancelada: string;
+  efectivoDevuelto: string;
+};
+
+/**
+ * Importes revisados; cualquier cambio al confirmar rechaza toda la operación.
+ */
+export type CreateCommercialReturnBodyRevision = {
+  /** @pattern ^(0|[1-9][0-9]*)\.[0-9]{2}$ */
+  importeRollo: string;
+  /** @pattern ^(0|[1-9][0-9]*)\.[0-9]{2}$ */
+  deudaCancelada: string;
+  /** @pattern ^(0|[1-9][0-9]*)\.[0-9]{2}$ */
+  efectivoDevuelto: string;
+};
+
+export type CreateCommercialReturnBody = {
+  uuidCliente: string;
+  /** @minimum 1 */
+  ticketId: number;
+  /** @minimum 1 */
+  lineaId: number;
+  /** @minimum 1 */
+  ubicacionRecepcionId: number;
+  /** @minimum 1 */
+  sesionCajaId: number;
+  /** @pattern ^(0|[1-9][0-9]{0,6})\.[0-9]{3}$ */
+  cantidad: string;
+  /**
+     * @minLength 1
+     * @maxLength 400
+     */
+  motivo: string;
+  /** Importes revisados; cualquier cambio al confirmar rechaza toda la operación. */
+  revision: CreateCommercialReturnBodyRevision;
+};
+
+export type CreateCommercialReturn201 = {
+  id: string;
+  ticketId: number;
+  lineaId: number;
+  rolloId: number;
+  serie: string;
+  ubicacionRecepcionId: number;
+  sesionCajaId: number;
+  cantidad: string;
+  importeRollo: string;
+  deudaCancelada: string;
+  efectivoDevuelto: string;
+  motivo: string;
+  createdAt: string;
+};
+
 export type GetE7Disponibilidad200 = {
   enabled: boolean;
   clienteFinanzas: boolean;
@@ -11002,6 +11093,7 @@ export const ListAdminCuentaDestinoMovimientosFuenteItem = {
   CREDITO: 'CREDITO',
   ABONO: 'ABONO',
   ABONO_SALDO_FAVOR: 'ABONO_SALDO_FAVOR',
+  DEVOLUCION_COMERCIAL: 'DEVOLUCION_COMERCIAL',
 } as const;
 
 export type ListAdminCuentaDestinoMovimientosPreset = typeof ListAdminCuentaDestinoMovimientosPreset[keyof typeof ListAdminCuentaDestinoMovimientosPreset];

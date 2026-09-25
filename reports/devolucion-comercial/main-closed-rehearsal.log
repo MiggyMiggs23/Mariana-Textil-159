@@ -1,0 +1,54 @@
+4ad70679e83671b565a617b40154f12fa249864e747e0e199389f04516bc8299  /home/runner/workspace/reports/devolucion-comercial/00-enum.sql
+0eb75653db060a6566b7ea4185ad178ed4a2386ee30d5bfea9b0eacefd3a7c02  /home/runner/workspace/reports/devolucion-comercial/01-schema.sql
+abae0f694efcb462a207a082b395223ebe24de00e73104cf10e43d851278fc6a  /home/runner/workspace/reports/devolucion-comercial/01b-financial-integrity.sql
+99c29153b380e017374f6c0b935724303f7400bc86f3c5d24bab076b1499d5b0  /home/runner/workspace/reports/devolucion-comercial/02-rehearsal-closed.sql
+ALTER TYPE
+BEGIN
+SET
+CREATE TABLE
+INSERT 0 1
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE FUNCTION
+CREATE TRIGGER
+DO
+DO
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE TRIGGER
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE TRIGGER
+CREATE TRIGGER
+CREATE TRIGGER
+CREATE TRIGGER
+COMMIT
+BEGIN
+SET
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+DO
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE TRIGGER
+CREATE TRIGGER
+CREATE TRIGGER
+DO
+CREATE TABLE
+CREATE FUNCTION
+DO
+CREATE FUNCTION
+CREATE TRIGGER
+REVOKE
+REVOKE
+ALTER TABLE
+COMMIT
+BEGIN
+psql:/home/runner/workspace/reports/devolucion-comercial/02-rehearsal-closed.sql:20: NOTICE:  commercial-return CLOSED direct capture: PASS
+DO
+ROLLBACK
+CLOSED installation/direct-write rehearsal completed. Positive financial/concurrency rehearsal still required.

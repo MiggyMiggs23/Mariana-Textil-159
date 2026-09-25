@@ -1,0 +1,33 @@
+/home/runner/workspace/node_modules/.pnpm/pg@8.22.0/node_modules/pg/lib/client.js:652
+          Error.captureStackTrace(err)
+                ^
+
+error: syntax error at or near "day"
+    at /home/runner/workspace/node_modules/.pnpm/pg@8.22.0/node_modules/pg/lib/client.js:652:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async receiving (/home/runner/workspace/reports/devolucion-comercial/run-positive-rehearsal.ts:48:23)
+    at async seed (/home/runner/workspace/reports/devolucion-comercial/run-positive-rehearsal.ts:53:31)
+    at async <anonymous> (/home/runner/workspace/reports/devolucion-comercial/run-positive-rehearsal.ts:183:19) {
+  length: 92,
+  severity: 'ERROR',
+  code: '42601',
+  detail: undefined,
+  hint: undefined,
+  position: '75',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'scan.l',
+  line: '1248',
+  routine: 'scanner_yyerror'
+}
+
+Node.js v24.13.0
+undefined
+/home/runner/workspace/artifacts/api-server:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: tsx ../../reports/devolucion-comercial/run-positive-rehearsal.ts

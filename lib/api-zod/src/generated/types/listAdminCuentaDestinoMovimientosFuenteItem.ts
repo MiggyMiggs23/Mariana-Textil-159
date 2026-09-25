@@ -14,4 +14,5 @@ export const ListAdminCuentaDestinoMovimientosFuenteItem = {
   CREDITO: 'CREDITO',
   ABONO: 'ABONO',
   ABONO_SALDO_FAVOR: 'ABONO_SALDO_FAVOR',
+  DEVOLUCION_COMERCIAL: 'DEVOLUCION_COMERCIAL',
 } as const;

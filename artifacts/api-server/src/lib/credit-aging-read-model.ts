@@ -42,7 +42,7 @@ export function buildCustomerCreditLedgerReadQuery(
             'sourceId', a.abono_movimiento_id,
             'targetId', a.venta_movimiento_id,
             'amountCents', round(a.importe * 100)
-          ))
+          ) ORDER BY a.id)
           FROM aplicaciones_credito a
           JOIN movimientos_credito favor_sale
             ON favor_sale.id = a.venta_movimiento_id
@@ -192,7 +192,7 @@ export async function loadCustomerCreditLedgerInTransaction(
             'sourceId', a.abono_movimiento_id,
             'targetId', a.venta_movimiento_id,
             'amountCents', round(a.importe * 100)
-          ))
+          ) ORDER BY a.id)
           FROM aplicaciones_credito a
           JOIN movimientos_credito favor_sale
             ON favor_sale.id = a.venta_movimiento_id
@@ -248,7 +248,7 @@ export async function loadCustomerCreditProjections(
             'sourceId', a.abono_movimiento_id,
             'targetId', a.venta_movimiento_id,
             'amountCents', round(a.importe * 100)
-          ))
+          ) ORDER BY a.id)
           FROM aplicaciones_credito a
           JOIN movimientos_credito favor_sale
             ON favor_sale.id = a.venta_movimiento_id

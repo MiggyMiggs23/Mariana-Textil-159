@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { CreditEvidenceFields, useCreditEvidenceDraft } from "@/components/credit-evidence-fields";
+import { CommercialReturnAction } from "@/components/commercial-return-dialog";
 import { useRoute, Link } from "wouter";
 import { AppBackLink, appHref } from "@/lib/internal-navigation";
 import {
@@ -362,6 +363,7 @@ export default function TicketDetailPage() {
           </div>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          {user && <CommercialReturnAction ticket={ticket} actorId={user.id} isAdmin={user.rol === Role.ADMIN} />}
           {canCancel && ticket.estado !== EstadoTicket.CANCELADO && (
             <Button className="w-full sm:w-auto" variant="destructive" onClick={() => {
               setMotivo("");

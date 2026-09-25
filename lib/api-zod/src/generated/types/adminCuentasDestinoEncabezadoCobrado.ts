@@ -15,6 +15,8 @@ export type AdminCuentasDestinoEncabezadoCobrado = {
   recepcionesRetenidas?: string;
   /** Salidas E5 de caja o cuenta del periodo */
   devolucionesRetenidas?: string;
+  /** Efectivo devuelto por devoluciones comerciales registradas en el periodo y tienda receptora; positivo a restar */
+  devolucionesComerciales?: string;
   total: string;
   /** @nullable */
   totalAnterior: string | null;

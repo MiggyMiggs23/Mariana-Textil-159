@@ -8,6 +8,92 @@
 import * as zod from 'zod';
 
 
+/**
+ * Solo ADMIN, CLOSED. Revalida nota, cantidad íntegra, pagos monetarios, caja del día y efectivo. No reserva los importes.
+ * @summary Revisar importes exactos y elegibilidad sin registrar movimientos
+ */
+
+
+
+
+export const previewCommercialReturnBodyCantidadRegExp = new RegExp('^(0|[1-9][0-9]{0,6})\\.[0-9]{3}$');
+export const previewCommercialReturnBodyMotivoMax = 400;
+
+
+
+export const PreviewCommercialReturnBody = zod.object({
+  "uuidCliente": zod.string().uuid(),
+  "ticketId": zod.number().int().min(1),
+  "lineaId": zod.number().int().min(1),
+  "ubicacionRecepcionId": zod.number().int().min(1),
+  "sesionCajaId": zod.number().int().min(1),
+  "cantidad": zod.string().regex(previewCommercialReturnBodyCantidadRegExp),
+  "motivo": zod.string().min(1).max(previewCommercialReturnBodyMotivoMax)
+})
+
+export const PreviewCommercialReturnResponse = zod.object({
+  "ticketId": zod.number().int(),
+  "lineaId": zod.number().int(),
+  "serie": zod.string(),
+  "ubicacionRecepcionId": zod.number().int(),
+  "sesionCajaId": zod.number().int(),
+  "cantidad": zod.string(),
+  "importeRollo": zod.string(),
+  "deudaCancelada": zod.string(),
+  "efectivoDevuelto": zod.string()
+})
+
+
+/**
+ * Candidato CLOSED. Solo ADMIN. Movimiento nuevo: no revierte venta ni corte.
+ * Deuda dirigida sin saldo a favor; dinero pagado sale de la caja abierta del día.
+ * No admite fracciones de centavo ni liquidaciones no monetarias.
+ * @summary Recibir un rollo completo y registrar su devolución comercial
+ */
+
+
+
+
+export const createCommercialReturnBodyCantidadRegExp = new RegExp('^(0|[1-9][0-9]{0,6})\\.[0-9]{3}$');
+export const createCommercialReturnBodyMotivoMax = 400;
+
+export const createCommercialReturnBodyRevisionImporteRolloRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createCommercialReturnBodyRevisionDeudaCanceladaRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createCommercialReturnBodyRevisionEfectivoDevueltoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const CreateCommercialReturnBody = zod.object({
+  "uuidCliente": zod.string().uuid(),
+  "ticketId": zod.number().int().min(1),
+  "lineaId": zod.number().int().min(1),
+  "ubicacionRecepcionId": zod.number().int().min(1),
+  "sesionCajaId": zod.number().int().min(1),
+  "cantidad": zod.string().regex(createCommercialReturnBodyCantidadRegExp),
+  "motivo": zod.string().min(1).max(createCommercialReturnBodyMotivoMax),
+  "revision": zod.object({
+  "importeRollo": zod.string().regex(createCommercialReturnBodyRevisionImporteRolloRegExp),
+  "deudaCancelada": zod.string().regex(createCommercialReturnBodyRevisionDeudaCanceladaRegExp),
+  "efectivoDevuelto": zod.string().regex(createCommercialReturnBodyRevisionEfectivoDevueltoRegExp)
+}).describe('Importes revisados; cualquier cambio al confirmar rechaza toda la operación.')
+})
+
+export const CreateCommercialReturnResponse = zod.object({
+  "id": zod.string().uuid(),
+  "ticketId": zod.number().int(),
+  "lineaId": zod.number().int(),
+  "rolloId": zod.number().int(),
+  "serie": zod.string(),
+  "ubicacionRecepcionId": zod.number().int(),
+  "sesionCajaId": zod.number().int(),
+  "cantidad": zod.string(),
+  "importeRollo": zod.string(),
+  "deudaCancelada": zod.string(),
+  "efectivoDevuelto": zod.string(),
+  "motivo": zod.string(),
+  "createdAt": zod.coerce.date()
+})
+
+
 export const GetRolloRemateParams = zod.object({
   "id": zod.coerce.number().int()
 })
@@ -11293,7 +11379,8 @@ export const GetClientePagoDetalleResponse = zod.object({
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO'])
 })).describe('Evidencia histórica de aplicaciones; no sustituye la proyección del servidor.'),
   "clienteNombre": zod.string().optional().describe('Nombre del cliente al que pertenece el movimiento.'),
-  "tipo": zod.enum(['ABONO', 'REVERSO', 'AJUSTE']).optional(),
+  "tipo": zod.enum(['ABONO', 'REVERSO', 'AJUSTE', 'DEVOLUCION_COMERCIAL']).optional(),
+  "devolucionComercial": zod.record(zod.string(), zod.unknown()).optional().describe('Documento inmutable nuevo; no es un abono ni un reverso.'),
   "importe": zod.string().optional().describe('Importe firmado del movimiento.'),
   "fechaEfectiva": zod.coerce.date().optional(),
   "fechaCaptura": zod.coerce.date().nullish().describe('Instante de captura comprobado en auditoría; null si no existe evidencia suficiente.'),
@@ -16154,6 +16241,7 @@ export const GetAdminCuentasDestinoResponse = zod.object({
   "saldosFavor": zod.string(),
   "recepcionesRetenidas": zod.string().optional().describe('Recepciones E5 reales del periodo; no aplicaciones.'),
   "devolucionesRetenidas": zod.string().optional().describe('Salidas E5 de caja o cuenta del periodo'),
+  "devolucionesComerciales": zod.string().optional().describe('Efectivo devuelto por devoluciones comerciales registradas en el periodo y tienda receptora; positivo a restar'),
   "total": zod.string(),
   "totalAnterior": zod.string().nullable(),
   "variacionPorcentaje": zod.string().nullable()
@@ -16239,7 +16327,7 @@ export const ListAdminCuentaDestinoMovimientosQueryParams = zod.object({
   "facturado": zod.coerce.boolean().optional(),
   "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'POR_COBRAR', 'OTRAS']).optional().describe('Categoría reconciliada de la matriz; TRANSFERENCIA incluye la forma histórica FACTURADO.'),
   "incongruente": zod.coerce.boolean().optional().describe('Limita el detalle a abonos cuyo destino contradice la facturación de la venta.'),
-  "fuente": zod.array(zod.enum(['POS', 'CREDITO', 'ABONO', 'ABONO_SALDO_FAVOR'])).optional().describe('Filtra el mismo detalle canónico que alimenta los agregados.'),
+  "fuente": zod.array(zod.enum(['POS', 'CREDITO', 'ABONO', 'ABONO_SALDO_FAVOR', 'DEVOLUCION_COMERCIAL'])).optional().describe('Filtra el mismo detalle canónico que alimenta los agregados.'),
   "preset": zod.enum(['hoy', 'semana', 'mes', 'trimestre', 'semestre', 'ano', 'custom']).optional().describe('Identifica el periodo de calendario para comparar el mismo tramo transcurrido.'),
   "page": zod.coerce.number().int().min(1).default(listAdminCuentaDestinoMovimientosQueryPageDefault),
   "pageSize": zod.coerce.number().int().min(1).max(listAdminCuentaDestinoMovimientosQueryPageSizeMax).default(listAdminCuentaDestinoMovimientosQueryPageSizeDefault)
@@ -16263,7 +16351,7 @@ export const ListAdminCuentaDestinoMovimientosResponse = zod.object({
   "registro": zod.string(),
   "formaPago": zod.string(),
   "facturado": zod.boolean(),
-  "fuente": zod.enum(['POS', 'CREDITO', 'ABONO', 'ABONO_SALDO_FAVOR', 'REVERSO_ABONO', 'REVERSO_ABONO_SALDO_FAVOR', 'E5_RECEPCION', 'E5_DEVOLUCION']),
+  "fuente": zod.enum(['POS', 'CREDITO', 'ABONO', 'ABONO_SALDO_FAVOR', 'REVERSO_ABONO', 'REVERSO_ABONO_SALDO_FAVOR', 'E5_RECEPCION', 'E5_DEVOLUCION', 'DEVOLUCION_COMERCIAL']),
   "e5CobroId": zod.string().uuid().nullish().describe('Identidad documental E5; no confundir con el ID numérico del cliente.'),
   "incongruente": zod.boolean()
 })),

@@ -121,6 +121,7 @@ function StatementNoteState({ movement }: { movement: StatementRow }) {
 }
 
 const movementDetailTypes = new Set(["ABONO", "REVERSO", "AJUSTE"]);
+movementDetailTypes.add("DEVOLUCION_COMERCIAL");
 
 function getMovementDetailHref(clienteId: number, movement: StatementRow) {
   return movementDetailTypes.has(movement.tipo ?? "") && movement.movimientoId != null
@@ -562,6 +563,7 @@ export default function ClienteDetail() {
                 </p>
                 <p className="text-sm text-muted-foreground">
                   Se excluyeron {formatNumber(lifetimeStats.data?.lineasExcluidasSinCosto ?? 0, { kind: "count" })} línea(s) sin costo asignado.
+                  {" "}Utilidad histórica bruta de las ventas originales, sin descontar devoluciones comerciales posteriores.
                 </p>
               </CardContent>
             </Card>

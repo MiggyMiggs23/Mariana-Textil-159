@@ -106,6 +106,8 @@ import type {
   CrearReimpresionEtiquetas201,
   CrearReimpresionEtiquetasBody,
   CreateClienteAjuste201,
+  CreateCommercialReturn201,
+  CreateCommercialReturnBody,
   CreditAttributionInput,
   CreditAttributionResult,
   CreditDirectedApprovalInput,
@@ -350,6 +352,8 @@ import type {
   PrecioProducto,
   PrecioProductoDetail,
   PrecioVentaPorMetroUpdate,
+  PreviewCommercialReturn200,
+  PreviewCommercialReturnBody,
   PreviewPagoProveedor,
   Producto,
   ProductoDetail,
@@ -479,6 +483,152 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getPreviewCommercialReturnUrl = () => {
+
+
+
+
+  return `/api/devoluciones-comerciales/vista-previa`
+}
+
+/**
+ * Solo ADMIN, CLOSED. Revalida nota, cantidad íntegra, pagos monetarios, caja del día y efectivo. No reserva los importes.
+ * @summary Revisar importes exactos y elegibilidad sin registrar movimientos
+ */
+export const previewCommercialReturn = async (previewCommercialReturnBody: PreviewCommercialReturnBody, options?: Parameters<typeof customFetch>[1]): Promise<PreviewCommercialReturn200> => {
+
+  return customFetch<PreviewCommercialReturn200>(getPreviewCommercialReturnUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(previewCommercialReturnBody)
+  }
+);}
+
+
+
+
+
+export const getPreviewCommercialReturnMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof previewCommercialReturn>>, TError,{data: BodyType<PreviewCommercialReturnBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof previewCommercialReturn>>, TError,{data: BodyType<PreviewCommercialReturnBody>}, TContext> => {
+
+const mutationKey = ['previewCommercialReturn'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof previewCommercialReturn>>, {data: BodyType<PreviewCommercialReturnBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  previewCommercialReturn(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PreviewCommercialReturnMutationResult = NonNullable<Awaited<ReturnType<typeof previewCommercialReturn>>>
+    export type PreviewCommercialReturnMutationBody = BodyType<PreviewCommercialReturnBody>
+    export type PreviewCommercialReturnMutationError = ErrorType<void>
+
+    /**
+ * @summary Revisar importes exactos y elegibilidad sin registrar movimientos
+ */
+export const usePreviewCommercialReturn = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof previewCommercialReturn>>, TError,{data: BodyType<PreviewCommercialReturnBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof previewCommercialReturn>>,
+        TError,
+        {data: BodyType<PreviewCommercialReturnBody>},
+        TContext
+      > => {
+      return useMutation(getPreviewCommercialReturnMutationOptions(options));
+    }
+
+export const getCreateCommercialReturnUrl = () => {
+
+
+
+
+  return `/api/devoluciones-comerciales`
+}
+
+/**
+ * Candidato CLOSED. Solo ADMIN. Movimiento nuevo: no revierte venta ni corte.
+ * Deuda dirigida sin saldo a favor; dinero pagado sale de la caja abierta del día.
+ * No admite fracciones de centavo ni liquidaciones no monetarias.
+ * @summary Recibir un rollo completo y registrar su devolución comercial
+ */
+export const createCommercialReturn = async (createCommercialReturnBody: CreateCommercialReturnBody, options?: Parameters<typeof customFetch>[1]): Promise<CreateCommercialReturn201> => {
+
+  return customFetch<CreateCommercialReturn201>(getCreateCommercialReturnUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(createCommercialReturnBody)
+  }
+);}
+
+
+
+
+
+export const getCreateCommercialReturnMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCommercialReturn>>, TError,{data: BodyType<CreateCommercialReturnBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createCommercialReturn>>, TError,{data: BodyType<CreateCommercialReturnBody>}, TContext> => {
+
+const mutationKey = ['createCommercialReturn'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCommercialReturn>>, {data: BodyType<CreateCommercialReturnBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createCommercialReturn(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateCommercialReturnMutationResult = NonNullable<Awaited<ReturnType<typeof createCommercialReturn>>>
+    export type CreateCommercialReturnMutationBody = BodyType<CreateCommercialReturnBody>
+    export type CreateCommercialReturnMutationError = ErrorType<void>
+
+    /**
+ * @summary Recibir un rollo completo y registrar su devolución comercial
+ */
+export const useCreateCommercialReturn = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCommercialReturn>>, TError,{data: BodyType<CreateCommercialReturnBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createCommercialReturn>>,
+        TError,
+        {data: BodyType<CreateCommercialReturnBody>},
+        TContext
+      > => {
+      return useMutation(getCreateCommercialReturnMutationOptions(options));
+    }
 
 export const getGetRolloRemateUrl = (id: number,) => {
 

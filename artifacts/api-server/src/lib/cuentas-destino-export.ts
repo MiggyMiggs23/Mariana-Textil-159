@@ -18,6 +18,7 @@ export type DestinationAccountsExportData = {
       contado: string;
       abonos: string;
       saldosFavor: string;
+      devolucionesComerciales?: string;
       total: string;
     };
   };
@@ -37,6 +38,9 @@ const visibleFigures = (data: DestinationAccountsExportData) => [
   { grupo: "Cobranza", concepto: "Contado cobrado", importe: data.encabezado.cobrado.contado },
   { grupo: "Cobranza", concepto: "Abonos a notas (neto de reversos)", importe: data.encabezado.cobrado.abonos },
   { grupo: "Cobranza", concepto: "Saldo a favor (neto de reversos)", importe: data.encabezado.cobrado.saldosFavor },
+  ...(data.encabezado.cobrado.devolucionesComerciales === undefined ? [] : [
+    { grupo: "Cobranza", concepto: "Efectivo devuelto por devoluciones comerciales (a restar)", importe: data.encabezado.cobrado.devolucionesComerciales },
+  ]),
 ];
 
 export function createDestinationAccountsWorkbook(

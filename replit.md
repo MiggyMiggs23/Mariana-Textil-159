@@ -269,8 +269,9 @@ y terminaron parcialmente; la conciliación de navegador quedó incierta tras
 interrupción del arnés y no se repitió. Para tarea 3, la autorización posterior
 en `reports/autorizacion-propietario-devolucion-rollo-20260925.txt` resuelve
 la prohibición general de devolución aplicada únicamente para retorno de rollo
-completo; falta precisar el importe del caso parcialmente pagado con valor
-devuelto superior a deuda. Tarea 9 es NO-GO documental, no purga; tarea 8 no añadió DDL ni
+completo. La autorización posterior `reports/autorizacion-propietario-devolucion-rollo-parcial-20260925.txt`
+también resuelve el caso parcialmente pagado: cancelar deuda atribuible y devolver
+lo pagado por el rollo; detener ante reparto incierto. Tarea 9 es NO-GO documental, no purga; tarea 8 no añadió DDL ni
 realizó medición anual en navegador. El procedimiento de liberación simple
 termina antes de datos reales; reinstaurar controles completos y resolver con
 el propietario retención, mecanismo y devolución física antes de purgar.
@@ -1712,13 +1713,17 @@ restricciones globales del corredor de pruebas siguen vigentes.
 
 ### Evidencia de verificación vinculada a una revisión exacta
 
-### Devolución por rollo — excepción autorizada; importe parcial por precisar
+### Devolución por rollo — excepción autorizada, incluida nota parcialmente pagada
 
 El 2026-09-24 (CDMX), mediante la autorización posterior literal `reports/autorizacion-propietario-devolucion-rollo-20260925.txt`, el propietario resolvió el conflicto general: únicamente para devolución de un rollo completo, con los mismos metros, kilos, piezas o bolsas con que salió, prevalece esta excepción sobre la prohibición de devolver dinero aplicado. Si la nota tiene deuda, se cancela la deuda por ese rollo; si está liquidada, se devuelve dinero desde la caja abierta del día, solo ADMIN y con motivo obligatorio. Nunca queda saldo a favor. Fuera de este caso, el dinero aplicado a una nota no se devuelve.
 
 El rollo vuelve con su misma serie al inventario de la tienda que lo recibe. La devolución es un movimiento nuevo, no un reverso; no toca el corte original ni edita la venta. No se registran cambios por otra tela/color. Está autorizada su construcción y liberación con el procedimiento simple, sin abrir devolución general E5, Fondo, E12 ni atribución histórica. Esta decisión también consta en `reports/prompt-u-respuestas-2026-09-18.md`; el conflicto anterior es histórico.
 
-Importe aún por precisar: cuando una nota parcialmente pagada conserva menos deuda que el valor del rollo devuelto, no se ha definido expresamente qué ocurre con la parte ya pagada. No inventar devolución de excedente, retención de dinero ni saldo a favor para ese caso. Registrar la autorización no equivale a declarar implementado o liberado el flujo.
+La autorización posterior literal `reports/autorizacion-propietario-devolucion-rollo-parcial-20260925.txt` resuelve la nota parcialmente pagada: cancelar la deuda que quedaba por ese rollo y devolver desde la caja abierta del día lo ya pagado por él, solo ADMIN y con motivo obligatorio. Nunca queda saldo a favor. En el ejemplo de $1,000 con $800 pagados y $200 de deuda, cancelar $200 y devolver $800.
+
+En notas con varios rollos se aplica proporcionalmente al rollo que regresa: cancelar su parte de deuda y devolver lo pagado por él. Si no se puede determinar con certeza el reparto de lo pagado entre rollos, detener y reportar al propietario en lugar de suponerlo. No inventar atribuciones históricas. Registrar la autorización no equivale a declarar implementado o liberado el flujo.
+
+**Estado de implementación de esta continuación:** existe un candidato de devolución comercial con API/UI/SQL cerrados; no está liberado. El ensayo positivo en PostgreSQL se detuvo en el acceso `FOR SHARE` a la puerta SQL usando el rol restringido (42501). No conceder UPDATE sobre la puerta como atajo. No se aplicó DDL comercial a la base de la aplicación ni se reemplazó el bundle servido. No compilar/publicar este candidato contra la base actual sin terminar el ensayo, revisar los lectores y aplicar el DDL autorizado: las nuevas lecturas requieren el esquema candidato. Resultado canónico: `reports/continuacion-rollos-20260925/INFORME.md`; detalles técnicos: `reports/devolucion-comercial/READINESS.md`.
 
 ### Identidad exacta de la evidencia
 

@@ -19,6 +19,18 @@ const fixture: DestinationAccountsExportData = {
   ],
 };
 
+test("commercial refund is separately identified in account export without relabeling debt as cash", async () => {
+  const data: DestinationAccountsExportData = {
+    ...fixture,
+    encabezado: { ...fixture.encabezado, cobrado: { ...fixture.encabezado.cobrado, devolucionesComerciales: "20.00", total: "115.29" } },
+  };
+  const workbook = createDestinationAccountsWorkbook(data);
+  const values: string[] = [];
+  workbook.eachSheet(sheet => sheet.eachRow(row => values.push(JSON.stringify(row.values))));
+  assert.match(values.join("\n"), /Efectivo devuelto por devoluciones comerciales/);
+  assert.ok(workbook.getWorksheet("Ventas y cobranza")!.getColumn(3).values.includes(20));
+});
+
 function legacyBaselineWorkbook(data: DestinationAccountsExportData): ExcelJS.Workbook {
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet("Cuentas destino");

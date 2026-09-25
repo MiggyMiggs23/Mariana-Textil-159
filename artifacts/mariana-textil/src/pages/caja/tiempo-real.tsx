@@ -201,11 +201,12 @@ export default function CajaTiempoReal() {
   const cobranzaStat = header ? {
     title: "Cobranza del periodo",
     amount: header.cobrado.total,
-    fuentes: ["POS", "ABONO", "ABONO_SALDO_FAVOR"],
+    fuentes: ["POS", "ABONO", "ABONO_SALDO_FAVOR", "DEVOLUCION_COMERCIAL"],
     breakdown: [
        { label: "Contado cobrado", amount: header.cobrado.contado, fuentes: ["POS"] },
        { label: "Abonos a notas (neto de reversos)", amount: header.cobrado.abonos, fuentes: ["ABONO"] },
        { label: "Saldo a favor (neto de reversos)", amount: header.cobrado.saldosFavor, fuentes: ["ABONO_SALDO_FAVOR"] },
+       { label: "Devoluciones comerciales (a restar)", amount: header.cobrado.devolucionesComerciales ?? "0.00", fuentes: ["DEVOLUCION_COMERCIAL"] },
     ],
     className: "border-l-4 border-l-primary",
   } : null;
@@ -258,7 +259,7 @@ export default function CajaTiempoReal() {
                   <ShoppingBag className="h-6 w-6" />
                 </div>
                 <div className="recon-top-card-content">
-                  <span className="recon-top-card-label">Ventas totales</span>
+                  <span className="recon-top-card-label">Ventas históricas brutas</span>
                   <span className="recon-top-card-value">
                     {formatNumber(totals.ventas, { kind: "money" })}
                   </span>

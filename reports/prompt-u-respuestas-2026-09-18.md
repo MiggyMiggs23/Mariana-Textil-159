@@ -210,7 +210,9 @@ Autorización literal posterior: `reports/autorizacion-propietario-devolucion-ro
 
 El rollo vuelve al inventario con su misma serie, en la tienda receptora. Es un movimiento nuevo, no un reverso: no edita la venta ni el corte original. No se registran cambios físicos por otra tela o color. Se autoriza construir y liberar con el procedimiento simple; esto no abre la devolución general E5 ni el retorno de abonos nunca aplicados.
 
-La prohibición general anterior ya no bloquea esta excepción. Queda por precisar únicamente el importe cuando una nota está parcialmente pagada y el valor del rollo supera la deuda restante: no se inferirá si la parte ya pagada se conserva o se devuelve. El informe anterior de conflicto se conserva como antecedente, no como decisión vigente.
+La prohibición general anterior ya no bloquea esta excepción. La autorización posterior literal `reports/autorizacion-propietario-devolucion-rollo-parcial-20260925.txt` resuelve la nota parcialmente pagada: cancelar la deuda que quedaba por el rollo y devolver lo ya pagado por él desde la caja abierta del día, solo ADMIN y con motivo obligatorio, sin saldo a favor. Un rollo de $1,000 con $800 pagados y $200 de deuda cancela $200 y devuelve $800.
+
+Si una nota tiene varios rollos y solo se devuelve uno, se cancela su parte proporcional de deuda y se devuelve lo ya pagado por ese rollo. Si el reparto de lo pagado no se puede determinar con certeza, detener y reportar el caso, nunca suponerlo. El informe anterior de conflicto se conserva como antecedente, no como decisión vigente. La autorización no equivale a declarar el flujo implementado o liberado.
 
 ### Reversión de inventario (se conserva)
 

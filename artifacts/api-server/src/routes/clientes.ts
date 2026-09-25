@@ -1425,7 +1425,7 @@ router.get(
       const tipo = typeof req.query.tipo === "string" ? req.query.tipo : null;
       if (
         tipo &&
-        !["VENTA_CREDITO", "ABONO", "REVERSO", "AJUSTE"].includes(tipo)
+        !["VENTA_CREDITO", "ABONO", "REVERSO", "AJUSTE", "DEVOLUCION_COMERCIAL"].includes(tipo)
       ) {
         res.status(400).json({ error: "Tipo de movimiento inválido." });
         return;

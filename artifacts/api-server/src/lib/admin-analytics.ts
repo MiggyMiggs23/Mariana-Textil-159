@@ -2,6 +2,7 @@ import { pool, db } from "@workspace/db";
 import { e5DestinationRows } from "./e5-destination-reader";
 import { readSessionCash } from "./caja-corte-reader";
 import { cashCents, cashMoney } from "./caja-cash-ledger";
+import { analyticsCutDifference } from "./analytics-cut-difference";
 import {
   accountedDocumentAt,
   accountedDocumentPredicate,
@@ -222,6 +223,18 @@ function destinationReadModel() {
       AND $3::int IS NULL
       AND r.tipo='REVERSO' AND original.tipo='ABONO' AND original.cuenta_destino IS NOT NULL
       AND -original.importe > COALESCE(aplicado.importe,0)
+    UNION ALL
+    SELECT m.id,m.created_at,-CASE WHEN m.tipo::text='DEVOLUCION_COMERCIAL'
+      THEN (m.metadata::jsonb->>'efectivoDevuelto')::numeric ELSE 0 END,
+      'EFECTIVO','CAJA_FISICA',m.ticket_id,t.folio,m.cliente_id,m.id,m.sitio_origen_id,
+      m.usuario_id,t.facturado,'DEVOLUCION_COMERCIAL'
+    FROM movimientos_credito m JOIN tickets t ON t.id=m.ticket_id
+    WHERE m.tipo::text='DEVOLUCION_COMERCIAL'
+      AND ($1::timestamptz IS NULL OR m.created_at >= $1)
+      AND ($2::timestamptz IS NULL OR m.created_at <= $2)
+      AND ($3::int IS NULL OR m.sitio_origen_id=$3)
+      AND CASE WHEN m.tipo::text='DEVOLUCION_COMERCIAL'
+        THEN (m.metadata::jsonb->>'efectivoDevuelto')::numeric ELSE 0 END>0
   ), destination_movements AS (
     SELECT legacy_destination_movements.*, NULL::text "e5CobroId" FROM legacy_destination_movements
     ${e5DestinationRows()}
@@ -243,7 +256,7 @@ export async function getDestinationCollectedAmount(
      SELECT COALESCE(SUM(importe),0)::text amount
      FROM destination_movements
      WHERE "cuentaDestino"=$4
-       AND fuente IN ('POS','ABONO','REVERSO_ABONO','ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR','E5_RECEPCION','E5_DEVOLUCION')`,
+       AND fuente IN ('POS','ABONO','REVERSO_ABONO','ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR','E5_RECEPCION','E5_DEVOLUCION','DEVOLUCION_COMERCIAL')`,
     [...values, destination],
   );
   return decimal(result.rows[0]!.amount);
@@ -1331,6 +1344,7 @@ export async function getDestinationAccounts(filters: AnalyticsFilters, compare 
   const rows = result.rows;
   const saleSources = new Set(["POS", "CREDITO"]);
   const collectionSources = new Set([
+    "DEVOLUCION_COMERCIAL",
     "E5_RECEPCION",
     "E5_DEVOLUCION",
     "POS",
@@ -1388,7 +1402,8 @@ export async function getDestinationAccounts(filters: AnalyticsFilters, compare 
   ]);
   const e5Receipts = sumSources(collectionRows, ["E5_RECEPCION"]);
   const e5Returns = -sumSources(collectionRows, ["E5_DEVOLUCION"]);
-  const collected = pos + abonos + abonosSaldoFavor + e5Receipts - e5Returns;
+   const commercialReturns = -sumSources(collectionRows, ["DEVOLUCION_COMERCIAL"]);
+   const collected = pos + abonos + abonosSaldoFavor + e5Receipts - e5Returns - commercialReturns;
   // Cobrado + Por cobrar is not an identity for Vendido: Cobrado includes ABONOs
   // settling credit sales from earlier periods, while Por cobrar means only the
   // credit notes created in this reporting period (not their outstanding balance).
@@ -1402,7 +1417,7 @@ export async function getDestinationAccounts(filters: AnalyticsFilters, compare 
     "REVERSO_ABONO_SALDO_FAVOR",
   ]);
   const priorCollected = priorPos + priorAbonos + priorAbonosSaldoFavor
-    + sumSources(priorCollectionRows, ["E5_RECEPCION", "E5_DEVOLUCION"]);
+     + sumSources(priorCollectionRows, ["E5_RECEPCION", "E5_DEVOLUCION", "DEVOLUCION_COMERCIAL"]);
   const matrix = reconcileDestinationMatrix(saleRows);
   const incongruenceCount = rows.reduce(
     (sum, row) => sum + Number(row.incongruencias ?? 0),
@@ -1456,6 +1471,7 @@ export async function getDestinationAccounts(filters: AnalyticsFilters, compare 
         variacionPorcentaje: compare ? percentageChange(credito, priorCredito) : null,
       },
       cobrado: {
+         devolucionesComerciales: decimal(commercialReturns),
         contado: decimal(pos),
         abonos: decimal(abonos),
         saldosFavor: decimal(abonosSaldoFavor),
@@ -1599,7 +1615,7 @@ export async function listDestinationAccountMovements(
     facturado?: boolean;
     formaPago?: "EFECTIVO" | "TRANSFERENCIA" | "POR_COBRAR" | "OTRAS";
     incongruente?: boolean;
-    fuentes?: Array<"POS" | "CREDITO" | "ABONO" | "ABONO_SALDO_FAVOR">;
+    fuentes?: Array<"POS" | "CREDITO" | "ABONO" | "ABONO_SALDO_FAVOR" | "DEVOLUCION_COMERCIAL">;
   } = {},
 ) {
   const filterValues = [
@@ -1659,15 +1675,17 @@ export async function listDestinationAccountMovements(
   const [rows, aggregate, previousAggregate] = await Promise.all([
     pool.query(
        `${readModel} SELECT d.id,d.fecha,
-         CASE d."cuentaDestino" WHEN 'CAJA_FISICA' THEN 'Cobro en efectivo'
+          CASE WHEN d.fuente='DEVOLUCION_COMERCIAL' THEN 'Devolución comercial'
+            ELSE CASE d."cuentaDestino" WHEN 'CAJA_FISICA' THEN 'Cobro en efectivo'
            WHEN 'CUENTAS_POR_COBRAR' THEN 'Venta a crédito'
-           WHEN 'CUENTA_FISCAL' THEN 'Transferencia fiscal' ELSE 'Transferencia no fiscal' END tipo,
+            WHEN 'CUENTA_FISCAL' THEN 'Transferencia fiscal' ELSE 'Transferencia no fiscal' END END tipo,
           CASE WHEN d.fuente IN ('E5_RECEPCION','E5_DEVOLUCION') THEN 'CLIENTE'
-            WHEN d.fuente IN ('ABONO','REVERSO_ABONO','ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR')
+             WHEN d.fuente IN ('ABONO','REVERSO_ABONO','ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR','DEVOLUCION_COMERCIAL')
            THEN 'MOVIMIENTO_CREDITO' ELSE 'TICKET' END "documentoTipo",
-         CASE WHEN d.fuente IN ('ABONO','REVERSO_ABONO','ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR')
+         CASE WHEN d.fuente IN ('ABONO','REVERSO_ABONO','ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR','DEVOLUCION_COMERCIAL')
            THEN d."movimientoCreditoId" ELSE d."documentoId" END "documentoId",
          CASE
+             WHEN d.fuente='DEVOLUCION_COMERCIAL' THEN ('Devolución comercial #' || d."movimientoCreditoId"::text)
             WHEN d.fuente='E5_RECEPCION' THEN ('Recepción retenida E5 ' || d."e5CobroId")
             WHEN d.fuente='E5_DEVOLUCION' THEN ('Devolución íntegra E5 ' || d."e5CobroId")
            WHEN d.fuente IN ('REVERSO_ABONO','REVERSO_ABONO_SALDO_FAVOR')
@@ -1736,8 +1754,11 @@ export async function getDifferences(
     `WITH cuts AS (
        SELECT s.id,s.usuario_id,s.ubicacion_id,usr.nombre cajero,u.nombre tienda,
          (s.cerrada_at AT TIME ZONE '${ANALYTICS_TIME_ZONE}')::date::text fecha,
-         s.efectivo_contado-s.fondo_inicial-COALESCE(SUM(p.importe)
-           FILTER (WHERE t.estado='VENDIDO' AND p.forma_pago='EFECTIVO'),0) diferencia
+          s.efectivo_contado-s.fondo_inicial-COALESCE(SUM(p.importe)
+            FILTER (WHERE t.estado='VENDIDO' AND p.forma_pago='EFECTIVO'),0) diferencia,
+          (SELECT jsonb_agg(a.datos_despues->'cashSnapshot') FROM auditoria a
+            WHERE a.accion='CERRAR_CAJA' AND a.entidad='sesiones_caja' AND a.entidad_id=s.id::text
+              AND a.datos_despues ? 'cashSnapshot') cash_snapshots
        FROM sesiones_caja s JOIN usuarios usr ON usr.id=s.usuario_id
        JOIN ubicaciones u ON u.id=s.ubicacion_id
        LEFT JOIN tickets t ON t.sesion_caja_id=s.id
@@ -1750,6 +1771,7 @@ export async function getDifferences(
      ) SELECT * FROM cuts ORDER BY fecha,id`,
     values,
   );
+   for (const row of result.rows) row.diferencia = analyticsCutDifference(row);
   const group = (key: "usuario_id" | "ubicacion_id", name: "cajero" | "tienda") => {
     const map = new Map<number, { id: number; nombre: string; values: number[] }>();
     for (const row of result.rows) {
@@ -1812,15 +1834,24 @@ export async function getDifferences(
     };
   });
   const monthRows = await pool.query(
-    `SELECT s.usuario_id,COUNT(*) FILTER (WHERE s.efectivo_contado-s.fondo_inicial-COALESCE(x.efectivo,0)<0)::int faltantes
+    `SELECT s.id,s.usuario_id,s.efectivo_contado-s.fondo_inicial-COALESCE(x.efectivo,0) diferencia,
+       (SELECT jsonb_agg(a.datos_despues->'cashSnapshot') FROM auditoria a
+         WHERE a.accion='CERRAR_CAJA' AND a.entidad='sesiones_caja' AND a.entidad_id=s.id::text
+           AND a.datos_despues ? 'cashSnapshot') cash_snapshots
      FROM sesiones_caja s LEFT JOIN LATERAL (
        SELECT COALESCE(SUM(p.importe) FILTER (WHERE t.estado='VENDIDO' AND p.forma_pago='EFECTIVO'),0) efectivo
        FROM tickets t LEFT JOIN ticket_pagos p ON p.ticket_id=t.id WHERE t.sesion_caja_id=s.id
      ) x ON true WHERE s.estado='CERRADA' AND s.efectivo_contado IS NOT NULL
        AND s.cerrada_at >= date_trunc('month', now() AT TIME ZONE '${ANALYTICS_TIME_ZONE}') AT TIME ZONE '${ANALYTICS_TIME_ZONE}'
-     GROUP BY s.usuario_id`,
+      `,
   );
-  const monthlyShortages = new Map(monthRows.rows.map((row) => [Number(row.usuario_id), Number(row.faltantes)]));
+  const monthlyShortages = new Map<number, number>();
+  for (const row of monthRows.rows) {
+    if (Number(analyticsCutDifference(row)) < 0) {
+      const user = Number(row.usuario_id);
+      monthlyShortages.set(user, (monthlyShortages.get(user) ?? 0) + 1);
+    }
+  }
   const repeatedAlerts = groupedCashiers
     .filter((cashier) => (monthlyShortages.get(cashier.id) ?? 0) > 3)
     .map((cashier) => ({
@@ -1947,7 +1978,7 @@ export async function compareStores(filters: AnalyticsFilters) {
        COALESCE(pay.transferencia,0)::text transferencia,
        COALESCE(credit.credito,0)::text credito,
        COALESCE(invoice.facturado,0)::text facturado,
-       COALESCE(cash.diferencia,0)::text "diferenciaCaja"
+        COALESCE(cash.diferencia,0)::text "diferenciaCaja",cash.cuts "cashCuts"
      FROM ubicaciones u LEFT JOIN ticket_data t ON t.ubicacion_id=u.id
      LEFT JOIN line_data l ON l.ticket_id=t.id
      LEFT JOIN LATERAL (
@@ -1968,7 +1999,12 @@ export async function compareStores(filters: AnalyticsFilters) {
         WHERE ft.ubicacion_id=u.id AND ${accountedDocumentPredicate("ft")} AND ft.facturado
       ) invoice ON true
      LEFT JOIN LATERAL (
-       SELECT COALESCE(SUM(s.efectivo_contado-s.fondo_inicial-x.efectivo),0) diferencia
+        SELECT COALESCE(SUM(s.efectivo_contado-s.fondo_inicial-x.efectivo),0) diferencia,
+          jsonb_agg(jsonb_build_object('id',s.id,
+            'diferencia',(s.efectivo_contado-s.fondo_inicial-x.efectivo)::text,
+            'cash_snapshots',(SELECT jsonb_agg(a.datos_despues->'cashSnapshot') FROM auditoria a
+              WHERE a.accion='CERRAR_CAJA' AND a.entidad='sesiones_caja' AND a.entidad_id=s.id::text
+                AND a.datos_despues ? 'cashSnapshot'))) cuts
        FROM sesiones_caja s LEFT JOIN LATERAL (
          SELECT COALESCE(SUM(p.importe) FILTER
            (WHERE ct.estado='VENDIDO' AND p.forma_pago='EFECTIVO'),0) efectivo
@@ -1979,10 +2015,18 @@ export async function compareStores(filters: AnalyticsFilters) {
          AND ($1::timestamptz IS NULL OR s.cerrada_at >= $1)
          AND ($2::timestamptz IS NULL OR s.cerrada_at <= $2)
       ) cash ON true WHERE u.tipo='TIENDA' AND u.activa
-      GROUP BY u.id,u.nombre,pay.efectivo,pay.transferencia,credit.credito,invoice.facturado,cash.diferencia
+       GROUP BY u.id,u.nombre,pay.efectivo,pay.transferencia,credit.credito,invoice.facturado,cash.diferencia,cash.cuts
      ORDER BY ventas DESC,u.nombre`,
     condition.values,
   );
+  for (const row of result.rows) {
+    if (Array.isArray(row.cashCuts)) {
+      row.diferenciaCaja = cashMoney(row.cashCuts.reduce(
+        (sum: bigint, cut: { id: unknown; diferencia: unknown; cash_snapshots?: unknown }) =>
+          sum + cashCents(analyticsCutDifference(cut)), 0n));
+    }
+    delete row.cashCuts;
+  }
   const previous = previousEqualPeriod(filters);
   const priorWhere = where(previous, "t", "ACCOUNTED");
   const effectivePriorWhere = priorWhere.text.replaceAll("t.created_at", accountedDocumentAt("t"));

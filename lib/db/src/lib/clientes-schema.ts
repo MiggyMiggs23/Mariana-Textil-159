@@ -149,6 +149,7 @@ export async function ensureClientesSchema(pool: Pool): Promise<void> {
           OR (tipo = 'ABONO' AND importe < 0)
           OR (tipo = 'REVERSO' AND importe <> 0)
           OR (tipo = 'AJUSTE' AND importe <> 0)
+           OR (tipo::text = 'DEVOLUCION_COMERCIAL' AND importe <= 0)
         );
        ALTER TABLE movimientos_credito
          DROP CONSTRAINT IF EXISTS movimientos_credito_cuenta_destino_check;

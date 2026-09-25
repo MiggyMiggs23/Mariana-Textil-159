@@ -9,6 +9,7 @@ import { ArrowLeft, PlusCircle, Undo2, SlidersHorizontal, User, Calendar, FileTe
 import { useE3ListRecibosCliente } from "@/hooks/use-e3";
 import { E3_ENABLED } from "@/lib/e3-feature-flags";
 import { Skeleton } from "@/components/ui/skeleton";
+import { commercialReturnResultSchema } from "@/lib/commercial-return";
 
 // Color semantics:
 // emerald: Abonos (ingreso de dinero, reduce deuda)
@@ -118,8 +119,13 @@ export default function ClienteMovimientoDetail() {
   const isAbono = detalle.tipo === "ABONO";
   const isReverso = detalle.tipo === "REVERSO";
   const isAjuste = detalle.tipo === "AJUSTE";
+  const isCommercialReturn = String(detalle.tipo) === "DEVOLUCION_COMERCIAL";
+  const commercialEvidence = commercialReturnResultSchema.safeParse(
+    (detalle as ClientePagoDetalle & { devolucionComercial?: unknown }).devolucionComercial,
+  );
 
-  const typeStyles = {
+  const typeStyles: Record<string, string> = {
+    DEVOLUCION_COMERCIAL: "text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-950/30 border-slate-200 dark:border-slate-800",
     ABONO: "text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900/50",
     REVERSO: "text-rose-800 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900/50",
     AJUSTE: "text-indigo-800 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200 dark:border-indigo-900/50"
@@ -158,7 +164,7 @@ export default function ClienteMovimientoDetail() {
                   {isReverso && <Undo2 className="h-7 w-7" />}
                   {isAjuste && <SlidersHorizontal className="h-7 w-7" />}
                   <h1 className="text-3xl font-black tracking-tight uppercase">
-                    {detalle.tipo}
+                    {isCommercialReturn ? "Devolución comercial" : detalle.tipo}
                   </h1>
                 </div>
                 <p className="text-base font-bold opacity-80">
@@ -169,15 +175,28 @@ export default function ClienteMovimientoDetail() {
                 </p>
               </div>
               <div className="text-left md:text-right">
-                <p className="text-xs font-bold uppercase tracking-widest opacity-70 mb-2">Importe del movimiento</p>
+                <p className="text-xs font-bold uppercase tracking-widest opacity-70 mb-2">{isCommercialReturn ? "Deuda cancelada" : "Importe del movimiento"}</p>
                 <p className="text-3xl sm:text-5xl font-black tabular-nums tracking-tighter">
-                  {formatNumber(detalle.importe!, { kind: "money" })}
+                  {formatNumber(isCommercialReturn ? String(detalle.importe).replace(/^-/, "") : detalle.importe!, { kind: "money" })}
                 </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
+        {isCommercialReturn && <Card>
+          <CardHeader><CardTitle>Documento de devolución comercial</CardTitle>
+            <CardDescription>Movimiento nuevo. No modifica la venta ni su corte y no genera saldo a favor.</CardDescription>
+          </CardHeader>
+          <CardContent>{commercialEvidence.success ? <dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
+            <dt>Serie recibida</dt><dd>{commercialEvidence.data.serie}</dd>
+            <dt>Cantidad íntegra</dt><dd>{commercialEvidence.data.cantidad}</dd>
+            <dt>Importe del rollo</dt><dd>${commercialEvidence.data.importeRollo}</dd>
+            <dt>Deuda cancelada</dt><dd>${commercialEvidence.data.deudaCancelada}</dd>
+            <dt>Efectivo devuelto de la caja del día</dt><dd>${commercialEvidence.data.efectivoDevuelto}</dd>
+            <dt>Motivo</dt><dd>{commercialEvidence.data.motivo}</dd>
+          </dl> : <p role="alert" className="text-destructive">No se pudo verificar el documento de devolución; no se muestran importes inferidos.</p>}</CardContent>
+        </Card>}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Card>
             <CardHeader className="pb-3">

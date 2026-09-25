@@ -31,7 +31,7 @@ export type CreditMovementDetailMovement = {
   id: number | string;
   clienteId: number | string;
   clienteNombre: string;
-  tipo: "ABONO" | "REVERSO" | "AJUSTE";
+  tipo: "ABONO" | "REVERSO" | "AJUSTE" | "DEVOLUCION_COMERCIAL";
   importe: string;
   fechaEfectiva: Date | string;
   formaPago: string | null;
@@ -250,6 +250,8 @@ export function auditMatchesMovement(
   const movementId = Number(movement.id);
   const clientId = Number(movement.clienteId);
   if (!Number.isSafeInteger(movementId) || !Number.isSafeInteger(clientId)) return false;
+  // Commercial evidence is its own immutable document, never payment/reversal evidence.
+  if (movement.tipo === "DEVOLUCION_COMERCIAL") return false;
 
   if (movement.tipo === "ABONO") {
     if (audit.accion !== "PAGO_CLIENTE" || audit.entidad !== "clientes") {
@@ -486,7 +488,7 @@ export function buildCreditMovementDetailFromReadFixture(
     id: movementId,
     clienteId,
     fecha: asIso(movement.fechaEfectiva),
-    montoTotalAbono: absoluteMoney(movement.importe),
+    montoTotalAbono: movement.tipo === "DEVOLUCION_COMERCIAL" ? "0.00" : absoluteMoney(movement.importe),
     formaPago: movement.formaPago,
     cuentaDestino: movement.cuentaDestino,
     referencia: movement.referencia,
@@ -593,7 +595,7 @@ export function buildCreditMovementDetailReadQueries(
       AND reverse.cliente_id=m.cliente_id
       AND reverse.tipo='REVERSO'
      WHERE m.id=$1 AND m.cliente_id=$2
-       AND m.tipo IN ('ABONO','REVERSO','AJUSTE')
+       AND m.tipo IN ('ABONO','REVERSO','AJUSTE','DEVOLUCION_COMERCIAL')
      LIMIT 1`,
     values: [movimientoId, clienteId],
   };
@@ -679,10 +681,21 @@ export async function buildCreditMovementDetail(
     auditQuery.text,
     auditQuery.values,
   );
-  return buildCreditMovementDetailFromReadFixture({
+  const detail = buildCreditMovementDetailFromReadFixture({
     movement,
     projection,
     applications: applicationResult.rows,
     audits: auditResult.rows,
   });
+  if (detail && movement.tipo === "DEVOLUCION_COMERCIAL") {
+    const evidence = await database.query<{ response: Record<string, unknown> }>(
+      `SELECT r.response FROM public.devoluciones_comerciales r
+       JOIN public.tickets t ON t.id=r.ticket_id
+       WHERE r.movimiento_credito_id=$1 AND t.cliente_id=$2`,
+      [movimientoId, clienteId],
+    );
+    if (evidence.rows.length !== 1) throw new Error("DEVOLUCION_COMERCIAL_SIN_EVIDENCIA: falta el documento inmutable.");
+    detail.devolucionComercial = evidence.rows[0]!.response;
+  }
+  return detail;
 }

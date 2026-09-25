@@ -1,0 +1,47 @@
+/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/pg-core/session.ts:73
+				throw new DrizzleQueryError(queryString, params, e as Error);
+				      ^
+
+DrizzleQueryError: Failed query: SELECT enabled FROM public.commercial_return_gate WHERE id=1 FOR SHARE
+params: 
+    at NodePgPreparedQuery.queryWithCache (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/pg-core/session.ts:73:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Module.commercialReturnInTransaction (/home/runner/workspace/artifacts/api-server/src/lib/commercial-return.ts:34:16)
+    ... 3 lines matching cause stack trace ...
+    at async <anonymous> (/home/runner/workspace/reports/devolucion-comercial/run-positive-rehearsal.ts:266:5) {
+  query: 'SELECT enabled FROM public.commercial_return_gate WHERE id=1 FOR SHARE',
+  params: [],
+  cause: error: permission denied for table commercial_return_gate
+      at /home/runner/workspace/node_modules/.pnpm/pg@8.22.0/node_modules/pg/lib/client.js:652:17
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async <anonymous> (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:149:14)
+      at async NodePgPreparedQuery.queryWithCache (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/pg-core/session.ts:71:12)
+      at async Module.commercialReturnInTransaction (/home/runner/workspace/artifacts/api-server/src/lib/commercial-return.ts:34:16)
+      at async NodePgSession.transaction (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:259:19)
+      at async <anonymous> (/home/runner/workspace/reports/devolucion-comercial/run-positive-rehearsal.ts:267:22)
+      at async check (/home/runner/workspace/reports/devolucion-comercial/run-positive-rehearsal.ts:195:3)
+      at async <anonymous> (/home/runner/workspace/reports/devolucion-comercial/run-positive-rehearsal.ts:266:5) {
+    length: 110,
+    severity: 'ERROR',
+    code: '42501',
+    detail: undefined,
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'aclchk.c',
+    line: '2814',
+    routine: 'aclcheck_error'
+  }
+}
+
+Node.js v24.13.0
+undefined
+/home/runner/workspace/artifacts/api-server:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: tsx ../../reports/devolucion-comercial/run-positive-rehearsal.ts

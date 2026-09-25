@@ -341,7 +341,7 @@ export default function CajaCuentasDestino() {
   const topStats = header
     ? [
         {
-          title: "Vendido",
+          title: "Vendido histórico (bruto)",
           amount: header.vendido.total,
           prev: header.vendido.totalAnterior,
           variation: header.vendido.variacionPorcentaje,
@@ -367,12 +367,13 @@ export default function CajaCuentasDestino() {
           amount: header.cobrado.total,
           prev: header.cobrado.totalAnterior,
           variation: header.cobrado.variacionPorcentaje,
-          fuentes: ["POS", "ABONO", "ABONO_SALDO_FAVOR"] as ListAdminCuentaDestinoMovimientosFuenteItem[],
+          fuentes: ["POS", "ABONO", "ABONO_SALDO_FAVOR", "DEVOLUCION_COMERCIAL"] as ListAdminCuentaDestinoMovimientosFuenteItem[],
           breakdown: [
              // Historical wording is intentionally not rendered: "De ventas del periodo" and "A cuenta, sin aplicar".
              { label: "Contado cobrado", amount: header.cobrado.contado, fuentes: ["POS"] as ListAdminCuentaDestinoMovimientosFuenteItem[] },
              { label: "Abonos a notas (neto de reversos)", amount: header.cobrado.abonos, fuentes: ["ABONO"] as ListAdminCuentaDestinoMovimientosFuenteItem[] },
              { label: "Saldo a favor (neto de reversos)", amount: header.cobrado.saldosFavor, fuentes: ["ABONO_SALDO_FAVOR"] as ListAdminCuentaDestinoMovimientosFuenteItem[] },
+             { label: "Devoluciones comerciales (a restar)", amount: header.cobrado.devolucionesComerciales ?? "0.00", fuentes: ["DEVOLUCION_COMERCIAL"] as ListAdminCuentaDestinoMovimientosFuenteItem[] },
           ],
           className: "border-l-4 border-l-primary",
         },

@@ -1,4 +1,5 @@
 import { db, pool } from "@workspace/db";
+import { COMMERCIAL_RETURN_HISTORICAL_SALES_NOTICE } from "./commercial-return-contract";
 import { meteredReferenceCost } from "./metered-reference-cost";
 import { loadCustomerCreditProjections } from "./credit-aging-read-model";
 import { accountedDocumentAt, accountedDocumentPredicate } from "./accounted-document";
@@ -237,5 +238,8 @@ async function clients(ctx: DomainReportContext): Promise<CommercialReport> {
 }
 
 export async function buildCommercialReport(section: "compras" | "clientes", ctx: DomainReportContext): Promise<CommercialReport> {
-  return section === "compras" ? purchases(ctx) : clients(ctx);
+  if (section === "compras") return purchases(ctx);
+  const report = await clients(ctx);
+  report.warnings.push(COMMERCIAL_RETURN_HISTORICAL_SALES_NOTICE);
+  return report;
 }

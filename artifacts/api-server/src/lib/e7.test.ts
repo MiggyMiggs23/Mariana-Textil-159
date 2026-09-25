@@ -62,7 +62,7 @@ function permissionDatabase(granted = true) {
   } };
   return { database: database as never, get selects() { return selects; } };
 }
-function databaseFixture(options: { actors?: Array<Actor | null>; historicalSql?: boolean } = {}) {
+function databaseFixture(options: { actors?: Array<Actor | null>; historicalSql?: boolean; commercialReturn?: boolean } = {}) {
   const actors = options.actors ?? [{ id: 1, rol: "ADMIN", ubicacion_id: null, alcance_consulta: "TODAS" }];
   let authReads = 0, queries = 0, transactions = 0;
   const seen: Array<{ text: string; values: readonly unknown[] }> = [];
@@ -74,7 +74,14 @@ function databaseFixture(options: { actors?: Array<Actor | null>; historicalSql?
         return (values[0] as number[]).map(id => ({ id, nombre: `Tienda ${id}` }));
       }
       if (/SELECT limite_credito::text AS limite FROM clientes/.test(text)) return [{ limite: "300.00" }];
-      if (/SELECT m\.cliente_id,m\.id,m\.ticket_id/.test(text)) return ledgerRows;
+      if (/SELECT m\.cliente_id,m\.id,m\.ticket_id/.test(text)) return options.commercialReturn ? [...ledgerRows, {
+        ...ledgerRows[0], id: 100, tipo: "DEVOLUCION_COMERCIAL", importe: "0.00",
+        movimiento_origen_id: 1, created_at: new Date("2026-01-20T12:00:00Z"),
+      }] : ledgerRows;
+      if (/FROM public.devoluciones_comerciales/.test(text)) return [{
+        id: "70000000-0000-4000-8000-000000000100", importe: "100.00",
+        fecha: "2026-01-20T12:00:00Z", ubicacion_id: 2,
+      }];
       if (/SELECT m\.id,[\s\S]*CASE WHEN m\.id IN/.test(text)) {
         const historicalIds = new Set((text.match(/m\.id IN \(([\d,]+)\)/)?.[1] ?? "")
           .split(",").filter(Boolean).map(Number));
@@ -84,7 +91,9 @@ function databaseFixture(options: { actors?: Array<Actor | null>; historicalSql?
           { id: 2, ticket_id: 12, ubicacion_id: 2, folio: "F-102", cuenta_destino: null, naturaleza: null,
             sitio_origen_id: 2, original_tipo: null },
           { id: 3, ticket_id: null, ubicacion_id: null, folio: null, cuenta_destino: "CAJA_FISICA",
-            naturaleza: "OPERACION_CREDITO_SIN_DINERO", sitio_origen_id: 1, original_tipo: null },
+            naturaleza: options.commercialReturn ? "INGRESO_FISICO" : "OPERACION_CREDITO_SIN_DINERO", sitio_origen_id: 1, original_tipo: null },
+          ...(options.commercialReturn ? [{ id: 100, ticket_id: 11, ubicacion_id: 2, folio: "F-101", cuenta_destino: null,
+            naturaleza: "OPERACION_CREDITO_SIN_DINERO", sitio_origen_id: 2, original_tipo: null }] : []),
           ...[51, 52, 53].map(id => ({ id, ticket_id: null, ubicacion_id: null, folio: null, cuenta_destino: "CUENTA_FISCAL",
             naturaleza: null, sitio_origen_id: historicalIds.has(id) ? null : 9, original_tipo: null })),
         ];
@@ -131,6 +140,19 @@ function reader(fixture: ReturnType<typeof databaseFixture>, extra: Record<strin
     database: fixture.database, transaction: fixture.transaction, ...extra });
 }
 const attributionQuery = { desde: "2026-01-01", hasta: "2026-01-31" };
+test("commercial return statement keeps zero debt evidence while attribution subtracts only its real cash refund", async () => {
+  const fixture = databaseFixture({ commercialReturn: true });
+  const api = reader(fixture);
+  const statement = await api.statement(session, 1);
+  assert.equal(statement.movimientos.find(row => row.tipo === "DEVOLUCION_COMERCIAL")?.importe, "0.00");
+  const attribution = await api.attribution(session, attributionQuery);
+  const returns = attribution.movimientos.filter(row => row.tipo === "DEVOLUCION_COMERCIAL");
+  assert.equal(returns.length, 1);
+  assert.equal(returns[0]?.importe, "-100.00");
+  assert.equal(returns[0]?.cuentaDestino, "CAJA_FISICA");
+  assert.equal(returns[0]?.ubicacionId, 2);
+  assert.equal(returns[0]?.detailHref, "/clientes/1/movimientos/100");
+});
 function extractLatin1PdfLines(pdf: Buffer) {
   const source = pdf.toString("latin1");
   assert.match(source, /^%PDF-1\.4\n/);

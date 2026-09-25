@@ -20,6 +20,7 @@ export const E7_LEYENDAS = [
   "El resumen global de crédito considera todos los sitios.",
   "El detalle corresponde solo a los sitios autorizados y no representa la deuda total del cliente.",
   "Las aplicaciones a notas no son nuevos ingresos.",
+  "En el estado de cuenta, DEVOLUCION_COMERCIAL cancela deuda y no es un abono. En atribución de cobranza, solo resta el efectivo devuelto de la fecha y tienda receptoras; nunca la deuda cancelada.",
   "El dinero retenido pendiente de aplicación no es saldo a favor ni reduce la deuda.",
   "Sin sitio determinado",
 ] as const;
@@ -265,6 +266,27 @@ export function createE7Reader(infrastructure: E7Infrastructure = {}) {
           movements.push(...data.portions);
           if (scope.tipo === "GLOBAL") for (const m of data.ledger) {
             const meta = data.metadata.get(m.id)!;
+            if (m.tipo === "DEVOLUCION_COMERCIAL") {
+              // Credit cancellation is not collection. Only the actual cash
+              // refund reduces net collection, at its NEW receiving-site date.
+              // Conditional lookup keeps CLOSED installations without the new
+              // table readable until any real commercial-return event exists.
+              const evidence = await db.query<{ id: string; importe: string; fecha: unknown; ubicacion_id: number }>(
+                `SELECT id::text,efectivo_devuelto::text AS importe,created_at AS fecha,
+                  ubicacion_recepcion_id AS ubicacion_id FROM public.devoluciones_comerciales
+                  WHERE movimiento_credito_id=$1`, [m.id]);
+              const returned = evidence.rows[0];
+              if (evidence.rows.length !== 1 || !returned)
+                throw new E7Error("E7_FUENTE_INVALIDA", "Devolución comercial sin documento inmutable único.");
+              if (moneyToCents(returned.importe) > 0) movements.push({
+                id: `DC:${returned.id}`, fecha: iso(returned.fecha), tipo: "DEVOLUCION_COMERCIAL",
+                importe: safeMoney(-moneyToCents(returned.importe)), ubicacionId: returned.ubicacion_id,
+                cuentaDestino: "CAJA_FISICA", folio: meta.folio, saldoPendiente: null,
+                detailHref: `/clientes/${id}/movimientos/${m.id}`,
+                documentHref: meta.ticketId === null ? null : `/tickets/${meta.ticketId}`,
+              });
+              continue;
+            }
             if (m.tipo !== "ABONO" && !(m.tipo === "REVERSO" && meta.originalType === "ABONO")) continue;
             if (meta.nature === "OPERACION_CREDITO_SIN_DINERO") continue;
             if (meta.account === null)

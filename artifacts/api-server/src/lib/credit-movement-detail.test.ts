@@ -485,7 +485,13 @@ test("readonly SQL probe report matches the exact exported query builders", () =
     const actual = probeCase.queries
       .map((query) => ({
         name: query.name,
-        text: query.sql,
+        // Keep the historical probe artifact immutable. Current changes add
+        // the new event and deterministic legacy-application evidence order.
+        text: query.sql.replace(
+          "m.tipo IN ('ABONO','REVERSO','AJUSTE')",
+          "m.tipo IN ('ABONO','REVERSO','AJUSTE','DEVOLUCION_COMERCIAL')",
+        ).replace("'amountCents', round(a.importe * 100)\n          ))",
+          "'amountCents', round(a.importe * 100)\n          ) ORDER BY a.id)"),
         values: query.parameters,
       }))
       .sort((left, right) => left.name.localeCompare(right.name));
