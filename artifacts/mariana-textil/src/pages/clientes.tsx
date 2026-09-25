@@ -1,19 +1,16 @@
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { useHistoryEntryState } from "@/lib/internal-navigation";
-import { ArrowUpDown, Loader2, LockKeyhole, Plus, Search, Users } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import {
   getGetClientesCarteraQueryKey,
-  getGetClienteCreditoQueryKey,
   getGetCurrentUserQueryKey,
   getListClientesQueryKey,
   getListLocationsQueryKey,
   getListCuentasIncobrablesQueryKey,
   useGetClientesCartera,
-  useGetClienteCredito,
   useGetCurrentUser,
   useListLocations,
-  useListClientes,
   useCreateCliente,
   useListCuentasIncobrables,
   useListarComportamientoPagoClientes,
@@ -45,13 +42,10 @@ import { getGlobalAnalytics } from "@/lib/clientes-api";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatNumber } from "@workspace/number-format";
 import { toast } from "sonner";
-import { PurgaCatalogoButton } from "@/components/purga-catalogo-button";
 import { CREDIT_TERMS, type ClientCreditTerm } from "@/lib/credit-terms";
+import { ClientDirectory } from "@/components/client-directory";
 
 export default function Clientes() {
-  const [search, setSearch] = useHistoryEntryState("clientes.search", "");
-  const [status, setStatus] = useHistoryEntryState("clientes.status", "active");
-  const [sort, setSort] = useHistoryEntryState<"name" | "recent">("clientes.sort", "name");
   const [analyticsMonths, setAnalyticsMonths] = useHistoryEntryState("clientes.analytics-months", "12");
   const [activeTab, setActiveTab] = useHistoryEntryState("clientes.tab", "clientes");
   const [carteraLocationIds, setCarteraLocationIds] = useState<number[]>([]);
@@ -67,7 +61,6 @@ export default function Clientes() {
   const canFinances = hasPermission(user, Modules.CLIENTES_FINANZAS, "ver") && user?.rol !== "SUPERVISOR";
   const canCredit = hasPermission(user, Modules.CLIENTES_CREDITO, "ver") && user?.rol !== "SUPERVISOR";
   const canCreate = hasPermission(user, Modules.CLIENTES, "crear");
-  const clientsQuery = useListClientes({ query: { enabled: activeTab === "clientes", queryKey: getListClientesQueryKey() } });
   const effectiveCarteraScope = carteraEffectiveScope(user);
   const canSelectCarteraScope = effectiveCarteraScope.kind === "UNRESTRICTED";
   const authPartition = carteraAuthPartition(user);
@@ -123,22 +116,6 @@ export default function Clientes() {
     .sort((a, b) => behaviorSort === "NAME"
       ? a.clienteNombre.localeCompare(b.clienteNombre, "es")
       : b.percentage - a.percentage), [behaviorColor, behaviorQuery.data, behaviorSort]);
-  const visible = useMemo(() => {
-    const term = search.trim().toLowerCase();
-    return [...(clientsQuery.data ?? [])]
-      .filter((client) => status === "all" || client.activo === (status === "active"))
-      .filter((client) => !term || [client.nombre, client.telefono, client.correo, client.rfc].some((field) => field?.toLowerCase().includes(term)))
-      .sort((a, b) => {
-        if (sort === "name") {
-          const aIsSys = a.esSistema || a.id === 1;
-          const bIsSys = b.esSistema || b.id === 1;
-          if (aIsSys && !bIsSys) return -1;
-          if (!aIsSys && bIsSys) return 1;
-          return a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base", numeric: true });
-        }
-        return +new Date(b.createdAt) - +new Date(a.createdAt);
-      });
-  }, [clientsQuery.data, search, sort, status]);
 
   return (
     <AppLayout>
@@ -164,65 +141,7 @@ export default function Clientes() {
             {user?.rol === "ADMIN" && <TabsTrigger value="incobrables" data-testid="tab-incobrables">Incobrables</TabsTrigger>}
           </TabsList>
           <TabsContent value="clientes" className="space-y-4">
-            <Card>
-              <CardContent className="grid gap-3 p-4 sm:grid-cols-[1fr_170px_170px]">
-                <div className="relative">
-                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Nombre, teléfono, correo o RFC" className="pl-9" data-testid="input-search-clients" />
-                </div>
-                <Select value={status} onValueChange={setStatus}>
-                  <SelectTrigger data-testid="select-client-status"><SelectValue /></SelectTrigger>
-                  <SelectContent><SelectItem value="active">Activos</SelectItem><SelectItem value="inactive">Inactivos</SelectItem><SelectItem value="all">Todos</SelectItem></SelectContent>
-                </Select>
-                <Select value={sort} onValueChange={(value) => setSort(value as "name" | "recent")}>
-                  <SelectTrigger data-testid="select-client-sort"><ArrowUpDown className="mr-2 h-4 w-4" /><SelectValue /></SelectTrigger>
-                  <SelectContent><SelectItem value="name">Nombre A–Z</SelectItem><SelectItem value="recent">Más recientes</SelectItem></SelectContent>
-                </Select>
-              </CardContent>
-            </Card>
-            {clientsQuery.isLoading ? (
-              <div className="space-y-3" aria-label="Cargando clientes">{[1, 2, 3].map((item) => <Skeleton key={item} className="h-16 w-full" />)}</div>
-            ) : clientsQuery.isError ? (
-              <Card className="border-destructive/30"><CardContent className="space-y-3 p-6 text-destructive" role="alert">
-                <p data-testid="error-clients">{getApiErrorMessage(clientsQuery.error, "No se pudieron cargar los clientes.")}</p>
-                <Button variant="outline" onClick={() => clientsQuery.refetch()} data-testid="button-retry-clients">Intentar de nuevo</Button>
-              </CardContent></Card>
-            ) : visible.length === 0 ? (
-              <Card><CardContent className="grid place-items-center gap-2 p-12 text-center text-muted-foreground"><Users className="h-10 w-10 opacity-40" /><p data-testid="empty-clients">No hay clientes que coincidan con los filtros.</p></CardContent></Card>
-            ) : (
-              <Card className="overflow-hidden">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader><TableRow><TableHead>Cliente</TableHead><TableHead>Contacto</TableHead><TableHead>RFC</TableHead><TableHead>Estado</TableHead>{canCredit && <><TableHead className="text-right">Saldo</TableHead><TableHead className="text-right">Disponible</TableHead></>}{canFinances && canCredit && <TableHead className="text-right">Saldo a favor</TableHead>}{user?.rol === "ADMIN" && <TableHead className="text-right">Acciones</TableHead>}</TableRow></TableHeader>
-                    <TableBody>{visible.map((client) => (
-                      <TableRow key={client.id} data-testid={`row-client-${client.id}`}>
-                        <TableCell className="font-medium">
-                          <Link
-                            href={`/clientes/${client.id}`}
-                            className="text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                            data-testid={`link-client-${client.id}`}
-                          >
-                            {client.nombre}
-                          </Link>
-                          {client.id === 1 && <Badge variant="secondary" className="ml-2"><LockKeyhole className="mr-1 h-3 w-3" />Sistema</Badge>}
-                        </TableCell>
-                        <TableCell><div>{client.telefono || "—"}</div><div className="text-xs text-muted-foreground">{client.correo}</div></TableCell>
-                        <TableCell>{client.rfc || "—"}</TableCell>
-                        <TableCell><Badge variant={client.activo ? "default" : "secondary"}>{client.activo ? "Activo" : "Inactivo"}</Badge></TableCell>
-                        {canCredit && <ClientFinancialCells id={client.id} showFavor={canFinances} />}
-                        {user?.rol === "ADMIN" && (
-                          <TableCell className="text-right">
-                            {!client.activo && !client.esSistema && (
-                              <PurgaCatalogoButton entidad="clientes" id={client.id} nombreVisible={client.nombre} invalidateQueryKey={getListClientesQueryKey()} />
-                            )}
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    ))}</TableBody>
-                  </Table>
-                </div>
-              </Card>
-            )}
+            <ClientDirectory enabled={authReady && activeTab === "clientes"} canFinances={canFinances} isAdmin={user?.rol === "ADMIN"} authPartition={authPartition} />
           </TabsContent>
           <TabsContent value="cartera" className="space-y-4">
             {canSelectCarteraScope && (
@@ -590,16 +509,6 @@ function AnalyticsTable({ title, rows }: { title: string; rows: string[][] }) {
     "Evolución mensual": "Agrupa tickets, ventas y utilidad monetaria por mes dentro del periodo elegido; la utilidad requiere costo congelado.",
   };
   return <Card><CardHeader><CardTitle>{title}</CardTitle></CardHeader><CardContent>{rows.length ? <div className="space-y-2">{rows.map((row, index) => <div key={`${row[0]}-${index}`} className="grid grid-cols-3 gap-2 border-b py-2 text-sm"><span className="font-medium">{row[0]}</span><span className="text-right">{row[1]}</span><span className="text-right text-muted-foreground">{row[2]}</span></div>)}</div> : <p className="text-muted-foreground">Sin datos para el periodo.</p>}<p className="mt-3 text-sm text-muted-foreground">{explanations[title]}</p></CardContent></Card>;
-}
-
-function ClientFinancialCells({ id, showFavor }: { id: number; showFavor: boolean }) {
-  const query = useGetClienteCredito(id, {
-    query: { queryKey: getGetClienteCreditoQueryKey(id), staleTime: 30_000 },
-  });
-  if (query.isLoading) return <><TableCell><Skeleton className="ml-auto h-4 w-16" /></TableCell><TableCell><Skeleton className="ml-auto h-4 w-16" /></TableCell>{showFavor && <TableCell><Skeleton className="ml-auto h-4 w-16" /></TableCell>}</>;
-  if (query.isError) return <><TableCell className="text-right text-muted-foreground">—</TableCell><TableCell className="text-right text-muted-foreground">—</TableCell>{showFavor && <TableCell className="text-right text-muted-foreground">—</TableCell>}</>;
-  const saldoAFavor = (query.data as typeof query.data & { saldoAFavor?: string } | undefined)?.saldoAFavor ?? "0.00";
-  return <><TableCell className="text-right font-mono text-red-700" data-testid={`text-client-balance-${id}`}>{formatNumber(query.data?.saldoActual, { kind: "money" })}</TableCell><TableCell className="text-right font-mono">{formatNumber(query.data?.creditoDisponible, { kind: "money" })}</TableCell>{showFavor && <TableCell className="text-right font-mono text-emerald-700" data-testid={`text-client-favor-${id}`}>{formatNumber(saldoAFavor, { kind: "money" })}</TableCell>}</>;
 }
 
 function IncobrablesTab() {

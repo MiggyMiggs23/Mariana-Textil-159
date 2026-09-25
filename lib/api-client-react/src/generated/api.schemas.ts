@@ -10695,6 +10695,85 @@ export type ListCuentasIncobrables200 = {
   total?: number;
 };
 
+export type ListClientesListadoParams = {
+/**
+ * @maxLength 200
+ */
+q?: string;
+sort?: ListClientesListadoSort;
+direction?: ListClientesListadoDirection;
+period?: ListClientesListadoPeriod;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+pageSize?: number;
+active?: ListClientesListadoActive;
+};
+
+export type ListClientesListadoSort = typeof ListClientesListadoSort[keyof typeof ListClientesListadoSort];
+
+
+export const ListClientesListadoSort = {
+  nombre: 'nombre',
+  rfc: 'rfc',
+  telefono: 'telefono',
+  limiteCredito: 'limiteCredito',
+  saldoActual: 'saldoActual',
+  movementCount: 'movementCount',
+  lastActivity: 'lastActivity',
+} as const;
+
+export type ListClientesListadoDirection = typeof ListClientesListadoDirection[keyof typeof ListClientesListadoDirection];
+
+
+export const ListClientesListadoDirection = {
+  asc: 'asc',
+  desc: 'desc',
+} as const;
+
+export type ListClientesListadoPeriod = typeof ListClientesListadoPeriod[keyof typeof ListClientesListadoPeriod];
+
+
+export const ListClientesListadoPeriod = {
+  '1m': '1m',
+  '3m': '3m',
+  '1y': '1y',
+  all: 'all',
+} as const;
+
+export type ListClientesListadoActive = typeof ListClientesListadoActive[keyof typeof ListClientesListadoActive];
+
+
+export const ListClientesListadoActive = {
+  true: 'true',
+  false: 'false',
+} as const;
+
+export type ListClientesListado200ItemsItem = Cliente & ({
+  /**
+     * @minimum 0
+     * @nullable
+     */
+  movementCount: number | null;
+  /** @nullable */
+  lastActivity: string | null;
+});
+
+export type ListClientesListado200 = {
+  items: ListClientesListado200ItemsItem[];
+  /** @minimum 0 */
+  total: number;
+  /** @minimum 1 */
+  page: number;
+  /** @minimum 1 */
+  pageSize: number;
+};
+
 export type GetClientesCarteraParams = {
 /**
  * Ubicación única solicitada para el alcance. No combinar con ubicacionIds.

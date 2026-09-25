@@ -10564,6 +10564,71 @@ export const ListCuentasIncobrablesResponse = zod.object({
 
 
 /**
+ * @summary Catálogo paginado con actividad y crédito según permisos
+ */
+export const listClientesListadoQueryQMax = 200;
+
+export const listClientesListadoQuerySortDefault = `lastActivity`;
+export const listClientesListadoQueryDirectionDefault = `desc`;
+export const listClientesListadoQueryPeriodDefault = `all`;
+export const listClientesListadoQueryPageDefault = 1;
+
+export const listClientesListadoQueryPageSizeDefault = 50;
+export const listClientesListadoQueryPageSizeMax = 100;
+
+
+
+export const ListClientesListadoQueryParams = zod.object({
+  "q": zod.coerce.string().max(listClientesListadoQueryQMax).optional(),
+  "sort": zod.enum(['nombre', 'rfc', 'telefono', 'limiteCredito', 'saldoActual', 'movementCount', 'lastActivity']).default(listClientesListadoQuerySortDefault),
+  "direction": zod.enum(['asc', 'desc']).default(listClientesListadoQueryDirectionDefault),
+  "period": zod.enum(['1m', '3m', '1y', 'all']).default(listClientesListadoQueryPeriodDefault),
+  "page": zod.coerce.number().int().min(1).default(listClientesListadoQueryPageDefault),
+  "pageSize": zod.coerce.number().int().min(1).max(listClientesListadoQueryPageSizeMax).default(listClientesListadoQueryPageSizeDefault),
+  "active": zod.enum(['true', 'false']).optional()
+})
+
+export const listClientesListadoResponseItemsItemOneRecibeNotaSinPreciosDefault = false;
+export const listClientesListadoResponseItemsItemTwoMovementCountMin = 0;
+
+export const listClientesListadoResponseTotalMin = 0;
+
+
+
+
+
+export const ListClientesListadoResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "telefono": zod.string().nullish(),
+  "correo": zod.string().nullish(),
+  "direccion": zod.string().nullish(),
+  "direccionParticular": zod.string().nullish(),
+  "direccionEntrega": zod.string().nullish(),
+  "rfc": zod.string().nullish(),
+  "notas": zod.string().nullish(),
+  "activo": zod.boolean(),
+  "esSistema": zod.boolean(),
+  "contactoNombre": zod.string().nullish(),
+  "recibeNotaSinPrecios": zod.boolean().default(listClientesListadoResponseItemsItemOneRecibeNotaSinPreciosDefault),
+  "limiteCredito": zod.string().nullish(),
+  "saldoActual": zod.string().optional().describe('Se incluye únicamente con permiso financiero.'),
+  "saldoAFavor": zod.string().optional().describe('Se incluye únicamente con permiso financiero.'),
+  "diasCredito": zod.union([zod.literal(0),zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).describe('0 indica que el cliente no tiene un plazo habitual configurado.'),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}).and(zod.object({
+  "movementCount": zod.number().int().min(listClientesListadoResponseItemsItemTwoMovementCountMin).nullable(),
+  "lastActivity": zod.coerce.date().nullable()
+}))),
+  "total": zod.number().int().min(listClientesListadoResponseTotalMin),
+  "page": zod.number().int().min(1),
+  "pageSize": zod.number().int().min(1)
+})
+
+
+/**
  * @summary Lista el catálogo operativo de clientes (sin datos financieros)
  */
 export const listClientesResponseRecibeNotaSinPreciosDefault = false;

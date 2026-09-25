@@ -276,6 +276,8 @@ import type {
   ListCamionetasParams,
   ListChoferesParams,
   ListClienteRecibosE3Params,
+  ListClientesListado200,
+  ListClientesListadoParams,
   ListComprasProveedorParams,
   ListContenedoresDisponiblesEntradaParams,
   ListContenedoresParams,
@@ -14624,6 +14626,90 @@ export function useListCuentasIncobrables<TData = Awaited<ReturnType<typeof list
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getListCuentasIncobrablesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListClientesListadoUrl = (params?: ListClientesListadoParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/clientes/listado?${stringifiedParams}` : `/api/clientes/listado`
+}
+
+/**
+ * @summary Catálogo paginado con actividad y crédito según permisos
+ */
+export const listClientesListado = async (params?: ListClientesListadoParams, options?: Parameters<typeof customFetch>[1]): Promise<ListClientesListado200> => {
+
+  return customFetch<ListClientesListado200>(getListClientesListadoUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListClientesListadoQueryKey = (params?: ListClientesListadoParams,) => {
+    return [
+    `/api/clientes/listado`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListClientesListadoQueryOptions = <TData = Awaited<ReturnType<typeof listClientesListado>>, TError = ErrorType<Error | UnauthorizedResponse | ForbiddenResponse>>(params?: ListClientesListadoParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listClientesListado>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListClientesListadoQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listClientesListado>>> = ({ signal }) => listClientesListado(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listClientesListado>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListClientesListadoQueryResult = NonNullable<Awaited<ReturnType<typeof listClientesListado>>>
+export type ListClientesListadoQueryError = ErrorType<Error | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Catálogo paginado con actividad y crédito según permisos
+ */
+
+export function useListClientesListado<TData = Awaited<ReturnType<typeof listClientesListado>>, TError = ErrorType<Error | UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListClientesListadoParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listClientesListado>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListClientesListadoQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

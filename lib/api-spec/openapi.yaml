@@ -4050,6 +4050,51 @@ paths:
                   totalCuentas: { type: number }
                   total: { type: number }
 
+  /clientes/listado:
+    get:
+      operationId: listClientesListado
+      tags: [clientes]
+      summary: Catálogo paginado con actividad y crédito según permisos
+      parameters:
+        - { name: q, in: query, schema: { type: string, maxLength: 200 } }
+        - { name: sort, in: query, schema: { type: string, enum: [nombre, rfc, telefono, limiteCredito, saldoActual, movementCount, lastActivity], default: lastActivity } }
+        - { name: direction, in: query, schema: { type: string, enum: [asc, desc], default: desc } }
+        - { name: period, in: query, schema: { type: string, enum: [1m, 3m, 1y, all], default: all } }
+        - { name: page, in: query, schema: { type: integer, minimum: 1, default: 1 } }
+        - { name: pageSize, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 50 } }
+        - { name: active, in: query, schema: { type: string, enum: ["true", "false"] } }
+      responses:
+        "200":
+          description: Página con orden global y conteo por periodo
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, total, page, pageSize]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/Cliente"
+                        - type: object
+                          required: [movementCount, lastActivity]
+                          properties:
+                            movementCount: { type: ["integer", "null"], minimum: 0 }
+                            lastActivity: { type: ["string", "null"], format: date-time }
+                  total: { type: integer, minimum: 0 }
+                  page: { type: integer, minimum: 1 }
+                  pageSize: { type: integer, minimum: 1 }
+        "400":
+          description: Consulta inválida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
   /clientes:
     get:
       operationId: listClientes

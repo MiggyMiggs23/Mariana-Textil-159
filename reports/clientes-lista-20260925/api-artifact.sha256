@@ -1,0 +1,5 @@
+a53d9a0d31c1713db1e57409a74d2c894935fa7327ec3617b5b58717b63eb5cd  artifacts/api-server/dist-clientes-lista-20260925/index.mjs
+f6ddfd66a4281c3e3ac017ff3a79a9ba8803dd69def6d63b4eabb549421ca914  artifacts/api-server/dist-clientes-lista-20260925/pino-file.mjs
+1a05aa85bf5ce035c5d1f19a32e0308d6dbab00c7194e1936c7f632d10994fac  artifacts/api-server/dist-clientes-lista-20260925/pino-pretty.mjs
+c5a89471858652e46f998b992424c00158c8ff63b2682049e496532a8ce656bd  artifacts/api-server/dist-clientes-lista-20260925/pino-worker.mjs
+b490228463d2d47a57932bcbe6bb307af9c54d1b4f3953191e1077e791bb188d  artifacts/api-server/dist-clientes-lista-20260925/thread-stream-worker.mjs

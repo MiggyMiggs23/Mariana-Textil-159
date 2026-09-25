@@ -1,3 +1,7 @@
+### Directorio de clientes — candidato pendiente de activación
+
+Mejora preparada en `dist-clientes-lista-20260925` de API y frontend; todavía no sustituye los artefactos activos. No activar ni reiniciar API sin autorización expresa del propietario. Evidencia, contrato, procedencia y pruebas: `reports/clientes-lista-20260925/`. El nuevo listado paginado mantiene intacto GET /clientes para consumidores operativos. La actividad cuenta documentos comerciales procesados una sola vez y abonos no revertidos; el conteo depende del período, mientras la última actividad considera todo el historial. Deuda y saldo a favor conservan la proyección canónica; actividad respeta alcance y permiso financiero. No se modificó ningún cliente ni movimiento, ni se aplicó DDL. No hace falta índice adicional según las mediciones actuales.
+
 ### Clientes reales — carga única completada 25/09/2026
 
 Importación autorizada de 2,575 clientes realizada una sola vez, después de comunicar la prueba PostgreSQL desechable. Cada cliente: límite MXN150,000 y días de crédito 0; sin truncamientos ni exclusiones. Verificación independiente posterior en transacción READ ONLY: los 2,575 registros coinciden campo por campo; cliente de sistema existente y otras 107 tablas conservados íntegros (huellas de las 108 tablas). Total catálogo: 2,576. Informe y autorización literal: `reports/importacion-clientes-reales-20260925/resultado-carga.md`. **NO reimportar, NO retirar `apply-once.claim.json`, NO ejecutar reset.** No se modificó esquema ni workflows.

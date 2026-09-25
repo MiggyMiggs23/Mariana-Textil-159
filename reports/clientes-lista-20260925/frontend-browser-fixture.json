@@ -1,0 +1,14 @@
+{
+  "synthetic": true,
+  "description": "Synthetic UI-only fixture. Intercept every API request; do not call real login or mutate application data. Metadata is not the real customer catalog.",
+  "listResponse": {
+    "items": [
+      {"id": 900001, "nombre": "Aarón Arvizu Rodríguez", "telefono": "5551234567", "rfc": "XAXX010101000", "activo": true, "esSistema": false, "limiteCredito": "150000.00", "saldoActual": "12750.00", "saldoAFavor": "0.00", "movementCount": 24, "lastActivity": "2026-09-25T20:00:00Z"},
+      {"id": 900002, "nombre": "Textiles del Norte · prueba", "telefono": "5552223344", "rfc": "XEXX010101000", "activo": true, "esSistema": false, "limiteCredito": "150000.00", "saldoActual": "0.00", "saldoAFavor": "800.00", "movementCount": 12, "lastActivity": "2026-09-24T18:00:00Z"},
+      {"id": 900003, "nombre": "María López · prueba", "telefono": null, "rfc": null, "activo": true, "esSistema": false, "limiteCredito": "150000.00", "saldoActual": "0.00", "saldoAFavor": "0.00", "movementCount": 0, "lastActivity": null}
+    ],
+    "total": 3,
+    "page": 1,
+    "pageSize": 50
+  }
+}

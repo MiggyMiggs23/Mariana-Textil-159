@@ -1,0 +1,19 @@
+{
+  "status": "candidate-not-activated",
+  "source": "approved .local/e7-text-baseline; not whole HEAD",
+  "candidate": "artifacts/mariana-textil/dist-clientes-lista-20260925",
+  "command": "NODE_ENV=production BASE_PATH=/ pnpm exec vite build --config vite.config.ts --outDir /home/runner/workspace/artifacts/mariana-textil/dist-clientes-lista-20260925",
+  "changedProductInputs": [
+    {"path": "src/pages/clientes.tsx", "sha256": "953ab7da9a0ea60d40b9683bc3579496e80d06ff8005573753564b5427b4a4b4"},
+    {"path": "src/components/client-directory.tsx", "sha256": "229c0def4bb07d0881c0ba26759df4ea7d720dbff5678f9b38e81060cb7ba3c7"}
+  ],
+  "retainedAppLayoutSha256": "f64b9afcb0c3ab521d07273c6b73798377c01af5f1eea8431af8174b532b13c6",
+  "outputHashes": "frontend-artifact.sha256",
+  "checks": [
+    "HEAD frontend typecheck passed",
+    "Five mounted tests passed",
+    "Safe isolated production build passed",
+    "Safe TypeScript project references compiled; remaining leaf diagnostics are missing historical E7 test fixtures only",
+    "No workflow, backend, database or server execution performed"
+  ]
+}
