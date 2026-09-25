@@ -1,0 +1,75 @@
+{
+  "identity": {
+    "db": "continue_test",
+    "actor": "postgres",
+    "port": 55536,
+    "directory": "/home/runner/workspace/private.local/roll-return-continuation/cluster"
+  },
+  "canonicalAdmin": 1,
+  "sites": [
+    {
+      "id": 10,
+      "nombre": "ROLL RETURN PERF TIENDA 1"
+    },
+    {
+      "id": 11,
+      "nombre": "ROLL RETURN PERF TIENDA 2"
+    },
+    {
+      "id": 12,
+      "nombre": "ROLL RETURN PERF TIENDA 3"
+    }
+  ],
+  "products": [
+    {
+      "id": 2,
+      "sku": "ROLL-RETURN-PERF-1"
+    },
+    {
+      "id": 3,
+      "sku": "ROLL-RETURN-PERF-2"
+    },
+    {
+      "id": 4,
+      "sku": "ROLL-RETURN-PERF-3"
+    },
+    {
+      "id": 5,
+      "sku": "ROLL-RETURN-PERF-4"
+    }
+  ],
+  "customer": {
+    "id": 8,
+    "nombre": "ROLL RETURN PERF ANNUAL CUSTOMER"
+  },
+  "actors": {
+    "admin": {
+      "id": 1,
+      "username": "admin"
+    },
+    "terminal": {
+      "id": 9,
+      "username": "roll-return-perf-terminal"
+    },
+    "caja": {
+      "id": 10,
+      "username": "roll-return-perf-caja"
+    }
+  },
+  "sessions": [
+    {
+      "id": 2,
+      "ubicacion_id": 10
+    },
+    {
+      "id": 3,
+      "ubicacion_id": 11
+    },
+    {
+      "id": 4,
+      "ubicacion_id": 12
+    }
+  ],
+  "producer": "authenticated canonical ADMIN API with SQL readback",
+  "applicationRowsCopied": false
+}

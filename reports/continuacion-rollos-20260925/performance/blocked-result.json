@@ -1,0 +1,24 @@
+{
+  "status": "BLOCKED_NO_ANNUAL_FIXTURE",
+  "target": "disposable continue_test",
+  "provision": "completed through authenticated canonical ADMIN API; synthetic fixture identities and credentials retained privately",
+  "seed": {
+    "status": "failed; no further seed attempts authorized",
+    "firstAttempt": "SQLSTATE 42804 at the integer autorizado_por parameter; rolled back; explicit integer casts were added before the retry",
+    "retry": "shell command timed out after 300000 ms while PostgreSQL was still actively executing COMMIT; MAIN cancelled the backend",
+    "observedCause": "commit-time work exceeded the command deadline; deferred E5/E11 graph triggers exist on annual fixture tables",
+    "notEstablished": "which exact trigger/function or SQL statement dominated COMMIT; no SQL query profile was captured"
+  },
+  "postCancellationReadOnlyVerification": {
+    "databaseAndPrivateClusterIdentityVerified": true,
+    "remainingOtherDatabaseConnections": 0,
+    "committedAnnualTickets": 0,
+    "committedAnnualTicketLines": 0,
+    "committedAnnualTicketPayments": 0,
+    "committedAnnualCreditMovements": 0,
+    "committedAnnualE1Operations": 0
+  },
+  "browserMeasurements": "not performed; fixture is absent",
+  "targets": "not evaluated",
+  "nextStep": "Stop. No seed retry or measurement without a separately approved safe copy-only producer/commit strategy; do not disable guards."
+}
