@@ -2509,3 +2509,31 @@ mtime_ms = 1790362722538
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/7c946329-c0ce-48d7-baaa-1c5acb968ef7/9cb07065-fd77-44a3-8ef6-4afdc661ce73"
 storage_version_token = "1790362836664694"
 content_type = "image/png"
+
+[[outputs]]
+id = "UzGUIyNbQhN9LMWw9YRxu"
+uri = "file://artifacts/mariana-textil/reports/test-reset-20260925/after-reset-login.png"
+type = "image"
+title = "Aviso después del reinicio"
+description = "Captura del recorrido probado en navegador con respuestas simuladas: regreso al inicio de sesión con un mensaje claro, persistente al recargar."
+logical_id = "9f7a10ff-247e-4cc9-a60b-4abed51cfc1b"
+content_hash = "sha256:831d1ef83f6579a0d09b3847bbacaa0628ec8ad4cfa95ce5e6f321b06e9beb4a"
+size = 124670
+mtime_ms = 1790369601345
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/9f7a10ff-247e-4cc9-a60b-4abed51cfc1b/0ce12848-d42c-482b-8e72-3f55808c9b6c"
+storage_version_token = "1790369791271706"
+content_type = "image/png"
+
+[[outputs]]
+id = "5SUSYe0MMFi1mkxTg6Bo1"
+uri = "file://artifacts/mariana-textil/reports/test-reset-20260925/sidebar-admin.png"
+type = "image"
+title = "Botón exclusivo de ADMIN"
+description = "Versión preparada: botón rojo al fondo del menú, separado del resto. Datos de ejemplo; pendiente de activación en la aplicación."
+logical_id = "9a6140fb-4388-42b6-a235-ad761e843e4e"
+content_hash = "sha256:f9036085b1b908dec19c838ec5aeb660335a45747aea7c5c9108efd1fba16ff0"
+size = 196111
+mtime_ms = 1790369576069
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/9a6140fb-4388-42b6-a235-ad761e843e4e/bb53323d-0704-4e6a-aac4-e2c0ba3735e8"
+storage_version_token = "1790369792102207"
+content_type = "image/png"
