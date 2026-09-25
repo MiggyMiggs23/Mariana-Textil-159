@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "identity": {
+    "database": "night56_test",
+    "port": 55526,
+    "directory": "/home/runner/workspace/private.local/night-t56/cluster",
+    "started": "2026-09-25T04:42:28.740Z"
+  },
+  "graph": {
+    "md5": "085a297c1439f5b0dde4e99df36e4edf"
+  },
+  "closures": [
+    {
+      "tgname": "e11_closed",
+      "count": 8
+    },
+    {
+      "tgname": "e5_closed",
+      "count": 9
+    }
+  ],
+  "changes": "Only ambiguous SQL aliases renamed; no gate changed"
+}

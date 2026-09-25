@@ -1,0 +1,97 @@
+diff --git a/artifacts/api-server/src/lib/e11-feature.ts b/artifacts/api-server/src/lib/e11-feature.ts
+index 13db5dff..dd4bc430 100644
+--- a/artifacts/api-server/src/lib/e11-feature.ts
++++ b/artifacts/api-server/src/lib/e11-feature.ts
+@@ -2,4 +2,4 @@
+ export const E11_ENABLED: boolean = true;
+ export const E11_PROFILE_ASSIGNMENT_ENABLED: boolean = true;
+ export const E11_RECONCILIATION_ENABLED: boolean = true;
+-export const E11_E5_PREPARATION_ENABLED: boolean = false;
++export const E11_E5_PREPARATION_ENABLED: boolean = true;
+diff --git a/artifacts/api-server/src/lib/e11-tanda-d.test.ts b/artifacts/api-server/src/lib/e11-tanda-d.test.ts
+index a9158253..1949c20e 100644
+--- a/artifacts/api-server/src/lib/e11-tanda-d.test.ts
++++ b/artifacts/api-server/src/lib/e11-tanda-d.test.ts
+@@ -32,12 +32,12 @@ function fixture(role: string, profile: string | null = null) {
+   } };
+   return { tx, queries };
+ }
+-test("released gates enable ADMIN profile assignment but keep E5 preparation closed", () => {
++test("released gates enable ADMIN profiles and explicit A preparation without E12", () => {
+   assert.deepEqual([E11_ENABLED, E11_RECONCILIATION_ENABLED, uiFlag("E11_ENABLED"), uiFlag("E11_UI_ENABLED"),
+     uiFlag("E11_RECONCILIATION_ENABLED")], [true, true, true, true, true]);
+   assert.deepEqual([E11_PROFILE_ASSIGNMENT_ENABLED, uiFlag("E11_PROFILE_ASSIGNMENT_ENABLED")], [true, true]);
+   assert.deepEqual([E11_E5_PREPARATION_ENABLED, uiFlag("E11_E5_PREPARATION_ENABLED"),
+-    E5_ENABLED, E5_CONTADOR_A_ENABLED, E12_SUPPLIER_CASH_ENABLED], Array(5).fill(false));
++    E5_ENABLED, E5_CONTADOR_A_ENABLED, E12_SUPPLIER_CASH_ENABLED], [true, true, true, true, false]);
+   assert.deepEqual([E7_ENABLED, E7_CLIENT_FINANCIAL_READS_ENABLED, E7_ATTRIBUTION_ENABLED], [true, true, true]);
+   assert.equal(E9_ENABLED, true);
+   assert.equal(E4_CASH_OUT_ENABLED, true);
+@@ -51,11 +51,11 @@ test("Tanda D: default CONTADOR is F with fiscal read and documentary reconcilia
+   assert.throws(() => e11Capability(actor, "FINANZAS_LIMITADAS_LEER"));
+   assert.throws(() => e11Capability(actor, "E5_PREPARAR"));
+ });
+-test("Tanda D: existing explicit A reads sanitized finance but cannot prepare E5", async () => {
++test("Tanda D: explicit A reads sanitized finance and only prepares E5", async () => {
+   const actor = await e11Identity(fixture("CONTADOR", "A").tx, 7);
+-  assert.deepEqual(actor.capacidades, ["FINANZAS_LIMITADAS_LEER"]);
++  assert.deepEqual(actor.capacidades, ["FINANZAS_LIMITADAS_LEER", "E5_PREPARAR"]);
+   assert.throws(() => e11Capability(actor, "FISCAL_CONCILIAR"));
+-  assert.throws(() => e11Capability(actor, "E5_PREPARAR"));
++  assert.doesNotThrow(() => e11Capability(actor, "E5_PREPARAR"));
+ });
+ test("ADMIN receives profile assignment without receiving E5 preparation", async () => {
+   const actor = await e11Identity(fixture("ADMIN").tx, 7);
+diff --git a/artifacts/api-server/src/lib/e11.test.ts b/artifacts/api-server/src/lib/e11.test.ts
+index 1356f6a7..d06b84e2 100644
+--- a/artifacts/api-server/src/lib/e11.test.ts
++++ b/artifacts/api-server/src/lib/e11.test.ts
+@@ -160,9 +160,9 @@ const frozen = (items = [sale()]) => ({
+   cantidadVentas: items.length, evidenciaHash: e11Hash(items), decisiones: [],
+ });
+ 
+-test("E11-RELEASE-PROFILES-ON-E5-PREPARATION-OFF", () => {
++test("E11-RELEASE-PROFILES-ON-E5-PREPARATION-EXPLICIT-A", () => {
+   assert.deepEqual([E11_ENABLED, E11_PROFILE_ASSIGNMENT_ENABLED, E11_RECONCILIATION_ENABLED,
+-    E11_E5_PREPARATION_ENABLED], [true, true, true, false]);
++    E11_E5_PREPARATION_ENABLED], [true, true, true, true]);
+ });
+ test("E11-OFF-SECURITY-NO-SQL", async () => {
+   const s = spySequence();
+@@ -681,7 +681,7 @@ test("E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY", async () => {
+     fechaRecepcion: "2026-09-20T12:00:00.000Z", formaPago: "TRANSFERENCIA", cuentaDestino: "CUENTA_FISCAL",
+     estado: "PENDIENTE", algunaVezAplicado: false, receptor: { id: 1, nombre: "ADMIN" },
+     evidenciaRecepcion: { descripcion: "Origen real previo", referencias: ["R-1"] },
+-    notasIndicadas: [], propuestas: [], aplicaciones: [], rechazos: [],
++    notasIndicadas: [{ notaId: 10, movimientoVentaId: 100, importe: "10.00" }], propuestas: [], aplicaciones: [], rechazos: [],
+     reciboId: "50000000-0000-4000-8000-000000000002", antiguedadDias: 0, avisoAdmin: false, capacidades: {},
+   };
+   const ledger = [{ id: 100, ticketId: 10, tipo: "VENTA_CREDITO" as const, importe: "10.00",
+@@ -753,11 +753,12 @@ test("E11-LEGACY-BOUNDARY-AUTHENTICATES-THEN-DENIES", async () => {
+   assert.equal(status, 403); assert.equal((body as { code: string }).code, "PERFIL_DENEGADO");
+   assert.equal(nextCalls, 0);
+ });
+-test("E11-E5-A-CLOSED-WHILE-OFF", () => {
++test("E11-E5-A-PREPARES-WITHOUT-RECEIVING-OR-APPLYING", () => {
+   const actor: E5Actor = { id: 7, nombre: "A sintético", rol: "CONTADOR", ubicacionId: null, ip: "",
+     ver: true, recibirCaja: false, recibirCliente: false, todas: true, capacidadAE11: true, e11PerfilVersion: 2 };
+-  assert.equal(e5Capabilities(actor).puedePreparar, false);
++  assert.equal(e5Capabilities(actor).puedePreparar, true);
+   assert.equal(e5Capabilities(actor).puedeRecibir, false);
++  assert.equal(e5Capabilities(actor).puedeAutorizar, false);
+ });
+ test("E11-ERROR-BODY-IS-PRIVATE", () => {
+   const error = Object.assign(new E11Error("FUENTE_CAMBIADA", "La fuente cambió."), { private: "secreto" });
+diff --git a/artifacts/mariana-textil/src/lib/e11-feature-flags.ts b/artifacts/mariana-textil/src/lib/e11-feature-flags.ts
+index e6b9625a..14efbeba 100644
+--- a/artifacts/mariana-textil/src/lib/e11-feature-flags.ts
++++ b/artifacts/mariana-textil/src/lib/e11-feature-flags.ts
+@@ -1,6 +1,6 @@
+-/** Readers, documentary reconciliation and ADMIN profile assignment; E5 stays closed. */
++/** Fiscal readers, documentary reconciliation, ADMIN profiles and explicit A preparation. */
+ export const E11_ENABLED = true;
+ export const E11_UI_ENABLED = true;
+ export const E11_PROFILE_ASSIGNMENT_ENABLED = true;
+ export const E11_RECONCILIATION_ENABLED = true;
+-export const E11_E5_PREPARATION_ENABLED = false;
++export const E11_E5_PREPARATION_ENABLED = true;

@@ -3,4 +3,4 @@ export const E5_ENABLED = true;
 /** Monetary refunds remain explicitly outside the directed/retained release. */
 export const E5_REFUND_ENABLED: boolean = false;
 /** Only explicit E11 profile A can prepare; never infer A from legacy CONTADOR. */
-export const E5_CONTADOR_A_ENABLED = false;
+export const E5_CONTADOR_A_ENABLED = true;

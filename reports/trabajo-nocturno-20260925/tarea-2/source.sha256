@@ -1,0 +1,4 @@
+5550f87673a508c657b2bc4c5e4769cd77cee7915581f732f4bab82d7f80701d  artifacts/api-server/src/lib/e11-feature.ts
+3955e57f5498e6ccd006536d5ebb4d3260c068db9dbe4128728000dec3fbd64d  artifacts/api-server/src/lib/e11.test.ts
+a6baf69d579440123466d536f8b1c52e6d6153d894aef2474cb4aab42bceb0aa  artifacts/api-server/src/lib/e11-tanda-d.test.ts
+d24f92a32b3cdeba84f34a233ead6ce3100dc80a3173b813216d53057af0aca0  artifacts/mariana-textil/src/lib/e11-feature-flags.ts

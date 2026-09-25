@@ -160,9 +160,9 @@ const frozen = (items = [sale()]) => ({
   cantidadVentas: items.length, evidenciaHash: e11Hash(items), decisiones: [],
 });
 
-test("E11-RELEASE-PROFILES-ON-E5-PREPARATION-OFF", () => {
+test("E11-RELEASE-PROFILES-ON-E5-PREPARATION-EXPLICIT-A", () => {
   assert.deepEqual([E11_ENABLED, E11_PROFILE_ASSIGNMENT_ENABLED, E11_RECONCILIATION_ENABLED,
-    E11_E5_PREPARATION_ENABLED], [true, true, true, false]);
+    E11_E5_PREPARATION_ENABLED], [true, true, true, true]);
 });
 test("E11-OFF-SECURITY-NO-SQL", async () => {
   const s = spySequence();
@@ -681,7 +681,7 @@ test("E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY", async () => {
     fechaRecepcion: "2026-09-20T12:00:00.000Z", formaPago: "TRANSFERENCIA", cuentaDestino: "CUENTA_FISCAL",
     estado: "PENDIENTE", algunaVezAplicado: false, receptor: { id: 1, nombre: "ADMIN" },
     evidenciaRecepcion: { descripcion: "Origen real previo", referencias: ["R-1"] },
-    notasIndicadas: [], propuestas: [], aplicaciones: [], rechazos: [],
+    notasIndicadas: [{ notaId: 10, movimientoVentaId: 100, importe: "10.00" }], propuestas: [], aplicaciones: [], rechazos: [],
     reciboId: "50000000-0000-4000-8000-000000000002", antiguedadDias: 0, avisoAdmin: false, capacidades: {},
   };
   const ledger = [{ id: 100, ticketId: 10, tipo: "VENTA_CREDITO" as const, importe: "10.00",
@@ -753,11 +753,12 @@ test("E11-LEGACY-BOUNDARY-AUTHENTICATES-THEN-DENIES", async () => {
   assert.equal(status, 403); assert.equal((body as { code: string }).code, "PERFIL_DENEGADO");
   assert.equal(nextCalls, 0);
 });
-test("E11-E5-A-CLOSED-WHILE-OFF", () => {
+test("E11-E5-A-PREPARES-WITHOUT-RECEIVING-OR-APPLYING", () => {
   const actor: E5Actor = { id: 7, nombre: "A sintético", rol: "CONTADOR", ubicacionId: null, ip: "",
     ver: true, recibirCaja: false, recibirCliente: false, todas: true, capacidadAE11: true, e11PerfilVersion: 2 };
-  assert.equal(e5Capabilities(actor).puedePreparar, false);
+  assert.equal(e5Capabilities(actor).puedePreparar, true);
   assert.equal(e5Capabilities(actor).puedeRecibir, false);
+  assert.equal(e5Capabilities(actor).puedeAutorizar, false);
 });
 test("E11-ERROR-BODY-IS-PRIVATE", () => {
   const error = Object.assign(new E11Error("FUENTE_CAMBIADA", "La fuente cambió."), { private: "secreto" });

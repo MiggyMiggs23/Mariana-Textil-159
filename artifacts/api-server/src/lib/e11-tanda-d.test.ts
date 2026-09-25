@@ -32,12 +32,12 @@ function fixture(role: string, profile: string | null = null) {
   } };
   return { tx, queries };
 }
-test("released gates enable ADMIN profile assignment but keep E5 preparation closed", () => {
+test("released gates enable ADMIN profiles and explicit A preparation without E12", () => {
   assert.deepEqual([E11_ENABLED, E11_RECONCILIATION_ENABLED, uiFlag("E11_ENABLED"), uiFlag("E11_UI_ENABLED"),
     uiFlag("E11_RECONCILIATION_ENABLED")], [true, true, true, true, true]);
   assert.deepEqual([E11_PROFILE_ASSIGNMENT_ENABLED, uiFlag("E11_PROFILE_ASSIGNMENT_ENABLED")], [true, true]);
   assert.deepEqual([E11_E5_PREPARATION_ENABLED, uiFlag("E11_E5_PREPARATION_ENABLED"),
-    E5_ENABLED, E5_CONTADOR_A_ENABLED, E12_SUPPLIER_CASH_ENABLED], Array(5).fill(false));
+    E5_ENABLED, E5_CONTADOR_A_ENABLED, E12_SUPPLIER_CASH_ENABLED], [true, true, true, true, false]);
   assert.deepEqual([E7_ENABLED, E7_CLIENT_FINANCIAL_READS_ENABLED, E7_ATTRIBUTION_ENABLED], [true, true, true]);
   assert.equal(E9_ENABLED, true);
   assert.equal(E4_CASH_OUT_ENABLED, true);
@@ -51,11 +51,11 @@ test("Tanda D: default CONTADOR is F with fiscal read and documentary reconcilia
   assert.throws(() => e11Capability(actor, "FINANZAS_LIMITADAS_LEER"));
   assert.throws(() => e11Capability(actor, "E5_PREPARAR"));
 });
-test("Tanda D: existing explicit A reads sanitized finance but cannot prepare E5", async () => {
+test("Tanda D: explicit A reads sanitized finance and only prepares E5", async () => {
   const actor = await e11Identity(fixture("CONTADOR", "A").tx, 7);
-  assert.deepEqual(actor.capacidades, ["FINANZAS_LIMITADAS_LEER"]);
+  assert.deepEqual(actor.capacidades, ["FINANZAS_LIMITADAS_LEER", "E5_PREPARAR"]);
   assert.throws(() => e11Capability(actor, "FISCAL_CONCILIAR"));
-  assert.throws(() => e11Capability(actor, "E5_PREPARAR"));
+  assert.doesNotThrow(() => e11Capability(actor, "E5_PREPARAR"));
 });
 test("ADMIN receives profile assignment without receiving E5 preparation", async () => {
   const actor = await e11Identity(fixture("ADMIN").tx, 7);
