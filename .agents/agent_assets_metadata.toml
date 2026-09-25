@@ -2439,3 +2439,17 @@ mtime_ms = 1790312829303
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/6d058a4b-2d5b-4e9a-b65d-528a8705ef47/fe6ec10e-9117-4e0d-bbb2-e0897ccbe9fa"
 storage_version_token = "1790313377860933"
 content_type = "image/png"
+
+[[outputs]]
+id = "bum3mpvljpl161S8AmS5Q"
+uri = "file://reports/continuacion-rollos-20260925/informe.html"
+type = "html"
+title = "Informe de continuación · candidato cerrado"
+description = "Autorización registrada, devolución aún no liberada, E5 verificado, avances de permisos y bloqueos pendientes de conciliación y rendimiento."
+logical_id = "9224c5a9-a0c7-4471-8891-88ee76ae8083"
+content_hash = "sha256:749999bdd34dff5882450a85180756e72868be5dfc2dd7ac3bfb67e206d95d5b"
+size = 6094
+mtime_ms = 1790347560961
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/9224c5a9-a0c7-4471-8891-88ee76ae8083/52a8e312-477c-4384-b716-739ea769df6c"
+storage_version_token = "1790347561638813"
+content_type = "text/html"
