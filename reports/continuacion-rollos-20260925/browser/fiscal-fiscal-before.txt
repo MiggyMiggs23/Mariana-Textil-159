@@ -1,0 +1,23 @@
+Contabilidad · F
+
+Perfil v0 · proyección autorizada, sin documentos operativos privados.
+
+Cerrar sesión
+Ventas y clientes facturados
+Ventas facturadas y clientes facturados
+
+“Factura” identifica el ticket interno marcado facturado. No es un CFDI ni certifica timbrado externo.
+
+Clientes con documentos facturados
+
+Cargando fuente autorizada…
+
+Desde (día CDMX)
+Hasta, exclusivo (día CDMX)
+Consultar intervalo
+Documentos facturados del intervalo
+
+Cargando fuente autorizada…
+
+ADMINISTRACIÓN Y AJUSTES
+Conciliaciones documentales

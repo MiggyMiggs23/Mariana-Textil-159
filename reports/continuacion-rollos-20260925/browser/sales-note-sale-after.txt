@@ -1,0 +1,29 @@
+Nota #1001
+
+Mariana
+
+Cancelar Nota
+Imprimir Nota
+Detalle de Operación
+
+Emitido por Administrador
+
+Ver rollos
+Nota por autorizar
+Cliente: Jesús López
+Producto	Rollos	Cantidad	Precio Unit.	Importe	Costo	Margen
+ROLLOS
+
+CONTINUACION DEAAE4 ALGODON - AZUL
+CONDEAALG-AZU
+	1	10.00 Mts.	$100.00	$1,000.00	$500.00	$500.00
+Subtotal Rollos	$1,000.00		
+Subtotal:
+$1,000.00
+Total:
+$1,000.00
+
+Cargando detalles de crédito...
+
+NOTA creado correctamente
+Folio: 1001

@@ -1,0 +1,121 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Mariana
+Activar sonido
+1
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Volver a pendientes
+Jesús López · PARCIAL
+
+Recibió Administrador · Mariana · 25/9/2026, 7:38:24 a.m.
+
+0 días desde recepción
+
+Recibido $1,000.00 · aplicado $500.00 · pendiente $500.00 · devuelto $0.00
+
+TRANSFERENCIA · CUENTA_NO_FISCAL · ENSAYO dirigido pendiente sin aplicación, copia desechable
+
+El retenido no baja deuda ni aumenta disponible/favor. Aplicar no registra otro cobro.
+
+Hubo aplicación: el remanente nunca es devolvible.
+Recibo inmediato
+Constancia · 25/9/2026, 7:39:02 a.m.
+Actualizar recepción y contexto
+Notas indicadas al recibir
+
+Nota 1001 · cargo #1 · saldo al recibir $1,000.00
+
+Preparar / resolver
+Acción
+Preparar propuesta (sin efecto financiero)
+ADMIN: autorizar parte o total
+ADMIN: rechazar propuesta
+ADMIN: devolver total nunca aplicado
+
+Varias notas del mismo cliente. Importe vacío excluye la nota. Autorizar sólo permite subconjunto/importes de la propuesta vigente.
+
+Nota 1001 · cargo #1 · No facturada · saldo $500.00
+Favor explícito a proponer — opcional, cero al omitir
+El servidor sólo permite favor si no queda deuda global después del reparto explícito. No se consulta ni se presume deuda fuera de tu alcance; no hay favor automático del sobrante.
+Motivo / evidencia obligatoria
+Referencias documentales (texto, una por línea; máximo 20)
+Revisar preparar
+Historial inmutable de propuestas y resoluciones
+Propuesta v1
+
+25/9/2026, 7:38:34 a.m. · Administrador · ENSAYO continuación initial-proposal sobre copia descartable
+
+Nota 1001, cargo #1: $1,000.00
+
+Favor propuesto: $0.00
+
+Propuesta v2
+
+25/9/2026, 7:38:43 a.m. · Administrador · ENSAYO continuación reproposal sobre copia descartable
+
+Nota 1001, cargo #1: $1,000.00
+
+Favor propuesto: $0.00
+
+Propuesta v3
+
+25/9/2026, 7:38:53 a.m. · CONTINUACION CONTADOR A · Preparación E11 por perfil A explícito; no aplicación.
+
+Nota 1001, cargo #1: $1,000.00
+
+Favor propuesto: $0.00
+
+Aplicación $500.00
+
+25/9/2026, 7:39:02 a.m. · Administrador · ENSAYO continuación admin-partial-approval sobre copia descartable
+
+Favor autorizado generado: $0.00
+
+Rechazo · 25/9/2026, 7:38:38 a.m. · Administrador · ENSAYO continuación reject-proposal sobre copia descartable

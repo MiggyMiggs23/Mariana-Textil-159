@@ -1,0 +1,23 @@
+{
+  "stage": "fiscal",
+  "status": "BLOCKED_CONFIRMED_NO_FISCAL_WRITES",
+  "steps": [
+    {
+      "action": "native-login",
+      "role": "F",
+      "status": 200
+    }
+  ],
+  "startedAt": "2026-09-25T14:17:49.652Z",
+  "error": "Readback /api/e11/fiscal/facturas/1 HTTP 409: {\"code\":\"REVISION_OBSOLETA\",\"message\":\"Conflicto concurrente; recarga y confirma de nuevo.\",\"requestId\":\"766c3a7c-4ae3-4755-bd91-c8ca94c9b824\"}",
+  "failure": {
+    "stage": "before any fiscal mutation",
+    "endpoint": "GET /api/e11/fiscal/facturas/1",
+    "httpStatus": 409,
+    "code": "REVISION_OBSOLETA",
+    "message": "Conflicto concurrente; recarga y confirma de nuevo.",
+    "fiscalOperationsAttempted": 0,
+    "uncertainOperations": 0,
+    "retryAuthorized": false
+  }
+}

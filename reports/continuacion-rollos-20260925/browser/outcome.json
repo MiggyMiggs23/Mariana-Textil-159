@@ -1,0 +1,42 @@
+{
+  "status": "PARTIAL_VERIFIED_FISCAL_BLOCKED_CONFIRMED",
+  "scope": "continue_test only; original UI 43937/API 43936 and MAIN-owned temporary fiscal UI 43941/API 43940 with forward E11-period/browser clock only; SQL/auth clocks and original servers unchanged; no appDB, refund write, or production actor",
+  "preparation": "reports/continuacion-rollos-20260925/preparation/ready.json",
+  "harness": "continuation.mjs",
+  "stagesCompleted": ["fixtures", "sales", "roles", "receive", "reject", "prepareA", "apply"],
+  "writeRecovery": "Every attempted business write is ACK_READBACK in private.local/roll-return-continuation/browser-continuation-state.json; no uncertain writes remain. No fiscal mutation was attempted. Failed pre-write selectors in sales/receive were corrected without replaying an acknowledged write.",
+  "verified": [
+    {
+      "case": "Fresh supplier, product and five-roll entry; new invoice sale paid and credit note authorized via ADMIN native UI",
+      "evidence": ["fixtures-result.json", "sales-result.json", "fixtures-five-roll-entry-before.png", "fixtures-five-roll-entry-after.png", "sales-pay-invoiced-sale-before.png", "sales-pay-invoiced-sale-after.png"]
+    },
+    {
+      "case": "Synthetic F/A created via ADMIN native UI only in disposable copy, A explicitly assigned; both native login; Fondo, provider payments, tickets and customer legacy HTTP403",
+      "evidence": ["roles-result.json", "roles-F-fondo-denied.png", "roles-A-fondo-denied.png"]
+    },
+    {
+      "case": "Directed 1000.00 received and PENDIENTE: applied 0.00; ADMIN proposal rejected and new proposal prepared, retained unchanged; A preparation adds third proposal with no application; only ADMIN applies 500.00, PARCIAL retained 500.00 and refund capability false, refund options HTTP403",
+      "evidence": ["receive-result.json", "reject-result.json", "prepareA-result.json", "apply-result.json", "receive-receive-before.png", "receive-receive-after.png", "reject-reject-proposal-before.png", "reject-reject-proposal-after.png", "prepareA-A-preparation-before.png", "prepareA-A-preparation-after.png", "apply-admin-partial-approval-before.png", "apply-admin-partial-approval-after.png", "apply-retained-no-refund.png"]
+    },
+    {
+      "case": "F invoice-only current-day nonempty browser list and clicked detail, API source 1160.00; noninvoiced note HTTP404 and A invoice projection HTTP403",
+      "evidence": ["fiscal-fiscal-invoiced-list.png", "fiscal-fiscal-invoiced-detail.png"]
+    }
+  ],
+  "blocked": [
+    {
+      "case": "Immutable closed-period day/week/month accepted snapshots and NO_CUADRA ADMIN notice",
+      "reason": "On the fourth MAIN-owned scoped-clock attempt, native F login returned 200 but the first F read, GET /api/e11/fiscal/facturas/1, returned HTTP 409 REVISION_OBSOLETA (Conflicto concurrente; recarga y confirma de nuevo). A preceding scoped-clock attempt likewise stopped before writes when A's F-only invoice probe returned HTTP 409, not 200; its response body was not preserved. The first global-clock attempt stopped at login HTTP 500 from a real SQL session-created_at versus forward JS time mismatch; the runner was then changed to scope the forward clock to E11 period evaluation only. No day/week/month snapshot, decision or ADMIN notice was written or verified. MAIN stopped the fiscal API; no further retries are authorized.",
+      "status": "BLOCKED_CONFIRMED_NO_FISCAL_WRITES",
+      "evidence": ["fiscal-result.json", "fiscal-fiscal-invoiced-list.png"]
+    }
+  ],
+  "productDefectsObserved": [],
+  "potentialProductDefects": [
+    {
+      "case": "Read-only E11 fiscal probe intermittently returns HTTP 409 instead of a stable invoice response or profile-denial response immediately after native login, observed with both F and A actors on distinct scoped-clock attempts.",
+      "diagnosis": "The auth middleware updates sesiones.expira_at on every authenticated request, including GET /api/auth/me and fiscal GETs. E11 reads run serializable transactions; a concurrent update of the same session row may produce a PostgreSQL conflict translated to REVISION_OBSOLETA (HTTP 409). F's fourth-attempt body confirms REVISION_OBSOLETA; A's earlier 409 body was not captured. The exact concurrent transaction was not proven, and neither 409 demonstrates an A data leak.",
+      "evidence": ["fiscal-result.json"]
+    }
+  ]
+}

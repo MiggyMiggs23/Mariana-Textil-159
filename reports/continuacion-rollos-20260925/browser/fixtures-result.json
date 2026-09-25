@@ -1,0 +1,158 @@
+{
+  "stage": "fixtures",
+  "status": "PASS",
+  "steps": [
+    {
+      "action": "native-login",
+      "role": "ADMIN",
+      "status": 200
+    },
+    {
+      "action": "supplier",
+      "httpStatus": 201,
+      "response": {
+        "id": 1,
+        "nombre": "CONTINUACION DEAAE4 PROVEEDOR",
+        "tipo": "NACIONAL",
+        "monedaDefault": "MXN",
+        "contactoNombre": null,
+        "telefono": null,
+        "correo": null,
+        "pais": null,
+        "notas": null,
+        "activo": true,
+        "createdAt": "2026-09-25T13:32:13.145Z"
+      },
+      "readback": {
+        "id": 1
+      }
+    },
+    {
+      "action": "product",
+      "httpStatus": 201,
+      "response": {
+        "id": 1,
+        "sku": "CONDEAALG-AZU",
+        "tela": "CONTINUACION DEAAE4 ALGODON",
+        "color": "AZUL",
+        "colorHex": null,
+        "anchoCm": null,
+        "composicion": null,
+        "gramajeGm2": null,
+        "unidad": "METRO",
+        "seVendePorMetro": false,
+        "precioSugerido": "100.00",
+        "notas": null,
+        "activo": true,
+        "rollos": 0,
+        "cantidad": "0.000",
+        "sitiosConExistencia": 0,
+        "unidadBloqueada": false,
+        "createdAt": "2026-09-25T13:32:14.651Z",
+        "updatedAt": "2026-09-25T13:32:14.651Z"
+      },
+      "readback": {
+        "id": 1
+      }
+    },
+    {
+      "action": "five-roll-entry",
+      "httpStatus": 201,
+      "response": {
+        "id": 1,
+        "folio": 1,
+        "inicialesSitio": "MA",
+        "folioFormateado": "MA-000001",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Mariana",
+        "proveedorId": 1,
+        "nombreProveedor": "CONTINUACION DEAAE4 PROVEEDOR",
+        "usuarioId": 1,
+        "nombreUsuario": "Administrador",
+        "fecha": "2026-09-25T13:32:18.082Z",
+        "observaciones": null,
+        "totalRollos": 5,
+        "totalCosto": "2500.00",
+        "uuidCliente": "164b3c24-b48a-40dc-bdc9-baf24a762f57",
+        "createdAt": "2026-09-25T13:32:18.073Z",
+        "lineas": [
+          {
+            "productoId": 1,
+            "skuProducto": "CONDEAALG-AZU",
+            "telaProducto": "CONTINUACION DEAAE4 ALGODON",
+            "colorProducto": "AZUL",
+            "unidadProducto": "METRO",
+            "costoUnitario": "50.00",
+            "rollosCount": 5,
+            "cantidadTotal": "50.000",
+            "costoTotal": "2500.00"
+          }
+        ],
+        "rollos": [
+          {
+            "id": 1,
+            "serie": "10000001",
+            "productoId": 1,
+            "cantidadInicial": "10.000",
+            "pisoId": null,
+            "nombrePiso": null,
+            "costoUnitario": "50.00",
+            "costoTotal": "500.00"
+          },
+          {
+            "id": 2,
+            "serie": "10000002",
+            "productoId": 1,
+            "cantidadInicial": "10.000",
+            "pisoId": null,
+            "nombrePiso": null,
+            "costoUnitario": "50.00",
+            "costoTotal": "500.00"
+          },
+          {
+            "id": 3,
+            "serie": "10000003",
+            "productoId": 1,
+            "cantidadInicial": "10.000",
+            "pisoId": null,
+            "nombrePiso": null,
+            "costoUnitario": "50.00",
+            "costoTotal": "500.00"
+          },
+          {
+            "id": 4,
+            "serie": "10000004",
+            "productoId": 1,
+            "cantidadInicial": "10.000",
+            "pisoId": null,
+            "nombrePiso": null,
+            "costoUnitario": "50.00",
+            "costoTotal": "500.00"
+          },
+          {
+            "id": 5,
+            "serie": "10000005",
+            "productoId": 1,
+            "cantidadInicial": "10.000",
+            "pisoId": null,
+            "nombrePiso": null,
+            "costoUnitario": "50.00",
+            "costoTotal": "500.00"
+          }
+        ]
+      },
+      "readback": {
+        "id": 1,
+        "declaredRolls": 5
+      }
+    },
+    {
+      "action": "fixture-private-manifest",
+      "supplierId": 1,
+      "productId": 1,
+      "entryId": 1
+    }
+  ],
+  "startedAt": "2026-09-25T13:32:07.462Z",
+  "completedAt": "2026-09-25T13:32:18.966Z"
+}

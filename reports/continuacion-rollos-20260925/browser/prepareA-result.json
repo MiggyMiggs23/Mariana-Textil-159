@@ -1,0 +1,50 @@
+{
+  "stage": "prepareA",
+  "status": "PASS",
+  "steps": [
+    {
+      "action": "native-login",
+      "role": "A",
+      "status": 200
+    },
+    {
+      "action": "native-login",
+      "role": "ADMIN",
+      "status": 200
+    },
+    {
+      "action": "A-preparation",
+      "httpStatus": 200,
+      "response": {
+        "cobroId": "ecf34c1f-fd9e-4568-aec7-b601d335ccac",
+        "clienteId": 2,
+        "revision": 5,
+        "fuenteRevision": "e5:v1:23d9522725b56aa91d871d8d13155e785aa40103df993fcc97606cde2b171e32",
+        "retenido": "1000.00",
+        "notas": [
+          {
+            "notaId": 2,
+            "movimientoVentaId": 1,
+            "folio": "1001",
+            "clienteId": 2,
+            "fecha": "2026-09-25T13:34:15.109Z",
+            "facturada": false,
+            "total": "1000.00",
+            "saldo": "1000.00"
+          }
+        ],
+        "propuestaId": "587547df-0d2b-4c1e-bc7d-07040a1e5c68"
+      },
+      "readback": {
+        "propuestaId": "587547df-0d2b-4c1e-bc7d-07040a1e5c68",
+        "retenido": "1000.00"
+      }
+    },
+    {
+      "action": "A-legacy-E5-denied",
+      "status": 403
+    }
+  ],
+  "startedAt": "2026-09-25T13:38:48.698Z",
+  "completedAt": "2026-09-25T13:38:53.852Z"
+}

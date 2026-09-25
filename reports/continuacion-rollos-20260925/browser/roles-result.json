@@ -1,0 +1,138 @@
+{
+  "stage": "roles",
+  "status": "PASS",
+  "steps": [
+    {
+      "action": "native-login",
+      "role": "ADMIN",
+      "status": 200
+    },
+    {
+      "action": "create-F",
+      "httpStatus": 201,
+      "response": {
+        "id": 2,
+        "nombre": "CONTINUACION CONTADOR F",
+        "usuario": "continuef92397c8592",
+        "rol": "CONTADOR",
+        "ubicacion": null,
+        "alcanceConsulta": "TODAS",
+        "activo": true,
+        "ultimoAcceso": null
+      },
+      "readback": {
+        "id": 2,
+        "rowVisible": true
+      }
+    },
+    {
+      "action": "create-A",
+      "httpStatus": 201,
+      "response": {
+        "id": 3,
+        "nombre": "CONTINUACION CONTADOR A",
+        "usuario": "continuea4f3723ba12",
+        "rol": "CONTADOR",
+        "ubicacion": null,
+        "alcanceConsulta": "TODAS",
+        "activo": true,
+        "ultimoAcceso": null
+      },
+      "readback": {
+        "id": 3,
+        "rowVisible": true
+      }
+    },
+    {
+      "action": "assign-A",
+      "httpStatus": 200,
+      "response": {
+        "id": "5e7266e8-e02c-4090-ad3a-4299a7b7c6a3",
+        "uuid": "d2c18c61-ffea-41ab-9cfc-ec7857ee21e5",
+        "usuarioId": 3,
+        "actorId": 1,
+        "anterior": "F",
+        "posterior": "A",
+        "revision": 1,
+        "motivo": "ENSAYO copia desechable: preparar E5, nunca aplicar",
+        "creadoEn": "2026-09-25T13:34:28.364Z"
+      },
+      "readback": {
+        "profile": "A",
+        "actorId": 3
+      }
+    },
+    {
+      "action": "native-login",
+      "role": "F",
+      "status": 200
+    },
+    {
+      "action": "native-login",
+      "role": "A",
+      "status": 200
+    },
+    {
+      "action": "identity",
+      "role": "F",
+      "actorId": 2,
+      "profileVersion": 0
+    },
+    {
+      "action": "restricted-legacy",
+      "role": "F",
+      "endpoint": "/api/fondo",
+      "status": 403
+    },
+    {
+      "action": "restricted-legacy",
+      "role": "F",
+      "endpoint": "/api/proveedores/1/pagos",
+      "status": 403
+    },
+    {
+      "action": "restricted-legacy",
+      "role": "F",
+      "endpoint": "/api/tickets/1",
+      "status": 403
+    },
+    {
+      "action": "restricted-legacy",
+      "role": "F",
+      "endpoint": "/api/clientes/1",
+      "status": 403
+    },
+    {
+      "action": "identity",
+      "role": "A",
+      "actorId": 3,
+      "profileVersion": 1
+    },
+    {
+      "action": "restricted-legacy",
+      "role": "A",
+      "endpoint": "/api/fondo",
+      "status": 403
+    },
+    {
+      "action": "restricted-legacy",
+      "role": "A",
+      "endpoint": "/api/proveedores/1/pagos",
+      "status": 403
+    },
+    {
+      "action": "restricted-legacy",
+      "role": "A",
+      "endpoint": "/api/tickets/1",
+      "status": 403
+    },
+    {
+      "action": "restricted-legacy",
+      "role": "A",
+      "endpoint": "/api/clientes/1",
+      "status": 403
+    }
+  ],
+  "startedAt": "2026-09-25T13:34:21.795Z",
+  "completedAt": "2026-09-25T13:34:33.135Z"
+}

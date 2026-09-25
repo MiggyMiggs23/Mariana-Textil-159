@@ -1,0 +1,71 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Vista Global
+Activar sonido
+1
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Usuarios
+
+Gestión de personal, accesos y asignación de sitios.
+
+Nuevo Usuario
+Activos
+Nombre / Usuario	Rol	Alcance	Sitio	Estado	Acciones
+
+Administrador
+admin
+	ADMIN	TODAS	Global	Activo	
+Editar
+
+CONTINUACION CONTADOR F
+continuef92397c8592
+	CONTADOR	TODAS	Global	Activo	Perfil contable A/F
+Editar
+Usuario creado correctamente

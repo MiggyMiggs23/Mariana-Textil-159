@@ -1,0 +1,85 @@
+{
+  "stage": "receive",
+  "status": "PASS",
+  "steps": [
+    {
+      "action": "native-login",
+      "role": "ADMIN",
+      "status": 200
+    },
+    {
+      "action": "site-control",
+      "count": 1,
+      "combos": [
+        "Vista Global"
+      ]
+    },
+    {
+      "action": "receive",
+      "httpStatus": 201,
+      "response": {
+        "id": "ecf34c1f-fd9e-4568-aec7-b601d335ccac",
+        "revision": 1,
+        "clienteId": 2,
+        "clienteNombre": "Jesús López",
+        "ubicacionId": 1,
+        "ubicacionNombre": "Mariana",
+        "importeRecibido": "1000.00",
+        "importeAplicado": "0.00",
+        "importePendiente": "1000.00",
+        "importeDevuelto": "0.00",
+        "fechaRecepcion": "2026-09-25T13:38:24.215Z",
+        "formaPago": "TRANSFERENCIA",
+        "cuentaDestino": "CUENTA_NO_FISCAL",
+        "sesionOperativaId": 1,
+        "estado": "PENDIENTE",
+        "algunaVezAplicado": false,
+        "receptor": {
+          "id": 1,
+          "nombre": "Administrador"
+        },
+        "evidenciaRecepcion": {
+          "descripcion": "ENSAYO dirigido pendiente sin aplicación, copia desechable",
+          "referencias": []
+        },
+        "notasIndicadas": [
+          {
+            "notaId": 2,
+            "movimientoVentaId": 1,
+            "folio": "1001",
+            "ubicacionId": 1,
+            "fecha": "2026-09-25T13:34:15.109Z",
+            "saldoPendiente": "1000.00",
+            "facturada": false
+          }
+        ],
+        "propuestas": [],
+        "aplicaciones": [],
+        "rechazos": [],
+        "reciboId": "210e9638-558d-4b7e-ad25-ec33e407998f",
+        "antiguedadDias": 0,
+        "avisoAdmin": false,
+        "capacidades": {
+          "puedeRecibir": true,
+          "puedePreparar": true,
+          "puedeAutorizar": false,
+          "puedeRechazar": false,
+          "puedeDevolver": false,
+          "puedeVerAvisos": true,
+          "puedeImprimir": true,
+          "preparacionADisponible": false
+        }
+      },
+      "readback": {
+        "id": "ecf34c1f-fd9e-4568-aec7-b601d335ccac",
+        "estado": "PENDIENTE",
+        "recibido": "1000.00",
+        "retenido": "1000.00",
+        "aplicado": "0.00",
+        "revision": 1
+      }
+    }
+  ],
+  "startedAt": "2026-09-25T13:38:11.351Z",
+  "completedAt": "2026-09-25T13:38:24.679Z"
+}

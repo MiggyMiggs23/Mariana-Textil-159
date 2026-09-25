@@ -1,0 +1,98 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Mariana
+Activar sonido
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Caja operativa
+Cartera / Estado de cuenta
+Historial de cortes
+Caja Operativa
+
+Cobro de tickets pendientes y cortes de caja.
+
+Sesión Abierta
+Realizar Corte
+Salidas de dinero
+
+Pagos operativos y extraordinarios (E4).
+
+Tipo de Salida
+Extraordinaria
+Extraordinaria
+Proveedor
+Monto
+Cuenta de origen
+Efectivo
+Efectivo
+
+E4 opera exclusivamente con Caja Física; Fondo y mezcla E12 están desactivados.
+
+Proveedor
+Sin proveedor
+Sin proveedor
+CONTINUACION DEAAE4 PROVEEDOR
+Motivo
+
+Saldo Caja (servidor): 0.00. Se revalida al confirmar; la API conserva la autoridad final.
+
+Motivo de desbloqueo extraordinario (solo si hay insuficiencia)
+Registrar salida extraordinaria
+Registro de Salidas
+
+Sin salidas registradas.
+
+Tickets de Caja
+VENTA FACTURADA folio 1000
+1:32 PM
+$1,160.00
+Cobrar
+Nota folio 1001
+1:33 PM
+$1,000.00

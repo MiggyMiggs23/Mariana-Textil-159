@@ -1,0 +1,29 @@
+Ticket #1000
+
+Mariana
+
+Cancelar Ticket
+Imprimir Ticket (80mm)
+Detalle de Operación
+
+Emitido por Administrador
+
+Ver rollos
+Ticket por cobrar
+Cliente: VENTA AL PÚBLICO
+FACTURADO
+Producto	Rollos	Cantidad	Precio Unit.	Importe	Costo	Margen
+ROLLOS
+
+CONTINUACION DEAAE4 ALGODON - AZUL
+CONDEAALG-AZU
+	1	10.00 Mts.	$100.00	$1,000.00	$500.00	$500.00
+Subtotal Rollos	$1,000.00		
+Subtotal:
+$1,000.00
+IVA (16.00%):
+$160.00
+Total:
+$1,160.00
+TICKET creado correctamente
+Folio: 1000

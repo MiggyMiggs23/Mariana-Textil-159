@@ -1,0 +1,391 @@
+{
+  "stage": "reject",
+  "status": "PASS",
+  "steps": [
+    {
+      "action": "native-login",
+      "role": "ADMIN",
+      "status": 200
+    },
+    {
+      "action": "site-control",
+      "count": 1,
+      "combos": [
+        "Vista Global"
+      ]
+    },
+    {
+      "action": "initial-proposal",
+      "httpStatus": 201,
+      "response": {
+        "id": "ecf34c1f-fd9e-4568-aec7-b601d335ccac",
+        "estado": "PENDIENTE",
+        "receptor": {
+          "id": 1,
+          "nombre": "Administrador"
+        },
+        "rechazos": [],
+        "reciboId": "210e9638-558d-4b7e-ad25-ec33e407998f",
+        "revision": 2,
+        "clienteId": 2,
+        "formaPago": "TRANSFERENCIA",
+        "avisoAdmin": false,
+        "propuestas": [
+          {
+            "id": "be9df05c-52ba-46ea-9f0b-66be0abd2c3d",
+            "version": 1,
+            "asignaciones": [
+              {
+                "notaId": 2,
+                "movimientoVentaId": 1,
+                "importe": "1000.00"
+              }
+            ],
+            "importeFavorPropuesto": "0.00",
+            "notas": [
+              {
+                "notaId": 2,
+                "movimientoVentaId": 1,
+                "folio": "1001",
+                "ubicacionId": 1,
+                "fecha": "2026-09-25T13:34:15.109Z",
+                "saldoPendiente": "1000.00",
+                "facturada": false
+              }
+            ],
+            "evidencia": {
+              "descripcion": "ENSAYO continuación initial-proposal sobre copia descartable",
+              "referencias": []
+            },
+            "actor": {
+              "id": 1,
+              "nombre": "Administrador"
+            },
+            "createdAt": "2026-09-25T13:38:34.748Z"
+          }
+        ],
+        "capacidades": {
+          "puedeRecibir": true,
+          "puedePreparar": true,
+          "puedeAutorizar": true,
+          "puedeRechazar": true,
+          "puedeDevolver": false,
+          "puedeVerAvisos": true,
+          "puedeImprimir": true,
+          "preparacionADisponible": false
+        },
+        "ubicacionId": 1,
+        "aplicaciones": [],
+        "clienteNombre": "Jesús López",
+        "cuentaDestino": "CUENTA_NO_FISCAL",
+        "antiguedadDias": 0,
+        "fechaRecepcion": "2026-09-25T13:38:24.215Z",
+        "notasIndicadas": [
+          {
+            "fecha": "2026-09-25T13:34:15.109Z",
+            "folio": "1001",
+            "notaId": 2,
+            "facturada": false,
+            "ubicacionId": 1,
+            "saldoPendiente": "1000.00",
+            "movimientoVentaId": 1
+          }
+        ],
+        "importeAplicado": "0.00",
+        "importeDevuelto": "0.00",
+        "importeRecibido": "1000.00",
+        "ubicacionNombre": "Mariana",
+        "importePendiente": "1000.00",
+        "algunaVezAplicado": false,
+        "sesionOperativaId": 1,
+        "evidenciaRecepcion": {
+          "descripcion": "ENSAYO dirigido pendiente sin aplicación, copia desechable",
+          "referencias": []
+        },
+        "propuestaVigenteId": "be9df05c-52ba-46ea-9f0b-66be0abd2c3d"
+      },
+      "readback": {
+        "id": "ecf34c1f-fd9e-4568-aec7-b601d335ccac",
+        "revision": 2,
+        "estado": "PENDIENTE",
+        "recibido": "1000.00",
+        "aplicado": "0.00",
+        "retenido": "1000.00",
+        "propuestas": 1,
+        "rechazos": 0,
+        "refundEnabled": false
+      }
+    },
+    {
+      "action": "site-control",
+      "count": 1,
+      "combos": [
+        "Vista Global"
+      ]
+    },
+    {
+      "action": "reject-proposal",
+      "httpStatus": 200,
+      "response": {
+        "id": "ecf34c1f-fd9e-4568-aec7-b601d335ccac",
+        "estado": "PENDIENTE",
+        "receptor": {
+          "id": 1,
+          "nombre": "Administrador"
+        },
+        "rechazos": [
+          {
+            "propuestaId": "be9df05c-52ba-46ea-9f0b-66be0abd2c3d",
+            "motivo": "ENSAYO continuación reject-proposal sobre copia descartable",
+            "actor": {
+              "id": 1,
+              "nombre": "Administrador"
+            },
+            "createdAt": "2026-09-25T13:38:38.224Z"
+          }
+        ],
+        "reciboId": "210e9638-558d-4b7e-ad25-ec33e407998f",
+        "revision": 3,
+        "clienteId": 2,
+        "formaPago": "TRANSFERENCIA",
+        "avisoAdmin": false,
+        "propuestas": [
+          {
+            "id": "be9df05c-52ba-46ea-9f0b-66be0abd2c3d",
+            "actor": {
+              "id": 1,
+              "nombre": "Administrador"
+            },
+            "notas": [
+              {
+                "fecha": "2026-09-25T13:34:15.109Z",
+                "folio": "1001",
+                "notaId": 2,
+                "facturada": false,
+                "ubicacionId": 1,
+                "saldoPendiente": "1000.00",
+                "movimientoVentaId": 1
+              }
+            ],
+            "version": 1,
+            "createdAt": "2026-09-25T13:38:34.748Z",
+            "evidencia": {
+              "descripcion": "ENSAYO continuación initial-proposal sobre copia descartable",
+              "referencias": []
+            },
+            "asignaciones": [
+              {
+                "notaId": 2,
+                "importe": "1000.00",
+                "movimientoVentaId": 1
+              }
+            ],
+            "importeFavorPropuesto": "0.00"
+          }
+        ],
+        "capacidades": {
+          "puedeRecibir": true,
+          "puedePreparar": true,
+          "puedeAutorizar": false,
+          "puedeRechazar": false,
+          "puedeDevolver": false,
+          "puedeVerAvisos": true,
+          "puedeImprimir": true,
+          "preparacionADisponible": false
+        },
+        "ubicacionId": 1,
+        "aplicaciones": [],
+        "clienteNombre": "Jesús López",
+        "cuentaDestino": "CUENTA_NO_FISCAL",
+        "antiguedadDias": 0,
+        "fechaRecepcion": "2026-09-25T13:38:24.215Z",
+        "notasIndicadas": [
+          {
+            "fecha": "2026-09-25T13:34:15.109Z",
+            "folio": "1001",
+            "notaId": 2,
+            "facturada": false,
+            "ubicacionId": 1,
+            "saldoPendiente": "1000.00",
+            "movimientoVentaId": 1
+          }
+        ],
+        "importeAplicado": "0.00",
+        "importeDevuelto": "0.00",
+        "importeRecibido": "1000.00",
+        "ubicacionNombre": "Mariana",
+        "importePendiente": "1000.00",
+        "algunaVezAplicado": false,
+        "sesionOperativaId": 1,
+        "evidenciaRecepcion": {
+          "descripcion": "ENSAYO dirigido pendiente sin aplicación, copia desechable",
+          "referencias": []
+        }
+      },
+      "readback": {
+        "id": "ecf34c1f-fd9e-4568-aec7-b601d335ccac",
+        "revision": 3,
+        "estado": "PENDIENTE",
+        "recibido": "1000.00",
+        "aplicado": "0.00",
+        "retenido": "1000.00",
+        "propuestas": 1,
+        "rechazos": 1,
+        "refundEnabled": false
+      }
+    },
+    {
+      "action": "site-control",
+      "count": 1,
+      "combos": [
+        "Vista Global"
+      ]
+    },
+    {
+      "action": "reproposal",
+      "httpStatus": 201,
+      "response": {
+        "id": "ecf34c1f-fd9e-4568-aec7-b601d335ccac",
+        "estado": "PENDIENTE",
+        "receptor": {
+          "id": 1,
+          "nombre": "Administrador"
+        },
+        "rechazos": [
+          {
+            "actor": {
+              "id": 1,
+              "nombre": "Administrador"
+            },
+            "motivo": "ENSAYO continuación reject-proposal sobre copia descartable",
+            "createdAt": "2026-09-25T13:38:38.224Z",
+            "propuestaId": "be9df05c-52ba-46ea-9f0b-66be0abd2c3d"
+          }
+        ],
+        "reciboId": "210e9638-558d-4b7e-ad25-ec33e407998f",
+        "revision": 4,
+        "clienteId": 2,
+        "formaPago": "TRANSFERENCIA",
+        "avisoAdmin": false,
+        "propuestas": [
+          {
+            "id": "be9df05c-52ba-46ea-9f0b-66be0abd2c3d",
+            "actor": {
+              "id": 1,
+              "nombre": "Administrador"
+            },
+            "notas": [
+              {
+                "fecha": "2026-09-25T13:34:15.109Z",
+                "folio": "1001",
+                "notaId": 2,
+                "facturada": false,
+                "ubicacionId": 1,
+                "saldoPendiente": "1000.00",
+                "movimientoVentaId": 1
+              }
+            ],
+            "version": 1,
+            "createdAt": "2026-09-25T13:38:34.748Z",
+            "evidencia": {
+              "descripcion": "ENSAYO continuación initial-proposal sobre copia descartable",
+              "referencias": []
+            },
+            "asignaciones": [
+              {
+                "notaId": 2,
+                "importe": "1000.00",
+                "movimientoVentaId": 1
+              }
+            ],
+            "importeFavorPropuesto": "0.00"
+          },
+          {
+            "id": "04c9ad54-5e64-417a-a9a7-9f1e94709bdb",
+            "version": 2,
+            "asignaciones": [
+              {
+                "notaId": 2,
+                "movimientoVentaId": 1,
+                "importe": "1000.00"
+              }
+            ],
+            "importeFavorPropuesto": "0.00",
+            "notas": [
+              {
+                "notaId": 2,
+                "movimientoVentaId": 1,
+                "folio": "1001",
+                "ubicacionId": 1,
+                "fecha": "2026-09-25T13:34:15.109Z",
+                "saldoPendiente": "1000.00",
+                "facturada": false
+              }
+            ],
+            "evidencia": {
+              "descripcion": "ENSAYO continuación reproposal sobre copia descartable",
+              "referencias": []
+            },
+            "actor": {
+              "id": 1,
+              "nombre": "Administrador"
+            },
+            "createdAt": "2026-09-25T13:38:43.494Z"
+          }
+        ],
+        "capacidades": {
+          "puedeRecibir": true,
+          "puedePreparar": true,
+          "puedeAutorizar": true,
+          "puedeRechazar": true,
+          "puedeDevolver": false,
+          "puedeVerAvisos": true,
+          "puedeImprimir": true,
+          "preparacionADisponible": false
+        },
+        "ubicacionId": 1,
+        "aplicaciones": [],
+        "clienteNombre": "Jesús López",
+        "cuentaDestino": "CUENTA_NO_FISCAL",
+        "antiguedadDias": 0,
+        "fechaRecepcion": "2026-09-25T13:38:24.215Z",
+        "notasIndicadas": [
+          {
+            "fecha": "2026-09-25T13:34:15.109Z",
+            "folio": "1001",
+            "notaId": 2,
+            "facturada": false,
+            "ubicacionId": 1,
+            "saldoPendiente": "1000.00",
+            "movimientoVentaId": 1
+          }
+        ],
+        "importeAplicado": "0.00",
+        "importeDevuelto": "0.00",
+        "importeRecibido": "1000.00",
+        "ubicacionNombre": "Mariana",
+        "importePendiente": "1000.00",
+        "algunaVezAplicado": false,
+        "sesionOperativaId": 1,
+        "evidenciaRecepcion": {
+          "descripcion": "ENSAYO dirigido pendiente sin aplicación, copia desechable",
+          "referencias": []
+        },
+        "propuestaVigenteId": "04c9ad54-5e64-417a-a9a7-9f1e94709bdb"
+      },
+      "readback": {
+        "id": "ecf34c1f-fd9e-4568-aec7-b601d335ccac",
+        "revision": 4,
+        "estado": "PENDIENTE",
+        "recibido": "1000.00",
+        "aplicado": "0.00",
+        "retenido": "1000.00",
+        "propuestas": 2,
+        "rechazos": 1,
+        "refundEnabled": false
+      }
+    }
+  ],
+  "startedAt": "2026-09-25T13:38:28.480Z",
+  "completedAt": "2026-09-25T13:38:43.952Z"
+}

@@ -1,0 +1,91 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Vista Global
+Activar sonido
+1
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Usuarios
+
+Gestión de personal, accesos y asignación de sitios.
+
+Nuevo Usuario
+Activos
+Nombre / Usuario	Rol	Alcance	Sitio	Estado	Acciones
+
+Administrador
+admin
+	ADMIN	TODAS	Global	Activo	
+Editar
+
+CONTINUACION CONTADOR A
+continuea4f3723ba12
+	CONTADOR	TODAS	Global	Activo	Perfil contable A/F
+Editar
+
+CONTINUACION CONTADOR F
+continuef92397c8592
+	CONTADOR	TODAS	Global	Activo	Perfil contable A/F
+Editar
+Usuario creado correctamente
+Usuario creado correctamente
+Asignación manual ADMIN · usuario #3
+
+Perfil efectivo F · versión 0. F es el defecto; A sólo se asigna manualmente. No se cambia el rol base.
+
+Confirmar F → A para usuario #3. Motivo: ENSAYO copia desechable: preparar E5, nunca aplicar. A→F revoca datos, capacidades e intenciones A.
+
+VolverConfirmar asignación ADMIN
+Historial de perfiles (append-only)
+
+Sin eventos materializados; no se inventa un ADMIN para el defecto F.
+
+Primera página / reiniciar cursor
+Siguiente
+Cerrar

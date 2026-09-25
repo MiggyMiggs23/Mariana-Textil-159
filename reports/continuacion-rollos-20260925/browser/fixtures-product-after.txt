@@ -1,0 +1,74 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Vista Global
+Activar sonido
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Catálogo de Productos
+
+Gestión de telas, colores, SKUs e inventario general.
+
+Importar
+Nuevo Producto
+Todos los prod.
+Todos los colores
+Todas las unid.
+Activos
+Columnas:
+Ancho
+Composición
+Gramaje
+1 productos en 1 telas
+Expandir todoColapsar todo
+CONTINUACION DEAAE4 ALGODON
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Producto creado exitosamente

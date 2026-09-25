@@ -1,0 +1,92 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Mariana
+Activar sonido
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Terminal POS
+TICKET
+
+Escanea o busca artículos para la venta.
+
+Venta de Rollos (NORMAL)
+Cortes (METREADO)
+Escanea o escribe para buscar...
+Ticket de Venta
+1 renglones
+CONTINUACION DEAAE4 ALGODON - AZUL
+ROLLO
+1 rollo
+CONDEAALG-AZU
+Precio / Mts.
+10.00 Mts.
+$1,000.00
+Ver series
+Requiere Factura
+
+El precio negociado es antes de IVA.
+
+Imprimir tabulares
+
+Agrega una tira por color de los rollos identificados.
+
+Subtotal
+$1,000.00
+IVA (16%)
+$160.00
+Total
+$1,160.00
+Cliente *
+Venta a Público
+
+El ticket se emitirá a nombre de Venta a Público.
+
+Venta a Público no admite compras a crédito.
+
+Confirmar Venta

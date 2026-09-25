@@ -1,0 +1,95 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+Cobros
+Cortes
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Mariana
+Activar sonido
+1
+A
+
+Administrador
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Cobros pendientes de aplicación
+Dinero recibido pendiente de aplicación
+
+No disminuye deuda ni aumenta disponible o saldo a favor mientras espera autorización.
+
+Abrir bandeja de pendientesOcultar captura
+Buscar cliente autorizado
+Buscar cliente
+Selecciona cliente…
+Jesús López
+Recepción real · Jesús López · Entrada CAJA
+
+No es recaptura. Recibido sin aplicar no constituye saldo a favor. Contexto: 25/9/2026, 7:38:24 a.m..
+
+Operación confirmada · PENDIENTE. Retenido: $1,000.00.
+
+Ver recepción y cronología
+Recibo inmediato
+Avisos ADMIN: desde tres días de recepción
+Actualizar lista
+
+No hay recepciones en este alcance/filtro.
+
+Primera página
+Siguiente
+Recepciones · importe y antigüedad
+Estado
+Todos
+PENDIENTE
+PARCIAL
+APLICADO
+DEVUELTO
+Actualizar lista
+Jesús López · PENDIENTE
+
+Recibido $1,000.00 · aplicado $0.00 · pendiente $1,000.00
+
+25/9/2026, 7:38:24 a.m. · 0 días desde recepción · Mariana
+
+Recibo inmediato
+Primera página
+Siguiente
