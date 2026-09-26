@@ -1,0 +1,23 @@
+{
+  "released": true,
+  "writer": "browser-focused-inventory-and-native-fixtures",
+  "candidate": "dist-noche-task7-inventory-20260926",
+  "inventoryResult": "tarea-7/inventory-piece-candidate-confirmation/result.json",
+  "inventoryStatus": "PASS",
+  "freshPaymentResult": "tarea-2/fresh-six-native-payments-completion/result.json",
+  "freshPaymentStatus": "PASS",
+  "paymentInput": "/tmp/noche-20260926/payment-input-fresh.json",
+  "siteId": 840,
+  "siteName": "NOCHE PERF 1",
+  "cashSessionId": 5,
+  "cashSessionLeftOpen": true,
+  "entryId": 6,
+  "beforeTicketIds": [109513, 109514, 109515],
+  "afterTicketIds": [109516, 109517, 109518],
+  "allSixNativeAndUnpaid": true,
+  "oldTicketsUnchanged": true,
+  "oldCashSessionNotReopened": true,
+  "noApplicationCodeChanges": true,
+  "browsersClosed": true,
+  "note": "Initial third-ticket attempt stopped before any sale POST due transient cart reset; independently checked remaining rolls DISPONIBLE and journal absent POST, then completed only unattempted tickets. Existing first two tickets were read back, never recreated. No payment performed."
+}

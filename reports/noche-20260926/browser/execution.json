@@ -1,0 +1,488 @@
+{
+  "cases": [
+    {
+      "id": "continuation-fixtures",
+      "task": 3,
+      "status": "BLOCKED",
+      "error": "Actual synthetic site/client fixture inputs required"
+    },
+    {
+      "id": "continuation-roles",
+      "task": 5,
+      "status": "BLOCKED",
+      "error": "Actual synthetic site/client fixture inputs required"
+    },
+    {
+      "id": "continuation-fixtures",
+      "task": 3,
+      "status": "PARTIAL_OR_BLOCKED",
+      "exitCode": 1,
+      "resultFile": "tarea-3/continuation-fixtures/fixtures-result.json",
+      "observations": [
+        {
+          "item": "native-login",
+          "status": 200
+        },
+        {
+          "item": "supplier",
+          "status": 201
+        },
+        {
+          "item": "product",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "id": "continuation-roles",
+      "task": 5,
+      "status": "PARTIAL_OR_BLOCKED",
+      "exitCode": 1,
+      "resultFile": "tarea-5/continuation-roles/roles-result.json",
+      "observations": [
+        {
+          "item": "native-login",
+          "status": 200
+        },
+        {
+          "item": "create-F",
+          "status": 201
+        },
+        {
+          "item": "create-A",
+          "status": 201
+        },
+        {
+          "item": "assign-A",
+          "status": 200
+        },
+        {
+          "item": "native-login",
+          "status": 200
+        },
+        {
+          "item": "native-login",
+          "status": 200
+        },
+        {
+          "item": "identity",
+          "status": "OBSERVED"
+        },
+        {
+          "item": "restricted-legacy",
+          "status": 403
+        },
+        {
+          "item": "restricted-legacy",
+          "status": 403
+        },
+        {
+          "item": "restricted-legacy",
+          "status": 403
+        },
+        {
+          "item": "restricted-legacy",
+          "status": 403
+        }
+      ]
+    },
+    {
+      "id": "flow-cash-open",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-cash-open/cash-open-result.json",
+      "observations": [
+        {
+          "item": "open-cash",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "id": "flow-e4",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-e4/e4-result.json",
+      "observations": [
+        {
+          "item": "missing-reason-native-submit",
+          "status": "PASS_HTML_VALIDATION"
+        },
+        {
+          "item": "insufficient-no-unlock",
+          "status": "PASS_REJECTED_UI"
+        },
+        {
+          "item": "admin-unlock-native",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "id": "flow-sale",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-sale/sale-result.json",
+      "observations": [
+        {
+          "item": "create-sale-native",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "id": "flow-pay-cash",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-pay-cash/pay-cash-result.json",
+      "observations": [
+        {
+          "item": "pay-cash",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "flow-sale-transfer",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-sale-transfer/sale-result.json",
+      "observations": [
+        {
+          "item": "create-sale-native",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "id": "flow-pay-transfer",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-pay-transfer/pay-transfer-result.json",
+      "observations": [
+        {
+          "item": "pay-transfer",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "flow-credit-sale",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-credit-sale/credit-sale-result.json",
+      "observations": [
+        {
+          "item": "create-sale-native",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "id": "flow-authorize-credit",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-authorize-credit/authorize-credit-result.json",
+      "observations": [
+        {
+          "item": "step-0",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "flow-abono",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-abono/abono-result.json",
+      "observations": [
+        {
+          "item": "ordinary-abono-native",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "id": "flow-receipt",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-receipt/receipt-result.json",
+      "observations": [
+        {
+          "item": "print",
+          "status": 200
+        },
+        {
+          "item": "reprint",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "continuation-receive",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/continuation-receive/receive-result.json",
+      "observations": [
+        {
+          "item": "native-login",
+          "status": 200
+        },
+        {
+          "item": "site-control",
+          "status": "OBSERVED"
+        },
+        {
+          "item": "receive",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "id": "continuation-reject",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/continuation-reject/reject-result.json",
+      "observations": [
+        {
+          "item": "native-login",
+          "status": 200
+        },
+        {
+          "item": "site-control",
+          "status": "OBSERVED"
+        },
+        {
+          "item": "initial-proposal",
+          "status": 201
+        },
+        {
+          "item": "site-control",
+          "status": "OBSERVED"
+        },
+        {
+          "item": "reject-proposal",
+          "status": 200
+        },
+        {
+          "item": "site-control",
+          "status": "OBSERVED"
+        },
+        {
+          "item": "reproposal",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "id": "continuation-prepareA",
+      "task": 5,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-5/continuation-prepareA/prepareA-result.json",
+      "observations": [
+        {
+          "item": "native-login",
+          "status": 200
+        },
+        {
+          "item": "native-login",
+          "status": 200
+        },
+        {
+          "item": "A-preparation",
+          "status": 200
+        },
+        {
+          "item": "A-legacy-E5-denied",
+          "status": 403
+        }
+      ]
+    },
+    {
+      "id": "continuation-apply",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/continuation-apply/apply-result.json",
+      "observations": [
+        {
+          "item": "native-login",
+          "status": 200
+        },
+        {
+          "item": "site-control",
+          "status": "OBSERVED"
+        },
+        {
+          "item": "admin-partial-approval",
+          "status": 200
+        },
+        {
+          "item": "site-control",
+          "status": "OBSERVED"
+        },
+        {
+          "item": "forbidden-refund-read",
+          "status": 403
+        }
+      ]
+    },
+    {
+      "id": "flow-e4-normal",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-e4-normal/e4-normal-result.json",
+      "observations": [
+        {
+          "item": "step-0",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "id": "return-debt",
+      "task": 3,
+      "status": "PARTIAL_OR_BLOCKED",
+      "exitCode": 0,
+      "resultFile": "tarea-3/return-debt/result.json"
+    },
+    {
+      "id": "return-settled",
+      "task": 3,
+      "status": "PARTIAL_OR_BLOCKED",
+      "exitCode": 0,
+      "resultFile": "tarea-3/return-settled/result.json"
+    },
+    {
+      "id": "accountant-boundaries",
+      "task": 5,
+      "status": "PARTIAL_OR_BLOCKED",
+      "exitCode": 0,
+      "resultFile": "tarea-5/accountant-boundaries/result.json"
+    },
+    {
+      "id": "audit",
+      "task": 4,
+      "status": "PARTIAL_OR_BLOCKED",
+      "exitCode": 0,
+      "resultFile": "tarea-4/audit/result.json"
+    },
+    {
+      "id": "flow-remate-mark",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-remate-mark/remate-mark-result.json",
+      "observations": [
+        {
+          "item": "step-0",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "id": "flow-sale-remate",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-sale-remate/sale-result.json",
+      "observations": [
+        {
+          "item": "create-sale-native",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "id": "flow-credit-sale-settled",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-credit-sale-settled/credit-sale-result.json",
+      "observations": [
+        {
+          "item": "create-sale-native",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "id": "flow-authorize-credit-settled",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-authorize-credit-settled/authorize-credit-result.json",
+      "observations": [
+        {
+          "item": "step-0",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "id": "flow-abono-settled",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-abono-settled/abono-result.json",
+      "observations": [
+        {
+          "item": "ordinary-abono-native",
+          "status": 201
+        }
+      ]
+    },
+    {
+      "id": "continuation-fiscal",
+      "task": 5,
+      "status": "PARTIAL_OR_BLOCKED",
+      "exitCode": 1,
+      "resultFile": "tarea-5/continuation-fiscal/fiscal-result.json",
+      "observations": []
+    },
+    {
+      "id": "flow-close",
+      "task": 3,
+      "status": "PARTIAL_OR_BLOCKED",
+      "exitCode": 1,
+      "resultFile": "tarea-3/flow-close/close-result.json",
+      "observations": []
+    },
+    {
+      "id": "flow-close-recovery",
+      "task": 3,
+      "status": "PASS",
+      "exitCode": 0,
+      "resultFile": "tarea-3/flow-close-recovery/close-result.json",
+      "observations": [
+        {
+          "item": "step-0",
+          "status": 200
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Only synthetic actors; copied real identities are never used.",
+    "Physical scanner not exercised; real browser keyboard-wedge input is used.",
+    "Access-floor ambiguity uses configured first active floor (nombre ASC); owner decision not invented.",
+    "No refund business gate changes; unavailable return paths are blocked, never passed.",
+    "Frozen bundle fingerprints are checked locally; MAIN remains responsible for process/DB-copy identity before handoff.",
+    "No case is automatically replayed after any execution attempt; ambiguous writes need independent readback.",
+    "Broad exploratory contracts must be populated from real screen/fixture evidence; absent coverage stays explicit."
+  ]
+}

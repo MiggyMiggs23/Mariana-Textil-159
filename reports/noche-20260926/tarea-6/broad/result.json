@@ -1,0 +1,6371 @@
+{
+  "status": "PARTIAL_OR_BLOCKED",
+  "checks": [
+    {
+      "id": "screen--caja-tiempo-real",
+      "status": "PASS",
+      "evidence": {
+        "route": "/caja/tiempo-real",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Tiempo real",
+          "Ventas pendientes de cobro o autorización",
+          "Salidas en tránsito",
+          "Tickets cancelados",
+          "Salidas canceladas",
+          "Estado por tienda",
+          "Tabla Comparativa",
+          "Últimos documentos"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Registrar Abono",
+          "Actualizar",
+          "Contado cobrado$2,000.002 tickets cobrados",
+          "Ventas a crédito$2,000.002 operaciones a crédito",
+          "Ventas pendientes de cobro o autorización$7,900.008 tickets · 0 notas",
+          "Salidas en tránsito1 salida",
+          "Tickets cancelados0 tickets · $0.00Tasa de cancelación: 0.00%",
+          "Salidas canceladas1 salida"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Ver ventas →",
+            "href": "/caja/tiendas/1/ventas"
+          },
+          {
+            "text": "Ver ventas →",
+            "href": "/caja/tiendas/3/ventas"
+          },
+          {
+            "text": "Ver ventas →",
+            "href": "/caja/tiendas/2/ventas"
+          },
+          {
+            "text": "Nota · Folio 12Nota autorizada03:12MarianaNOCHE26 CREDIT 1790391440045$1,000.00$500.00 marg.",
+            "href": "/tickets/12"
+          },
+          {
+            "text": "Ticket · Folio 11Ticket pendiente03:12MarianaNOCHE26 CASH 1790391435124$400.00-$100.00 marg.",
+            "href": "/tickets/11"
+          },
+          {
+            "text": "Nota · Folio 10Nota autorizada03:04MarianaNOCHE26 CREDIT 1790391440045$1,000.00$500.00 marg.",
+            "href": "/tickets/10"
+          },
+          {
+            "text": "Ticket · Folio 9Ticket cobrado03:03MarianaNOCHE26 CASH 1790391435124$1,000.00$500.00 marg.",
+            "href": "/tickets/9"
+          },
+          {
+            "text": "Ticket · Folio 8Ticket cobrado03:03MarianaNOCHE26 CASH 1790391435124$1,000.00$500.00 marg.",
+            "href": "/tickets/8"
+          },
+          {
+            "text": "Ticket · Folio 7Ticket pendiente03:02MarianaNOCHE26 CASH 1790391435124$1,000.00$500.00 marg.",
+            "href": "/tickets/7"
+          },
+          {
+            "text": "Ticket · Folio 6Ticket pendiente03:02MarianaNOCHE26 CASH 1790391435124$1,000.00$500.00 marg.",
+            "href": "/tickets/6"
+          },
+          {
+            "text": "Ticket · Folio 5Ticket pendiente03:01MarianaNOCHE26 CASH 1790391435124$1,000.00$500.00 marg.",
+            "href": "/tickets/5"
+          },
+          {
+            "text": "Ticket · Folio 4Ticket pendiente03:01MarianaNOCHE26 CASH 1790391435124$1,000.00$500.00 marg.",
+            "href": "/tickets/4"
+          },
+          {
+            "text": "Ticket · Folio 3Ticket pendiente03:01MarianaNOCHE26 CASH 1790391435124$1,000.00$500.00 marg.",
+            "href": "/tickets/3"
+          },
+          {
+            "text": "Ticket · Folio 2Ticket pendiente03:00MarianaNOCHE26 CASH 1790391435124$1,000.00$500.00 marg.",
+            "href": "/tickets/2"
+          },
+          {
+            "text": "Ticket · Folio 1Ticket pendiente02:27Mariana3Bh Creations SA DE CV$1,500.00$500.00 marg.",
+            "href": "/tickets/1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--productos",
+      "status": "PASS",
+      "evidence": {
+        "route": "/productos",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Catálogo de Productos"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Importar",
+          "Nuevo Producto",
+          "Expandir todo",
+          "Colapsar todo",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color",
+          " Color"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--inventario",
+      "status": "PASS",
+      "evidence": {
+        "route": "/inventario",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Control de Inventario"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Expandir todos"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--inventario-vista-global",
+      "status": "PASS",
+      "evidence": {
+        "route": "/inventario/vista-global",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Vista Global",
+          "Tiendas Activas",
+          "Bodegas Activas",
+          "Usuarios Activos",
+          "Inventario por Sitio"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--inventario-ajustes",
+      "status": "PASS",
+      "evidence": {
+        "route": "/inventario/ajustes",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Ajustes de Inventario",
+          " Buscar Rollo",
+          " Detalles del Ajuste"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Ajuste de Cantidad",
+          "Dar de Baja",
+          "Aplicar Ajuste"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--inventario-auditorias",
+      "status": "PASS",
+      "evidence": {
+        "route": "/inventario/auditorias",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Auditoría de Inventario",
+          "Auditorías abiertas en el sitio",
+          "Historial del Sitio"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "NNA-AI-000001ABIERTANOCHE26 AUDIT NATIVO4/5",
+          "MA-AI-000001ABIERTAMariana0/6"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--etiquetas",
+      "status": "PASS",
+      "evidence": {
+        "route": "/etiquetas",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Etiquetas",
+          "Pendientes de revisión0 rollos"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          " Reimprimir seleccionadas (0)",
+          "Buscar",
+          "Limpiar filtros",
+          "Mostrar todos los rollos"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--precios",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Browser or HTTP server error\n\n1 !== 0\n"
+    },
+    {
+      "id": "screen--inventario-stock-minimos",
+      "status": "PASS",
+      "evidence": {
+        "route": "/inventario/stock-minimos",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Stock mínimo",
+          "Consumo por sitio, no total entre sitios",
+          "Selecciona un sitio en el encabezado"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--pos",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('h1').first() to be visible\u001b[22m\n"
+    },
+    {
+      "id": "screen--entradas",
+      "status": "PASS",
+      "evidence": {
+        "route": "/entradas",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "ENTRADAS",
+          "Historial de entradas"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Nueva entrada",
+          "Filtros"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Costos Pendientes",
+            "href": "/entradas/pendientes-costo"
+          },
+          {
+            "text": "MA-000003",
+            "href": "/entradas/3/documento"
+          },
+          {
+            "text": "MA-000002",
+            "href": "/entradas/2/documento"
+          },
+          {
+            "text": "NNA-000001",
+            "href": "/entradas/4/documento"
+          },
+          {
+            "text": "MA-000001",
+            "href": "/entradas/1/documento"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--salidas",
+      "status": "PASS",
+      "evidence": {
+        "route": "/salidas",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Salidas"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Excel",
+          "Nueva Salida",
+          "Nueva salida para venta a cliente",
+          "Filtros",
+          "Entregar",
+          "Cancelar"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Nueva Salida",
+            "href": "/salidas/nueva"
+          },
+          {
+            "text": "Nueva salida para venta a cliente",
+            "href": "/salidas/nueva?modalidad=VENTA_CLIENTE"
+          },
+          {
+            "text": "MA-000002",
+            "href": "/salidas/2"
+          },
+          {
+            "text": "MA-000001",
+            "href": "/salidas/1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--viajes",
+      "status": "PASS",
+      "evidence": {
+        "route": "/viajes",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Viajes",
+          "Viajes registrados"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Nuevo viaje"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Nuevo viaje",
+            "href": "/viajes/nuevo"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--movimientos",
+      "status": "PASS",
+      "evidence": {
+        "route": "/movimientos",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Movimientos",
+          " Filtros"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Limpiar",
+          "Exportar",
+          "Todo lo que salió",
+          "Todos los tipos",
+          "1",
+          "1",
+          "5",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "20",
+          "1",
+          "1",
+          "1",
+          "1",
+          "6",
+          "Anterior",
+          "Siguiente"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Abrir ticket",
+            "href": "/tickets/12?returnTo=%2Fmovimientos%3Fpage%3D1"
+          },
+          {
+            "text": "Abrir ticket",
+            "href": "/tickets/11?returnTo=%2Fmovimientos%3Fpage%3D1"
+          },
+          {
+            "text": "Entrada NNA-000001",
+            "href": "/entradas/4/documento"
+          },
+          {
+            "text": "Abrir ticket",
+            "href": "/tickets/10?returnTo=%2Fmovimientos%3Fpage%3D1"
+          },
+          {
+            "text": "Abrir ticket",
+            "href": "/tickets/9?returnTo=%2Fmovimientos%3Fpage%3D1"
+          },
+          {
+            "text": "Abrir ticket",
+            "href": "/tickets/8?returnTo=%2Fmovimientos%3Fpage%3D1"
+          },
+          {
+            "text": "Abrir ticket",
+            "href": "/tickets/7?returnTo=%2Fmovimientos%3Fpage%3D1"
+          },
+          {
+            "text": "Abrir ticket",
+            "href": "/tickets/6?returnTo=%2Fmovimientos%3Fpage%3D1"
+          },
+          {
+            "text": "Abrir ticket",
+            "href": "/tickets/5?returnTo=%2Fmovimientos%3Fpage%3D1"
+          },
+          {
+            "text": "Abrir ticket",
+            "href": "/tickets/4?returnTo=%2Fmovimientos%3Fpage%3D1"
+          },
+          {
+            "text": "Abrir ticket",
+            "href": "/tickets/3?returnTo=%2Fmovimientos%3Fpage%3D1"
+          },
+          {
+            "text": "Abrir ticket",
+            "href": "/tickets/2?returnTo=%2Fmovimientos%3Fpage%3D1"
+          },
+          {
+            "text": "Entrada MA-000003",
+            "href": "/entradas/3/documento"
+          },
+          {
+            "text": "Abrir ticket",
+            "href": "/tickets/1?returnTo=%2Fmovimientos%3Fpage%3D1"
+          },
+          {
+            "text": "Entrada MA-000002",
+            "href": "/entradas/2/documento"
+          },
+          {
+            "text": "Entrada MA-000001",
+            "href": "/entradas/1/documento"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--caja-cuentas-destino",
+      "status": "PASS",
+      "evidence": {
+        "route": "/caja/cuentas-destino",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Cuentas Destino",
+          "Cobranza",
+          "Matriz de Operaciones (Ventas)",
+          "Ventas",
+          "Desglose por Tienda",
+          "Acumulados"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          ""
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          },
+          {
+            "text": " Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "$0.00",
+            "href": "/caja/cuentas-destino/CAJA_FISICA?desde=2026-09-26&hasta=2026-09-26&preset=hoy"
+          },
+          {
+            "text": "0.00% DEL TOTAL",
+            "href": "/caja/cuentas-destino/CAJA_FISICA?desde=2026-09-26&hasta=2026-09-26&preset=hoy"
+          },
+          {
+            "text": "$0.00",
+            "href": "/caja/cuentas-destino/CAJA_FISICA?desde=2026-09-26&hasta=2026-09-26&preset=hoy&fuente=POS&fuente=ABONO&fuente=ABONO_SALDO_FAVOR&facturado=true"
+          },
+          {
+            "text": "0.00% DEL TOTAL",
+            "href": "/caja/cuentas-destino/CAJA_FISICA?desde=2026-09-26&hasta=2026-09-26&preset=hoy&fuente=POS&fuente=ABONO&fuente=ABONO_SALDO_FAVOR&facturado=true"
+          },
+          {
+            "text": "$0.00",
+            "href": "/caja/cuentas-destino/CAJA_FISICA?desde=2026-09-26&hasta=2026-09-26&preset=hoy&fuente=POS&fuente=ABONO&fuente=ABONO_SALDO_FAVOR&facturado=false"
+          },
+          {
+            "text": "0.00% DEL TOTAL",
+            "href": "/caja/cuentas-destino/CAJA_FISICA?desde=2026-09-26&hasta=2026-09-26&preset=hoy&fuente=POS&fuente=ABONO&fuente=ABONO_SALDO_FAVOR&facturado=false"
+          },
+          {
+            "text": "$0.00",
+            "href": "/caja/cuentas-destino/CUENTA_NO_FISCAL?desde=2026-09-26&hasta=2026-09-26&preset=hoy"
+          },
+          {
+            "text": "0.00% DEL TOTAL",
+            "href": "/caja/cuentas-destino/CUENTA_NO_FISCAL?desde=2026-09-26&hasta=2026-09-26&preset=hoy"
+          },
+          {
+            "text": "$0.00",
+            "href": "/caja/cuentas-destino/CUENTA_FISCAL?desde=2026-09-26&hasta=2026-09-26&preset=hoy"
+          },
+          {
+            "text": "0.00% DEL TOTAL",
+            "href": "/caja/cuentas-destino/CUENTA_FISCAL?desde=2026-09-26&hasta=2026-09-26&preset=hoy"
+          },
+          {
+            "text": "$0.00",
+            "href": "/caja/cuentas-destino/TODAS?desde=2026-09-26&hasta=2026-09-26&preset=hoy&fuente=CREDITO"
+          },
+          {
+            "text": "$0.00",
+            "href": "/caja/cuentas-destino/TODAS?desde=2026-09-26&hasta=2026-09-26&preset=hoy&fuente=POS&fuente=CREDITO&facturado=true"
+          },
+          {
+            "text": "$0.00",
+            "href": "/caja/cuentas-destino/TODAS?desde=2026-09-26&hasta=2026-09-26&preset=hoy&fuente=POS&fuente=CREDITO&facturado=false"
+          },
+          {
+            "text": "$0.00",
+            "href": "/caja/cuentas-destino/TODAS?desde=2026-09-26&hasta=2026-09-26&preset=hoy&fuente=POS&fuente=CREDITO"
+          },
+          {
+            "text": "$0.00",
+            "href": "/caja/cuentas-destino/TODAS?desde=2026-09-26&hasta=2026-09-26&preset=hoy&fuente=POS&fuente=CREDITO"
+          },
+          {
+            "text": "$0.00",
+            "href": "/caja/cuentas-destino/TODAS?desde=2026-09-26&hasta=2026-09-26&preset=hoy&fuente=POS"
+          },
+          {
+            "text": "$0.00",
+            "href": "/caja/cuentas-destino/TODAS?desde=2026-09-26&hasta=2026-09-26&preset=hoy&fuente=CREDITO"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--cobros",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('h1').first() to be visible\u001b[22m\n"
+    },
+    {
+      "id": "screen--caja-cortes",
+      "status": "PASS",
+      "evidence": {
+        "route": "/caja/cortes",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Historial de Cortes"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Con Diferencia",
+          "",
+          " Excel",
+          " PDF"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--caja-atribucion-e7",
+      "status": "PASS",
+      "evidence": {
+        "route": "/caja/atribucion-e7",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Atribución de cobranza y aplicaciones",
+          "Movimientos del periodo",
+          "Puente por fuente, cuenta y sitio"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Descargar PDF E7",
+          "Descargar XLSX E7",
+          "Actualizar E7"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          },
+          {
+            "text": " Cuentas Destino",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "8",
+            "href": "/tickets/8"
+          },
+          {
+            "text": "$1000.00",
+            "href": "/tickets/8"
+          },
+          {
+            "text": "9",
+            "href": "/tickets/9"
+          },
+          {
+            "text": "$1000.00",
+            "href": "/tickets/9"
+          },
+          {
+            "text": "10",
+            "href": "/tickets/10"
+          },
+          {
+            "text": "10",
+            "href": "/tickets/10"
+          },
+          {
+            "text": "12",
+            "href": "/tickets/12"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--alertas",
+      "status": "PASS",
+      "evidence": {
+        "route": "/alertas",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Alertas en Tiempo Real",
+          "Tickets Pendientes1",
+          "Pagos por vencer o vencidos0",
+          "Salidas sin recibir (>24 h)0",
+          "Ventas autorizadas sin entregar (>24 h) 0"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Actualizar"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Revisar ",
+            "href": "/tickets/1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--clientes",
+      "status": "PASS",
+      "evidence": {
+        "route": "/clientes",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Clientes"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Nuevo cliente",
+          "Deuda pendiente primero",
+          "Cliente",
+          "Teléfono",
+          "RFC",
+          "Deuda",
+          "Límite de crédito",
+          "Movimientos",
+          "Última actividad",
+          "",
+          ""
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          },
+          {
+            "text": "\"Facbricolor\"",
+            "href": "/clientes/805"
+          },
+          {
+            "text": "\"Subli Express\"",
+            "href": "/clientes/2368"
+          },
+          {
+            "text": "\"Uniforma Operadora De Tiendas\"",
+            "href": "/clientes/2466"
+          },
+          {
+            "text": "3Bh Creations SA DE CV",
+            "href": "/clientes/8"
+          },
+          {
+            "text": "88 Bag",
+            "href": "/clientes/9"
+          },
+          {
+            "text": "Aarón Arvizu Rodríguez",
+            "href": "/clientes/10"
+          },
+          {
+            "text": "Abaco Offset Y Digital SA DE CV",
+            "href": "/clientes/11"
+          },
+          {
+            "text": "Abadis Elite SA DE CV",
+            "href": "/clientes/12"
+          },
+          {
+            "text": "Abastecedora De Colchones Y Accesorios SA DE CV",
+            "href": "/clientes/13"
+          },
+          {
+            "text": "Abastecedora De Insumos Para El Deporte, Estimulacion Y Rehabilitacion",
+            "href": "/clientes/14"
+          },
+          {
+            "text": "Abastecedora De Mercerias",
+            "href": "/clientes/15"
+          },
+          {
+            "text": "Abastecedora Industrial Elimar",
+            "href": "/clientes/16"
+          },
+          {
+            "text": "Abasto Hospitalario",
+            "href": "/clientes/17"
+          },
+          {
+            "text": "Abc Uniformes",
+            "href": "/clientes/18"
+          },
+          {
+            "text": "Abdon Ruiz Mira Flores",
+            "href": "/clientes/19"
+          },
+          {
+            "text": "Abeja Sonica",
+            "href": "/clientes/20"
+          },
+          {
+            "text": "Abel Campuzano Flores",
+            "href": "/clientes/21"
+          },
+          {
+            "text": "Abel Dorantes Paredes",
+            "href": "/clientes/22"
+          },
+          {
+            "text": "Abel Galvez",
+            "href": "/clientes/23"
+          },
+          {
+            "text": "Abel Leivis Reyes Gonzalez",
+            "href": "/clientes/24"
+          },
+          {
+            "text": "Abel Márquez",
+            "href": "/clientes/25"
+          },
+          {
+            "text": "Abigail De Los Santos (Martinez)",
+            "href": "/clientes/26"
+          },
+          {
+            "text": "Abraham Farca",
+            "href": "/clientes/27"
+          },
+          {
+            "text": "Abraham Islas Martinez",
+            "href": "/clientes/28"
+          },
+          {
+            "text": "Abraham Lopez",
+            "href": "/clientes/29"
+          },
+          {
+            "text": "Abraham Sanchez Onofre",
+            "href": "/clientes/30"
+          },
+          {
+            "text": "Abraham Solorio Ortuño",
+            "href": "/clientes/31"
+          },
+          {
+            "text": "Abt Promo Max",
+            "href": "/clientes/32"
+          },
+          {
+            "text": "Acabados Y Empaques Mexicanos",
+            "href": "/clientes/33"
+          },
+          {
+            "text": "Acosta Martinez Cirila",
+            "href": "/clientes/34"
+          },
+          {
+            "text": "Action Sport Retailer De Mexico",
+            "href": "/clientes/35"
+          },
+          {
+            "text": "Acty Gym Gimnasia Y Estimulacion Temprana SC",
+            "href": "/clientes/36"
+          },
+          {
+            "text": "Adan De Jesus Rivera Resendiz",
+            "href": "/clientes/37"
+          },
+          {
+            "text": "Adan De Luis Romero",
+            "href": "/clientes/38"
+          },
+          {
+            "text": "Adan Gerardo Lopez Arteaga",
+            "href": "/clientes/39"
+          },
+          {
+            "text": "Adan Rodrigo Calixto Ayala",
+            "href": "/clientes/40"
+          },
+          {
+            "text": "Addy Beatriz Gallareta Gonzalez",
+            "href": "/clientes/41"
+          },
+          {
+            "text": "Adel Al Amer",
+            "href": "/clientes/42"
+          },
+          {
+            "text": "Administradora H Huatulco",
+            "href": "/clientes/43"
+          },
+          {
+            "text": "Adrian Alberto Guevara Bernabe",
+            "href": "/clientes/46"
+          },
+          {
+            "text": "Adrian De Lucio Perez",
+            "href": "/clientes/51"
+          },
+          {
+            "text": "Adrian Roja y/o Fernando",
+            "href": "/clientes/52"
+          },
+          {
+            "text": "Adriana Gomez",
+            "href": "/clientes/44"
+          },
+          {
+            "text": "Adriana Isabel Aragon Martinez",
+            "href": "/clientes/45"
+          },
+          {
+            "text": "Adriana Navarrete Martinez",
+            "href": "/clientes/47"
+          },
+          {
+            "text": "Adriana Nelly Herrera Solis",
+            "href": "/clientes/48"
+          },
+          {
+            "text": "Adriana Ramirez Carrillo",
+            "href": "/clientes/49"
+          },
+          {
+            "text": "Adriana Rodriguez Carrillo",
+            "href": "/clientes/50"
+          },
+          {
+            "text": "Af.Mob",
+            "href": "/clientes/53"
+          },
+          {
+            "text": "Agencia De Fundraising Comunicacion Y Sustentabilidad S DE RL DE CV",
+            "href": "/clientes/54"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--proveedores",
+      "status": "PASS",
+      "evidence": {
+        "route": "/proveedores",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Proveedores"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Nuevo Proveedor",
+          "Proveedor / Contacto",
+          "Tipo",
+          "Saldo",
+          "Comprado (12m)",
+          "Última Compra",
+          "Compras en periodo",
+          "Estado"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Alan Hilu",
+            "href": "/proveedores/8"
+          },
+          {
+            "text": "Alfredo Cojab",
+            "href": "/proveedores/225"
+          },
+          {
+            "text": "Alfredo Lorenzo",
+            "href": "/proveedores/213"
+          },
+          {
+            "text": "Alfredo Miguel",
+            "href": "/proveedores/218"
+          },
+          {
+            "text": "BeeBags",
+            "href": "/proveedores/3"
+          },
+          {
+            "text": "Bordatec",
+            "href": "/proveedores/6"
+          },
+          {
+            "text": "Carpe",
+            "href": "/proveedores/215"
+          },
+          {
+            "text": "Cobitel",
+            "href": "/proveedores/214"
+          },
+          {
+            "text": "CONTINUACION 2D0AA2 PROVEEDOR",
+            "href": "/proveedores/226"
+          },
+          {
+            "text": "David Ohanna",
+            "href": "/proveedores/209"
+          },
+          {
+            "text": "Dona Hi",
+            "href": "/proveedores/221"
+          },
+          {
+            "text": "Eduardo Hussni",
+            "href": "/proveedores/208"
+          },
+          {
+            "text": "El Asturcon",
+            "href": "/proveedores/210"
+          },
+          {
+            "text": "FisFiber",
+            "href": "/proveedores/2"
+          },
+          {
+            "text": "Gerardo Gonzales",
+            "href": "/proveedores/212"
+          },
+          {
+            "text": "Grupo Vision",
+            "href": "/proveedores/4"
+          },
+          {
+            "text": "Insertex",
+            "href": "/proveedores/9"
+          },
+          {
+            "text": "Jesus Poo",
+            "href": "/proveedores/216"
+          },
+          {
+            "text": "Juan Carlos Priede",
+            "href": "/proveedores/219"
+          },
+          {
+            "text": "Ling Si",
+            "href": "/proveedores/7"
+          },
+          {
+            "text": "Notesa",
+            "href": "/proveedores/5"
+          },
+          {
+            "text": "Olegario Alvarez",
+            "href": "/proveedores/217"
+          },
+          {
+            "text": "Paulina",
+            "href": "/proveedores/222"
+          },
+          {
+            "text": "Ping Li",
+            "href": "/proveedores/220"
+          },
+          {
+            "text": "Ricardo Miguel",
+            "href": "/proveedores/211"
+          },
+          {
+            "text": "Salomon Hilu",
+            "href": "/proveedores/223"
+          },
+          {
+            "text": "Salomon Hilu Cojab",
+            "href": "/proveedores/224"
+          },
+          {
+            "text": "SkyTex",
+            "href": "/proveedores/1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--directorio-camionetas",
+      "status": "PASS",
+      "evidence": {
+        "route": "/directorio/camionetas",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Camionetas"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Nueva Camioneta",
+          ""
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--directorio-choferes",
+      "status": "PASS",
+      "evidence": {
+        "route": "/directorio/choferes",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Choferes"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Nuevo chofer",
+          "Activos",
+          "Inactivos",
+          "Todos",
+          "",
+          "Desactivar"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--equipos",
+      "status": "PASS",
+      "evidence": {
+        "route": "/equipos",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Equipos",
+          "Coco",
+          "Cruces",
+          "Don Nacho",
+          "Mariana",
+          "NOCHE26 AUDIT NATIVO",
+          "Tomás",
+          "Coco",
+          "Cruces",
+          "Don Nacho",
+          "Mariana",
+          "N26-PERM",
+          "NOCHE26 AUDIT NATIVO",
+          "Tomás"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Nuevo Equipo",
+          "Coco0de 0 activos",
+          "Cruces0de 0 activos",
+          "Don Nacho0de 0 activos",
+          "Mariana0de 1 activos",
+          "NOCHE26 AUDIT NATIVO0de 0 activos",
+          "Tomás0de 0 activos",
+          "Checklist",
+          ""
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--reportes",
+      "status": "PASS",
+      "evidence": {
+        "route": "/reportes",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Reportes y Decisiones",
+          "$4,000.00",
+          "4",
+          "$4,000.00",
+          "4",
+          "$1,000.00",
+          "$0.00",
+          "0",
+          "$0.00",
+          "40.00",
+          "Ventas diarias",
+          "Ventas por hora",
+          "Ventas por día",
+          "Día",
+          "Día de semana",
+          "Hora",
+          "Sitio",
+          "Producto",
+          "Tela",
+          "Color",
+          "Vendedor",
+          "Cliente",
+          "Forma de pago",
+          "Estado de factura",
+          "Mejores productos",
+          "Peores productos",
+          "Clasificación ABC",
+          "Pares de productos en canasta",
+          "Resumen de cancelaciones",
+          "Cancelaciones",
+          "Productos cancelados",
+          "Comparativo de Tiendas",
+          "Ventas por Tienda",
+          "Participación Global",
+          "Mezcla de Pago"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Productos",
+          "Telas",
+          "Colores",
+          "Unidades",
+          "Usuarios",
+          "Clientes",
+          "Proveedores",
+          "Métodos",
+          " Actualizar",
+          " PDF",
+          " Excel"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--contenedores",
+      "status": "PASS",
+      "evidence": {
+        "route": "/contenedores",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Próximos Contenedores",
+          "Resumen del Periodo",
+          "Costo por Mes",
+          "Desempeño por Proveedor",
+          "Desempeño por Producto",
+          "Resumen por Tela",
+          "Resumen por Color",
+          "Diferencias Detectadas",
+          "Desglose de Contenedores",
+          "Sin contenedores"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Nuevo Contenedor",
+          " PDF",
+          " Excel",
+          "Registrar Contenedor"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--ubicaciones",
+      "status": "PASS",
+      "evidence": {
+        "route": "/ubicaciones",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Sitios"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Nuevo sitio",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Reactivar",
+          "Editar",
+          "Reactivar",
+          "Editar",
+          "Reactivar",
+          "Editar",
+          "Reactivar",
+          "Editar",
+          "Editar"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--usuarios",
+      "status": "PASS",
+      "evidence": {
+        "route": "/usuarios",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Usuarios"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Nuevo Usuario",
+          "Editar",
+          "Editar",
+          "Perfil contable A/F",
+          "Editar",
+          "Perfil contable A/F",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Perfil contable A/F",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Editar",
+          "Editar"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--permisos",
+      "status": "PASS",
+      "evidence": {
+        "route": "/permisos",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Permisos",
+          "Matriz de Roles",
+          "Administrador"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--administracion-conciliacion",
+      "status": "PASS",
+      "evidence": {
+        "route": "/administracion/conciliacion",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "ADMIN · discrepancias documentales NO CUADRA",
+          "Conciliación de Kardex",
+          "Sin discrepancias"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Consultar intervalo",
+          "Actualizar fuente",
+          "Descartar cursor y volver al inicio"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--auditoria",
+      "status": "PASS",
+      "evidence": {
+        "route": "/auditoria",
+        "headings": [
+          "Bitácora"
+        ],
+        "buttons": [
+          "Exportar Excel",
+          "01/09/26 - 30/09/26",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          " Anterior",
+          "Siguiente "
+        ],
+        "links": []
+      }
+    },
+    {
+      "id": "screen--contabilidad-conciliaciones",
+      "status": "PASS",
+      "evidence": {
+        "route": "/contabilidad/conciliaciones",
+        "headings": [
+          "Contabilidad · ADMIN",
+          "Conciliaciones de ventas facturadas",
+          "Administración y ajustes"
+        ],
+        "buttons": [
+          "Cerrar sesión",
+          "Consultar intervalo",
+          "Actualizar fuente",
+          "Descartar cursor y volver al inicio"
+        ],
+        "links": [
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--",
+      "status": "PASS",
+      "evidence": {
+        "route": "/",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Tiempo real",
+          "Ventas pendientes de cobro o autorización",
+          "Salidas en tránsito",
+          "Tickets cancelados",
+          "Salidas canceladas",
+          "Estado por tienda",
+          "Tabla Comparativa",
+          "Últimos documentos"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Registrar Abono",
+          "Actualizar",
+          "Contado cobrado$2,000.002 tickets cobrados",
+          "Ventas a crédito$2,000.002 operaciones a crédito",
+          "Ventas pendientes de cobro o autorización$7,900.008 tickets · 0 notas",
+          "Salidas en tránsito1 salida",
+          "Tickets cancelados0 tickets · $0.00Tasa de cancelación: 0.00%",
+          "Salidas canceladas1 salida"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Ver ventas →",
+            "href": "/caja/tiendas/1/ventas"
+          },
+          {
+            "text": "Ver ventas →",
+            "href": "/caja/tiendas/3/ventas"
+          },
+          {
+            "text": "Ver ventas →",
+            "href": "/caja/tiendas/2/ventas"
+          },
+          {
+            "text": "Nota · Folio 12Nota autorizada03:12MarianaNOCHE26 CREDIT 1790391440045$1,000.00$500.00 marg.",
+            "href": "/tickets/12"
+          },
+          {
+            "text": "Ticket · Folio 11Ticket pendiente03:12MarianaNOCHE26 CASH 1790391435124$400.00-$100.00 marg.",
+            "href": "/tickets/11"
+          },
+          {
+            "text": "Nota · Folio 10Nota autorizada03:04MarianaNOCHE26 CREDIT 1790391440045$1,000.00$500.00 marg.",
+            "href": "/tickets/10"
+          },
+          {
+            "text": "Ticket · Folio 9Ticket cobrado03:03MarianaNOCHE26 CASH 1790391435124$1,000.00$500.00 marg.",
+            "href": "/tickets/9"
+          },
+          {
+            "text": "Ticket · Folio 8Ticket cobrado03:03MarianaNOCHE26 CASH 1790391435124$1,000.00$500.00 marg.",
+            "href": "/tickets/8"
+          },
+          {
+            "text": "Ticket · Folio 7Ticket pendiente03:02MarianaNOCHE26 CASH 1790391435124$1,000.00$500.00 marg.",
+            "href": "/tickets/7"
+          },
+          {
+            "text": "Ticket · Folio 6Ticket pendiente03:02MarianaNOCHE26 CASH 1790391435124$1,000.00$500.00 marg.",
+            "href": "/tickets/6"
+          },
+          {
+            "text": "Ticket · Folio 5Ticket pendiente03:01MarianaNOCHE26 CASH 1790391435124$1,000.00$500.00 marg.",
+            "href": "/tickets/5"
+          },
+          {
+            "text": "Ticket · Folio 4Ticket pendiente03:01MarianaNOCHE26 CASH 1790391435124$1,000.00$500.00 marg.",
+            "href": "/tickets/4"
+          },
+          {
+            "text": "Ticket · Folio 3Ticket pendiente03:01MarianaNOCHE26 CASH 1790391435124$1,000.00$500.00 marg.",
+            "href": "/tickets/3"
+          },
+          {
+            "text": "Ticket · Folio 2Ticket pendiente03:00MarianaNOCHE26 CASH 1790391435124$1,000.00$500.00 marg.",
+            "href": "/tickets/2"
+          },
+          {
+            "text": "Ticket · Folio 1Ticket pendiente02:27Mariana3Bh Creations SA DE CV$1,500.00$500.00 marg.",
+            "href": "/tickets/1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--notificaciones",
+      "status": "PASS",
+      "evidence": {
+        "route": "/notificaciones",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "ADMIN · discrepancias documentales NO CUADRA",
+          "Notificaciones",
+          "Avisos operativos",
+          "Ventas a crédito",
+          "Por vencer (próximos 3 días)",
+          "Notas vencidas",
+          "Clientes con más de una nota vencida"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Consultar intervalo",
+          "Actualizar fuente",
+          "Descartar cursor y volver al inicio",
+          "Actualizar",
+          "Marcar guardadas como leídas",
+          "Leída",
+          "Leída"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--clientes-2584",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "page.waitForLoadState: Timeout 12000ms exceeded."
+    },
+    {
+      "id": "screen--proveedores-226",
+      "status": "PASS",
+      "evidence": {
+        "route": "/proveedores/226",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "CONTINUACION 2D0AA2 PROVEEDOR",
+          "Información del Proveedor",
+          "Solicitudes de pago dirigido"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Exportar Excel",
+          "Imprimir PDF",
+          "Abonar a cuenta",
+          "Editar Datos"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Volver a proveedores",
+            "href": "/proveedores"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--productos-2078",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('h1').first() to be visible\u001b[22m\n"
+    },
+    {
+      "id": "screen--inventario-rollos-8",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('h1').first() to be visible\u001b[22m\n"
+    },
+    {
+      "id": "screen--tickets-8",
+      "status": "PASS",
+      "evidence": {
+        "route": "/tickets/8",
+        "headings": [
+          "Ticket #8",
+          "Detalle de Operación"
+        ],
+        "buttons": [
+          " Cancelar Ticket",
+          " Imprimir Ticket (80mm)",
+          "Ver rollos"
+        ],
+        "links": [
+          {
+            "text": "",
+            "href": "/pos"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--recibos-e3-E3-1-00000001",
+      "status": "PASS",
+      "evidence": {
+        "route": "/recibos-e3/E3-1-00000001",
+        "headings": [
+          "INVENTARIO",
+          "OPERACIÓN",
+          "CAJA",
+          "DIRECTORIO",
+          "CONFIGURACIÓN",
+          "ADMINISTRACIÓN CONTABLE",
+          "Recibo E3-1-00000001"
+        ],
+        "buttons": [
+          "Borrar datos de prueba",
+          "3",
+          "Cerrar sesión",
+          "Solicitar impresión / reimpresión"
+        ],
+        "links": [
+          {
+            "text": "Mariana Textil",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Tiempo Real",
+            "href": "/caja/tiempo-real"
+          },
+          {
+            "text": "Productos",
+            "href": "/productos"
+          },
+          {
+            "text": "Inventario",
+            "href": "/inventario"
+          },
+          {
+            "text": "Vista Global",
+            "href": "/inventario/vista-global"
+          },
+          {
+            "text": "Ajustes",
+            "href": "/inventario/ajustes"
+          },
+          {
+            "text": "Auditorías",
+            "href": "/inventario/auditorias"
+          },
+          {
+            "text": "Etiquetas",
+            "href": "/etiquetas"
+          },
+          {
+            "text": "Precios",
+            "href": "/precios"
+          },
+          {
+            "text": "Stock mínimo",
+            "href": "/inventario/stock-minimos"
+          },
+          {
+            "text": "Ventas / POS",
+            "href": "/pos"
+          },
+          {
+            "text": "Entradas",
+            "href": "/entradas"
+          },
+          {
+            "text": "Salidas",
+            "href": "/salidas"
+          },
+          {
+            "text": "Viajes",
+            "href": "/viajes"
+          },
+          {
+            "text": "Movimientos",
+            "href": "/movimientos"
+          },
+          {
+            "text": "Cuentas",
+            "href": "/caja/cuentas-destino"
+          },
+          {
+            "text": "Cobros",
+            "href": "/cobros"
+          },
+          {
+            "text": "Cortes",
+            "href": "/caja/cortes"
+          },
+          {
+            "text": "Atribución E7",
+            "href": "/caja/atribucion-e7"
+          },
+          {
+            "text": "Alertas",
+            "href": "/alertas"
+          },
+          {
+            "text": "Clientes",
+            "href": "/clientes"
+          },
+          {
+            "text": "Proveedores",
+            "href": "/proveedores"
+          },
+          {
+            "text": "Camionetas",
+            "href": "/directorio/camionetas"
+          },
+          {
+            "text": "Choferes",
+            "href": "/directorio/choferes"
+          },
+          {
+            "text": "Equipos",
+            "href": "/equipos"
+          },
+          {
+            "text": "Reportes",
+            "href": "/reportes"
+          },
+          {
+            "text": "Próximos Contenedores",
+            "href": "/contenedores"
+          },
+          {
+            "text": "Sitios",
+            "href": "/ubicaciones"
+          },
+          {
+            "text": "Usuarios",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Permisos",
+            "href": "/permisos"
+          },
+          {
+            "text": "Conciliación de Kardex",
+            "href": "/administracion/conciliacion"
+          },
+          {
+            "text": "Bitácora",
+            "href": "/auditoria"
+          },
+          {
+            "text": "Conciliaciones documentales",
+            "href": "/contabilidad/conciliaciones"
+          },
+          {
+            "text": "Administrar perfiles A/F",
+            "href": "/usuarios"
+          },
+          {
+            "text": "Ver detalle del movimiento #2",
+            "href": "/clientes/2584/movimientos/2"
+          },
+          {
+            "text": "10",
+            "href": "/tickets/10"
+          },
+          {
+            "text": "10",
+            "href": "/tickets/10"
+          }
+        ]
+      }
+    },
+    {
+      "id": "screen--cobros-pendientes",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('h1').first() to be visible\u001b[22m\n"
+    },
+    {
+      "id": "coverage-detailChains",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "No authentic fixture contracts supplied for detailChains; not claimed complete"
+    },
+    {
+      "id": "coverage-unitChecks",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "No authentic fixture contracts supplied for unitChecks; not claimed complete"
+    },
+    {
+      "id": "coverage-colorChecks",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "No authentic fixture contracts supplied for colorChecks; not claimed complete"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "tarea-6/broad/screen--caja-tiempo-real-0.png",
+      "sha256": "f4a647e1bf9ddea4d99f07329b573ebe96b878733fa79a365a9c8943725e2dfb"
+    },
+    {
+      "file": "tarea-6/broad/screen--productos-0.png",
+      "sha256": "4b2137bb8b8d017ffcfca2d703269e465e115cafb1f87988b685161e9ea0d2b5"
+    },
+    {
+      "file": "tarea-6/broad/screen--inventario-0.png",
+      "sha256": "3de57524b553fdcbc372df61208a10eeb8944309c95d39c002b81ecefac9f068"
+    },
+    {
+      "file": "tarea-6/broad/screen--inventario-vista-global-0.png",
+      "sha256": "71c4456efcae5409683ed7973714b3fdd73600fdcba59dd0a318809f3caea6e7"
+    },
+    {
+      "file": "tarea-6/broad/screen--inventario-ajustes-0.png",
+      "sha256": "cd5816615a089329f8f3367ce4d6af4700367492faf78ed03a1c10a01b2b1e7b"
+    },
+    {
+      "file": "tarea-6/broad/screen--inventario-auditorias-0.png",
+      "sha256": "7d6fde27064a72d7daca263db3bb5d0fac73bd90ff1ff71c0bbc986e27669755"
+    },
+    {
+      "file": "tarea-6/broad/screen--etiquetas-0.png",
+      "sha256": "342bc58308d31910c27ef434c810083e0a18dde1985c1bfcfe84d3c66bc8c817"
+    },
+    {
+      "file": "tarea-6/broad/screen--precios-0.png",
+      "sha256": "8a605ed87ca626a282aeb755adb7b5dcc4da0d30031037595f2db718499b83e0"
+    },
+    {
+      "file": "tarea-6/broad/screen--inventario-stock-minimos-0.png",
+      "sha256": "cfc84844621b9e250fb95414e6addfd77b1ab82707e67963ed56d499852e92e9"
+    },
+    {
+      "file": "tarea-6/broad/screen--pos-0.png",
+      "sha256": "ef12d5d7280cea722beb45a5806b9b6dfe99ed9e2bfbeff3dcf580d4555c726f"
+    },
+    {
+      "file": "tarea-6/broad/screen--entradas-0.png",
+      "sha256": "82134b1f3bac7bff9086ceca9c0bb26728c14f1b98048bbb5cc74b9ab186a6af"
+    },
+    {
+      "file": "tarea-6/broad/screen--salidas-0.png",
+      "sha256": "3808887c339b84607229cd3414e8f8ce148b6f0852d7031b37b4e1d9dd48bde0"
+    },
+    {
+      "file": "tarea-6/broad/screen--viajes-0.png",
+      "sha256": "108094f2c548e2afa125a17e792ebedf0a814e7c272757597364f8a25d3a4cee"
+    },
+    {
+      "file": "tarea-6/broad/screen--movimientos-0.png",
+      "sha256": "e833dd9c28de2d2ffdd18e7516bb4c8cd9baedad6940f9d5a9a59d75cdcd47ff"
+    },
+    {
+      "file": "tarea-6/broad/screen--caja-cuentas-destino-0.png",
+      "sha256": "0ebb8120f2a2cfc90950f68f75894a7bbd3dce61da65c2c7f44181a0fce4cc12"
+    },
+    {
+      "file": "tarea-6/broad/screen--cobros-0.png",
+      "sha256": "d5e08411c858063e6465b70034471bafe2c68c73c0dbdb56e6300dcd77bc44e3"
+    },
+    {
+      "file": "tarea-6/broad/screen--caja-cortes-0.png",
+      "sha256": "677fcbb462f2dd5a39b8d0a9f2b5c70ce0832768fdb72d4bd740e1dc9b06e272"
+    },
+    {
+      "file": "tarea-6/broad/screen--caja-atribucion-e7-0.png",
+      "sha256": "ed7faea86039acaa3702de0887e15fac2999470fcf951a65f1cd65a3b60e9496"
+    },
+    {
+      "file": "tarea-6/broad/screen--alertas-0.png",
+      "sha256": "51659a882f2c8a13b0e7edb2a65073cf16d314e479c1f4488ff4fc4af8f8bfb1"
+    },
+    {
+      "file": "tarea-6/broad/screen--clientes-0.png",
+      "sha256": "69fbeea9ea76e525453fa80e26724f1d4eb37ee474e5cc2e25ed40c3c65d09d9"
+    },
+    {
+      "file": "tarea-6/broad/screen--proveedores-0.png",
+      "sha256": "7087388f4ff8a8d57244b1f9a039e1e60ee2954083355d46fabf042507393b28"
+    },
+    {
+      "file": "tarea-6/broad/screen--directorio-camionetas-0.png",
+      "sha256": "d4eeebb249f5aa90cc03fd7c24f36fc20736515e4d96e55b36f477ab634e976f"
+    },
+    {
+      "file": "tarea-6/broad/screen--directorio-choferes-0.png",
+      "sha256": "dedcfebd968b1ff9434eedfa75245feb7876c482c76ba3de8e25f6885f2b22d9"
+    },
+    {
+      "file": "tarea-6/broad/screen--equipos-0.png",
+      "sha256": "5a0cbcc1268608d834c06eedb25f243c4f82eba1eb61ced884d4cbcacf1b22bd"
+    },
+    {
+      "file": "tarea-6/broad/screen--reportes-0.png",
+      "sha256": "f1ca2b38b6bcf4fe800e5e6a16bfa8137c12fcf8b5e0d3af48c68f7b5a9fb316"
+    },
+    {
+      "file": "tarea-6/broad/screen--contenedores-0.png",
+      "sha256": "2943463c4d93f461aab752d9aec5a688eb0a0a3f8d22781dce1c3c8b6e81bcb3"
+    },
+    {
+      "file": "tarea-6/broad/screen--ubicaciones-0.png",
+      "sha256": "3c455e49f18416f1e66ac935f225e7a120ada464f995a2bcaa5e3366ff0a3a49"
+    },
+    {
+      "file": "tarea-6/broad/screen--usuarios-0.png",
+      "sha256": "a292c803a0cf574259fb8d98119cb27bf6a8fa4a57e873b4ed6a115689dcd68e"
+    },
+    {
+      "file": "tarea-6/broad/screen--permisos-0.png",
+      "sha256": "c1bf99e4492c180fae42b33a264ea6bf307ec871a51e6202aee3412bab24325e"
+    },
+    {
+      "file": "tarea-6/broad/screen--administracion-conciliacion-0.png",
+      "sha256": "e1e9a0802d6e8f58e30d4bbb2c48f727f1ea8e377b4d76065b984b693a3a8375"
+    },
+    {
+      "file": "tarea-6/broad/screen--auditoria-0.png",
+      "sha256": "e123ae41a81e29076e4d728dab94c2f2a2c742d7a4f496573264365f735cfad9"
+    },
+    {
+      "file": "tarea-6/broad/screen--contabilidad-conciliaciones-0.png",
+      "sha256": "952946588e59fc6b8ae14165685478028e11cdadbfda30277a7c88e782573291"
+    },
+    {
+      "file": "tarea-6/broad/screen---0.png",
+      "sha256": "8550d8f12e1d21a1bb2e6441e683b2f838cd1efbb307766653ba15c96bcbddeb"
+    },
+    {
+      "file": "tarea-6/broad/screen--notificaciones-0.png",
+      "sha256": "7951a38b957948a5e9b602af323ddfab21261373db341e71cb3551e567ddf07d"
+    },
+    {
+      "file": "tarea-6/broad/screen--clientes-2584-0.png",
+      "sha256": "3cb401f7c317ee217c3444d01e42c7cb529f3165cf6a6990d7b7afcb00ef85ed"
+    },
+    {
+      "file": "tarea-6/broad/screen--proveedores-226-0.png",
+      "sha256": "40ffdddf209160c48c1f54cca1ae7cbda8a24a5e5c640527afde0071e9507cdb"
+    },
+    {
+      "file": "tarea-6/broad/screen--productos-2078-0.png",
+      "sha256": "3dd565dc8218f63498a68cbb6ebdf6824c460573c2dd6fd42f4cdd4f334fdff6"
+    },
+    {
+      "file": "tarea-6/broad/screen--inventario-rollos-8-0.png",
+      "sha256": "e35309822cc937b5d84b2a8ca1e19c1c5b5ad9781d574d5e55f1914a460d8fdc"
+    },
+    {
+      "file": "tarea-6/broad/screen--tickets-8-0.png",
+      "sha256": "5d1a747004354ff54919dd2262a5188bc6f1f532bada465d41955a3f1ff42711"
+    },
+    {
+      "file": "tarea-6/broad/screen--recibos-e3-E3-1-00000001-0.png",
+      "sha256": "826ed9583a1ba64297ce083f3ac9e7450618dfc4750d36a6b1ebf5f91a59ef37"
+    },
+    {
+      "file": "tarea-6/broad/screen--cobros-pendientes-0.png",
+      "sha256": "f333bc9de8a94dd29161b8134de988412274ea5f99499977cd73db1c93e37556"
+    }
+  ],
+  "startedAt": "2026-09-26T03:25:34.900Z",
+  "technicalErrors": [
+    {
+      "kind": "http",
+      "path": "/api/precios",
+      "status": 500
+    },
+    {
+      "kind": "http",
+      "path": "/api/clientes/2584/comportamiento-pago",
+      "status": 500
+    },
+    {
+      "kind": "http",
+      "path": "/api/clientes/2584/pagos",
+      "status": 500
+    },
+    {
+      "kind": "http",
+      "path": "/api/clientes/2584/comportamiento-pago",
+      "status": 500
+    }
+  ]
+}

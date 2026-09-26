@@ -1,0 +1,18 @@
+{
+  "status": "WAITING_FOR_MAIN_EXCLUSIVE_WRITER_WINDOW",
+  "privateManifest": "private.local/night-disposable/browser/manifest.json",
+  "origin": "http://127.0.0.1:18228",
+  "apiOrigin": "http://127.0.0.1:18227",
+  "credentialsReference": "/tmp/noche-20260926/credentials.json",
+  "environmentReference": "/tmp/noche-20260926/test-env.json",
+  "apiSha256": "e62a79333d0ee1433c114656af980e33ff420b728688a121ee586efdfab1b30d",
+  "frontendIndexSha256": "be762ee00aaeb78427d040d9f6cc6be95b8c05d7ad99e6af2c1cd76b7268a643",
+  "writerGuard": "NIGHT_BROWSER_WINDOW=MAIN_EXCLUSIVE_GRANTED is required at browser launch and case execution.",
+  "afterGrant": [
+    "NIGHT_BROWSER_MANIFEST=private.local/night-disposable/browser/manifest.json NIGHT_BROWSER_WINDOW=MAIN_EXCLUSIVE_GRANTED node reports/noche-20260926/browser/orchestrate.mjs fixtures",
+    "Inspect actual fixture/native results and update selectors only if frozen UI differs; do not replay uncertain writes.",
+    "NIGHT_BROWSER_MANIFEST=private.local/night-disposable/browser/manifest.json NIGHT_BROWSER_WINDOW=MAIN_EXCLUSIVE_GRANTED node reports/noche-20260926/browser/orchestrate.mjs cash-credit",
+    "Supply authenticated actual roll/audit/close/closed-period targets before remaining phase."
+  ],
+  "preparationOnly": "Private manifest and frozen-before-browser.json created from ready/candidate/copy-ready metadata. No secret contents copied into reports. No login, HTTP, browser launch, API write or database connection during this preparation."
+}

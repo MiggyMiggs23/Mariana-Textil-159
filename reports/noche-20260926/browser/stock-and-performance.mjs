@@ -1,0 +1,71 @@
+import fs from "node:fs";
+import path from "node:path";
+import assert from "node:assert/strict";
+import { load, browserKit, session, api, recorder } from "./runtime.mjs";
+const { m, credentials } = load(), r = recorder(3, "native-stock-performance");
+const b = await browserKit(m), stateFile = path.join(m.privateDir, "native-stock-performance.json");
+const state = fs.existsSync(stateFile) ? JSON.parse(fs.readFileSync(stateFile)) : { operations: {} };
+const save = () => fs.writeFileSync(stateFile, JSON.stringify(state, null, 2), { mode: 0o600 });
+const op = async (key, p, method, endpoint, button) => {
+  assert.ok(!state.operations[key], "Already attempted " + key);
+  state.operations[key] = { status: "UNCERTAIN" }; save(); await r.snap(p, key + "-before");
+  const pending = p.waitForResponse(x => x.request().method() === method && new URL(x.url()).pathname === endpoint);
+  await button.click(); const response = await pending, body = await response.json();
+  state.operations[key].http = response.status(); state.operations[key].body = body; save();
+  assert.ok(response.ok(), `${key} HTTP ${response.status()}`);
+  return body;
+};
+try {
+  const p = await session(b, m, credentials.admin);
+  const prior = JSON.parse(fs.readFileSync(path.join(m.privateDir, "browser-continuation-state.json")));
+  const product = prior.operations.product.response, supplier = prior.operations.supplier.response;
+  await r.check("new-entry-with-required-floor", async () => {
+    if (state.fixture) return { reuseVerified: true, entryId: state.fixture.entryId };
+    await p.goto(m.origin + "/entradas");
+    await p.getByTestId("btn-create-entrada").click();
+    await p.getByTestId("input-entrada-producto").fill(product.tela);
+    await p.getByRole("option").filter({ hasText: product.tela }).first().click();
+    await p.getByTestId("input-declared").fill("20");
+    await p.getByTestId("input-costo-unitario").fill("50");
+    await p.getByTestId("select-entrada-ubicacion").click();
+    await p.getByRole("option", { name: m.site.name, exact: true }).click();
+    await p.getByTestId("select-entrada-proveedor").click();
+    await p.getByRole("option", { name: supplier.nombre, exact: true }).click();
+    await p.getByTestId("btn-add-line").click();
+    await p.getByTestId("input-uniform-qty").fill("10");
+    await p.getByTestId("button-apply-uniform").click();
+    await p.getByTestId("trigger-bulk-floor").click();
+    const floor = p.getByRole("option").filter({ hasNotText: /Sin piso/ }).first();
+    const floorName = await floor.innerText(); await floor.click();
+    await p.getByTestId("button-confirm-line").click();
+    await p.getByTestId("btn-save-entrada").click();
+    const entry = await op("entry20", p, "POST", "/api/inventario/entradas", p.getByTestId("btn-confirm-entrada-review"));
+    assert.equal(entry.rollos?.length, 20);
+    const d = await api(p, `/api/inventario/entradas/${entry.id}`); assert.equal(d.status, 200);
+    state.operations.entry20.status = "ACK_READBACK";
+    state.fixture = { productId: product.id, fabric: product.tela, supplierId: supplier.id, supplierName: supplier.nombre, entryId: entry.id, rollSeries: entry.rollos.map(x => x.serie), rollIds: entry.rollos.map(x => x.id), floorName };
+    save();
+    fs.writeFileSync(path.join(m.privateDir, "fixture.json"), JSON.stringify(state.fixture, null, 2), { mode: 0o600 });
+    return { entryId: entry.id, rolls: 20, floorName };
+  }, [p]);
+  for (let i = 0; i < 6; i++) await r.check("performance-ticket-" + i, async () => {
+    assert.ok(state.fixture, "Entry prerequisite");
+    if (state.operations["ticket" + i]?.status === "ACK_READBACK") return { acknowledged: true };
+    await p.goto(m.origin + "/pos");
+    await p.getByRole("combobox").first().click(); await p.getByRole("option", { name: m.site.name, exact: true }).click();
+    await p.getByRole("button", { name: "Ticket (Contado)", exact: true }).click();
+    const search = p.getByPlaceholder("Buscar por serie de rollo, SKU o tela...");
+    await search.fill(state.fixture.rollSeries[10 + i]); await search.press("Enter");
+    await p.getByRole("button", { name: "Agregar", exact: true }).click();
+    await p.getByTestId("pos-cart-line").waitFor();
+    await p.getByTestId("button-select-client").click();
+    await p.getByTestId(`option-client-${m.clients.cash.id}`).click();
+    const ticket = await op("ticket" + i, p, "POST", "/api/tickets", p.getByTestId("button-confirmar-venta"));
+    const d = await api(p, `/api/tickets/${ticket.id}`); assert.equal(d.status, 200); assert.equal(d.body.cobrado, false);
+    state.operations["ticket" + i].status = "ACK_READBACK"; save();
+    return { id: ticket.id, folio: ticket.folio, nativeProvenance: true };
+  }, [p]);
+  const tickets = Array.from({ length: 6 }, (_, i) => state.operations["ticket" + i]).filter(x => x?.status === "ACK_READBACK").map(x => ({ id: x.body.id, folio: x.body.folio, nativeProvenance: true }));
+  fs.writeFileSync("/tmp/noche-20260926/payment-input.json", JSON.stringify({ before: tickets.slice(0, 3), after: tickets.slice(3, 6) }, null, 2), { mode: 0o600 });
+} catch (e) { await r.check("setup", async () => { throw e; }); }
+finally { r.finish(); await b.close(); }

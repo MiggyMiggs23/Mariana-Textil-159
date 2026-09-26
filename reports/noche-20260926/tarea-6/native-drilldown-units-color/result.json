@@ -1,0 +1,137 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "real-amount-to-detail-to-folio-document",
+      "status": "PASS",
+      "evidence": {
+        "amount": "Contado cobrado",
+        "realDocumentLink": {
+          "folioText": "9",
+          "href": "/tickets/9"
+        }
+      }
+    },
+    {
+      "id": "color-has-operational-text-not-color-alone",
+      "status": "PASS",
+      "evidence": {
+        "labels": [
+          "Contado cobrado",
+          "Ventas pendientes de cobro o autorización",
+          "Tickets cancelados"
+        ],
+        "codes": [
+          {
+            "state": "attention",
+            "label": "Ventas pendientes de cobro o autorización$7,900.008 tickets · 0 notas"
+          },
+          {
+            "state": "attention",
+            "label": "Salidas en tránsito1 salida"
+          },
+          {
+            "state": "neutral",
+            "label": "Tickets cancelados0 tickets · $0.00Tasa de cancelación: 0.00%"
+          },
+          {
+            "state": "attention",
+            "label": "Salidas canceladas1 salida"
+          }
+        ],
+        "limitation": "Observed dashboard semantic labels; not a claim that every decorative color across all screens is compliant."
+      }
+    },
+    {
+      "id": "native-product-KILO",
+      "status": "PASS",
+      "evidence": {
+        "id": 2079,
+        "acknowledgedEarlier": true
+      }
+    },
+    {
+      "id": "native-product-PIEZA",
+      "status": "PASS",
+      "evidence": {
+        "id": 2080,
+        "acknowledgedEarlier": true
+      }
+    },
+    {
+      "id": "native-product-BOLSA",
+      "status": "PASS",
+      "evidence": {
+        "id": 2081,
+        "acknowledgedEarlier": true
+      }
+    },
+    {
+      "id": "four-unit-entry-review-and-document-no-mixed-sum",
+      "status": "PASS",
+      "evidence": {
+        "entryId": 5,
+        "distinctDimensions": [
+          {
+            "unit": "METRO",
+            "quantity": "11"
+          },
+          {
+            "unit": "KILO",
+            "quantity": "13"
+          },
+          {
+            "unit": "PIEZA",
+            "quantity": "17"
+          },
+          {
+            "unit": "BOLSA",
+            "quantity": "19"
+          }
+        ],
+        "reviewText": "METRO\n11.00\nKILO\n13.00\nBOLSA\n19.00\nPIEZA\n17.00"
+      },
+      "screenshotError": "page.screenshot: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "tarea-6/native-drilldown-units-color/amount-detail.png",
+      "sha256": "a99be05e159ee39c1da9bfa0bfd338ffb4d718e2e47cff43c985f0113bae986c"
+    },
+    {
+      "file": "tarea-6/native-drilldown-units-color/folio-document.png",
+      "sha256": "ab0b6c65a0c94fcf479b7e1fcc7f17f0853879756270fe0042b72cc1d39c6476"
+    },
+    {
+      "file": "tarea-6/native-drilldown-units-color/real-amount-to-detail-to-folio-document-0.png",
+      "sha256": "873dbd2f8547a4ed970537f319cf649b4172e9e97ac93946877a850010d32ee2"
+    },
+    {
+      "file": "tarea-6/native-drilldown-units-color/color-has-operational-text-not-color-alone-0.png",
+      "sha256": "4a581396bc35bdb6a39c80e5f77e81309ab59795955fd710fdeb61e6d0ae7628"
+    },
+    {
+      "file": "tarea-6/native-drilldown-units-color/native-product-KILO-0.png",
+      "sha256": "4a581396bc35bdb6a39c80e5f77e81309ab59795955fd710fdeb61e6d0ae7628"
+    },
+    {
+      "file": "tarea-6/native-drilldown-units-color/native-product-PIEZA-0.png",
+      "sha256": "4a581396bc35bdb6a39c80e5f77e81309ab59795955fd710fdeb61e6d0ae7628"
+    },
+    {
+      "file": "tarea-6/native-drilldown-units-color/native-product-BOLSA-0.png",
+      "sha256": "4a581396bc35bdb6a39c80e5f77e81309ab59795955fd710fdeb61e6d0ae7628"
+    },
+    {
+      "file": "tarea-6/native-drilldown-units-color/four-units-review.png",
+      "sha256": "b090a829eb6191530d326742ff9aec8ac9529996beaa22ad9f947a75d266796a"
+    },
+    {
+      "file": "tarea-6/native-drilldown-units-color/four-units-document.png",
+      "sha256": "a893408b6dede8ff8bf0974e67406bd91c72fb2ab8b423b7f2a66c7979a5d324"
+    }
+  ],
+  "startedAt": "2026-09-26T03:34:21.974Z",
+  "unitReview": "METRO\n11.00\nKILO\n13.00\nBOLSA\n19.00\nPIEZA\n17.00"
+}

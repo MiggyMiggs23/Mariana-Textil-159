@@ -1,0 +1,35 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "commands": [
+    "node reports/noche-20260926/browser/run.mjs --plan",
+    "NIGHT_BROWSER_MANIFEST=private.local/night-disposable/browser/manifest.json node reports/noche-20260926/browser/run.mjs --compile continuation-fixtures",
+    "NIGHT_BROWSER_MANIFEST=private.local/night-disposable/browser/manifest.json node reports/noche-20260926/browser/run.mjs --case continuation-fixtures"
+  ],
+  "mainMustSupply": [
+    "Private manifest matching manifest.example.json; mainHandoff READY_FOR_BROWSER only after MAIN verifies disposable process identity and exact frozen hashes.",
+    "privateDir/credentials.json with synthetic admin and auditUsers[6]; username/password/synthetic:true and display name for audit authors. No copied real ADMIN.",
+    "Actual synthetic clients.cash/credit IDs and credit display name; actual operational site ID/name.",
+    "Audit fixture: open empty auditId, ordered active floors [{id,name}] with nombre ASC, six same-site synthetic scanner users, five actual series. First series physically expected on floors[0], scanned by user1 on floors[1]. Prepare audit fixture via existing disposable setup, not production.",
+    "After native continuation-fixtures/sales, inspect private fixture.json/state and fresh readbacks; fill targets with actual series, roll IDs, ticket captions, receipt folio, independently counted close cash and closeReadbackPath.",
+    "Run flow-e4 against an empty/insufficient session before collecting funds, with observed insufficientAmount; flow-e4-normal after collecting funds. Do not replay cash-open if continuation-sales already opened the session.",
+    "Flow pay-transfer needs its own authentic unpaid synthetic ticket caption; flow-sale-remate needs marked actual roll series. Never pay first copied ticket.",
+    "For continuation-fiscal only: separate MAIN-controlled forward-clock frozen environment, actual invoice within four closed nonempty periods DIA:ACEPTADA, SEMANA:ACEPTADA, MES:ACEPTADA, DIA:NO_CUADRA. Each period {tipo,inicio,finExclusivo,resultado}; no database backdating.",
+    "accountantProjections {A:[actual permitted API paths],F:[actual permitted API paths]} and targets.sensitiveSupplierId/sensitiveTicketId for real-object denied reads.",
+    "Broad detailChains [{id,path,steps:[{testId|role+name|selector,urlPattern,expectedText},...]} with >=2 real figure-to-detail-to-folio steps; unitChecks [{id,path,expectedSeparateLabels,forbiddenMixedLabels}]; colorChecks [{id,path,semanticLabels}]. These are assertions on real data, never mocked responses.",
+    "Targets return-debt/return-settled {path} to authentic synthetic note/roll routes. Inspector records real UI availability and preserves business block; it does not authorize refund."
+  ],
+  "safety": [
+    "Compiler and --plan do not contact an app or database.",
+    "No DDL, server launch, workflow restart, DB direct writes, app edits or commits in this deliverable.",
+    "Generated adapters reuse original files read-only, parameterize historical hosts/users/IDs/dates, reject missing target IDs and guard replay.",
+    "Legacy raw child output stays under privateDir with mode 0600. Report text redacts passwords/tokens/DSNs. Screenshots are actual Playwright PNGs generated only during explicit execution.",
+    "Do not run --all blindly: plan lists coverage, not a substitute for fixture dependency and cash-session checks."
+  ],
+  "knownCoverageLimits": [
+    "Historical fiscal loop was adapted rather than the old reconcile.mjs because the old script reconciles empty hardcoded periods, stops at first failure, and never proves ADMIN notification. Adapter exercises equivalent native reconciliation controls with authenticated readback and ADMIN notification.",
+    "Audit port removes historical direct PostgreSQL reads and API fixture creation; it requires explicit fixture handoff and reads back through authenticated real API.",
+    "No claim that source HEAD gates or features are released in the frozen bundle. UI/API absence is a recorded block.",
+    "Money-flow legacy substeps stop within a dependent case after a failure; the runner records subsequent cases independently.",
+    "Detailed exploratory manual button coverage and visual color meaning still require MAIN/tester review; empty contracts are BLOCKED, not coverage PASS."
+  ]
+}

@@ -1,0 +1,892 @@
+[
+  {
+    "file": "tarea-3/continuation-apply/apply-admin-partial-approval-after.png",
+    "bytes": 278460,
+    "sha256": "98ab02cce9b49a254286ce2c87f12a90e1396c07c763b2a21d9cffccc3f6fe02"
+  },
+  {
+    "file": "tarea-3/continuation-apply/apply-admin-partial-approval-before.png",
+    "bytes": 224755,
+    "sha256": "dd158fdc452bba7c08d4f13b47dec77fe6d9b7339da16e9007448daed9bb8594"
+  },
+  {
+    "file": "tarea-3/continuation-apply/apply-retained-no-refund.png",
+    "bytes": 286461,
+    "sha256": "29cb22335ad7e0e4a6ccd778eecb6b93a9c29559210bce654d802bdc7d501509"
+  },
+  {
+    "file": "tarea-3/continuation-fixtures/fixtures-blocked.png",
+    "bytes": 184314,
+    "sha256": "a8c89fcb5ee7e6916f6df4d6b3868987049e0fa222f2226c51e0ccb051b560a6"
+  },
+  {
+    "file": "tarea-3/continuation-fixtures/fixtures-product-after.png",
+    "bytes": 1055768,
+    "sha256": "c596843c40803941f9ec7fa639010e5f6856fef438bca94215f2e6ebf1df2573"
+  },
+  {
+    "file": "tarea-3/continuation-fixtures/fixtures-product-before.png",
+    "bytes": 1046439,
+    "sha256": "c37470fa1606fbf0516f0ca2d0634f65b814aee7e4acd0c7e183eb9ccdc741b1"
+  },
+  {
+    "file": "tarea-3/continuation-fixtures/fixtures-supplier-after.png",
+    "bytes": 321977,
+    "sha256": "b5cea0580c6cd29651ff356af949b29310bc952a1a35d770f8923d7033e025ad"
+  },
+  {
+    "file": "tarea-3/continuation-fixtures/fixtures-supplier-before.png",
+    "bytes": 150224,
+    "sha256": "f04ae46d558e659908887ca2bac5730d9500dd28a2a4003581e016c966c53473"
+  },
+  {
+    "file": "tarea-3/continuation-receive/receive-receive-after.png",
+    "bytes": 182776,
+    "sha256": "e2ec8fc21047d43afc89d765566a674b8a8041d3ac2a1216e41c4bfa9a8699c6"
+  },
+  {
+    "file": "tarea-3/continuation-receive/receive-receive-before.png",
+    "bytes": 190808,
+    "sha256": "9fe14662069b9837b7e11516e0165ed7a4e4b191b8060271b3ecb8b4d77e12a1"
+  },
+  {
+    "file": "tarea-3/continuation-reject/reject-initial-proposal-after.png",
+    "bytes": 181702,
+    "sha256": "44ae3780be3739f7e974f2a9502f44a71b1053d0b25bad669b8de6a832551de4"
+  },
+  {
+    "file": "tarea-3/continuation-reject/reject-initial-proposal-before.png",
+    "bytes": 140779,
+    "sha256": "55737be42c39022d1a2d3b262abff8bedc9b9e653489377e5cbeca6a2200ccc1"
+  },
+  {
+    "file": "tarea-3/continuation-reject/reject-reject-proposal-after.png",
+    "bytes": 190840,
+    "sha256": "1c4007f506302e21fe800bea870bf799c8535a17f79e52982d5f3b16d10fdfa7"
+  },
+  {
+    "file": "tarea-3/continuation-reject/reject-reject-proposal-before.png",
+    "bytes": 161092,
+    "sha256": "fa3bc995c7fbe79850d14dd0e1cddc95e139bf56668097644dfcad0c6f6265ed"
+  },
+  {
+    "file": "tarea-3/continuation-reject/reject-reproposal-after.png",
+    "bytes": 197901,
+    "sha256": "3a4c79b64ba096993a9d29033c85781367deb5a73f142ce42880895b14b48f0d"
+  },
+  {
+    "file": "tarea-3/continuation-reject/reject-reproposal-before.png",
+    "bytes": 174439,
+    "sha256": "9cec1d0d8697fd995405833665abd71770629ca367b5905e9f7ce2c891d2f3e6"
+  },
+  {
+    "file": "tarea-3/final-browser-session-readbacks/real-settled-note-document.png",
+    "bytes": 99013,
+    "sha256": "0e532daa0dd0dbf66582e2bba4afa1a32b93d80b8db26e8bdc92ebd0b6299faa"
+  },
+  {
+    "file": "tarea-3/flow-abono/abono-form.png",
+    "bytes": 167704,
+    "sha256": "e8c36e977e45afd407433bf4b66fa693e94460994675e4bb7cdb3ec89bb547ea"
+  },
+  {
+    "file": "tarea-3/flow-abono/abono-preview.png",
+    "bytes": 129483,
+    "sha256": "3bbdba96c901d482231e0808f7070893d9a0d9ef54db75d7bd7496499134821a"
+  },
+  {
+    "file": "tarea-3/flow-abono/abono-success.png",
+    "bytes": 127714,
+    "sha256": "e30ec96462a31bfe8a36e2838dab29c358c039c7746521dee4d6520c87ce0945"
+  },
+  {
+    "file": "tarea-3/flow-abono-settled/abono-form.png",
+    "bytes": 164798,
+    "sha256": "4a91fd3b9dc763428a2fad66d53261aa2a8a505a26717e0bbcccfa04151ca7be"
+  },
+  {
+    "file": "tarea-3/flow-abono-settled/abono-preview.png",
+    "bytes": 135089,
+    "sha256": "1ba1213092b023269b2d1e888b321074fb91692587a3489977b5a89b27b2ec7f"
+  },
+  {
+    "file": "tarea-3/flow-abono-settled/abono-success.png",
+    "bytes": 128103,
+    "sha256": "f10bd56131707acb5d06df92d7c3ea3b1671babf420e9174d04257646ec9f4c3"
+  },
+  {
+    "file": "tarea-3/flow-authorize-credit/authorize-credit-after.png",
+    "bytes": 249964,
+    "sha256": "56f16aab6e44928d4d657d0498f1c883ec4d6b745abe7b236ee09d9b78b2c9c3"
+  },
+  {
+    "file": "tarea-3/flow-authorize-credit/authorize-credit-before.png",
+    "bytes": 255850,
+    "sha256": "fd5cdebc11e2251140ab1cf3da2e134206e60c24830a38dab96c8fa27f2256bb"
+  },
+  {
+    "file": "tarea-3/flow-authorize-credit-settled/authorize-credit-after.png",
+    "bytes": 282386,
+    "sha256": "1c2bf1db342dca9389d8b4b47bda132e2442550dd45c0f6b19a2a29459e5f60d"
+  },
+  {
+    "file": "tarea-3/flow-authorize-credit-settled/authorize-credit-before.png",
+    "bytes": 267069,
+    "sha256": "f42d68dfa85b92fa7894c71319ddfa8742eeeb90bb5a518ba5ec10bfe0678793"
+  },
+  {
+    "file": "tarea-3/flow-cash-open/cash-open-after.png",
+    "bytes": 138015,
+    "sha256": "4ddf6556af2655b1ece0b790829bcf10ccf9fd5dbf48d603b315af719d4846c2"
+  },
+  {
+    "file": "tarea-3/flow-cash-open/cash-open-before.png",
+    "bytes": 80828,
+    "sha256": "4133d4c21d692aee3ac1073f18ad76ddfca67a9dba15a9b85d34a1621e3ad5aa"
+  },
+  {
+    "file": "tarea-3/flow-close/close-blocked.png",
+    "bytes": 184446,
+    "sha256": "69a95038a4fbff8ce265acb2221420e18982aa7b387cfaf8f051d3182cd5bfa8"
+  },
+  {
+    "file": "tarea-3/flow-close-recovery/close-after.png",
+    "bytes": 304872,
+    "sha256": "a6c359aa4b5ffd7a758e31479e529278219c3d73f5fe257c0d43ee94935a946d"
+  },
+  {
+    "file": "tarea-3/flow-close-recovery/close-before.png",
+    "bytes": 310200,
+    "sha256": "ab1045229854bc2429aa064d7dbf75c7defc1270055e36a64abba826db0a6f1e"
+  },
+  {
+    "file": "tarea-3/flow-credit-sale/credit-sale-cart-before.png",
+    "bytes": 143575,
+    "sha256": "03e929604a7e045bab545f07f960d99acee92d9ef98d9b658ba6911981db51ed"
+  },
+  {
+    "file": "tarea-3/flow-credit-sale/credit-sale-created.png",
+    "bytes": 8645,
+    "sha256": "6d10ebe3b514ab63e698c0075db7573a05d5563d0f339e9110c39769283c9e74"
+  },
+  {
+    "file": "tarea-3/flow-credit-sale-settled/credit-sale-cart-before.png",
+    "bytes": 143671,
+    "sha256": "58c319be1c817015a9a3067b6e6a247c3e62de8196397cc24d26f417ad1deeab"
+  },
+  {
+    "file": "tarea-3/flow-credit-sale-settled/credit-sale-created.png",
+    "bytes": 8414,
+    "sha256": "2cf0e6337da740ad5c40f97cab35dc5a902e32f9cf227ad381bb7b93d648bc0b"
+  },
+  {
+    "file": "tarea-3/flow-e4/e4-insufficient.png",
+    "bytes": 206526,
+    "sha256": "1621e1d940786ec3f45d1701db598551edf722624f5f73143b29dc976cb93ee6"
+  },
+  {
+    "file": "tarea-3/flow-e4/e4-missing-reason.png",
+    "bytes": 140006,
+    "sha256": "f7a356357a88e8be274952323a442d21b59507b8dceb61d8309df96eb0e14dfd"
+  },
+  {
+    "file": "tarea-3/flow-e4/e4-unlock-after.png",
+    "bytes": 208180,
+    "sha256": "38104f75268daa5c87fd1067a1db0d033e8348d0df29e1b85e373643842db166"
+  },
+  {
+    "file": "tarea-3/flow-e4/e4-unlock-before.png",
+    "bytes": 207157,
+    "sha256": "829cb2bc08abd5208d57f4cb127c31b4ad289aeb0b169323c93988609c60633d"
+  },
+  {
+    "file": "tarea-3/flow-e4-normal/e4-normal-after.png",
+    "bytes": 265268,
+    "sha256": "5c4ad8dc5b31f3a597aec84e40d3ccaaa49b8dde6c1de99473c76d716f15001c"
+  },
+  {
+    "file": "tarea-3/flow-e4-normal/e4-normal-before.png",
+    "bytes": 142538,
+    "sha256": "03e6403a44c1dbe5582dcfbecd1226279b8a771ee5fc553d675bea265f96bc92"
+  },
+  {
+    "file": "tarea-3/flow-pay-cash/pay-cash-after.png",
+    "bytes": 236376,
+    "sha256": "7aa39a26bf021b1d01874234e352d623a37466f252ba932a4f7c95ca9cac9d38"
+  },
+  {
+    "file": "tarea-3/flow-pay-cash/pay-cash-before.png",
+    "bytes": 221513,
+    "sha256": "75934d1fc921c5a3bd3e51ce5c2884f58b34ac376fa4bb524bcfe1b8cba5f5ea"
+  },
+  {
+    "file": "tarea-3/flow-pay-transfer/pay-transfer-after.png",
+    "bytes": 246612,
+    "sha256": "8dc4efe9d75590475e17be1bfa44588beb6acecfb4f9eeead996b57e4a7fbf1b"
+  },
+  {
+    "file": "tarea-3/flow-pay-transfer/pay-transfer-before.png",
+    "bytes": 238578,
+    "sha256": "d3887fbff17e26494203a08c894b9d1c0afb7e2ab1d59f8f08fc180241b226b8"
+  },
+  {
+    "file": "tarea-3/flow-receipt/receipt-after.png",
+    "bytes": 135315,
+    "sha256": "14610b58bb89f12e49b9b424fab22d8d0b605e3442f741c42031a72b12a6b132"
+  },
+  {
+    "file": "tarea-3/flow-receipt/receipt-before.png",
+    "bytes": 135242,
+    "sha256": "b61cb16c0e4f8a508d9084e0900a076dcc210088c14ecf6d8220fa898b1f002c"
+  },
+  {
+    "file": "tarea-3/flow-remate-mark/remate-mark-after.png",
+    "bytes": 134718,
+    "sha256": "78f6c3a0299da4f2d81d74a5796170fdd45a1683f7e798a13e6821aafe997055"
+  },
+  {
+    "file": "tarea-3/flow-remate-mark/remate-mark-before.png",
+    "bytes": 137161,
+    "sha256": "10d8fb3bf381b3a7f4c36c16122ad03dc5cca151399912fabb8644b02e0d8b1b"
+  },
+  {
+    "file": "tarea-3/flow-sale/sale-cart-before.png",
+    "bytes": 133986,
+    "sha256": "0be9ded20c50aa19604c4248b8232dd8ca9caa8dac349c8927b6a2807fb4a075"
+  },
+  {
+    "file": "tarea-3/flow-sale/sale-created.png",
+    "bytes": 10126,
+    "sha256": "75ee8759aac72ea5e208d79fbf01472137abf21fea8af7f42d544df615e0f976"
+  },
+  {
+    "file": "tarea-3/flow-sale-remate/sale-cart-before.png",
+    "bytes": 140090,
+    "sha256": "61dab719e6e8a34fc9f072d12eac5a388fbd057b05a4522c63575cb2c613290d"
+  },
+  {
+    "file": "tarea-3/flow-sale-remate/sale-created.png",
+    "bytes": 8557,
+    "sha256": "1b2f6c7d63ff60ae877807b5b66b6253b43403f66e3a313c39ade216e017b4fc"
+  },
+  {
+    "file": "tarea-3/flow-sale-transfer/sale-cart-before.png",
+    "bytes": 133960,
+    "sha256": "3ed1384386931ea1833cbfb185204dbfeb85238e65eb988e6cc5de76cef89353"
+  },
+  {
+    "file": "tarea-3/flow-sale-transfer/sale-created.png",
+    "bytes": 10190,
+    "sha256": "f1fcc522a81e6891580342af76a1cf244ea128950c98c428c00ad8905db987de"
+  },
+  {
+    "file": "tarea-3/native-fixtures/cash-before.png",
+    "bytes": 138845,
+    "sha256": "e5a707925263b7a76a73f067072ddd5bfe3867a0ff80a24bcf88bfe26aff8e17"
+  },
+  {
+    "file": "tarea-3/native-fixtures/credit-before.png",
+    "bytes": 107918,
+    "sha256": "aa765d9817592eb1d3e91ad16595bef35109d460b134c03628953943d016159a"
+  },
+  {
+    "file": "tarea-3/native-fixtures/synthetic-client-cash-0.png",
+    "bytes": 11283,
+    "sha256": "ebcf686a4004686e5a65ba78d477226cc547c5a6e0a81323f8f0001328e71328"
+  },
+  {
+    "file": "tarea-3/native-fixtures/synthetic-client-credit-0.png",
+    "bytes": 11283,
+    "sha256": "ebcf686a4004686e5a65ba78d477226cc547c5a6e0a81323f8f0001328e71328"
+  },
+  {
+    "file": "tarea-3/native-stock-performance/entry20-before.png",
+    "bytes": 211571,
+    "sha256": "2a3eda55894246d06baa1f9686506b0dc519d2576b691bd956000c4a9a19c228"
+  },
+  {
+    "file": "tarea-3/native-stock-performance/new-entry-with-required-floor-0.png",
+    "bytes": 79940,
+    "sha256": "b5e6a87bcf2729bbe2b2f605fde752eedda8f18cb0f45e03f0082dac6b9982f8"
+  },
+  {
+    "file": "tarea-3/native-stock-performance/performance-ticket-0-0.png",
+    "bytes": 60974,
+    "sha256": "f716b1b123434bb5ec003766bdc37bea9f84d38c1f747e3a5af22f96feb481dc"
+  },
+  {
+    "file": "tarea-3/native-stock-performance/performance-ticket-1-0.png",
+    "bytes": 61047,
+    "sha256": "f48914d4aaa8c285521a4379e458676370e6cadc0e850fa03d1d0815d8f98e65"
+  },
+  {
+    "file": "tarea-3/native-stock-performance/performance-ticket-2-0.png",
+    "bytes": 60773,
+    "sha256": "3926f71f449c2b46828a8d1e55010a9fac8f24399220f5ece947662ebec88cd0"
+  },
+  {
+    "file": "tarea-3/native-stock-performance/performance-ticket-3-0.png",
+    "bytes": 60963,
+    "sha256": "32bff4dfe1b9cbb0278db9b34d18529b57380afd3b0187485f44ced5f18c632c"
+  },
+  {
+    "file": "tarea-3/native-stock-performance/performance-ticket-4-0.png",
+    "bytes": 61079,
+    "sha256": "05e2962b205c134837b9235c185d0128fa66d9af5f0e0637d95f0ee24936351f"
+  },
+  {
+    "file": "tarea-3/native-stock-performance/performance-ticket-5-0.png",
+    "bytes": 60837,
+    "sha256": "42cca4a4c156d23bfe4a6ee6c8512038b9613abf57383d761d9430ce39cb670c"
+  },
+  {
+    "file": "tarea-3/native-stock-performance/ticket0-before.png",
+    "bytes": 130037,
+    "sha256": "c7785723e93fe2dd42eb865c66cc54d8a949e73330e0f96c329f8316d125f13f"
+  },
+  {
+    "file": "tarea-3/native-stock-performance/ticket1-before.png",
+    "bytes": 130035,
+    "sha256": "0a581fe5e75f1588554e0302a9a56506a779cb8df4c07f8aeab3d8e788455585"
+  },
+  {
+    "file": "tarea-3/native-stock-performance/ticket2-before.png",
+    "bytes": 130035,
+    "sha256": "0a581fe5e75f1588554e0302a9a56506a779cb8df4c07f8aeab3d8e788455585"
+  },
+  {
+    "file": "tarea-3/native-stock-performance/ticket3-before.png",
+    "bytes": 130035,
+    "sha256": "0a581fe5e75f1588554e0302a9a56506a779cb8df4c07f8aeab3d8e788455585"
+  },
+  {
+    "file": "tarea-3/native-stock-performance/ticket4-before.png",
+    "bytes": 130037,
+    "sha256": "c7785723e93fe2dd42eb865c66cc54d8a949e73330e0f96c329f8316d125f13f"
+  },
+  {
+    "file": "tarea-3/native-stock-performance/ticket5-before.png",
+    "bytes": 130035,
+    "sha256": "0a581fe5e75f1588554e0302a9a56506a779cb8df4c07f8aeab3d8e788455585"
+  },
+  {
+    "file": "tarea-3/return-debt/frozen-return-availability.png",
+    "bytes": 15813,
+    "sha256": "a893408b6dede8ff8bf0974e67406bd91c72fb2ab8b423b7f2a66c7979a5d324"
+  },
+  {
+    "file": "tarea-3/return-debt/return-debt-0.png",
+    "bytes": 15813,
+    "sha256": "a893408b6dede8ff8bf0974e67406bd91c72fb2ab8b423b7f2a66c7979a5d324"
+  },
+  {
+    "file": "tarea-3/return-settled/frozen-return-availability.png",
+    "bytes": 60824,
+    "sha256": "527d6dd740329fafc657369ba2285074575c354fb13295d7934be4a47100b312"
+  },
+  {
+    "file": "tarea-3/return-settled/return-settled-0.png",
+    "bytes": 60804,
+    "sha256": "2341ffaf32621fac1bd056e23309b3bfc937ca0cf63bd8be6f6454dae7089535"
+  },
+  {
+    "file": "tarea-4/audit/desktop-fixed-first-configured-floor-0.png",
+    "bytes": 420290,
+    "sha256": "34c75c247a6a2ae0d5d523fcd7b0046e90bf882249ece155cd9995223e2a53f8"
+  },
+  {
+    "file": "tarea-4/audit/roll-on-another-floor-0.png",
+    "bytes": 264597,
+    "sha256": "11611277c4308137fe72c5afb436397d9a5f22fbcb38ddd88d1ee57049064898"
+  },
+  {
+    "file": "tarea-4/audit/same-roll-two-users-0.png",
+    "bytes": 16767,
+    "sha256": "2fa411894d00cbcc3d78d3624438db55bdb60ddbfce81203432b25e2c6495fab"
+  },
+  {
+    "file": "tarea-4/audit/same-roll-two-users-1.png",
+    "bytes": 273076,
+    "sha256": "b01b99b05248f686f899217b27268ceaaceb0c98fdafc65d0b1a5bb5c6dcebfe"
+  },
+  {
+    "file": "tarea-4/audit/sixth-user-rejected-0.png",
+    "bytes": 18928,
+    "sha256": "311226cddd8111aeef67e6fd49d298f77b6bde5037efdfafca95502666cf8165"
+  },
+  {
+    "file": "tarea-4/audit/three-concurrent-distinct-floors-0.png",
+    "bytes": 262311,
+    "sha256": "4a5c1ccc0578f30e1d3995c2e5c26f8f32aff533d26344827d22b178de7a9128"
+  },
+  {
+    "file": "tarea-4/audit/three-concurrent-distinct-floors-1.png",
+    "bytes": 270974,
+    "sha256": "6715a8f4b4802acf8407a041d30a9b747a8b9d620901a4529a728f31d5cfcc79"
+  },
+  {
+    "file": "tarea-4/audit/three-concurrent-distinct-floors-2.png",
+    "bytes": 262385,
+    "sha256": "7ccf764330d490a836bf6a36fba2bc0c3192e42de2417b7269fb9af487a42133"
+  },
+  {
+    "file": "tarea-4/audit-independent-recovery/desktop-actual-first-floor-keyboard-scan-0.png",
+    "bytes": 419828,
+    "sha256": "a60585abd32a309dfd01b12fd23fd70cee5bf6eefcdfef5e5e4d3657b897705b"
+  },
+  {
+    "file": "tarea-4/audit-independent-recovery/duplicate-readback-after-concurrency-error-0.png",
+    "bytes": 356167,
+    "sha256": "fa50a92a5228803d4073f4faea16aad69374473c80d85644b0de926ea74c43f9"
+  },
+  {
+    "file": "tarea-4/audit-independent-recovery/fresh-join-0-0.png",
+    "bytes": 284666,
+    "sha256": "2254b9fea5d7e5d9d6e208bd048773e69e5046675f24594d31995763d8da15d7"
+  },
+  {
+    "file": "tarea-4/audit-independent-recovery/fresh-join-1-0.png",
+    "bytes": 276934,
+    "sha256": "672b8ffdde741c8dda6a0964a9bbfc47db3e0d6c94c12f5ba73145541e92ee56"
+  },
+  {
+    "file": "tarea-4/audit-independent-recovery/fresh-join-2-0.png",
+    "bytes": 278842,
+    "sha256": "1e7a9e4140c54f8b571966efd765dc9679b5e07513ef0c65f32b02db7f2a4b7e"
+  },
+  {
+    "file": "tarea-4/audit-independent-recovery/fresh-join-3-0.png",
+    "bytes": 426547,
+    "sha256": "c0d2b502e131666f31a05903db2b2f6f631575e093bcad3f88da33ee553fc914"
+  },
+  {
+    "file": "tarea-4/audit-independent-recovery/fresh-join-4-0.png",
+    "bytes": 419304,
+    "sha256": "cf548924f9d1b6fe66e9dbdc30a29c7d39731c577175d1d658e85c998eeb2290"
+  },
+  {
+    "file": "tarea-4/audit-independent-recovery/sixth-full-capacity-response-0.png",
+    "bytes": 440063,
+    "sha256": "abdc574a8e922cb2f6c492ea7af8163df812604614e68978973f237a4ab94ee1"
+  },
+  {
+    "file": "tarea-4/desktop-keyboard-scan/configured-first-floor-real-keyboard-scan-0.png",
+    "bytes": 416926,
+    "sha256": "9724be02985b454577e13a60d21f73f61e02236a6033e7e794a226760b8264ee"
+  },
+  {
+    "file": "tarea-4/native-fixtures/native-five-rolls-on-first-floor-0.png",
+    "bytes": 9441,
+    "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+  },
+  {
+    "file": "tarea-4/native-fixtures/native-open-audit-0.png",
+    "bytes": 110529,
+    "sha256": "b4cd3d7db08e28016ae2394c214e7f720ddd9bcc6c302f30b4b963bf80eb4dbf"
+  },
+  {
+    "file": "tarea-4/native-fixtures/native-synthetic-audit-user-0-0.png",
+    "bytes": 9441,
+    "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+  },
+  {
+    "file": "tarea-4/native-fixtures/native-synthetic-audit-user-1-0.png",
+    "bytes": 9441,
+    "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+  },
+  {
+    "file": "tarea-4/native-fixtures/native-synthetic-audit-user-2-0.png",
+    "bytes": 9441,
+    "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+  },
+  {
+    "file": "tarea-4/native-fixtures/native-synthetic-audit-user-3-0.png",
+    "bytes": 9441,
+    "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+  },
+  {
+    "file": "tarea-4/native-fixtures/native-synthetic-audit-user-4-0.png",
+    "bytes": 9441,
+    "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+  },
+  {
+    "file": "tarea-4/native-fixtures/native-synthetic-audit-user-5-0.png",
+    "bytes": 9441,
+    "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+  },
+  {
+    "file": "tarea-4/native-fixtures/synthetic-site-floor-fixtures-authenticated-api-0.png",
+    "bytes": 9441,
+    "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+  },
+  {
+    "file": "tarea-5/accountant-boundaries/A-permitted-finanzas-0.png",
+    "bytes": 33638,
+    "sha256": "e00cb7a4b02e52560a6713d6dae83206c0a68359da841d1e237bba4ffa376c85"
+  },
+  {
+    "file": "tarea-5/accountant-boundaries/A-permitted-preparaciones-0.png",
+    "bytes": 9441,
+    "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+  },
+  {
+    "file": "tarea-5/accountant-boundaries/A-ui-denied-fondo-0.png",
+    "bytes": 9441,
+    "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+  },
+  {
+    "file": "tarea-5/accountant-boundaries/A-ui-denied-productos-0.png",
+    "bytes": 9441,
+    "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+  },
+  {
+    "file": "tarea-5/accountant-boundaries/A-ui-denied-proveedores-0.png",
+    "bytes": 9441,
+    "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+  },
+  {
+    "file": "tarea-5/accountant-boundaries/A-ui-denied-reportes-0.png",
+    "bytes": 9441,
+    "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+  },
+  {
+    "file": "tarea-5/accountant-boundaries/F-permitted-conciliaciones-0.png",
+    "bytes": 382049,
+    "sha256": "92aaf3be48dbb8d6dd10040effb8fda4f64260cf63c590a41f655c21c2a1f421"
+  },
+  {
+    "file": "tarea-5/accountant-boundaries/F-permitted-fiscal-0.png",
+    "bytes": 89912,
+    "sha256": "61c9abd4f354855bea24cdd72b5378a480eaa746dd6f839a958c9e27f55676aa"
+  },
+  {
+    "file": "tarea-5/accountant-boundaries/F-ui-denied-fondo-0.png",
+    "bytes": 38132,
+    "sha256": "53d4fcfdddc3a28fb6aa89b3910897d596822ab6bf32560c9a6bfc4428a6eb40"
+  },
+  {
+    "file": "tarea-5/accountant-boundaries/F-ui-denied-productos-0.png",
+    "bytes": 38132,
+    "sha256": "53d4fcfdddc3a28fb6aa89b3910897d596822ab6bf32560c9a6bfc4428a6eb40"
+  },
+  {
+    "file": "tarea-5/accountant-boundaries/F-ui-denied-proveedores-0.png",
+    "bytes": 38132,
+    "sha256": "53d4fcfdddc3a28fb6aa89b3910897d596822ab6bf32560c9a6bfc4428a6eb40"
+  },
+  {
+    "file": "tarea-5/accountant-boundaries/F-ui-denied-reportes-0.png",
+    "bytes": 38132,
+    "sha256": "53d4fcfdddc3a28fb6aa89b3910897d596822ab6bf32560c9a6bfc4428a6eb40"
+  },
+  {
+    "file": "tarea-5/continuation-prepareA/prepareA-A-preparation-after.png",
+    "bytes": 134069,
+    "sha256": "705eb33af66fb8b9866c22a5161804d1b89d9f79058e1fb3f44b953b79faf737"
+  },
+  {
+    "file": "tarea-5/continuation-prepareA/prepareA-A-preparation-before.png",
+    "bytes": 71745,
+    "sha256": "3736f3cd0ea8be87167d87d10d1ee1add72d4ed2b9dbba0f9d290cec7e85c94c"
+  },
+  {
+    "file": "tarea-5/continuation-roles/roles-F-fondo-denied.png",
+    "bytes": 38132,
+    "sha256": "53d4fcfdddc3a28fb6aa89b3910897d596822ab6bf32560c9a6bfc4428a6eb40"
+  },
+  {
+    "file": "tarea-5/continuation-roles/roles-assign-A-after.png",
+    "bytes": 60711,
+    "sha256": "42e017a1a735a20a5d5f11c656b7301b9f119b712be9e6a91d628fd00dd42b44"
+  },
+  {
+    "file": "tarea-5/continuation-roles/roles-assign-A-before.png",
+    "bytes": 244652,
+    "sha256": "6a6204c665ee7ac499d670647a850aace991dbf8048dc0240b2a291120488785"
+  },
+  {
+    "file": "tarea-5/continuation-roles/roles-blocked.png",
+    "bytes": 38132,
+    "sha256": "53d4fcfdddc3a28fb6aa89b3910897d596822ab6bf32560c9a6bfc4428a6eb40"
+  },
+  {
+    "file": "tarea-5/continuation-roles/roles-create-A-after.png",
+    "bytes": 240201,
+    "sha256": "0f2cc5f0ee82701c3731d65fe0bce17038aabe36e3216159a92900263d7b8050"
+  },
+  {
+    "file": "tarea-5/continuation-roles/roles-create-A-before.png",
+    "bytes": 219006,
+    "sha256": "9d9759ec9ad108f488c3da890a13d5f187310e84a4cc8fef5bd07928c798681f"
+  },
+  {
+    "file": "tarea-5/continuation-roles/roles-create-F-after.png",
+    "bytes": 226660,
+    "sha256": "28a286ef16a3fc61615f050b36378f19dfd914988767f4f80dc7f8d6f4b3d4f7"
+  },
+  {
+    "file": "tarea-5/continuation-roles/roles-create-F-before.png",
+    "bytes": 209207,
+    "sha256": "1f292cee400452a143c93a3a8c7c1516e9fd05473569e0557ced427e26531b38"
+  },
+  {
+    "file": "tarea-5/independent-final-readbacks/real-settled-note-document.png",
+    "bytes": 99013,
+    "sha256": "0e532daa0dd0dbf66582e2bba4afa1a32b93d80b8db26e8bdc92ebd0b6299faa"
+  },
+  {
+    "file": "tarea-6/broad/screen---0.png",
+    "bytes": 353443,
+    "sha256": "8550d8f12e1d21a1bb2e6441e683b2f838cd1efbb307766653ba15c96bcbddeb"
+  },
+  {
+    "file": "tarea-6/broad/screen--administracion-conciliacion-0.png",
+    "bytes": 160570,
+    "sha256": "e1e9a0802d6e8f58e30d4bbb2c48f727f1ea8e377b4d76065b984b693a3a8375"
+  },
+  {
+    "file": "tarea-6/broad/screen--alertas-0.png",
+    "bytes": 126097,
+    "sha256": "51659a882f2c8a13b0e7edb2a65073cf16d314e479c1f4488ff4fc4af8f8bfb1"
+  },
+  {
+    "file": "tarea-6/broad/screen--auditoria-0.png",
+    "bytes": 648569,
+    "sha256": "e123ae41a81e29076e4d728dab94c2f2a2c742d7a4f496573264365f735cfad9"
+  },
+  {
+    "file": "tarea-6/broad/screen--caja-atribucion-e7-0.png",
+    "bytes": 285727,
+    "sha256": "ed7faea86039acaa3702de0887e15fac2999470fcf951a65f1cd65a3b60e9496"
+  },
+  {
+    "file": "tarea-6/broad/screen--caja-cortes-0.png",
+    "bytes": 111300,
+    "sha256": "677fcbb462f2dd5a39b8d0a9f2b5c70ce0832768fdb72d4bd740e1dc9b06e272"
+  },
+  {
+    "file": "tarea-6/broad/screen--caja-cuentas-destino-0.png",
+    "bytes": 161115,
+    "sha256": "0ebb8120f2a2cfc90950f68f75894a7bbd3dce61da65c2c7f44181a0fce4cc12"
+  },
+  {
+    "file": "tarea-6/broad/screen--caja-tiempo-real-0.png",
+    "bytes": 353530,
+    "sha256": "f4a647e1bf9ddea4d99f07329b573ebe96b878733fa79a365a9c8943725e2dfb"
+  },
+  {
+    "file": "tarea-6/broad/screen--clientes-0.png",
+    "bytes": 619701,
+    "sha256": "69fbeea9ea76e525453fa80e26724f1d4eb37ee474e5cc2e25ed40c3c65d09d9"
+  },
+  {
+    "file": "tarea-6/broad/screen--clientes-2584-0.png",
+    "bytes": 304705,
+    "sha256": "3cb401f7c317ee217c3444d01e42c7cb529f3165cf6a6990d7b7afcb00ef85ed"
+  },
+  {
+    "file": "tarea-6/broad/screen--cobros-0.png",
+    "bytes": 73222,
+    "sha256": "d5e08411c858063e6465b70034471bafe2c68c73c0dbdb56e6300dcd77bc44e3"
+  },
+  {
+    "file": "tarea-6/broad/screen--cobros-pendientes-0.png",
+    "bytes": 62556,
+    "sha256": "f333bc9de8a94dd29161b8134de988412274ea5f99499977cd73db1c93e37556"
+  },
+  {
+    "file": "tarea-6/broad/screen--contabilidad-conciliaciones-0.png",
+    "bytes": 77699,
+    "sha256": "952946588e59fc6b8ae14165685478028e11cdadbfda30277a7c88e782573291"
+  },
+  {
+    "file": "tarea-6/broad/screen--contenedores-0.png",
+    "bytes": 224574,
+    "sha256": "2943463c4d93f461aab752d9aec5a688eb0a0a3f8d22781dce1c3c8b6e81bcb3"
+  },
+  {
+    "file": "tarea-6/broad/screen--directorio-camionetas-0.png",
+    "bytes": 86559,
+    "sha256": "d4eeebb249f5aa90cc03fd7c24f36fc20736515e4d96e55b36f477ab634e976f"
+  },
+  {
+    "file": "tarea-6/broad/screen--directorio-choferes-0.png",
+    "bytes": 85961,
+    "sha256": "dedcfebd968b1ff9434eedfa75245feb7876c482c76ba3de8e25f6885f2b22d9"
+  },
+  {
+    "file": "tarea-6/broad/screen--entradas-0.png",
+    "bytes": 114032,
+    "sha256": "82134b1f3bac7bff9086ceca9c0bb26728c14f1b98048bbb5cc74b9ab186a6af"
+  },
+  {
+    "file": "tarea-6/broad/screen--equipos-0.png",
+    "bytes": 155552,
+    "sha256": "5a0cbcc1268608d834c06eedb25f243c4f82eba1eb61ced884d4cbcacf1b22bd"
+  },
+  {
+    "file": "tarea-6/broad/screen--etiquetas-0.png",
+    "bytes": 111910,
+    "sha256": "342bc58308d31910c27ef434c810083e0a18dde1985c1bfcfe84d3c66bc8c817"
+  },
+  {
+    "file": "tarea-6/broad/screen--inventario-0.png",
+    "bytes": 98988,
+    "sha256": "3de57524b553fdcbc372df61208a10eeb8944309c95d39c002b81ecefac9f068"
+  },
+  {
+    "file": "tarea-6/broad/screen--inventario-ajustes-0.png",
+    "bytes": 104002,
+    "sha256": "cd5816615a089329f8f3367ce4d6af4700367492faf78ed03a1c10a01b2b1e7b"
+  },
+  {
+    "file": "tarea-6/broad/screen--inventario-auditorias-0.png",
+    "bytes": 102357,
+    "sha256": "7d6fde27064a72d7daca263db3bb5d0fac73bd90ff1ff71c0bbc986e27669755"
+  },
+  {
+    "file": "tarea-6/broad/screen--inventario-rollos-8-0.png",
+    "bytes": 140819,
+    "sha256": "e35309822cc937b5d84b2a8ca1e19c1c5b5ad9781d574d5e55f1914a460d8fdc"
+  },
+  {
+    "file": "tarea-6/broad/screen--inventario-stock-minimos-0.png",
+    "bytes": 99024,
+    "sha256": "cfc84844621b9e250fb95414e6addfd77b1ab82707e67963ed56d499852e92e9"
+  },
+  {
+    "file": "tarea-6/broad/screen--inventario-vista-global-0.png",
+    "bytes": 105318,
+    "sha256": "71c4456efcae5409683ed7973714b3fdd73600fdcba59dd0a318809f3caea6e7"
+  },
+  {
+    "file": "tarea-6/broad/screen--movimientos-0.png",
+    "bytes": 350915,
+    "sha256": "e833dd9c28de2d2ffdd18e7516bb4c8cd9baedad6940f9d5a9a59d75cdcd47ff"
+  },
+  {
+    "file": "tarea-6/broad/screen--notificaciones-0.png",
+    "bytes": 199851,
+    "sha256": "7951a38b957948a5e9b602af323ddfab21261373db341e71cb3551e567ddf07d"
+  },
+  {
+    "file": "tarea-6/broad/screen--permisos-0.png",
+    "bytes": 156833,
+    "sha256": "c1bf99e4492c180fae42b33a264ea6bf307ec871a51e6202aee3412bab24325e"
+  },
+  {
+    "file": "tarea-6/broad/screen--pos-0.png",
+    "bytes": 71834,
+    "sha256": "ef12d5d7280cea722beb45a5806b9b6dfe99ed9e2bfbeff3dcf580d4555c726f"
+  },
+  {
+    "file": "tarea-6/broad/screen--precios-0.png",
+    "bytes": 102087,
+    "sha256": "8a605ed87ca626a282aeb755adb7b5dcc4da0d30031037595f2db718499b83e0"
+  },
+  {
+    "file": "tarea-6/broad/screen--productos-0.png",
+    "bytes": 1055030,
+    "sha256": "4b2137bb8b8d017ffcfca2d703269e465e115cafb1f87988b685161e9ea0d2b5"
+  },
+  {
+    "file": "tarea-6/broad/screen--productos-2078-0.png",
+    "bytes": 616034,
+    "sha256": "3dd565dc8218f63498a68cbb6ebdf6824c460573c2dd6fd42f4cdd4f334fdff6"
+  },
+  {
+    "file": "tarea-6/broad/screen--proveedores-0.png",
+    "bytes": 323953,
+    "sha256": "7087388f4ff8a8d57244b1f9a039e1e60ee2954083355d46fabf042507393b28"
+  },
+  {
+    "file": "tarea-6/broad/screen--proveedores-226-0.png",
+    "bytes": 126496,
+    "sha256": "40ffdddf209160c48c1f54cca1ae7cbda8a24a5e5c640527afde0071e9507cdb"
+  },
+  {
+    "file": "tarea-6/broad/screen--recibos-e3-E3-1-00000001-0.png",
+    "bytes": 135051,
+    "sha256": "826ed9583a1ba64297ce083f3ac9e7450618dfc4750d36a6b1ebf5f91a59ef37"
+  },
+  {
+    "file": "tarea-6/broad/screen--reportes-0.png",
+    "bytes": 892918,
+    "sha256": "f1ca2b38b6bcf4fe800e5e6a16bfa8137c12fcf8b5e0d3af48c68f7b5a9fb316"
+  },
+  {
+    "file": "tarea-6/broad/screen--salidas-0.png",
+    "bytes": 105518,
+    "sha256": "3808887c339b84607229cd3414e8f8ce148b6f0852d7031b37b4e1d9dd48bde0"
+  },
+  {
+    "file": "tarea-6/broad/screen--tickets-8-0.png",
+    "bytes": 57372,
+    "sha256": "5d1a747004354ff54919dd2262a5188bc6f1f532bada465d41955a3f1ff42711"
+  },
+  {
+    "file": "tarea-6/broad/screen--ubicaciones-0.png",
+    "bytes": 154140,
+    "sha256": "3c455e49f18416f1e66ac935f225e7a120ada464f995a2bcaa5e3366ff0a3a49"
+  },
+  {
+    "file": "tarea-6/broad/screen--usuarios-0.png",
+    "bytes": 298549,
+    "sha256": "a292c803a0cf574259fb8d98119cb27bf6a8fa4a57e873b4ed6a115689dcd68e"
+  },
+  {
+    "file": "tarea-6/broad/screen--viajes-0.png",
+    "bytes": 72940,
+    "sha256": "108094f2c548e2afa125a17e792ebedf0a814e7c272757597364f8a25d3a4cee"
+  },
+  {
+    "file": "tarea-6/native-drilldown-units-color/amount-detail.png",
+    "bytes": 331914,
+    "sha256": "a99be05e159ee39c1da9bfa0bfd338ffb4d718e2e47cff43c985f0113bae986c"
+  },
+  {
+    "file": "tarea-6/native-drilldown-units-color/color-has-operational-text-not-color-alone-0.png",
+    "bytes": 353611,
+    "sha256": "4a581396bc35bdb6a39c80e5f77e81309ab59795955fd710fdeb61e6d0ae7628"
+  },
+  {
+    "file": "tarea-6/native-drilldown-units-color/folio-document.png",
+    "bytes": 7582,
+    "sha256": "ab0b6c65a0c94fcf479b7e1fcc7f17f0853879756270fe0042b72cc1d39c6476"
+  },
+  {
+    "file": "tarea-6/native-drilldown-units-color/four-unit-entry-review-and-document-no-mixed-sum-0.png",
+    "bytes": 169941,
+    "sha256": "fc3663bfe39920c4346c2865192cdde8816aab26978ad0a5ba85afd64229ea8e"
+  },
+  {
+    "file": "tarea-6/native-drilldown-units-color/four-units-document.png",
+    "bytes": 15813,
+    "sha256": "a893408b6dede8ff8bf0974e67406bd91c72fb2ab8b423b7f2a66c7979a5d324"
+  },
+  {
+    "file": "tarea-6/native-drilldown-units-color/four-units-review.png",
+    "bytes": 254731,
+    "sha256": "b090a829eb6191530d326742ff9aec8ac9529996beaa22ad9f947a75d266796a"
+  },
+  {
+    "file": "tarea-6/native-drilldown-units-color/native-product-BOLSA-0.png",
+    "bytes": 353611,
+    "sha256": "4a581396bc35bdb6a39c80e5f77e81309ab59795955fd710fdeb61e6d0ae7628"
+  },
+  {
+    "file": "tarea-6/native-drilldown-units-color/native-product-KILO-0.png",
+    "bytes": 353611,
+    "sha256": "4a581396bc35bdb6a39c80e5f77e81309ab59795955fd710fdeb61e6d0ae7628"
+  },
+  {
+    "file": "tarea-6/native-drilldown-units-color/native-product-PIEZA-0.png",
+    "bytes": 353611,
+    "sha256": "4a581396bc35bdb6a39c80e5f77e81309ab59795955fd710fdeb61e6d0ae7628"
+  },
+  {
+    "file": "tarea-6/native-drilldown-units-color/real-amount-to-detail-to-folio-document-0.png",
+    "bytes": 7598,
+    "sha256": "873dbd2f8547a4ed970537f319cf649b4172e9e97ac93946877a850010d32ee2"
+  }
+]

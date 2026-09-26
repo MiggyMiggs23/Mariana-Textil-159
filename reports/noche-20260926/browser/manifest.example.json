@@ -1,0 +1,38 @@
+{
+  "disposable": true,
+  "mainHandoff": "NOT_STARTED",
+  "syntheticActorsOnly": true,
+  "origin": "http://127.0.0.1:43957",
+  "privateDir": "private.local/night-disposable/browser",
+  "playwrightModule": ".cache/pnpm/dlx/0be451ecc86649edb1205a8454559cdd433606b22e8744a742f8d93fdb9e4b57/1a0642de1a4-8c2/node_modules/.pnpm/playwright@1.55.0/node_modules/playwright/index.mjs",
+  "bundle": {
+    "apiEntry": "MAIN_SUPPLIES_FROZEN_ENTRY",
+    "apiSha256": "MAIN_SUPPLIES_SHA256",
+    "frontendRoot": "MAIN_SUPPLIES_FROZEN_ROOT",
+    "frontendFiles": { "index.html": "MAIN_SUPPLIES_SHA256" }
+  },
+  "site": { "id": null, "name": "MAIN_SUPPLIES_SITE" },
+  "clients": {
+    "cash": { "id": null, "name": "NOCHE SYNTHETIC CASH" },
+    "credit": { "id": null, "name": "NOCHE SYNTHETIC CREDIT" }
+  },
+  "targets": {},
+  "fiscal": {
+    "forwardClockReady": false,
+    "clockTime": null,
+    "periods": []
+  },
+  "audit": {
+    "siteName": "MAIN_SUPPLIES_SYNTHETIC_AUDIT_SITE",
+    "auditId": null,
+    "floors": [],
+    "series": [],
+    "expectedFirstFloor": null
+  },
+  "broad": {
+    "paths": ["/", "/clientes", "/proveedores", "/productos", "/inventario", "/entradas", "/salidas", "/pos", "/cobros", "/reportes", "/movimientos", "/usuarios", "/permisos", "/notificaciones"],
+    "detailChains": [],
+    "unitChecks": [],
+    "colorChecks": []
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "released": true,
+  "at": "2026-09-26T03:43:15.222Z",
+  "writer": "browser-task3-6",
+  "origin": "http://127.0.0.1:18228",
+  "apiSha256": "e62a79333d0ee1433c114656af980e33ff420b728688a121ee586efdfab1b30d",
+  "servedFrontendIndexSha256": "be762ee00aaeb78427d040d9f6cc6be95b8c05d7ad99e6af2c1cd76b7268a643",
+  "noApplicationCodeChanges": true,
+  "noCommits": true,
+  "browsersClosed": true,
+  "noDatabaseResetOrBackdating": true,
+  "secretsScan": "PASS",
+  "screenshotFiles": 178,
+  "paymentInput": "/tmp/noche-20260926/payment-input.json",
+  "paymentBeforeIds": [
+    2,
+    3,
+    4
+  ],
+  "paymentAfterIds": [
+    5,
+    6,
+    7
+  ],
+  "paymentUnpaidReadback": "tarea-5/independent-final-readbacks/result.json",
+  "privateProvenance": "private.local/night-disposable/browser",
+  "cashSession": {
+    "id": 1,
+    "estado": "CERRADA",
+    "esperado": "2548.00",
+    "contado": "2548.00",
+    "diferencia": "0.00"
+  },
+  "audit": {
+    "id": 2,
+    "estado": "ABIERTA",
+    "scanned": 5,
+    "appliedToInventory": false
+  },
+  "preservedForMain": "Disposable copy remains for performance/fix verification; MAIN owns teardown.",
+  "findings": [
+    "Audit duplicate concurrency full-page REVISION_OBSOLETA",
+    "A identity503 and forbidden endpoints500",
+    "Precios500",
+    "Client payment/history500"
+  ],
+  "blocked": [
+    "Commercial roll returns not executed; gates unchanged",
+    "Closed-period day/week/month and NO_CUADRA require safely prepared clock clone"
+  ]
+}
