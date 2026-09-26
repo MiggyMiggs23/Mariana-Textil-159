@@ -1,0 +1,95 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Vista Global
+I
+
+Isolated postreview financial admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Sitios
+
+Administración de tiendas y bodegas. Los sitios de sistema no pueden ser editados.
+
+Los sitios se desactivan, no se borran: conservar sus referencias mantiene la trazabilidad.
+
+Nuevo sitio
+Nombre	Iniciales	Tipo	Estado	Acciones
+Mariana	MA	TIENDA	Activa	
+Editar
+Cruces	CR	TIENDA	Activa	
+Editar
+Coco	CO	TIENDA	Activa	
+Editar
+Tomás	TO	BODEGA	Activa	
+Editar
+Don Nacho	DN	BODEGA	Activa	
+Editar
+Lucas Alamán	LA	BODEGA	InactivaNo disponible para operaciones	Reactivar
+Editar
+Bodega Cruces	BC	BODEGA	InactivaNo disponible para operaciones	Reactivar
+Editar
+UbSAT SA1787447615051_6	AAA	TIENDA	InactivaNo disponible para operaciones	Reactivar
+Editar
+UbSAT SA1787447882698_6	AAB	TIENDA	InactivaNo disponible para operaciones	Reactivar
+Editar
+OWNER POSTREVIEW26	OWN	TIENDA	Activa	
+Editar
+Piso creado
+Piso creado
+Editar Sitio
+Nombre
+Iniciales
+
+2 o 3 letras mayúsculas, únicas por sitio.
+
+Sitio activo
+Pisos / Divisiones
+Agregar
+01 Acceso
+Cancelar
+Guardar cambios
+Cerrar

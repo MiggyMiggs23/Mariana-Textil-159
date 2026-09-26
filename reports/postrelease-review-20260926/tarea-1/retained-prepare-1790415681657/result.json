@@ -1,0 +1,571 @@
+{
+  "stage": "retained-prepare",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "status": "PASS",
+  "startedAt": "2026-09-26T09:41:21.657Z",
+  "requests": [
+    {
+      "at": "2026-09-26T09:41:22.836Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415682822-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T09:41:23.788Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415682985-7"
+    },
+    {
+      "at": "2026-09-26T09:41:24.389Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415683802-10"
+    },
+    {
+      "at": "2026-09-26T09:41:24.391Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415683795-8"
+    },
+    {
+      "at": "2026-09-26T09:41:24.406Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415684400-11"
+    },
+    {
+      "at": "2026-09-26T09:41:24.993Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415684401-12"
+    },
+    {
+      "at": "2026-09-26T09:41:25.130Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415684408-13"
+    },
+    {
+      "at": "2026-09-26T09:41:25.526Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415685188-15"
+    },
+    {
+      "at": "2026-09-26T09:41:25.997Z",
+      "path": "/api/clientes/2583/credito",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415684996-14"
+    },
+    {
+      "at": "2026-09-26T09:41:26.010Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415685191-18"
+    },
+    {
+      "at": "2026-09-26T09:41:26.777Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415686197-35"
+    },
+    {
+      "at": "2026-09-26T09:41:26.787Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415686781-37"
+    },
+    {
+      "at": "2026-09-26T09:41:27.512Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415686789-38"
+    },
+    {
+      "at": "2026-09-26T09:41:27.873Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415687539-39"
+    },
+    {
+      "at": "2026-09-26T09:41:28.121Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415687542-42"
+    },
+    {
+      "at": "2026-09-26T09:41:28.155Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415687542-44"
+    },
+    {
+      "at": "2026-09-26T09:41:28.165Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415687542-43"
+    },
+    {
+      "at": "2026-09-26T09:41:28.232Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415687540-41"
+    },
+    {
+      "at": "2026-09-26T09:41:28.315Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415687540-40"
+    },
+    {
+      "at": "2026-09-26T09:41:28.490Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415687542-45"
+    },
+    {
+      "at": "2026-09-26T09:41:28.734Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415687543-46"
+    },
+    {
+      "at": "2026-09-26T09:41:29.730Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415689139-52"
+    },
+    {
+      "at": "2026-09-26T09:41:29.741Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415689734-54"
+    },
+    {
+      "at": "2026-09-26T09:41:30.474Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415689743-55"
+    },
+    {
+      "at": "2026-09-26T09:41:30.828Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415690501-56"
+    },
+    {
+      "at": "2026-09-26T09:41:31.087Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415690504-61"
+    },
+    {
+      "at": "2026-09-26T09:41:31.094Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415690503-59"
+    },
+    {
+      "at": "2026-09-26T09:41:31.188Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415690503-58"
+    },
+    {
+      "at": "2026-09-26T09:41:31.277Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415690502-57"
+    },
+    {
+      "at": "2026-09-26T09:41:31.349Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415690504-60"
+    },
+    {
+      "at": "2026-09-26T09:41:31.677Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415690505-63"
+    },
+    {
+      "at": "2026-09-26T09:41:31.691Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415690505-62"
+    },
+    {
+      "at": "2026-09-26T09:41:32.408Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415691827-65"
+    },
+    {
+      "at": "2026-09-26T09:41:33.032Z",
+      "path": "/api/e5/cobros/fd5849b4-bfab-40e3-b07d-c471cdbed06f",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415692411-66"
+    },
+    {
+      "at": "2026-09-26T09:41:33.604Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415693049-68"
+    },
+    {
+      "at": "2026-09-26T09:41:33.969Z",
+      "path": "/api/e5/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415693049-67"
+    },
+    {
+      "at": "2026-09-26T09:41:35.334Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415694755-69"
+    },
+    {
+      "at": "2026-09-26T09:41:36.056Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415695336-70"
+    },
+    {
+      "at": "2026-09-26T09:41:36.610Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415696058-71"
+    },
+    {
+      "at": "2026-09-26T09:41:37.444Z",
+      "path": "/api/e5/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415696612-72"
+    },
+    {
+      "at": "2026-09-26T09:41:38.032Z",
+      "path": "/api/e5/cobros/fd5849b4-bfab-40e3-b07d-c471cdbed06f",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415697445-73"
+    },
+    {
+      "at": "2026-09-26T09:41:38.624Z",
+      "path": "/api/e5/cobros/fd5849b4-bfab-40e3-b07d-c471cdbed06f",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415698035-74"
+    },
+    {
+      "at": "2026-09-26T09:41:39.451Z",
+      "path": "/api/e5/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415698626-75"
+    },
+    {
+      "at": "2026-09-26T09:41:40.004Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415699453-76"
+    },
+    {
+      "at": "2026-09-26T09:41:40.692Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415700006-77"
+    },
+    {
+      "at": "2026-09-26T09:41:41.835Z",
+      "path": "/api/e5/cobros/fd5849b4-bfab-40e3-b07d-c471cdbed06f/propuestas",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415700697-78"
+    },
+    {
+      "at": "2026-09-26T09:41:42.408Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415701840-81"
+    },
+    {
+      "at": "2026-09-26T09:41:42.439Z",
+      "path": "/api/e5/cobros/fd5849b4-bfab-40e3-b07d-c471cdbed06f",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415701840-82"
+    },
+    {
+      "at": "2026-09-26T09:41:42.501Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415701839-80"
+    },
+    {
+      "at": "2026-09-26T09:41:42.660Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415701838-79"
+    },
+    {
+      "at": "2026-09-26T09:41:42.669Z",
+      "path": "/api/e5/cobros/fd5849b4-bfab-40e3-b07d-c471cdbed06f",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415702039-84"
+    },
+    {
+      "at": "2026-09-26T09:41:42.708Z",
+      "path": "/api/e5/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415701840-83"
+    },
+    {
+      "at": "2026-09-26T09:41:43.660Z",
+      "path": "/api/clientes/2583/credito",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-prepare-1790415702675-85"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-prepare-1790415681657/application-review-viewport.png",
+      "bytes": 151845,
+      "sha256": "45e27d9b6bea70590003fab253cc169e71c4e5da25f1568d815897fe83a6c9fa"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-prepare-1790415681657/application-review-full.png",
+      "bytes": 151868,
+      "sha256": "4e1a552013602ea858d4422e3acd6e48b8d2576cb03e7f1785ca743d90c7895c"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-prepare-1790415681657/application-review.txt",
+      "bytes": 1420,
+      "sha256": "f3c6487689a4335cfb2963fdb7a573d535eba12be103822035ad824b5c4fff6b"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-prepare-1790415681657/retained-prepare-viewport.png",
+      "bytes": 159589,
+      "sha256": "9fa0bee553c20fcc25579dd8b4d985162f054ba23d62eecc766eb8a9c4650acb"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-prepare-1790415681657/retained-prepare-full.png",
+      "bytes": 170232,
+      "sha256": "0ebd602ed4ba57188936a16a26d6295713e1146babacd982de0709ec85fa37fc"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-prepare-1790415681657/retained-prepare.txt",
+      "bytes": 1579,
+      "sha256": "2e86eef90edab8f19a6895048740b0d8cc4d1bf4f3f85455b6976af1302fe967"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-prepare-1790415681657/actual-balance-and-state-viewport.png",
+      "bytes": 161869,
+      "sha256": "477e36f66384628b64a3050acbbb918a396cbf63000589c879a0377ff6ea2151"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-prepare-1790415681657/actual-balance-and-state-full.png",
+      "bytes": 236738,
+      "sha256": "9208a6571fe1e87f121b8854c30df39eb5c47657c1dd5eb3b408ead6a8870990"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-prepare-1790415681657/actual-balance-and-state.txt",
+      "bytes": 2272,
+      "sha256": "d7ac49242edfa2a2ddd1f9e43096ab15f403fd2913b3737be0b05c01e0acca5f"
+    }
+  ],
+  "checks": [],
+  "actorId": 234,
+  "before": {
+    "clienteId": 2583,
+    "limiteCredito": "50000.00",
+    "saldoActual": "750.00",
+    "saldoAFavor": "0.00",
+    "creditoDisponible": "49250.00",
+    "puedeComprarCredito": true,
+    "diasCredito": 7,
+    "utilizacion": "1.50",
+    "totalVencido": "0.00",
+    "primerVencimiento": "2026-10-03",
+    "primeraCompra": "2026-09-26T09:36:41.965Z",
+    "ultimaActividad": "2026-09-26T09:37:35.125Z",
+    "antiguedad": [
+      {
+        "fechaVencimiento": "2026-10-03",
+        "pendiente": "750.00",
+        "diasVencido": 0,
+        "sinPlazo": false,
+        "estado": "VIGENTE"
+      }
+    ]
+  },
+  "cobro": {
+    "id": "fd5849b4-bfab-40e3-b07d-c471cdbed06f",
+    "estado": "PENDIENTE",
+    "receptor": {
+      "id": 234,
+      "nombre": "Isolated postreview financial admin"
+    },
+    "rechazos": [],
+    "reciboId": "95565aa2-242b-49a5-8887-311346e3ae5e",
+    "revision": 2,
+    "clienteId": 2583,
+    "formaPago": "EFECTIVO",
+    "avisoAdmin": false,
+    "propuestas": [
+      {
+        "id": "0df2e982-488c-4401-8525-0ecf8d39e4a7",
+        "actor": {
+          "id": 234,
+          "nombre": "Isolated postreview financial admin"
+        },
+        "notas": [
+          {
+            "fecha": "2026-09-26T09:37:20.923Z",
+            "folio": "2",
+            "notaId": 2,
+            "facturada": false,
+            "ubicacionId": 835,
+            "saldoPendiente": "750.00",
+            "movimientoVentaId": 1
+          }
+        ],
+        "version": 1,
+        "createdAt": "2026-09-26T09:41:41.381Z",
+        "evidencia": {
+          "descripcion": "OWNER POSTREVIEW aplicación dirigida explícita200, retener100, sin segundo ingreso",
+          "referencias": []
+        },
+        "asignaciones": [
+          {
+            "notaId": 2,
+            "importe": "200.00",
+            "movimientoVentaId": 1
+          }
+        ],
+        "importeFavorPropuesto": "0.00"
+      }
+    ],
+    "capacidades": {
+      "puedeRecibir": true,
+      "puedePreparar": true,
+      "puedeAutorizar": true,
+      "puedeRechazar": true,
+      "puedeDevolver": false,
+      "puedeVerAvisos": true,
+      "puedeImprimir": true,
+      "preparacionADisponible": false
+    },
+    "ubicacionId": 835,
+    "aplicaciones": [],
+    "sesionCajaId": 1,
+    "clienteNombre": "OWNER POSTREVIEW26 CLIENTE",
+    "cuentaDestino": "CAJA_FISICA",
+    "antiguedadDias": 0,
+    "fechaRecepcion": "2026-09-26T09:39:27.121Z",
+    "notasIndicadas": [
+      {
+        "fecha": "2026-09-26T09:37:20.923Z",
+        "folio": "2",
+        "notaId": 2,
+        "facturada": false,
+        "ubicacionId": 835,
+        "saldoPendiente": "750.00",
+        "movimientoVentaId": 1
+      }
+    ],
+    "importeAplicado": "0.00",
+    "importeDevuelto": "0.00",
+    "importeRecibido": "300.00",
+    "ubicacionNombre": "OWNER POSTREVIEW26",
+    "importePendiente": "300.00",
+    "algunaVezAplicado": false,
+    "sesionOperativaId": 1,
+    "evidenciaRecepcion": {
+      "descripcion": "OWNER POSTREVIEW dinero real sintético retained-receive",
+      "referencias": [
+        "OWNER-retained-receive"
+      ]
+    },
+    "propuestaVigenteId": "0df2e982-488c-4401-8525-0ecf8d39e4a7"
+  },
+  "after": {
+    "clienteId": 2583,
+    "limiteCredito": "50000.00",
+    "saldoActual": "750.00",
+    "saldoAFavor": "0.00",
+    "creditoDisponible": "49250.00",
+    "puedeComprarCredito": true,
+    "diasCredito": 7,
+    "utilizacion": "1.50",
+    "totalVencido": "0.00",
+    "primerVencimiento": "2026-10-03",
+    "primeraCompra": "2026-09-26T09:36:41.965Z",
+    "ultimaActividad": "2026-09-26T09:37:35.125Z",
+    "antiguedad": [
+      {
+        "fechaVencimiento": "2026-10-03",
+        "pendiente": "750.00",
+        "diasVencido": 0,
+        "sinPlazo": false,
+        "estado": "VIGENTE"
+      }
+    ]
+  },
+  "finishedAt": "2026-09-26T09:41:44.076Z"
+}

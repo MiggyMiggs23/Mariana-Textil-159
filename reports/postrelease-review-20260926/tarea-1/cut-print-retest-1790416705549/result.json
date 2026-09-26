@@ -1,0 +1,606 @@
+{
+  "stage": "cut-print-retest",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "a296de5707e38b9996293f48f968fca1e480810931b5769286bebe9b75f83f6f",
+  "status": "PASS",
+  "startedAt": "2026-09-26T09:58:25.549Z",
+  "requests": [
+    {
+      "at": "2026-09-26T09:58:27.415Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416707376-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T09:58:28.384Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416707613-7"
+    },
+    {
+      "at": "2026-09-26T09:58:28.938Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416708392-8"
+    },
+    {
+      "at": "2026-09-26T09:58:28.948Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416708943-11"
+    },
+    {
+      "at": "2026-09-26T09:58:28.968Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416708399-10"
+    },
+    {
+      "at": "2026-09-26T09:58:29.625Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416708951-12"
+    },
+    {
+      "at": "2026-09-26T09:58:30.009Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416709691-14"
+    },
+    {
+      "at": "2026-09-26T09:58:30.051Z",
+      "path": "/api/sesiones-caja/1/corte",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416708979-13"
+    },
+    {
+      "at": "2026-09-26T09:58:30.503Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416709695-17"
+    },
+    {
+      "at": "2026-09-26T09:58:31.273Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416710717-34"
+    },
+    {
+      "at": "2026-09-26T09:58:31.283Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416711277-36"
+    },
+    {
+      "at": "2026-09-26T09:58:31.971Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416711286-37"
+    },
+    {
+      "at": "2026-09-26T09:58:32.321Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416712007-38"
+    },
+    {
+      "at": "2026-09-26T09:58:32.508Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416712010-41"
+    },
+    {
+      "at": "2026-09-26T09:58:32.613Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416712011-43"
+    },
+    {
+      "at": "2026-09-26T09:58:32.615Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416712010-42"
+    },
+    {
+      "at": "2026-09-26T09:58:32.684Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416712009-40"
+    },
+    {
+      "at": "2026-09-26T09:58:32.829Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416712008-39"
+    },
+    {
+      "at": "2026-09-26T09:58:32.954Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416712012-44"
+    },
+    {
+      "at": "2026-09-26T09:58:33.130Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416712012-45"
+    },
+    {
+      "at": "2026-09-26T09:58:34.280Z",
+      "path": "/api/sesiones-caja",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416713655-48"
+    },
+    {
+      "at": "2026-09-26T09:58:35.565Z",
+      "path": "/api/sesiones-caja/1/corte",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416714491-49"
+    },
+    {
+      "at": "2026-09-26T09:58:36.124Z",
+      "path": "/api/caja/recibos-e3",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416715590-52"
+    },
+    {
+      "at": "2026-09-26T09:58:36.147Z",
+      "path": "/api/e9/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416715588-50"
+    },
+    {
+      "at": "2026-09-26T09:58:36.157Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416715590-51"
+    },
+    {
+      "at": "2026-09-26T09:58:37.261Z",
+      "path": "/api/sesiones-caja/1/corte",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cut-print-retest-1790416716153-53"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/cut-print-retest-1790416705549/corte-native-print-repeat.pdf",
+      "bytes": 180517,
+      "sha256": "bd5815cce1528d5ad337d30b4117c51a83fbe9c4333d37a5a278264c80ecba3b"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/cut-print-retest-1790416705549/screen-cut-after-native-print-viewport.png",
+      "bytes": 165480,
+      "sha256": "f6dadf93c7a961505f29443b9d039006e0030cfa60e92226313fbfe65728a220"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/cut-print-retest-1790416705549/screen-cut-after-native-print-full.png",
+      "bytes": 161438,
+      "sha256": "4baa28aef1bb8deef5ed77308e044d073fd5db098749acd8ec3f6b5227a525f1"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/cut-print-retest-1790416705549/screen-cut-after-native-print.txt",
+      "bytes": 3670,
+      "sha256": "67126c3a937178b8b0216d702c48e87307fdb12a920c9508fb0419d7958a9efa"
+    }
+  ],
+  "checks": [],
+  "actorId": 234,
+  "existingCut": {
+    "versionCorte": "e9:v1:11a18e2cb6f5d2393836dfd1bb2131c5a94c3e751e2d389d3cd25269e638b912",
+    "sesion": {
+      "id": 1,
+      "ubicacionId": 835,
+      "nombreUbicacion": "OWNER POSTREVIEW26",
+      "usuarioId": 234,
+      "nombreUsuario": "Isolated postreview financial admin",
+      "abiertaAt": "2026-09-26T09:36:29.819Z",
+      "cerradaAt": "2026-09-26T09:46:58.633Z",
+      "fondoInicial": "0.00",
+      "efectivoContado": "1925.00",
+      "estado": "CERRADA"
+    },
+    "formasPago": [
+      {
+        "formaPago": "EFECTIVO",
+        "importe": "1400.00",
+        "pagosCount": 2,
+        "ticketsCount": 2
+      },
+      {
+        "formaPago": "TRANSFERENCIA",
+        "importe": "0.00",
+        "pagosCount": 0,
+        "ticketsCount": 0
+      },
+      {
+        "formaPago": "FACTURADO",
+        "importe": "0.00",
+        "pagosCount": 0,
+        "ticketsCount": 0
+      },
+      {
+        "formaPago": "CREDITO",
+        "importe": "0.00",
+        "pagosCount": 0,
+        "ticketsCount": 0
+      }
+    ],
+    "cuentasDestino": [
+      {
+        "formaPago": "EFECTIVO",
+        "cuentaDestino": "CAJA_FISICA",
+        "importe": "1375.00"
+      },
+      {
+        "formaPago": "TRANSFERENCIA",
+        "cuentaDestino": "CUENTA_NO_FISCAL",
+        "importe": "0.00"
+      },
+      {
+        "formaPago": "TRANSFERENCIA",
+        "cuentaDestino": "CUENTA_FISCAL",
+        "importe": "0.00"
+      },
+      {
+        "formaPago": "CREDITO",
+        "cuentaDestino": "CUENTAS_POR_COBRAR",
+        "importe": "0.00"
+      }
+    ],
+    "salidas": [
+      {
+        "id": 1,
+        "monto": "25.00",
+        "motivo": "OWNER POSTREVIEW26 gasto sintético ordinario",
+        "proveedorId": null,
+        "cuentaOrigen": "CAJA_FISICA",
+        "createdAt": "2026-09-26T09:38:18.245Z",
+        "proveedor": null,
+        "e4": {
+          "tipo": "EXTRAORDINARIA",
+          "estado": "PENDIENTE",
+          "version": 0,
+          "claveOperacion": "ee55cbf5-cfbd-40b6-bd78-0d244641c173",
+          "historial": [],
+          "desbloqueoCaja": null
+        }
+      }
+    ],
+    "salidasPorCuenta": {
+      "CAJA_FISICA": "25.00",
+      "CUENTA_NO_FISCAL": "0.00",
+      "CUENTA_FISCAL": "0.00"
+    },
+    "facturacion": [
+      {
+        "facturado": true,
+        "ticketsCount": 0,
+        "subtotal": "0.00",
+        "iva": "0.00",
+        "importe": "0.00",
+        "efectivo": "0.00",
+        "transferencia": "0.00",
+        "credito": "0.00"
+      },
+      {
+        "facturado": false,
+        "ticketsCount": 2,
+        "subtotal": "1400.00",
+        "iva": "0.00",
+        "importe": "1400.00",
+        "efectivo": "1400.00",
+        "transferencia": "0.00",
+        "credito": "0.00"
+      }
+    ],
+    "metreado": [
+      {
+        "tipo": "NORMAL",
+        "unidad": "METRO",
+        "ticketsCount": 3,
+        "cantidad": "30.000",
+        "importe": "2400.00"
+      }
+    ],
+    "productos": [
+      {
+        "productoId": 2078,
+        "sku": "OWNPOSALG-AZU",
+        "tela": "OWNER POSTREVIEW26 ALGODON",
+        "color": "AZUL",
+        "tipo": "NORMAL",
+        "unidad": "METRO",
+        "cantidad": "30.000",
+        "importe": "2400.00"
+      }
+    ],
+    "pendientes": [],
+    "ticketsCobradosDetalle": [
+      {
+        "ticketId": 1,
+        "folio": 1,
+        "importe": "1000.00",
+        "cobradoAt": "2026-09-26T09:37:08.780Z"
+      },
+      {
+        "ticketId": 3,
+        "folio": 3,
+        "importe": "400.00",
+        "cobradoAt": "2026-09-26T09:43:35.168Z"
+      }
+    ],
+    "ticketsCobrados": 2,
+    "cancelaciones": [],
+    "fondoInicial": "0.00",
+    "totalCobrado": "1400.00",
+    "ivaCobrado": "0.00",
+    "efectivoEsperado": "1925.00",
+    "efectivoDesglose": {
+      "version": "E2",
+      "fondoInicial": "0.00",
+      "cobrosTickets": "1400.00",
+      "abonosFisicos": "250.00",
+      "cobrosRetenidos": "300.00",
+      "salidasFisicas": "25.00",
+      "efectivoEsperado": "1925.00",
+      "documentos": [
+        {
+          "origen": "FONDO_INICIAL",
+          "id": "1",
+          "folio": null,
+          "importe": "0.00",
+          "href": null,
+          "evidencia": {
+            "referencia": "Sesión de caja #1",
+            "motivo": null,
+            "fecha": "2026-09-26T09:36:29.819Z",
+            "usuarioId": 234,
+            "proveedorId": null,
+            "usuarioNombre": "Isolated postreview financial admin",
+            "proveedorNombre": null
+          }
+        },
+        {
+          "origen": "TICKET",
+          "id": "1",
+          "folio": "1",
+          "importe": "1000.00",
+          "href": "/tickets/1"
+        },
+        {
+          "origen": "TICKET",
+          "id": "2",
+          "folio": "3",
+          "importe": "400.00",
+          "href": "/tickets/3"
+        },
+        {
+          "origen": "ABONO",
+          "id": "ABONO_ORDINARIO:bd340aa0-bff1-4352-9fc5-45057752922b",
+          "folio": null,
+          "importe": "250.00",
+          "href": "/clientes/2583/movimientos/2",
+          "evidencia": {
+            "referencia": null,
+            "motivo": "Abono real recibido desde Caja",
+            "fecha": "2026-09-26T09:37:35.125Z",
+            "usuarioId": 234,
+            "proveedorId": null,
+            "usuarioNombre": "Isolated postreview financial admin",
+            "proveedorNombre": null
+          }
+        },
+        {
+          "origen": "COBRO_RETENIDO",
+          "id": "COBRO_PENDIENTE:fd5849b4-bfab-40e3-b07d-c471cdbed06f",
+          "folio": null,
+          "importe": "300.00",
+          "href": null,
+          "evidencia": {
+            "referencia": "OWNER-retained-receive",
+            "motivo": "OWNER POSTREVIEW dinero real sintético retained-receive",
+            "fecha": "2026-09-26T09:39:27.121Z",
+            "usuarioId": 234,
+            "proveedorId": null,
+            "usuarioNombre": "Isolated postreview financial admin",
+            "proveedorNombre": null
+          }
+        },
+        {
+          "origen": "SALIDA",
+          "id": "1",
+          "folio": null,
+          "importe": "25.00",
+          "href": null,
+          "evidencia": {
+            "referencia": null,
+            "motivo": "OWNER POSTREVIEW26 gasto sintético ordinario",
+            "fecha": "2026-09-26T09:38:18.245Z",
+            "usuarioId": 234,
+            "proveedorId": null,
+            "usuarioNombre": "Isolated postreview financial admin",
+            "proveedorNombre": null
+          }
+        }
+      ]
+    },
+    "efectivoContado": "1925.00",
+    "diferencia": "0.00",
+    "hojaVentasDia": {
+      "sitio": "OWNER POSTREVIEW26",
+      "fechaOperativa": "2026-09-26",
+      "cerrada": true,
+      "quienCerro": "Isolated postreview financial admin",
+      "secciones": [
+        {
+          "modalidad": "ROLLOS",
+          "lineas": [
+            {
+              "productoId": 2078,
+              "sku": "OWNPOSALG-AZU",
+              "tela": "OWNER POSTREVIEW26 ALGODON",
+              "color": "AZUL",
+              "tipo": "NORMAL",
+              "unidad": "ROLLOS",
+              "cantidad": "2",
+              "importe": "1400.00"
+            }
+          ],
+          "subtotal": "1400.00"
+        },
+        {
+          "modalidad": "METRAJE",
+          "lineas": [],
+          "subtotal": "0.00"
+        }
+      ],
+      "totalRollos": "2",
+      "totalMetros": "20",
+      "totalKilos": "0",
+      "totalBolsas": "0",
+      "totalPiezas": "0",
+      "subtotal": "1400.00",
+      "ivaFacturado": "0.00",
+      "totalGeneral": "1400.00"
+    }
+  },
+  "beforePdf": {
+    "bodyClass": "print-corte",
+    "events": [
+      {
+        "printMedia": false,
+        "bodyClass": "print-corte",
+        "parents": [
+          {
+            "tag": "DIV",
+            "className": "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg corte-print max-h-[92dvh] overflow-y-auto sm:max-w-4xl",
+            "display": "grid",
+            "visibility": "visible",
+            "textLength": 2435
+          },
+          {
+            "tag": "BODY",
+            "className": "print-corte",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 3445
+          },
+          {
+            "tag": "HTML",
+            "className": "",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 19184
+          }
+        ]
+      }
+    ]
+  },
+  "afterPdf": {
+    "bodyClass": "print-corte",
+    "events": [
+      {
+        "printMedia": false,
+        "bodyClass": "print-corte",
+        "parents": [
+          {
+            "tag": "DIV",
+            "className": "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg corte-print max-h-[92dvh] overflow-y-auto sm:max-w-4xl",
+            "display": "grid",
+            "visibility": "visible",
+            "textLength": 2435
+          },
+          {
+            "tag": "BODY",
+            "className": "print-corte",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 3445
+          },
+          {
+            "tag": "HTML",
+            "className": "",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 19184
+          }
+        ]
+      },
+      {
+        "printMedia": false,
+        "bodyClass": "print-corte",
+        "parents": [
+          {
+            "tag": "DIV",
+            "className": "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg corte-print max-h-[92dvh] overflow-y-auto sm:max-w-4xl",
+            "display": "grid",
+            "visibility": "visible",
+            "textLength": 2435
+          },
+          {
+            "tag": "BODY",
+            "className": "print-corte",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 3445
+          },
+          {
+            "tag": "HTML",
+            "className": "",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 19184
+          }
+        ]
+      }
+    ]
+  },
+  "printCss": {
+    "bodyClass": "print-corte",
+    "printMedia": true,
+    "directBodyChild": true,
+    "display": "block",
+    "visibility": "visible",
+    "transform": "none",
+    "translate": "-50% -50%",
+    "rect": {
+      "x": 0,
+      "y": 250,
+      "width": 1360,
+      "height": 500
+    }
+  },
+  "finishedAt": "2026-09-26T09:58:38.236Z"
+}

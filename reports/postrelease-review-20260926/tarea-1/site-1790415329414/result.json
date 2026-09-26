@@ -1,0 +1,269 @@
+{
+  "stage": "site",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "status": "PASS",
+  "startedAt": "2026-09-26T09:35:29.414Z",
+  "requests": [
+    {
+      "at": "2026-09-26T09:35:30.732Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-site-1790415330687-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T09:35:31.678Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415330871-7"
+    },
+    {
+      "at": "2026-09-26T09:35:32.253Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415331685-8"
+    },
+    {
+      "at": "2026-09-26T09:35:32.260Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415331691-10"
+    },
+    {
+      "at": "2026-09-26T09:35:32.267Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415332258-11"
+    },
+    {
+      "at": "2026-09-26T09:35:33.091Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415332501-16"
+    },
+    {
+      "at": "2026-09-26T09:35:33.100Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415333094-18"
+    },
+    {
+      "at": "2026-09-26T09:35:33.802Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415333102-19"
+    },
+    {
+      "at": "2026-09-26T09:35:34.171Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415333846-20"
+    },
+    {
+      "at": "2026-09-26T09:35:34.405Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415333850-24"
+    },
+    {
+      "at": "2026-09-26T09:35:34.434Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415333849-23"
+    },
+    {
+      "at": "2026-09-26T09:35:34.457Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415333850-25"
+    },
+    {
+      "at": "2026-09-26T09:35:34.478Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415333849-22"
+    },
+    {
+      "at": "2026-09-26T09:35:34.523Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415333847-21"
+    },
+    {
+      "at": "2026-09-26T09:35:34.770Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415333854-26"
+    },
+    {
+      "at": "2026-09-26T09:35:35.006Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415333854-27"
+    },
+    {
+      "at": "2026-09-26T09:35:35.056Z",
+      "path": "/api/locations",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415333854-28"
+    },
+    {
+      "at": "2026-09-26T09:35:36.342Z",
+      "path": "/api/locations",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-site-1790415335602-30"
+    },
+    {
+      "at": "2026-09-26T09:35:36.962Z",
+      "path": "/api/locations",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415336344-31"
+    },
+    {
+      "at": "2026-09-26T09:35:38.163Z",
+      "path": "/api/locations/835/pisos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415337508-32"
+    },
+    {
+      "at": "2026-09-26T09:35:39.296Z",
+      "path": "/api/locations/835/pisos",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-site-1790415338383-33"
+    },
+    {
+      "at": "2026-09-26T09:35:40.161Z",
+      "path": "/api/locations/835/pisos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415339298-34"
+    },
+    {
+      "at": "2026-09-26T09:35:40.550Z",
+      "path": "/api/locations/835/pisos",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-site-1790415339654-35"
+    },
+    {
+      "at": "2026-09-26T09:35:41.191Z",
+      "path": "/api/locations/835/pisos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-site-1790415340553-36"
+    },
+    {
+      "at": "2026-09-26T09:35:41.631Z",
+      "path": "/api/locations/835/pisos",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-site-1790415340871-37"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/site-1790415329414/site-viewport.png",
+      "bytes": 167307,
+      "sha256": "5008ac108f65d81c886146735e49261317cadbb60b9896ac52fea1901cc3e7dc"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/site-1790415329414/site-full.png",
+      "bytes": 149203,
+      "sha256": "6209eca336667583a94d6df22086e010c15ede9017deabef7ae80b134a8077fc"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/site-1790415329414/site.txt",
+      "bytes": 1356,
+      "sha256": "0ac58e7526a3a7ccd0bc2c5c2309faf3b57e424bf682a889bc10021cb709f8c7"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/site-1790415329414/floor-01 Acceso-viewport.png",
+      "bytes": 139974,
+      "sha256": "b8df78987b0c053e37861c35972cc4fe2062075d52a6190b0d2d5a0a809f90f2"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/site-1790415329414/floor-01 Acceso-full.png",
+      "bytes": 139963,
+      "sha256": "da969af2970f753f63da10b414e8e706d7b9a4833fc5cd8f53fab183a141bae3"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/site-1790415329414/floor-01 Acceso.txt",
+      "bytes": 1603,
+      "sha256": "98f5dc1048c79db3d28bbd1aa6b0a2805aecdea0e7b268ab58488b6d54e916eb"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/site-1790415329414/floor-02 Segundo-viewport.png",
+      "bytes": 135956,
+      "sha256": "eb3e87372c25fdb10210e6d57f4721ce5893fc8202076ac6e5e8330f75534072"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/site-1790415329414/floor-02 Segundo-full.png",
+      "bytes": 136843,
+      "sha256": "059eeee0eabe9b71cfd99ed4c902049c95d07da8aa52fa92cae67f233f69a13f"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/site-1790415329414/floor-02 Segundo.txt",
+      "bytes": 1557,
+      "sha256": "0d5ec12eed110c18e6d929f0edc968a163b649c9d781e360ebb9a7b9334326ca"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/site-1790415329414/floor-03 Tercero-viewport.png",
+      "bytes": 137598,
+      "sha256": "c502f8b2bbda08dfecb6ad0736051a778a6dd427d18147c507abf520ea7b5db6"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/site-1790415329414/floor-03 Tercero-full.png",
+      "bytes": 138338,
+      "sha256": "135f64f454d947a58c18aedf91bfaa6b8c9ebdd88ec8f7cc9c4b8d5b34324efb"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/site-1790415329414/floor-03 Tercero.txt",
+      "bytes": 1580,
+      "sha256": "94c2cba818eb1d643f92adc01d27681745de35e1c5272c9fa1e4be41024a300e"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/site-1790415329414/final-viewport.png",
+      "bytes": 137294,
+      "sha256": "bf1f3053410cedcbaea6acd50b966bc271b22090792969e43228f2dced5a5da4"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/site-1790415329414/final-full.png",
+      "bytes": 136603,
+      "sha256": "c6c4b0acd1d500d2446513eb6cb98de7d17a873f10a12ba2d9b9028c252026da"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/site-1790415329414/final.txt",
+      "bytes": 1580,
+      "sha256": "94c2cba818eb1d643f92adc01d27681745de35e1c5272c9fa1e4be41024a300e"
+    }
+  ],
+  "checks": [],
+  "actorId": 234,
+  "finishedAt": "2026-09-26T09:35:42.235Z"
+}

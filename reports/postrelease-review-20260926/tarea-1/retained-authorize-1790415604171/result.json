@@ -1,0 +1,324 @@
+{
+  "stage": "retained-authorize",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "status": "BLOCKED_OR_DEFECT",
+  "startedAt": "2026-09-26T09:40:04.171Z",
+  "requests": [
+    {
+      "at": "2026-09-26T09:40:04.905Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415604890-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T09:40:05.856Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415605050-7"
+    },
+    {
+      "at": "2026-09-26T09:40:06.455Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415605868-10"
+    },
+    {
+      "at": "2026-09-26T09:40:06.462Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415605864-8"
+    },
+    {
+      "at": "2026-09-26T09:40:06.468Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415606462-11"
+    },
+    {
+      "at": "2026-09-26T09:40:07.054Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415606464-12"
+    },
+    {
+      "at": "2026-09-26T09:40:07.188Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415606471-13"
+    },
+    {
+      "at": "2026-09-26T09:40:07.572Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415607237-15"
+    },
+    {
+      "at": "2026-09-26T09:40:07.809Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415607239-18"
+    },
+    {
+      "at": "2026-09-26T09:40:07.874Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415607241-21"
+    },
+    {
+      "at": "2026-09-26T09:40:07.950Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415607267-24"
+    },
+    {
+      "at": "2026-09-26T09:40:08.181Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415607238-16"
+    },
+    {
+      "at": "2026-09-26T09:40:08.182Z",
+      "path": "/api/clientes/2583/credito",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415607058-14"
+    },
+    {
+      "at": "2026-09-26T09:40:08.294Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415607268-25"
+    },
+    {
+      "at": "2026-09-26T09:40:09.333Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415608512-35"
+    },
+    {
+      "at": "2026-09-26T09:40:09.345Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415609339-37"
+    },
+    {
+      "at": "2026-09-26T09:40:10.233Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415609347-38"
+    },
+    {
+      "at": "2026-09-26T09:40:10.595Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415610267-39"
+    },
+    {
+      "at": "2026-09-26T09:40:10.852Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415610269-42"
+    },
+    {
+      "at": "2026-09-26T09:40:10.869Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415610270-43"
+    },
+    {
+      "at": "2026-09-26T09:40:10.887Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415610270-44"
+    },
+    {
+      "at": "2026-09-26T09:40:10.967Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415610269-41"
+    },
+    {
+      "at": "2026-09-26T09:40:10.994Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415610268-40"
+    },
+    {
+      "at": "2026-09-26T09:40:11.207Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415610271-45"
+    },
+    {
+      "at": "2026-09-26T09:40:11.473Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415610271-46"
+    },
+    {
+      "at": "2026-09-26T09:40:12.494Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415611914-52"
+    },
+    {
+      "at": "2026-09-26T09:40:12.502Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415612497-54"
+    },
+    {
+      "at": "2026-09-26T09:40:13.222Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415612504-55"
+    },
+    {
+      "at": "2026-09-26T09:40:13.582Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415613251-56"
+    },
+    {
+      "at": "2026-09-26T09:40:13.841Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415613253-59"
+    },
+    {
+      "at": "2026-09-26T09:40:13.850Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415613254-60"
+    },
+    {
+      "at": "2026-09-26T09:40:13.859Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415613254-61"
+    },
+    {
+      "at": "2026-09-26T09:40:13.932Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415613252-58"
+    },
+    {
+      "at": "2026-09-26T09:40:13.997Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415613252-57"
+    },
+    {
+      "at": "2026-09-26T09:40:14.207Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415613254-62"
+    },
+    {
+      "at": "2026-09-26T09:40:14.465Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415613255-63"
+    },
+    {
+      "at": "2026-09-26T09:40:28.967Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415628225-65"
+    },
+    {
+      "at": "2026-09-26T09:40:29.778Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-authorize-1790415628999-66"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-authorize-1790415604171/blocked-viewport.png",
+      "bytes": 62314,
+      "sha256": "de24b25275949e025278a2c85f425a1c1aea6ab47a8c53b632107a8b9064ef60"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-authorize-1790415604171/blocked-full.png",
+      "bytes": 62314,
+      "sha256": "de24b25275949e025278a2c85f425a1c1aea6ab47a8c53b632107a8b9064ef60"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-authorize-1790415604171/blocked.txt",
+      "bytes": 645,
+      "sha256": "f70a387f655fc6923792dc568b8b798318046617397608c9bf9a82edf7a73898"
+    }
+  ],
+  "checks": [],
+  "actorId": 234,
+  "before": {
+    "clienteId": 2583,
+    "limiteCredito": "50000.00",
+    "saldoActual": "750.00",
+    "saldoAFavor": "0.00",
+    "creditoDisponible": "49250.00",
+    "puedeComprarCredito": true,
+    "diasCredito": 7,
+    "utilizacion": "1.50",
+    "totalVencido": "0.00",
+    "primerVencimiento": "2026-10-03",
+    "primeraCompra": "2026-09-26T09:36:41.965Z",
+    "ultimaActividad": "2026-09-26T09:37:35.125Z",
+    "antiguedad": [
+      {
+        "fechaVencimiento": "2026-10-03",
+        "pendiente": "750.00",
+        "diasVencido": 0,
+        "sinPlazo": false,
+        "estado": "VIGENTE"
+      }
+    ]
+  },
+  "error": "locator.selectOption: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Acción', { exact: true })\u001b[22m\n",
+  "finishedAt": "2026-09-26T09:40:32.319Z"
+}

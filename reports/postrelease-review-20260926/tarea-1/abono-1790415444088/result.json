@@ -1,0 +1,295 @@
+{
+  "stage": "abono",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "status": "PASS",
+  "startedAt": "2026-09-26T09:37:24.088Z",
+  "requests": [
+    {
+      "at": "2026-09-26T09:37:25.144Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-abono-1790415445117-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T09:37:26.652Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415445324-7"
+    },
+    {
+      "at": "2026-09-26T09:37:27.231Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415446666-10"
+    },
+    {
+      "at": "2026-09-26T09:37:27.237Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415446657-8"
+    },
+    {
+      "at": "2026-09-26T09:37:28.043Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415447462-15"
+    },
+    {
+      "at": "2026-09-26T09:37:28.052Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415448046-17"
+    },
+    {
+      "at": "2026-09-26T09:37:28.770Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415448055-18"
+    },
+    {
+      "at": "2026-09-26T09:37:29.144Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415448819-19"
+    },
+    {
+      "at": "2026-09-26T09:37:29.374Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415448822-22"
+    },
+    {
+      "at": "2026-09-26T09:37:29.418Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415448823-24"
+    },
+    {
+      "at": "2026-09-26T09:37:29.430Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415448823-23"
+    },
+    {
+      "at": "2026-09-26T09:37:29.507Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415448821-21"
+    },
+    {
+      "at": "2026-09-26T09:37:29.565Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415448820-20"
+    },
+    {
+      "at": "2026-09-26T09:37:29.750Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415448823-25"
+    },
+    {
+      "at": "2026-09-26T09:37:29.958Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415448824-26"
+    },
+    {
+      "at": "2026-09-26T09:37:31.062Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415450496-30"
+    },
+    {
+      "at": "2026-09-26T09:37:31.073Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415450495-29"
+    },
+    {
+      "at": "2026-09-26T09:37:31.111Z",
+      "path": "/api/locations",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415450497-31"
+    },
+    {
+      "at": "2026-09-26T09:37:31.441Z",
+      "path": "/api/caja/abonos-e3/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415450842-32"
+    },
+    {
+      "at": "2026-09-26T09:37:31.689Z",
+      "path": "/api/e5/avisos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415451077-33"
+    },
+    {
+      "at": "2026-09-26T09:37:31.907Z",
+      "path": "/api/caja/abonos-e3/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415451258-34"
+    },
+    {
+      "at": "2026-09-26T09:37:32.803Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415452228-36"
+    },
+    {
+      "at": "2026-09-26T09:37:32.838Z",
+      "path": "/api/caja/abonos-e3/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415452227-35"
+    },
+    {
+      "at": "2026-09-26T09:37:34.167Z",
+      "path": "/api/caja/abonos-e3/vista-previa",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415453012-37"
+    },
+    {
+      "at": "2026-09-26T09:37:35.981Z",
+      "path": "/api/caja/abonos-e3",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-abono-1790415454550-38"
+    },
+    {
+      "at": "2026-09-26T09:37:36.600Z",
+      "path": "/api/caja/abonos-e3/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415455984-39"
+    },
+    {
+      "at": "2026-09-26T09:37:37.417Z",
+      "path": "/api/clientes/2583/credito",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-abono-1790415456442-40"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/abono-1790415444088/review-abono-viewport.png",
+      "bytes": 129584,
+      "sha256": "9c6d1562fc627ac21bf831505d5a8e9968d8edf971730d0821fd2a13dbbcac25"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/abono-1790415444088/review-abono-full.png",
+      "bytes": 131478,
+      "sha256": "b9ff3858b9cf6eb25751c1d116c524d6388b9f80683d297f59fc7c24669e1614"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/abono-1790415444088/review-abono.txt",
+      "bytes": 1829,
+      "sha256": "54c24dfb4c3498b53836453f218bcc3781a78c3e7634f1c746488242322444be"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/abono-1790415444088/abono-viewport.png",
+      "bytes": 129385,
+      "sha256": "2cf7717f9a23120130700c95141c61dfe3a9cf3089bd6c68a876259c86b658f1"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/abono-1790415444088/abono-full.png",
+      "bytes": 120241,
+      "sha256": "111bd8ca3cbeb0d66be8ad57d3e393ae5207452f756edad4abf5df5958d3f73a"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/abono-1790415444088/abono.txt",
+      "bytes": 1720,
+      "sha256": "8d00337b211c6e3302b6476053da9e9d24f39e698c3c9c1a8603eaa9a48f13d3"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/abono-1790415444088/actual-receipt-link-viewport.png",
+      "bytes": 118399,
+      "sha256": "ffff56457592fba0253888b06a293f6afee8fb3009d8b5b035389e275eed3b75"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/abono-1790415444088/actual-receipt-link-full.png",
+      "bytes": 120215,
+      "sha256": "c770ecfaaf90347baf64f08d7d5677c4d2b9ef975120c9da33e5c4f4048a06e1"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/abono-1790415444088/actual-receipt-link.txt",
+      "bytes": 1720,
+      "sha256": "8d00337b211c6e3302b6476053da9e9d24f39e698c3c9c1a8603eaa9a48f13d3"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/abono-1790415444088/final-viewport.png",
+      "bytes": 118375,
+      "sha256": "536d34114aed54e21e38737d59b5023eca85e9e99e40d167aac979a31f5a03e1"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/abono-1790415444088/final-full.png",
+      "bytes": 120233,
+      "sha256": "7f937a3536cf92e1c452f8b88e6552af00deb081a2c8600fa423636755baad81"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/abono-1790415444088/final.txt",
+      "bytes": 1720,
+      "sha256": "8d00337b211c6e3302b6476053da9e9d24f39e698c3c9c1a8603eaa9a48f13d3"
+    }
+  ],
+  "checks": [
+    {
+      "status": 200,
+      "body": {
+        "clienteId": 2583,
+        "limiteCredito": "50000.00",
+        "saldoActual": "750.00",
+        "saldoAFavor": "0.00",
+        "creditoDisponible": "49250.00",
+        "puedeComprarCredito": true,
+        "diasCredito": 7,
+        "utilizacion": "1.50",
+        "totalVencido": "0.00",
+        "primerVencimiento": "2026-10-03",
+        "primeraCompra": "2026-09-26T09:36:41.965Z",
+        "ultimaActividad": "2026-09-26T09:37:35.125Z",
+        "antiguedad": [
+          {
+            "fechaVencimiento": "2026-10-03",
+            "pendiente": "750.00",
+            "diasVencido": 0,
+            "sinPlazo": false,
+            "estado": "VIGENTE"
+          }
+        ]
+      }
+    }
+  ],
+  "actorId": 234,
+  "finishedAt": "2026-09-26T09:37:38.125Z"
+}

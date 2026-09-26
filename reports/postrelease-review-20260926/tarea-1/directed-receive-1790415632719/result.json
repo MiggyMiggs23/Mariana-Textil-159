@@ -1,0 +1,296 @@
+{
+  "stage": "directed-receive",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "status": "BLOCKED_OR_DEFECT",
+  "startedAt": "2026-09-26T09:40:32.719Z",
+  "requests": [
+    {
+      "at": "2026-09-26T09:40:33.442Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-directed-receive-1790415633425-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T09:40:34.418Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415633583-7"
+    },
+    {
+      "at": "2026-09-26T09:40:35.002Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415634432-8"
+    },
+    {
+      "at": "2026-09-26T09:40:35.016Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415635006-11"
+    },
+    {
+      "at": "2026-09-26T09:40:35.034Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415634443-10"
+    },
+    {
+      "at": "2026-09-26T09:40:35.638Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415635046-13"
+    },
+    {
+      "at": "2026-09-26T09:40:35.724Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415635017-12"
+    },
+    {
+      "at": "2026-09-26T09:40:36.114Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415635781-15"
+    },
+    {
+      "at": "2026-09-26T09:40:36.362Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415635784-18"
+    },
+    {
+      "at": "2026-09-26T09:40:36.414Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415635787-21"
+    },
+    {
+      "at": "2026-09-26T09:40:36.471Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415635809-24"
+    },
+    {
+      "at": "2026-09-26T09:40:36.567Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415635783-16"
+    },
+    {
+      "at": "2026-09-26T09:40:36.631Z",
+      "path": "/api/clientes/2583/credito",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415635642-14"
+    },
+    {
+      "at": "2026-09-26T09:40:36.712Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415635811-25"
+    },
+    {
+      "at": "2026-09-26T09:40:37.508Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415636940-35"
+    },
+    {
+      "at": "2026-09-26T09:40:37.517Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415637512-37"
+    },
+    {
+      "at": "2026-09-26T09:40:38.229Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415637519-38"
+    },
+    {
+      "at": "2026-09-26T09:40:38.580Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415638261-39"
+    },
+    {
+      "at": "2026-09-26T09:40:38.850Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415638263-42"
+    },
+    {
+      "at": "2026-09-26T09:40:38.860Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415638264-43"
+    },
+    {
+      "at": "2026-09-26T09:40:38.876Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415638265-44"
+    },
+    {
+      "at": "2026-09-26T09:40:38.959Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415638263-41"
+    },
+    {
+      "at": "2026-09-26T09:40:39.006Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415638262-40"
+    },
+    {
+      "at": "2026-09-26T09:40:39.178Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415638265-45"
+    },
+    {
+      "at": "2026-09-26T09:40:39.482Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415638265-46"
+    },
+    {
+      "at": "2026-09-26T09:40:40.479Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415639914-49"
+    },
+    {
+      "at": "2026-09-26T09:40:40.495Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415639915-50"
+    },
+    {
+      "at": "2026-09-26T09:40:40.539Z",
+      "path": "/api/locations",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415639916-51"
+    },
+    {
+      "at": "2026-09-26T09:40:41.083Z",
+      "path": "/api/e5/avisos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415640483-52"
+    },
+    {
+      "at": "2026-09-26T09:40:41.452Z",
+      "path": "/api/caja/abonos-e3/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415640788-53"
+    },
+    {
+      "at": "2026-09-26T09:40:42.157Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415641588-55"
+    },
+    {
+      "at": "2026-09-26T09:40:42.478Z",
+      "path": "/api/e5/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415641586-54"
+    },
+    {
+      "at": "2026-09-26T09:40:53.979Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415653240-56"
+    },
+    {
+      "at": "2026-09-26T09:40:54.790Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415654009-57"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/directed-receive-1790415632719/blocked-viewport.png",
+      "bytes": 153728,
+      "sha256": "afd9cc27769786afd0c7c4d8644ec487027273562006edfc813a72a4be2e5b15"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/directed-receive-1790415632719/blocked-full.png",
+      "bytes": 212963,
+      "sha256": "b6a126aeddb70e4ef8b2f3d9e4660f3a1793cfccc51d8bdf3f3c2d0a8dff6024"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/directed-receive-1790415632719/blocked.txt",
+      "bytes": 2063,
+      "sha256": "2d58e44f3404b8aa024bfbfa2a1003ec181094d5b3ba56d64f6a0b4565362b9c"
+    }
+  ],
+  "checks": [],
+  "actorId": 234,
+  "before": {
+    "clienteId": 2583,
+    "limiteCredito": "50000.00",
+    "saldoActual": "750.00",
+    "saldoAFavor": "0.00",
+    "creditoDisponible": "49250.00",
+    "puedeComprarCredito": true,
+    "diasCredito": 7,
+    "utilizacion": "1.50",
+    "totalVencido": "0.00",
+    "primerVencimiento": "2026-10-03",
+    "primeraCompra": "2026-09-26T09:36:41.965Z",
+    "ultimaActividad": "2026-09-26T09:37:35.125Z",
+    "antiguedad": [
+      {
+        "fechaVencimiento": "2026-10-03",
+        "pendiente": "750.00",
+        "diasVencido": 0,
+        "sinPlazo": false,
+        "estado": "VIGENTE"
+      }
+    ]
+  },
+  "error": "locator.selectOption: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('Medio', { exact: true })\u001b[22m\n",
+  "finishedAt": "2026-09-26T09:41:03.497Z"
+}

@@ -1,0 +1,438 @@
+{
+  "stage": "salida-transfer",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "status": "BLOCKED_OR_DEFECT",
+  "startedAt": "2026-09-26T09:45:35.705Z",
+  "requests": [
+    {
+      "at": "2026-09-26T09:45:36.862Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415936838-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T09:45:37.803Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415937007-7"
+    },
+    {
+      "at": "2026-09-26T09:45:38.382Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415937809-8"
+    },
+    {
+      "at": "2026-09-26T09:45:38.393Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415938385-11"
+    },
+    {
+      "at": "2026-09-26T09:45:38.399Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415937816-10"
+    },
+    {
+      "at": "2026-09-26T09:45:39.121Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415938395-12"
+    },
+    {
+      "at": "2026-09-26T09:45:39.224Z",
+      "path": "/api/salidas/1",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415938407-13"
+    },
+    {
+      "at": "2026-09-26T09:45:39.518Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415939176-14"
+    },
+    {
+      "at": "2026-09-26T09:45:40.571Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415939716-34"
+    },
+    {
+      "at": "2026-09-26T09:45:40.580Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415940575-36"
+    },
+    {
+      "at": "2026-09-26T09:45:41.552Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415940583-37"
+    },
+    {
+      "at": "2026-09-26T09:45:41.909Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415941584-38"
+    },
+    {
+      "at": "2026-09-26T09:45:42.156Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415941587-41"
+    },
+    {
+      "at": "2026-09-26T09:45:42.189Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415941587-42"
+    },
+    {
+      "at": "2026-09-26T09:45:42.207Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415941587-43"
+    },
+    {
+      "at": "2026-09-26T09:45:42.283Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415941585-40"
+    },
+    {
+      "at": "2026-09-26T09:45:42.359Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415941585-39"
+    },
+    {
+      "at": "2026-09-26T09:45:42.509Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415941589-44"
+    },
+    {
+      "at": "2026-09-26T09:45:42.756Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415941590-45"
+    },
+    {
+      "at": "2026-09-26T09:45:43.002Z",
+      "path": "/api/salidas/1",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415941590-46"
+    },
+    {
+      "at": "2026-09-26T09:45:43.671Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415943106-49"
+    },
+    {
+      "at": "2026-09-26T09:45:43.883Z",
+      "path": "/api/salidas/1/documento",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415943105-48"
+    },
+    {
+      "at": "2026-09-26T09:45:45.337Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415944760-54"
+    },
+    {
+      "at": "2026-09-26T09:45:45.353Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415945341-56"
+    },
+    {
+      "at": "2026-09-26T09:45:46.064Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415945355-57"
+    },
+    {
+      "at": "2026-09-26T09:45:46.437Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415946111-58"
+    },
+    {
+      "at": "2026-09-26T09:45:46.699Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415946114-61"
+    },
+    {
+      "at": "2026-09-26T09:45:46.713Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415946114-62"
+    },
+    {
+      "at": "2026-09-26T09:45:46.749Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415946115-63"
+    },
+    {
+      "at": "2026-09-26T09:45:46.793Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415946113-60"
+    },
+    {
+      "at": "2026-09-26T09:45:46.868Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415946112-59"
+    },
+    {
+      "at": "2026-09-26T09:45:47.038Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415946115-64"
+    },
+    {
+      "at": "2026-09-26T09:45:47.314Z",
+      "path": "/api/salidas/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415946117-66"
+    },
+    {
+      "at": "2026-09-26T09:45:47.322Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415946116-65"
+    },
+    {
+      "at": "2026-09-26T09:45:47.369Z",
+      "path": "/api/users",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415946118-67"
+    },
+    {
+      "at": "2026-09-26T09:45:47.829Z",
+      "path": "/api/productos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415946118-68"
+    },
+    {
+      "at": "2026-09-26T09:45:48.192Z",
+      "path": "/api/salidas",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415947534-71"
+    },
+    {
+      "at": "2026-09-26T09:45:48.593Z",
+      "path": "/api/salidas/recepcion",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415947784-72"
+    },
+    {
+      "at": "2026-09-26T09:46:01.797Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415961066-73"
+    },
+    {
+      "at": "2026-09-26T09:46:02.647Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-salida-transfer-1790415961871-74"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/salida-transfer-1790415935705/authentic-salida-document-viewport.png",
+      "bytes": 69922,
+      "sha256": "4f8ab1903ddfe602d0698a5d6afdc797d01b0417ba7580c80bff235e15ead520"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/salida-transfer-1790415935705/authentic-salida-document-full.png",
+      "bytes": 69922,
+      "sha256": "4f8ab1903ddfe602d0698a5d6afdc797d01b0417ba7580c80bff235e15ead520"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/salida-transfer-1790415935705/authentic-salida-document.txt",
+      "bytes": 539,
+      "sha256": "910ef96334e37682af7078170aa91e53a7cbb009844a52a7cf99dc715de4516e"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/salida-transfer-1790415935705/salida-original.pdf",
+      "bytes": 1015701,
+      "sha256": "08cd9a5414e067c5632ebb0626d6b0d3547ead85696d4bbf3d73e20946e5de1d"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/salida-transfer-1790415935705/blocked-viewport.png",
+      "bytes": 101356,
+      "sha256": "7dc187a98341e4c43f146dcab177a820cb3aa1193bb4ce0760c0120cdbc77744"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/salida-transfer-1790415935705/blocked-full.png",
+      "bytes": 101356,
+      "sha256": "7dc187a98341e4c43f146dcab177a820cb3aa1193bb4ce0760c0120cdbc77744"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/salida-transfer-1790415935705/blocked.txt",
+      "bytes": 913,
+      "sha256": "5304a728cd0d90fdb6275229f581e8017b56af2a1fe4682b12361aa8aa24a90a"
+    }
+  ],
+  "checks": [],
+  "actorId": 234,
+  "sent": {
+    "id": 1,
+    "modalidad": "TRASLADO",
+    "folio": 1,
+    "folioFormateado": "OWN-000001",
+    "origenId": 835,
+    "destinoId": 836,
+    "nombreOrigen": "OWNER POSTREVIEW26",
+    "nombreDestino": "OWNER POSTREVIEW26 DESTINO",
+    "clienteId": null,
+    "nombreCliente": null,
+    "documentoVenta": null,
+    "autorizada": null,
+    "estado": "EN_TRANSITO",
+    "armadoPorId": 234,
+    "nombreArmadoPor": "Isolated postreview financial admin",
+    "fechaArmado": "2026-09-26T09:44:48.048Z",
+    "enviadoPorId": 234,
+    "nombreEnviadoPor": "Isolated postreview financial admin",
+    "fechaEnvio": "2026-09-26T09:44:50.785Z",
+    "recibidoPorId": null,
+    "nombreRecibidoPor": null,
+    "fechaRecepcion": null,
+    "canceladoPorId": null,
+    "nombreCanceladoPor": null,
+    "fechaCancelacion": null,
+    "entregadoPorId": null,
+    "fechaEntrega": null,
+    "motivoCancelacion": null,
+    "pisosRetorno": [
+      {
+        "id": 14,
+        "nombre": "01 Acceso"
+      },
+      {
+        "id": 15,
+        "nombre": "02 Segundo"
+      },
+      {
+        "id": 16,
+        "nombre": "03 Tercero"
+      }
+    ],
+    "notaEnvio": null,
+    "notaRecepcion": null,
+    "transportista": "OWNER TRANSPORTE NATIVO",
+    "viaje": null,
+    "transporteEfectivo": "OWNER TRANSPORTE NATIVO",
+    "uuidCliente": "7b228a44-524d-48d2-9154-8eab69e9efd1",
+    "createdAt": "2026-09-26T09:44:47.640Z",
+    "updatedAt": "2026-09-26T09:44:50.785Z",
+    "totalProductos": 1,
+    "totalRollos": 1,
+    "totalMetros": "10.000",
+    "totalKilos": "0.000",
+    "totalBolsas": "0.000",
+    "totalPiezas": "0.000",
+    "usuarioId": 234,
+    "nombreUsuario": "Isolated postreview financial admin",
+    "observaciones": null,
+    "totalCantidadSolicitada": "10.000",
+    "totalCantidadEnviada": "10.000",
+    "totalCantidadRecibida": "0.000",
+    "diferenciasPendientes": false,
+    "lineas": [
+      {
+        "id": 1,
+        "productoId": 2078,
+        "skuProducto": "OWNPOSALG-AZU",
+        "telaProducto": "OWNER POSTREVIEW26 ALGODON",
+        "colorProducto": "AZUL",
+        "unidadProducto": "METRO",
+        "cantidadSolicitada": "10.000",
+        "cantidadEnviada": "10.000",
+        "cantidadRecibida": "0.000",
+        "rollosSolicitados": 1,
+        "rollosEnviados": 1,
+        "rollosRecibidos": 0,
+        "nota": null
+      }
+    ],
+    "rollos": [
+      {
+        "id": 1,
+        "salidaId": 1,
+        "lineaId": 1,
+        "rolloId": 4,
+        "cantidadEnviada": "10.000",
+        "cantidadRecibida": null,
+        "recibido": false,
+        "notaDiferencia": null,
+        "serie": "10000004",
+        "estado": "EN_TRANSITO",
+        "cantidadActual": "10.000",
+        "productoId": 2078,
+        "sku": "OWNPOSALG-AZU",
+        "tela": "OWNER POSTREVIEW26 ALGODON",
+        "color": "AZUL",
+        "unidad": "METRO",
+        "diferencia": null
+      }
+    ]
+  },
+  "error": "locator.waitFor: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Confirmar recepción de todos los rollos', exact: true }) to be visible\u001b[22m\n",
+  "finishedAt": "2026-09-26T09:46:08.141Z"
+}

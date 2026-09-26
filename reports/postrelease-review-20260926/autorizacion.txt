@@ -1,0 +1,13 @@
+miguelestza: Cuando termines y liberes lo anterior, sigue con esto, con el procedimiento simple y en copia desechable. Cada tarea en su propio commit; si una se atora, documéntala y sigue.
+
+1. Repite el recorrido financiero completo sobre la versión ya liberada, para confirmar que las correcciones no rompieron nada: cobros, crédito, abonos, recibos, dirigido y retenido, remate, salidas y cierre de caja. Con capturas.
+
+2. Prueba de concurrencia real, que es donde han salido los 500: cinco usuarios entrando y trabajando al mismo tiempo en pantallas distintas, dos cajeros cobrando a la vez, tres escaneando en una auditoría y un ADMIN consultando reportes, todo simultáneo durante varios minutos. Reporta cualquier error de servidor, sesión perdida o lentitud, con el paso exacto que lo provocó.
+
+3. Termina la matriz de permisos: quedan 381 directas y 401 combinadas. Acaba todas las que puedas. Cualquier diferencia entre lo que la pantalla esconde y lo que la API permite es defecto: corrígelo.
+
+4. Revisa el sistema completo buscando fallas por tu cuenta: pantallas que truenen, errores técnicos visibles al usuario, operaciones que dejen algo a medias, o cualquier cosa que contradiga una regla de replit.md. Corrige lo que sea defecto claro y libéralo. Lo que sea decisión de negocio, anótalo sin resolverlo.
+
+5. Deja lista una lista corta para el propietario: qué quedó liberado hoy, qué sigue detenido y por qué, y qué debe probar él en pantalla, en orden.
+
+Informe único en reports/ con capturas, commits y lo detenido. Destruye las copias al terminar.

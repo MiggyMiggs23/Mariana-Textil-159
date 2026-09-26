@@ -1,0 +1,218 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+OWNER POSTREVIEW26
+1
+I
+
+Isolated postreview financial admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Caja operativa
+Cartera / Estado de cuenta
+Historial de cortes
+Historial de cortes
+
+Sesiones de todos los sitios, de la más reciente a la más antigua.
+
+Actualizar
+
+OWNER POSTREVIEW26 · Isolated postreview financial admin
+
+Abrió: 26 de septiembre de 2026 03:36 · Cerró: 26 de septiembre de 2026 03:46
+
+Estado: CERRADA · 3 cobrados
+
+Total
+$1,400.00
+Esperado
+$1,925.00
+Diferencia
+$0.00
+Ver corte
+Detalle de corte
+Envío completo al cierre
+Documentar envío completo
+Excel
+Reimprimir / PDF
+
+TURNO
+
+OWNER POSTREVIEW26
+
+Cajero: Isolated postreview financial admin
+
+CERRADA ($0.00)
+
+FECHAS
+
+Apertura: 26 sep 2026 03:36
+
+Cierre: 26 sep 2026 03:46
+
+Recibos de Abono (E3) de esta sesión
+
+E3-835-00000001
+
+OWNER POSTREVIEW26 CLIENTE
+
+$250.00
+
+CAJA
+
+Formas de Pago
+Forma	Tickets	Importe
+EFECTIVO	2	$1,400.00
+TRANSFERENCIA	0	$0.00
+FACTURADO	0	$0.00
+CREDITO	0	$0.00
+Cuentas Destino
+Cuenta / Forma	Importe
+
+Efectivo
+EFECTIVO
+	$1,375.00
+
+Cuentas No Fiscales
+TRANSFERENCIA
+	$0.00
+
+Cuentas Fiscales
+TRANSFERENCIA
+	$0.00
+
+Ventas a Crédito
+CREDITO
+	$0.00
+Facturación y Medios de Pago
+Estado	Tck	Subtotal	IVA	Total	Efectivo	Transf.	Crédito
+Facturado	0	$0.00	$0.00	$0.00	$0.00	$0.00	$0.00
+Sin factura	2	$1,400.00	$0.00	$1,400.00	$1,400.00	$0.00	$0.00
+Tipo de Venta
+Modalidad	Cantidad	Importe
+ROLLOS	30.00 Mts.	$2,400.00
+Productos Top
+SKU	Tela / Color	Cantidad	Importe
+OWNPOSALG-AZU	ROLLO · OWNER POSTREVIEW26 ALGODON - AZUL	30.00 Mts.	$2,400.00
+Tickets Cobrados (2)
+Folio	Hora	Importe
+F-1	03:37:08	$1,000.00
+F-3	03:43:35	$400.00
+Arqueo de Efectivo Final
+Fondo Inicializado
+$0.00
+Ingresos Efectivo Registrados
+$1,925.00
+Efectivo Esperado (Sistema)
+$1,925.00
+Efectivo Contado (Cajero)
+$1,925.00
+Diferencia de Arqueo
+$0.00
+Salidas de Dinero (1)
+OWNER POSTREVIEW26 gasto sintético ordinario
+Efectivo
+·
+03:38
+·
+EXTRAORDINARIA
+$25.00
+Pendiente
+Aceptar
+Reclamar
+Trazabilidad del efectivo esperado
+FÓRMULA E2
+
+Fondo inicial + tickets en efectivo + abonos físicos + cobros retenidos − salidas físicas.
+
+Fondo inicial
+$0.00
+Cobros físicos de tickets
+$1,400.00
+Abonos físicos de crédito
+$250.00
+Cobros físicos retenidos
+$300.00
+Salidas físicas
+− $25.00
+Efectivo esperado
+$1,925.00
+DOCUMENTOS QUE COMPONEN EL CÁLCULO
+Origen	Documento y evidencia	Importe
+Fondo inicial	
+ID 1
+Referencia: Sesión de caja #1
+Fecha: 26 sep 2026, 3:36 a.m.
+Registró: Isolated postreview financial admin
+	$0.00
+Ticket	
+1
+	$1,000.00
+Ticket	
+3
+	$400.00
+Abono de crédito	
+ID ABONO_ORDINARIO:bd340aa0-bff1-4352-9fc5-45057752922b
+Motivo: Abono real recibido desde Caja
+Fecha: 26 sep 2026, 3:37 a.m.
+Registró: Isolated postreview financial admin
+	$250.00
+Cobro retenido	
+ID COBRO_PENDIENTE:fd5849b4-bfab-40e3-b07d-c471cdbed06f
+Referencia: OWNER-retained-receive
+Motivo: OWNER POSTREVIEW dinero real sintético retained-receive
+Fecha: 26 sep 2026, 3:39 a.m.
+Registró: Isolated postreview financial admin
+	$300.00
+Salida física	
+ID 1
+Motivo: OWNER POSTREVIEW26 gasto sintético ordinario
+Fecha: 26 sep 2026, 3:38 a.m.
+Registró: Isolated postreview financial admin
+	− $25.00
+Imprimir Corte
+Cerrar
+Cerrar

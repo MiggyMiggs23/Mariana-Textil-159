@@ -1,0 +1,71 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+OWNER POSTREVIEW26 DESTINO
+1
+I
+
+Isolated postreview financial admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Salidas
+
+Historial completo de salidas y movimientos entre almacenes.
+
+Excel
+Nueva Salida
+Nueva salida para venta a cliente
+Historial
+Recepción
+A mostrador
+Extraordinarias
+Escanear salida para recibir
+Pendientes para este sitio
+
+No hay salidas en tránsito por recibir.
+
+Salida recibida
+El folio OWN-000001 y todos sus rollos ya están en el destino.

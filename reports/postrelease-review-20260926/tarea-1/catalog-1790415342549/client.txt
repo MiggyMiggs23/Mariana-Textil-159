@@ -1,0 +1,291 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Vista Global
+I
+
+Isolated postreview financial admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Clientes
+
+Directorio, cartera y comportamiento comercial.
+
+Nuevo cliente
+Clientes
+Cartera
+Análisis
+Comportamiento de pago
+Incobrables
+Activos
+Inactivos
+Todos
+Ordenar clientes
+Nombre A–Z
+Mayor demanda
+Deuda pendiente primero
+Periodo de movimientos
+Último mes
+Últimos tres meses
+Último año
+Todo el tiempo
+
+Movimientos (Todo el tiempo): ventas, notas y abonos del periodo elegido. Última actividad: fecha del último movimiento, sin limitar al periodo.
+
+2,576 clientes encontrados
+Buscando…
+Cliente
+	Teléfono
+	RFC
+	Estado	Deuda
+	Límite de crédito
+	Movimientos
+	Última actividad
+	Acciones
+"Facbricolor"	5559535138	FAC091221V40	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+"Subli Express"	—	SEX140807D57	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+"Uniforma Operadora De Tiendas"	53841865	UOT110705NY4	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+3Bh Creations SA DE CV	—	BCR160426UN8	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+88 Bag	5551097323	OOB071016AA1	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Aarón Arvizu Rodríguez	(442) 215 02 73 y 295 03	AIRA740701E5A	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abaco Offset Y Digital SA DE CV	91803931	AOD190121UR9	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abadis Elite SA DE CV	55222191	AEL140924JQ2	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abastecedora De Colchones Y Accesorios SA DE CV	—	ACA0402033E9	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abastecedora De Insumos Para El Deporte, Estimulacion Y Rehabilitacion	5556423798	AID1803161C2	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abastecedora De Mercerias	8183753360 EXT 28	AME000117SH1	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abastecedora Industrial Elimar	5557193114	AIE100218H75	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abasto Hospitalario	5517688747	AHO010620PG8	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abc Uniformes	51157207	AUN990119MYA	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abdon Ruiz Mira Flores	—	—	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abeja Sonica	—	ASO130524731	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abel Campuzano Flores	7223319001	CAFA820224DE3	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abel Dorantes Paredes	7727364548 / 017597231614	DOPA700507194	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abel Galvez	24545952 / 14503656	—	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abel Leivis Reyes Gonzalez	5523007027	REGA800614VE6	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abel Márquez	013957851161 / 851111	—	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abigail De Los Santos (Martinez)	2381513560	—	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abraham Farca	—	—	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abraham Islas Martinez	5524128381	IAMA841028HD9	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abraham Lopez	55222338	—	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abraham Sanchez Onofre	—	SAOA601009CA9	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abraham Solorio Ortuño	55423862	SOOA830316V31	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Abt Promo Max	5551057435	APM1912022V2	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Acabados Y Empaques Mexicanos	5557405096	AEM970611TX5	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Acosta Martinez Cirila	—	AOMC680707TZ2	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Action Sport Retailer De Mexico	998 151 0867	ASR9911122F4	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Acty Gym Gimnasia Y Estimulacion Temprana SC	55248290	AGG910206TH2	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Adan De Jesus Rivera Resendiz	55 1023 8070	RIRA850903L89	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Adan De Luis Romero	5518140015	LURA691120UB3	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Adan Gerardo Lopez Arteaga	5615581716	LOAA830716139	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Adan Rodrigo Calixto Ayala	55 1745 0308	CAAA7705285J7	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Addy Beatriz Gallareta Gonzalez	—	GAGA550410BJ3	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Adel Al Amer	55 3436 0833	AAAD8604303J8	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Administradora H Huatulco	5543411218	AHH120110961	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Adrian Alberto Guevara Bernabe	5564988689	GUBA841102G99	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Adrian De Lucio Perez	5532389272	LUPA970730DD8	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Adrian Roja y/o Fernando	—	—	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Adriana Gomez	5526649178	—	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Adriana Isabel Aragon Martinez	5536645306	AAMA841213S73	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Adriana Navarrete Martinez	7222611078	NAMA750316L99	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Adriana Nelly Herrera Solis	—	HESA740908M52	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Adriana Ramirez Carrillo	3336375678	RACA920303FP6	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Adriana Rodriguez Carrillo	5530792346	ROCA9209066V2	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Af.Mob	55837556	AFM170118KJ7	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+Agencia De Fundraising Comunicacion Y Sustentabilidad S DE RL DE CV	5532321552	AFC1506176K5	Activo	
+$0.00
+Sin deuda
+	$150,000.00	0	Sin movimientos	
+1–50 de 2,576 · 50 por página
+Página 1 de 52
+Cliente creado
+OWNER POSTREVIEW26 CLIENTE

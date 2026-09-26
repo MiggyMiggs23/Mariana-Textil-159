@@ -1,0 +1,190 @@
+{
+  "stage": "retained-gate",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "status": "PASS",
+  "startedAt": "2026-09-26T09:37:39.563Z",
+  "requests": [
+    {
+      "at": "2026-09-26T09:37:40.835Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-retained-gate-1790415460663-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T09:37:41.800Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-gate-1790415460956-7"
+    },
+    {
+      "at": "2026-09-26T09:37:42.422Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-gate-1790415461814-8"
+    },
+    {
+      "at": "2026-09-26T09:37:42.423Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-gate-1790415461822-10"
+    },
+    {
+      "at": "2026-09-26T09:37:42.440Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-gate-1790415462433-11"
+    },
+    {
+      "at": "2026-09-26T09:37:43.017Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-gate-1790415462434-12"
+    },
+    {
+      "at": "2026-09-26T09:37:43.870Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-gate-1790415463286-17"
+    },
+    {
+      "at": "2026-09-26T09:37:43.881Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-gate-1790415463873-19"
+    },
+    {
+      "at": "2026-09-26T09:37:44.616Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-gate-1790415463885-20"
+    },
+    {
+      "at": "2026-09-26T09:37:45.008Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-gate-1790415464668-21"
+    },
+    {
+      "at": "2026-09-26T09:37:45.240Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-gate-1790415464679-24"
+    },
+    {
+      "at": "2026-09-26T09:37:45.295Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-gate-1790415464680-26"
+    },
+    {
+      "at": "2026-09-26T09:37:45.296Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-gate-1790415464679-25"
+    },
+    {
+      "at": "2026-09-26T09:37:45.360Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-gate-1790415464679-23"
+    },
+    {
+      "at": "2026-09-26T09:37:45.447Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-gate-1790415464677-22"
+    },
+    {
+      "at": "2026-09-26T09:37:45.616Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-gate-1790415464682-27"
+    },
+    {
+      "at": "2026-09-26T09:37:45.819Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-retained-gate-1790415464682-28"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-gate-1790415459563/retained-ui-entry-viewport.png",
+      "bytes": 78910,
+      "sha256": "6f5d3a17fbe931b8aa121a09fdffd4901558163ce6a468cad621f5b549004cba"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-gate-1790415459563/retained-ui-entry-full.png",
+      "bytes": 66402,
+      "sha256": "6a43f93b21e5ea7b3d2f961071b9f68894e09165fa3645a2a54e9b40fac3049c"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-gate-1790415459563/retained-ui-entry.txt",
+      "bytes": 659,
+      "sha256": "dce370e1f52303b023cc7efd2bd5b9adebb2398726867b13696a60fe8c04f48c"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-gate-1790415459563/final-viewport.png",
+      "bytes": 66435,
+      "sha256": "30b69b9e43a0542e2f97a58d03bb7f6e71b0c461dbd11d17184cf31039670e97"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-gate-1790415459563/final-full.png",
+      "bytes": 66420,
+      "sha256": "f1b26a76a3de9dc41a1f87882f5c70950252a619ae746f6b2b026e29e5e052ed"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/retained-gate-1790415459563/final.txt",
+      "bytes": 659,
+      "sha256": "dce370e1f52303b023cc7efd2bd5b9adebb2398726867b13696a60fe8c04f48c"
+    }
+  ],
+  "checks": [
+    {
+      "capabilityRead": {
+        "status": 200,
+        "body": {
+          "enabled": true,
+          "capacidades": {
+            "puedeRecibir": true,
+            "puedePreparar": true,
+            "puedeAutorizar": true,
+            "puedeRechazar": false,
+            "puedeDevolver": false,
+            "puedeVerAvisos": true,
+            "puedeImprimir": true,
+            "preparacionADisponible": false
+          }
+        }
+      }
+    },
+    {
+      "next": "Native retained receipt, ADMIN directed authorization and balance assertions require current enabled UI inspection; not passed merely by this availability check"
+    }
+  ],
+  "actorId": 234,
+  "finishedAt": "2026-09-26T09:37:46.730Z"
+}

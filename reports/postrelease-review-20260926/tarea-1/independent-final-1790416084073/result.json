@@ -1,0 +1,754 @@
+{
+  "stage": "independent-final",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "status": "BLOCKED_OR_DEFECT",
+  "startedAt": "2026-09-26T09:48:04.075Z",
+  "requests": [
+    {
+      "at": "2026-09-26T09:48:06.221Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-independent-final-1790416085864-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T09:48:07.738Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416086768-7"
+    },
+    {
+      "at": "2026-09-26T09:48:08.258Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416087744-8"
+    },
+    {
+      "at": "2026-09-26T09:48:08.270Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416088262-11"
+    },
+    {
+      "at": "2026-09-26T09:48:08.465Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416087758-10"
+    },
+    {
+      "at": "2026-09-26T09:48:08.902Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416088272-12"
+    },
+    {
+      "at": "2026-09-26T09:48:09.238Z",
+      "path": "/api/tickets/1",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416088472-13"
+    },
+    {
+      "at": "2026-09-26T09:48:09.256Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416088956-14"
+    },
+    {
+      "at": "2026-09-26T09:48:09.627Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416088958-17"
+    },
+    {
+      "at": "2026-09-26T09:48:09.775Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416088992-24"
+    },
+    {
+      "at": "2026-09-26T09:48:09.790Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416088993-25"
+    },
+    {
+      "at": "2026-09-26T09:48:09.811Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416088960-20"
+    },
+    {
+      "at": "2026-09-26T09:48:10.006Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416088991-23"
+    },
+    {
+      "at": "2026-09-26T09:48:10.127Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416088994-26"
+    },
+    {
+      "at": "2026-09-26T09:48:10.178Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416088957-15"
+    },
+    {
+      "at": "2026-09-26T09:48:10.342Z",
+      "path": "/api/admin/dashboard/realtime",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416088995-28"
+    },
+    {
+      "at": "2026-09-26T09:48:10.442Z",
+      "path": "/api/admin/dashboard/realtime/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416088996-29"
+    },
+    {
+      "at": "2026-09-26T09:48:10.602Z",
+      "path": "/api/admin/cuentas-destino",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416088995-27"
+    },
+    {
+      "at": "2026-09-26T09:48:10.871Z",
+      "path": "/api/tickets/2",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416089242-31"
+    },
+    {
+      "at": "2026-09-26T09:48:11.702Z",
+      "path": "/api/tickets/3",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416090877-32"
+    },
+    {
+      "at": "2026-09-26T09:48:12.645Z",
+      "path": "/api/clientes/2583/credito",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416091709-33"
+    },
+    {
+      "at": "2026-09-26T09:48:13.679Z",
+      "path": "/api/sesiones-caja/1/corte",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-independent-final-1790416092649-34"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/independent-final-1790416084073/blocked-viewport.png",
+      "bytes": 156504,
+      "sha256": "6688f5dc2c4b2c04b23a34d3d7967fc1764e404b3d19781ede188fd4980656a5"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/independent-final-1790416084073/blocked-full.png",
+      "bytes": 306795,
+      "sha256": "d61591f6b945ab4a959ee11f9dfe17de4971a2d7046de471dd5eef20edabf70a"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/independent-final-1790416084073/blocked.txt",
+      "bytes": 3135,
+      "sha256": "f43f9adf00fc662d5e5d8c8b4f244efb2ff4f0862ba4c8d6daac9808fe0a6812"
+    }
+  ],
+  "checks": [
+    {
+      "sale": {
+        "id": 1,
+        "folio": 1,
+        "ubicacionId": 835,
+        "nombreUbicacion": "OWNER POSTREVIEW26",
+        "usuarioTerminalId": 234,
+        "nombreUsuarioTerminal": "Isolated postreview financial admin",
+        "clienteId": 2583,
+        "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+        "notaSinPrecios": false,
+        "direccionEntregaEfectiva": null,
+        "subtotal": "1000.00",
+        "iva": "0.00",
+        "tasaIva": "0.1600",
+        "total": "1000.00",
+        "estado": "VENDIDO",
+        "cobrado": true,
+        "cobradoAt": "2026-09-26T09:37:08.780Z",
+        "usuarioCajaId": 234,
+        "nombreUsuarioCaja": null,
+        "facturado": false,
+        "sesionCajaId": 1,
+        "uuidCliente": "b9b856b9-6949-44e4-9b82-1192250de14c",
+        "createdAt": "2026-09-26T09:36:41.965Z",
+        "canceladoAt": null,
+        "canceladoPor": null,
+        "nombreUsuarioCancelacion": null,
+        "motivoCancelacion": null,
+        "autorizadoPor": null,
+        "nombreUsuarioAutorizacion": null,
+        "esCredito": false,
+        "importeCredito": "0.00",
+        "diasPlazo": null,
+        "fechaVencimiento": null,
+        "saldoPendiente": "0.00",
+        "estadoNota": null,
+        "telefonoCliente": null,
+        "correoCliente": null,
+        "direccionCliente": null,
+        "remate": false,
+        "rollosRemate": [],
+        "documentoTipo": "TICKET",
+        "autorizacionEstado": "NO_APLICA",
+        "nombreDestinatario": null,
+        "direccionEntregaSnapshot": null,
+        "convertidoANotaPorCobro": false,
+        "diasCreditoCliente": 7,
+        "viaje": null,
+        "salidas": [],
+        "lineas": [
+          {
+            "id": 1,
+            "ticketId": 1,
+            "rolloId": 1,
+            "productoId": 2078,
+            "tipo": "NORMAL",
+            "cantidad": "10.000",
+            "precioUnitario": "100.00",
+            "precioSugerido": "100.00",
+            "importe": "1000.00",
+            "skuProducto": "OWNPOSALG-AZU",
+            "telaProducto": "OWNER POSTREVIEW26 ALGODON",
+            "colorProducto": "AZUL",
+            "unidadProducto": "METRO",
+            "serieRollo": "10000001",
+            "nombreUbicacion": "OWNER POSTREVIEW26",
+            "costoUnitarioCongelado": "50.00",
+            "costoTotalCongelado": "500.00",
+            "costoFuente": "EXACT_ROLL",
+            "margen": "500.00"
+          }
+        ],
+        "pagos": [
+          {
+            "id": 1,
+            "ticketId": 1,
+            "formaPago": "EFECTIVO",
+            "importe": "1000.00",
+            "referencia": null,
+            "createdAt": "2026-09-26T09:37:08.616Z",
+            "usuarioId": 234,
+            "nombreUsuario": "Isolated postreview financial admin"
+          }
+        ]
+      }
+    },
+    {
+      "sale": {
+        "id": 2,
+        "folio": 2,
+        "ubicacionId": 835,
+        "nombreUbicacion": "OWNER POSTREVIEW26",
+        "usuarioTerminalId": 234,
+        "nombreUsuarioTerminal": "Isolated postreview financial admin",
+        "clienteId": 2583,
+        "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+        "notaSinPrecios": false,
+        "direccionEntregaEfectiva": null,
+        "subtotal": "1000.00",
+        "iva": "0.00",
+        "tasaIva": "0.1600",
+        "total": "1000.00",
+        "estado": "VENDIDO",
+        "cobrado": false,
+        "cobradoAt": null,
+        "usuarioCajaId": null,
+        "nombreUsuarioCaja": null,
+        "facturado": false,
+        "sesionCajaId": 1,
+        "uuidCliente": "277271f0-eda4-4b3e-94f6-c1ce8e545cb3",
+        "createdAt": "2026-09-26T09:36:55.632Z",
+        "canceladoAt": null,
+        "canceladoPor": null,
+        "nombreUsuarioCancelacion": null,
+        "motivoCancelacion": null,
+        "autorizadoPor": 234,
+        "nombreUsuarioAutorizacion": null,
+        "esCredito": true,
+        "importeCredito": "1000.00",
+        "diasPlazo": 7,
+        "fechaVencimiento": "2026-10-03",
+        "saldoPendiente": "450.00",
+        "estadoNota": "ABONO_PARCIAL",
+        "telefonoCliente": null,
+        "correoCliente": null,
+        "direccionCliente": null,
+        "remate": false,
+        "rollosRemate": [],
+        "documentoTipo": "NOTA",
+        "autorizacionEstado": "AUTORIZADA",
+        "nombreDestinatario": null,
+        "direccionEntregaSnapshot": null,
+        "convertidoANotaPorCobro": false,
+        "diasCreditoCliente": 7,
+        "viaje": null,
+        "salidas": [],
+        "lineas": [
+          {
+            "id": 2,
+            "ticketId": 2,
+            "rolloId": 2,
+            "productoId": 2078,
+            "tipo": "NORMAL",
+            "cantidad": "10.000",
+            "precioUnitario": "100.00",
+            "precioSugerido": "100.00",
+            "importe": "1000.00",
+            "skuProducto": "OWNPOSALG-AZU",
+            "telaProducto": "OWNER POSTREVIEW26 ALGODON",
+            "colorProducto": "AZUL",
+            "unidadProducto": "METRO",
+            "serieRollo": "10000002",
+            "nombreUbicacion": "OWNER POSTREVIEW26",
+            "costoUnitarioCongelado": "50.00",
+            "costoTotalCongelado": "500.00",
+            "costoFuente": "EXACT_ROLL",
+            "margen": "500.00"
+          }
+        ],
+        "pagos": []
+      }
+    },
+    {
+      "sale": {
+        "id": 3,
+        "folio": 3,
+        "ubicacionId": 835,
+        "nombreUbicacion": "OWNER POSTREVIEW26",
+        "usuarioTerminalId": 234,
+        "nombreUsuarioTerminal": "Isolated postreview financial admin",
+        "clienteId": 2583,
+        "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+        "notaSinPrecios": false,
+        "direccionEntregaEfectiva": null,
+        "subtotal": "400.00",
+        "iva": "0.00",
+        "tasaIva": "0.1600",
+        "total": "400.00",
+        "estado": "VENDIDO",
+        "cobrado": true,
+        "cobradoAt": "2026-09-26T09:43:35.168Z",
+        "usuarioCajaId": 234,
+        "nombreUsuarioCaja": null,
+        "facturado": false,
+        "sesionCajaId": 1,
+        "uuidCliente": "4705dc0b-75d3-4116-ba01-a0e033df49fc",
+        "createdAt": "2026-09-26T09:43:22.502Z",
+        "canceladoAt": null,
+        "canceladoPor": null,
+        "nombreUsuarioCancelacion": null,
+        "motivoCancelacion": null,
+        "autorizadoPor": null,
+        "nombreUsuarioAutorizacion": null,
+        "esCredito": false,
+        "importeCredito": "0.00",
+        "diasPlazo": null,
+        "fechaVencimiento": null,
+        "saldoPendiente": "0.00",
+        "estadoNota": null,
+        "telefonoCliente": null,
+        "correoCliente": null,
+        "direccionCliente": null,
+        "remate": true,
+        "rollosRemate": [
+          3
+        ],
+        "documentoTipo": "TICKET",
+        "autorizacionEstado": "NO_APLICA",
+        "nombreDestinatario": null,
+        "direccionEntregaSnapshot": null,
+        "convertidoANotaPorCobro": false,
+        "diasCreditoCliente": 7,
+        "viaje": null,
+        "salidas": [],
+        "lineas": [
+          {
+            "id": 3,
+            "ticketId": 3,
+            "rolloId": 3,
+            "productoId": 2078,
+            "tipo": "NORMAL",
+            "cantidad": "10.000",
+            "precioUnitario": "40.00",
+            "precioSugerido": "100.00",
+            "importe": "400.00",
+            "skuProducto": "OWNPOSALG-AZU",
+            "telaProducto": "OWNER POSTREVIEW26 ALGODON",
+            "colorProducto": "AZUL",
+            "unidadProducto": "METRO",
+            "serieRollo": "10000003",
+            "nombreUbicacion": "OWNER POSTREVIEW26",
+            "costoUnitarioCongelado": "50.00",
+            "costoTotalCongelado": "500.00",
+            "costoFuente": "EXACT_ROLL",
+            "margen": "-100.00"
+          }
+        ],
+        "pagos": [
+          {
+            "id": 2,
+            "ticketId": 3,
+            "formaPago": "EFECTIVO",
+            "importe": "400.00",
+            "referencia": null,
+            "createdAt": "2026-09-26T09:43:35.004Z",
+            "usuarioId": 234,
+            "nombreUsuario": "Isolated postreview financial admin"
+          }
+        ]
+      }
+    },
+    {
+      "credit": {
+        "clienteId": 2583,
+        "limiteCredito": "50000.00",
+        "saldoActual": "450.00",
+        "saldoAFavor": "0.00",
+        "creditoDisponible": "49550.00",
+        "puedeComprarCredito": true,
+        "diasCredito": 7,
+        "utilizacion": "0.90",
+        "totalVencido": "0.00",
+        "primerVencimiento": "2026-10-03",
+        "primeraCompra": "2026-09-26T09:36:41.965Z",
+        "ultimaActividad": "2026-09-26T09:43:22.502Z",
+        "antiguedad": [
+          {
+            "fechaVencimiento": "2026-10-03",
+            "pendiente": "450.00",
+            "diasVencido": 0,
+            "sinPlazo": false,
+            "estado": "VIGENTE"
+          }
+        ]
+      }
+    },
+    {
+      "cut": {
+        "versionCorte": "e9:v1:11a18e2cb6f5d2393836dfd1bb2131c5a94c3e751e2d389d3cd25269e638b912",
+        "sesion": {
+          "id": 1,
+          "ubicacionId": 835,
+          "nombreUbicacion": "OWNER POSTREVIEW26",
+          "usuarioId": 234,
+          "nombreUsuario": "Isolated postreview financial admin",
+          "abiertaAt": "2026-09-26T09:36:29.819Z",
+          "cerradaAt": "2026-09-26T09:46:58.633Z",
+          "fondoInicial": "0.00",
+          "efectivoContado": "1925.00",
+          "estado": "CERRADA"
+        },
+        "formasPago": [
+          {
+            "formaPago": "EFECTIVO",
+            "importe": "1400.00",
+            "pagosCount": 2,
+            "ticketsCount": 2
+          },
+          {
+            "formaPago": "TRANSFERENCIA",
+            "importe": "0.00",
+            "pagosCount": 0,
+            "ticketsCount": 0
+          },
+          {
+            "formaPago": "FACTURADO",
+            "importe": "0.00",
+            "pagosCount": 0,
+            "ticketsCount": 0
+          },
+          {
+            "formaPago": "CREDITO",
+            "importe": "0.00",
+            "pagosCount": 0,
+            "ticketsCount": 0
+          }
+        ],
+        "cuentasDestino": [
+          {
+            "formaPago": "EFECTIVO",
+            "cuentaDestino": "CAJA_FISICA",
+            "importe": "1375.00"
+          },
+          {
+            "formaPago": "TRANSFERENCIA",
+            "cuentaDestino": "CUENTA_NO_FISCAL",
+            "importe": "0.00"
+          },
+          {
+            "formaPago": "TRANSFERENCIA",
+            "cuentaDestino": "CUENTA_FISCAL",
+            "importe": "0.00"
+          },
+          {
+            "formaPago": "CREDITO",
+            "cuentaDestino": "CUENTAS_POR_COBRAR",
+            "importe": "0.00"
+          }
+        ],
+        "salidas": [
+          {
+            "id": 1,
+            "monto": "25.00",
+            "motivo": "OWNER POSTREVIEW26 gasto sintético ordinario",
+            "proveedorId": null,
+            "cuentaOrigen": "CAJA_FISICA",
+            "createdAt": "2026-09-26T09:38:18.245Z",
+            "proveedor": null,
+            "e4": {
+              "tipo": "EXTRAORDINARIA",
+              "estado": "PENDIENTE",
+              "version": 0,
+              "claveOperacion": "ee55cbf5-cfbd-40b6-bd78-0d244641c173",
+              "historial": [],
+              "desbloqueoCaja": null
+            }
+          }
+        ],
+        "salidasPorCuenta": {
+          "CAJA_FISICA": "25.00",
+          "CUENTA_NO_FISCAL": "0.00",
+          "CUENTA_FISCAL": "0.00"
+        },
+        "facturacion": [
+          {
+            "facturado": true,
+            "ticketsCount": 0,
+            "subtotal": "0.00",
+            "iva": "0.00",
+            "importe": "0.00",
+            "efectivo": "0.00",
+            "transferencia": "0.00",
+            "credito": "0.00"
+          },
+          {
+            "facturado": false,
+            "ticketsCount": 2,
+            "subtotal": "1400.00",
+            "iva": "0.00",
+            "importe": "1400.00",
+            "efectivo": "1400.00",
+            "transferencia": "0.00",
+            "credito": "0.00"
+          }
+        ],
+        "metreado": [
+          {
+            "tipo": "NORMAL",
+            "unidad": "METRO",
+            "ticketsCount": 3,
+            "cantidad": "30.000",
+            "importe": "2400.00"
+          }
+        ],
+        "productos": [
+          {
+            "productoId": 2078,
+            "sku": "OWNPOSALG-AZU",
+            "tela": "OWNER POSTREVIEW26 ALGODON",
+            "color": "AZUL",
+            "tipo": "NORMAL",
+            "unidad": "METRO",
+            "cantidad": "30.000",
+            "importe": "2400.00"
+          }
+        ],
+        "pendientes": [],
+        "ticketsCobradosDetalle": [
+          {
+            "ticketId": 1,
+            "folio": 1,
+            "importe": "1000.00",
+            "cobradoAt": "2026-09-26T09:37:08.780Z"
+          },
+          {
+            "ticketId": 3,
+            "folio": 3,
+            "importe": "400.00",
+            "cobradoAt": "2026-09-26T09:43:35.168Z"
+          }
+        ],
+        "ticketsCobrados": 2,
+        "cancelaciones": [],
+        "fondoInicial": "0.00",
+        "totalCobrado": "1400.00",
+        "ivaCobrado": "0.00",
+        "efectivoEsperado": "1925.00",
+        "efectivoDesglose": {
+          "version": "E2",
+          "fondoInicial": "0.00",
+          "cobrosTickets": "1400.00",
+          "abonosFisicos": "250.00",
+          "cobrosRetenidos": "300.00",
+          "salidasFisicas": "25.00",
+          "efectivoEsperado": "1925.00",
+          "documentos": [
+            {
+              "origen": "FONDO_INICIAL",
+              "id": "1",
+              "folio": null,
+              "importe": "0.00",
+              "href": null,
+              "evidencia": {
+                "referencia": "Sesión de caja #1",
+                "motivo": null,
+                "fecha": "2026-09-26T09:36:29.819Z",
+                "usuarioId": 234,
+                "proveedorId": null,
+                "usuarioNombre": "Isolated postreview financial admin",
+                "proveedorNombre": null
+              }
+            },
+            {
+              "origen": "TICKET",
+              "id": "1",
+              "folio": "1",
+              "importe": "1000.00",
+              "href": "/tickets/1"
+            },
+            {
+              "origen": "TICKET",
+              "id": "2",
+              "folio": "3",
+              "importe": "400.00",
+              "href": "/tickets/3"
+            },
+            {
+              "origen": "ABONO",
+              "id": "ABONO_ORDINARIO:bd340aa0-bff1-4352-9fc5-45057752922b",
+              "folio": null,
+              "importe": "250.00",
+              "href": "/clientes/2583/movimientos/2",
+              "evidencia": {
+                "referencia": null,
+                "motivo": "Abono real recibido desde Caja",
+                "fecha": "2026-09-26T09:37:35.125Z",
+                "usuarioId": 234,
+                "proveedorId": null,
+                "usuarioNombre": "Isolated postreview financial admin",
+                "proveedorNombre": null
+              }
+            },
+            {
+              "origen": "COBRO_RETENIDO",
+              "id": "COBRO_PENDIENTE:fd5849b4-bfab-40e3-b07d-c471cdbed06f",
+              "folio": null,
+              "importe": "300.00",
+              "href": null,
+              "evidencia": {
+                "referencia": "OWNER-retained-receive",
+                "motivo": "OWNER POSTREVIEW dinero real sintético retained-receive",
+                "fecha": "2026-09-26T09:39:27.121Z",
+                "usuarioId": 234,
+                "proveedorId": null,
+                "usuarioNombre": "Isolated postreview financial admin",
+                "proveedorNombre": null
+              }
+            },
+            {
+              "origen": "SALIDA",
+              "id": "1",
+              "folio": null,
+              "importe": "25.00",
+              "href": null,
+              "evidencia": {
+                "referencia": null,
+                "motivo": "OWNER POSTREVIEW26 gasto sintético ordinario",
+                "fecha": "2026-09-26T09:38:18.245Z",
+                "usuarioId": 234,
+                "proveedorId": null,
+                "usuarioNombre": "Isolated postreview financial admin",
+                "proveedorNombre": null
+              }
+            }
+          ]
+        },
+        "efectivoContado": "1925.00",
+        "diferencia": "0.00",
+        "hojaVentasDia": {
+          "sitio": "OWNER POSTREVIEW26",
+          "fechaOperativa": "2026-09-26",
+          "cerrada": true,
+          "quienCerro": "Isolated postreview financial admin",
+          "secciones": [
+            {
+              "modalidad": "ROLLOS",
+              "lineas": [
+                {
+                  "productoId": 2078,
+                  "sku": "OWNPOSALG-AZU",
+                  "tela": "OWNER POSTREVIEW26 ALGODON",
+                  "color": "AZUL",
+                  "tipo": "NORMAL",
+                  "unidad": "ROLLOS",
+                  "cantidad": "2",
+                  "importe": "1400.00"
+                }
+              ],
+              "subtotal": "1400.00"
+            },
+            {
+              "modalidad": "METRAJE",
+              "lineas": [],
+              "subtotal": "0.00"
+            }
+          ],
+          "totalRollos": "2",
+          "totalMetros": "20",
+          "totalKilos": "0",
+          "totalBolsas": "0",
+          "totalPiezas": "0",
+          "subtotal": "1400.00",
+          "ivaFacturado": "0.00",
+          "totalGeneral": "1400.00"
+        }
+      }
+    },
+    {
+      "postgresIdentity": {
+        "database": "postreview_financial_20260926",
+        "read_only": "on"
+      }
+    }
+  ],
+  "actorId": 234,
+  "error": "column \"sesion_caja_id\" does not exist",
+  "finishedAt": "2026-09-26T09:48:14.572Z"
+}

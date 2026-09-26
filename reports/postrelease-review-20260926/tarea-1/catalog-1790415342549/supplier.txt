@@ -1,0 +1,432 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Vista Global
+I
+
+Isolated postreview financial admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Proveedores
+
+Gestión de proveedores nacionales y de importación.
+
+Nuevo Proveedor
+Total Deuda
+$0.00
+Compras del Mes
+$0.00
+Proveedores con Saldo
+0
+Total Proveedores
+27
+Proveedores
+Últimas compras
+Análisis global
+Todos (Tipo)
+Activos
+Nombre A–Z
+Todo el tiempo
+Proveedor / Contacto
+	Tipo
+	Saldo
+	Comprado (12m)
+	Última Compra
+	Compras en periodo
+	Estado
+
+
+Alan Hilu
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Alfredo Cojab
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Alfredo Lorenzo
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Alfredo Miguel
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+BeeBags
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Bordatec
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Carpe
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Cobitel
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+David Ohanna
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Dona Hi
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Eduardo Hussni
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+El Asturcon
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+FisFiber
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Gerardo Gonzales
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Grupo Vision
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Insertex
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Jesus Poo
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Juan Carlos Priede
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Ling Si
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Notesa
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Olegario Alvarez
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Paulina
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Ping Li
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Ricardo Miguel
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Salomon Hilu
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+Salomon Hilu Cojab
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+
+SkyTex
+	
+NACIONAL
+	
+$0.00
+	
+$0.00
+	
+-
+	0
+Todo el tiempo
+	Activo
+Proveedor creado exitosamente

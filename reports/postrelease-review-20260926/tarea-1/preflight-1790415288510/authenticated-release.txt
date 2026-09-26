@@ -1,0 +1,169 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Vista Global
+I
+
+Isolated postreview financial admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Tiempo real
+
+Monitoreo operativo de cobros.
+
+Actualizado: 03:34:54
+Registrar Abono
+Actualizar
+Ventas totales
+$0.00
+0 tickets totales
+Contado cobrado
+$0.00
+0 tickets cobrados
+Ventas a crédito
+$0.00
+0 operaciones a crédito
+Utilidad
+$0.00
+Margen 0.00%
+VENTAS PENDIENTES DE COBRO O AUTORIZACIÓN
+$0.00
+
+0 tickets · 0 notas
+
+SALIDAS EN TRÁNSITO
+0 salidas
+TICKETS CANCELADOS
+0 tickets · $0.00
+
+Tasa de cancelación: 0.00%
+
+SALIDAS CANCELADAS
+0 salidas
+Estado por tienda
+Mariana
+Caja cerrada
+Sin cajero
+Vendido
+$0.00
+Cobrado
+$0.00
+Margen
+0.00%
+Pendiente
+$0.00
+Utilidad
+$0.00
+Tickets cobrados
+0
+Ticket promedio
+$0.00
+Efectivo
+$0.00
+Transferencia
+$0.00
+Crédito
+$0.00
+Caja cerrada
+Ver ventas →
+Coco
+Caja cerrada
+Sin cajero
+Vendido
+$0.00
+Cobrado
+$0.00
+Margen
+0.00%
+Pendiente
+$0.00
+Utilidad
+$0.00
+Tickets cobrados
+0
+Ticket promedio
+$0.00
+Efectivo
+$0.00
+Transferencia
+$0.00
+Crédito
+$0.00
+Caja cerrada
+Ver ventas →
+Cruces
+Caja cerrada
+Sin cajero
+Vendido
+$0.00
+Cobrado
+$0.00
+Margen
+0.00%
+Pendiente
+$0.00
+Utilidad
+$0.00
+Tickets cobrados
+0
+Ticket promedio
+$0.00
+Efectivo
+$0.00
+Transferencia
+$0.00
+Crédito
+$0.00
+Caja cerrada
+Ver ventas →
+Tabla Comparativa
+Tienda	Tck	Vendido	Cobrado	Pendiente	Margen $	Margen %	Efectivo	Transf	Crédito
+Mariana	0	$0.00	$0.00	$0.00	$0.00	0.00%	$0.00	$0.00	$0.00
+Coco	0	$0.00	$0.00	$0.00	$0.00	0.00%	$0.00	$0.00	$0.00
+Cruces	0	$0.00	$0.00	$0.00	$0.00	0.00%	$0.00	$0.00	$0.00
+Total General	0	$0.00	$0.00	$0.00	$0.00	0.00%	Distribución en panel superior
+Últimos documentos
+Sin tickets recientes

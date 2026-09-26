@@ -290,6 +290,9 @@ body.measure-thermal-ticket .tabular-strip-page {
   body.printing-label-sheet > .etiquetas-print:not(#root) {
     display: grid !important;
   }
+  body.print-corte > .corte-print:not(#root) {
+    display: block !important;
+  }
   body.print-corte > *:not(#root):has(.corte-print) {
     display: contents !important;
   }
@@ -559,6 +562,10 @@ body.measure-thermal-ticket .tabular-strip-page {
   body.print-corte .corte-print {
     position: absolute;
     inset: 0;
+    translate: none !important;
+    transform: none !important;
+    --tw-translate-x: 0px !important;
+    --tw-translate-y: 0px !important;
     max-width: none;
     max-height: none;
     overflow: visible;

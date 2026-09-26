@@ -1,0 +1,178 @@
+Detalle de corte
+ Envío completo al cierre
+ Consultando corte canónico…
+
+
+                                                                                     Excel        Reimprimir / PDF
+
+
+  TURNO                                                                                                     FECHAS
+  OWNER POSTREVIEW26                                                                    Apertura: 26 sep 2026 03:36
+  Cajero: Isolated postreview financial admin                                             Cierre: 26 sep 2026 03:46
+  CERRADA ($0.00)
+
+
+
+
+       Recibos de Abono (E3) de esta sesión
+
+    E3-835-00000001                             $250.00
+    OWNER POSTREVIEW26 CLIENTE                      CAJA
+
+
+
+
+Formas de Pago                                             Cuentas Destino
+
+
+  Forma                      Tickets            Importe      Cuenta / Forma                                 Importe
+
+
+  EFECTIVO                        2         $1,400.00        Efectivo                                     $1,375.00
+                                                             EFECTIVO
+
+  TRANSFERENCIA                   0              $0.00
+                                                             Cuentas No Fiscales                             $0.00
+                                                             TRANSFERENCIA
+  FACTURADO                       0              $0.00
+
+                                                             Cuentas Fiscales                                $0.00
+                                                             TRANSFERENCIA
+  CREDITO                         0              $0.00
+
+
+                                                             Ventas a Crédito                                $0.00
+                                                             CREDITO
+
+
+
+Facturación y Medios de Pago
+
+
+  Estado              Tck        Subtotal          IVA           Total             Efectivo     Transf.      Crédito
+
+
+  Facturado            0           $0.00        $0.00          $0.00                $0.00        $0.00       $0.00
+
+
+
+  Sin factura          2      $1,400.00         $0.00      $1,400.00            $1,400.00        $0.00       $0.00
+Tipo de Venta
+
+
+  Modalidad                 Cantidad          Importe
+
+
+  ROLLOS                30.00 Mts.          $2,400.00
+
+
+
+Productos Top
+
+
+  SKU                    Tela / Color                                  Cantidad         Importe
+
+
+  OWNPOSALG-AZU          ROLLO · OWNER POSTREVIEW26 ALGODON - AZUL   30.00 Mts.      $2,400.00
+
+
+
+
+Tickets Cobrados (2)
+
+
+  Folio                          Hora                                                   Importe
+
+
+  F-1                            03:37:08                                            $1,000.00
+
+
+
+  F-3                            03:43:35                                              $400.00
+
+
+
+
+ Arqueo de Efectivo Final
+
+  Fondo Inicializado                                                                     $0.00
+
+  Ingresos Efectivo Registrados                                                     $1,925.00
+
+
+  Efectivo Esperado (Sistema)                                                       $1,925.00
+
+  Efectivo Contado (Cajero)                                                         $1,925.00
+
+
+    Diferencia de Arqueo                                                               $0.00
+
+
+
+
+Salidas de Dinero (1)
+
+
+OWNER POSTREVIEW26 gasto sintético ordinario                                              $25.00
+Efectivo · 03:38 · EXTRAORDINARIA                                                      Pendiente
+
+                                                                          Aceptar      Reclamar
+
+
+
+  Trazabilidad del efectivo esperado                                                FÓRMULA E2
+Fondo inicial + tickets en efectivo + abonos físicos + cobros retenidos − salidas físicas.
+
+
+Fondo inicial                        $0.00      DOCUMENTOS QUE COMPONEN EL CÁLCULO
+
+Cobros físicos de
+                              $1,400.00            Origen              Documento y evidencia                              Importe
+tickets
+Abonos físicos de crédito         $250.00
+                                                                       ID 1
+Cobros físicos retenidos          $300.00
+                                                   Fondo inicial       Referencia: Sesión de caja #1                       $0.00
+                                                                       Fecha: 26 sep 2026, 3:36 a.m.
+Salidas físicas                 − $25.00
+                                                                       Registró: Isolated postreview financial admin
+
+Efectivo esperado             $1,925.00
+                                                   Ticket              1                                                $1,000.00
+
+
+
+                                                   Ticket              3                                                 $400.00
+
+
+
+                                                                       ID ABONO_ORDINARIO:bd340aa0-bff1-
+                                                                       4352-9fc5-45057752922b
+                                                   Abono de
+                                                                       Motivo: Abono real recibido desde Caja            $250.00
+                                                   crédito
+                                                                       Fecha: 26 sep 2026, 3:37 a.m.
+                                                                       Registró: Isolated postreview financial admin
+
+
+                                                                       ID COBRO_PENDIENTE:fd5849b4-bfab-
+                                                                       40e3-b07d-c471cdbed06f
+                                                                       Referencia: OWNER-retained-receive
+                                                   Cobro                                                                 $300.00
+                                                   retenido            Motivo: OWNER POSTREVIEW dinero real
+                                                                       sintético retained-receive
+                                                                       Fecha: 26 sep 2026, 3:39 a.m.
+                                                                       Registró: Isolated postreview financial admin
+
+
+                                                                       ID 1
+                                                                       Motivo: OWNER POSTREVIEW26 gasto
+                                                   Salida física       sintético ordinario                              − $25.00
+                                                                       Fecha: 26 sep 2026, 3:38 a.m.
+                                                                       Registró: Isolated postreview financial admin
+
+
+
+
+                                                                                                       Imprimir Corte        Cerrar
+

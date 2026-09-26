@@ -1,0 +1,302 @@
+{
+  "stage": "sale-credit",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "status": "PASS",
+  "startedAt": "2026-09-26T09:36:44.849Z",
+  "requests": [
+    {
+      "at": "2026-09-26T09:36:46.185Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-sale-credit-1790415406155-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T09:36:47.671Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415406347-7"
+    },
+    {
+      "at": "2026-09-26T09:36:48.233Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415407678-8"
+    },
+    {
+      "at": "2026-09-26T09:36:48.244Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415408237-11"
+    },
+    {
+      "at": "2026-09-26T09:36:48.270Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415407686-10"
+    },
+    {
+      "at": "2026-09-26T09:36:49.094Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415408492-16"
+    },
+    {
+      "at": "2026-09-26T09:36:49.106Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415409098-18"
+    },
+    {
+      "at": "2026-09-26T09:36:49.845Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415409109-19"
+    },
+    {
+      "at": "2026-09-26T09:36:50.233Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415409904-20"
+    },
+    {
+      "at": "2026-09-26T09:36:50.388Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415409907-23"
+    },
+    {
+      "at": "2026-09-26T09:36:50.511Z",
+      "path": "/api/locations",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415409907-24"
+    },
+    {
+      "at": "2026-09-26T09:36:50.516Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415409908-25"
+    },
+    {
+      "at": "2026-09-26T09:36:50.544Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415409906-22"
+    },
+    {
+      "at": "2026-09-26T09:36:50.564Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415409905-21"
+    },
+    {
+      "at": "2026-09-26T09:36:50.842Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415409909-26"
+    },
+    {
+      "at": "2026-09-26T09:36:50.890Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415409910-27"
+    },
+    {
+      "at": "2026-09-26T09:36:51.110Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415409910-28"
+    },
+    {
+      "at": "2026-09-26T09:36:51.963Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415411487-31"
+    },
+    {
+      "at": "2026-09-26T09:36:52.428Z",
+      "path": "/api/pos/buscar",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415411809-32"
+    },
+    {
+      "at": "2026-09-26T09:36:52.666Z",
+      "path": "/api/clientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415411485-30"
+    },
+    {
+      "at": "2026-09-26T09:36:54.365Z",
+      "path": "/api/pos/validar-precio",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415413711-33"
+    },
+    {
+      "at": "2026-09-26T09:36:56.737Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-sale-credit-1790415414712-34"
+    },
+    {
+      "at": "2026-09-26T09:36:57.327Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415416758-35"
+    },
+    {
+      "at": "2026-09-26T09:36:57.628Z",
+      "path": "/api/tickets/2",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415416758-36"
+    },
+    {
+      "at": "2026-09-26T09:36:57.841Z",
+      "path": "/api/tickets/2",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-sale-credit-1790415416962-38"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/sale-credit-1790415404849/sale-credit-viewport.png",
+      "bytes": 8593,
+      "sha256": "a76dfe3246df588db390ddbfe655c53908feca9fcf34d348a75b25b731d68021"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/sale-credit-1790415404849/sale-credit-full.png",
+      "bytes": 11916,
+      "sha256": "d4886295d3e72361c8798539fe2254fd04a8c05b746f0e726cd961a7050277a9"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/sale-credit-1790415404849/sale-credit.txt",
+      "bytes": 34,
+      "sha256": "8abf4367c9bbf7ebcdfc934bc4fe35de88e739bca4986e17b5b54675381d2ab9"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/sale-credit-1790415404849/final-viewport.png",
+      "bytes": 65082,
+      "sha256": "b49f59983b0bf97f7b38d0242163816e4dca54abf567dde85ef334253e0053a0"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/sale-credit-1790415404849/final-full.png",
+      "bytes": 65492,
+      "sha256": "a7acc67980ac9e90f316c1d083a52cf5df5b68b974a35ebb99c3de7ed2051acc"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/sale-credit-1790415404849/final.txt",
+      "bytes": 492,
+      "sha256": "67e305edfed3c5f1749c1c0384c97f48791c03959a93b355cb918b852597d1a2"
+    }
+  ],
+  "checks": [
+    {
+      "status": 200,
+      "body": {
+        "id": 2,
+        "folio": 2,
+        "ubicacionId": 835,
+        "nombreUbicacion": "OWNER POSTREVIEW26",
+        "usuarioTerminalId": 234,
+        "nombreUsuarioTerminal": "Isolated postreview financial admin",
+        "clienteId": 2583,
+        "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+        "notaSinPrecios": false,
+        "direccionEntregaEfectiva": null,
+        "subtotal": "1000.00",
+        "iva": "0.00",
+        "tasaIva": "0.1600",
+        "total": "1000.00",
+        "estado": "VENDIDO",
+        "cobrado": false,
+        "cobradoAt": null,
+        "usuarioCajaId": null,
+        "nombreUsuarioCaja": null,
+        "facturado": false,
+        "sesionCajaId": null,
+        "uuidCliente": "277271f0-eda4-4b3e-94f6-c1ce8e545cb3",
+        "createdAt": "2026-09-26T09:36:55.632Z",
+        "canceladoAt": null,
+        "canceladoPor": null,
+        "nombreUsuarioCancelacion": null,
+        "motivoCancelacion": null,
+        "autorizadoPor": null,
+        "nombreUsuarioAutorizacion": null,
+        "esCredito": true,
+        "importeCredito": "0.00",
+        "diasPlazo": 7,
+        "fechaVencimiento": "2026-10-03",
+        "saldoPendiente": "0.00",
+        "estadoNota": null,
+        "telefonoCliente": null,
+        "correoCliente": null,
+        "direccionCliente": null,
+        "remate": false,
+        "rollosRemate": [],
+        "documentoTipo": "NOTA",
+        "autorizacionEstado": "PENDIENTE",
+        "nombreDestinatario": null,
+        "direccionEntregaSnapshot": null,
+        "convertidoANotaPorCobro": false,
+        "diasCreditoCliente": 7,
+        "viaje": null,
+        "salidas": [],
+        "lineas": [
+          {
+            "id": 2,
+            "ticketId": 2,
+            "rolloId": 2,
+            "productoId": 2078,
+            "tipo": "NORMAL",
+            "cantidad": "10.000",
+            "precioUnitario": "100.00",
+            "precioSugerido": "100.00",
+            "importe": "1000.00",
+            "skuProducto": "OWNPOSALG-AZU",
+            "telaProducto": "OWNER POSTREVIEW26 ALGODON",
+            "colorProducto": "AZUL",
+            "unidadProducto": "METRO",
+            "serieRollo": "10000002",
+            "nombreUbicacion": "OWNER POSTREVIEW26",
+            "costoUnitarioCongelado": "50.00",
+            "costoTotalCongelado": "500.00",
+            "costoFuente": "EXACT_ROLL",
+            "margen": "500.00"
+          }
+        ],
+        "pagos": []
+      }
+    }
+  ],
+  "actorId": 234,
+  "finishedAt": "2026-09-26T09:36:58.291Z"
+}

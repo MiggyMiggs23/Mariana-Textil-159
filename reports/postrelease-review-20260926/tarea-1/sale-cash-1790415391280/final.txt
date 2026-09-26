@@ -1,0 +1,26 @@
+Ticket #1
+
+OWNER POSTREVIEW26
+
+Cancelar Ticket
+Imprimir Ticket (80mm)
+Detalle de Operación
+
+Emitido por Isolated postreview financial admin
+
+Ver rollos
+Ticket por cobrar
+Cliente: OWNER POSTREVIEW26 CLIENTE
+Producto	Rollos	Cantidad	Precio Unit.	Importe	Costo	Margen
+ROLLOS
+
+OWNER POSTREVIEW26 ALGODON - AZUL
+OWNPOSALG-AZU
+	1	10.00 Mts.	$100.00	$1,000.00	$500.00	$500.00
+Subtotal Rollos	$1,000.00		
+Subtotal:
+$1,000.00
+Total:
+$1,000.00
+TICKET creado correctamente
+Folio: 1

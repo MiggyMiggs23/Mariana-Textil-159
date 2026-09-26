@@ -1,0 +1,415 @@
+{
+  "stage": "catalog",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "status": "PASS",
+  "startedAt": "2026-09-26T09:35:42.549Z",
+  "requests": [
+    {
+      "at": "2026-09-26T09:35:43.289Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-catalog-1790415343275-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T09:35:44.275Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415343433-7"
+    },
+    {
+      "at": "2026-09-26T09:35:44.875Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415344295-10"
+    },
+    {
+      "at": "2026-09-26T09:35:44.890Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415344285-8"
+    },
+    {
+      "at": "2026-09-26T09:35:45.695Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415345092-15"
+    },
+    {
+      "at": "2026-09-26T09:35:45.704Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415345698-17"
+    },
+    {
+      "at": "2026-09-26T09:35:46.536Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415345709-18"
+    },
+    {
+      "at": "2026-09-26T09:35:47.042Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415346644-19"
+    },
+    {
+      "at": "2026-09-26T09:35:47.249Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415346657-22"
+    },
+    {
+      "at": "2026-09-26T09:35:47.282Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415346660-24"
+    },
+    {
+      "at": "2026-09-26T09:35:47.292Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415346658-23"
+    },
+    {
+      "at": "2026-09-26T09:35:47.322Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415346651-21"
+    },
+    {
+      "at": "2026-09-26T09:35:47.580Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415346650-20"
+    },
+    {
+      "at": "2026-09-26T09:35:47.610Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415346661-25"
+    },
+    {
+      "at": "2026-09-26T09:35:47.804Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415346663-26"
+    },
+    {
+      "at": "2026-09-26T09:35:47.890Z",
+      "path": "/api/proveedores/analitica-global",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415346665-28"
+    },
+    {
+      "at": "2026-09-26T09:35:47.933Z",
+      "path": "/api/proveedores",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415346664-27"
+    },
+    {
+      "at": "2026-09-26T09:35:48.029Z",
+      "path": "/api/proveedores/directorio",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415346666-29"
+    },
+    {
+      "at": "2026-09-26T09:35:48.323Z",
+      "path": "/api/proveedores",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-catalog-1790415347237-31"
+    },
+    {
+      "at": "2026-09-26T09:35:48.904Z",
+      "path": "/api/proveedores/directorio",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415348326-33"
+    },
+    {
+      "at": "2026-09-26T09:35:49.947Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415349351-37"
+    },
+    {
+      "at": "2026-09-26T09:35:49.957Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415349951-39"
+    },
+    {
+      "at": "2026-09-26T09:35:50.696Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415349960-40"
+    },
+    {
+      "at": "2026-09-26T09:35:51.100Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415350757-41"
+    },
+    {
+      "at": "2026-09-26T09:35:51.316Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415350760-44"
+    },
+    {
+      "at": "2026-09-26T09:35:51.353Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415350761-45"
+    },
+    {
+      "at": "2026-09-26T09:35:51.355Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415350758-42"
+    },
+    {
+      "at": "2026-09-26T09:35:51.373Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415350761-46"
+    },
+    {
+      "at": "2026-09-26T09:35:51.633Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415350759-43"
+    },
+    {
+      "at": "2026-09-26T09:35:51.709Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415350761-47"
+    },
+    {
+      "at": "2026-09-26T09:35:51.925Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415350763-48"
+    },
+    {
+      "at": "2026-09-26T09:35:52.371Z",
+      "path": "/api/productos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415350763-49"
+    },
+    {
+      "at": "2026-09-26T09:35:53.559Z",
+      "path": "/api/productos",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-catalog-1790415352754-51"
+    },
+    {
+      "at": "2026-09-26T09:35:54.412Z",
+      "path": "/api/productos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415353562-52"
+    },
+    {
+      "at": "2026-09-26T09:35:55.535Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415354969-56"
+    },
+    {
+      "at": "2026-09-26T09:35:55.546Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415355540-58"
+    },
+    {
+      "at": "2026-09-26T09:35:56.250Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415355549-59"
+    },
+    {
+      "at": "2026-09-26T09:35:56.623Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415356307-60"
+    },
+    {
+      "at": "2026-09-26T09:35:56.877Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415356310-64"
+    },
+    {
+      "at": "2026-09-26T09:35:56.913Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415356311-65"
+    },
+    {
+      "at": "2026-09-26T09:35:56.965Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415356309-62"
+    },
+    {
+      "at": "2026-09-26T09:35:56.992Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415356308-61"
+    },
+    {
+      "at": "2026-09-26T09:35:57.204Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415356312-66"
+    },
+    {
+      "at": "2026-09-26T09:35:57.487Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415356312-67"
+    },
+    {
+      "at": "2026-09-26T09:35:57.520Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415356313-68"
+    },
+    {
+      "at": "2026-09-26T09:35:57.522Z",
+      "path": "/api/clientes/listado",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415356310-63"
+    },
+    {
+      "at": "2026-09-26T09:35:58.184Z",
+      "path": "/api/clientes",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-catalog-1790415357217-70"
+    },
+    {
+      "at": "2026-09-26T09:35:59.406Z",
+      "path": "/api/clientes/listado",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-catalog-1790415358186-71"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/catalog-1790415342549/supplier-viewport.png",
+      "bytes": 196342,
+      "sha256": "16eb00e013057823ae0c2f26a176676792986d379200cc19411dbb3d3e24e7df"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/catalog-1790415342549/supplier-full.png",
+      "bytes": 310935,
+      "sha256": "c465c38762ccaefca4673fe36452666e5783c4a9b35effb212b7bf720775283a"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/catalog-1790415342549/supplier.txt",
+      "bytes": 2857,
+      "sha256": "df563e636f9ae19732a87bcbbe8dbdbf6306834ce78abdc2389108551fa5481a"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/catalog-1790415342549/product-viewport.png",
+      "bytes": 218587,
+      "sha256": "969ebee8ad987f60b9882d496a6903f2364490b6a7270868048b9e22aa0fa6e2"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/catalog-1790415342549/product-full.png",
+      "bytes": 1047001,
+      "sha256": "1ab935efbf81d3a7732e135c6e1daa8b7e8c341313b994ec90d65e0ec7ed7537"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/catalog-1790415342549/product.txt",
+      "bytes": 7860,
+      "sha256": "b6e5477ac7985e1c39318fd30c0034b821ffcabaa2e231b19e532c67d440c9c2"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/catalog-1790415342549/client-viewport.png",
+      "bytes": 217159,
+      "sha256": "e50695c3615fed4665aa847946c8032f3355cae731f1d0e326c9878f024b52a7"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/catalog-1790415342549/client-full.png",
+      "bytes": 625092,
+      "sha256": "e006608e9a07adca8322fcfdc4b1a0352d448f75cb546ffdcb05922f4851e90b"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/catalog-1790415342549/client.txt",
+      "bytes": 6469,
+      "sha256": "bc9c7c69d7eb882c2f41de0fa423df71634d325421ffbbe1a98fa3f41008f776"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/catalog-1790415342549/final-viewport.png",
+      "bytes": 182922,
+      "sha256": "4a2400d2cf8f22dc0931a554032148d8f907e444ad0414e35e2f9a76971c8d63"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/catalog-1790415342549/final-full.png",
+      "bytes": 622783,
+      "sha256": "5f84fafc986747738f863f7c6541388567542a7df0c50bca4ea0ef196d0dff52"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/catalog-1790415342549/final.txt",
+      "bytes": 6457,
+      "sha256": "28e408449c01bc19cb4ae8a4ce7d7e8324a4537646b261708bb1c106cf5a842a"
+    }
+  ],
+  "checks": [],
+  "actorId": 234,
+  "finishedAt": "2026-09-26T09:35:59.803Z"
+}

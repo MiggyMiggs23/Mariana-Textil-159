@@ -1,0 +1,25 @@
+{
+  "status": "TERMINAL_FINANCIAL_PASS_CUT_PRINT_FIX_NATIVE_RETEST_PASS",
+  "authoritativeReport": "reports/postrelease-review-20260926/tarea-1/informe.md",
+  "requiresNewDisposableCopy": true,
+  "noOldDatabaseOrFixtureReuse": true,
+  "noApplicationEdits": true,
+  "noGateEnabling": true,
+  "newRuntimeConfigurationEnvironment": "NIGHT_BROWSER_CONFIG",
+  "configurationFields": ["status:READY", "disposable:true", "origin", "database", "campaignId", "apiSha256", "uiSha256", "credentialsFile", "journalDirectory", "authorizationEvidence:original-owner-text-and-scope-in-reports"],
+  "criticalScenarios": [
+    "New native site, floors, supplier, product, client and 24 rolls; preserve remaining rolls for sequential task2",
+    "Cash ticket creation, native cash collection, independent ticket and cash ledger readback",
+    "Credit note creation and authorization with hard-limit policy; nonempty canonical credit readback",
+    "Ordinary cash abono, FIFO allocation/debt readback, genuine E3 receipt and native-print PDFs",
+    "Directed and retained receipt flows if existing business gates permit; otherwise explicit BLOCKED and continue independent flows",
+    "Remate marking and corresponding nonempty sale/collection, not marking alone",
+    "Salidas flow and cash expense with actual document/kardex or session evidence as applicable",
+    "Nonempty cash close against independent cents journal, cut/document artifacts",
+    "Critical desktop/mobile screenshots and downloadable native exports, authentic timestamps and request correlation",
+    "Followup task2: six actors overlapping >=180 seconds, two cashier POS transactions, three audit scanners and ADMIN report"
+  ],
+  "executionCommand": "NIGHT_BROWSER_CONFIG=<MAIN-provided-private-config> node reports/owner-night-20260926/task1/native.mjs <explicit-stage>",
+  "continuationRule": "Never replay an attempted business operation. UNKNOWN/5xx remains UNCERTAIN pending independent readback and existing recovery protocol.",
+  "remaining": ["E5-print-lifecycle-valid-PDF-capture-not-claimed", "task2-six-actor-overlap-after-MAIN-task1-commit"]
+}

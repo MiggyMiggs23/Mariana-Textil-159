@@ -1,0 +1,61 @@
+Mariana Textil
+1
+Cerrar sesión
+
+Isolated postreview financial admin
+
+ADMIN · Global
+
+Vista Global
+Recibo E3-835-00000001
+
+Dos copias A5. La solicitud se audita; cancelar la impresora no vuelve a cobrar.
+
+Ver detalle del movimiento #2
+
+Solicitar impresión / reimpresión
+Mariana Textil · Recibo de abono
+Copia Cliente · Página 1 / 1
+E3-835-00000001
+$250.00
+
+Cliente: OWNER POSTREVIEW26 CLIENTE
+
+Sitio receptor: OWNER POSTREVIEW26 · Recibió / registró: Isolated postreview financial admin
+
+Recepción: 26/9/2026, 3:37:35 a.m. · Registro: 26/9/2026, 3:37:35 a.m.
+
+Medio: Efectivo · Cuenta: CAJA FISICA
+
+Nota	Saldo anterior	Aplicado	Saldo posterior
+2	$1,000.00	$250.00	$750.00
+
+Remanente del abono: $0.00 · Saldo a favor total: $0.00 · Deuda total posterior: $750.00
+
+Firma de quien entrega
+Firma de quien recibe
+
+REIMPRESIÓN / copia de evidencia emitida · 26/9/2026, 3:48:40 a.m. · Movimiento 2
+
+Mariana Textil · Recibo de abono
+Copia Tienda · Página 1 / 1
+E3-835-00000001
+$250.00
+
+Cliente: OWNER POSTREVIEW26 CLIENTE
+
+Sitio receptor: OWNER POSTREVIEW26 · Recibió / registró: Isolated postreview financial admin
+
+Recepción: 26/9/2026, 3:37:35 a.m. · Registro: 26/9/2026, 3:37:35 a.m.
+
+Medio: Efectivo · Cuenta: CAJA FISICA
+
+Nota	Saldo anterior	Aplicado	Saldo posterior
+2	$1,000.00	$250.00	$750.00
+
+Remanente del abono: $0.00 · Saldo a favor total: $0.00 · Deuda total posterior: $750.00
+
+Firma de quien entrega
+Firma de quien recibe
+
+REIMPRESIÓN / copia de evidencia emitida · 26/9/2026, 3:48:40 a.m. · Movimiento 2

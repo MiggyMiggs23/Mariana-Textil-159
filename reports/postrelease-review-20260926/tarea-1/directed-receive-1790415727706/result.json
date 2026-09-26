@@ -1,0 +1,583 @@
+{
+  "stage": "directed-receive",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "status": "PASS",
+  "startedAt": "2026-09-26T09:42:07.706Z",
+  "requests": [
+    {
+      "at": "2026-09-26T09:42:08.394Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-directed-receive-1790415728381-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T09:42:09.364Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415728562-7"
+    },
+    {
+      "at": "2026-09-26T09:42:09.944Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415729378-10"
+    },
+    {
+      "at": "2026-09-26T09:42:09.952Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415729370-8"
+    },
+    {
+      "at": "2026-09-26T09:42:09.958Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415729953-11"
+    },
+    {
+      "at": "2026-09-26T09:42:10.527Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415729954-12"
+    },
+    {
+      "at": "2026-09-26T09:42:10.660Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415729961-13"
+    },
+    {
+      "at": "2026-09-26T09:42:11.043Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415730712-15"
+    },
+    {
+      "at": "2026-09-26T09:42:11.304Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415730715-18"
+    },
+    {
+      "at": "2026-09-26T09:42:11.335Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415730717-21"
+    },
+    {
+      "at": "2026-09-26T09:42:11.410Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415730747-24"
+    },
+    {
+      "at": "2026-09-26T09:42:11.486Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415730713-16"
+    },
+    {
+      "at": "2026-09-26T09:42:11.490Z",
+      "path": "/api/clientes/2583/credito",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415730531-14"
+    },
+    {
+      "at": "2026-09-26T09:42:11.635Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415730749-25"
+    },
+    {
+      "at": "2026-09-26T09:42:12.393Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415731829-35"
+    },
+    {
+      "at": "2026-09-26T09:42:12.401Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415732397-37"
+    },
+    {
+      "at": "2026-09-26T09:42:13.105Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415732404-38"
+    },
+    {
+      "at": "2026-09-26T09:42:13.462Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415733131-39"
+    },
+    {
+      "at": "2026-09-26T09:42:13.698Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415733133-42"
+    },
+    {
+      "at": "2026-09-26T09:42:13.742Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415733133-43"
+    },
+    {
+      "at": "2026-09-26T09:42:13.753Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415733135-44"
+    },
+    {
+      "at": "2026-09-26T09:42:13.806Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415733133-41"
+    },
+    {
+      "at": "2026-09-26T09:42:13.883Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415733132-40"
+    },
+    {
+      "at": "2026-09-26T09:42:14.076Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415733135-45"
+    },
+    {
+      "at": "2026-09-26T09:42:14.298Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415733135-46"
+    },
+    {
+      "at": "2026-09-26T09:42:15.378Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415734802-50"
+    },
+    {
+      "at": "2026-09-26T09:42:15.384Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415734800-49"
+    },
+    {
+      "at": "2026-09-26T09:42:15.420Z",
+      "path": "/api/locations",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415734803-51"
+    },
+    {
+      "at": "2026-09-26T09:42:16.013Z",
+      "path": "/api/e5/avisos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415735389-52"
+    },
+    {
+      "at": "2026-09-26T09:42:16.337Z",
+      "path": "/api/caja/abonos-e3/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415735686-53"
+    },
+    {
+      "at": "2026-09-26T09:42:17.072Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415736485-55"
+    },
+    {
+      "at": "2026-09-26T09:42:17.350Z",
+      "path": "/api/e5/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415736483-54"
+    },
+    {
+      "at": "2026-09-26T09:42:18.931Z",
+      "path": "/api/e5/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415738060-56"
+    },
+    {
+      "at": "2026-09-26T09:42:20.082Z",
+      "path": "/api/e5/cobros/vista-previa",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415738937-57"
+    },
+    {
+      "at": "2026-09-26T09:42:21.241Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415740656-58"
+    },
+    {
+      "at": "2026-09-26T09:42:21.967Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415741244-59"
+    },
+    {
+      "at": "2026-09-26T09:42:22.554Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415741970-60"
+    },
+    {
+      "at": "2026-09-26T09:42:23.426Z",
+      "path": "/api/e5/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415742555-61"
+    },
+    {
+      "at": "2026-09-26T09:42:24.304Z",
+      "path": "/api/e5/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415743428-62"
+    },
+    {
+      "at": "2026-09-26T09:42:25.218Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415744306-63"
+    },
+    {
+      "at": "2026-09-26T09:42:26.089Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415745220-64"
+    },
+    {
+      "at": "2026-09-26T09:42:27.910Z",
+      "path": "/api/e5/cobros",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-directed-receive-1790415746094-65"
+    },
+    {
+      "at": "2026-09-26T09:42:28.493Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415747916-68"
+    },
+    {
+      "at": "2026-09-26T09:42:28.528Z",
+      "path": "/api/e5/avisos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415747917-69"
+    },
+    {
+      "at": "2026-09-26T09:42:28.586Z",
+      "path": "/api/caja/abonos-e3/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415747917-70"
+    },
+    {
+      "at": "2026-09-26T09:42:28.603Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415747916-67"
+    },
+    {
+      "at": "2026-09-26T09:42:28.680Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415747915-66"
+    },
+    {
+      "at": "2026-09-26T09:42:28.776Z",
+      "path": "/api/e5/contexto",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415747917-71"
+    },
+    {
+      "at": "2026-09-26T09:42:29.138Z",
+      "path": "/api/e5/cobros/1be749fa-7141-45a1-bda2-873cf6d26e1d",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415748185-73"
+    },
+    {
+      "at": "2026-09-26T09:42:29.193Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415748106-72"
+    },
+    {
+      "at": "2026-09-26T09:42:30.108Z",
+      "path": "/api/clientes/2583/credito",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-directed-receive-1790415749143-74"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/directed-receive-1790415727706/receipt-review-viewport.png",
+      "bytes": 141537,
+      "sha256": "6691aff61c9e75a4597bc9bb12cdf4bbbfbf0e9a8e14090646f00ce70ee5370a"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/directed-receive-1790415727706/receipt-review-full.png",
+      "bytes": 218982,
+      "sha256": "7e7a1b45370b172453a857fe8c02e134fcce6d5bc21aba4a216c21f97fbe2197"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/directed-receive-1790415727706/receipt-review.txt",
+      "bytes": 2174,
+      "sha256": "7b50c4bd43afe09e8ea8c7febb7e60af6adc19b96e9f95bdf2334d15494a5581"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/directed-receive-1790415727706/directed-receive-viewport.png",
+      "bytes": 128351,
+      "sha256": "c5aa6701f85f3b7eafb4183e0fdc7c1a740b8ce04130021e5a8166dcd97799c7"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/directed-receive-1790415727706/directed-receive-full.png",
+      "bytes": 192321,
+      "sha256": "5da6d5bfaf14c3454bec2ad5bf56af4290146da8119aaa6bf5849a182b4df635"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/directed-receive-1790415727706/directed-receive.txt",
+      "bytes": 1877,
+      "sha256": "98ccdbd7617a1c686828357b082848ddbc308b003cbfb211c6a5391fce6f95d6"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/directed-receive-1790415727706/actual-balance-and-state-viewport.png",
+      "bytes": 129611,
+      "sha256": "3da741c43d9fa0710b26f2c2da559840407724bb9ad3860cad8f0f2794ab1a4d"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/directed-receive-1790415727706/actual-balance-and-state-full.png",
+      "bytes": 188482,
+      "sha256": "cc414d4c66db06b1fade6b49f30c1d7d46db3ec4af0029add68e59dfc0bbe21c"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/directed-receive-1790415727706/actual-balance-and-state.txt",
+      "bytes": 1847,
+      "sha256": "fca5aa5f2807cc3829d81300f6a33eee639f09d53aa6cd737184fe732026f6d0"
+    }
+  ],
+  "checks": [],
+  "actorId": 234,
+  "before": {
+    "clienteId": 2583,
+    "limiteCredito": "50000.00",
+    "saldoActual": "550.00",
+    "saldoAFavor": "0.00",
+    "creditoDisponible": "49450.00",
+    "puedeComprarCredito": true,
+    "diasCredito": 7,
+    "utilizacion": "1.10",
+    "totalVencido": "0.00",
+    "primerVencimiento": "2026-10-03",
+    "primeraCompra": "2026-09-26T09:36:41.965Z",
+    "ultimaActividad": "2026-09-26T09:42:04.121Z",
+    "antiguedad": [
+      {
+        "fechaVencimiento": "2026-10-03",
+        "pendiente": "550.00",
+        "diasVencido": 0,
+        "sinPlazo": false,
+        "estado": "VIGENTE"
+      }
+    ]
+  },
+  "cobro": {
+    "id": "1be749fa-7141-45a1-bda2-873cf6d26e1d",
+    "estado": "APLICADO",
+    "receptor": {
+      "id": 234,
+      "nombre": "Isolated postreview financial admin"
+    },
+    "rechazos": [],
+    "reciboId": "e33e6dc2-deee-4c6f-9184-2126bcc99b40",
+    "revision": 1,
+    "clienteId": 2583,
+    "formaPago": "TRANSFERENCIA",
+    "avisoAdmin": false,
+    "propuestas": [
+      {
+        "id": "060b5ce5-705c-4fcf-b864-b331235b4fa0",
+        "actor": {
+          "id": 234,
+          "nombre": "Isolated postreview financial admin"
+        },
+        "notas": [
+          {
+            "fecha": "2026-09-26T09:37:20.923Z",
+            "folio": "2",
+            "notaId": 2,
+            "facturada": false,
+            "ubicacionId": 835,
+            "saldoPendiente": "550.00",
+            "movimientoVentaId": 1
+          }
+        ],
+        "version": 1,
+        "createdAt": "2026-09-26T09:42:26.785Z",
+        "evidencia": {
+          "descripcion": "OWNER POSTREVIEW dinero real sintético directed-receive",
+          "referencias": [
+            "OWNER-directed-receive"
+          ]
+        },
+        "asignaciones": [
+          {
+            "notaId": 2,
+            "importe": "100.00",
+            "movimientoVentaId": 1
+          }
+        ],
+        "importeFavorPropuesto": "0.00"
+      }
+    ],
+    "capacidades": {
+      "puedeRecibir": true,
+      "puedePreparar": false,
+      "puedeAutorizar": false,
+      "puedeRechazar": false,
+      "puedeDevolver": false,
+      "puedeVerAvisos": true,
+      "puedeImprimir": true,
+      "preparacionADisponible": false
+    },
+    "ubicacionId": 835,
+    "aplicaciones": [
+      {
+        "id": "d0056233-7b17-421a-9217-36cff5c84474",
+        "actor": {
+          "id": 234,
+          "nombre": "Isolated postreview financial admin"
+        },
+        "importe": "100.00",
+        "evidencia": {
+          "descripcion": "OWNER POSTREVIEW dinero real sintético directed-receive",
+          "referencias": [
+            "OWNER-directed-receive"
+          ]
+        },
+        "propuestaId": "060b5ce5-705c-4fcf-b864-b331235b4fa0",
+        "asignaciones": [
+          {
+            "notaId": 2,
+            "importe": "100.00",
+            "movimientoVentaId": 1
+          }
+        ],
+        "constanciaId": "8173dad9-b128-4147-8088-868fcf5fde62",
+        "fechaAplicacion": "2026-09-26T09:42:26.785Z",
+        "importeFavorGenerado": "0.00"
+      }
+    ],
+    "clienteNombre": "OWNER POSTREVIEW26 CLIENTE",
+    "cuentaDestino": "CUENTA_NO_FISCAL",
+    "antiguedadDias": 0,
+    "fechaRecepcion": "2026-09-26T09:42:26.785Z",
+    "notasIndicadas": [
+      {
+        "fecha": "2026-09-26T09:37:20.923Z",
+        "folio": "2",
+        "notaId": 2,
+        "facturada": false,
+        "ubicacionId": 835,
+        "saldoPendiente": "550.00",
+        "movimientoVentaId": 1
+      }
+    ],
+    "importeAplicado": "100.00",
+    "importeDevuelto": "0.00",
+    "importeRecibido": "100.00",
+    "ubicacionNombre": "OWNER POSTREVIEW26",
+    "importePendiente": "0.00",
+    "algunaVezAplicado": true,
+    "sesionOperativaId": 1,
+    "evidenciaRecepcion": {
+      "descripcion": "OWNER POSTREVIEW dinero real sintético directed-receive",
+      "referencias": [
+        "OWNER-directed-receive"
+      ]
+    }
+  },
+  "after": {
+    "clienteId": 2583,
+    "limiteCredito": "50000.00",
+    "saldoActual": "450.00",
+    "saldoAFavor": "0.00",
+    "creditoDisponible": "49550.00",
+    "puedeComprarCredito": true,
+    "diasCredito": 7,
+    "utilizacion": "0.90",
+    "totalVencido": "0.00",
+    "primerVencimiento": "2026-10-03",
+    "primeraCompra": "2026-09-26T09:36:41.965Z",
+    "ultimaActividad": "2026-09-26T09:42:26.785Z",
+    "antiguedad": [
+      {
+        "fechaVencimiento": "2026-10-03",
+        "pendiente": "450.00",
+        "diasVencido": 0,
+        "sinPlazo": false,
+        "estado": "VIGENTE"
+      }
+    ]
+  },
+  "finishedAt": "2026-09-26T09:42:30.623Z"
+}

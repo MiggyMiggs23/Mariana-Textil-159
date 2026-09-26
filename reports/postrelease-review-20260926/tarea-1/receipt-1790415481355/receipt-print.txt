@@ -1,0 +1,105 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Vista Global
+1
+I
+
+Isolated postreview financial admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Recibo E3-835-00000001
+
+Dos copias A5. La solicitud se audita; cancelar la impresora no vuelve a cobrar.
+
+Ver detalle del movimiento #2
+
+Solicitar impresión / reimpresión
+Mariana Textil · Recibo de abono
+Copia Cliente · Página 1 / 1
+E3-835-00000001
+$250.00
+
+Cliente: OWNER POSTREVIEW26 CLIENTE
+
+Sitio receptor: OWNER POSTREVIEW26 · Recibió / registró: Isolated postreview financial admin
+
+Recepción: 26/9/2026, 3:37:35 a.m. · Registro: 26/9/2026, 3:37:35 a.m.
+
+Medio: Efectivo · Cuenta: CAJA FISICA
+
+Nota	Saldo anterior	Aplicado	Saldo posterior
+2	$1,000.00	$250.00	$750.00
+
+Remanente del abono: $0.00 · Saldo a favor total: $0.00 · Deuda total posterior: $750.00
+
+Firma de quien entrega
+Firma de quien recibe
+
+REIMPRESIÓN / copia de evidencia emitida · 26/9/2026, 3:38:07 a.m. · Movimiento 2
+
+Mariana Textil · Recibo de abono
+Copia Tienda · Página 1 / 1
+E3-835-00000001
+$250.00
+
+Cliente: OWNER POSTREVIEW26 CLIENTE
+
+Sitio receptor: OWNER POSTREVIEW26 · Recibió / registró: Isolated postreview financial admin
+
+Recepción: 26/9/2026, 3:37:35 a.m. · Registro: 26/9/2026, 3:37:35 a.m.
+
+Medio: Efectivo · Cuenta: CAJA FISICA
+
+Nota	Saldo anterior	Aplicado	Saldo posterior
+2	$1,000.00	$250.00	$750.00
+
+Remanente del abono: $0.00 · Saldo a favor total: $0.00 · Deuda total posterior: $750.00
+
+Firma de quien entrega
+Firma de quien recibe
+
+REIMPRESIÓN / copia de evidencia emitida · 26/9/2026, 3:38:07 a.m. · Movimiento 2

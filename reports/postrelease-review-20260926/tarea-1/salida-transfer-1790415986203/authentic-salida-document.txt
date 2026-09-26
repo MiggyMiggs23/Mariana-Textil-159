@@ -1,0 +1,36 @@
+Vista previa de impresión (SALIDA - A5 horizontal)
+Imprimir / Guardar PDF
+Salida
+MARIANA TEXTIL
+OWN-000001
+Pág 1/1
+GENERÓ:
+Isolated postreview financial admin
+ENTREGÓ:
+OWNER TRANSPORTE NATIVO
+ORIGEN:
+OWNER POSTREVIEW26
+DESTINO:
+OWNER POSTREVIEW26 DESTINO
+FECHA:
+26/09/2026 03:44
+#	PRODUCTO	COLOR	NO. DE
+ROLLOS	CANT. DE
+UNIDAD	SKU
+1	OWNER POSTREVIEW26 ALGODON	AZUL	1	10.00 Mts.	OWNPOSALG-AZU
+					
+					
+					
+					
+					
+					
+					
+					
+					
+OBSERVACIONES
+Sin observaciones.
+Revisó
+Entregó
+Recibió
+Total Rollos	1
+Total Mts.	10.00

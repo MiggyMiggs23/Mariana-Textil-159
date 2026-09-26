@@ -1,0 +1,917 @@
+{
+  "stage": "documents-print-check",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "status": "PASS",
+  "startedAt": "2026-09-26T09:49:42.339Z",
+  "requests": [
+    {
+      "at": "2026-09-26T09:49:43.667Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416183640-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T09:49:44.896Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416183853-7"
+    },
+    {
+      "at": "2026-09-26T09:49:45.488Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416184902-8"
+    },
+    {
+      "at": "2026-09-26T09:49:45.498Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416185493-11"
+    },
+    {
+      "at": "2026-09-26T09:49:45.706Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416184910-10"
+    },
+    {
+      "at": "2026-09-26T09:49:46.227Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416185501-12"
+    },
+    {
+      "at": "2026-09-26T09:49:46.335Z",
+      "path": "/api/e5/cobros/fd5849b4-bfab-40e3-b07d-c471cdbed06f",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416185713-13"
+    },
+    {
+      "at": "2026-09-26T09:49:46.622Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416186285-14"
+    },
+    {
+      "at": "2026-09-26T09:49:47.565Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416186803-34"
+    },
+    {
+      "at": "2026-09-26T09:49:47.575Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416187569-36"
+    },
+    {
+      "at": "2026-09-26T09:49:48.263Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416187577-37"
+    },
+    {
+      "at": "2026-09-26T09:49:48.601Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416188290-38"
+    },
+    {
+      "at": "2026-09-26T09:49:48.856Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416188293-41"
+    },
+    {
+      "at": "2026-09-26T09:49:48.886Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416188292-40"
+    },
+    {
+      "at": "2026-09-26T09:49:48.896Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416188294-43"
+    },
+    {
+      "at": "2026-09-26T09:49:48.898Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416188293-42"
+    },
+    {
+      "at": "2026-09-26T09:49:49.025Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416188291-39"
+    },
+    {
+      "at": "2026-09-26T09:49:49.182Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416188296-44"
+    },
+    {
+      "at": "2026-09-26T09:49:49.453Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416188296-45"
+    },
+    {
+      "at": "2026-09-26T09:49:50.110Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416189542-47"
+    },
+    {
+      "at": "2026-09-26T09:49:50.674Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416190114-48"
+    },
+    {
+      "at": "2026-09-26T09:49:50.700Z",
+      "path": "/api/e5/cobros/fd5849b4-bfab-40e3-b07d-c471cdbed06f",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416190115-49"
+    },
+    {
+      "at": "2026-09-26T09:49:51.326Z",
+      "path": "/api/e5/cobros/fd5849b4-bfab-40e3-b07d-c471cdbed06f/documentos/95565aa2-242b-49a5-8887-311346e3ae5e",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416190703-50"
+    },
+    {
+      "at": "2026-09-26T09:49:51.973Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416191420-51"
+    },
+    {
+      "at": "2026-09-26T09:49:52.665Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416191976-52"
+    },
+    {
+      "at": "2026-09-26T09:49:53.266Z",
+      "path": "/api/e5/cobros/fd5849b4-bfab-40e3-b07d-c471cdbed06f",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416192669-53"
+    },
+    {
+      "at": "2026-09-26T09:49:54.204Z",
+      "path": "/api/e5/cobros/fd5849b4-bfab-40e3-b07d-c471cdbed06f/documentos/95565aa2-242b-49a5-8887-311346e3ae5e/impresiones",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416193278-54"
+    },
+    {
+      "at": "2026-09-26T09:49:55.582Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416195016-58"
+    },
+    {
+      "at": "2026-09-26T09:49:55.593Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416195588-60"
+    },
+    {
+      "at": "2026-09-26T09:49:56.298Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416195596-61"
+    },
+    {
+      "at": "2026-09-26T09:49:56.655Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416196334-62"
+    },
+    {
+      "at": "2026-09-26T09:49:56.920Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416196337-65"
+    },
+    {
+      "at": "2026-09-26T09:49:56.931Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416196337-66"
+    },
+    {
+      "at": "2026-09-26T09:49:56.943Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416196337-67"
+    },
+    {
+      "at": "2026-09-26T09:49:57.012Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416196337-64"
+    },
+    {
+      "at": "2026-09-26T09:49:57.062Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416196335-63"
+    },
+    {
+      "at": "2026-09-26T09:49:57.252Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416196338-68"
+    },
+    {
+      "at": "2026-09-26T09:49:57.533Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416196339-69"
+    },
+    {
+      "at": "2026-09-26T09:49:58.322Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416197739-71"
+    },
+    {
+      "at": "2026-09-26T09:49:58.912Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416198327-72"
+    },
+    {
+      "at": "2026-09-26T09:49:58.926Z",
+      "path": "/api/e5/cobros/fd5849b4-bfab-40e3-b07d-c471cdbed06f",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416198327-73"
+    },
+    {
+      "at": "2026-09-26T09:49:59.562Z",
+      "path": "/api/e5/cobros/fd5849b4-bfab-40e3-b07d-c471cdbed06f/documentos/67b7af0e-8b0d-45cc-84fb-9d98b8e3c539",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416198928-74"
+    },
+    {
+      "at": "2026-09-26T09:50:00.668Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416200103-75"
+    },
+    {
+      "at": "2026-09-26T09:50:01.371Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416200670-76"
+    },
+    {
+      "at": "2026-09-26T09:50:01.987Z",
+      "path": "/api/e5/cobros/fd5849b4-bfab-40e3-b07d-c471cdbed06f",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416201372-77"
+    },
+    {
+      "at": "2026-09-26T09:50:02.875Z",
+      "path": "/api/e5/cobros/fd5849b4-bfab-40e3-b07d-c471cdbed06f/documentos/67b7af0e-8b0d-45cc-84fb-9d98b8e3c539/impresiones",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416201994-78"
+    },
+    {
+      "at": "2026-09-26T09:50:03.767Z",
+      "path": "/api/e5/cobros/1be749fa-7141-45a1-bda2-873cf6d26e1d",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416203148-79"
+    },
+    {
+      "at": "2026-09-26T09:50:04.584Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416203997-83"
+    },
+    {
+      "at": "2026-09-26T09:50:04.596Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416204587-85"
+    },
+    {
+      "at": "2026-09-26T09:50:05.320Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416204600-86"
+    },
+    {
+      "at": "2026-09-26T09:50:05.684Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416205348-87"
+    },
+    {
+      "at": "2026-09-26T09:50:05.917Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416205351-90"
+    },
+    {
+      "at": "2026-09-26T09:50:05.919Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416205352-92"
+    },
+    {
+      "at": "2026-09-26T09:50:06.044Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416205352-91"
+    },
+    {
+      "at": "2026-09-26T09:50:06.204Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416205350-89"
+    },
+    {
+      "at": "2026-09-26T09:50:06.207Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416205349-88"
+    },
+    {
+      "at": "2026-09-26T09:50:06.298Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416205353-93"
+    },
+    {
+      "at": "2026-09-26T09:50:06.710Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416205354-94"
+    },
+    {
+      "at": "2026-09-26T09:50:07.567Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416207040-96"
+    },
+    {
+      "at": "2026-09-26T09:50:08.095Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416207570-97"
+    },
+    {
+      "at": "2026-09-26T09:50:08.185Z",
+      "path": "/api/e5/cobros/1be749fa-7141-45a1-bda2-873cf6d26e1d",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416207571-98"
+    },
+    {
+      "at": "2026-09-26T09:50:08.885Z",
+      "path": "/api/e5/cobros/1be749fa-7141-45a1-bda2-873cf6d26e1d/documentos/e33e6dc2-deee-4c6f-9184-2126bcc99b40",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416208228-99"
+    },
+    {
+      "at": "2026-09-26T09:50:09.989Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416209399-100"
+    },
+    {
+      "at": "2026-09-26T09:50:10.717Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416209991-101"
+    },
+    {
+      "at": "2026-09-26T09:50:11.282Z",
+      "path": "/api/e5/cobros/1be749fa-7141-45a1-bda2-873cf6d26e1d",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416210718-102"
+    },
+    {
+      "at": "2026-09-26T09:50:12.101Z",
+      "path": "/api/e5/cobros/1be749fa-7141-45a1-bda2-873cf6d26e1d/documentos/e33e6dc2-deee-4c6f-9184-2126bcc99b40/impresiones",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416211294-103"
+    },
+    {
+      "at": "2026-09-26T09:50:13.215Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416212684-107"
+    },
+    {
+      "at": "2026-09-26T09:50:13.228Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416213219-109"
+    },
+    {
+      "at": "2026-09-26T09:50:14.173Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416213229-110"
+    },
+    {
+      "at": "2026-09-26T09:50:14.731Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416214205-111"
+    },
+    {
+      "at": "2026-09-26T09:50:14.932Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416214209-116"
+    },
+    {
+      "at": "2026-09-26T09:50:14.968Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416214207-114"
+    },
+    {
+      "at": "2026-09-26T09:50:14.993Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416214207-115"
+    },
+    {
+      "at": "2026-09-26T09:50:15.072Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416214207-113"
+    },
+    {
+      "at": "2026-09-26T09:50:15.152Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416214206-112"
+    },
+    {
+      "at": "2026-09-26T09:50:15.340Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416214209-117"
+    },
+    {
+      "at": "2026-09-26T09:50:15.439Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416214210-118"
+    },
+    {
+      "at": "2026-09-26T09:50:16.357Z",
+      "path": "/api/e5/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416215874-120"
+    },
+    {
+      "at": "2026-09-26T09:50:16.845Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416216361-121"
+    },
+    {
+      "at": "2026-09-26T09:50:16.979Z",
+      "path": "/api/e5/cobros/1be749fa-7141-45a1-bda2-873cf6d26e1d",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416216362-122"
+    },
+    {
+      "at": "2026-09-26T09:50:17.643Z",
+      "path": "/api/e5/cobros/1be749fa-7141-45a1-bda2-873cf6d26e1d/documentos/8173dad9-b128-4147-8088-868fcf5fde62",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416216982-123"
+    },
+    {
+      "at": "2026-09-26T09:50:18.315Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416217733-124"
+    },
+    {
+      "at": "2026-09-26T09:50:19.042Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416218317-125"
+    },
+    {
+      "at": "2026-09-26T09:50:19.558Z",
+      "path": "/api/e5/cobros/1be749fa-7141-45a1-bda2-873cf6d26e1d",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416219044-126"
+    },
+    {
+      "at": "2026-09-26T09:50:20.317Z",
+      "path": "/api/e5/cobros/1be749fa-7141-45a1-bda2-873cf6d26e1d/documentos/8173dad9-b128-4147-8088-868fcf5fde62/impresiones",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416219576-127"
+    },
+    {
+      "at": "2026-09-26T09:50:21.313Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416220821-131"
+    },
+    {
+      "at": "2026-09-26T09:50:21.322Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416221316-133"
+    },
+    {
+      "at": "2026-09-26T09:50:21.937Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416221324-134"
+    },
+    {
+      "at": "2026-09-26T09:50:22.249Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416221970-135"
+    },
+    {
+      "at": "2026-09-26T09:50:22.538Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416221972-138"
+    },
+    {
+      "at": "2026-09-26T09:50:22.543Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416221973-140"
+    },
+    {
+      "at": "2026-09-26T09:50:22.558Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416221973-139"
+    },
+    {
+      "at": "2026-09-26T09:50:22.646Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416221972-137"
+    },
+    {
+      "at": "2026-09-26T09:50:22.740Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416221971-136"
+    },
+    {
+      "at": "2026-09-26T09:50:22.756Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416221973-141"
+    },
+    {
+      "at": "2026-09-26T09:50:23.103Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416221974-142"
+    },
+    {
+      "at": "2026-09-26T09:50:24.315Z",
+      "path": "/api/sesiones-caja",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416223761-145"
+    },
+    {
+      "at": "2026-09-26T09:50:25.503Z",
+      "path": "/api/sesiones-caja/1/corte",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416224595-146"
+    },
+    {
+      "at": "2026-09-26T09:50:26.004Z",
+      "path": "/api/e9/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416225522-147"
+    },
+    {
+      "at": "2026-09-26T09:50:26.050Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416225523-148"
+    },
+    {
+      "at": "2026-09-26T09:50:26.176Z",
+      "path": "/api/caja/recibos-e3",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416225524-149"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/document-retained-receipt-viewport.png",
+      "bytes": 161766,
+      "sha256": "e8b978de8232748516fc0df08011120d58ce8021933639addea179b84944914e"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/document-retained-receipt-full.png",
+      "bytes": 189813,
+      "sha256": "81899022f92b2fdd7144963a6298a4ade4023a9c5b7a7243543cb93bcd3d2b0d"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/document-retained-receipt.txt",
+      "bytes": 2817,
+      "sha256": "506f836cdb027e10096de26d8ee524454e0aa723bc7ed707e2c652fb45be481c"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/retained-receipt.pdf",
+      "bytes": 1073,
+      "sha256": "ec0ca2343bb371dcd419ea65f1812a4f847acd8f53679b3fbc5e41f3f7f25b03"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/document-retained-application-viewport.png",
+      "bytes": 167563,
+      "sha256": "e2c5b9e43ef5a2c786c551b944cf14bdbf049810715a6a532faf8593576bf261"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/document-retained-application-full.png",
+      "bytes": 195245,
+      "sha256": "5147519fb9abea508c20fb0cbd11ceeaa0ba50d960d46e4d3d6ca524f5184396"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/document-retained-application.txt",
+      "bytes": 2961,
+      "sha256": "f699a8cc814c5f42be82f457a8c5301973fde0a5bf40e11da47e5ea6144ba0dc"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/retained-application.pdf",
+      "bytes": 1073,
+      "sha256": "43e4b6158ff3e75ab018fda30091e8bc8a148e13f07415abcd1df34d4072d820"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/document-directed-receipt-viewport.png",
+      "bytes": 160460,
+      "sha256": "eaea38839c7a143119d30459755a56feb02387a9e7bb6a657fdc56c0eb380124"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/document-directed-receipt-full.png",
+      "bytes": 188312,
+      "sha256": "11aeaff845cee12ac7d9d2cc2e32e3834408ff4b08357454d544bef28559cc44"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/document-directed-receipt.txt",
+      "bytes": 2837,
+      "sha256": "8536efc0a2372f852e7ca1902687e9bd48ba704ed1a66a5a1ee0d5551c418bda"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/directed-receipt.pdf",
+      "bytes": 1073,
+      "sha256": "cb79f2877c32729e9a33779ac5492728666789c3b29fd26544e15b87ed3a4000"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/document-directed-application-viewport.png",
+      "bytes": 166248,
+      "sha256": "87f8821d2409de2a737d291ea6bd3804198794d622b7ef9669f102857ac334fb"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/document-directed-application-full.png",
+      "bytes": 194691,
+      "sha256": "d7dd34be05a25c64843259a63169d089550bd3d743b02da2ddd7168793cd787e"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/document-directed-application.txt",
+      "bytes": 2993,
+      "sha256": "3dea0e0222f96e8d173e29f3c5a4b0a12625d30bab6537e787c627c0bdcb2a43"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/directed-application.pdf",
+      "bytes": 1073,
+      "sha256": "fce4a66b530d338738e96ad65648c441fe7fb1f20d0e6c193abb33cf44b129a4"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/corte-native-print-repeat.pdf",
+      "bytes": 1034,
+      "sha256": "7706bbe796064667433fcac2e725be379afd6a235fc8c622f9188f50c697c15c"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/screen-cut-after-native-print-viewport.png",
+      "bytes": 215951,
+      "sha256": "54780c978cf6246a19cbdd012ec93e71c35226ef8b7f70f54f6a31052c9e5232"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/screen-cut-after-native-print-full.png",
+      "bytes": 172001,
+      "sha256": "e84139641bef4e844943a3f14ed24a93a27eebee0fccb90ddd85110bbb836218"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416182339/screen-cut-after-native-print.txt",
+      "bytes": 3676,
+      "sha256": "5afca8268a635cd66cc73f9d27748119fe019bd2ec745a1521713ab649770c1c"
+    }
+  ],
+  "checks": [],
+  "actorId": 234,
+  "beforePdf": {
+    "bodyClass": "print-corte",
+    "events": [
+      {
+        "printMedia": false,
+        "bodyClass": "print-corte",
+        "parents": [
+          {
+            "tag": "DIV",
+            "className": "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg corte-print max-h-[92dvh] overflow-y-auto sm:max-w-4xl",
+            "display": "grid",
+            "visibility": "visible",
+            "textLength": 2353
+          },
+          {
+            "tag": "BODY",
+            "className": "print-corte",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 3363
+          },
+          {
+            "tag": "HTML",
+            "className": "",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 19102
+          }
+        ]
+      }
+    ]
+  },
+  "afterPdf": {
+    "bodyClass": "print-corte",
+    "events": [
+      {
+        "printMedia": false,
+        "bodyClass": "print-corte",
+        "parents": [
+          {
+            "tag": "DIV",
+            "className": "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg corte-print max-h-[92dvh] overflow-y-auto sm:max-w-4xl",
+            "display": "grid",
+            "visibility": "visible",
+            "textLength": 2353
+          },
+          {
+            "tag": "BODY",
+            "className": "print-corte",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 3363
+          },
+          {
+            "tag": "HTML",
+            "className": "",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 19102
+          }
+        ]
+      },
+      {
+        "printMedia": false,
+        "bodyClass": "print-corte",
+        "parents": [
+          {
+            "tag": "DIV",
+            "className": "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg corte-print max-h-[92dvh] overflow-y-auto sm:max-w-4xl",
+            "display": "grid",
+            "visibility": "visible",
+            "textLength": 2353
+          },
+          {
+            "tag": "BODY",
+            "className": "print-corte",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 3363
+          },
+          {
+            "tag": "HTML",
+            "className": "",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 19102
+          }
+        ]
+      }
+    ]
+  },
+  "finishedAt": "2026-09-26T09:50:26.561Z"
+}

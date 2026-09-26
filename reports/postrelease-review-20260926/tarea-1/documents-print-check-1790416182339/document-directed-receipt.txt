@@ -1,0 +1,124 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+OWNER POSTREVIEW26
+1
+I
+
+Isolated postreview financial admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Volver a recepción
+RECIBO · E5-R-e33e6dc2-deee-4c6f-9184-2126bcc99b40
+
+Dos copias A5 horizontal. Solicitud auditada; no acredita impresión física. Cancelar o fallar la impresora no modifica dinero.
+
+Motivo de impresión / reimpresión
+Solicitar impresión / reimpresión
+Mariana Textil · Recibo de recepción
+Copia Cliente · Página 1 / 1
+E5-R-e33e6dc2-deee-4c6f-9184-2126bcc99b40
+$100.00
+
+Recibo vinculado: E5-R-e33e6dc2-deee-4c6f-9184-2126bcc99b40
+
+Cliente: OWNER POSTREVIEW26 CLIENTE · Sitio: OWNER POSTREVIEW26
+
+Recibió: Isolated postreview financial admin
+
+Recepción: 26/9/2026, 3:42:26 a.m. · Emisión: 26/9/2026, 3:42:26 a.m.
+
+Medio: TRANSFERENCIA · Cuenta: CUENTA_NO_FISCAL
+
+Recibido, pendiente de aplicación. No es saldo a favor disponible.
+
+Evidencia: OWNER POSTREVIEW dinero real sintético directed-receive
+
+Referencia: OWNER-directed-receive
+
+Nota (snapshot)	Saldo en evidencia	Importe asignado
+2 · cargo 1	$550.00	Sin aplicación en este documento
+
+Total recibido original: $100.00 · Pendiente al emitir: $100.00
+
+Favor autorizado generado en esta constancia: $0.00
+
+Documento inmutable. No recalculado con saldos actuales. Reimprimir no recibe ni aplica dinero.
+
+Firma de quien entrega / cliente
+Firma de quien recibe / autoriza
+Mariana Textil · Recibo de recepción
+Copia Tienda · Página 1 / 1
+E5-R-e33e6dc2-deee-4c6f-9184-2126bcc99b40
+$100.00
+
+Recibo vinculado: E5-R-e33e6dc2-deee-4c6f-9184-2126bcc99b40
+
+Cliente: OWNER POSTREVIEW26 CLIENTE · Sitio: OWNER POSTREVIEW26
+
+Recibió: Isolated postreview financial admin
+
+Recepción: 26/9/2026, 3:42:26 a.m. · Emisión: 26/9/2026, 3:42:26 a.m.
+
+Medio: TRANSFERENCIA · Cuenta: CUENTA_NO_FISCAL
+
+Recibido, pendiente de aplicación. No es saldo a favor disponible.
+
+Evidencia: OWNER POSTREVIEW dinero real sintético directed-receive
+
+Referencia: OWNER-directed-receive
+
+Nota (snapshot)	Saldo en evidencia	Importe asignado
+2 · cargo 1	$550.00	Sin aplicación en este documento
+
+Total recibido original: $100.00 · Pendiente al emitir: $100.00
+
+Favor autorizado generado en esta constancia: $0.00
+
+Documento inmutable. No recalculado con saldos actuales. Reimprimir no recibe ni aplica dinero.
+
+Firma de quien entrega / cliente
+Firma de quien recibe / autoriza

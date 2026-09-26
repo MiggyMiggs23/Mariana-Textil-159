@@ -1,0 +1,128 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+OWNER POSTREVIEW26
+1
+I
+
+Isolated postreview financial admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Volver a recepción
+CONSTANCIA · E5-A-8173dad9-b128-4147-8088-868fcf5fde62
+
+Dos copias A5 horizontal. Solicitud auditada; no acredita impresión física. Cancelar o fallar la impresora no modifica dinero.
+
+Motivo de impresión / reimpresión
+Solicitar impresión / reimpresión
+Mariana Textil · Constancia de aplicación — SIN OTRO COBRO
+Copia Cliente · Página 1 / 1
+E5-A-8173dad9-b128-4147-8088-868fcf5fde62
+$100.00
+
+Recibo vinculado: E5-R-e33e6dc2-deee-4c6f-9184-2126bcc99b40
+
+Cliente: OWNER POSTREVIEW26 CLIENTE · Sitio: OWNER POSTREVIEW26
+
+Recibió: Isolated postreview financial admin · Autorizó: Isolated postreview financial admin
+
+Recepción: 26/9/2026, 3:42:26 a.m. · Emisión: 26/9/2026, 3:42:26 a.m.
+
+Aplicación: 26/9/2026, 3:42:26 a.m.
+
+Medio: TRANSFERENCIA · Cuenta: CUENTA_NO_FISCAL
+
+Constancia de aplicación autorizada. No es un nuevo cobro.
+
+Evidencia: OWNER POSTREVIEW dinero real sintético directed-receive
+
+Referencia: OWNER-directed-receive
+
+Nota (snapshot)	Saldo en evidencia	Importe asignado
+2 · cargo 1	$550.00	$100.00
+
+Total recibido original: $100.00 · Pendiente al emitir: $0.00
+
+Favor autorizado generado en esta constancia: $0.00
+
+Documento inmutable. No recalculado con saldos actuales. Reimprimir no recibe ni aplica dinero.
+
+Firma de quien entrega / cliente
+Firma de quien recibe / autoriza
+Mariana Textil · Constancia de aplicación — SIN OTRO COBRO
+Copia Tienda · Página 1 / 1
+E5-A-8173dad9-b128-4147-8088-868fcf5fde62
+$100.00
+
+Recibo vinculado: E5-R-e33e6dc2-deee-4c6f-9184-2126bcc99b40
+
+Cliente: OWNER POSTREVIEW26 CLIENTE · Sitio: OWNER POSTREVIEW26
+
+Recibió: Isolated postreview financial admin · Autorizó: Isolated postreview financial admin
+
+Recepción: 26/9/2026, 3:42:26 a.m. · Emisión: 26/9/2026, 3:42:26 a.m.
+
+Aplicación: 26/9/2026, 3:42:26 a.m.
+
+Medio: TRANSFERENCIA · Cuenta: CUENTA_NO_FISCAL
+
+Constancia de aplicación autorizada. No es un nuevo cobro.
+
+Evidencia: OWNER POSTREVIEW dinero real sintético directed-receive
+
+Referencia: OWNER-directed-receive
+
+Nota (snapshot)	Saldo en evidencia	Importe asignado
+2 · cargo 1	$550.00	$100.00
+
+Total recibido original: $100.00 · Pendiente al emitir: $0.00
+
+Favor autorizado generado en esta constancia: $0.00
+
+Documento inmutable. No recalculado con saldos actuales. Reimprimir no recibe ni aplica dinero.
+
+Firma de quien entrega / cliente
+Firma de quien recibe / autoriza

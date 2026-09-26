@@ -1,0 +1,252 @@
+{
+  "stage": "entry",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "status": "PASS",
+  "startedAt": "2026-09-26T09:36:00.214Z",
+  "requests": [
+    {
+      "at": "2026-09-26T09:36:01.542Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-entry-1790415361524-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T09:36:02.544Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415361695-7"
+    },
+    {
+      "at": "2026-09-26T09:36:03.141Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415362558-8"
+    },
+    {
+      "at": "2026-09-26T09:36:03.148Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415362565-10"
+    },
+    {
+      "at": "2026-09-26T09:36:03.162Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415363153-11"
+    },
+    {
+      "at": "2026-09-26T09:36:04.023Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415363451-16"
+    },
+    {
+      "at": "2026-09-26T09:36:04.033Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415364027-18"
+    },
+    {
+      "at": "2026-09-26T09:36:04.771Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415364036-19"
+    },
+    {
+      "at": "2026-09-26T09:36:05.197Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415364868-20"
+    },
+    {
+      "at": "2026-09-26T09:36:05.467Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415364876-24"
+    },
+    {
+      "at": "2026-09-26T09:36:05.502Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415364877-25"
+    },
+    {
+      "at": "2026-09-26T09:36:05.514Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415364871-22"
+    },
+    {
+      "at": "2026-09-26T09:36:05.543Z",
+      "path": "/api/inventario/entradas",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415364875-23"
+    },
+    {
+      "at": "2026-09-26T09:36:05.564Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415364871-21"
+    },
+    {
+      "at": "2026-09-26T09:36:05.824Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415364879-26"
+    },
+    {
+      "at": "2026-09-26T09:36:05.869Z",
+      "path": "/api/inventario/fecha-servidor",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415364889-31"
+    },
+    {
+      "at": "2026-09-26T09:36:06.082Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415364880-27"
+    },
+    {
+      "at": "2026-09-26T09:36:06.114Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415364882-28"
+    },
+    {
+      "at": "2026-09-26T09:36:06.146Z",
+      "path": "/api/locations",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415364888-30"
+    },
+    {
+      "at": "2026-09-26T09:36:06.192Z",
+      "path": "/api/inventario/entradas/catalogos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415364883-29"
+    },
+    {
+      "at": "2026-09-26T09:36:07.487Z",
+      "path": "/api/contenedores/disponibles-entrada",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415366865-34"
+    },
+    {
+      "at": "2026-09-26T09:36:07.514Z",
+      "path": "/api/locations/835/pisos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415366864-33"
+    },
+    {
+      "at": "2026-09-26T09:36:14.875Z",
+      "path": "/api/inventario/entradas",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-entry-1790415369221-35"
+    },
+    {
+      "at": "2026-09-26T09:36:15.672Z",
+      "path": "/api/contenedores/disponibles-entrada",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415374884-38"
+    },
+    {
+      "at": "2026-09-26T09:36:15.739Z",
+      "path": "/api/inventario/entradas/catalogos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415374884-37"
+    },
+    {
+      "at": "2026-09-26T09:36:15.996Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415375376-45"
+    },
+    {
+      "at": "2026-09-26T09:36:16.151Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415375383-47"
+    },
+    {
+      "at": "2026-09-26T09:36:16.165Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415376133-49"
+    },
+    {
+      "at": "2026-09-26T09:36:16.172Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-entry-1790415376163-50"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/entry-1790415360214/entry-viewport.png",
+      "bytes": 79654,
+      "sha256": "bd6c0f93b286c62592d29df4df2f3905360b8c978498f4ba186b7d0a75b743b5"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/entry-1790415360214/entry-full.png",
+      "bytes": 80675,
+      "sha256": "8d166c4d7ab4fcc03d21c7a0150d311d65e93aa729da710ded55690e0415647f"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/entry-1790415360214/entry.txt",
+      "bytes": 734,
+      "sha256": "d00ee7c181bfca9bb087d05ec9d6798908f52d72ce51b4aed8b4c48bd73ae361"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/entry-1790415360214/final-viewport.png",
+      "bytes": 78759,
+      "sha256": "736a7df1e0fb08ef0a97057c5227471875ac8cd8d23ecc1ba5d460c1050662ed"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/entry-1790415360214/final-full.png",
+      "bytes": 78759,
+      "sha256": "736a7df1e0fb08ef0a97057c5227471875ac8cd8d23ecc1ba5d460c1050662ed"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/entry-1790415360214/final.txt",
+      "bytes": 734,
+      "sha256": "d00ee7c181bfca9bb087d05ec9d6798908f52d72ce51b4aed8b4c48bd73ae361"
+    }
+  ],
+  "checks": [],
+  "actorId": 234,
+  "finishedAt": "2026-09-26T09:36:17.660Z"
+}

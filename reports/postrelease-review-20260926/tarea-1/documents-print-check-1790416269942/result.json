@@ -1,0 +1,284 @@
+{
+  "stage": "documents-print-check",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "status": "PASS",
+  "startedAt": "2026-09-26T09:51:09.942Z",
+  "requests": [
+    {
+      "at": "2026-09-26T09:51:11.071Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416271054-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T09:51:12.243Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416271229-7"
+    },
+    {
+      "at": "2026-09-26T09:51:12.816Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416272249-8"
+    },
+    {
+      "at": "2026-09-26T09:51:12.828Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416272820-11"
+    },
+    {
+      "at": "2026-09-26T09:51:13.039Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416272256-10"
+    },
+    {
+      "at": "2026-09-26T09:51:13.799Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416273236-16"
+    },
+    {
+      "at": "2026-09-26T09:51:13.807Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416273802-18"
+    },
+    {
+      "at": "2026-09-26T09:51:14.535Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416273810-19"
+    },
+    {
+      "at": "2026-09-26T09:51:14.947Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416274611-20"
+    },
+    {
+      "at": "2026-09-26T09:51:15.311Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416274614-25"
+    },
+    {
+      "at": "2026-09-26T09:51:15.400Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416274613-23"
+    },
+    {
+      "at": "2026-09-26T09:51:15.410Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416274613-22"
+    },
+    {
+      "at": "2026-09-26T09:51:15.458Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416274614-24"
+    },
+    {
+      "at": "2026-09-26T09:51:15.539Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416274615-26"
+    },
+    {
+      "at": "2026-09-26T09:51:15.584Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416274612-21"
+    },
+    {
+      "at": "2026-09-26T09:51:15.909Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416274615-27"
+    },
+    {
+      "at": "2026-09-26T09:51:17.044Z",
+      "path": "/api/sesiones-caja",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416276396-30"
+    },
+    {
+      "at": "2026-09-26T09:51:18.323Z",
+      "path": "/api/sesiones-caja/1/corte",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416277247-31"
+    },
+    {
+      "at": "2026-09-26T09:51:18.920Z",
+      "path": "/api/e9/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416278342-32"
+    },
+    {
+      "at": "2026-09-26T09:51:18.922Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416278343-33"
+    },
+    {
+      "at": "2026-09-26T09:51:18.944Z",
+      "path": "/api/caja/recibos-e3",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-documents-print-check-1790416278344-34"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416269942/corte-native-print-repeat.pdf",
+      "bytes": 1034,
+      "sha256": "5aa7abce36935d50aca181e5c3358ca86b2434acb6dbbdf5bb189dcfb9614a63"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416269942/screen-cut-after-native-print-viewport.png",
+      "bytes": 152206,
+      "sha256": "8c293a96e6deea0b6d5d2d5000097e49eaef5347c87bd1f9983fcefe73308c15"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416269942/screen-cut-after-native-print-full.png",
+      "bytes": 166564,
+      "sha256": "d1e2556e4bda179e91dacdcb9166334da943e722231ab9ab1bee9fdfdb9765d9"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/documents-print-check-1790416269942/screen-cut-after-native-print.txt",
+      "bytes": 3676,
+      "sha256": "5afca8268a635cd66cc73f9d27748119fe019bd2ec745a1521713ab649770c1c"
+    }
+  ],
+  "checks": [],
+  "actorId": 234,
+  "beforePdf": {
+    "bodyClass": "print-corte",
+    "events": [
+      {
+        "printMedia": false,
+        "bodyClass": "print-corte",
+        "parents": [
+          {
+            "tag": "DIV",
+            "className": "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg corte-print max-h-[92dvh] overflow-y-auto sm:max-w-4xl",
+            "display": "grid",
+            "visibility": "visible",
+            "textLength": 2353
+          },
+          {
+            "tag": "BODY",
+            "className": "print-corte",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 3363
+          },
+          {
+            "tag": "HTML",
+            "className": "",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 19102
+          }
+        ]
+      }
+    ]
+  },
+  "afterPdf": {
+    "bodyClass": "print-corte",
+    "events": [
+      {
+        "printMedia": false,
+        "bodyClass": "print-corte",
+        "parents": [
+          {
+            "tag": "DIV",
+            "className": "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg corte-print max-h-[92dvh] overflow-y-auto sm:max-w-4xl",
+            "display": "grid",
+            "visibility": "visible",
+            "textLength": 2353
+          },
+          {
+            "tag": "BODY",
+            "className": "print-corte",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 3363
+          },
+          {
+            "tag": "HTML",
+            "className": "",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 19102
+          }
+        ]
+      },
+      {
+        "printMedia": false,
+        "bodyClass": "print-corte",
+        "parents": [
+          {
+            "tag": "DIV",
+            "className": "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg corte-print max-h-[92dvh] overflow-y-auto sm:max-w-4xl",
+            "display": "grid",
+            "visibility": "visible",
+            "textLength": 2353
+          },
+          {
+            "tag": "BODY",
+            "className": "print-corte",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 3363
+          },
+          {
+            "tag": "HTML",
+            "className": "",
+            "display": "block",
+            "visibility": "visible",
+            "textLength": 19102
+          }
+        ]
+      }
+    ]
+  },
+  "printCss": {
+    "bodyClass": "print-corte",
+    "printMedia": true,
+    "directBodyChild": true,
+    "display": "none",
+    "visibility": "visible"
+  },
+  "finishedAt": "2026-09-26T09:51:19.385Z"
+}

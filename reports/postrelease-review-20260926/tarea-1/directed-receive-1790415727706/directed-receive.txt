@@ -1,0 +1,90 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+OWNER POSTREVIEW26
+1
+I
+
+Isolated postreview financial admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Caja operativa
+Cartera / Estado de cuenta
+Historial de cortes
+Sitio de crédito (independiente del sitio operativo)
+OWNER POSTREVIEW26
+
+La tienda seleccionada limita la búsqueda por folio: al cambiarla se limpia el resultado anterior. Una nota escaneada se consulta por su identidad sin filtro de tienda y se conserva al cambiar la selección. El estado de cuenta y los saldos del cliente son globales. El sitio de caja para registrar pagos se elige por separado.
+
+Dinero recibido pendiente de aplicación
+
+No disminuye deuda ni aumenta disponible o saldo a favor mientras espera autorización.
+
+Abrir bandeja de pendientesOcultar captura
+Buscar cliente autorizado
+Buscar cliente
+
+Buscando clientes…
+
+Recepción real · OWNER POSTREVIEW26 CLIENTE · Entrada CAJA
+
+No es recaptura. Recibido sin aplicar no constituye saldo a favor. Contexto: 26/9/2026, 3:42:24 a.m..
+
+Comprobando y registrando… No repitas la operación.
+
+Operación confirmada · APLICADO. Retenido: $0.00.
+
+Ver recepción y cronología
+Recibo inmediato
+Constancia · 26/9/2026, 3:42:26 a.m.
+Estado de Cuenta
+
+Escanea el QR de la nota de crédito o ingresa el folio para consultar y abonar a la cartera.
+
+Registrar Abono
+Escáner / Folio de Nota
+
+Escanea una nota de crédito para cargar el estado de cuenta.
