@@ -1,20 +1,24 @@
-# Estado de entrega — candidato verificado visualmente, no activado
+# Estado de entrega — ACTIVO sin RFC nuevo de proveedores
+
+## Activación autorizada (26/09/2026)
+
+Autorización literal: **«Osea activa todo menos ese, ese cambio no lo quiero»**; se excluyó el RFC nuevo de proveedores. MAIN activó `artifacts/api-server/dist-directorios-sitios-20260925-sin-rfc` y `artifacts/mariana-textil/dist-directorios-sitios-20260925-sin-rfc` con configuración TOML validada y un reinicio por workflow administrado. API PID 20373 arrancó en modo inspección sin inicializadores, frontend HTTP 200 con `index.html` SHA-256 `7f7650f603302b32a985eac9fbb64e0fd4e3897c17093f307f912dcede21b926`, y `/healthz` HTTP 200. Evidencia READ ONLY `activation-sin-rfc/before.json` y `activation-sin-rfc/after.json`: 108 tablas, misma base y esquema, ningún conteo ni hash de contenido alterado. **No se ejecutó DDL ni migración**. Ver `activation-sin-rfc/resultado.md` y su manifiesto para hashes/procedencia.
 
 ## Actualización posterior: simplificaciones y capturas completadas
 
-El propietario aprobó únicamente las propuestas 1, 2, 6, 7 y 8 y rechazó las 3, 4 y 5. Se incorporaron en el candidato frontend `dist-directorios-sitios-20260925-simplificados`, con pruebas focalizadas e isolated typecheck aprobados. Teléfono y RFC permanecen visibles en el directorio; esta simplificación no modifica Últimas ventas ni Estado de cuenta.
+El propietario aprobó únicamente las propuestas 1, 2, 6, 7 y 8 y rechazó las 3, 4 y 5. Se incorporaron primero en el candidato frontend `dist-directorios-sitios-20260925-simplificados` y se conservaron en la versión activa sin RFC de proveedor, con pruebas focalizadas y typecheck aislado aprobados. Teléfono y RFC **de clientes** permanecen visibles en el directorio de Clientes; esta simplificación no modifica Últimas ventas ni Estado de cuenta.
 
 Se sustituyó la entrega visual incompleta por imágenes PNG reales obtenidas de Chromium local. La galería autocontenida `capturas-antes-despues.html` contiene 85 imágenes de cuatro escenarios explícitamente identificados: versión activa congelada, candidato anterior a las simplificaciones, candidato final y reclasificación sintética de Bodega Cruces. `capturas-resumen-operativo.html` presenta los cinco selectores operativos y las dos comprobaciones de Cartera.
 
 Los cuatro manifiestos de `browser-local/screenshots/` registran cero endpoints sin respuesta de prueba y cero errores de navegador. Se comprobaron las cuatro bodegas en Inventario, Entradas, Salidas, Viajes y Movimientos; Cartera excluye BODEGA aunque esté activa e incluye Bodega Cruces al cambiar solo su tipo a TIENDA. Se completaron las capturas de ficha, Últimas ventas, Estado de cuenta y navegación del folio de venta sintético a su documento. Las imágenes usan datos sintéticos, no una sesión ni operaciones de producción.
 
-No se activó el candidato ni se modificó la base. La activación de la API continúa condicionada a autorización expresa para añadir la columna RFC opcional de proveedor y aplicar su migración antes del arranque. La API candidata anterior permanece sin cambios.
+Las galerías documentan candidatos y escenarios sintéticos anteriores a la exclusión final del RFC proveedor; no son una prueba autenticada de la versión hoy activa. La nueva versión sin RFC se activó por separado, sin modificar datos ni esquema según las huellas READ ONLY.
 
 ## Construcción
 
-Se prepararon candidatos separados de la versión activa, con procedencia y hashes en candidate-ready.json. Se conservaron los módulos no autorizados fuera de la composición. No se reiniciaron workflows, aplicó DDL ni modificaron datos de la aplicación.
+Se prepararon primero candidatos separados de la entonces versión activa, con procedencia y hashes en `candidate-ready.json`. Se conservaron los módulos no autorizados fuera de la composición. Tras el rechazo del RFC proveedor se produjo un candidato final nuevo, con manifiesto y procedencia en `activation-sin-rfc/`, que MAIN activó sin DDL ni cambios de datos/esquema.
 
-Los cambios abarcan selectores contextuales de crédito por tipo de sitio, directorios de Clientes y Proveedores, sus periodos y conteos, reutilización de historiales y RFC opcional de proveedor. La migración RFC está preparada y NO aplicada. La API candidata requiere aplicar esa migración antes de activarse, con autorización expresa.
+La versión activa abarca selectores contextuales de crédito por tipo de sitio, directorios de Clientes y Proveedores, sus periodos y conteos y reutilización de historiales, **sin RFC nuevo de proveedor**. El antiguo SQL candidato RFC fue retirado; no hay DDL pendiente para esta versión.
 
 Las pruebas enfocadas y typechecks indicados en los informes de cada componente aprobaron. La revisión independiente reconfirmó las correcciones de permisos del conteo de proveedores, fechas desconocidas al final, comparación por alcance contextual y descarte de resultados anteriores al cambiar de tienda en Cobros.
 

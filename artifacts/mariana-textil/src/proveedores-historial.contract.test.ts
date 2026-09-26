@@ -13,16 +13,16 @@ test("historial vive solo en la pestaña global de Proveedores", async () => {
   assert.doesNotMatch(app, /historial-compras|Historial de compras/);
 });
 
-test("directorio y formularios de proveedor incluyen RFC sin reemplazar el historial", async () => {
+test("búsqueda por nombre/contacto/teléfono no publica el RFC de proveedor rechazado", async () => {
   const directory = await readFile(new URL("./pages/proveedores.tsx", import.meta.url), "utf8");
   const detail = await readFile(new URL("./pages/proveedor-detail.tsx", import.meta.url), "utf8");
-  const migration = await readFile(new URL("../../../lib/db/migrations/20260925_supplier_rfc.sql", import.meta.url), "utf8");
-  assert.match(directory, /\[p\.nombre, p\.rfc, p\.contactoNombre, p\.telefono\].*\.some/s);
-  assert.match(directory, /data-testid="input-create-supplier-rfc"/);
-  assert.match(detail, /data-testid="input-edit-supplier-rfc"/);
-  assert.match(detail, /data-testid="display-supplier-rfc"/);
-  assert.match(migration, /ALTER TABLE proveedores ADD COLUMN IF NOT EXISTS rfc text;/);
-  assert.doesNotMatch(migration, /\b(?:UPDATE|DELETE|INSERT|DROP|TRUNCATE)\b/i);
+  const route = await readFile(new URL("../../api-server/src/routes/proveedores.ts", import.meta.url), "utf8");
+  const schema = await readFile(new URL("../../../lib/db/src/schema/proveedores.ts", import.meta.url), "utf8");
+  assert.match(directory, /\[p\.nombre, p\.contactoNombre, p\.telefono\].*\.some/s);
+  assert.match(directory, /Buscar por nombre, contacto o teléfono/);
+  for (const source of [directory, detail, route, schema]) {
+    assert.doesNotMatch(source, /\brfc\b|supplier-rfc/i);
+  }
 });
 
 test("simplificación aprobada conserva tipo textual y purga solo con acciones aplicables", async () => {

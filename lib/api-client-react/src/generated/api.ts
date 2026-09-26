@@ -8659,6 +8659,7 @@ export const getListProveedoresDirectorioUrl = (params?: ListProveedoresDirector
 }
 
 /**
+ * Requiere proveedores.ver y proveedores_finanzas.ver. El alcance territorial restringe los conteos.
  * @summary Conteo de entradas por proveedor en el periodo y sitio autorizados
  */
 export const listProveedoresDirectorio = async (params?: ListProveedoresDirectorioParams, options?: Parameters<typeof customFetch>[1]): Promise<ProveedoresDirectorioResult> => {

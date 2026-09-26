@@ -1,0 +1,15 @@
+{
+  "status": "activated-by-MAIN-2026-09-26",
+  "apiPath": "artifacts/api-server/dist-directorios-sitios-20260925-sin-rfc",
+  "apiEntry": "artifacts/api-server/dist-directorios-sitios-20260925-sin-rfc/index.mjs",
+  "apiEntrySha256": "4366c5679e58432587b91a88c843df5ad2490096c73707f7bcb88b4d64806ae1",
+  "frontendPath": "artifacts/mariana-textil/dist-directorios-sitios-20260925-sin-rfc",
+  "frontendIndex": "artifacts/mariana-textil/dist-directorios-sitios-20260925-sin-rfc/index.html",
+  "frontendIndexSha256": "7f7650f603302b32a985eac9fbb64e0fd4e3897c17093f307f912dcede21b926",
+  "approval": "reports/directorios-sitios-20260925/activation-sin-rfc/approval.json",
+  "apiProvenance": "reports/directorios-sitios-20260925/activation-sin-rfc/api-provenance.json",
+  "frontendProvenance": "reports/directorios-sitios-20260925/activation-sin-rfc/frontend-provenance.json",
+  "supplierRfc": "rejected-not-built",
+  "ddl": "none",
+  "activation": "reports/directorios-sitios-20260925/activation-sin-rfc/resultado.md"
+}

@@ -87,7 +87,6 @@ function presentProveedor(row: typeof proveedoresTable.$inferSelect) {
   return {
     id: row.id,
     nombre: row.nombre,
-    rfc: row.rfc,
     tipo: row.tipo,
     monedaDefault: row.monedaDefault,
     contactoNombre: row.contactoNombre,
@@ -355,7 +354,6 @@ router.post(
           .insert(proveedoresTable)
           .values({
             nombre: parsed.data.nombre.trim(),
-            rfc: parsed.data.rfc?.trim() || null,
             tipo: parsed.data.tipo as TipoProveedor,
             monedaDefault: (parsed.data.monedaDefault ?? "MXN") as Moneda,
             contactoNombre: parsed.data.contactoNombre ?? null,
@@ -449,7 +447,6 @@ router.patch(
 
       const updates: {
         nombre?: string;
-        rfc?: string | null;
         tipo?: TipoProveedor;
         monedaDefault?: Moneda;
         contactoNombre?: string | null;
@@ -461,7 +458,6 @@ router.patch(
       } = {};
 
       if (body.data.nombre !== undefined) updates.nombre = body.data.nombre.trim();
-      if ("rfc" in body.data) updates.rfc = body.data.rfc?.trim() || null;
       if (body.data.tipo !== undefined) updates.tipo = body.data.tipo as TipoProveedor;
       if (body.data.monedaDefault !== undefined)
         updates.monedaDefault = body.data.monedaDefault as Moneda;

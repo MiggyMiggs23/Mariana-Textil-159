@@ -1,0 +1,25 @@
+{
+  "status": "candidate-only-not-activated",
+  "parentSha256": "b870909beced1957603ccbac785983d4c129c8438715d0e206c0e72fb1d90dbe",
+  "candidateSha256": "4366c5679e58432587b91a88c843df5ad2490096c73707f7bcb88b4d64806ae1",
+  "sourceDeltas": [
+    {
+      "path": "artifacts/api-server/src/routes/proveedores.ts",
+      "baseSha256": "3a56953d26e59d5e92097dd9f3e4c125889254968d3eff77e98fd5887db78f3f",
+      "sha256": "cd8dee74cd0c72f8045ad83813c8a4fa46cc470afb4f366ff0a5626a7c038e8d",
+      "composition": "remove only four RFC supplier route lines; byte-match current reviewed source"
+    },
+    {
+      "path": "lib/api-zod/src/generated/api.ts",
+      "baseSha256": "16b016e7e9c65c7ade6312a6685569b4fac42f5cf77ce60ebfc157139c4dd01a",
+      "sha256": "87f6407a88e4f9f4f60ed230d55531f18f83edb44ca799f9ca8197585f157fad",
+      "composition": "remove seven supplier RFC schema lines only within supplier Zod block; preserve customer RFC"
+    },
+    {
+      "path": "lib/db/src/schema/proveedores.ts",
+      "baseSha256": "7dbe9a4f7a9fafa3448864e7d13f9edfb9ef23599b02b4d00c16ff93daeb0e6a",
+      "sha256": "e25249f40758fd34bcb12c9f6be6a24baf8c3ad5a7db6f13f532785d622b6676",
+      "composition": "restore original retained active API sourcemap source before unapproved RFC column"
+    }
+  ]
+}

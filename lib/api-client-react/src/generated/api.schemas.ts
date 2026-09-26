@@ -6532,8 +6532,6 @@ export interface ImportResult {
 export interface Proveedor {
   id: number;
   nombre: string;
-  /** @nullable */
-  rfc: string | null;
   tipo: TipoProveedor;
   monedaDefault: Moneda;
   /** @nullable */
@@ -6556,8 +6554,6 @@ export interface ProveedorInput {
      * @maxLength 200
      */
   nombre: string;
-  /** @nullable */
-  rfc?: string | null;
   tipo: TipoProveedor;
   monedaDefault?: Moneda;
   /** @nullable */
@@ -6578,8 +6574,6 @@ export interface ProveedorUpdate {
      * @maxLength 200
      */
   nombre?: string;
-  /** @nullable */
-  rfc?: string | null;
   tipo?: TipoProveedor;
   monedaDefault?: Moneda;
   /** @nullable */
@@ -7884,8 +7878,6 @@ export interface AjusteProveedorInput {
 export interface ProveedorMetricas {
   id: number;
   nombre: string;
-  /** @nullable */
-  rfc: string | null;
   tipo: TipoProveedor;
   monedaDefault: Moneda;
   /** @nullable */

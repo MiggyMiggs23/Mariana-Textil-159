@@ -6508,7 +6508,6 @@ export const GetProveedoresResumenResponse = zod.object({
   "items": zod.array(zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
-  "rfc": zod.string().nullable(),
   "tipo": zod.enum(['NACIONAL', 'IMPORTACION']),
   "monedaDefault": zod.enum(['MXN', 'USD']),
   "contactoNombre": zod.string().nullable(),
@@ -6633,6 +6632,7 @@ export const ListHistorialComprasProveedoresResponse = zod.object({
 
 
 /**
+ * Requiere proveedores.ver y proveedores_finanzas.ver. El alcance territorial restringe los conteos.
  * @summary Conteo de entradas por proveedor en el periodo y sitio autorizados
  */
 export const listProveedoresDirectorioQueryPeriodDefault = `all`;
@@ -6662,7 +6662,6 @@ export const ListProveedoresResponse = zod.object({
   "items": zod.array(zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
-  "rfc": zod.string().nullable(),
   "tipo": zod.enum(['NACIONAL', 'IMPORTACION']),
   "monedaDefault": zod.enum(['MXN', 'USD']),
   "contactoNombre": zod.string().nullable(),
@@ -6692,7 +6691,6 @@ export const createProveedorBodyNombreMax = 200;
 
 export const CreateProveedorBody = zod.object({
   "nombre": zod.string().min(1).max(createProveedorBodyNombreMax),
-  "rfc": zod.string().nullish(),
   "tipo": zod.enum(['NACIONAL', 'IMPORTACION']),
   "monedaDefault": zod.enum(['MXN', 'USD']).optional(),
   "contactoNombre": zod.string().nullish(),
@@ -6705,7 +6703,6 @@ export const CreateProveedorBody = zod.object({
 export const CreateProveedorResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
-  "rfc": zod.string().nullable(),
   "tipo": zod.enum(['NACIONAL', 'IMPORTACION']),
   "monedaDefault": zod.enum(['MXN', 'USD']),
   "contactoNombre": zod.string().nullable(),
@@ -6728,7 +6725,6 @@ export const GetProveedorParams = zod.object({
 export const GetProveedorResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
-  "rfc": zod.string().nullable(),
   "tipo": zod.enum(['NACIONAL', 'IMPORTACION']),
   "monedaDefault": zod.enum(['MXN', 'USD']),
   "contactoNombre": zod.string().nullable(),
@@ -6754,7 +6750,6 @@ export const updateProveedorBodyNombreMax = 200;
 
 export const UpdateProveedorBody = zod.object({
   "nombre": zod.string().min(1).max(updateProveedorBodyNombreMax).optional(),
-  "rfc": zod.string().nullish(),
   "tipo": zod.enum(['NACIONAL', 'IMPORTACION']).optional(),
   "monedaDefault": zod.enum(['MXN', 'USD']).optional(),
   "contactoNombre": zod.string().nullish(),
@@ -6768,7 +6763,6 @@ export const UpdateProveedorBody = zod.object({
 export const UpdateProveedorResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
-  "rfc": zod.string().nullable(),
   "tipo": zod.enum(['NACIONAL', 'IMPORTACION']),
   "monedaDefault": zod.enum(['MXN', 'USD']),
   "contactoNombre": zod.string().nullable(),

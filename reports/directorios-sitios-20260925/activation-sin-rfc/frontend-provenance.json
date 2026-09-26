@@ -1,0 +1,71 @@
+{
+  "status": "candidate-only-not-activated",
+  "parentIndexSha256": "0bb3a9dc64bb3c6b9e650041b900956278f1f9b980812c3e0a10876ae56159c3",
+  "overlays": [
+    {
+      "path": "artifacts/mariana-textil/src/pages/proveedores.tsx",
+      "baseSha256": "83ca435eebffcc6a807c36c7c56ff2b9c37efffd357a4e12debf9081f6bcd0bd",
+      "sha256": "f883e9b81f41a139a65494fc215bae9760303d095f75196ac63bc205ead72edf",
+      "composition": "supplier-only RFC removal, preserve approved directory simplifications"
+    },
+    {
+      "path": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+      "sha256": "3e830a2d05cfbc1cae17f97b5f2ed28504dac5927c91bb790d523917ddea84a3",
+      "composition": "supplier-only RFC removal, preserve history and other fields"
+    },
+    {
+      "path": "lib/api-client-react/src/generated/api.schemas.ts",
+      "baseSha256": "f164f6bb1b16b7a8bb581c938f222e44c048475edf8e8e54be91877534586d5e",
+      "sha256": "16fa313cfb3945a5a32332f210cfdbcc359fa6d73dccd052e29488b1509174eb",
+      "composition": "remove four supplier interface RFC lines; retain safe historical non-supplier generated data"
+    }
+  ],
+  "isolatedTypecheck": "passed",
+  "staging": "reports/directorios-sitios-20260925/staging/frontend-root-sin-rfc",
+  "output": [
+    {
+      "file": "artifacts/mariana-textil/dist-directorios-sitios-20260925-sin-rfc/assets/index-1U6Cw9Y7.css",
+      "sha256": "6e070f5ab3abbd47fdd8db4ca067eae24668fccd756d4977e4205eadea430ad5"
+    },
+    {
+      "file": "artifacts/mariana-textil/dist-directorios-sitios-20260925-sin-rfc/assets/index-ChXPVaTw.js",
+      "sha256": "58d1499eef4028d2d8bddd54a93bc47349225f4cf96afdadd4ca441a4ce909cf"
+    },
+    {
+      "file": "artifacts/mariana-textil/dist-directorios-sitios-20260925-sin-rfc/assets/index-CJ5sQYvB.js",
+      "sha256": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c"
+    },
+    {
+      "file": "artifacts/mariana-textil/dist-directorios-sitios-20260925-sin-rfc/assets/mariana-textil-logo-FFOiXRd3.png",
+      "sha256": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6"
+    },
+    {
+      "file": "artifacts/mariana-textil/dist-directorios-sitios-20260925-sin-rfc/assets/mariana-textil-logo-monochrome-_7AVoW2A.png",
+      "sha256": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24"
+    },
+    {
+      "file": "artifacts/mariana-textil/dist-directorios-sitios-20260925-sin-rfc/favicon.png",
+      "sha256": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6"
+    },
+    {
+      "file": "artifacts/mariana-textil/dist-directorios-sitios-20260925-sin-rfc/index.html",
+      "sha256": "7f7650f603302b32a985eac9fbb64e0fd4e3897c17093f307f912dcede21b926"
+    },
+    {
+      "file": "artifacts/mariana-textil/dist-directorios-sitios-20260925-sin-rfc/robots.txt",
+      "sha256": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95"
+    },
+    {
+      "file": "artifacts/mariana-textil/dist-directorios-sitios-20260925-sin-rfc/sounds/alerta.ogg",
+      "sha256": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e"
+    },
+    {
+      "file": "artifacts/mariana-textil/dist-directorios-sitios-20260925-sin-rfc/sounds/aviso.ogg",
+      "sha256": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4"
+    },
+    {
+      "file": "artifacts/mariana-textil/dist-directorios-sitios-20260925-sin-rfc/sounds/solicitud.ogg",
+      "sha256": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+    }
+  ]
+}

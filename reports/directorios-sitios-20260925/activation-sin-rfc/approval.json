@@ -1,0 +1,44 @@
+{
+  "status": "candidate-only-supplier-rfc-rejected",
+  "apiParentSha256": "b870909beced1957603ccbac785983d4c129c8438715d0e206c0e72fb1d90dbe",
+  "frontendParentIndexSha256": "0bb3a9dc64bb3c6b9e650041b900956278f1f9b980812c3e0a10876ae56159c3",
+  "api": [
+    {
+      "path": "artifacts/api-server/src/routes/proveedores.ts",
+      "baseSha256": "3a56953d26e59d5e92097dd9f3e4c125889254968d3eff77e98fd5887db78f3f",
+      "sha256": "cd8dee74cd0c72f8045ad83813c8a4fa46cc470afb4f366ff0a5626a7c038e8d",
+      "composition": "remove only four RFC supplier route lines; byte-match current reviewed source"
+    },
+    {
+      "path": "lib/api-zod/src/generated/api.ts",
+      "baseSha256": "16b016e7e9c65c7ade6312a6685569b4fac42f5cf77ce60ebfc157139c4dd01a",
+      "sha256": "87f6407a88e4f9f4f60ed230d55531f18f83edb44ca799f9ca8197585f157fad",
+      "composition": "remove seven supplier RFC schema lines only within supplier Zod block; preserve customer RFC"
+    },
+    {
+      "path": "lib/db/src/schema/proveedores.ts",
+      "baseSha256": "7dbe9a4f7a9fafa3448864e7d13f9edfb9ef23599b02b4d00c16ff93daeb0e6a",
+      "sha256": "e25249f40758fd34bcb12c9f6be6a24baf8c3ad5a7db6f13f532785d622b6676",
+      "composition": "restore original retained active API sourcemap source before unapproved RFC column"
+    }
+  ],
+  "frontend": [
+    {
+      "path": "artifacts/mariana-textil/src/pages/proveedores.tsx",
+      "baseSha256": "83ca435eebffcc6a807c36c7c56ff2b9c37efffd357a4e12debf9081f6bcd0bd",
+      "sha256": "f883e9b81f41a139a65494fc215bae9760303d095f75196ac63bc205ead72edf",
+      "composition": "supplier-only RFC removal, preserve approved directory simplifications"
+    },
+    {
+      "path": "artifacts/mariana-textil/src/pages/proveedor-detail.tsx",
+      "sha256": "3e830a2d05cfbc1cae17f97b5f2ed28504dac5927c91bb790d523917ddea84a3",
+      "composition": "supplier-only RFC removal, preserve history and other fields"
+    },
+    {
+      "path": "lib/api-client-react/src/generated/api.schemas.ts",
+      "baseSha256": "f164f6bb1b16b7a8bb581c938f222e44c048475edf8e8e54be91877534586d5e",
+      "sha256": "16fa313cfb3945a5a32332f210cfdbcc359fa6d73dccd052e29488b1509174eb",
+      "composition": "remove four supplier interface RFC lines; retain safe historical non-supplier generated data"
+    }
+  ]
+}

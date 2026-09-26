@@ -13102,7 +13102,6 @@ components:
         [
           id,
           nombre,
-          rfc,
           tipo,
           monedaDefault,
           contactoNombre,
@@ -13116,7 +13115,6 @@ components:
       properties:
         id: { type: number }
         nombre: { type: string }
-        rfc: { type: ["string", "null"] }
         tipo:
           $ref: "#/components/schemas/TipoProveedor"
         monedaDefault:
@@ -13138,7 +13136,6 @@ components:
       required: [nombre, tipo]
       properties:
         nombre: { type: string, minLength: 1, maxLength: 200 }
-        rfc: { type: ["string", "null"] }
         tipo:
           $ref: "#/components/schemas/TipoProveedor"
         monedaDefault:
@@ -13157,7 +13154,6 @@ components:
       type: object
       properties:
         nombre: { type: string, minLength: 1, maxLength: 200 }
-        rfc: { type: ["string", "null"] }
         tipo:
           $ref: "#/components/schemas/TipoProveedor"
         monedaDefault:
@@ -14834,7 +14830,6 @@ components:
         [
           id,
           nombre,
-          rfc,
           tipo,
           monedaDefault,
           contactoNombre,
@@ -14848,7 +14843,6 @@ components:
       properties:
         id: { type: number }
         nombre: { type: string }
-        rfc: { type: ["string", "null"] }
         tipo:
           $ref: "#/components/schemas/TipoProveedor"
         monedaDefault:

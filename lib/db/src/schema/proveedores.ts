@@ -12,7 +12,6 @@ import { tipoProveedorEnum, monedaEnum } from "./enums";
 export const proveedoresTable = pgTable("proveedores", {
   id: serial("id").primaryKey(),
   nombre: text("nombre").notNull(),
-  rfc: text("rfc"),
   tipo: tipoProveedorEnum("tipo").notNull(),
   monedaDefault: monedaEnum("moneda_default").notNull().default("MXN"),
   contactoNombre: text("contacto_nombre"),
