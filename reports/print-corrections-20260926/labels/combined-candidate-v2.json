@@ -1,0 +1,27 @@
+{
+  "status": "combined-frontend-built-not-started",
+  "frontendRoot": "/home/runner/workspace/reports/print-corrections-20260926/labels/combined-candidate-v2",
+  "frontendFiles": {
+    "assets/index-CJ5sQYvB.js": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c",
+    "assets/index-CdyF5z0i.css": "b33f62a7a81cf091ab4d9c70da2fa219672ef5e9dc2c6e0192d69aa8b949345c",
+    "assets/index-xWK5VoVw.js": "494484efc920db620783727c930670f327ea4709e94439406b8d0b8f02a84552",
+    "assets/mariana-textil-logo-FFOiXRd3.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "assets/mariana-textil-logo-monochrome-_7AVoW2A.png": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24",
+    "favicon.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "index.html": "95e948b639fe5c3d7df677a87933adbc64698a0c4e9b5e25640ba8ec60a53dab",
+    "robots.txt": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+    "sounds/alerta.ogg": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e",
+    "sounds/aviso.ogg": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4",
+    "sounds/solicitud.ogg": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+  },
+  "parentIndexSha256": "92f6123346e12d569a724840102d9fff57f915086a8f0e48d4c5b7ccf774bf72",
+  "frozenRoot": "/home/runner/workspace/reports/print-corrections-20260926/labels/frozen-root",
+  "overlays": [
+    "labels/status.json overlayFiles",
+    "entrada/overlay-inventory.json (all six verified SHA256)"
+  ],
+  "contractDelta": "entrada/contract.yaml; final-frozen-root contains no api-spec, so full unrelated HEAD spec not introduced",
+  "api": "MAIN coordinates entrada agent snapshot build; not built here",
+  "browser": "pending MAIN start 18428",
+  "reason": "Hidden print portal requires offscreen measurement before gating; zero geometry must not cause overflow"
+}

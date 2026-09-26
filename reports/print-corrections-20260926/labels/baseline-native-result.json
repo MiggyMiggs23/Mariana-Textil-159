@@ -1,0 +1,15 @@
+{
+  "method": "Browser-only response replacement of v3 main JS with exact frozen released task4 main JS; same native copied API and unchanged CSS; no runtime switch.",
+  "baseline": "artifacts/mariana-textil/dist-postreview-final-20260926/assets/index-CB9hQHvT.js",
+  "dialogs": [
+    "ERROR: etiqueta no imprimible. Valor completo que no cabe:\nlabel-product-name: GABARDINA METEPEC 1.50 - MARINO"
+  ],
+  "before": {
+    "name": "GABARDINA METEPEC 1.50 - MARINO",
+    "blocked": "true",
+    "error": "ERROR: etiqueta no imprimible. Valor completo que no cabe:\nlabel-product-name: GABARDINA METEPEC 1.50 - MARINO",
+    "width": 0
+  },
+  "nativeReached": true,
+  "finished": true
+}

@@ -1,0 +1,71 @@
+{
+  "status": "verified-v3-native-pdf-ready-for-MAIN-release",
+  "candidateManifest": "combined-candidate-v3.json",
+  "uiSha256": "0ca090ce957ef72c37cebbdb0663948b61d90eeb90d76bbc5cc1f0b20ae023c5",
+  "apiSha256": "1c74777957fc1ad332228ea8407eac831cd14018debf94918c2a96647d6348b3",
+  "catalog": {
+    "count": 1234,
+    "method": "Actual production CatalogLabelFitReport, batches of 25 authentic current read-only catalog products supplied to list endpoint; diagnostic series/quantity belong to existing report component, not real inventory.",
+    "unfittableNames": [],
+    "minApprovedPx": 14
+  },
+  "nativeLabels": {
+    "entryId": 3,
+    "actualRolls": 26,
+    "top25LongestPlusExactExample": true,
+    "decodedPdfRasterQrCount": 26,
+    "dialogs": [],
+    "pdfs": [
+      {
+        "name": "etiquetas-top25-y-gabardina",
+        "pages": 26
+      },
+      {
+        "name": "GABARDINA-METEPEC-1.50-MARINO",
+        "pages": 1
+      },
+      {
+        "name": "MEZCLILLA-DIAMANTINA-10-OZ-INDIGO-RAYADA",
+        "pages": 1
+      }
+    ]
+  },
+  "nativeEntry": {
+    "id": 2,
+    "pages": 2,
+    "originalFloors": [
+      "Planta Alta",
+      "Planta Baja"
+    ],
+    "currentFloors": [
+      "Planta Baja",
+      "Planta Baja"
+    ],
+    "evidence": "../entrada/native-evidence.json"
+  },
+  "baseline": {
+    "evidence": "baseline-native-result.json",
+    "reproducedExactMessage": "ERROR: etiqueta no imprimible. Valor completo que no cabe: label-product-name: GABARDINA METEPEC 1.50 - MARINO",
+    "cause": "Released fitter treated width=0 hidden print portal as genuine name overflow. Browser baseline production bundle replacement reproduced alert on actual print button, same entry/API/fonts/CSS."
+  },
+  "files": [
+    {
+      "file": "GABARDINA-METEPEC-1.50-MARINO.pdf",
+      "sha256": "e1bde37ff8de68f04bdeb27b44a64d5e7576d720b313d4fe74671f893736a8a5"
+    },
+    {
+      "file": "MEZCLILLA-DIAMANTINA-10-OZ-INDIGO-RAYADA.pdf",
+      "sha256": "dfa3d4c5804344900e275accc445f7b4c1d1a0c15b8190e5964ac0b5b5267b7d"
+    },
+    {
+      "file": "etiquetas-top25-y-gabardina.pdf",
+      "sha256": "61829638d843e8ba1498bc34cb747e908822458bc3e4daaa0ec4586795d28560"
+    },
+    {
+      "file": "ENTRADA-MA000001-PISOS-ORIGINALES.pdf",
+      "sha256": "ce6dbc52df583317edc5499a5b987642d70a4b834b48df4d23ef184e25ff5de3"
+    }
+  ],
+  "physicalPrinterTested": false,
+  "scope": "Authenticated disposable copy only. Real button activates print state; only native window.print call intercepted for Chromium PDF. Complete natural PDF pages, no page ranges or hand-drawn replacements. Catalog report batches diagnostic, actual26 receipt rolls separate. MAIN controls live release."
+}

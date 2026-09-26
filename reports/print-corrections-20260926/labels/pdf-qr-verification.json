@@ -1,0 +1,132 @@
+[
+  {
+    "page": 1,
+    "file": "label-01.png",
+    "qr": "MEZDIA10-IND2-10000123"
+  },
+  {
+    "page": 2,
+    "file": "label-02.png",
+    "qr": "CAMFLOMAR-AMA-10000124"
+  },
+  {
+    "page": 3,
+    "file": "label-03.png",
+    "qr": "MEZDIA10-IND-10000125"
+  },
+  {
+    "page": 4,
+    "file": "label-04.png",
+    "qr": "CAMFLOMAR-VER-10000126"
+  },
+  {
+    "page": 5,
+    "file": "label-05.png",
+    "qr": "GABGAP170-BLA2-10000127"
+  },
+  {
+    "page": 6,
+    "file": "label-06.png",
+    "qr": "GABMET170-AMA-10000128"
+  },
+  {
+    "page": 7,
+    "file": "label-07.png",
+    "qr": "CAMFLOMED-VER3-10000129"
+  },
+  {
+    "page": 8,
+    "file": "label-08.png",
+    "qr": "CAMFLOGRA-AMA-10000130"
+  },
+  {
+    "page": 9,
+    "file": "label-09.png",
+    "qr": "CAMFLOMAR-VER2-10000131"
+  },
+  {
+    "page": 10,
+    "file": "label-10.png",
+    "qr": "GABMET170-NAR2-10000132"
+  },
+  {
+    "page": 11,
+    "file": "label-11.png",
+    "qr": "CAMFLOCHI-AMA-10000133"
+  },
+  {
+    "page": 12,
+    "file": "label-12.png",
+    "qr": "CAMFLOGRA-VER-10000134"
+  },
+  {
+    "page": 13,
+    "file": "label-13.png",
+    "qr": "FRACUA180-BLA-10000135"
+  },
+  {
+    "page": 14,
+    "file": "label-14.png",
+    "qr": "CAMFLOCHI-VER2-10000136"
+  },
+  {
+    "page": 15,
+    "file": "label-15.png",
+    "qr": "CAMFLOMED-VER2-10000137"
+  },
+  {
+    "page": 16,
+    "file": "label-16.png",
+    "qr": "MEZBLABLA-NEG-10000138"
+  },
+  {
+    "page": 17,
+    "file": "label-17.png",
+    "qr": "TAFESTMUE-DIS-10000139"
+  },
+  {
+    "page": 18,
+    "file": "label-18.png",
+    "qr": "TAFESTNAV-DIS-10000140"
+  },
+  {
+    "page": 19,
+    "file": "label-19.png",
+    "qr": "GABMET170-VER-10000141"
+  },
+  {
+    "page": 20,
+    "file": "label-20.png",
+    "qr": "FORCAR70-AMA-10000142"
+  },
+  {
+    "page": 21,
+    "file": "label-21.png",
+    "qr": "FRACUA180-ROJ-10000143"
+  },
+  {
+    "page": 22,
+    "file": "label-22.png",
+    "qr": "CAMFLOGRA-VER2-10000144"
+  },
+  {
+    "page": 23,
+    "file": "label-23.png",
+    "qr": "CAMFLOMAR-TUR-10000145"
+  },
+  {
+    "page": 24,
+    "file": "label-24.png",
+    "qr": "GABCAM-AMA-10000146"
+  },
+  {
+    "page": 25,
+    "file": "label-25.png",
+    "qr": "PLAMANMAS-TUR-10000147"
+  },
+  {
+    "page": 26,
+    "file": "label-26.png",
+    "qr": "GABMET150-MAR-10000148"
+  }
+]

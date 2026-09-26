@@ -47,7 +47,9 @@ export default function EntradaEtiquetas() {
     void printWhenReady(
       printMode === "thermal" ? "printing-labels" : "printing-label-sheet",
       printRootRef.current,
-    );
+    ).catch((error: unknown) => {
+      window.alert(error instanceof Error ? error.message : "No se pudieron preparar las etiquetas para imprimir.");
+    });
   };
 
   const toggleAll = () => {

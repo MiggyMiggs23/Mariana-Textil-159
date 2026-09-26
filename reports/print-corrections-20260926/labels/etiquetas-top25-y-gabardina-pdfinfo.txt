@@ -1,0 +1,19 @@
+Title:           Mariana Textil
+Creator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36
+Producer:        Skia/PDF m152
+CreationDate:    Sat Sep 26 19:39:28 2026 UTC
+ModDate:         Sat Sep 26 19:39:28 2026 UTC
+Custom Metadata: no
+Metadata Stream: no
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           26
+Encrypted:       no
+Page size:       282.96 x 198 pts
+Page rot:        0
+File size:       524832 bytes
+Optimized:       no
+PDF version:     1.4

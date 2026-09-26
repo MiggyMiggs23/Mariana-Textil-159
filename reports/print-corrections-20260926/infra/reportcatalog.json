@@ -1,0 +1,683 @@
+{
+  "at": "2026-09-26T19:19:07.687Z",
+  "source": {
+    "database": "heliumdb",
+    "readonly": "on"
+  },
+  "productCount": 1234,
+  "longest": [
+    {
+      "id": 1720,
+      "tela": "Mezclilla Diamantina 10 Oz",
+      "color": "Indigo Rayada",
+      "activo": true,
+      "tela_length": 26,
+      "color_length": 13,
+      "combined_length": 40,
+      "length_rank": 1
+    },
+    {
+      "id": 1948,
+      "tela": "Campesina Flor Margarita",
+      "color": "Amarillo Mango",
+      "activo": true,
+      "tela_length": 24,
+      "color_length": 14,
+      "combined_length": 39,
+      "length_rank": 2
+    },
+    {
+      "id": 114,
+      "tela": "Mezclilla Diamantina 10 Oz",
+      "color": "Indigo Lisa",
+      "activo": true,
+      "tela_length": 26,
+      "color_length": 11,
+      "combined_length": 38,
+      "length_rank": 3
+    },
+    {
+      "id": 1951,
+      "tela": "Campesina Flor Margarita",
+      "color": "Verde Bandera",
+      "activo": true,
+      "tela_length": 24,
+      "color_length": 13,
+      "combined_length": 38,
+      "length_rank": 4
+    },
+    {
+      "id": 1262,
+      "tela": "Gabardina Gap 1.70",
+      "color": "Blanco Sandorizado",
+      "activo": true,
+      "tela_length": 18,
+      "color_length": 18,
+      "combined_length": 37,
+      "length_rank": 5
+    },
+    {
+      "id": 1337,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Amarillo Neon",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 13,
+      "combined_length": 36,
+      "length_rank": 6
+    },
+    {
+      "id": 1934,
+      "tela": "Campesina Flor Mediana",
+      "color": "Verde Bandera",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 13,
+      "combined_length": 36,
+      "length_rank": 7
+    },
+    {
+      "id": 1942,
+      "tela": "Campesina Flor Grande",
+      "color": "Amarillo Mango",
+      "activo": true,
+      "tela_length": 21,
+      "color_length": 14,
+      "combined_length": 36,
+      "length_rank": 8
+    },
+    {
+      "id": 1953,
+      "tela": "Campesina Flor Margarita",
+      "color": "Verde Limon",
+      "activo": true,
+      "tela_length": 24,
+      "color_length": 11,
+      "combined_length": 36,
+      "length_rank": 9
+    },
+    {
+      "id": 1327,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Naranja Neon",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 12,
+      "combined_length": 35,
+      "length_rank": 10
+    },
+    {
+      "id": 1922,
+      "tela": "Campesina Flor Chica",
+      "color": "Amarillo Mango",
+      "activo": true,
+      "tela_length": 20,
+      "color_length": 14,
+      "combined_length": 35,
+      "length_rank": 11
+    },
+    {
+      "id": 1938,
+      "tela": "Campesina Flor Grande",
+      "color": "Verde Bandera",
+      "activo": true,
+      "tela_length": 21,
+      "color_length": 13,
+      "combined_length": 35,
+      "length_rank": 12
+    },
+    {
+      "id": 2014,
+      "tela": "Franela Cuadros 1.80",
+      "color": "Blanco c/Negro",
+      "activo": true,
+      "tela_length": 20,
+      "color_length": 14,
+      "combined_length": 35,
+      "length_rank": 13
+    },
+    {
+      "id": 1917,
+      "tela": "Campesina Flor Chica",
+      "color": "Verde Bandera",
+      "activo": true,
+      "tela_length": 20,
+      "color_length": 13,
+      "combined_length": 34,
+      "length_rank": 14
+    },
+    {
+      "id": 1930,
+      "tela": "Campesina Flor Mediana",
+      "color": "Verde Limon",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 11,
+      "combined_length": 34,
+      "length_rank": 15
+    },
+    {
+      "id": 116,
+      "tela": "Mezclilla Black Black",
+      "color": "Negra 14 Oz",
+      "activo": true,
+      "tela_length": 21,
+      "color_length": 11,
+      "combined_length": 33,
+      "length_rank": 16
+    },
+    {
+      "id": 117,
+      "tela": "Tafetan Estampado Muertos",
+      "color": "Diseños",
+      "activo": true,
+      "tela_length": 25,
+      "color_length": 7,
+      "combined_length": 33,
+      "length_rank": 17
+    },
+    {
+      "id": 1235,
+      "tela": "Tafetan Estampado Navidad",
+      "color": "Diseños",
+      "activo": true,
+      "tela_length": 25,
+      "color_length": 7,
+      "combined_length": 33,
+      "length_rank": 18
+    },
+    {
+      "id": 1338,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Verde Neon",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 10,
+      "combined_length": 33,
+      "length_rank": 19
+    },
+    {
+      "id": 1391,
+      "tela": "Forro Cartera 70",
+      "color": "Amarillo Canario",
+      "activo": true,
+      "tela_length": 16,
+      "color_length": 16,
+      "combined_length": 33,
+      "length_rank": 20
+    },
+    {
+      "id": 1697,
+      "tela": "Franela Cuadros 1.80",
+      "color": "Rojo c/Negro",
+      "activo": true,
+      "tela_length": 20,
+      "color_length": 12,
+      "combined_length": 33,
+      "length_rank": 21
+    },
+    {
+      "id": 1947,
+      "tela": "Campesina Flor Grande",
+      "color": "Verde Limon",
+      "activo": true,
+      "tela_length": 21,
+      "color_length": 11,
+      "combined_length": 33,
+      "length_rank": 22
+    },
+    {
+      "id": 1954,
+      "tela": "Campesina Flor Margarita",
+      "color": "Turquesa",
+      "activo": true,
+      "tela_length": 24,
+      "color_length": 8,
+      "combined_length": 33,
+      "length_rank": 23
+    },
+    {
+      "id": 1279,
+      "tela": "Gabardina Camisera",
+      "color": "Amarillo Neon",
+      "activo": true,
+      "tela_length": 18,
+      "color_length": 13,
+      "combined_length": 32,
+      "length_rank": 24
+    },
+    {
+      "id": 1830,
+      "tela": "Plastico Mantel Mascota",
+      "color": "Turqueza",
+      "activo": true,
+      "tela_length": 23,
+      "color_length": 8,
+      "combined_length": 32,
+      "length_rank": 25
+    }
+  ],
+  "matches": [
+    {
+      "id": 1337,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Amarillo Neon",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 13,
+      "combined_length": 36,
+      "length_rank": 6
+    },
+    {
+      "id": 1327,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Naranja Neon",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 12,
+      "combined_length": 35,
+      "length_rank": 10
+    },
+    {
+      "id": 1338,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Verde Neon",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 10,
+      "combined_length": 33,
+      "length_rank": 19
+    },
+    {
+      "id": 1332,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Plumbago",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 8,
+      "combined_length": 31,
+      "length_rank": 31
+    },
+    {
+      "id": 1336,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Turqueza",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 8,
+      "combined_length": 31,
+      "length_rank": 32
+    },
+    {
+      "id": 1308,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Bandera",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 7,
+      "combined_length": 30,
+      "length_rank": 40
+    },
+    {
+      "id": 1309,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Botella",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 7,
+      "combined_length": 30,
+      "length_rank": 41
+    },
+    {
+      "id": 1314,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Canario",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 7,
+      "combined_length": 30,
+      "length_rank": 42
+    },
+    {
+      "id": 1324,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Militar",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 7,
+      "combined_length": 30,
+      "length_rank": 43
+    },
+    {
+      "id": 1326,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Naranja",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 7,
+      "combined_length": 30,
+      "length_rank": 44
+    },
+    {
+      "id": 1331,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Pizarra",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 7,
+      "combined_length": 30,
+      "length_rank": 45
+    },
+    {
+      "id": 1311,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Blanco",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 6,
+      "combined_length": 29,
+      "length_rank": 61
+    },
+    {
+      "id": 1316,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Chofer",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 6,
+      "combined_length": 29,
+      "length_rank": 62
+    },
+    {
+      "id": 1317,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Fiusha",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 6,
+      "combined_length": 29,
+      "length_rank": 63
+    },
+    {
+      "id": 1323,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Marino",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 6,
+      "combined_length": 29,
+      "length_rank": 64
+    },
+    {
+      "id": 1325,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Morado",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 6,
+      "combined_length": 29,
+      "length_rank": 65
+    },
+    {
+      "id": 1340,
+      "tela": "Gabardina Metepec 1.50",
+      "color": "Marino",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 6,
+      "combined_length": 29,
+      "length_rank": 66
+    },
+    {
+      "id": 1307,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Arena",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 5,
+      "combined_length": 28,
+      "length_rank": 84
+    },
+    {
+      "id": 1310,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Beige",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 5,
+      "combined_length": 28,
+      "length_rank": 85
+    },
+    {
+      "id": 1312,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Coral",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 5,
+      "combined_length": 28,
+      "length_rank": 86
+    },
+    {
+      "id": 1315,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Cielo",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 5,
+      "combined_length": 28,
+      "length_rank": 87
+    },
+    {
+      "id": 1318,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Hueso",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 5,
+      "combined_length": 28,
+      "length_rank": 88
+    },
+    {
+      "id": 1321,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Limon",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 5,
+      "combined_length": 28,
+      "length_rank": 89
+    },
+    {
+      "id": 1322,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Mango",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 5,
+      "combined_length": 28,
+      "length_rank": 90
+    },
+    {
+      "id": 1328,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Negro",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 5,
+      "combined_length": 28,
+      "length_rank": 91
+    },
+    {
+      "id": 1329,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Olivo",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 5,
+      "combined_length": 28,
+      "length_rank": 92
+    },
+    {
+      "id": 1330,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Perla",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 5,
+      "combined_length": 28,
+      "length_rank": 93
+    },
+    {
+      "id": 1313,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Cafe",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 4,
+      "combined_length": 27,
+      "length_rank": 129
+    },
+    {
+      "id": 1319,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Jade",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 4,
+      "combined_length": 27,
+      "length_rank": 130
+    },
+    {
+      "id": 1320,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Kaki",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 4,
+      "combined_length": 27,
+      "length_rank": 131
+    },
+    {
+      "id": 1334,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Rojo",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 4,
+      "combined_length": 27,
+      "length_rank": 132
+    },
+    {
+      "id": 1335,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Rosa",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 4,
+      "combined_length": 27,
+      "length_rank": 133
+    },
+    {
+      "id": 1339,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Vino",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 4,
+      "combined_length": 27,
+      "length_rank": 134
+    },
+    {
+      "id": 1333,
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Rey",
+      "activo": true,
+      "tela_length": 22,
+      "color_length": 3,
+      "combined_length": 26,
+      "length_rank": 162
+    }
+  ],
+  "floors": [
+    {
+      "piso_id": 3,
+      "ubicacion_id": 1,
+      "activo": true,
+      "ubicacion_activa": true
+    },
+    {
+      "piso_id": 4,
+      "ubicacion_id": 1,
+      "activo": true,
+      "ubicacion_activa": true
+    },
+    {
+      "piso_id": 1,
+      "ubicacion_id": 2,
+      "activo": true,
+      "ubicacion_activa": true
+    },
+    {
+      "piso_id": 2,
+      "ubicacion_id": 2,
+      "activo": true,
+      "ubicacion_activa": true
+    },
+    {
+      "piso_id": 5,
+      "ubicacion_id": 3,
+      "activo": true,
+      "ubicacion_activa": true
+    },
+    {
+      "piso_id": 6,
+      "ubicacion_id": 3,
+      "activo": true,
+      "ubicacion_activa": true
+    },
+    {
+      "piso_id": 7,
+      "ubicacion_id": 4,
+      "activo": true,
+      "ubicacion_activa": true
+    },
+    {
+      "piso_id": 8,
+      "ubicacion_id": 4,
+      "activo": true,
+      "ubicacion_activa": true
+    },
+    {
+      "piso_id": 9,
+      "ubicacion_id": 4,
+      "activo": true,
+      "ubicacion_activa": true
+    },
+    {
+      "piso_id": 10,
+      "ubicacion_id": 5,
+      "activo": true,
+      "ubicacion_activa": true
+    },
+    {
+      "piso_id": 11,
+      "ubicacion_id": 5,
+      "activo": true,
+      "ubicacion_activa": true
+    },
+    {
+      "piso_id": 12,
+      "ubicacion_id": 5,
+      "activo": true,
+      "ubicacion_activa": true
+    },
+    {
+      "piso_id": 13,
+      "ubicacion_id": 5,
+      "activo": true,
+      "ubicacion_activa": true
+    }
+  ],
+  "policy": "READ ONLY product names/colors/IDs/lengths and floor/location IDs only; no PII, prices, stock, secrets or business writes"
+}

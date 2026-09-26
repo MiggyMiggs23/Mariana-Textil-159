@@ -56,3 +56,23 @@ test("label refits after fonts load and before print while preserving three deci
   assert.match(source, /testId="label-sku"/);
   assert.match(source, /testId="label-qr-payload"/);
 });
+
+test("label tries one line before two, never breaks a word or shrinks below approved steps", async () => {
+  const source = await readFile(componentFile, "utf8");
+  assert.match(source, /wrapTwoLines \? \[1, 2\] : \[1\]/);
+  assert.match(source, /wrapTwoLines && lineLimit === 1 \? fontSteps\.slice\(0, 1\) : fontSteps/);
+  assert.match(source, /whiteSpace: "nowrap"/);
+  assert.match(source, /wordBreak: "normal", hyphens: "none"/);
+  assert.match(source, /fontSize \* 1\.05 \* lineLimit/);
+  assert.match(source, /container\.addEventListener\("labelprintmeasure", fit\)/);
+  assert.match(source, /container\.getBoundingClientRect\(\)\.width <= 0/);
+  assert.match(source, /data-fit-state="pending"/);
+  const print = await readFile(new URL("../lib/print.ts", import.meta.url), "utf8");
+  assert.ok(print.indexOf("await waitForPrintableAssets();") < print.indexOf('new Event("labelprintmeasure")'));
+  assert.ok(print.indexOf('new Event("labelprintmeasure")') < print.indexOf("window.print();"));
+  assert.match(print, /document\.fonts\?\.status === "loading"/);
+  assert.match(print, /throw new Error\(details\.join/);
+  assert.match(print, /page\.closest<HTMLElement>\("\.etiquetas-print"\)/);
+  assert.match(print, /portal\.style\.setProperty\("left", "-10000px", "important"\)/);
+  assert.match(print, /portal\.setAttribute\("style", style\)/);
+});

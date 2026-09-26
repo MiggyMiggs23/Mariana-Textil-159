@@ -80,27 +80,41 @@ function AutoFitText({
 
     const fit = () => {
       if (cancelled) return;
+      // Print-only portals have zero geometry until prepared or print media
+      // applies. Do not turn an unmeasurable hidden field into a false overflow.
+      if (container.getBoundingClientRect().width <= 0) return;
       let selectedStep = fontSteps.at(-1) ?? 1;
       let fits = false;
-      for (const fontSize of fontSteps) {
-        container.style.fontSize = `${fontSize}px`;
-        selectedStep = fontSize;
-        const styles = window.getComputedStyle(container);
-        const availableWidth =
-          container.getBoundingClientRect().width -
-          Number.parseFloat(styles.paddingLeft || "0") -
-          Number.parseFloat(styles.paddingRight || "0");
-        // The name span is constrained to the available width. Its scrollWidth
-        // detects an unbreakable word, unlike the unconstrained flex measurement.
-        const textWidth = wrapTwoLines ? text.scrollWidth : text.getBoundingClientRect().width;
-        const availableHeight = container.getBoundingClientRect().height -
-          Number.parseFloat(styles.paddingTop || "0") -
-          Number.parseFloat(styles.paddingBottom || "0");
-        fits = textWidth <= availableWidth + 0.5 &&
-          (!wrapTwoLines || (text.scrollHeight <= availableHeight + 0.5 &&
-            text.scrollHeight <= fontSize * 2.1 + 2));
-        container.dataset.textWidth = textWidth.toFixed(2);
-        container.dataset.availableWidth = availableWidth.toFixed(2);
+      // Prefer one line at the normal (largest approved) size. If it does not
+      // fit, try two lines BEFORE reducing through the approved steps.
+      // Inline geometry keeps this independent of frozen utility CSS.
+      for (const lineLimit of wrapTwoLines ? [1, 2] : [1]) {
+        text.style.whiteSpace = lineLimit === 1 ? "nowrap" : "normal";
+        text.style.width = lineLimit === 1 ? "max-content" : "100%";
+        text.style.flexShrink = "0";
+        text.style.minWidth = "0";
+        const steps = wrapTwoLines && lineLimit === 1 ? fontSteps.slice(0, 1) : fontSteps;
+        for (const fontSize of steps) {
+          container.style.fontSize = `${fontSize}px`;
+          selectedStep = fontSize;
+          const styles = window.getComputedStyle(container);
+          const availableWidth =
+            container.getBoundingClientRect().width -
+            Number.parseFloat(styles.paddingLeft || "0") -
+            Number.parseFloat(styles.paddingRight || "0");
+          // scrollWidth also detects an unbreakable word in two-line mode.
+          const textWidth = Math.max(text.scrollWidth, text.getBoundingClientRect().width);
+          const availableHeight = container.getBoundingClientRect().height -
+            Number.parseFloat(styles.paddingTop || "0") -
+            Number.parseFloat(styles.paddingBottom || "0");
+          fits = textWidth <= availableWidth + 0.5 &&
+            (!wrapTwoLines || (text.scrollHeight <= availableHeight + 0.5 &&
+              text.scrollHeight <= fontSize * 1.05 * lineLimit + 1));
+          container.dataset.textWidth = textWidth.toFixed(2);
+          container.dataset.availableWidth = availableWidth.toFixed(2);
+          container.dataset.lineLimit = String(lineLimit);
+          if (fits) break;
+        }
         if (fits) break;
       }
       container.dataset.fontStep = String(selectedStep);
@@ -110,10 +124,14 @@ function AutoFitText({
     };
 
     fit();
+    container.addEventListener("labelprintmeasure", fit);
     void document.fonts?.ready.then(() => requestAnimationFrame(fit));
     const beforePrint = (event: Event) => {
-      fit();
       const page = container.closest<HTMLElement>(".label-page");
+      page?.querySelectorAll<HTMLElement>("[data-testid]").forEach((field) => {
+        field.dispatchEvent(new Event("labelprintmeasure"));
+      });
+      fit();
       if (page?.dataset.printBlocked === "true") {
         // Some browsers do not cancel their native print dialog on
         // preventDefault. The opaque error page above is the safety net.
@@ -136,11 +154,12 @@ function AutoFitText({
     if (clippingAncestor) observer?.observe(clippingAncestor);
     return () => {
       cancelled = true;
+      container.removeEventListener("labelprintmeasure", fit);
       observer?.disconnect();
       window.removeEventListener("beforeprint", beforePrint);
       window.removeEventListener("afterprint", afterPrint);
     };
-  }, [children, fontSteps]);
+  }, [children, fontSteps, wrapTwoLines]);
 
   return (
     <div
@@ -148,17 +167,21 @@ function AutoFitText({
       className={className}
       style={{ fontSize: `${fontSteps[0] ?? 1}px` }}
       data-testid={testId}
+      data-fit-state="pending"
     >
       <span
         ref={textRef}
         className={wrapTwoLines
           ? "block w-full whitespace-normal break-normal [overflow-wrap:normal] leading-[1.05]"
           : "inline-block whitespace-nowrap"}
-        style={wrapTwoLines ? { lineHeight: 1.05 } : undefined}
+        style={wrapTwoLines ? {
+          display: "block", lineHeight: 1.05, overflowWrap: "normal",
+          wordBreak: "normal", hyphens: "none",
+        } : undefined}
       >
         {wrapTwoLines
           ? children.split(/(\s+)/).map((part, index) =>
-              /^\s+$/.test(part) ? part : <span key={index} className="whitespace-nowrap">{part}</span>)
+              /^\s+$/.test(part) ? part : <span key={index} style={{ whiteSpace: "nowrap" }}>{part}</span>)
           : children}
       </span>
     </div>

@@ -64,6 +64,52 @@ export async function printWhenReady(
 
   try {
     await waitForPrintableAssets();
+    // Label safety is evaluated only after the loader has revealed the print
+    // target and font loading has completed, never from a stale screen fit.
+    const labelRoot = printRoot ?? document;
+    const labelPages = Array.from(labelRoot.querySelectorAll<HTMLElement>(".label-page"));
+    if (labelPages.length) {
+      if (document.fonts?.status === "loading") {
+        throw new Error("Las fuentes de las etiquetas siguen cargando. Intenta imprimir de nuevo.");
+      }
+      // The actual entry/reprint portal is display:none on screen. Measure it
+      // off-screen before gating; zero-width hidden geometry is NOT overflow.
+      const portals = [...new Set(labelPages.map((page) =>
+        page.closest<HTMLElement>(".etiquetas-print"),
+      ).filter((portal): portal is HTMLElement => !!portal))];
+      const styles = portals.map((portal) => portal.getAttribute("style"));
+      try {
+        portals.forEach((portal) => {
+          portal.style.setProperty("display", "block", "important");
+          portal.style.setProperty("position", "absolute", "important");
+          portal.style.setProperty("left", "-10000px", "important");
+          portal.style.setProperty("visibility", "hidden", "important");
+        });
+        for (const page of labelPages) {
+          page.querySelectorAll<HTMLElement>("[data-fit-state]").forEach((field) => {
+            field.dispatchEvent(new Event("labelprintmeasure"));
+          });
+        }
+      } finally {
+        portals.forEach((portal, index) => {
+          const style = styles[index];
+          if (style === null) portal.removeAttribute("style");
+          else portal.setAttribute("style", style);
+        });
+      }
+      const failures = labelPages.filter((page) =>
+        page.dataset.printBlocked === "true" ||
+        !page.querySelector("[data-fit-state]") ||
+        !!page.querySelector('[data-fit-state]:not([data-fit-state="fits"])'),
+      );
+      if (failures.length) {
+        const details = failures.map((page) =>
+          page.querySelector('[data-testid="label-print-error"]')?.textContent ??
+          "Etiqueta sin medición válida.",
+        );
+        throw new Error(details.join("\n"));
+      }
+    }
     window.addEventListener("afterprint", cleanup, { once: true });
     window.print();
   } catch (error) {

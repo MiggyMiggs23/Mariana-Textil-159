@@ -1,0 +1,36 @@
+     ENTRADA
+     Página 1 de 2
+
+
+
+
+                      Isolated print correction
+ USUARIO                                                       HORA                   19:27 hrs
+                      runtime admin
+
+     FECHA                  26/09/2026                         NO. FOLIO              MA-000001
+
+     PROVEEDOR              N/A                                SITIO                  Mariana
+
+#        PRODUCTO                 CANTIDAD DE ROLLOS         CANTIDAD / UNIDAD         SKU           PISO
+
+ 1       Alaska                           1                                5.00 Kg.    ALA-BEI       Planta Alta
+         Beige
+2        Alaska                           1                                5.00 Kg.    ALA-CAF       Planta Baja
+         Café
+
+
+
+
+OBSERVACIONES
+Prueba autorizada de impresión: dos
+pisos originales. Copia aislada
+20260926.
+                                              RECIBIDO POR         REVISADO POR                  AUTORIZADO POR
+FOLIO MA-000001             LISTADO DE SERIES                        Página 2 de 2
+
+ PRODUCTO         SKU           SERIE 1         SERIE 2   SERIE 3   SERIE 4
+ Alaska Beige     ALA-BEI       10000121
+
+ Alaska Café      ALA-CAF       10000122
+
