@@ -1,0 +1,226 @@
+[
+  {
+    "at": "2026-09-26T09:06:20.888Z",
+    "request": {
+      "id": "53c8ee4f-fd37-4738-9845-1bae64905023",
+      "method": "POST",
+      "route": "/api/auth/login"
+    },
+    "event": "query_end",
+    "verb": "UPDATE",
+    "shapeSha256": "a0f0eb883a7f5b79b6b678a2aebf2b1dbdc9aed6a9a917ed5c44097d08b595d5",
+    "nodePid": 1604559204,
+    "backendPid": 1825,
+    "durationMs": 35.86491099999694,
+    "error": {
+      "name": "error",
+      "code": "40001",
+      "severity": "ERROR",
+      "routine": "exec_stmt_raise",
+      "messageSha256": "da1d8a25221903ce11cd2c29ff6f8f640930c0a969ed3f42afe0357b6df43dde",
+      "stackSha256": "b6bbe07f5ca83bbc0e7fb7cbbe303b6bab3b9788f75c96e21492fb1786f563ac",
+      "category": null,
+      "cause": null
+    },
+    "total": 3,
+    "idle": 0,
+    "waiting": 0,
+    "max": 12
+  },
+  {
+    "at": "2026-09-26T09:06:20.889Z",
+    "request": {
+      "id": "2b7e6fec-d286-447c-b266-160d12c45169",
+      "method": "POST",
+      "route": "/api/auth/login"
+    },
+    "event": "query_end",
+    "verb": "UPDATE",
+    "shapeSha256": "a0f0eb883a7f5b79b6b678a2aebf2b1dbdc9aed6a9a917ed5c44097d08b595d5",
+    "nodePid": -2123121410,
+    "backendPid": 1826,
+    "durationMs": 35.446177999998326,
+    "error": {
+      "name": "error",
+      "code": "40001",
+      "severity": "ERROR",
+      "routine": "exec_stmt_raise",
+      "messageSha256": "da1d8a25221903ce11cd2c29ff6f8f640930c0a969ed3f42afe0357b6df43dde",
+      "stackSha256": "b6bbe07f5ca83bbc0e7fb7cbbe303b6bab3b9788f75c96e21492fb1786f563ac",
+      "category": null,
+      "cause": null
+    },
+    "total": 3,
+    "idle": 0,
+    "waiting": 0,
+    "max": 12
+  },
+  {
+    "at": "2026-09-26T09:06:22.140Z",
+    "request": {
+      "id": "d1719cc1-f9e4-4ff1-b53f-18ad0abe4484",
+      "method": "POST",
+      "route": "/api/auth/login"
+    },
+    "event": "query_end",
+    "verb": "UPDATE",
+    "shapeSha256": "a0f0eb883a7f5b79b6b678a2aebf2b1dbdc9aed6a9a917ed5c44097d08b595d5",
+    "nodePid": 1604559204,
+    "backendPid": 1825,
+    "durationMs": 35.18461799999932,
+    "error": {
+      "name": "error",
+      "code": "40001",
+      "severity": "ERROR",
+      "routine": "exec_stmt_raise",
+      "messageSha256": "da1d8a25221903ce11cd2c29ff6f8f640930c0a969ed3f42afe0357b6df43dde",
+      "stackSha256": "b6bbe07f5ca83bbc0e7fb7cbbe303b6bab3b9788f75c96e21492fb1786f563ac",
+      "category": null,
+      "cause": null
+    },
+    "total": 3,
+    "idle": 0,
+    "waiting": 0,
+    "max": 12
+  },
+  {
+    "at": "2026-09-26T09:06:22.143Z",
+    "request": {
+      "id": "f8bb7673-c3a7-4e45-8851-41830afb8d73",
+      "method": "POST",
+      "route": "/api/auth/login"
+    },
+    "event": "query_end",
+    "verb": "UPDATE",
+    "shapeSha256": "a0f0eb883a7f5b79b6b678a2aebf2b1dbdc9aed6a9a917ed5c44097d08b595d5",
+    "nodePid": -2123121410,
+    "backendPid": 1826,
+    "durationMs": 35.388097000002745,
+    "error": {
+      "name": "error",
+      "code": "40001",
+      "severity": "ERROR",
+      "routine": "exec_stmt_raise",
+      "messageSha256": "da1d8a25221903ce11cd2c29ff6f8f640930c0a969ed3f42afe0357b6df43dde",
+      "stackSha256": "b6bbe07f5ca83bbc0e7fb7cbbe303b6bab3b9788f75c96e21492fb1786f563ac",
+      "category": null,
+      "cause": null
+    },
+    "total": 3,
+    "idle": 0,
+    "waiting": 0,
+    "max": 12
+  },
+  {
+    "at": "2026-09-26T09:06:23.378Z",
+    "request": {
+      "id": "9ad67d7e-385c-4a8c-b5c3-75c32c2e65bc",
+      "method": "POST",
+      "route": "/api/auth/login"
+    },
+    "event": "query_end",
+    "verb": "UPDATE",
+    "shapeSha256": "a0f0eb883a7f5b79b6b678a2aebf2b1dbdc9aed6a9a917ed5c44097d08b595d5",
+    "nodePid": 1604559204,
+    "backendPid": 1825,
+    "durationMs": 35.0307959999991,
+    "error": {
+      "name": "error",
+      "code": "40001",
+      "severity": "ERROR",
+      "routine": "exec_stmt_raise",
+      "messageSha256": "da1d8a25221903ce11cd2c29ff6f8f640930c0a969ed3f42afe0357b6df43dde",
+      "stackSha256": "b6bbe07f5ca83bbc0e7fb7cbbe303b6bab3b9788f75c96e21492fb1786f563ac",
+      "category": null,
+      "cause": null
+    },
+    "total": 3,
+    "idle": 0,
+    "waiting": 0,
+    "max": 12
+  },
+  {
+    "at": "2026-09-26T09:06:23.380Z",
+    "request": {
+      "id": "fa9dcd04-005b-4ed4-9e03-608046cb803f",
+      "method": "POST",
+      "route": "/api/auth/login"
+    },
+    "event": "query_end",
+    "verb": "UPDATE",
+    "shapeSha256": "a0f0eb883a7f5b79b6b678a2aebf2b1dbdc9aed6a9a917ed5c44097d08b595d5",
+    "nodePid": -2123121410,
+    "backendPid": 1826,
+    "durationMs": 35.491039000000455,
+    "error": {
+      "name": "error",
+      "code": "40001",
+      "severity": "ERROR",
+      "routine": "exec_stmt_raise",
+      "messageSha256": "da1d8a25221903ce11cd2c29ff6f8f640930c0a969ed3f42afe0357b6df43dde",
+      "stackSha256": "b6bbe07f5ca83bbc0e7fb7cbbe303b6bab3b9788f75c96e21492fb1786f563ac",
+      "category": null,
+      "cause": null
+    },
+    "total": 3,
+    "idle": 0,
+    "waiting": 0,
+    "max": 12
+  },
+  {
+    "at": "2026-09-26T09:06:24.598Z",
+    "request": {
+      "id": "0bcc5507-2a29-4e45-95f5-0d5fa019264c",
+      "method": "POST",
+      "route": "/api/auth/login"
+    },
+    "event": "query_end",
+    "verb": "UPDATE",
+    "shapeSha256": "a0f0eb883a7f5b79b6b678a2aebf2b1dbdc9aed6a9a917ed5c44097d08b595d5",
+    "nodePid": 1604559204,
+    "backendPid": 1825,
+    "durationMs": 34.69055699999444,
+    "error": {
+      "name": "error",
+      "code": "40001",
+      "severity": "ERROR",
+      "routine": "exec_stmt_raise",
+      "messageSha256": "da1d8a25221903ce11cd2c29ff6f8f640930c0a969ed3f42afe0357b6df43dde",
+      "stackSha256": "b6bbe07f5ca83bbc0e7fb7cbbe303b6bab3b9788f75c96e21492fb1786f563ac",
+      "category": null,
+      "cause": null
+    },
+    "total": 3,
+    "idle": 0,
+    "waiting": 0,
+    "max": 12
+  },
+  {
+    "at": "2026-09-26T09:06:24.601Z",
+    "request": {
+      "id": "7d938638-4696-4c61-9da4-6d54b186be8b",
+      "method": "POST",
+      "route": "/api/auth/login"
+    },
+    "event": "query_end",
+    "verb": "UPDATE",
+    "shapeSha256": "a0f0eb883a7f5b79b6b678a2aebf2b1dbdc9aed6a9a917ed5c44097d08b595d5",
+    "nodePid": -2123121410,
+    "backendPid": 1826,
+    "durationMs": 35.399599000003946,
+    "error": {
+      "name": "error",
+      "code": "40001",
+      "severity": "ERROR",
+      "routine": "exec_stmt_raise",
+      "messageSha256": "da1d8a25221903ce11cd2c29ff6f8f640930c0a969ed3f42afe0357b6df43dde",
+      "stackSha256": "b6bbe07f5ca83bbc0e7fb7cbbe303b6bab3b9788f75c96e21492fb1786f563ac",
+      "category": null,
+      "cause": null
+    },
+    "total": 3,
+    "idle": 0,
+    "waiting": 0,
+    "max": 12
+  }
+]

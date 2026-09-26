@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useId } from "react";
+import { flushSync } from "react-dom";
 import { ReporteTable } from "@workspace/api-client-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,9 +13,32 @@ import { getReportTableHref, isSafeInternalReportHref } from "@/lib/report-href"
 
 export { getReportTableHref, isSafeInternalReportHref };
 
-export function ReportTable({ block, hasEconomicAccess, section }: { block: ReporteTable, hasEconomicAccess: boolean; section?: string }) {
+export function ReportTable({ block, hasEconomicAccess, section, paginationKey }: { block: ReporteTable, hasEconomicAccess: boolean; section?: string; paginationKey?: string }) {
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
+  const paginated = paginationKey !== undefined;
+  const [pageSize, setPageSize] = useState(50);
+  const [position, setPosition] = useState({ rows: block.rows, context: paginationKey, page: 1 });
+  const [printing, setPrinting] = useState(false);
+  const controlsId = useId();
+
+  useEffect(() => {
+    setPosition(current => current.rows === block.rows && current.context === paginationKey
+      ? current : { rows: block.rows, context: paginationKey, page: 1 });
+  }, [block.rows, paginationKey]);
+
+  useEffect(() => {
+    if (!paginated) return;
+    // Browser print must snapshot every row, not merely the current screen page.
+    const beforePrint = () => flushSync(() => setPrinting(true));
+    const afterPrint = () => setPrinting(false);
+    window.addEventListener("beforeprint", beforePrint);
+    window.addEventListener("afterprint", afterPrint);
+    return () => {
+      window.removeEventListener("beforeprint", beforePrint);
+      window.removeEventListener("afterprint", afterPrint);
+    };
+  }, [paginated]);
 
   const visibleColumns = useMemo(() => {
     // If no economic access, hide columns of kind "money"
@@ -35,8 +59,16 @@ export function ReportTable({ block, hasEconomicAccess, section }: { block: Repo
     });
   }, [block.rows, sortKey, sortAsc]);
 
+  const pageCount = Math.max(1, Math.ceil(sortedData.length / pageSize));
+  // Reset immediately when rows or report filters change; never flash an old page.
+  const page = position.rows === block.rows && position.context === paginationKey ? Math.min(position.page, pageCount) : 1;
+  const setPage = (next: number) => setPosition({ rows: block.rows, context: paginationKey, page: next });
+  const offset = paginated && !printing ? (page - 1) * pageSize : 0;
+  const displayedData = paginated && !printing ? sortedData.slice(offset, offset + pageSize) : sortedData;
+
   const handleSort = (key: string, sortable?: boolean) => {
     if (sortable === false) return;
+    setPage(1);
     if (sortKey === key) {
       setSortAsc(!sortAsc);
     } else {
@@ -45,10 +77,10 @@ export function ReportTable({ block, hasEconomicAccess, section }: { block: Repo
     }
   };
 
-  const isSticky = sortedData.length > 15;
+  const isSticky = displayedData.length > 15 && !printing;
 
   return (
-    <Card className="border-border shadow-sm overflow-hidden" data-testid={`report-table-${block.id}`}>
+    <Card className="border-border shadow-sm overflow-hidden print:overflow-visible" data-testid={`report-table-${block.id}`}>
       {block.title && (
         <CardHeader className="py-4 px-5">
           <CardTitle className="text-lg font-semibold tracking-tight text-report-header">
@@ -57,8 +89,21 @@ export function ReportTable({ block, hasEconomicAccess, section }: { block: Repo
         </CardHeader>
       )}
       <CardContent className="p-0">
+        {paginated && (
+          <nav aria-label={`Paginación de ${block.title || block.id}`} className="flex flex-wrap items-center gap-3 px-5 py-3 print:hidden">
+            <label htmlFor={controlsId}>Filas por página</label>
+            <select id={controlsId} value={pageSize} className="rounded border bg-background p-2" onChange={event => { setPageSize(Number(event.target.value)); setPage(1); }}>
+              {[25, 50, 100].map(size => <option key={size} value={size}>{size}</option>)}
+            </select>
+            <button type="button" className="rounded border px-3 py-2 disabled:opacity-50" disabled={page === 1} onClick={() => setPage(page - 1)}>Anterior</button>
+            <span role="status" aria-live="polite">Página {page} de {pageCount} · Filas {sortedData.length ? offset + 1 : 0}–{Math.min(offset + pageSize, sortedData.length)} de {sortedData.length}</span>
+            <button type="button" className="rounded border px-3 py-2 disabled:opacity-50" disabled={page >= pageCount} onClick={() => setPage(page + 1)}>Siguiente</button>
+            <button type="button" className="rounded border px-3 py-2" onClick={() => window.print()}>Imprimir reporte completo</button>
+            <p className="w-full text-sm text-muted-foreground">Sólo se pagina la pantalla. Los totales, las exportaciones y la impresión incluyen todas las filas del reporte filtrado.</p>
+          </nav>
+        )}
         <div
-          className={`w-full overflow-x-auto custom-scrollbar ${isSticky ? "max-h-[600px] overflow-y-auto" : ""}`}
+          className={`w-full overflow-x-auto custom-scrollbar print:overflow-visible print:max-h-none [&>div]:print:overflow-visible ${isSticky ? "max-h-[600px] overflow-y-auto" : ""}`}
         >
           <Table className="text-[14px] w-full">
             <TableHeader className={isSticky ? "sticky top-0 z-20" : ""}>
@@ -75,6 +120,9 @@ export function ReportTable({ block, hasEconomicAccess, section }: { block: Repo
                       key={col.key}
                       className={`h-11 px-4 font-semibold tracking-wide text-report-header-foreground ${alignRight ? 'text-right' : alignCenter ? 'text-center' : 'text-left'} ${col.sortable !== false ? 'cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 select-none' : ''}`}
                       onClick={() => handleSort(col.key, col.sortable)}
+                      tabIndex={col.sortable !== false ? 0 : undefined}
+                      aria-sort={sortKey === col.key ? (sortAsc ? "ascending" : "descending") : undefined}
+                      onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); handleSort(col.key, col.sortable); } }}
                       data-testid={`th-${col.key}`}
                     >
                       <div className={`flex items-center gap-1.5 ${alignRight ? 'justify-end' : alignCenter ? 'justify-center' : 'justify-start'}`}>
@@ -86,11 +134,11 @@ export function ReportTable({ block, hasEconomicAccess, section }: { block: Repo
               </TableRow>
             </TableHeader>
             <TableBody>
-              {sortedData.map((row: any, idx) => (
+              {displayedData.map((row: any, idx) => (
                 <TableRow
-                  key={row.id || idx}
+                  key={row.id || offset + idx}
                   className="whitespace-nowrap border-b-0 transition-colors even:bg-report-stripe hover:bg-black/5 dark:hover:bg-white/10"
-                  data-testid={`tr-${idx}`}
+                  data-testid={`tr-${offset + idx}`}
                 >
                   {visibleColumns.map((col: any) => {
                     const val = row[col.key];

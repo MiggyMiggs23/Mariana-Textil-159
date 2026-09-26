@@ -114,6 +114,10 @@ router.post("/auth/login", async (req, res): Promise<void> => {
   const expiraAt = new Date(now.getTime() + INACTIVITY_MS);
 
   await db.transaction(async (tx) => {
+    // e5_serialize on usuarios UPDATE deliberately raises 40001 if its graph
+    // lock is busy. Wait BEFORE taking session/FK/user locks, never after them.
+    // The trigger re-acquires our transaction lock; no write retry is needed.
+    await tx.execute(sql`SELECT pg_advisory_xact_lock(650005,5)`);
     await tx.insert(sesionesTable).values({
       id: sessionId,
       usuarioId: row.user.id,

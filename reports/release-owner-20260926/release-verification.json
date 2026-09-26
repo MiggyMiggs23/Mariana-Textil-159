@@ -1,0 +1,56 @@
+{
+  "status": "ACTIVE_IN_APPLICATION_WORKSPACE",
+  "authorization": "reports/autorizacion-propietario-liberacion-20260926.txt",
+  "api": {
+    "file": "artifacts/api-server/dist-owner-login-v9-20260926/index.mjs",
+    "sha256": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+    "pid": 1601
+  },
+  "frontend": {
+    "file": "artifacts/mariana-textil/dist-priority-credit-presentation-20260926/index.html",
+    "servedIndexSha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+  },
+  "health": {
+    "path": "/api/healthz",
+    "httpStatus": 200,
+    "body": {
+      "status": "ok"
+    }
+  },
+  "sql": {
+    "evidence": "reports/release-owner-20260926/application-alias-migration-result.json",
+    "businessDML": false,
+    "fixtureClockNotApplied": true
+  },
+  "login": {
+    "concurrentRequests": 21,
+    "http200": 21,
+    "http500": 0,
+    "committedSessions": 21,
+    "committedAudits": 21,
+    "noWriteRetries": true
+  },
+  "credit": {
+    "baselineCompletedMs": [
+      10978.244,
+      15276.559,
+      15049.783
+    ],
+    "candidateMs": [
+      5431.429,
+      5195.218,
+      5402.697
+    ],
+    "medianReductionPercent": 64.1,
+    "baselineAdditionalHarnessTimeoutSeconds": 300,
+    "financialResponseParity": true,
+    "xlsxDataSheetsParity": true,
+    "pdfValid": true,
+    "pdfTextEqualityTested": false,
+    "printFullDOMVerified": true,
+    "comparisonNotes": "Same API process/database; browser origin port changed 18238 to18239. Timings from disposable annual model, not live user data."
+  },
+  "clientList": "Owner accepts cold 2.61s / warm1.6s; no further optimization",
+  "startup": "Existing inspection boot retained: schema initializers and maintenance paused; business endpoints remain available",
+  "publishedDeployment": "Not republished; verified running workspace application"
+}

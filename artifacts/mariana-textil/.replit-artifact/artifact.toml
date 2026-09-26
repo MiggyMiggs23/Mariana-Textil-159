@@ -12,7 +12,7 @@ paths = [ "/" ]
 localPort = 20329
 
 [services.development]
-run = "cd /home/runner/workspace && sha256sum -c reports/noche-20260926/tarea-7/frontend.sha256 && cd artifacts/mariana-textil && exec pnpm exec vite preview --config vite.config.ts --outDir dist-noche-task7-inventory-20260926 --host 0.0.0.0 --port \"$PORT\" --strictPort"
+run = "cd /home/runner/workspace && sha256sum -c reports/release-owner-20260926/frontend.sha256 && cd artifacts/mariana-textil && exec pnpm exec vite preview --config vite.config.ts --outDir dist-priority-credit-presentation-20260926 --host 0.0.0.0 --port \"$PORT\" --strictPort"
 
 [services.production]
 build = [ "pnpm", "--filter", "@workspace/mariana-textil", "run", "build" ]

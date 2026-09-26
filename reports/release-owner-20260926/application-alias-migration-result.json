@@ -1,0 +1,9 @@
+{
+  "beforeHash": "5f4323afaf6225e79a78dc581e3b350fe71dbe202831c07829ed8daf6681c1ca",
+  "afterHash": "520001178556703d8cda64dcfcda7911f7331c9e5f3e2c41107a8c7777b196bc",
+  "dataWrites": false,
+  "triggerChanges": false,
+  "rollbackTrial": "EXACT_PREIMAGE_RESTORED",
+  "status": "ALIAS_ONLY_COMMITTED",
+  "identityPrivilegesAndTriggersUnchanged": true
+}

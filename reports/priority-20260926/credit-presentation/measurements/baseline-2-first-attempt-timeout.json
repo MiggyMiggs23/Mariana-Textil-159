@@ -1,0 +1,10 @@
+{
+  "phase": "baseline",
+  "sample": 2,
+  "attempt": 1,
+  "status": "BLOCKED",
+  "evidence": "ShellExec terminated the browser harness after its 300000ms deadline. Last emitted stage was authenticated-site-ready. No trustworthy action-to-visible duration was returned and no final JSON was produced.",
+  "durationMs": null,
+  "notExcludedFromAudit": true,
+  "followUp": "Unchanged server still returned healthz200 with baseline UI02e838. Added bounded diagnostics/checkpoints and retained this failure separately before repeating sample2. Cause not established; not labeled product failure or successful performance result."
+}

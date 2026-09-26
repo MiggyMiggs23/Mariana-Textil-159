@@ -1,0 +1,16 @@
+{
+  "status": "READY",
+  "database": "release_perf_20260926",
+  "pid": 1540,
+  "apiSha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+  "startupMode": "INSPECTION",
+  "checkedAt": "2026-09-26T09:10:58.939Z",
+  "launcherPid": 1527,
+  "url": "http://127.0.0.1:18238",
+  "apiUrl": "http://127.0.0.1:18237",
+  "frontendRoot": "/home/runner/workspace/artifacts/mariana-textil/dist-priority-e11-confirmed-lifecycle-20260926",
+  "loginStatus": 200,
+  "meStatus": 200,
+  "noInitializers": true,
+  "noPoller": true
+}

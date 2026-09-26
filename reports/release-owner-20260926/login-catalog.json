@@ -1,0 +1,161 @@
+{
+  "identity": [
+    {
+      "current_database": "release_login_20260926",
+      "isolation": "read committed",
+      "default_isolation": "read committed"
+    }
+  ],
+  "indexes": [
+    {
+      "indexdef": "CREATE UNIQUE INDEX usuarios_pkey ON public.usuarios USING btree (id)"
+    },
+    {
+      "indexdef": "CREATE UNIQUE INDEX usuarios_usuario_unique ON public.usuarios USING btree (usuario)"
+    }
+  ],
+  "triggers": [
+    {
+      "tgname": "e11_graph",
+      "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.usuarios DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+    },
+    {
+      "tgname": "e11_no_truncate",
+      "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.usuarios FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+    },
+    {
+      "tgname": "e11_user_change",
+      "definition": "CREATE TRIGGER e11_user_change AFTER UPDATE OF rol, activo ON public.usuarios FOR EACH ROW EXECUTE FUNCTION e11_user_change()"
+    },
+    {
+      "tgname": "e5_graph",
+      "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.usuarios DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+    },
+    {
+      "tgname": "e5_no_truncate",
+      "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.usuarios FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+    },
+    {
+      "tgname": "e5_serialize",
+      "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.usuarios FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+    }
+  ],
+  "constraints": [
+    {
+      "tabla": "auditoria",
+      "definition": "NOT NULL id"
+    },
+    {
+      "tabla": "auditoria",
+      "definition": "NOT NULL accion"
+    },
+    {
+      "tabla": "auditoria",
+      "definition": "NOT NULL entidad"
+    },
+    {
+      "tabla": "auditoria",
+      "definition": "NOT NULL ip"
+    },
+    {
+      "tabla": "auditoria",
+      "definition": "NOT NULL created_at"
+    },
+    {
+      "tabla": "sesiones",
+      "definition": "NOT NULL expira_at"
+    },
+    {
+      "tabla": "sesiones",
+      "definition": "NOT NULL id"
+    },
+    {
+      "tabla": "sesiones",
+      "definition": "NOT NULL usuario_id"
+    },
+    {
+      "tabla": "sesiones",
+      "definition": "NOT NULL ip"
+    },
+    {
+      "tabla": "sesiones",
+      "definition": "NOT NULL user_agent"
+    },
+    {
+      "tabla": "sesiones",
+      "definition": "NOT NULL created_at"
+    },
+    {
+      "tabla": "usuarios",
+      "definition": "NOT NULL id"
+    },
+    {
+      "tabla": "usuarios",
+      "definition": "NOT NULL nombre"
+    },
+    {
+      "tabla": "usuarios",
+      "definition": "NOT NULL usuario"
+    },
+    {
+      "tabla": "usuarios",
+      "definition": "NOT NULL password_hash"
+    },
+    {
+      "tabla": "usuarios",
+      "definition": "NOT NULL rol"
+    },
+    {
+      "tabla": "usuarios",
+      "definition": "NOT NULL activo"
+    },
+    {
+      "tabla": "usuarios",
+      "definition": "NOT NULL created_at"
+    },
+    {
+      "tabla": "usuarios",
+      "definition": "NOT NULL alcance_consulta"
+    },
+    {
+      "tabla": "auditoria",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "tabla": "sesiones",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "tabla": "usuarios",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "tabla": "usuarios",
+      "definition": "UNIQUE (usuario)"
+    },
+    {
+      "tabla": "usuarios",
+      "definition": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+    },
+    {
+      "tabla": "usuarios",
+      "definition": "TRIGGER DEFERRABLE INITIALLY DEFERRED"
+    },
+    {
+      "tabla": "auditoria",
+      "definition": "FOREIGN KEY (sitio_id) REFERENCES ubicaciones(id)"
+    },
+    {
+      "tabla": "auditoria",
+      "definition": "FOREIGN KEY (usuario_id) REFERENCES usuarios(id)"
+    },
+    {
+      "tabla": "sesiones",
+      "definition": "FOREIGN KEY (usuario_id) REFERENCES usuarios(id)"
+    },
+    {
+      "tabla": "usuarios",
+      "definition": "FOREIGN KEY (ubicacion_id) REFERENCES ubicaciones(id)"
+    }
+  ]
+}

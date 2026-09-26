@@ -1,0 +1,65 @@
+{
+  "status": "LOADED",
+  "database": "release_perf_20260926",
+  "before": {
+    "clientes": 2576,
+    "tickets": 0,
+    "ticket_lineas": 0,
+    "ticket_pagos": 0,
+    "movimientos_credito": 0,
+    "rollos": 0,
+    "sesiones_caja": 0
+  },
+  "after": {
+    "clientes": 2576,
+    "tickets": 54750,
+    "ticket_lineas": 54750,
+    "ticket_pagos": 41063,
+    "movimientos_credito": 13687,
+    "rollos": 54750,
+    "sesiones_caja": 3
+  },
+  "loadMs": 22866.456516000002,
+  "assumptions": {
+    "days": 365,
+    "stores": 3,
+    "ticketsPerStoreDay": 50,
+    "start": "2025-09-27",
+    "tickets": 54750,
+    "clientsDistributed": 2575,
+    "distribution": "round robin across copied customers, 4 meter products and 3 synthetic stores",
+    "credit": "every fourth ticket",
+    "unpaid": "every twentieth ticket (subset of credit)",
+    "notObservedBusinessAnnualVolume": true,
+    "notCorrectnessSimulation": true
+  },
+  "sites": [
+    {
+      "id": 835,
+      "nombre": "NOCHE PERF 1"
+    },
+    {
+      "id": 836,
+      "nombre": "NOCHE PERF 2"
+    },
+    {
+      "id": 837,
+      "nombre": "NOCHE PERF 3"
+    }
+  ],
+  "sessions": [
+    1,
+    2,
+    3
+  ],
+  "products": [
+    2078,
+    2079,
+    2080,
+    2081
+  ],
+  "adminId": 234,
+  "customerId": 8,
+  "end": "2026-09-26",
+  "at": "2026-09-26T09:04:21.354Z"
+}

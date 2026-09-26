@@ -1,0 +1,1125 @@
+{
+  "phase": "after",
+  "sample": 1,
+  "origin": "http://127.0.0.1:18239",
+  "database": "release_perf_20260926",
+  "apiSha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+  "frontendIndexSha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "apiPid": 1540,
+  "originDifference": "Candidate-only frontend proxy18239; baseline proxy18238 untouched; both forward same API18237 PID1540. Fresh independent browser/session per sample.",
+  "model": {
+    "days": 365,
+    "stores": 3,
+    "ticketsPerStoreDay": 50,
+    "start": "2025-09-27",
+    "tickets": 54750,
+    "clientsDistributed": 2575,
+    "distribution": "round robin across copied customers, 4 meter products and 3 synthetic stores",
+    "credit": "every fourth ticket",
+    "unpaid": "every twentieth ticket (subset of credit)",
+    "notObservedBusinessAnnualVolume": true,
+    "notCorrectnessSimulation": true
+  },
+  "range": {
+    "from": "2025-09-27",
+    "through": "2026-09-26"
+  },
+  "definition": "Fresh browser/session; ordinary login/site selection excluded; full annual credit URL navigation through report-content visible plus two animation frames. No report request warmup. Exports only after third timed sample.",
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "query": "",
+      "status": 401,
+      "method": "GET",
+      "inMeasuredAction": false,
+      "timing": {
+        "startTime": 1790414495359.0488,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.287,
+        "responseStart": 26.435,
+        "responseEnd": 41.927
+      },
+      "headers": {
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/auth/login",
+      "query": "",
+      "status": 200,
+      "method": "POST",
+      "inMeasuredAction": false,
+      "timing": {
+        "startTime": 1790414495602.046,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.401,
+        "responseStart": 977.249,
+        "responseEnd": 985.149
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": false,
+      "timing": {
+        "startTime": 1790414496593.726,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 4.747,
+        "responseStart": 554.865,
+        "responseEnd": 566.141
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": false,
+      "timing": {
+        "startTime": 1790414497158.082,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.414,
+        "responseStart": 2.703,
+        "responseEnd": 7.382
+      },
+      "headers": {
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/e11/identidad",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": false,
+      "timing": {
+        "startTime": 1790414497167.534,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.344,
+        "responseStart": 686.91,
+        "responseEnd": 690.927
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/admin/test-reset",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": false,
+      "timing": {
+        "startTime": 1790414497920.2922,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 4.413,
+        "responseStart": 320.251,
+        "responseEnd": 355.477
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": false,
+      "timing": {
+        "startTime": 1790414497923.1892,
+        "domainLookupStart": 1.096,
+        "domainLookupEnd": 1.099,
+        "connectStart": 1.099,
+        "secureConnectionStart": -1,
+        "connectEnd": 1.417,
+        "requestStart": 1.841,
+        "responseStart": 811.858,
+        "responseEnd": 850.541
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": false,
+      "timing": {
+        "startTime": 1790414497923.5618,
+        "domainLookupStart": 53.85,
+        "domainLookupEnd": 53.861,
+        "connectStart": 53.861,
+        "secureConnectionStart": -1,
+        "connectEnd": 54.115,
+        "requestStart": 54.314,
+        "responseStart": 889.612,
+        "responseEnd": 924.868
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": false,
+      "timing": {
+        "startTime": 1790414497963.371,
+        "domainLookupStart": 14.47,
+        "domainLookupEnd": 14.473,
+        "connectStart": 14.473,
+        "secureConnectionStart": -1,
+        "connectEnd": 14.632,
+        "requestStart": 14.739,
+        "responseStart": 868.002,
+        "responseEnd": 889.255
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": false,
+      "timing": {
+        "startTime": 1790414497963.5278,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 279.049,
+        "responseStart": 874.213,
+        "responseEnd": 895.352
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/notificaciones",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": false,
+      "timing": {
+        "startTime": 1790414497961.7688,
+        "domainLookupStart": 15.894,
+        "domainLookupEnd": 15.897,
+        "connectStart": 15.897,
+        "secureConnectionStart": -1,
+        "connectEnd": 16.149,
+        "requestStart": 16.32,
+        "responseStart": 1584.086,
+        "responseEnd": 1625.251
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": false,
+      "timing": {
+        "startTime": 1790414497920.44,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 4.351,
+        "responseStart": 2380.008,
+        "responseEnd": 2416.3
+      },
+      "headers": {
+        "cache-control": "private, no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/admin/dashboard/realtime/pendientes",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": false,
+      "timing": {
+        "startTime": 1790414497966.155,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 873.852,
+        "responseStart": 2612.472,
+        "responseEnd": 2633.595
+      },
+      "headers": {
+        "cache-control": "private, no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": false,
+      "timing": {
+        "startTime": 1790414497965.331,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 776.517,
+        "responseStart": 2615.324,
+        "responseEnd": 2637.688
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/admin/cuentas-destino",
+      "query": "?desde=2026-09-26&hasta=2026-09-26&compare=false&preset=hoy",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": false,
+      "timing": {
+        "startTime": 1790414497965.8518,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 849.949,
+        "responseStart": 2625.398,
+        "responseEnd": 2648.907
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/admin/dashboard/realtime",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": false,
+      "timing": {
+        "startTime": 1790414497966.036,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 867.323,
+        "responseStart": 2741.489,
+        "responseEnd": 2763.21
+      },
+      "headers": {
+        "cache-control": "private, no-store",
+        "server-timing": "admin-realtime;dur=304.3",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": true,
+      "timing": {
+        "startTime": 1790414501161.153,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.435,
+        "responseStart": 578.994,
+        "responseEnd": 588.183
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": true,
+      "timing": {
+        "startTime": 1790414501749.083,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.586,
+        "responseStart": 2.219,
+        "responseEnd": 6.842
+      },
+      "headers": {
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/e11/identidad",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": true,
+      "timing": {
+        "startTime": 1790414501758.258,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.429,
+        "responseStart": 716.869,
+        "responseEnd": 727.978
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/admin/test-reset",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": true,
+      "timing": {
+        "startTime": 1790414502549.937,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.47,
+        "responseStart": 323.72,
+        "responseEnd": 355.958
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": true,
+      "timing": {
+        "startTime": 1790414502553.04,
+        "domainLookupStart": 0.773,
+        "domainLookupEnd": 0.781,
+        "connectStart": 0.781,
+        "secureConnectionStart": -1,
+        "connectEnd": 1.07,
+        "requestStart": 1.352,
+        "responseStart": 560.615,
+        "responseEnd": 595.587
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/reportes/pagos-dirigidos",
+      "query": "?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": true,
+      "timing": {
+        "startTime": 1790414502552.852,
+        "domainLookupStart": 0.846,
+        "domainLookupEnd": 0.855,
+        "connectStart": 0.855,
+        "secureConnectionStart": -1,
+        "connectEnd": 1.095,
+        "requestStart": 1.475,
+        "responseStart": 589.776,
+        "responseEnd": 621.679
+      },
+      "headers": {
+        "cache-control": "private, no-store",
+        "server-timing": "reportes;dur=35.3",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": true,
+      "timing": {
+        "startTime": 1790414502554.563,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 323.279,
+        "responseStart": 985.636,
+        "responseEnd": 1019.649
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": true,
+      "timing": {
+        "startTime": 1790414502554.8042,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 565.236,
+        "responseStart": 1267.965,
+        "responseEnd": 1305.583
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": true,
+      "timing": {
+        "startTime": 1790414502550.781,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.356,
+        "responseStart": 1585.551,
+        "responseEnd": 1622.72
+      },
+      "headers": {
+        "cache-control": "private, no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": true,
+      "timing": {
+        "startTime": 1790414502555.0432,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 590.764,
+        "responseStart": 1581.54,
+        "responseEnd": 1621.302
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/notificaciones",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": true,
+      "timing": {
+        "startTime": 1790414502552.5,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1.524,
+        "responseStart": 1508.905,
+        "responseEnd": 1635.154
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": true,
+      "timing": {
+        "startTime": 1790414502555.134,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 989.399,
+        "responseStart": 1834.738,
+        "responseEnd": 1865.663
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/locations",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": true,
+      "timing": {
+        "startTime": 1790414502555.315,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1275.557,
+        "responseStart": 2102.415,
+        "responseEnd": 2136.218
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/reportes/clientes",
+      "query": "?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": true,
+      "timing": {
+        "startTime": 1790414502552.7239,
+        "domainLookupStart": 0.592,
+        "domainLookupEnd": 0.801,
+        "connectStart": 0.801,
+        "secureConnectionStart": -1,
+        "connectEnd": 1.18,
+        "requestStart": 1.495,
+        "responseStart": 2239.23,
+        "responseEnd": 2277.58
+      },
+      "headers": {
+        "cache-control": "private, no-store",
+        "server-timing": "reportes;dur=1539.8",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    },
+    {
+      "path": "/api/reportes/catalogos",
+      "query": "",
+      "status": 200,
+      "method": "GET",
+      "inMeasuredAction": true,
+      "timing": {
+        "startTime": 1790414502556.3982,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 1597.798,
+        "responseStart": 2488.078,
+        "responseEnd": 2519.677
+      },
+      "headers": {
+        "cache-control": "no-store",
+        "server-timing": "reportes;dur=171.8",
+        "x-priority-api-sha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+        "x-priority-clock": "system",
+        "x-priority-ui-sha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+      }
+    }
+  ],
+  "errors": [],
+  "stage": "diagnostics-collected",
+  "actionStartEpochMs": 1790414500947,
+  "actionStartNodeMonotonicMs": 7396.36322,
+  "visibleDetectedEpochMs": 1790414505657,
+  "durationMs": 5431.428782,
+  "actionEndEpochMs": 1790414506378,
+  "actionEndNodeMonotonicMs": 12827.792002,
+  "browserAtVisible": {
+    "timeOriginEpochMs": 1790414500950.6,
+    "nowMs": 5957.59999999986,
+    "navigation": [
+      {
+        "name": "http://127.0.0.1:18239/reportes/clientes?periodo=personalizado&desde=2025-09-27&hasta=2026-09-26",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 200,
+        "navigationId": 3009,
+        "initiatorType": "navigation",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.6999999999534339,
+        "domainLookupStart": 0.6999999999534339,
+        "domainLookupEnd": 0.6999999999534339,
+        "connectStart": 0.6999999999534339,
+        "secureConnectionStart": 0,
+        "connectEnd": 0.6999999999534339,
+        "requestStart": 4.099999999860302,
+        "responseStart": 4.7999999998137355,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 4.7999999998137355,
+        "responseEnd": 6.699999999953434,
+        "transferSize": 1632,
+        "encodedBodySize": 1332,
+        "decodedBodySize": 1332,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 10.599999999860302,
+        "unloadEventEnd": 10.599999999860302,
+        "domInteractive": 20.699999999953434,
+        "domContentLoadedEventStart": 199.0999999998603,
+        "domContentLoadedEventEnd": 199.19999999995343,
+        "domComplete": 200,
+        "loadEventStart": 200,
+        "loadEventEnd": 200,
+        "type": "navigate",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "high"
+        }
+      }
+    ],
+    "longTasks": [
+      {
+        "startEpochMs": 1790414501099.9001,
+        "durationMs": 50
+      },
+      {
+        "startEpochMs": 1790414502486.2002,
+        "durationMs": 59
+      },
+      {
+        "startEpochMs": 1790414504815.9001,
+        "durationMs": 70
+      },
+      {
+        "startEpochMs": 1790414504906.6,
+        "durationMs": 722
+      },
+      {
+        "startEpochMs": 1790414505657.3,
+        "durationMs": 313
+      },
+      {
+        "startEpochMs": 1790414505981.4001,
+        "durationMs": 125
+      },
+      {
+        "startEpochMs": 1790414506108.1,
+        "durationMs": 269
+      },
+      {
+        "startEpochMs": 1790414506377.4001,
+        "durationMs": 120
+      },
+      {
+        "startEpochMs": 1790414506497.5,
+        "durationMs": 285
+      },
+      {
+        "startEpochMs": 1790414506783.4001,
+        "durationMs": 124
+      }
+    ],
+    "reportTableRows": 106,
+    "creditTableRows": 105,
+    "domElements": 7987,
+    "tables": [
+      {
+        "id": "report-table-clientes",
+        "rows": 50,
+        "totalsText": "Totales$5,201,300.00$5,201,300.00$0.00$2,600,650.00",
+        "pageStatus": "Página 1 de 52 · Filas 1–50 de 2575"
+      },
+      {
+        "id": "report-table-publico-registrado",
+        "rows": 1,
+        "totalsText": "Totales$5,201,300.00",
+        "pageStatus": "Página 1 de 1 · Filas 1–1 de 1"
+      },
+      {
+        "id": "report-table-formas-pago",
+        "rows": 2,
+        "totalsText": "Totales$4,763,308.00",
+        "pageStatus": "Página 1 de 1 · Filas 1–2 de 2"
+      },
+      {
+        "id": "report-table-cuentas-por-cobrar-fifo",
+        "rows": 50,
+        "totalsText": "Totales$1,587,692.00",
+        "pageStatus": "Página 1 de 274 · Filas 1–50 de 13687"
+      },
+      {
+        "id": "report-table-pagos-dirigidos",
+        "rows": 1,
+        "totalsText": null,
+        "pageStatus": "Página 1 de 1 · Filas 0–0 de 0"
+      },
+      {
+        "id": "report-table-castigos-y-reversos",
+        "rows": 1,
+        "totalsText": null,
+        "pageStatus": "Página 1 de 1 · Filas 0–0 de 0"
+      }
+    ]
+  },
+  "report": {
+    "url": "/api/reportes/clientes?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+    "kpis": [
+      {
+        "id": "ventas-clientes",
+        "label": "Ventas",
+        "value": 5201300,
+        "kind": "money",
+        "economic": true
+      },
+      {
+        "id": "utilidad-clientes",
+        "label": "Utilidad exacta",
+        "value": 2600650,
+        "kind": "money",
+        "economic": true
+      },
+      {
+        "id": "ticket-promedio",
+        "label": "Ticket promedio",
+        "value": 100,
+        "kind": "money",
+        "economic": true
+      },
+      {
+        "id": "clientes-nuevos",
+        "label": "Clientes nuevos",
+        "value": 2575,
+        "kind": "count"
+      }
+    ],
+    "chartsSha256": "fadc7e926e1d61e358f79ad433e13bb364f7eff406f0420cab038782e3480dfe",
+    "tables": [
+      {
+        "id": "clientes",
+        "rowCount": 2575,
+        "totals": {
+          "ventas": 5201300,
+          "comprasRollos": 5201300,
+          "comprasMetraje": 0,
+          "utilidad": 2600650
+        },
+        "rowsSha256": "a9078b306ecd57067acbaa289b5d7c9bb3d35b0b9c7b10f04508f5dfee83d13a",
+        "columnsSha256": "6ce7fec18ea9debf033e3f481600eb60c2274bf7b21f83bbceab2fd1575a6ba2"
+      },
+      {
+        "id": "publico-registrado",
+        "rowCount": 1,
+        "totals": {
+          "ventas": 5201300
+        },
+        "rowsSha256": "890b4bfa3298d1ef147bd46364d29f5af5e30ba35c517a6507b27346c9a23bca",
+        "columnsSha256": "6a0a6681487701d891ea123cbc070c5e771f1d82e3e6478fd82c4d428fffe1b9"
+      },
+      {
+        "id": "formas-pago",
+        "rowCount": 2,
+        "totals": {
+          "importe": 4763308
+        },
+        "rowsSha256": "daaab6ca2f7054eb01004e3ddf803dd0dd24ff941d87d9231746410c16625f98",
+        "columnsSha256": "3f9abc06ef3fb0851b15ce20d097f5b1a7458dedd08e51b66bf37f76413c8e13"
+      },
+      {
+        "id": "cuentas-por-cobrar-fifo",
+        "rowCount": 13687,
+        "totals": {
+          "saldo": 1587692
+        },
+        "rowsSha256": "4ff10402418a9a36d239d0a022a6a27b3a5694693370c5bacdb17510594bd6b2",
+        "columnsSha256": "ef28f29c7f26ad2eecd74018d414f6fa9980c88cd64c7101e9daf33bf5ab410e"
+      },
+      {
+        "id": "pagos-dirigidos",
+        "rowCount": 0,
+        "totals": {
+          "importe": 0
+        },
+        "rowsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "columnsSha256": "4197284a4ebc8b5ffe99744b356d9d599e1c8ae549f13d608ab77699a1610f49"
+      },
+      {
+        "id": "castigos-y-reversos",
+        "rowCount": 0,
+        "totals": {
+          "importe": 0
+        },
+        "rowsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "columnsSha256": "0d9a539b0ba3336d440a0af110428efa3120348715874da3e6b7c14c0e12db9a"
+      }
+    ]
+  },
+  "phaseIntervals": [
+    {
+      "path": "/api/auth/me",
+      "actionToRequestStartMs": 214.153076171875,
+      "requestDurationMs": 588.183,
+      "responseEndEpochMs": 1790414501749.3362,
+      "responseEndToVisibleMs": 3907.663818359375
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "actionToRequestStartMs": 802.0830078125,
+      "requestDurationMs": 6.842,
+      "responseEndEpochMs": 1790414501755.925,
+      "responseEndToVisibleMs": 3901.074951171875
+    },
+    {
+      "path": "/api/e11/identidad",
+      "actionToRequestStartMs": 811.258056640625,
+      "requestDurationMs": 727.978,
+      "responseEndEpochMs": 1790414502486.236,
+      "responseEndToVisibleMs": 3170.763916015625
+    },
+    {
+      "path": "/api/admin/test-reset",
+      "actionToRequestStartMs": 1602.93701171875,
+      "requestDurationMs": 355.958,
+      "responseEndEpochMs": 1790414502905.895,
+      "responseEndToVisibleMs": 2751.10498046875
+    },
+    {
+      "path": "/api/auth/me",
+      "actionToRequestStartMs": 1606.0400390625,
+      "requestDurationMs": 595.587,
+      "responseEndEpochMs": 1790414503148.627,
+      "responseEndToVisibleMs": 2508.373046875
+    },
+    {
+      "path": "/api/reportes/pagos-dirigidos",
+      "actionToRequestStartMs": 1605.85205078125,
+      "requestDurationMs": 621.679,
+      "responseEndEpochMs": 1790414503174.531,
+      "responseEndToVisibleMs": 2482.468994140625
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "actionToRequestStartMs": 1607.56298828125,
+      "requestDurationMs": 1019.649,
+      "responseEndEpochMs": 1790414503574.212,
+      "responseEndToVisibleMs": 2082.7880859375
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "actionToRequestStartMs": 1607.80419921875,
+      "requestDurationMs": 1305.583,
+      "responseEndEpochMs": 1790414503860.3872,
+      "responseEndToVisibleMs": 1796.61279296875
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "actionToRequestStartMs": 1603.781005859375,
+      "requestDurationMs": 1622.72,
+      "responseEndEpochMs": 1790414504173.501,
+      "responseEndToVisibleMs": 1483.4990234375
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "actionToRequestStartMs": 1608.043212890625,
+      "requestDurationMs": 1621.302,
+      "responseEndEpochMs": 1790414504176.3452,
+      "responseEndToVisibleMs": 1480.65478515625
+    },
+    {
+      "path": "/api/notificaciones",
+      "actionToRequestStartMs": 1605.5,
+      "requestDurationMs": 1635.154,
+      "responseEndEpochMs": 1790414504187.654,
+      "responseEndToVisibleMs": 1469.345947265625
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "actionToRequestStartMs": 1608.134033203125,
+      "requestDurationMs": 1865.663,
+      "responseEndEpochMs": 1790414504420.797,
+      "responseEndToVisibleMs": 1236.202880859375
+    },
+    {
+      "path": "/api/locations",
+      "actionToRequestStartMs": 1608.31494140625,
+      "requestDurationMs": 2136.218,
+      "responseEndEpochMs": 1790414504691.533,
+      "responseEndToVisibleMs": 965.467041015625
+    },
+    {
+      "path": "/api/reportes/clientes",
+      "actionToRequestStartMs": 1605.723876953125,
+      "requestDurationMs": 2277.58,
+      "responseEndEpochMs": 1790414504830.304,
+      "responseEndToVisibleMs": 826.696044921875
+    },
+    {
+      "path": "/api/reportes/catalogos",
+      "actionToRequestStartMs": 1609.398193359375,
+      "requestDurationMs": 2519.677,
+      "responseEndEpochMs": 1790414505076.0752,
+      "responseEndToVisibleMs": 580.9248046875
+    }
+  ],
+  "status": "MEASURED"
+}

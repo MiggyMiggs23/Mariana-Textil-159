@@ -10,13 +10,15 @@ export function GenericReportRenderer({
   isLoading, 
   isError, 
   refetch, 
-  section 
+  section,
+  tablePaginationKey
 }: { 
   data: any; 
   isLoading: boolean; 
   isError: boolean; 
   refetch: () => void; 
   section: string;
+  tablePaginationKey?: string;
 }) {
   if (isLoading) {
     return (
@@ -68,6 +70,7 @@ export function GenericReportRenderer({
               block={table}
               hasEconomicAccess={data.hasEconomicAccess}
               section={section}
+              paginationKey={tablePaginationKey}
             />
           ))}
         </div>

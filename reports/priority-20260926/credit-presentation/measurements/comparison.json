@@ -1,0 +1,258 @@
+{
+  "verdict": "Presentation pagination materially faster; financial payload and complete business workbook cells preserved. Not a sub-3-second full-navigation result.",
+  "baseline": [
+    {
+      "sample": 1,
+      "actionToVisiblePlusTwoFramesMs": 10978.243655,
+      "creditRequestDurationMs": 2172.22,
+      "creditResponseEndToVisibleMs": 5748.106689453125,
+      "creditScreenRowsIncludingEmptyStates": 16267,
+      "allReportScreenRowsIncludingEmptyStates": 16268,
+      "documentElements": 238227
+    },
+    {
+      "sample": 2,
+      "actionToVisiblePlusTwoFramesMs": 15276.558950000002,
+      "creditRequestDurationMs": 2128.457,
+      "creditResponseEndToVisibleMs": 9533.295166015625,
+      "creditScreenRowsIncludingEmptyStates": 16267,
+      "allReportScreenRowsIncludingEmptyStates": 16268,
+      "documentElements": 238227
+    },
+    {
+      "sample": 3,
+      "actionToVisiblePlusTwoFramesMs": 15049.782685999999,
+      "creditRequestDurationMs": 2150.335,
+      "creditResponseEndToVisibleMs": 9700.260986328125,
+      "creditScreenRowsIncludingEmptyStates": 16267,
+      "allReportScreenRowsIncludingEmptyStates": 16268,
+      "documentElements": 238227
+    }
+  ],
+  "after": [
+    {
+      "sample": 1,
+      "actionToVisiblePlusTwoFramesMs": 5431.428782,
+      "creditRequestDurationMs": 2277.58,
+      "creditResponseEndToVisibleMs": 826.696044921875,
+      "creditScreenRowsIncludingEmptyStates": 105,
+      "allReportScreenRowsIncludingEmptyStates": 106,
+      "documentElements": 7987
+    },
+    {
+      "sample": 2,
+      "actionToVisiblePlusTwoFramesMs": 5195.217637999999,
+      "creditRequestDurationMs": 2073.785,
+      "creditResponseEndToVisibleMs": 916.3330078125,
+      "creditScreenRowsIncludingEmptyStates": 105,
+      "allReportScreenRowsIncludingEmptyStates": 106,
+      "documentElements": 7987
+    },
+    {
+      "sample": 3,
+      "actionToVisiblePlusTwoFramesMs": 5402.696809,
+      "creditRequestDurationMs": 1984.618,
+      "creditResponseEndToVisibleMs": 715.320068359375,
+      "creditScreenRowsIncludingEmptyStates": 105,
+      "allReportScreenRowsIncludingEmptyStates": 106,
+      "documentElements": 7987
+    }
+  ],
+  "completedSampleMedianMs": {
+    "baseline": 15049.782685999999,
+    "after": 5402.696809,
+    "reductionPercent": 64.1011639721161
+  },
+  "baselineTimeout": {
+    "phase": "baseline",
+    "sample": 2,
+    "attempt": 1,
+    "status": "BLOCKED",
+    "evidence": "ShellExec terminated the browser harness after its 300000ms deadline. Last emitted stage was authenticated-site-ready. No trustworthy action-to-visible duration was returned and no final JSON was produced.",
+    "durationMs": null,
+    "notExcludedFromAudit": true,
+    "followUp": "Unchanged server still returned healthz200 with baseline UI02e838. Added bounded diagnostics/checkpoints and retained this failure separately before repeating sample2. Cause not established; not labeled product failure or successful performance result."
+  },
+  "statisticalCaveat": "Medians describe completed samples only. Baseline also had an unresolved 300s harness timeout, retained separately; this is not a clean uninterrupted six-attempt run.",
+  "sameApiPid": 1540,
+  "sameApiSha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+  "sameDatabase": "release_perf_20260926",
+  "origins": {
+    "baseline": "http://127.0.0.1:18238",
+    "after": "http://127.0.0.1:18239"
+  },
+  "originCaveat": "Frontend proxy origin changes only:18238→18239. Each sample uses a fresh independent browser/session; API18237 process and DB unchanged.",
+  "financialParity": {
+    "allSixReportPayloadSummariesEqual": true,
+    "proof": "Exact equality of KPI values, chart hash, each complete table's row hash/count, columns hash and totals.",
+    "actualDataRows": 16265,
+    "screenEmptyStateRowsAreNotData": true
+  },
+  "workbookParity": [
+    {
+      "name": "Periodo",
+      "rowCount": 5,
+      "allCellsHashEqual": false
+    },
+    {
+      "name": "Indicadores",
+      "rowCount": 6,
+      "allCellsHashEqual": true
+    },
+    {
+      "name": "Clientes",
+      "rowCount": 2577,
+      "allCellsHashEqual": true
+    },
+    {
+      "name": "Público vs registrado",
+      "rowCount": 3,
+      "allCellsHashEqual": true
+    },
+    {
+      "name": "Métodos de pago por modalidad",
+      "rowCount": 4,
+      "allCellsHashEqual": true
+    },
+    {
+      "name": "Cuentas por cobrar FIFO",
+      "rowCount": 13689,
+      "allCellsHashEqual": true
+    },
+    {
+      "name": "Pagos dirigidos",
+      "rowCount": 2,
+      "allCellsHashEqual": true
+    },
+    {
+      "name": "Castigos y reversos de crédito",
+      "rowCount": 2,
+      "allCellsHashEqual": true
+    },
+    {
+      "name": "Pagos dirigidos resueltos",
+      "rowCount": 2,
+      "allCellsHashEqual": true
+    },
+    {
+      "name": "Grafico Ventas por cliente",
+      "rowCount": 2576,
+      "allCellsHashEqual": true
+    },
+    {
+      "name": "Avisos",
+      "rowCount": 5,
+      "allCellsHashEqual": true
+    }
+  ],
+  "exportCaveat": "All 10 non-metadata sheets have byte-identical serialized cell hashes. Periodo metadata sheet differs; existing exporter includes generation time at B2. Binary XLSX/PDF hashes differ, so whole-file byte equality is NOT claimed. PDF checks: valid PDF signature, successful full-filter request and ~3.57MB download on both sides; no extracted-PDF financial-content equality assertion.",
+  "paginationUi": {
+    "nextPageChangesRows": true,
+    "fullTotalsUnchanged": true,
+    "sortAllBeforePage": true,
+    "pageSizeReset": true
+  },
+  "printUi": {
+    "tables": [
+      {
+        "id": "clientes",
+        "rows": 2575,
+        "navigationDisplay": "none",
+        "headerPosition": "static",
+        "scrollWrappers": [
+          {
+            "overflow": "visible",
+            "maxHeight": "none"
+          },
+          {
+            "overflow": "visible",
+            "maxHeight": "none"
+          }
+        ]
+      },
+      {
+        "id": "publico-registrado",
+        "rows": 1,
+        "navigationDisplay": "none",
+        "headerPosition": "static",
+        "scrollWrappers": [
+          {
+            "overflow": "visible",
+            "maxHeight": "none"
+          },
+          {
+            "overflow": "visible",
+            "maxHeight": "none"
+          }
+        ]
+      },
+      {
+        "id": "formas-pago",
+        "rows": 2,
+        "navigationDisplay": "none",
+        "headerPosition": "static",
+        "scrollWrappers": [
+          {
+            "overflow": "visible",
+            "maxHeight": "none"
+          },
+          {
+            "overflow": "visible",
+            "maxHeight": "none"
+          }
+        ]
+      },
+      {
+        "id": "cuentas-por-cobrar-fifo",
+        "rows": 13687,
+        "navigationDisplay": "none",
+        "headerPosition": "static",
+        "scrollWrappers": [
+          {
+            "overflow": "visible",
+            "maxHeight": "none"
+          },
+          {
+            "overflow": "visible",
+            "maxHeight": "none"
+          }
+        ]
+      },
+      {
+        "id": "pagos-dirigidos",
+        "rows": 1,
+        "navigationDisplay": "none",
+        "headerPosition": "static",
+        "scrollWrappers": [
+          {
+            "overflow": "visible",
+            "maxHeight": "none"
+          },
+          {
+            "overflow": "visible",
+            "maxHeight": "none"
+          }
+        ]
+      },
+      {
+        "id": "castigos-y-reversos",
+        "rows": 1,
+        "navigationDisplay": "none",
+        "headerPosition": "static",
+        "scrollWrappers": [
+          {
+            "overflow": "visible",
+            "maxHeight": "none"
+          },
+          {
+            "overflow": "visible",
+            "maxHeight": "none"
+          }
+        ]
+      }
+    ],
+    "restoredScreenPage": true
+  },
+  "printCaveat": "Verified actual production-page beforeprint DOM and computed print-media CSS, then afterprint restoration. No physical printer or browser print spool/PDF output tested.",
+  "noClientListMeasurement": true
+}

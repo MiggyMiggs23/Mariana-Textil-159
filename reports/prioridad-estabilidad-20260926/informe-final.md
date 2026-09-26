@@ -1,5 +1,27 @@
 # Estabilidad: corregido, medido y pendiente
 
+## Liberación posterior confirmada por MAIN
+
+MAIN comunica API V9 activa, PID1601, SHA256 exacto `3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea` y **`/api/healthz`200 en la aplicación**. UI activa: `artifacts/mariana-textil/dist-priority-credit-presentation-20260926`, index SHA256 `af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5`.
+
+Referencias de liberación: `reports/release-owner-20260926/api.sha256`, `frontend.sha256`, `login-v9/candidate.json`; corrección SQL autorizada previa: `application-alias-migration-result.json`. La comprobación del proceso vivo pertenece a MAIN. Este agente verificó hashes de los archivos de referencia y previamente ejecutó el RED/GREEN nativo y los21 logins HTTP exitosos en la copia, no una nueva prueba contra la BD de aplicación.
+
+Queda sustituido el estado “activación V9 pendiente” de la sección histórica siguiente. No se extrapola el ensayo de21 logins a una garantía ilimitada de concurrencia; las mediciones de presentación de crédito y su UI pertenecen a su responsable.
+
+## Actualización posterior: login reproducido y candidato V9 comprobado
+
+La incertidumbre del login descrita abajo fue resuelta mediante **una reproducción nueva**, no recuperando la causa histórica perdida. En la copia autorizada `release_login_20260926`, V8 produjo8/12 HTTP500 con un actor concurrente y6/9 con tres actores distintos. Observer saneado: UPDATE usuarios,40001,`exec_stmt_raise`, hash `da1d8a25221903ce11cd2c29ff6f8f640930c0a969ed3f42afe0357b6df43dde`. Coincide exactamente con el mensaje instalado de `e5_serialize`: “E5: grafo ocupado; abortar transacción completa, sin espera global”. El trigger BEFORE STATEMENT intenta `pg_try_advisory_xact_lock(650005,5)` y rechaza la colisión. Aislamiento efectivo READ COMMITTED; no fue un deadlock FK ni saturación del pool.
+
+La causa se documentó antes del fix. `artifacts/api-server/src/routes/auth.ts:117-120` toma ahora ese lock transaccional **al comenzar el tx**, antes de insertar sesión o tomar locks FK/usuario. No se espera detrás de locks propios preexistentes. Se conserva atomicidad sesión/último acceso/auditoría, no se modifica trigger y no se agrega retry de escritura.
+
+Prueba nativa del callback exacto de la ruta con trigger instalado y barrera real: baseline40001; candidato espera antes de escribir y confirma una sola vez; tres logins mismo actor y tres actores distintos PASS; error de auditoría revierte sesión y último acceso. Schema propio eliminado, sin DML público en esa prueba.
+
+Tras activación **por MAIN** de V9 sólo en la copia, HTTP final: **21/21 respuestas200, cero500**, cuatro rondas de tres logins mismo actor y tres rondas de tres actores distintos.21 sesiones nuevas y21 auditorías de éxito, IDs únicos y exactamente una auditoría con autor correcto por sesión; cero retries del cliente o del tx. Duraciones mínimo1240.68ms/mediana1457.42ms/máximo1745.46ms. Healthz de la copia200 antes y después. Verificación durable en BD READ ONLY.
+
+V9: `artifacts/api-server/dist-owner-login-v9-20260926/index.mjs`, SHA256 `3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea`. Exactamente una fuente diferente frente al frozen V8: auth.ts, byte por byte igual a la fuente actual. Typecheck PASS y cinco regresiones offline V8 preservadas PASS. Evidencias/manifiesto: `reports/release-owner-20260926/login-v9/candidate.json`, `login-cause.json`, `login-regression-results.json`, `login-http-green-results.json`.
+
+**Activación V9 en la aplicación y healthz de esa versión quedan a cargo de MAIN.** El200 de esta sección es de la copia; no se presenta como certificación del despliegue vivo. Las secciones siguientes conservan el dictamen histórico previo a esta reproducción.
+
 ## Dictamen
 
 **Los escenarios principales de auditoría y conciliación fiscal pasan según la validación final comunicada por MAIN. Existe un 500 residual de login concurrente cuya causa SQL todavía no está identificada. No se declara estabilidad global ni cierre total del incidente.**

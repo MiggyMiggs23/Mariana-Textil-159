@@ -1,0 +1,49 @@
+{
+  "at": "2026-09-26T09:25:52.139Z",
+  "branch": "br-falling-king-axocxbt1",
+  "project": "withered-block-09991755",
+  "ports": [
+    {
+      "port": 18227,
+      "closed": true,
+      "result": "ECONNREFUSED"
+    },
+    {
+      "port": 18228,
+      "closed": true,
+      "result": "ECONNREFUSED"
+    },
+    {
+      "port": 18237,
+      "closed": true,
+      "result": "ECONNREFUSED"
+    },
+    {
+      "port": 18238,
+      "closed": true,
+      "result": "ECONNREFUSED"
+    },
+    {
+      "port": 18239,
+      "closed": true,
+      "result": "ECONNREFUSED"
+    }
+  ],
+  "archiveSha256": "39ba1ba912e865db1399372712de69710f68a7a838234c23f93c4a00180b65c0",
+  "archiveEvents": 1492,
+  "eventCounts": {
+    "acquire_start": 128,
+    "occupancy": 431,
+    "acquire_end": 128,
+    "backend_identity": 7,
+    "query_end": 301,
+    "pg_activity": 431,
+    "http_end": 65,
+    "pg_locks": 1
+  },
+  "queryErrors": 14,
+  "httpErrors": 22,
+  "blockingSnapshots": 1,
+  "archivePolicy": "Strict field allowlist; routes hashed; no SQL, parameters, credentials, raw logs, names, or customer data.",
+  "appDatabaseAccess": "NONE"
+}

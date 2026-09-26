@@ -1,0 +1,38 @@
+{
+  "status": "NATIVE_PG_AND_DISPOSABLE_HTTP_GREEN_MAIN_REPORTS_LIVE_V9_HEALTH_200",
+  "apiEntry": "/home/runner/workspace/artifacts/api-server/dist-owner-login-v9-20260926/index.mjs",
+  "apiSha256": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "parentApiSha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+  "apiFiles": {
+    "index.mjs": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+    "index.mjs.map": "cf6a38a71096b0a6e5b1ddb86061908c38ce3be8b69380e4006d3376cd069bb8",
+    "pino-file.mjs": "54f2082681269b9a873d00a462b87410c51ea32c12bd535ab92e6b12bf8ccb5f",
+    "pino-file.mjs.map": "d71f32e1041fc312b6a00e58e308d104776300e0e7834e30c547c76f0ff9ca0c",
+    "pino-pretty.mjs": "1a05aa85bf5ce035c5d1f19a32e0308d6dbab00c7194e1936c7f632d10994fac",
+    "pino-pretty.mjs.map": "a7d3c3a4613f9648f8cb7e69a6abeacdbe3934792fcc24cc0af74fd6fde3eb90",
+    "pino-worker.mjs": "63da39b16f17b66227a468e78b13218e7b753a28ba2f94afdbd2f59a0851fe5b",
+    "pino-worker.mjs.map": "56df0bd249d4496fcb0dcbaefa216f0f3fd0dec4b5d5bbc977d331a7d658296c",
+    "thread-stream-worker.mjs": "b490228463d2d47a57932bcbe6bb307af9c54d1b4f3953191e1077e791bb188d",
+    "thread-stream-worker.mjs.map": "e5fd66fcec3ca622f449a275bd6b14d061ed62ce34faadce8716b363a4df878a"
+  },
+  "sourceDeltas": [
+    "artifacts/api-server/src/routes/auth.ts"
+  ],
+  "actualRouteSha256": "d475feee2c54232819e6a80bedd91dcc04025d0bd9b90f3ce46d20d5079ddda6",
+  "sourceParity": true,
+  "frontendChanges": [],
+  "sqlChanges": [],
+  "writeRetriesAdded": false,
+  "nativePgEvidence": "reports/release-owner-20260926/login-regression-results.json",
+  "causeEvidence": "reports/release-owner-20260926/login-cause.json",
+  "httpEvidence": "reports/release-owner-20260926/login-http-green-results.json",
+  "healthz": {
+    "disposableBefore": 200,
+    "disposableAfter": 200,
+    "liveV9": 200,
+    "liveEvidenceOwner": "MAIN: active PID1601, exact apiSha256 verified; not a new runtime inspection by this worker"
+  },
+  "liveReleaseHashFile": "reports/release-owner-20260926/api.sha256",
+  "liveFrontendHashFile": "reports/release-owner-20260926/frontend.sha256",
+  "liveFrontendIndexSha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5"
+}

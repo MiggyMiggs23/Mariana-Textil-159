@@ -1,0 +1,53 @@
+{
+  "at": "2026-09-26T09:04:48.233Z",
+  "source": {
+    "database": "heliumdb",
+    "version": "16.10",
+    "readonly": "on"
+  },
+  "copies": [
+    {
+      "kind": "login",
+      "identity": {
+        "database": "release_login_20260926",
+        "version": "18.6 (6569466)",
+        "readonly": "on"
+      },
+      "businessEqual": true,
+      "differences": [
+        "function:public.fips_mode()"
+      ],
+      "sourceCatalogSha256": "0c1e05724c81a0148090cde870853665c7ab5bb1afd28219b8afad6e5c33954b",
+      "targetCatalogSha256": "c7d55ac018206e2aed4aa4d1134f5cd19f71d4c89551ca35479c382aa007d6f7",
+      "counts": {
+        "column": 948,
+        "constraint": 656,
+        "function": 118,
+        "index": 325,
+        "trigger": 255
+      }
+    },
+    {
+      "kind": "perf",
+      "identity": {
+        "database": "release_perf_20260926",
+        "version": "18.6 (6569466)",
+        "readonly": "on"
+      },
+      "businessEqual": true,
+      "differences": [
+        "function:public.fips_mode()"
+      ],
+      "sourceCatalogSha256": "0c1e05724c81a0148090cde870853665c7ab5bb1afd28219b8afad6e5c33954b",
+      "targetCatalogSha256": "c7d55ac018206e2aed4aa4d1134f5cd19f71d4c89551ca35479c382aa007d6f7",
+      "counts": {
+        "column": 948,
+        "constraint": 656,
+        "function": 118,
+        "index": 325,
+        "trigger": 255
+      }
+    }
+  ],
+  "normalization": "NOT NULL catalog rows vary byPGversion; compared explicit column.notnull instead. Target pgcrypto extra fips_mode disclosed; owners/ACL excluded. No schema/data initializers."
+}

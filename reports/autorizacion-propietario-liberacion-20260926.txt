@@ -1,0 +1,13 @@
+miguelestza: Autorización del propietario. Guarda este texto tal cual en reports/ antes de la primera escritura.
+
+Libera las correcciones ya probadas: ContadorA, precios y pagos simultáneos, el alias SQL de conciliaciones y el aviso de recuperación. Autorizo aplicar a la base de la aplicación la corrección SQL correspondiente, ensayada antes en copia desechable. Sin esto la aplicación sigue con los errores 500 y el propietario no puede probar.
+
+Además:
+
+1. Pagina la presentación del reporte de crédito como propusiste, conservando totales y exportaciones completos. No cambies lo que significa ninguna cifra. Vuelve a medir.
+
+2. El 500 al actualizar el último acceso con inicios de sesión simultáneos: encuentra la causa exacta, con archivo y línea, corrígelo y libéralo. Que dos personas entren al mismo tiempo va a pasar todos los días.
+
+3. La lista de clientes: 2.61 s en la primera medición y 1.6 s en las siguientes es arranque en frío, no un defecto de la consulta. No lo persigas más; solo déjalo anotado.
+
+Al terminar, confirma que la aplicación está sirviendo la versión con todas las correcciones, con /api/healthz 200, y dime qué me toca probar a mí en pantalla.

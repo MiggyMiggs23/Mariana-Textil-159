@@ -1,0 +1,42 @@
+[
+  {
+    "fixtureId": 234,
+    "id": 234,
+    "activo": true,
+    "rol": "ADMIN",
+    "username_matches": true,
+    "password_matches": true
+  },
+  {
+    "fixtureId": 235,
+    "id": 235,
+    "activo": true,
+    "rol": "ADMIN",
+    "username_matches": true,
+    "password_matches": true
+  },
+  {
+    "fixtureId": 236,
+    "id": 236,
+    "activo": true,
+    "rol": "ADMIN",
+    "username_matches": true,
+    "password_matches": true
+  },
+  {
+    "fixtureId": 237,
+    "id": 237,
+    "activo": true,
+    "rol": "ADMIN",
+    "username_matches": true,
+    "password_matches": true
+  },
+  {
+    "fixtureId": 238,
+    "id": 238,
+    "activo": true,
+    "rol": "ADMIN",
+    "username_matches": true,
+    "password_matches": true
+  }
+]

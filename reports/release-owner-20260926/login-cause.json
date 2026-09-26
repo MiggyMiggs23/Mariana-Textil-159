@@ -1,0 +1,15 @@
+{
+  "status": "REPRODUCED_BEFORE_FIX",
+  "database": "release_login_20260926",
+  "httpBaseline": {"rounds": 4, "concurrentLoginsPerRound": 3, "success200": 4, "failure500": 8},
+  "sqlstate": "40001",
+  "routine": "exec_stmt_raise",
+  "messageSha256": "da1d8a25221903ce11cd2c29ff6f8f640930c0a969ed3f42afe0357b6df43dde",
+  "exactMessage": "E5: grafo ocupado; abortar transacción completa, sin espera global",
+  "cause": "BEFORE STATEMENT trigger e5_serialize on usuarios UPDATE calls pg_try_advisory_xact_lock(650005,5); concurrent login transactions collide even under READ COMMITTED. The trigger explicitly raises 40001 rather than waiting behind locks already held by callers.",
+  "sources": ["artifacts/api-server/src/routes/auth.ts:116-136", "reports/e5/01-preparado.sql:223-238"],
+  "catalogEvidence": "login-e5-functions.json",
+  "observerEvidence": "login-observed-errors.json",
+  "scope": "Fresh disposable reproduction; original historical nested error unavailable. Identical failing route/UPDATE reproduced, not a claim that the lost original cause was recovered.",
+  "proposedNarrowFix": "Acquire the same transaction-level E5 graph lock as the first login transaction statement, before session insert/FK/user locks. Preserve atomic session/last-access/audit, no write retry and no trigger change."
+}

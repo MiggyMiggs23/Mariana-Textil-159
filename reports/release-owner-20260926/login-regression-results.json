@@ -1,0 +1,40 @@
+{
+  "results": [
+    {
+      "test": "exact frozen login callback + native trigger/barrier",
+      "result": "RED_40001",
+      "partialWrites": 0
+    },
+    {
+      "test": "candidate waits before FK locks, then atomic commit once",
+      "result": "PASS"
+    },
+    {
+      "test": "three concurrent exact candidate callbacks",
+      "actors": [
+        1,
+        1,
+        1
+      ],
+      "result": "PASS",
+      "ms": 507.1826490000003
+    },
+    {
+      "test": "three concurrent exact candidate callbacks",
+      "actors": [
+        1,
+        2,
+        3
+      ],
+      "result": "PASS",
+      "ms": 499.18414699999994
+    },
+    {
+      "test": "audit rejection rolls back session and last access",
+      "result": "PASS"
+    }
+  ],
+  "isolatedSchemaDropped": true,
+  "publicDml": false,
+  "scope": "Exact source transaction callbacks with native installed e5_serialize and session/audit FKs; unrelated deferred business graphs not copied."
+}

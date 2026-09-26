@@ -1,0 +1,200 @@
+{
+  "status": "PASS",
+  "database": "release_login_20260926",
+  "apiSha256": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "activation": "MAIN activated V9; worker did not start or restart any runtime",
+  "healthBefore": 200,
+  "healthAfter": 200,
+  "requests": 21,
+  "status200": 21,
+  "status500": 0,
+  "sessionsAdded": 21,
+  "successfulAuditsAdded": 21,
+  "uniqueResponseSessions": 21,
+  "exactlyOneMatchingAuditPerSession": true,
+  "httpRetries": 0,
+  "sourceTransactionRetries": 0,
+  "durationsMs": {
+    "min": 1240.6816670000007,
+    "median": 1457.4155379999997,
+    "max": 1745.4552429999999
+  },
+  "databaseVerificationReadOnly": true,
+  "results": [
+    {
+      "scenario": "same-actor",
+      "round": 1,
+      "batchDurationMs": 1746.9430949999996,
+      "requests": [
+        {
+          "actorId": 234,
+          "status": 200,
+          "durationMs": 1645.3313090000001,
+          "sessionCookiePresent": true
+        },
+        {
+          "actorId": 234,
+          "status": 200,
+          "durationMs": 1745.4552429999999,
+          "sessionCookiePresent": true
+        },
+        {
+          "actorId": 234,
+          "status": 200,
+          "durationMs": 1466.731162,
+          "sessionCookiePresent": true
+        }
+      ]
+    },
+    {
+      "scenario": "same-actor",
+      "round": 2,
+      "batchDurationMs": 1582.442087,
+      "requests": [
+        {
+          "actorId": 234,
+          "status": 200,
+          "durationMs": 1485.076185,
+          "sessionCookiePresent": true
+        },
+        {
+          "actorId": 234,
+          "status": 200,
+          "durationMs": 1581.9719490000002,
+          "sessionCookiePresent": true
+        },
+        {
+          "actorId": 234,
+          "status": 200,
+          "durationMs": 1311.673586,
+          "sessionCookiePresent": true
+        }
+      ]
+    },
+    {
+      "scenario": "same-actor",
+      "round": 3,
+      "batchDurationMs": 1559.8606049999999,
+      "requests": [
+        {
+          "actorId": 234,
+          "status": 200,
+          "durationMs": 1457.4155379999997,
+          "sessionCookiePresent": true
+        },
+        {
+          "actorId": 234,
+          "status": 200,
+          "durationMs": 1559.4043559999996,
+          "sessionCookiePresent": true
+        },
+        {
+          "actorId": 234,
+          "status": 200,
+          "durationMs": 1287.5739679999997,
+          "sessionCookiePresent": true
+        }
+      ]
+    },
+    {
+      "scenario": "same-actor",
+      "round": 4,
+      "batchDurationMs": 1549.6740920000002,
+      "requests": [
+        {
+          "actorId": 234,
+          "status": 200,
+          "durationMs": 1549.64203,
+          "sessionCookiePresent": true
+        },
+        {
+          "actorId": 234,
+          "status": 200,
+          "durationMs": 1447.666921,
+          "sessionCookiePresent": true
+        },
+        {
+          "actorId": 234,
+          "status": 200,
+          "durationMs": 1276.307428,
+          "sessionCookiePresent": true
+        }
+      ]
+    },
+    {
+      "scenario": "distinct-actors",
+      "round": 1,
+      "batchDurationMs": 1534.0989280000003,
+      "requests": [
+        {
+          "actorId": 234,
+          "status": 200,
+          "durationMs": 1398.9657000000007,
+          "sessionCookiePresent": true
+        },
+        {
+          "actorId": 237,
+          "status": 200,
+          "durationMs": 1533.8117709999988,
+          "sessionCookiePresent": true
+        },
+        {
+          "actorId": 238,
+          "status": 200,
+          "durationMs": 1240.6816670000007,
+          "sessionCookiePresent": true
+        }
+      ]
+    },
+    {
+      "scenario": "distinct-actors",
+      "round": 2,
+      "batchDurationMs": 1559.270477,
+      "requests": [
+        {
+          "actorId": 234,
+          "status": 200,
+          "durationMs": 1559.1961339999998,
+          "sessionCookiePresent": true
+        },
+        {
+          "actorId": 237,
+          "status": 200,
+          "durationMs": 1423.5587340000002,
+          "sessionCookiePresent": true
+        },
+        {
+          "actorId": 238,
+          "status": 200,
+          "durationMs": 1265.3859869999997,
+          "sessionCookiePresent": true
+        }
+      ]
+    },
+    {
+      "scenario": "distinct-actors",
+      "round": 3,
+      "batchDurationMs": 1540.542214000001,
+      "requests": [
+        {
+          "actorId": 234,
+          "status": 200,
+          "durationMs": 1404.6381459999993,
+          "sessionCookiePresent": true
+        },
+        {
+          "actorId": 237,
+          "status": 200,
+          "durationMs": 1539.958987,
+          "sessionCookiePresent": true
+        },
+        {
+          "actorId": 238,
+          "status": 200,
+          "durationMs": 1242.9189729999998,
+          "sessionCookiePresent": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "status": "FRONTEND_PROXY_LISTENING",
+  "proxyPid": 2324,
+  "existingApiPid": 1540,
+  "apiUrl": "http://127.0.0.1:18237",
+  "url": "http://127.0.0.1:18239",
+  "apiSha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+  "frontendIndexSha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "manifestPath": "/home/runner/workspace/reports/priority-20260926/credit-presentation/candidate.json",
+  "change": "Browser origin/frontend only; same existing API and database; no restart or warmup requests"
+}

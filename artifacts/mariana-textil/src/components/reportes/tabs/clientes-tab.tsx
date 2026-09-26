@@ -25,7 +25,7 @@ function ClientesSiteFrame({
   return (
     <div className="space-y-6 rounded-xl border border-border/70 bg-card/40 p-4">
       <h2 className="text-xl font-bold tracking-tight text-sidebar">{frame.siteLabel}</h2>
-      <GenericReportRenderer data={cliData} isLoading={cliLoading} isError={cliError} refetch={cliRefetch} section={`clientes-${frame.siteLabel}`} />
+      <GenericReportRenderer data={cliData} isLoading={cliLoading} isError={cliError} refetch={cliRefetch} section={`clientes-${frame.siteLabel}`} tablePaginationKey={JSON.stringify(frame.apiParams)} />
       <div className="pt-8 border-t border-border space-y-4">
         <h3 className="text-lg font-bold tracking-tight text-sidebar">Solicitudes Resueltas</h3>
         <GenericReportRenderer data={pagData} isLoading={pagLoading} isError={pagError} refetch={pagRefetch} section={`pagos-dirigidos-${frame.siteLabel}`} />
@@ -75,7 +75,7 @@ export function ClientesTab({
 
   return (
     <div className="space-y-12">
-      <GenericReportRenderer data={cliData} isLoading={cliLoading} isError={cliError} refetch={cliRefetch} section="clientes" />
+      <GenericReportRenderer data={cliData} isLoading={cliLoading} isError={cliError} refetch={cliRefetch} section="clientes" tablePaginationKey={JSON.stringify(apiParams)} />
       
       <div className="pt-8 border-t border-border space-y-4">
         <h2 className="text-xl font-bold tracking-tight text-sidebar">Solicitudes Resueltas</h2>
