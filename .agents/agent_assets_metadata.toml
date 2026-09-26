@@ -2719,3 +2719,31 @@ mtime_ms = 1790451615842
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/4a2eb901-529f-4856-9514-c5cd0e3b0a5b/c7e68b1b-d446-4904-80d3-6cff8b50da0d"
 storage_version_token = "1790451997509830"
 content_type = "application/pdf"
+
+[[outputs]]
+id = "RexBdiDBw_bsth2UDnZrC"
+uri = "file://reports/inventory-floors-20260926/capturas/01-agrupado-global-fixture.png"
+type = "image"
+title = "Inventario — Agrupado por Producto"
+description = "Captura de la interfaz real con datos de prueba: ubicación por sitio y piso, color expandido y cantidades separadas por unidad."
+logical_id = "44fa4956-6ae9-485b-901d-5b8b5110fad8"
+content_hash = "sha256:d36eddac3694b5d9ba4fbd513baf2fb18514318afa281fc9c636af4aae1b5963"
+size = 201267
+mtime_ms = 1790455272529
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/44fa4956-6ae9-485b-901d-5b8b5110fad8/90a09a87-7b6e-4e78-8ae8-8e9671cc1976"
+storage_version_token = "1790455408621329"
+content_type = "image/png"
+
+[[outputs]]
+id = "QaiFpFmgmarU23Vj7eFc0"
+uri = "file://reports/inventory-floors-20260926/capturas/02-detalle-rollos-fixture.png"
+type = "image"
+title = "Inventario — Detalle de Rollos"
+description = "Captura con datos de prueba: cada serie muestra su piso, incluido Sin piso, conservando las tarjetas existentes."
+logical_id = "ae1b36b4-3c57-4dfc-a613-63e8d83b47b5"
+content_hash = "sha256:c88f73af35e69dbdd71e818d0e429405a5faa548c7c4b862feab8f8cc79f7b88"
+size = 156644
+mtime_ms = 1790455272817
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/ae1b36b4-3c57-4dfc-a613-63e8d83b47b5/193fcdc6-6cda-4378-8124-aee764654ac4"
+storage_version_token = "1790455409488829"
+content_type = "image/png"

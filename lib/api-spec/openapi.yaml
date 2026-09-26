@@ -14070,9 +14070,20 @@ components:
           type: string
           enum: [TIENDA, BODEGA, TRANSITO, EXTERNO]
         activa: { type: boolean }
+    ExistenciaAgrupadaUbicacion:
+      type: object
+      required: [ubicacionId, nombreUbicacion, pisoId, nombrePiso, rollosCount, cantidadTotal, unidad]
+      properties:
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        pisoId: { type: [number, "null"] }
+        nombrePiso: { type: [string, "null"] }
+        rollosCount: { type: number }
+        cantidadTotal: { type: string }
+        unidad: { type: string, enum: [METRO, KILO, BOLSA, PIEZA] }
     ExistenciaAgrupadaHijo:
       type: object
-      required: [productoId, color, sku, rollosCount, cantidadTotal, unidad]
+      required: [productoId, color, sku, rollosCount, cantidadTotal, unidad, ubicaciones]
       properties:
         productoId: { type: number }
         color: { type: string }
@@ -14080,6 +14091,10 @@ components:
         rollosCount: { type: number }
         cantidadTotal: { type: string }
         unidad: { type: string, enum: [METRO, KILO, BOLSA, PIEZA] }
+        ubicaciones:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExistenciaAgrupadaUbicacion"
     ExistenciaAgrupada:
       type: object
       required:

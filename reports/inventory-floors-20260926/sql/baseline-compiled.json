@@ -1,0 +1,21 @@
+{
+  "sql": "\n        SELECT p.id AS producto_id, p.sku, p.tela, p.color, p.unidad,\n               COUNT(r.id)::int AS rollos_count,\n               COALESCE(SUM(r.cantidad_actual), 0)::text AS cantidad_total\n        FROM productos p\n        LEFT JOIN rollos r\n          ON r.producto_id = p.id\n         AND r.estado = 'DISPONIBLE'\n         AND ($1::int IS NULL OR r.ubicacion_id = $2)\n        WHERE p.activo = true\n          AND ($3::text IS NULL\n            OR p.tela ILIKE $4\n            OR p.color ILIKE $5\n            OR p.sku ILIKE $6)\n        GROUP BY p.id\n        HAVING $7 OR COUNT(r.id) > 0\n        ORDER BY p.tela, p.color, p.sku\n      ",
+  "params": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    false
+  ],
+  "typings": [
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none"
+  ]
+}

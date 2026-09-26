@@ -1,0 +1,44 @@
+{
+  "status": "BUILT_NOT_ACTIVATED",
+  "out": "/home/runner/workspace/artifacts/mariana-textil/dist-inventory-floors-20260926",
+  "frozen": "/home/runner/workspace/reports/inventory-floors-20260926/frozen-root",
+  "prior": "/home/runner/workspace/reports/print-corrections-20260926/labels/frozen-root",
+  "sourceDeltas": [
+    {
+      "file": "artifacts/mariana-textil/src/pages/inventario.tsx",
+      "beforeSha256": "4db08031f8cb37e1568b83f039bf9215b08a83c7b7161c081dde4b7dc3e4fba2",
+      "headSha256": "4db08031f8cb37e1568b83f039bf9215b08a83c7b7161c081dde4b7dc3e4fba2",
+      "afterSha256": "c150c40abbd8f5251a501c2c058b04c123b88c5a8391020c0180c543c521c7f6",
+      "frozenEqualsHead": true
+    },
+    {
+      "file": "artifacts/mariana-textil/src/lib/inventory-locations.tsx",
+      "beforeSha256": null,
+      "headSha256": null,
+      "afterSha256": "eb805da3e90aaabebcc4385193f57e8dc92cf968aab4b1e020849ff7f3d960eb",
+      "frozenEqualsHead": true
+    },
+    {
+      "file": "lib/api-client-react/src/generated/api.schemas.ts",
+      "beforeSha256": "aaedabbb04947487a82f214909bb2ebe97383b9a58309dd218b61429f3899c44",
+      "headSha256": "edcdc43291a2abbea9c4e529bb405da7bd5c10723568f011471463f2dafb1171",
+      "afterSha256": "34a8f2e0093c2960f76578424981f36280a18d50cd2693a6a6897751b407baa8",
+      "frozenEqualsHead": false
+    }
+  ],
+  "files": {
+    "assets/index-CJ5sQYvB.js": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c",
+    "assets/index-CS_1gxo0.js": "ffb588c3b48e6bb6a4ea590ac3880a3ea8efbe6458b5f4135cebf89709cdc532",
+    "assets/index-CdyF5z0i.css": "b33f62a7a81cf091ab4d9c70da2fa219672ef5e9dc2c6e0192d69aa8b949345c",
+    "assets/mariana-textil-logo-FFOiXRd3.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "assets/mariana-textil-logo-monochrome-_7AVoW2A.png": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24",
+    "favicon.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "index.html": "032b63fa24c9e2832cdd751ddf6dd198b0feddc0c28286ae2f65207dbcdab3c4",
+    "robots.txt": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+    "sounds/alerta.ogg": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e",
+    "sounds/aviso.ogg": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4",
+    "sounds/solicitud.ogg": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+  },
+  "databaseAccess": false,
+  "runtimeChanges": false
+}

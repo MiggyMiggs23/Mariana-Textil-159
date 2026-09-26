@@ -1,0 +1,30 @@
+{
+  "status": "BUILT_NOT_STARTED_NATIVE_COPY_TEST_PENDING",
+  "apiEntry": "/home/runner/workspace/artifacts/api-server/dist-inventory-floors-20260926/index.mjs",
+  "apiSha256": "7ce444a8dbda01aae9f6df484424159532f6d7c4b1ec9421bba438128693b446",
+  "parentApiSha256": "1c74777957fc1ad332228ea8407eac831cd14018debf94918c2a96647d6348b3",
+  "apiFiles": {
+    "assets/fonts/DEJAVU-LICENSE.txt": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9",
+    "assets/fonts/DejaVuSans.ttf": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+    "index.mjs": "7ce444a8dbda01aae9f6df484424159532f6d7c4b1ec9421bba438128693b446",
+    "index.mjs.map": "6c577c16852c57a4bb2e37d32c1f8ff6d0cec001e8b040bcd24921095a1904fa",
+    "pino-file.mjs": "0df6c9769d3ce9d6562a2d60a95249cb7a30c1d631649ded666ec136c348ab28",
+    "pino-file.mjs.map": "bc19338eadf62523a122a9cf34b4b7c39cf2bedaa65b847d472e4398a430952c",
+    "pino-pretty.mjs": "1a05aa85bf5ce035c5d1f19a32e0308d6dbab00c7194e1936c7f632d10994fac",
+    "pino-pretty.mjs.map": "a7d3c3a4613f9648f8cb7e69a6abeacdbe3934792fcc24cc0af74fd6fde3eb90",
+    "pino-worker.mjs": "d1fb70e8c5d26942a44815376ccb26fcba415a4bce984354348f14f5d32b34d5",
+    "pino-worker.mjs.map": "9d01e4a15b1d22c224fc292eeb4821156bdc8e3adaea4d4d724f59e4dad4eff7",
+    "thread-stream-worker.mjs": "b490228463d2d47a57932bcbe6bb307af9c54d1b4f3953191e1077e791bb188d",
+    "thread-stream-worker.mjs.map": "e5fd66fcec3ca622f449a275bd6b14d061ed62ce34faadce8716b363a4df878a"
+  },
+  "sourceDeltas": [
+    "artifacts/api-server/src/routes/inventario.ts",
+    "lib/api-zod/src/generated/api.ts"
+  ],
+  "sourceParity": true,
+  "sourceCount": 1313,
+  "sourceInventorySha256": "a7b6dc4d61d169ccdc369f8c83e99992b7740c7f20796df1cd1ac850c80e9a5f",
+  "databaseAccess": false,
+  "sqlChanges": [],
+  "runtimeChanges": false
+}

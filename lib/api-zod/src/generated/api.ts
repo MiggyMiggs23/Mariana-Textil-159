@@ -9038,6 +9038,7 @@ export const CrearEntradaResponse = zod.object({
   "uuidCliente": zod.string(),
   "createdAt": zod.coerce.date(),
   "lineas": zod.array(zod.object({
+  "pisoEntrada": zod.string().optional().describe('Receipt floor labels from immutable creation evidence; never current roll location.'),
   "productoId": zod.number(),
   "skuProducto": zod.string(),
   "telaProducto": zod.string(),
@@ -9046,7 +9047,6 @@ export const CrearEntradaResponse = zod.object({
   "costoUnitario": zod.string().nullish(),
   "rollosCount": zod.number(),
   "cantidadTotal": zod.string(),
-  "pisoEntrada": zod.string().optional(),
   "costoTotal": zod.string().nullish()
 })),
   "rollos": zod.array(zod.object({
@@ -9148,6 +9148,7 @@ export const GetEntradaResponse = zod.object({
   "uuidCliente": zod.string(),
   "createdAt": zod.coerce.date(),
   "lineas": zod.array(zod.object({
+  "pisoEntrada": zod.string().optional().describe('Receipt floor labels from immutable creation evidence; never current roll location.'),
   "productoId": zod.number(),
   "skuProducto": zod.string(),
   "telaProducto": zod.string(),
@@ -9156,7 +9157,6 @@ export const GetEntradaResponse = zod.object({
   "costoUnitario": zod.string().nullish(),
   "rollosCount": zod.number(),
   "cantidadTotal": zod.string(),
-  "pisoEntrada": zod.string().optional(),
   "costoTotal": zod.string().nullish()
 })),
   "rollos": zod.array(zod.object({
@@ -9210,6 +9210,7 @@ export const CapturarCostosEntradaResponse = zod.object({
   "uuidCliente": zod.string(),
   "createdAt": zod.coerce.date(),
   "lineas": zod.array(zod.object({
+  "pisoEntrada": zod.string().optional().describe('Receipt floor labels from immutable creation evidence; never current roll location.'),
   "productoId": zod.number(),
   "skuProducto": zod.string(),
   "telaProducto": zod.string(),
@@ -9218,7 +9219,6 @@ export const CapturarCostosEntradaResponse = zod.object({
   "costoUnitario": zod.string().nullish(),
   "rollosCount": zod.number(),
   "cantidadTotal": zod.string(),
-  "pisoEntrada": zod.string().optional(),
   "costoTotal": zod.string().nullish()
 })),
   "rollos": zod.array(zod.object({
@@ -9885,7 +9885,16 @@ export const GetExistenciasAgrupadasResponseItem = zod.object({
   "sku": zod.string(),
   "rollosCount": zod.number(),
   "cantidadTotal": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
+  "ubicaciones": zod.array(zod.object({
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "pisoId": zod.number().nullable(),
+  "nombrePiso": zod.string().nullable(),
+  "rollosCount": zod.number(),
+  "cantidadTotal": zod.string(),
   "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA'])
+}))
 }))
 })
 export const GetExistenciasAgrupadasResponse = zod.array(GetExistenciasAgrupadasResponseItem)

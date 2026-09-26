@@ -534,6 +534,8 @@ export * from './etiquetaImprimibleUnidad';
 export * from './existenciaAgrupada';
 export * from './existenciaAgrupadaHijo';
 export * from './existenciaAgrupadaHijoUnidad';
+export * from './existenciaAgrupadaUbicacion';
+export * from './existenciaAgrupadaUbicacionUnidad';
 export * from './existenciaRow';
 export * from './exportAdminCortesPdfParams';
 export * from './exportAdminCortesXlsxParams';

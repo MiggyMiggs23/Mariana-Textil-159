@@ -1889,7 +1889,26 @@ inventarioRouter.get(
       const result = await db.execute(sql`
         SELECT p.id AS producto_id, p.sku, p.tela, p.color, p.unidad,
                COUNT(r.id)::int AS rollos_count,
-               COALESCE(SUM(r.cantidad_actual), 0)::text AS cantidad_total
+               COALESCE(SUM(r.cantidad_actual), 0)::text AS cantidad_total,
+               COALESCE((
+                 SELECT jsonb_agg(detail ORDER BY detail."nombreUbicacion", detail."ubicacionId", detail."nombrePiso" NULLS LAST, detail."pisoId")
+                 FROM (
+                   SELECT current_roll.ubicacion_id AS "ubicacionId",
+                          location.nombre AS "nombreUbicacion",
+                          current_roll.piso_id AS "pisoId",
+                          floor.nombre AS "nombrePiso",
+                          COUNT(current_roll.id)::int AS "rollosCount",
+                          SUM(current_roll.cantidad_actual)::text AS "cantidadTotal",
+                          p.unidad AS unidad
+                   FROM rollos current_roll
+                   JOIN ubicaciones location ON location.id = current_roll.ubicacion_id
+                   LEFT JOIN pisos floor ON floor.id = current_roll.piso_id
+                   WHERE current_roll.producto_id = p.id
+                     AND current_roll.estado = 'DISPONIBLE'
+                     AND (${ubicacionId ?? null}::int IS NULL OR current_roll.ubicacion_id = ${ubicacionId ?? null})
+                   GROUP BY current_roll.ubicacion_id, location.nombre, current_roll.piso_id, floor.nombre
+                 ) detail
+               ), '[]'::jsonb) AS ubicaciones
         FROM productos p
         LEFT JOIN rollos r
           ON r.producto_id = p.id
@@ -1911,6 +1930,15 @@ inventarioRouter.get(
         rollosCount: number;
         cantidadTotal: string;
         unidad: "METRO" | "KILO" | "BOLSA" | "PIEZA";
+        ubicaciones: Array<{
+          ubicacionId: number;
+          nombreUbicacion: string;
+          pisoId: number | null;
+          nombrePiso: string | null;
+          rollosCount: number;
+          cantidadTotal: string;
+          unidad: "METRO" | "KILO" | "BOLSA" | "PIEZA";
+        }>;
       };
       type Parent = {
         productoKey: string;
@@ -1948,6 +1976,10 @@ inventarioRouter.get(
           rollosCount,
           cantidadTotal: quantity.toFixed(3),
           unidad,
+          ubicaciones: (raw.ubicaciones as Child["ubicaciones"]).map((location) => ({
+            ...location,
+            cantidadTotal: Number(location.cantidadTotal).toFixed(3),
+          })),
         });
         parent.coloresCount += 1;
         parent.rollosCount += rollosCount;

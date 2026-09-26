@@ -1,0 +1,28 @@
+{
+  "status": "BUILT_NOT_ACTIVATED",
+  "uiBaselineByteParity": true,
+  "uiSourceDeltas": [
+    "artifacts/mariana-textil/src/lib/inventory-locations.tsx",
+    "artifacts/mariana-textil/src/pages/inventario.tsx",
+    "lib/api-client-react/src/generated/api.schemas.ts"
+  ],
+  "recipeAndEvidenceHashes": {
+    "build-ui.mjs": "c66376ca62c5460116596d26983d3050348c2313e05dee3ab736484a741abd0c",
+    "build-api.mjs": "cee4741875b7c14bb29465391e399939cc3edba953624779ac8f66268dfab8e7",
+    "build-api-frozen.mjs": "58241ad39556cfe31c548c506716f4563655e07d3dc83a2d869180c31df8d0ad",
+    "ui-inputs.json": "7b3865af55daf998267e04458fe397593f3dd744d725ec90824684eb62d64d8d",
+    "api-inputs.json": "2dbf03fc7a76f70656b1f4f3516b4f99bca9ae6857ce8794ca07e45ef48c8c7d",
+    "ui-candidate.json": "2abed2a40bba7f5c1e4397b7f86ae111c047b3edb7bc762004f97f239ef470c5",
+    "ui-baseline-parity.json": "379d7e952c96d1b58d0b75125100958b5bb152208d3f3671c13b99b1c1b3848a",
+    "api-candidate/candidate.json": "1dae8d0e841c5f3c598ba7c3ff8b7f0ba6cfdcae4ac1408c829c4167dc0907da",
+    "api-candidate/source-inventory.json": "a7b6dc4d61d169ccdc369f8c83e99992b7740c7f20796df1cd1ac850c80e9a5f"
+  },
+  "apiExcludedGeneratorChurn": "Receipt schema field reorder/description intentionally excluded; only grouped response addition applied",
+  "databaseAccess": false,
+  "runtimeChanges": false,
+  "reproduce": [
+    "node reports/inventory-floors-20260926/build-ui.mjs --baseline",
+    "node reports/inventory-floors-20260926/build-ui.mjs",
+    "node reports/inventory-floors-20260926/build-api.mjs"
+  ]
+}

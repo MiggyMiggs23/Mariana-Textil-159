@@ -1,0 +1,246 @@
+{
+  "scope": "Disposable local PostgreSQL only; synthetic minimal relational fixtures, no application database",
+  "baselineCommit": "28d27eadcb68accdee7f25a13f1d47fc898a1033",
+  "routeSha256": "bc3c6839d1c83f48e29668c047b424ba512cabd75a07a836d840fd209134e1b6",
+  "templateSha256": "b71b036e97e6aa9e7c44290bd65822feb99b0aa0e16c0895e2ad05321d25fe53",
+  "cases": [
+    {
+      "ubicacionId": null,
+      "includeSinExistencia": false,
+      "search": null,
+      "rows": 4,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": null,
+      "includeSinExistencia": false,
+      "search": "%Tela%",
+      "rows": 4,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": null,
+      "includeSinExistencia": false,
+      "search": "%EMPTY%",
+      "rows": 0,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": null,
+      "includeSinExistencia": false,
+      "search": "%missing%",
+      "rows": 0,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": null,
+      "includeSinExistencia": true,
+      "search": null,
+      "rows": 5,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": null,
+      "includeSinExistencia": true,
+      "search": "%Tela%",
+      "rows": 4,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": null,
+      "includeSinExistencia": true,
+      "search": "%EMPTY%",
+      "rows": 1,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": null,
+      "includeSinExistencia": true,
+      "search": "%missing%",
+      "rows": 0,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 1,
+      "includeSinExistencia": false,
+      "search": null,
+      "rows": 4,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 1,
+      "includeSinExistencia": false,
+      "search": "%Tela%",
+      "rows": 4,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 1,
+      "includeSinExistencia": false,
+      "search": "%EMPTY%",
+      "rows": 0,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 1,
+      "includeSinExistencia": false,
+      "search": "%missing%",
+      "rows": 0,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 1,
+      "includeSinExistencia": true,
+      "search": null,
+      "rows": 5,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 1,
+      "includeSinExistencia": true,
+      "search": "%Tela%",
+      "rows": 4,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 1,
+      "includeSinExistencia": true,
+      "search": "%EMPTY%",
+      "rows": 1,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 1,
+      "includeSinExistencia": true,
+      "search": "%missing%",
+      "rows": 0,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 2,
+      "includeSinExistencia": false,
+      "search": null,
+      "rows": 4,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 2,
+      "includeSinExistencia": false,
+      "search": "%Tela%",
+      "rows": 4,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 2,
+      "includeSinExistencia": false,
+      "search": "%EMPTY%",
+      "rows": 0,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 2,
+      "includeSinExistencia": false,
+      "search": "%missing%",
+      "rows": 0,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 2,
+      "includeSinExistencia": true,
+      "search": null,
+      "rows": 5,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 2,
+      "includeSinExistencia": true,
+      "search": "%Tela%",
+      "rows": 4,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 2,
+      "includeSinExistencia": true,
+      "search": "%EMPTY%",
+      "rows": 1,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 2,
+      "includeSinExistencia": true,
+      "search": "%missing%",
+      "rows": 0,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 999,
+      "includeSinExistencia": false,
+      "search": null,
+      "rows": 0,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 999,
+      "includeSinExistencia": false,
+      "search": "%Tela%",
+      "rows": 0,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 999,
+      "includeSinExistencia": false,
+      "search": "%EMPTY%",
+      "rows": 0,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 999,
+      "includeSinExistencia": false,
+      "search": "%missing%",
+      "rows": 0,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 999,
+      "includeSinExistencia": true,
+      "search": null,
+      "rows": 5,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 999,
+      "includeSinExistencia": true,
+      "search": "%Tela%",
+      "rows": 4,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 999,
+      "includeSinExistencia": true,
+      "search": "%EMPTY%",
+      "rows": 1,
+      "status": "PASS"
+    },
+    {
+      "ubicacionId": 999,
+      "includeSinExistencia": true,
+      "search": "%missing%",
+      "rows": 0,
+      "status": "PASS"
+    }
+  ],
+  "postgres": "PostgreSQL 16.10 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit",
+  "status": "PASS",
+  "coverage": [
+    "Actual route SQL compiled by Drizzle and executed by PostgreSQL (including grouped correlation)",
+    "32 old/new result comparisons",
+    "METRO KILO PIEZA BOLSA exact floor counts and quantities",
+    "Same-named floors in distinct sites remain distinct",
+    "Null floor id/name preserved as Sin piso contract, not literal SQL label",
+    "Zero stock []",
+    "Global, both local sites, nonexistent site",
+    "includeSinExistencia both values; search; inactive and unavailable exclusion"
+  ],
+  "localServerStopped": true,
+  "disposableDirectoryRemoved": true
+}

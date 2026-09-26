@@ -7200,6 +7200,28 @@ export interface UbicacionInventario {
   activa: boolean;
 }
 
+export type ExistenciaAgrupadaUbicacionUnidad = typeof ExistenciaAgrupadaUbicacionUnidad[keyof typeof ExistenciaAgrupadaUbicacionUnidad];
+
+
+export const ExistenciaAgrupadaUbicacionUnidad = {
+  METRO: 'METRO',
+  KILO: 'KILO',
+  BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
+} as const;
+
+export interface ExistenciaAgrupadaUbicacion {
+  ubicacionId: number;
+  nombreUbicacion: string;
+  /** @nullable */
+  pisoId: number | null;
+  /** @nullable */
+  nombrePiso: string | null;
+  rollosCount: number;
+  cantidadTotal: string;
+  unidad: ExistenciaAgrupadaUbicacionUnidad;
+}
+
 export type ExistenciaAgrupadaHijoUnidad = typeof ExistenciaAgrupadaHijoUnidad[keyof typeof ExistenciaAgrupadaHijoUnidad];
 
 
@@ -7217,6 +7239,7 @@ export interface ExistenciaAgrupadaHijo {
   rollosCount: number;
   cantidadTotal: string;
   unidad: ExistenciaAgrupadaHijoUnidad;
+  ubicaciones: ExistenciaAgrupadaUbicacion[];
 }
 
 export interface ExistenciaAgrupada {

@@ -1,4 +1,8 @@
-### Versión activa: auditoría colaborativa + totales PIEZA separados en Inventario (26/09/2026)
+### Versión activa: ubicación por piso en Control de Inventario (26/09/2026)
+
+Frontend y API activos: `dist-inventory-floors-20260926`, con guardas en `reports/inventory-floors-20260926/{frontend,api}.sha256`. Derivados exclusivamente de los builds activos de correcciones de impresión, conservando etiquetas y piso original de Entrada; no se liberó el resto de HEAD. En Control de Inventario se consulta el piso **actual**, con sitio + piso en Vista Global, desglose por color y unidades separadas. Detalle de Rollos conserva sus tarjetas y muestra siempre Piso/Sin piso. Evidencia SQL local, capturas con fixtures explícitos y manifiestos: `reports/inventory-floors-20260926/`. No se republicó despliegue externo.
+
+### Versión histórica: auditoría colaborativa + totales PIEZA separados en Inventario (26/09/2026)
 
 MAIN activó el **frontend** `artifacts/mariana-textil/dist-noche-task7-inventory-20260926` (`index.html` SHA256 `09e9fb57f7fc495b98107b86d796e5cbce980aa5755a62a6bb47a87bd98ad9c9`) desde el staging congelado `frontend-root-mensaje` con exactamente tres archivos fuente cambiados: `pages/inventario.tsx`, `lib/inventory-global-totals.ts` y su test. En Inventario agrupado las PIEZAS se muestran en columna propia y el pie filtrado suma PIEZA por separado de METRO/KILO/BOLSA, sin conversión ni mezcla. Manifiesto de los 11 archivos y prueba de preservación: `reports/noche-20260926/tarea-7/candidate.json` y `frontend.sha256`. MAIN sustituyó el TOML web mediante `verifyAndReplaceArtifactToml`, reinició el web y comprobó las 11 guardas; la verificación enfocada del componente `/inventario` con cantidades sintéticas se conserva en `reports/noche-20260926/tarea-7/inventory-piece-candidate-confirmation/`. Esto **no** constituye un recorrido íntegro del sistema ni corrige los errores 500/503, timeouts y `REVISION_OBSOLETA` observados en la campaña nocturna.
 

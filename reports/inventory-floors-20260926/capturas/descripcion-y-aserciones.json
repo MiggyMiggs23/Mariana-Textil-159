@@ -1,0 +1,284 @@
+{
+  "descripcion": "Aplicación real compilada candidata; datos íntegramente sintéticos servidos por HTTP loopback. Sin login, secretos ni acceso a base de datos. Banner añadido únicamente a DOM de captura.",
+  "dist": "/home/runner/workspace/artifacts/mariana-textil/dist-inventory-floors-20260926",
+  "viewport": {
+    "width": 1800,
+    "height": 1500
+  },
+  "expected": {
+    "METRO": 25,
+    "KILO": 3.25,
+    "BOLSA": 4,
+    "PIEZA": 6
+  },
+  "groups": [
+    {
+      "productoKey": "fixture-0",
+      "telaProducto": "Lino",
+      "coloresCount": 1,
+      "rollosCount": 3,
+      "totalMetros": "25",
+      "totalKilos": "0",
+      "totalBolsas": "0",
+      "totalPiezas": "0",
+      "colores": [
+        {
+          "productoId": 990,
+          "color": "Azul",
+          "sku": "FIX-METRO",
+          "unidad": "METRO",
+          "cantidadTotal": "25",
+          "rollosCount": 3,
+          "ubicaciones": [
+            {
+              "ubicacionId": 901,
+              "nombreUbicacion": "Sitio Alfa (fixture)",
+              "pisoId": 1,
+              "nombrePiso": "Planta baja",
+              "rollosCount": 1,
+              "cantidadTotal": "12.5",
+              "unidad": "METRO"
+            },
+            {
+              "ubicacionId": 901,
+              "nombreUbicacion": "Sitio Alfa (fixture)",
+              "pisoId": 2,
+              "nombrePiso": "Piso 1",
+              "rollosCount": 1,
+              "cantidadTotal": "7.5",
+              "unidad": "METRO"
+            },
+            {
+              "ubicacionId": 902,
+              "nombreUbicacion": "Sitio Beta (fixture)",
+              "pisoId": 3,
+              "nombrePiso": "Planta baja",
+              "rollosCount": 1,
+              "cantidadTotal": "5",
+              "unidad": "METRO"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "productoKey": "fixture-1",
+      "telaProducto": "Felpa",
+      "coloresCount": 1,
+      "rollosCount": 1,
+      "totalMetros": "0",
+      "totalKilos": "3.25",
+      "totalBolsas": "0",
+      "totalPiezas": "0",
+      "colores": [
+        {
+          "productoId": 991,
+          "color": "Gris",
+          "sku": "FIX-KILO",
+          "unidad": "KILO",
+          "cantidadTotal": "3.25",
+          "rollosCount": 1,
+          "ubicaciones": [
+            {
+              "ubicacionId": 901,
+              "nombreUbicacion": "Sitio Alfa (fixture)",
+              "pisoId": 1,
+              "nombrePiso": "Planta baja",
+              "rollosCount": 1,
+              "cantidadTotal": "3.25",
+              "unidad": "KILO"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "productoKey": "fixture-2",
+      "telaProducto": "Retazos",
+      "coloresCount": 1,
+      "rollosCount": 1,
+      "totalMetros": "0",
+      "totalKilos": "0",
+      "totalBolsas": "4",
+      "totalPiezas": "0",
+      "colores": [
+        {
+          "productoId": 992,
+          "color": "Blanco",
+          "sku": "FIX-BOLSA",
+          "unidad": "BOLSA",
+          "cantidadTotal": "4",
+          "rollosCount": 1,
+          "ubicaciones": [
+            {
+              "ubicacionId": 901,
+              "nombreUbicacion": "Sitio Alfa (fixture)",
+              "pisoId": null,
+              "nombrePiso": null,
+              "rollosCount": 1,
+              "cantidadTotal": "4",
+              "unidad": "BOLSA"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "productoKey": "fixture-3",
+      "telaProducto": "Paños",
+      "coloresCount": 1,
+      "rollosCount": 1,
+      "totalMetros": "0",
+      "totalKilos": "0",
+      "totalBolsas": "0",
+      "totalPiezas": "6",
+      "colores": [
+        {
+          "productoId": 993,
+          "color": "Rojo",
+          "sku": "FIX-PIEZA",
+          "unidad": "PIEZA",
+          "cantidadTotal": "6",
+          "rollosCount": 1,
+          "ubicaciones": [
+            {
+              "ubicacionId": 902,
+              "nombreUbicacion": "Sitio Beta (fixture)",
+              "pisoId": 3,
+              "nombrePiso": "Planta baja",
+              "rollosCount": 1,
+              "cantidadTotal": "6",
+              "unidad": "PIEZA"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "rollos": [
+    {
+      "id": 9901,
+      "serie": "FIX-9901",
+      "productoId": 990,
+      "telaProducto": "Lino",
+      "colorProducto": "Azul",
+      "sku": "FIX-METRO",
+      "unidad": "METRO",
+      "estado": "DISPONIBLE",
+      "ubicacionId": 901,
+      "nombreUbicacion": "Sitio Alfa (fixture)",
+      "pisoId": 1,
+      "nombrePiso": "Planta baja",
+      "cantidadActual": "12.5",
+      "cantidadInicial": "12.5"
+    },
+    {
+      "id": 9902,
+      "serie": "FIX-9902",
+      "productoId": 990,
+      "telaProducto": "Lino",
+      "colorProducto": "Azul",
+      "sku": "FIX-METRO",
+      "unidad": "METRO",
+      "estado": "DISPONIBLE",
+      "ubicacionId": 901,
+      "nombreUbicacion": "Sitio Alfa (fixture)",
+      "pisoId": 2,
+      "nombrePiso": "Piso 1",
+      "cantidadActual": "7.5",
+      "cantidadInicial": "7.5"
+    },
+    {
+      "id": 9903,
+      "serie": "FIX-9903",
+      "productoId": 990,
+      "telaProducto": "Lino",
+      "colorProducto": "Azul",
+      "sku": "FIX-METRO",
+      "unidad": "METRO",
+      "estado": "DISPONIBLE",
+      "ubicacionId": 902,
+      "nombreUbicacion": "Sitio Beta (fixture)",
+      "pisoId": 3,
+      "nombrePiso": "Planta baja",
+      "cantidadActual": "5",
+      "cantidadInicial": "5"
+    },
+    {
+      "id": 9904,
+      "serie": "FIX-9904",
+      "productoId": 991,
+      "telaProducto": "Felpa",
+      "colorProducto": "Gris",
+      "sku": "FIX-KILO",
+      "unidad": "KILO",
+      "estado": "DISPONIBLE",
+      "ubicacionId": 901,
+      "nombreUbicacion": "Sitio Alfa (fixture)",
+      "pisoId": 1,
+      "nombrePiso": "Planta baja",
+      "cantidadActual": "3.25",
+      "cantidadInicial": "3.25"
+    },
+    {
+      "id": 9905,
+      "serie": "FIX-9905",
+      "productoId": 992,
+      "telaProducto": "Retazos",
+      "colorProducto": "Blanco",
+      "sku": "FIX-BOLSA",
+      "unidad": "BOLSA",
+      "estado": "DISPONIBLE",
+      "ubicacionId": 901,
+      "nombreUbicacion": "Sitio Alfa (fixture)",
+      "pisoId": null,
+      "nombrePiso": null,
+      "cantidadActual": "4",
+      "cantidadInicial": "4"
+    },
+    {
+      "id": 9906,
+      "serie": "FIX-9906",
+      "productoId": 993,
+      "telaProducto": "Paños",
+      "colorProducto": "Rojo",
+      "sku": "FIX-PIEZA",
+      "unidad": "PIEZA",
+      "estado": "DISPONIBLE",
+      "ubicacionId": 902,
+      "nombreUbicacion": "Sitio Beta (fixture)",
+      "pisoId": 3,
+      "nombrePiso": "Planta baja",
+      "cantidadActual": "6",
+      "cantidadInicial": "6"
+    }
+  ],
+  "assertions": [
+    "Totales de fixture por unidad = sumas de rollos",
+    "Totales de padres y pie de tabla coinciden por unidad",
+    "Totales de colores coinciden",
+    "Expandir no cambia padres ni pie",
+    "Azul se desglosa en 3 filas: dos pisos de Alfa y Planta baja de Beta",
+    "Gris y Rojo: piso único; Blanco: Sin piso",
+    "Seis campos Piso en tarjetas, uno Sin piso",
+    "Ninguna solicitud API inesperada; solo GET; tráfico externo bloqueado"
+  ],
+  "groupedText": "Control de Inventario\n\nVista Consolidada (Todos los sitios)\n\nAgrupado por Producto\nDetalle de Rollos\nContraer todos\nMostrar sin existencias\n\tTela / Producto\tSitio\tUbicación\tRollos\tTotal Mts.\tTotal Kg.\tTotal Bolsas\tTotal Pzas.\n\n\tLino1 colores\t\tSitio Alfa (fixture) · Planta baja, Sitio Alfa (fixture) · Piso 1, Sitio Beta (fixture) · Planta baja\t3\t25.00\t-\t-\t-\n\n\t\nAzul\nFIX-METRO\n\t\t3 pisos\t3\t\n25.00\nMts.\n\n\tPor ubicación\tSitio Alfa (fixture)\tSitio Alfa (fixture) · Planta baja\t1\t12.50\t-\t-\t-\n\tPor ubicación\tSitio Alfa (fixture)\tSitio Alfa (fixture) · Piso 1\t1\t7.50\t-\t-\t-\n\tPor ubicación\tSitio Beta (fixture)\tSitio Beta (fixture) · Planta baja\t1\t5.00\t-\t-\t-\n\n\tFelpa1 colores\t\tSitio Alfa (fixture) · Planta baja\t1\t-\t3.25\t-\t-\n\t\nGris\nFIX-KILO\n\t\tSitio Alfa (fixture) · Planta baja\t1\t\n3.25\nKg.\n\n\n\tRetazos1 colores\t\tSitio Alfa (fixture) · Sin piso\t1\t-\t-\t4.00\t-\n\t\nBlanco\nFIX-BOLSA\n\t\tSitio Alfa (fixture) · Sin piso\t1\t\n4.00\nBolsas\n\n\n\tPaños1 colores\t\tSitio Beta (fixture) · Planta baja\t1\t-\t-\t-\t6.00\n\t\nRojo\nFIX-PIEZA\n\t\tSitio Beta (fixture) · Planta baja\t1\t\n6.00\nPzas.\n\n\tTOTALESfiltro actual\t\t\t6\t25.00\t3.25\t4.00\t6.00",
+  "detailText": "Control de Inventario\n\nVista Consolidada (Todos los sitios)\n\nAgrupado por Producto\nDetalle de Rollos\nTodos los estados\nSeleccionar todos los visibles\n0/50 seleccionados\nReimprimir etiquetas (0)\nFIX-9901\nDISPONIBLE\nLino / Azul\nSitio Alfa (fixture)\nPISO: PLANTA BAJA\n12.50\nFIX-9902\nDISPONIBLE\nLino / Azul\nSitio Alfa (fixture)\nPISO: PISO 1\n7.50\nFIX-9903\nDISPONIBLE\nLino / Azul\nSitio Beta (fixture)\nPISO: PLANTA BAJA\n5.00\nFIX-9904\nDISPONIBLE\nFelpa / Gris\nSitio Alfa (fixture)\nPISO: PLANTA BAJA\n3.25\nFIX-9905\nDISPONIBLE\nRetazos / Blanco\nSitio Alfa (fixture)\nPISO: SIN PISO\n4.00\nFIX-9906\nDISPONIBLE\nPaños / Rojo\nSitio Beta (fixture)\nPISO: PLANTA BAJA\n6.00",
+  "requests": [
+    "GET /api/auth/me",
+    "GET /api/e11/disponibilidad",
+    "GET /api/e11/identidad",
+    "GET /api/admin/test-reset",
+    "GET /api/notificaciones/feed",
+    "GET /api/notificaciones",
+    "GET /api/auth/me",
+    "GET /api/inventario/ajustes/pendientes",
+    "GET /api/inventario/entradas/pendientes-costo/count",
+    "GET /api/etiquetas/alertas/count",
+    "GET /api/inventario/ubicaciones",
+    "GET /api/inventario/existencias/agrupadas",
+    "GET /api/inventario/rollos"
+  ],
+  "unexpected": []
+}

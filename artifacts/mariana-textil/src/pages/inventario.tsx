@@ -31,6 +31,7 @@ import { toast } from "@/hooks/use-toast";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { toggleLabelSelection, updateVisibleLabelSelection } from "@/lib/label-selection";
 import { ReprintLabelsDialog } from "@/components/reprint-labels-dialog";
+import { existingLocations, floorLabel, InventoryLocationRows, locationKey, locationSummary, type InventoryLocation } from "@/lib/inventory-locations";
 
 export default function Inventario() {
   const [, setLocation] = useLocation();
@@ -55,6 +56,16 @@ export default function Inventario() {
   const [pisoFilter, setPisoFilter] = useHistoryEntryState<string>("inventario.piso", "TODOS");
   const [showZero, setShowZero] = useHistoryEntryState("inventario.show-zero", false);
   const [activeTab, setActiveTab] = useHistoryEntryState("inventario.tab", "existencias");
+  const [expandedColors, setExpandedColors] = useState<Set<string>>(new Set());
+
+  const toggleColor = (key: string) => {
+    setExpandedColors((current) => {
+      const next = new Set(current);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
 
   useEffect(() => {
     setPisoFilter("TODOS");
@@ -260,6 +271,7 @@ export default function Inventario() {
                       <TableHead className="w-8"></TableHead>
                       <TableHead>Tela / Producto</TableHead>
                       {isTodas && <TableHead>Sitio</TableHead>}
+                      <TableHead>Ubicación</TableHead>
                       <TableHead className="text-right">Rollos</TableHead>
                       <TableHead className="text-right">Total {formatUnit("METRO")}</TableHead>
                       <TableHead className="text-right">Total {formatUnit("KILO")}</TableHead>
@@ -270,13 +282,13 @@ export default function Inventario() {
                   <TableBody>
                     {loadingExistencias ? (
                       <TableRow>
-                        <TableCell colSpan={(isTodas ? 6 : 5) + (showBolsasColumn ? 1 : 0) + (showPiezasColumn ? 1 : 0)} className="h-32 text-center text-muted-foreground">
+                        <TableCell colSpan={(isTodas ? 7 : 6) + (showBolsasColumn ? 1 : 0) + (showPiezasColumn ? 1 : 0)} className="h-32 text-center text-muted-foreground">
                           Cargando inventario...
                         </TableCell>
                       </TableRow>
                     ) : existenciasAgrupadas?.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={(isTodas ? 6 : 5) + (showBolsasColumn ? 1 : 0) + (showPiezasColumn ? 1 : 0)} className="h-32 text-center text-muted-foreground">
+                        <TableCell colSpan={(isTodas ? 7 : 6) + (showBolsasColumn ? 1 : 0) + (showPiezasColumn ? 1 : 0)} className="h-32 text-center text-muted-foreground">
                           <Boxes className="w-8 h-8 mx-auto mb-2 opacity-20" />
                           No se encontraron existencias
                         </TableCell>
@@ -293,15 +305,30 @@ export default function Inventario() {
                               <Badge variant="outline" className="ml-2 bg-background font-normal text-xs">{grupo.coloresCount} colores</Badge>
                             </TableCell>
                             {isTodas && <TableCell></TableCell>}
+                            <TableCell className="py-3 text-sm">
+                              {locationSummary(grupo.colores.flatMap((color) => (color as typeof color & { ubicaciones?: InventoryLocation[] }).ubicaciones ?? []), grupo.rollosCount, consolidado)}
+                            </TableCell>
                             <TableCell className="text-right font-bold py-3">{formatNumber(grupo.rollosCount, { kind: "count" })}</TableCell>
                             <TableCell className="text-right tabular-nums py-3">{parseFloat(grupo.totalMetros) > 0 ? formatNumber(grupo.totalMetros, { kind: "quantity" }) : "-"}</TableCell>
                             <TableCell className="text-right tabular-nums py-3">{parseFloat(grupo.totalKilos) > 0 ? formatNumber(grupo.totalKilos, { kind: "quantity" }) : "-"}</TableCell>
                              {showBolsasColumn && <TableCell className="text-right tabular-nums py-3">{Number(grupo.totalBolsas) > 0 ? formatNumber(grupo.totalBolsas, { kind: "quantity" }) : "-"}</TableCell>}
                              {showPiezasColumn && <TableCell className="text-right tabular-nums py-3">{Number(grupo.totalPiezas) > 0 ? formatNumber(grupo.totalPiezas, { kind: "quantity" }) : "-"}</TableCell>}
                           </TableRow>
-                          {expandedGroups.has(grupo.productoKey) && grupo.colores.map((hijo, idx) => (
-                            <TableRow key={hijo.productoId} className={idx === grupo.colores.length - 1 ? "border-b-2" : "border-b-0"}>
-                              <TableCell></TableCell>
+                          {expandedGroups.has(grupo.productoKey) && grupo.colores.map((hijo, idx) => {
+                            const locations = existingLocations((hijo as typeof hijo & { ubicaciones?: InventoryLocation[] }).ubicaciones);
+                            const multipleFloors = new Set(locations.map(locationKey)).size > 1 && hijo.rollosCount > 0;
+                            const colorKey = JSON.stringify([grupo.productoKey, hijo.productoId]);
+                            const expanded = expandedColors.has(colorKey);
+                            return (
+                            <React.Fragment key={hijo.productoId}>
+                            <TableRow className={idx === grupo.colores.length - 1 ? "border-b-2" : "border-b-0"}>
+                              <TableCell>
+                                {multipleFloors && (
+                                  <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => toggleColor(colorKey)} aria-expanded={expanded} aria-label={`${expanded ? "Contraer" : "Expandir"} ubicaciones de ${hijo.color}`}>
+                                    {expanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                                  </Button>
+                                )}
+                              </TableCell>
                               <TableCell className="pl-6 py-2">
                                 <div className="flex items-center gap-2">
                                   <div className="w-1.5 h-1.5 rounded-full bg-primary/40"></div>
@@ -310,6 +337,13 @@ export default function Inventario() {
                                 </div>
                               </TableCell>
                               {isTodas && <TableCell className="py-2"></TableCell>}
+                              <TableCell className="py-2 text-sm" title={locationSummary(locations, hijo.rollosCount, consolidado)}>
+                                {multipleFloors ? (
+                                  <button type="button" className="text-left hover:underline" onClick={() => toggleColor(colorKey)} aria-expanded={expanded}>
+                                    {locationSummary(locations, hijo.rollosCount, consolidado, true)}
+                                  </button>
+                                ) : locationSummary(locations, hijo.rollosCount, consolidado)}
+                              </TableCell>
                                <TableCell className="text-right py-2">{formatNumber(hijo.rollosCount, { kind: "count" })}</TableCell>
                               <TableCell className="text-right tabular-nums py-2" colSpan={2 + Number(showBolsasColumn) + Number(showPiezasColumn)}>
                                 <div className="flex items-center justify-end gap-1">
@@ -318,7 +352,10 @@ export default function Inventario() {
                                 </div>
                               </TableCell>
                             </TableRow>
-                          ))}
+                            {multipleFloors && expanded && <InventoryLocationRows locations={locations} showSitio={isTodas} consolidado={consolidado} showBolsas={showBolsasColumn} showPiezas={showPiezasColumn} />}
+                            </React.Fragment>
+                            );
+                          })}
                         </React.Fragment>
                       ))
                     )}
@@ -334,6 +371,7 @@ export default function Inventario() {
                           </span>
                         </TableCell>
                         {isTodas && <TableCell></TableCell>}
+                        <TableCell></TableCell>
                         <TableCell className="text-right font-bold tabular-nums">
                           {formatNumber(globalTotals.rollosCount, { kind: "count" })}
                         </TableCell>
@@ -466,11 +504,9 @@ export default function Inventario() {
                           {rollo.telaProducto} <span className="text-muted-foreground font-normal">/</span> {rollo.colorProducto}
                         </div>
                         {isTodas && <div className="text-xs text-muted-foreground mt-1">{rollo.nombreUbicacion}</div>}
-                        {(rollo as any).nombrePiso && (
-                          <div className="text-[10px] uppercase font-bold text-muted-foreground mt-1 bg-muted/30 px-1.5 py-0.5 rounded w-fit border border-dashed">
-                            Piso: {(rollo as any).nombrePiso}
-                          </div>
-                        )}
+                        <div className="text-[10px] uppercase font-bold text-muted-foreground mt-1 bg-muted/30 px-1.5 py-0.5 rounded w-fit border border-dashed">
+                          Piso: {floorLabel(rollo.nombrePiso)}
+                        </div>
                       </div>
 
                         <div className="flex items-end justify-between mt-auto gap-3">

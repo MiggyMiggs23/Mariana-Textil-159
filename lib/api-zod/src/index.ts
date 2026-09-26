@@ -530,6 +530,8 @@ export * from "./generated/types/etiquetaImprimibleUnidad";
 export * from "./generated/types/existenciaAgrupada";
 export * from "./generated/types/existenciaAgrupadaHijo";
 export * from "./generated/types/existenciaAgrupadaHijoUnidad";
+export * from "./generated/types/existenciaAgrupadaUbicacion";
+export * from "./generated/types/existenciaAgrupadaUbicacionUnidad";
 export * from "./generated/types/existenciaRow";
 export * from "./generated/types/exportAdminCortesPdfParams";
 export * from "./generated/types/exportAdminCortesXlsxParams";

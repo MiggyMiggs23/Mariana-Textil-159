@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ExistenciaAgrupadaHijoUnidad } from './existenciaAgrupadaHijoUnidad';
+import type { ExistenciaAgrupadaUbicacion } from './existenciaAgrupadaUbicacion';
 
 export interface ExistenciaAgrupadaHijo {
   productoId: number;
@@ -14,4 +15,5 @@ export interface ExistenciaAgrupadaHijo {
   rollosCount: number;
   cantidadTotal: string;
   unidad: ExistenciaAgrupadaHijoUnidad;
+  ubicaciones: ExistenciaAgrupadaUbicacion[];
 }
