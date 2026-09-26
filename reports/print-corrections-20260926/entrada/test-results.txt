@@ -1,0 +1,12 @@
+✔ actual released builder + actual document: two receipt floors survive later roll relocation (18.118797ms)
+✔ historical, ambiguous and malformed evidence never use current roll floors (16.39082ms)
+✔ same product keeps one original row and lists all receipt floors; explicit null is not missing history (0.278968ms)
+✔ source delta is exactly the two requested visible replacements; snapshot is in existing creation audit (143.823393ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 833.245674

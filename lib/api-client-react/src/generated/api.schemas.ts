@@ -7083,6 +7083,8 @@ export interface EntradaRollo {
 }
 
 export interface EntradaLinea {
+  /** Receipt floor labels from immutable creation evidence; never current roll location. */
+  pisoEntrada?: string;
   productoId: number;
   skuProducto: string;
   telaProducto: string;

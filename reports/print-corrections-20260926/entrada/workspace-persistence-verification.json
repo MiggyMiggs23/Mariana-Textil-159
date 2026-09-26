@@ -1,0 +1,13 @@
+{
+  "status": "PASSED",
+  "sameExactAddedRemovedLinesAsFrozenOverlay": true,
+  "unreleasedWorkspaceSourcePreserved": true,
+  "helperByteIdenticalToFrozenOverlay": true,
+  "syntaxDiagnostics": 0,
+  "workspaceBeforeSha256": "c40277bc35873c099c6c591c294ee13bb686401fd1e7304cb4852bb2f8a77e8b",
+  "workspaceAfterSha256": "d5948f00a57a9ae6368300bb2fd2135899985ed44ab0fc7db80e0e55f31df37f",
+  "frozenBeforeSha256": "3e1c06120189811d4140766a6f987f4b7ed5abd15d268ff04682ec5313b1e79f",
+  "frozenAfterSha256": "4524087488ce0c4a9604df43506b38ec3d3bb0ca5220258b5db721a7c1d26455",
+  "helperSha256": "eb21b1cdb1cbd04d18659565244d195d6c27be1fbb881cc6393dd3fb64c85191",
+  "runtimeOrBuildChanged": false
+}

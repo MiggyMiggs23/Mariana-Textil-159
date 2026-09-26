@@ -20,6 +20,7 @@
  */
 
 import { createHash } from "node:crypto";
+import { entradaFloorLabel, type EntradaFloorSnapshot } from "./entrada-floor-evidence";
 import { getReactivacionContexto } from "./reactivacion-faltante-evidencia";
 import { and, eq, sql, desc, count, gt, gte, inArray, lte } from "drizzle-orm";
 import {
@@ -653,6 +654,7 @@ export type EntradaRolloResult = {
 };
 
 export type EntradaLineaResult = {
+  pisoEntrada: string;
   productoId: number;
   skuProducto: string;
   telaProducto: string;
@@ -858,7 +860,7 @@ export async function crearEntrada(
       );
     }
   }
-  const pisosActivos = await tx.select({ id: pisosTable.id }).from(pisosTable)
+  const pisosActivos = await tx.select({ id: pisosTable.id, nombre: pisosTable.nombre }).from(pisosTable)
     .where(and(eq(pisosTable.ubicacionId, input.ubicacionId), eq(pisosTable.activo, true)));
   const pisoIds = new Set(pisosActivos.map((p) => p.id));
   for (const linea of input.lineas) {
@@ -909,6 +911,7 @@ export async function crearEntrada(
   let serieIdx = 0;
 
   // 4 & 5) Create DISPONIBLE rolls + RECEPCION movements
+  const pisosEntrada: EntradaFloorSnapshot[] = [];
   for (const linea of input.lineas) {
     for (const [cantidadIndex, cantidad] of linea.cantidades.entries()) {
       const costoTotal =
@@ -933,6 +936,12 @@ export async function crearEntrada(
         })
         .returning();
 
+      pisosEntrada.push({
+        rolloId: rollo!.id,
+        productoId: linea.productoId,
+        pisoId: rollo!.pisoId,
+        nombrePiso: pisosActivos.find((piso) => piso.id === rollo!.pisoId)?.nombre ?? null,
+      });
       await insertMovimiento(tx, {
         rolloId: rollo!.id,
         productoId: linea.productoId,
@@ -966,6 +975,8 @@ export async function crearEntrada(
       proveedorId: input.proveedorId ?? null,
       totalRollos,
       totalCosto: totalCostoStr,
+      pisosEntradaVersion: 1,
+      pisosEntrada,
     } as Record<string, unknown>,
     ip: input.ip ?? "desconocida",
   });
@@ -1102,6 +1113,18 @@ export async function buildEntradaResult(
     nombrePiso: r.nombrePiso ?? null,
   }));
 
+  // Only the immutable receipt creation event proves the original floor.
+  // Later relocations, inventory audits and current roll floors cannot substitute it.
+  const receiptEvents = await tx.select({ datos: auditoriaTable.datosDespues })
+    .from(auditoriaTable)
+    .where(and(
+      eq(auditoriaTable.entidad, "entradas"),
+      eq(auditoriaTable.entidadId, String(entradaId)),
+      eq(auditoriaTable.accion, "CREAR"),
+    ));
+  const receipt = receiptEvents.length === 1 ? receiptEvents[0]?.datos : null;
+  const floorEvidence = receipt?.pisosEntradaVersion === 1 ? receipt.pisosEntrada : null;
+
   // Group lines by product
   type Group = {
     productoId: number;
@@ -1135,6 +1158,7 @@ export async function buildEntradaResult(
   }
 
   const lineas: EntradaLineaResult[] = Array.from(groups.values()).map((g) => ({
+    pisoEntrada: entradaFloorLabel(rolloRows.filter((r) => r.productoId === g.productoId), floorEvidence),
     productoId: g.productoId,
     skuProducto: g.skuProducto,
     telaProducto: g.telaProducto,

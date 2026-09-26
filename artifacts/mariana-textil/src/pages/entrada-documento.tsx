@@ -203,7 +203,7 @@ export default function EntradaDocumento() {
                     <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider text-center">Cantidad de Rollos</th>
                     <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider text-right">Cantidad / unidad</th>
                     <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider">SKU</th>
-                    <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider">Sitio</th>
+                    <th className="py-2 px-3 text-xs font-bold uppercase tracking-wider">Piso</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -219,7 +219,7 @@ export default function EntradaDocumento() {
                         <td className="py-1 px-3 text-center font-bold text-xs">{formatNumber(linea.rollosCount, { kind: "count" })}</td>
                         <td className="py-1 px-3 text-right text-xs font-medium">{formatNumber(linea.cantidadTotal, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}</td>
                         <td className="py-1 px-3 font-mono text-[10px] text-gray-600">{linea.skuProducto}</td>
-                        <td className="py-1 px-3 text-xs text-gray-800">{entrada.nombreUbicacion}</td>
+                        <td className="py-1 px-3 text-xs text-gray-800">{linea.pisoEntrada || "Sin evidencia"}</td>
                       </tr>
                     );
                   })}

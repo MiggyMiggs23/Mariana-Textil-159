@@ -13901,6 +13901,9 @@ components:
           cantidadTotal,
         ]
       properties:
+        pisoEntrada:
+          type: string
+          description: Receipt floor labels from immutable creation evidence; never current roll location.
         productoId: { type: number }
         skuProducto: { type: string }
         telaProducto: { type: string }

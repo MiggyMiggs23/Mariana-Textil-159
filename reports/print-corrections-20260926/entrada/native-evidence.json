@@ -1,0 +1,203 @@
+{
+  "status": "PASSED_NATIVE_API_RECEIPT_RELOCATION_PERSISTED_AUDIT",
+  "entryId": 2,
+  "documentUrl": "http://127.0.0.1:18428/entradas/2/documento",
+  "request": {
+    "ubicacionId": 1,
+    "proveedorId": null,
+    "uuidCliente": "db3c25aa-039e-4782-aa6c-839c2bc56eee",
+    "observaciones": "Prueba autorizada de impresión: dos pisos originales. Copia aislada 20260926.",
+    "lineas": [
+      {
+        "productoId": 1748,
+        "cantidades": [
+          "5"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          4
+        ]
+      },
+      {
+        "productoId": 1747,
+        "cantidades": [
+          "5"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          3
+        ]
+      }
+    ]
+  },
+  "created": {
+    "id": 2,
+    "folio": 1,
+    "inicialesSitio": "MA",
+    "folioFormateado": "MA-000001",
+    "ubicacionId": 1,
+    "nombreUbicacion": "Mariana",
+    "proveedorId": null,
+    "nombreProveedor": null,
+    "usuarioId": 234,
+    "nombreUsuario": "Isolated print correction runtime admin",
+    "fecha": "2026-09-26T19:27:12.746Z",
+    "observaciones": "Prueba autorizada de impresión: dos pisos originales. Copia aislada 20260926.",
+    "totalRollos": 2,
+    "totalCosto": "10.00",
+    "uuidCliente": "db3c25aa-039e-4782-aa6c-839c2bc56eee",
+    "createdAt": "2026-09-26T19:27:12.513Z",
+    "lineas": [
+      {
+        "productoId": 1748,
+        "skuProducto": "ALA-BEI",
+        "telaProducto": "Alaska",
+        "colorProducto": "Beige",
+        "unidadProducto": "KILO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "5.000",
+        "pisoEntrada": "Planta Alta",
+        "costoTotal": "5.00"
+      },
+      {
+        "productoId": 1747,
+        "skuProducto": "ALA-CAF",
+        "telaProducto": "Alaska",
+        "colorProducto": "Café",
+        "unidadProducto": "KILO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "5.000",
+        "pisoEntrada": "Planta Baja",
+        "costoTotal": "5.00"
+      }
+    ],
+    "rollos": [
+      {
+        "id": 121,
+        "serie": "10000121",
+        "productoId": 1748,
+        "cantidadInicial": "5.000",
+        "pisoId": 4,
+        "nombrePiso": "Planta Alta",
+        "costoUnitario": "1.00",
+        "costoTotal": "5.00"
+      },
+      {
+        "id": 122,
+        "serie": "10000122",
+        "productoId": 1747,
+        "cantidadInicial": "5.000",
+        "pisoId": 3,
+        "nombrePiso": "Planta Baja",
+        "costoUnitario": "1.00",
+        "costoTotal": "5.00"
+      }
+    ]
+  },
+  "relocatedRollId": 121,
+  "after": {
+    "id": 2,
+    "folio": 1,
+    "inicialesSitio": "MA",
+    "folioFormateado": "MA-000001",
+    "ubicacionId": 1,
+    "nombreUbicacion": "Mariana",
+    "proveedorId": null,
+    "nombreProveedor": null,
+    "usuarioId": 234,
+    "nombreUsuario": "Isolated print correction runtime admin",
+    "fecha": "2026-09-26T19:27:12.746Z",
+    "observaciones": "Prueba autorizada de impresión: dos pisos originales. Copia aislada 20260926.",
+    "totalRollos": 2,
+    "totalCosto": "10.00",
+    "uuidCliente": "db3c25aa-039e-4782-aa6c-839c2bc56eee",
+    "createdAt": "2026-09-26T19:27:12.513Z",
+    "lineas": [
+      {
+        "productoId": 1748,
+        "skuProducto": "ALA-BEI",
+        "telaProducto": "Alaska",
+        "colorProducto": "Beige",
+        "unidadProducto": "KILO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "5.000",
+        "pisoEntrada": "Planta Alta",
+        "costoTotal": "5.00"
+      },
+      {
+        "productoId": 1747,
+        "skuProducto": "ALA-CAF",
+        "telaProducto": "Alaska",
+        "colorProducto": "Café",
+        "unidadProducto": "KILO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "5.000",
+        "pisoEntrada": "Planta Baja",
+        "costoTotal": "5.00"
+      }
+    ],
+    "rollos": [
+      {
+        "id": 121,
+        "serie": "10000121",
+        "productoId": 1748,
+        "cantidadInicial": "5.000",
+        "pisoId": 3,
+        "nombrePiso": "Planta Baja",
+        "costoUnitario": "1.00",
+        "costoTotal": "5.00"
+      },
+      {
+        "id": 122,
+        "serie": "10000122",
+        "productoId": 1747,
+        "cantidadInicial": "5.000",
+        "pisoId": 3,
+        "nombrePiso": "Planta Baja",
+        "costoUnitario": "1.00",
+        "costoTotal": "5.00"
+      }
+    ]
+  },
+  "identity": {
+    "database": "print_corrections_20260926",
+    "readonly": "on"
+  },
+  "audit": [
+    {
+      "id": "11",
+      "accion": "CREAR",
+      "entidad": "entradas",
+      "entidad_id": "2",
+      "datos_despues": {
+        "folio": 1,
+        "totalCosto": "10.00",
+        "proveedorId": null,
+        "totalRollos": 2,
+        "ubicacionId": 1,
+        "pisosEntrada": [
+          {
+            "pisoId": 4,
+            "rolloId": 121,
+            "nombrePiso": "Planta Alta",
+            "productoId": 1748
+          },
+          {
+            "pisoId": 3,
+            "rolloId": 122,
+            "nombrePiso": "Planta Baja",
+            "productoId": 1747
+          }
+        ],
+        "pisosEntradaVersion": 1
+      }
+    }
+  ],
+  "supplierLedgerRows": 0,
+  "sqlWrites": false,
+  "noSupplierDebt": true
+}

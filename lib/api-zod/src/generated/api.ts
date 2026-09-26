@@ -9046,6 +9046,7 @@ export const CrearEntradaResponse = zod.object({
   "costoUnitario": zod.string().nullish(),
   "rollosCount": zod.number(),
   "cantidadTotal": zod.string(),
+  "pisoEntrada": zod.string().optional(),
   "costoTotal": zod.string().nullish()
 })),
   "rollos": zod.array(zod.object({
@@ -9155,6 +9156,7 @@ export const GetEntradaResponse = zod.object({
   "costoUnitario": zod.string().nullish(),
   "rollosCount": zod.number(),
   "cantidadTotal": zod.string(),
+  "pisoEntrada": zod.string().optional(),
   "costoTotal": zod.string().nullish()
 })),
   "rollos": zod.array(zod.object({
@@ -9216,6 +9218,7 @@ export const CapturarCostosEntradaResponse = zod.object({
   "costoUnitario": zod.string().nullish(),
   "rollosCount": zod.number(),
   "cantidadTotal": zod.string(),
+  "pisoEntrada": zod.string().optional(),
   "costoTotal": zod.string().nullish()
 })),
   "rollos": zod.array(zod.object({

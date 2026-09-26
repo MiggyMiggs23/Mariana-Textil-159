@@ -1,0 +1,32 @@
+[
+  {
+    "path": "artifacts/api-server/src/lib/entrada-floor-evidence.ts",
+    "beforeSha256": null,
+    "afterSha256": "eb21b1cdb1cbd04d18659565244d195d6c27be1fbb881cc6393dd3fb64c85191"
+  },
+  {
+    "path": "artifacts/api-server/src/lib/inventario.ts",
+    "beforeSha256": "3e1c06120189811d4140766a6f987f4b7ed5abd15d268ff04682ec5313b1e79f",
+    "afterSha256": "4524087488ce0c4a9604df43506b38ec3d3bb0ca5220258b5db721a7c1d26455"
+  },
+  {
+    "path": "artifacts/mariana-textil/src/pages/entrada-documento.tsx",
+    "beforeSha256": "83baf69db514d3c09fe72797eb4932028887a45e71c697453dd147633b22a38a",
+    "afterSha256": "3485ffa1607b81eba90ef396a5ad533778e60b0b7572023d707379ecce9fa513"
+  },
+  {
+    "path": "lib/api-client-react/src/generated/api.schemas.ts",
+    "beforeSha256": "566c6ccc4122cb20a5d9b5fbab356d5965f18546949a04950d7bdbd0608530e8",
+    "afterSha256": "aaedabbb04947487a82f214909bb2ebe97383b9a58309dd218b61429f3899c44"
+  },
+  {
+    "path": "lib/api-zod/src/generated/api.ts",
+    "beforeSha256": "900f791798764765b41ada882f806b85259d243ac5c5a52dca276300116d7a88",
+    "afterSha256": "440c98bfcd260ae105b8a0caf283e5116179e95a195d71cf2eb35442307f6dd5"
+  },
+  {
+    "path": "lib/api-zod/src/generated/types/entradaLinea.ts",
+    "beforeSha256": "78352c4f872bfdb2599ee7e9a6ba8010ea6ddc889eecb978a6679cce0712ae99",
+    "afterSha256": "a4252f4851e871d93fe7539049cf6dce67c1aeee6347048ba0a936d40287f2ab"
+  }
+]

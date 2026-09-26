@@ -1,0 +1,37 @@
+{
+  "status": "implemented-awaiting-MAIN-combined-build-and-own-copy-native-browser-print",
+  "uiBase": "reports/postrelease-review-20260926/tarea-4/final-frozen-root",
+  "apiBase": "artifacts/api-server/dist-owner-cash-v10-20260926/index.mjs.map",
+  "apiSha256": "dafb028d684e3de6f04232908c5fa5054c9bb1757d5dc4bb7f40eb2a29585df1",
+  "apply": "Use overlay/ paths relative to combined frozen root. API inventario.ts is extracted from released cashV10 sourcemap, NOT workspace/HEAD. New helper must accompany it. UI source was identical to released frozen source before two-cell replacement. Frozen generated contract overlays preserve all other released types. Workspace generated files receive only scoped field additions; do not use their full HEAD content for released build.",
+  "contract": {
+    "schema": "EntradaLinea",
+    "newOptionalProperty": "pisoEntrada",
+    "type": "string",
+    "meaning": "Distinct original receipt floor names, in receipt roll order, separated by comma-space. Explicit receipt null: Sin piso. Missing, ambiguous, unsupported or invalid evidence: Sin evidencia. Mixed floor or partially unknown product rows retain one product row and show every distinct label.",
+    "required": false,
+    "generator": "Isolated Orval 8.23.0 run using contract.yaml and orval.config.mjs; generated/ records exact optional TS/Zod field contract. Only this field was transplanted into frozen generated EntradaLinea TS types and the three EntradaDetail Zod responses. No full HEAD codegen.",
+    "openapi": "Apply the optional EntradaLinea.properties.pisoEntrada from contract.yaml to combined spec; workspace lib/api-spec/openapi.yaml contains this exact minimal change."
+  },
+  "trace": [
+    "entradas.tsx capPisos -> lineas[].pisosPorCantidad -> POST /inventario/entradas -> crearEntrada -> rollos.piso_id. API validates active floors belong to selected site.",
+    "Released buildEntradaResult uses current rollos.piso_id joined to pisos.nombre; that field is unsuitable for original receipt printing.",
+    "Released creation audit CREAR/entradas stores header/count/cost only. Released RECEPCION movements store no floor. Entry schema has no original-floor snapshot.",
+    "Searched all released sourcemap app sources containing floor references. Later roll-floor ACTUALIZAR audits, inventory piso_snapshot, reversal physical states and floor catalog audits are later-state evidence, not receipt evidence. They do not establish original floor and are not used.",
+    "New creation appends versioned pisosEntrada array to the EXISTING CREAR/entradas event in the same receipt transaction; entries contain rolloId, productoId, pisoId and exact configured nombrePiso. No migration, extra event, update/backfill, or mutation to historical records.",
+    "Reader accepts a single creation event with version 1 and exactly one matching roll/product snapshot. Existing history without such evidence is explicitly labeled, not inferred from current roll state."
+  ],
+  "tests": {
+    "command": "node --test reports/print-corrections-20260926/entrada/entrada.test.mjs",
+    "result": "4/4 passed",
+    "scope": "Actual released builder body with deterministic query-result fixtures, actual current and frozen React document components rendered to static markup; two configured receipt floor labels despite relocated current floor; no history/unknown-version/ambiguous audit; mixed floors; explicit no-floor; duplicate snapshot rejected; exact DOM comparison proves only final header and cells change. Full API source transpiles with no syntax diagnostics.",
+    "notClaimed": "No real DB receipt, deployed API, browser geometry or native PDF run yet. MAIN owns combined frozen build/activation, then own-copy browser evidence."
+  },
+  "sideEffects": {
+    "appDatabaseWrites": false,
+    "sqlMigrations": false,
+    "runtimeChanges": false,
+    "workflowChanges": false,
+    "commit": false
+  }
+}

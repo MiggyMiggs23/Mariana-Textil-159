@@ -1,0 +1,1293 @@
+{
+  "entryId": 3,
+  "folio": "MA-000002",
+  "request": {
+    "ubicacionId": 1,
+    "proveedorId": null,
+    "uuidCliente": "a236e131-008f-4ec7-8baa-af5b041f4e31",
+    "observaciones": "Verificación autorizada de impresión de nombres reales largos del catálogo. Solo copia aislada.",
+    "lineas": [
+      {
+        "productoId": 1720,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          4
+        ]
+      },
+      {
+        "productoId": 1948,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          3
+        ]
+      },
+      {
+        "productoId": 114,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          4
+        ]
+      },
+      {
+        "productoId": 1951,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          3
+        ]
+      },
+      {
+        "productoId": 1262,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          4
+        ]
+      },
+      {
+        "productoId": 1337,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          3
+        ]
+      },
+      {
+        "productoId": 1934,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          4
+        ]
+      },
+      {
+        "productoId": 1942,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          3
+        ]
+      },
+      {
+        "productoId": 1953,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          4
+        ]
+      },
+      {
+        "productoId": 1327,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          3
+        ]
+      },
+      {
+        "productoId": 1922,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          4
+        ]
+      },
+      {
+        "productoId": 1938,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          3
+        ]
+      },
+      {
+        "productoId": 2014,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          4
+        ]
+      },
+      {
+        "productoId": 1917,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          3
+        ]
+      },
+      {
+        "productoId": 1930,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          4
+        ]
+      },
+      {
+        "productoId": 116,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          3
+        ]
+      },
+      {
+        "productoId": 117,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          4
+        ]
+      },
+      {
+        "productoId": 1235,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          3
+        ]
+      },
+      {
+        "productoId": 1338,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          4
+        ]
+      },
+      {
+        "productoId": 1391,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          3
+        ]
+      },
+      {
+        "productoId": 1697,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          4
+        ]
+      },
+      {
+        "productoId": 1947,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          3
+        ]
+      },
+      {
+        "productoId": 1954,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          4
+        ]
+      },
+      {
+        "productoId": 1279,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          3
+        ]
+      },
+      {
+        "productoId": 1830,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          4
+        ]
+      },
+      {
+        "productoId": 1340,
+        "cantidades": [
+          "10"
+        ],
+        "costoUnitario": "1.00",
+        "pisosPorCantidad": [
+          3
+        ]
+      }
+    ]
+  },
+  "created": {
+    "id": 3,
+    "folio": 2,
+    "inicialesSitio": "MA",
+    "folioFormateado": "MA-000002",
+    "ubicacionId": 1,
+    "nombreUbicacion": "Mariana",
+    "proveedorId": null,
+    "nombreProveedor": null,
+    "usuarioId": 234,
+    "nombreUsuario": "Isolated print correction runtime admin",
+    "fecha": "2026-09-26T19:35:16.995Z",
+    "observaciones": "Verificación autorizada de impresión de nombres reales largos del catálogo. Solo copia aislada.",
+    "totalRollos": 26,
+    "totalCosto": "260.00",
+    "uuidCliente": "a236e131-008f-4ec7-8baa-af5b041f4e31",
+    "createdAt": "2026-09-26T19:35:15.870Z",
+    "lineas": [
+      {
+        "productoId": 1720,
+        "skuProducto": "MEZDIA10-IND2",
+        "telaProducto": "Mezclilla Diamantina 10 Oz",
+        "colorProducto": "Indigo Rayada",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Alta",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1948,
+        "skuProducto": "CAMFLOMAR-AMA",
+        "telaProducto": "Campesina Flor Margarita",
+        "colorProducto": "Amarillo Mango",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Baja",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 114,
+        "skuProducto": "MEZDIA10-IND",
+        "telaProducto": "Mezclilla Diamantina 10 Oz",
+        "colorProducto": "Indigo Lisa",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Alta",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1951,
+        "skuProducto": "CAMFLOMAR-VER",
+        "telaProducto": "Campesina Flor Margarita",
+        "colorProducto": "Verde Bandera",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Baja",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1262,
+        "skuProducto": "GABGAP170-BLA2",
+        "telaProducto": "Gabardina Gap 1.70",
+        "colorProducto": "Blanco Sandorizado",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Alta",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1337,
+        "skuProducto": "GABMET170-AMA",
+        "telaProducto": "Gabardina Metepec 1.70",
+        "colorProducto": "Amarillo Neon",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Baja",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1934,
+        "skuProducto": "CAMFLOMED-VER3",
+        "telaProducto": "Campesina Flor Mediana",
+        "colorProducto": "Verde Bandera",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Alta",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1942,
+        "skuProducto": "CAMFLOGRA-AMA",
+        "telaProducto": "Campesina Flor Grande",
+        "colorProducto": "Amarillo Mango",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Baja",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1953,
+        "skuProducto": "CAMFLOMAR-VER2",
+        "telaProducto": "Campesina Flor Margarita",
+        "colorProducto": "Verde Limon",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Alta",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1327,
+        "skuProducto": "GABMET170-NAR2",
+        "telaProducto": "Gabardina Metepec 1.70",
+        "colorProducto": "Naranja Neon",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Baja",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1922,
+        "skuProducto": "CAMFLOCHI-AMA",
+        "telaProducto": "Campesina Flor Chica",
+        "colorProducto": "Amarillo Mango",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Alta",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1938,
+        "skuProducto": "CAMFLOGRA-VER",
+        "telaProducto": "Campesina Flor Grande",
+        "colorProducto": "Verde Bandera",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Baja",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 2014,
+        "skuProducto": "FRACUA180-BLA",
+        "telaProducto": "Franela Cuadros 1.80",
+        "colorProducto": "Blanco c/Negro",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Alta",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1917,
+        "skuProducto": "CAMFLOCHI-VER2",
+        "telaProducto": "Campesina Flor Chica",
+        "colorProducto": "Verde Bandera",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Baja",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1930,
+        "skuProducto": "CAMFLOMED-VER2",
+        "telaProducto": "Campesina Flor Mediana",
+        "colorProducto": "Verde Limon",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Alta",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 116,
+        "skuProducto": "MEZBLABLA-NEG",
+        "telaProducto": "Mezclilla Black Black",
+        "colorProducto": "Negra 14 Oz",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Baja",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 117,
+        "skuProducto": "TAFESTMUE-DIS",
+        "telaProducto": "Tafetan Estampado Muertos",
+        "colorProducto": "Diseños",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Alta",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1235,
+        "skuProducto": "TAFESTNAV-DIS",
+        "telaProducto": "Tafetan Estampado Navidad",
+        "colorProducto": "Diseños",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Baja",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1338,
+        "skuProducto": "GABMET170-VER",
+        "telaProducto": "Gabardina Metepec 1.70",
+        "colorProducto": "Verde Neon",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Alta",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1391,
+        "skuProducto": "FORCAR70-AMA",
+        "telaProducto": "Forro Cartera 70",
+        "colorProducto": "Amarillo Canario",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Baja",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1697,
+        "skuProducto": "FRACUA180-ROJ",
+        "telaProducto": "Franela Cuadros 1.80",
+        "colorProducto": "Rojo c/Negro",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Alta",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1947,
+        "skuProducto": "CAMFLOGRA-VER2",
+        "telaProducto": "Campesina Flor Grande",
+        "colorProducto": "Verde Limon",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Baja",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1954,
+        "skuProducto": "CAMFLOMAR-TUR",
+        "telaProducto": "Campesina Flor Margarita",
+        "colorProducto": "Turquesa",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Alta",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1279,
+        "skuProducto": "GABCAM-AMA",
+        "telaProducto": "Gabardina Camisera",
+        "colorProducto": "Amarillo Neon",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Baja",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1830,
+        "skuProducto": "PLAMANMAS-TUR",
+        "telaProducto": "Plastico Mantel Mascota",
+        "colorProducto": "Turqueza",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Alta",
+        "costoTotal": "10.00"
+      },
+      {
+        "productoId": 1340,
+        "skuProducto": "GABMET150-MAR",
+        "telaProducto": "Gabardina Metepec 1.50",
+        "colorProducto": "Marino",
+        "unidadProducto": "METRO",
+        "costoUnitario": "1.00",
+        "rollosCount": 1,
+        "cantidadTotal": "10.000",
+        "pisoEntrada": "Planta Baja",
+        "costoTotal": "10.00"
+      }
+    ],
+    "rollos": [
+      {
+        "id": 123,
+        "serie": "10000123",
+        "productoId": 1720,
+        "cantidadInicial": "10.000",
+        "pisoId": 4,
+        "nombrePiso": "Planta Alta",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 124,
+        "serie": "10000124",
+        "productoId": 1948,
+        "cantidadInicial": "10.000",
+        "pisoId": 3,
+        "nombrePiso": "Planta Baja",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 125,
+        "serie": "10000125",
+        "productoId": 114,
+        "cantidadInicial": "10.000",
+        "pisoId": 4,
+        "nombrePiso": "Planta Alta",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 126,
+        "serie": "10000126",
+        "productoId": 1951,
+        "cantidadInicial": "10.000",
+        "pisoId": 3,
+        "nombrePiso": "Planta Baja",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 127,
+        "serie": "10000127",
+        "productoId": 1262,
+        "cantidadInicial": "10.000",
+        "pisoId": 4,
+        "nombrePiso": "Planta Alta",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 128,
+        "serie": "10000128",
+        "productoId": 1337,
+        "cantidadInicial": "10.000",
+        "pisoId": 3,
+        "nombrePiso": "Planta Baja",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 129,
+        "serie": "10000129",
+        "productoId": 1934,
+        "cantidadInicial": "10.000",
+        "pisoId": 4,
+        "nombrePiso": "Planta Alta",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 130,
+        "serie": "10000130",
+        "productoId": 1942,
+        "cantidadInicial": "10.000",
+        "pisoId": 3,
+        "nombrePiso": "Planta Baja",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 131,
+        "serie": "10000131",
+        "productoId": 1953,
+        "cantidadInicial": "10.000",
+        "pisoId": 4,
+        "nombrePiso": "Planta Alta",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 132,
+        "serie": "10000132",
+        "productoId": 1327,
+        "cantidadInicial": "10.000",
+        "pisoId": 3,
+        "nombrePiso": "Planta Baja",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 133,
+        "serie": "10000133",
+        "productoId": 1922,
+        "cantidadInicial": "10.000",
+        "pisoId": 4,
+        "nombrePiso": "Planta Alta",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 134,
+        "serie": "10000134",
+        "productoId": 1938,
+        "cantidadInicial": "10.000",
+        "pisoId": 3,
+        "nombrePiso": "Planta Baja",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 135,
+        "serie": "10000135",
+        "productoId": 2014,
+        "cantidadInicial": "10.000",
+        "pisoId": 4,
+        "nombrePiso": "Planta Alta",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 136,
+        "serie": "10000136",
+        "productoId": 1917,
+        "cantidadInicial": "10.000",
+        "pisoId": 3,
+        "nombrePiso": "Planta Baja",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 137,
+        "serie": "10000137",
+        "productoId": 1930,
+        "cantidadInicial": "10.000",
+        "pisoId": 4,
+        "nombrePiso": "Planta Alta",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 138,
+        "serie": "10000138",
+        "productoId": 116,
+        "cantidadInicial": "10.000",
+        "pisoId": 3,
+        "nombrePiso": "Planta Baja",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 139,
+        "serie": "10000139",
+        "productoId": 117,
+        "cantidadInicial": "10.000",
+        "pisoId": 4,
+        "nombrePiso": "Planta Alta",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 140,
+        "serie": "10000140",
+        "productoId": 1235,
+        "cantidadInicial": "10.000",
+        "pisoId": 3,
+        "nombrePiso": "Planta Baja",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 141,
+        "serie": "10000141",
+        "productoId": 1338,
+        "cantidadInicial": "10.000",
+        "pisoId": 4,
+        "nombrePiso": "Planta Alta",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 142,
+        "serie": "10000142",
+        "productoId": 1391,
+        "cantidadInicial": "10.000",
+        "pisoId": 3,
+        "nombrePiso": "Planta Baja",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 143,
+        "serie": "10000143",
+        "productoId": 1697,
+        "cantidadInicial": "10.000",
+        "pisoId": 4,
+        "nombrePiso": "Planta Alta",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 144,
+        "serie": "10000144",
+        "productoId": 1947,
+        "cantidadInicial": "10.000",
+        "pisoId": 3,
+        "nombrePiso": "Planta Baja",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 145,
+        "serie": "10000145",
+        "productoId": 1954,
+        "cantidadInicial": "10.000",
+        "pisoId": 4,
+        "nombrePiso": "Planta Alta",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 146,
+        "serie": "10000146",
+        "productoId": 1279,
+        "cantidadInicial": "10.000",
+        "pisoId": 3,
+        "nombrePiso": "Planta Baja",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 147,
+        "serie": "10000147",
+        "productoId": 1830,
+        "cantidadInicial": "10.000",
+        "pisoId": 4,
+        "nombrePiso": "Planta Alta",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      },
+      {
+        "id": 148,
+        "serie": "10000148",
+        "productoId": 1340,
+        "cantidadInicial": "10.000",
+        "pisoId": 3,
+        "nombrePiso": "Planta Baja",
+        "costoUnitario": "1.00",
+        "costoTotal": "10.00"
+      }
+    ]
+  },
+  "mapping": [
+    {
+      "id": 1720,
+      "serie": "10000123",
+      "productoId": 1720,
+      "cantidadInicial": "10.000",
+      "pisoId": 4,
+      "nombrePiso": "Planta Alta",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "MEZDIA10-IND2",
+      "tela": "Mezclilla Diamantina 10 Oz",
+      "color": "Indigo Rayada",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 123
+    },
+    {
+      "id": 1948,
+      "serie": "10000124",
+      "productoId": 1948,
+      "cantidadInicial": "10.000",
+      "pisoId": 3,
+      "nombrePiso": "Planta Baja",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "CAMFLOMAR-AMA",
+      "tela": "Campesina Flor Margarita",
+      "color": "Amarillo Mango",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 124
+    },
+    {
+      "id": 114,
+      "serie": "10000125",
+      "productoId": 114,
+      "cantidadInicial": "10.000",
+      "pisoId": 4,
+      "nombrePiso": "Planta Alta",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "MEZDIA10-IND",
+      "tela": "Mezclilla Diamantina 10 Oz",
+      "color": "Indigo Lisa",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 125
+    },
+    {
+      "id": 1951,
+      "serie": "10000126",
+      "productoId": 1951,
+      "cantidadInicial": "10.000",
+      "pisoId": 3,
+      "nombrePiso": "Planta Baja",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "CAMFLOMAR-VER",
+      "tela": "Campesina Flor Margarita",
+      "color": "Verde Bandera",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 126
+    },
+    {
+      "id": 1262,
+      "serie": "10000127",
+      "productoId": 1262,
+      "cantidadInicial": "10.000",
+      "pisoId": 4,
+      "nombrePiso": "Planta Alta",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "GABGAP170-BLA2",
+      "tela": "Gabardina Gap 1.70",
+      "color": "Blanco Sandorizado",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 127
+    },
+    {
+      "id": 1337,
+      "serie": "10000128",
+      "productoId": 1337,
+      "cantidadInicial": "10.000",
+      "pisoId": 3,
+      "nombrePiso": "Planta Baja",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "GABMET170-AMA",
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Amarillo Neon",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 128
+    },
+    {
+      "id": 1934,
+      "serie": "10000129",
+      "productoId": 1934,
+      "cantidadInicial": "10.000",
+      "pisoId": 4,
+      "nombrePiso": "Planta Alta",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "CAMFLOMED-VER3",
+      "tela": "Campesina Flor Mediana",
+      "color": "Verde Bandera",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 129
+    },
+    {
+      "id": 1942,
+      "serie": "10000130",
+      "productoId": 1942,
+      "cantidadInicial": "10.000",
+      "pisoId": 3,
+      "nombrePiso": "Planta Baja",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "CAMFLOGRA-AMA",
+      "tela": "Campesina Flor Grande",
+      "color": "Amarillo Mango",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 130
+    },
+    {
+      "id": 1953,
+      "serie": "10000131",
+      "productoId": 1953,
+      "cantidadInicial": "10.000",
+      "pisoId": 4,
+      "nombrePiso": "Planta Alta",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "CAMFLOMAR-VER2",
+      "tela": "Campesina Flor Margarita",
+      "color": "Verde Limon",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 131
+    },
+    {
+      "id": 1327,
+      "serie": "10000132",
+      "productoId": 1327,
+      "cantidadInicial": "10.000",
+      "pisoId": 3,
+      "nombrePiso": "Planta Baja",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "GABMET170-NAR2",
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Naranja Neon",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 132
+    },
+    {
+      "id": 1922,
+      "serie": "10000133",
+      "productoId": 1922,
+      "cantidadInicial": "10.000",
+      "pisoId": 4,
+      "nombrePiso": "Planta Alta",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "CAMFLOCHI-AMA",
+      "tela": "Campesina Flor Chica",
+      "color": "Amarillo Mango",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 133
+    },
+    {
+      "id": 1938,
+      "serie": "10000134",
+      "productoId": 1938,
+      "cantidadInicial": "10.000",
+      "pisoId": 3,
+      "nombrePiso": "Planta Baja",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "CAMFLOGRA-VER",
+      "tela": "Campesina Flor Grande",
+      "color": "Verde Bandera",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 134
+    },
+    {
+      "id": 2014,
+      "serie": "10000135",
+      "productoId": 2014,
+      "cantidadInicial": "10.000",
+      "pisoId": 4,
+      "nombrePiso": "Planta Alta",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "FRACUA180-BLA",
+      "tela": "Franela Cuadros 1.80",
+      "color": "Blanco c/Negro",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 135
+    },
+    {
+      "id": 1917,
+      "serie": "10000136",
+      "productoId": 1917,
+      "cantidadInicial": "10.000",
+      "pisoId": 3,
+      "nombrePiso": "Planta Baja",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "CAMFLOCHI-VER2",
+      "tela": "Campesina Flor Chica",
+      "color": "Verde Bandera",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 136
+    },
+    {
+      "id": 1930,
+      "serie": "10000137",
+      "productoId": 1930,
+      "cantidadInicial": "10.000",
+      "pisoId": 4,
+      "nombrePiso": "Planta Alta",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "CAMFLOMED-VER2",
+      "tela": "Campesina Flor Mediana",
+      "color": "Verde Limon",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 137
+    },
+    {
+      "id": 116,
+      "serie": "10000138",
+      "productoId": 116,
+      "cantidadInicial": "10.000",
+      "pisoId": 3,
+      "nombrePiso": "Planta Baja",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "MEZBLABLA-NEG",
+      "tela": "Mezclilla Black Black",
+      "color": "Negra 14 Oz",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 138
+    },
+    {
+      "id": 117,
+      "serie": "10000139",
+      "productoId": 117,
+      "cantidadInicial": "10.000",
+      "pisoId": 4,
+      "nombrePiso": "Planta Alta",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "TAFESTMUE-DIS",
+      "tela": "Tafetan Estampado Muertos",
+      "color": "Diseños",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 139
+    },
+    {
+      "id": 1235,
+      "serie": "10000140",
+      "productoId": 1235,
+      "cantidadInicial": "10.000",
+      "pisoId": 3,
+      "nombrePiso": "Planta Baja",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "TAFESTNAV-DIS",
+      "tela": "Tafetan Estampado Navidad",
+      "color": "Diseños",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 140
+    },
+    {
+      "id": 1338,
+      "serie": "10000141",
+      "productoId": 1338,
+      "cantidadInicial": "10.000",
+      "pisoId": 4,
+      "nombrePiso": "Planta Alta",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "GABMET170-VER",
+      "tela": "Gabardina Metepec 1.70",
+      "color": "Verde Neon",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 141
+    },
+    {
+      "id": 1391,
+      "serie": "10000142",
+      "productoId": 1391,
+      "cantidadInicial": "10.000",
+      "pisoId": 3,
+      "nombrePiso": "Planta Baja",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "FORCAR70-AMA",
+      "tela": "Forro Cartera 70",
+      "color": "Amarillo Canario",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 142
+    },
+    {
+      "id": 1697,
+      "serie": "10000143",
+      "productoId": 1697,
+      "cantidadInicial": "10.000",
+      "pisoId": 4,
+      "nombrePiso": "Planta Alta",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "FRACUA180-ROJ",
+      "tela": "Franela Cuadros 1.80",
+      "color": "Rojo c/Negro",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 143
+    },
+    {
+      "id": 1947,
+      "serie": "10000144",
+      "productoId": 1947,
+      "cantidadInicial": "10.000",
+      "pisoId": 3,
+      "nombrePiso": "Planta Baja",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "CAMFLOGRA-VER2",
+      "tela": "Campesina Flor Grande",
+      "color": "Verde Limon",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 144
+    },
+    {
+      "id": 1954,
+      "serie": "10000145",
+      "productoId": 1954,
+      "cantidadInicial": "10.000",
+      "pisoId": 4,
+      "nombrePiso": "Planta Alta",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "CAMFLOMAR-TUR",
+      "tela": "Campesina Flor Margarita",
+      "color": "Turquesa",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 145
+    },
+    {
+      "id": 1279,
+      "serie": "10000146",
+      "productoId": 1279,
+      "cantidadInicial": "10.000",
+      "pisoId": 3,
+      "nombrePiso": "Planta Baja",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "GABCAM-AMA",
+      "tela": "Gabardina Camisera",
+      "color": "Amarillo Neon",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 146
+    },
+    {
+      "id": 1830,
+      "serie": "10000147",
+      "productoId": 1830,
+      "cantidadInicial": "10.000",
+      "pisoId": 4,
+      "nombrePiso": "Planta Alta",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "PLAMANMAS-TUR",
+      "tela": "Plastico Mantel Mascota",
+      "color": "Turqueza",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 147
+    },
+    {
+      "id": 1340,
+      "serie": "10000148",
+      "productoId": 1340,
+      "cantidadInicial": "10.000",
+      "pisoId": 3,
+      "nombrePiso": "Planta Baja",
+      "costoUnitario": "1.00",
+      "costoTotal": "10.00",
+      "sku": "GABMET150-MAR",
+      "tela": "Gabardina Metepec 1.50",
+      "color": "Marino",
+      "unidad": "METRO",
+      "activo": true,
+      "rolloId": 148
+    }
+  ],
+  "source": "infra/reportcatalog.json longest first 25 plus 1720/1340 if absent",
+  "supplierId": null,
+  "readonlyVerification": {
+    "identity": {
+      "database": "print_corrections_20260926",
+      "readonly": "on"
+    },
+    "supplierLedgerRows": 0
+  }
+}

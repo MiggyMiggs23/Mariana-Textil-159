@@ -1,0 +1,23 @@
+openapi: 3.1.0
+info:
+  title: EntradaPrint
+  version: 1.0.0
+paths:
+  /entrada:
+    get:
+      operationId: getEntradaPrintContract
+      responses:
+        "200":
+          description: Receipt product row
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EntradaLinea"
+components:
+  schemas:
+    EntradaLinea:
+      type: object
+      properties:
+        pisoEntrada:
+          type: string
+          description: Receipt floor labels from immutable creation evidence; never current roll location.
