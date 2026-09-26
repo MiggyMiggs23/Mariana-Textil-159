@@ -88,6 +88,8 @@ export default function Inventario() {
   });
   const hasBolsas = existenciasAgrupadas?.some((grupo) => Number(grupo.totalBolsas) > 0) ?? false;
   const showBolsasColumn = consolidado || hasBolsas;
+  const hasPiezas = existenciasAgrupadas?.some((grupo) => Number(grupo.totalPiezas) > 0) ?? false;
+  const showPiezasColumn = consolidado || hasPiezas;
   const globalTotals = consolidado && existenciasAgrupadas?.length
     ? calculateGroupedInventoryTotals(existenciasAgrupadas)
     : null;
@@ -262,18 +264,19 @@ export default function Inventario() {
                       <TableHead className="text-right">Total {formatUnit("METRO")}</TableHead>
                       <TableHead className="text-right">Total {formatUnit("KILO")}</TableHead>
                       {showBolsasColumn && <TableHead className="text-right">Total {formatUnit("BOLSA")}</TableHead>}
+                      {showPiezasColumn && <TableHead className="text-right">Total {formatUnit("PIEZA")}</TableHead>}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {loadingExistencias ? (
                       <TableRow>
-                        <TableCell colSpan={(isTodas ? 6 : 5) + (showBolsasColumn ? 1 : 0)} className="h-32 text-center text-muted-foreground">
+                        <TableCell colSpan={(isTodas ? 6 : 5) + (showBolsasColumn ? 1 : 0) + (showPiezasColumn ? 1 : 0)} className="h-32 text-center text-muted-foreground">
                           Cargando inventario...
                         </TableCell>
                       </TableRow>
                     ) : existenciasAgrupadas?.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={(isTodas ? 6 : 5) + (showBolsasColumn ? 1 : 0)} className="h-32 text-center text-muted-foreground">
+                        <TableCell colSpan={(isTodas ? 6 : 5) + (showBolsasColumn ? 1 : 0) + (showPiezasColumn ? 1 : 0)} className="h-32 text-center text-muted-foreground">
                           <Boxes className="w-8 h-8 mx-auto mb-2 opacity-20" />
                           No se encontraron existencias
                         </TableCell>
@@ -294,6 +297,7 @@ export default function Inventario() {
                             <TableCell className="text-right tabular-nums py-3">{parseFloat(grupo.totalMetros) > 0 ? formatNumber(grupo.totalMetros, { kind: "quantity" }) : "-"}</TableCell>
                             <TableCell className="text-right tabular-nums py-3">{parseFloat(grupo.totalKilos) > 0 ? formatNumber(grupo.totalKilos, { kind: "quantity" }) : "-"}</TableCell>
                              {showBolsasColumn && <TableCell className="text-right tabular-nums py-3">{Number(grupo.totalBolsas) > 0 ? formatNumber(grupo.totalBolsas, { kind: "quantity" }) : "-"}</TableCell>}
+                             {showPiezasColumn && <TableCell className="text-right tabular-nums py-3">{Number(grupo.totalPiezas) > 0 ? formatNumber(grupo.totalPiezas, { kind: "quantity" }) : "-"}</TableCell>}
                           </TableRow>
                           {expandedGroups.has(grupo.productoKey) && grupo.colores.map((hijo, idx) => (
                             <TableRow key={hijo.productoId} className={idx === grupo.colores.length - 1 ? "border-b-2" : "border-b-0"}>
@@ -307,7 +311,7 @@ export default function Inventario() {
                               </TableCell>
                               {isTodas && <TableCell className="py-2"></TableCell>}
                                <TableCell className="text-right py-2">{formatNumber(hijo.rollosCount, { kind: "count" })}</TableCell>
-                              <TableCell className="text-right tabular-nums py-2" colSpan={showBolsasColumn ? 3 : 2}>
+                              <TableCell className="text-right tabular-nums py-2" colSpan={2 + Number(showBolsasColumn) + Number(showPiezasColumn)}>
                                 <div className="flex items-center justify-end gap-1">
                                    <span className="font-medium">{formatNumber(hijo.cantidadTotal, { kind: "quantity" })}</span>
                                   <span className="text-xs text-muted-foreground">{formatUnit(hijo.unidad)}</span>
@@ -342,6 +346,11 @@ export default function Inventario() {
                         {showBolsasColumn && (
                           <TableCell className="text-right font-bold tabular-nums">
                             {formatNumber(globalTotals.totalBolsas, { kind: "quantity" })}
+                          </TableCell>
+                        )}
+                        {showPiezasColumn && (
+                          <TableCell className="text-right font-bold tabular-nums">
+                            {formatNumber(globalTotals.totalPiezas, { kind: "quantity" })}
                           </TableCell>
                         )}
                       </TableRow>

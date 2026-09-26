@@ -1,0 +1,53 @@
+{
+  "status": "BLOCKED_ROOT_CAUSE_NOT_PROVEN",
+  "scope": "Offline inspection of exact frozen API source and frontend mensaje; no database access or runtime execution",
+  "sanitizedEvidenceProvidedByMain": {
+    "queryReadTimeouts": 14,
+    "connectionAcquisitionTimeouts": 18,
+    "failedSessionExpiryUpdates": 16,
+    "failedLastAccessUpdates": 6,
+    "e5GraphBusyAbortMessages": 6,
+    "otherFailures": ["rollback", "rollos quantity/cost/state read by product"],
+    "otherSqlErrorsObserved": false
+  },
+  "findings": [
+    {
+      "classification": "confirmed-source-behavior",
+      "detail": "E11SessionProvider polls identity every 15 seconds with retry disabled and replaces business children on identity error. REVISION_OBSOLETA is mapped by E11 for 40001, 40P01 and 23505, not an inventory scan response code. This establishes an independent route to the observed full-page failure, not proof that any one failed identity request caused the reported duplicate-scan screenshot."
+    },
+    {
+      "classification": "confirmed-contention-surface-not-proven-deadlock",
+      "detail": "requireSession performs a session expiry UPDATE before awaiting e11AuthIdentity. E11 identity transactions hold FOR SHARE locks on user and session rows; e11Execute also uses SERIALIZABLE for its work transaction. Concurrent sliding-expiry updates and login last-access updates can wait for these locks. Middleware expiry UPDATE completes outside the identity transaction: its source alone does not establish a session-update/identity lock cycle."
+    },
+    {
+      "classification": "confirmed-source-behavior",
+      "detail": "E11 work and delivery reauthorization use two sequential awaited transactions, not nested transactions. e11Runtime passes the transaction handle into work. These paths do not themselves demonstrate pool self-starvation. The exact frozen pool defaults are max 30, acquisition timeout 5000 ms, server statement timeout 30000 ms and client query timeout 35000 ms; deployed environment overrides were not inspected."
+    },
+    {
+      "classification": "runtime-resource-failure-supported-root-cause-unresolved",
+      "detail": "Supplied connection-acquisition and query timeouts support resource pressure and/or long waits. They do not establish a PostgreSQL deadlock, a serialization rollback, missing clone catalogs, permission-policy defects, or a particular endpoint implementation error. No 40001/40P01 evidence was supplied. Failure to update user/session rows can occur before the authorization rejection, explaining why an otherwise forbidden route may return an infrastructure error without granting access."
+    }
+  ],
+  "decision": {
+    "productionSourceChanges": [],
+    "sourceOverlays": [],
+    "candidateBuild": "not performed",
+    "identitySerializationRetry": "not implemented: no demonstrated serialization failure, and retries on connection/query timeout could amplify exhaustion",
+    "permissionsAndGates": "unchanged; fail-closed behavior retained",
+    "inventoryPieza": "outside this task; existing separate three-file overlay unchanged",
+    "releaseClaim": "none"
+  },
+  "nextEvidenceRequiredAfterExclusiveWindow": [
+    "MAIN correlates request IDs/timestamps of identity failures with duplicate-scan browser evidence and safe SQLSTATE classifications.",
+    "On isolated database only, owner captures pool total/idle/waiting counts and sanitized pg_stat_activity wait types plus pg_blocking_pids during the reproduction; no SQL parameters or credentials.",
+    "Determine whether connection holders are blocked by database locks, slow queries, external contention, or unreleased clients. Verify runtime timeout/pool settings without disclosing connection strings.",
+    "If an actual read-only identity transaction returns 40001 or 40P01, consider bounded whole-transaction retry only after successful rollback, with fresh authorization on every attempt and no retry of writes, delivery failures, dependency timeouts or ambiguous outcomes.",
+    "Do not patch the global provider to retain sensitive children on identity failure or bypass identity checks; do not return fabricated successful prices/history/payment results."
+  ],
+  "safeCompositionInstructions": [
+    "There is no runtime source overlay to compose from this investigation; do not build full HEAD or label the runtime reports resolved.",
+    "Existing night-system-review builder may independently compose the already owned PIEZA overlay onto frontend-root-mensaje using its hash checks.",
+    "Any later API correction must start from the final candidate frozen source map, verify parent API SHA256 e62a79333d0ee1433c114656af980e33ff420b728688a121ee586efdfab1b30d and record an exact allowlisted delta.",
+    "A later identity frontend correction, if proven necessary without weakening gates, must start from frontend-root-mensaje and be kept separate from the PIEZA files."
+  ]
+}

@@ -9,21 +9,24 @@ const filteredGroups = [
     totalMetros: "10.004",
     totalKilos: "2.125",
     totalBolsas: "1.000",
+    totalPiezas: "4.000",
   },
   {
     rollosCount: 4,
     totalMetros: "0.004",
     totalKilos: "3.375",
     totalBolsas: "2.500",
+    totalPiezas: "7.000",
   },
 ] as const;
 
-test("mantiene metros, kilos, bolsas y rollos separados en una suma mixta", () => {
+test("mantiene metros, kilos, bolsas, piezas y rollos separados en una suma mixta", () => {
   assert.deepEqual(calculateGroupedInventoryTotals(filteredGroups), {
     rollosCount: 7,
     totalMetros: "10.008",
     totalKilos: "5.500",
     totalBolsas: "3.500",
+    totalPiezas: "11.000",
   });
 });
 
@@ -45,6 +48,7 @@ test("un subconjunto filtrado no incluye filas ausentes", () => {
       totalMetros: "900.000",
       totalKilos: "800.000",
       totalBolsas: "700.000",
+      totalPiezas: "600.000",
     },
   ];
 

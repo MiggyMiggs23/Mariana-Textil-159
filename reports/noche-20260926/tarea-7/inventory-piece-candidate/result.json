@@ -1,0 +1,35 @@
+{
+  "status": "PARTIAL_OR_BLOCKED",
+  "checks": [
+    {
+      "id": "served-candidate-fingerprint",
+      "status": "PASS",
+      "evidence": {
+        "servedIndexSha256": "09e9fb57f7fc495b98107b86d796e5cbce980aa5755a62a6bb47a87bd98ad9c9",
+        "apiSha256": "e62a79333d0ee1433c114656af980e33ff420b728688a121ee586efdfab1b30d",
+        "frontendRoot": "/home/runner/workspace/artifacts/mariana-textil/dist-noche-task7-inventory-20260926"
+      }
+    },
+    {
+      "id": "actual-inventory-component-piece-column-and-filtered-totals",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('columnheader', { name: 'Total Pzas.', exact: true }) to be visible\u001b[22m\n"
+    },
+    {
+      "id": "entry5-metro11-in-actual-inventory-roll-detail",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('row').filter({ hasText: '10000033' }).first() to be visible\u001b[22m\n"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "tarea-7/inventory-piece-candidate/actual-inventory-component-piece-column-and-filtered-totals-0.png",
+      "sha256": "6dc261da2e787dd4034073ae5ba12f5c70e5e6189c7b4032d4c9bbb580ba6233"
+    },
+    {
+      "file": "tarea-7/inventory-piece-candidate/entry5-metro11-in-actual-inventory-roll-detail-0.png",
+      "sha256": "a12bdb4a309609e5db37fda023dbc3fc729fc3161bc733d24ddfed4f262a2a31"
+    }
+  ],
+  "startedAt": "2026-09-26T04:12:37.200Z"
+}

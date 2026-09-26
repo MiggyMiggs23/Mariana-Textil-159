@@ -3,6 +3,7 @@ export interface GroupedInventoryValues {
   totalMetros: string;
   totalKilos: string;
   totalBolsas: string;
+  totalPiezas: string;
 }
 
 export interface GroupedInventoryTotals {
@@ -10,6 +11,7 @@ export interface GroupedInventoryTotals {
   totalMetros: string;
   totalKilos: string;
   totalBolsas: string;
+  totalPiezas: string;
 }
 
 interface DecimalParts {
@@ -60,5 +62,6 @@ export function calculateGroupedInventoryTotals(
     totalMetros: addSavedDecimals(groups.map((group) => group.totalMetros)),
     totalKilos: addSavedDecimals(groups.map((group) => group.totalKilos)),
     totalBolsas: addSavedDecimals(groups.map((group) => group.totalBolsas)),
+    totalPiezas: addSavedDecimals(groups.map((group) => group.totalPiezas)),
   };
 }
