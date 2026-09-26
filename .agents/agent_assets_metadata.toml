@@ -2621,3 +2621,17 @@ mtime_ms = 1790387478405
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/cb1da902-546b-4e16-bf9f-99ef888699f1/a324d01c-6f8d-4156-baf0-ff6bddea0b9c"
 storage_version_token = "1790387490513651"
 content_type = "text/html"
+
+[[outputs]]
+id = "tY_tQL1xOrnS_EhXOe3BQ"
+uri = "file://reports/noche-20260926/informe.html"
+type = "html"
+title = "Informe nocturno: resultados, capturas y pendientes"
+description = "Informe único de las siete tareas, con mediciones reales, commits, corrección liberada, bloqueos y eliminación verificada de la copia de prueba."
+logical_id = "36c0371f-e8d4-4f2d-8511-554941009eb3"
+content_hash = "sha256:6e4526c3ad251b8eb922804db1adbe3e429f60a77cde245b7b99343889dd1524"
+size = 530712
+mtime_ms = 1790396797308
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/36c0371f-e8d4-4f2d-8511-554941009eb3/30cb5c22-3f13-46af-83f2-6e82eb1cbd1d"
+storage_version_token = "1790396811502085"
+content_type = "text/html"

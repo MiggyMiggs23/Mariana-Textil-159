@@ -1,0 +1,17 @@
+Trabajo largo para toda la noche, sin supervisión, con el procedimiento simple. Cada tarea en su propio commit. Todo en copia desechable; no escribas en la base de la aplicación. Si una tarea se atora, documéntala y sigue con la siguiente. Lo que sea decisión de negocio, anótalo sin resolverlo.
+
+1. Termina la matriz de permisos. Faltan 381 celdas negadas por comprobar con solicitudes autenticadas y 421 por cerrar junto con su botón real. Acábalas todas. Las 357 sin operación identificada, déjalas listadas para el propietario en lugar de inventarles significado. Cualquier diferencia entre lo que la pantalla esconde y lo que la API permite es defecto: corrígelo y libéralo.
+
+2. Mediciones de rendimiento con carga real: los 2,575 clientes ya cargados más la carga anual sintética. Mide en navegador la lista de clientes, el buscador, el estado de cuenta, el cobro en caja, el corte y el reporte de crédito. Aplica los índices que hagan falta y vuelve a medir. Objetivo: nada arriba de dos segundos, salvo el reporte de crédito, que puede llegar a tres.
+
+3. Recorrido completo en navegador con sesión real de todo lo liberado estos días, que nunca se ha probado junto: cobro en efectivo y por transferencia, nota a crédito, abono ordinario, recibo y reimpresión, pago dirigido y cobro retenido con autorización y con rechazo de ADMIN, devolución de rollo con nota con deuda y con nota liquidada, salida extraordinaria con y sin motivo, insuficiencia y desbloqueo ADMIN, venta de rollo en remate, cierre de caja y cuadre del corte.
+
+4. Recorrido de la auditoría con varios usuarios y pisos: tres usuarios a la vez en pisos distintos, rollo repetido entre dos, rollo que aparece en otro piso, el sexto usuario rechazado, y la pistola de la computadora fija en el piso de acceso del sitio.
+
+5. Recorrido de los dos perfiles de contador: crea un usuario de cada uno en la copia y comprueba qué ve y qué no, que la conciliación funcione por día, semana y mes, que el "no cuadra" avise a ADMIN, y que ninguno vea Fondo, margen, pagos a proveedor ni datos sensibles. Compruébalo también contra la API, no solo en pantalla.
+
+6. Además de lo listado, recorre por tu cuenta el resto del sistema buscando fallas: cualquier pantalla, botón o flujo que truene, muestre un error técnico, deje algo a medias o contradiga una regla de replit.md. Incluye que toda cifra abra su detalle y de ahí el documento por su folio, que el color solo codifique información, y que metros, kilos, piezas y bolsas nunca se sumen entre sí.
+
+7. Con todo lo que encuentres en las tareas 3 a 6: corrige los defectos claros y libéralos.
+
+Informe único en reports/ con resultado por tarea, capturas, commits, lo corregido y lo detenido con su motivo. Destruye las copias al terminar.
