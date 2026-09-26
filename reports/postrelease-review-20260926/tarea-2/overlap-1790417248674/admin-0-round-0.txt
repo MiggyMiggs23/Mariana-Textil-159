@@ -1,0 +1,1100 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Vista Global
+1
+I
+
+Isolated postreview financial admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Reportes y Decisiones
+
+Análisis consolidados para seguimiento operativo y financiero.
+
+Normal
+Comparar
+Ventas
+Qué comprar
+Utilidad y márgenes
+Clientes y crédito
+Control operativo
+Este Mes
+Todo
+Todo
+Productos
+Telas
+Colores
+Unidades
+Usuarios
+Clientes
+Proveedores
+Métodos
+Actualizar
+PDF
+Excel
+
+VENTAS TOTALES
+
+$2,400.00
+0.00%
+vs ant.
+
+TICKETS TOTALES
+
+3
+0.00%
+vs ant.
+
+VENTAS · ROLLOS
+
+$2,400.00
+
+TICKETS CON ROLLOS
+
+3
+
+SUBTOTAL PROMEDIO · ROLLOS
+
+$800.00
+0.00%
+vs ant.
+
+VENTAS · METRAJE
+
+$0.00
+
+TICKETS CON METRAJE
+
+0
+
+SUBTOTAL PROMEDIO · METRAJE
+
+$0.00
+0.00%
+vs ant.
+
+ROLLOS · METRO
+
+30.00
+Ventas diarias
+2026-09-26
+$0k
+$0.6k
+$1.2k
+$1.8k
+$2.4k
+ventas
+
+Suma el subtotal sin IVA por fecha local de México del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos.
+
+Ventas por hora
+03
+$0k
+$0.6k
+$1.2k
+$1.8k
+$2.4k
+ventas
+
+Suma el subtotal sin IVA de tickets vendidos por hora local del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos.
+
+Ventas por día
+Saturday
+$0k
+$0.6k
+$1.2k
+$1.8k
+$2.4k
+ventas
+
+Acumula el subtotal sin IVA de tickets vendidos por día de semana, no por fecha, del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos.
+
+Día
+Día
+	
+Modalidad
+	
+Fuente del costo
+	
+Líneas con último costo conocido
+	
+Líneas con fuente histórica desconocida
+	
+Unidad
+	
+Cantidad
+	
+Tickets
+	
+Subtotal sin IVA
+	
+Costo congelado
+	
+Utilidad
+	
+Margen exacto
+
+
+2026-09-26
+	
+ROLLOS
+	
+Costo exacto del rollo vendido
+	
+0
+	
+0
+	
+Mts.
+	
+30.00
+	
+3
+	
+$2,400.00
+	
+$1,500.00
+	
+$900.00
+	
+37.50%
+
+Totales						30.00		$2,400.00	$1,500.00	$900.00	
+
+Agrupa cantidad por unidad, tickets y subtotal sin IVA del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos; las líneas sin costo cuentan en ventas pero dejan costo, utilidad y margen pendientes.
+
+Día de semana
+Día de semana
+	
+Modalidad
+	
+Fuente del costo
+	
+Líneas con último costo conocido
+	
+Líneas con fuente histórica desconocida
+	
+Unidad
+	
+Cantidad
+	
+Tickets
+	
+Subtotal sin IVA
+	
+Costo congelado
+	
+Utilidad
+	
+Margen exacto
+
+
+Saturday
+	
+ROLLOS
+	
+Costo exacto del rollo vendido
+	
+0
+	
+0
+	
+Mts.
+	
+30.00
+	
+3
+	
+$2,400.00
+	
+$1,500.00
+	
+$900.00
+	
+37.50%
+
+Totales						30.00		$2,400.00	$1,500.00	$900.00	
+
+Agrupa cantidad por unidad, tickets y subtotal sin IVA del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos; las líneas sin costo cuentan en ventas pero dejan costo, utilidad y margen pendientes.
+
+Hora
+Hora
+	
+Modalidad
+	
+Fuente del costo
+	
+Líneas con último costo conocido
+	
+Líneas con fuente histórica desconocida
+	
+Unidad
+	
+Cantidad
+	
+Tickets
+	
+Subtotal sin IVA
+	
+Costo congelado
+	
+Utilidad
+	
+Margen exacto
+
+
+03
+	
+ROLLOS
+	
+Costo exacto del rollo vendido
+	
+0
+	
+0
+	
+Mts.
+	
+30.00
+	
+3
+	
+$2,400.00
+	
+$1,500.00
+	
+$900.00
+	
+37.50%
+
+Totales						30.00		$2,400.00	$1,500.00	$900.00	
+
+Agrupa cantidad por unidad, tickets y subtotal sin IVA del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos; las líneas sin costo cuentan en ventas pero dejan costo, utilidad y margen pendientes.
+
+Sitio
+Sitio
+	
+Modalidad
+	
+Fuente del costo
+	
+Líneas con último costo conocido
+	
+Líneas con fuente histórica desconocida
+	
+Unidad
+	
+Cantidad
+	
+Tickets
+	
+Subtotal sin IVA
+	
+Costo congelado
+	
+Utilidad
+	
+Margen exacto
+
+
+OWNER POSTREVIEW26
+	
+ROLLOS
+	
+Costo exacto del rollo vendido
+	
+0
+	
+0
+	
+Mts.
+	
+30.00
+	
+3
+	
+$2,400.00
+	
+$1,500.00
+	
+$900.00
+	
+37.50%
+
+Totales						30.00		$2,400.00	$1,500.00	$900.00	
+
+Agrupa cantidad por unidad, tickets y subtotal sin IVA del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos; las líneas sin costo cuentan en ventas pero dejan costo, utilidad y margen pendientes.
+
+Producto
+Producto
+	
+Modalidad
+	
+Fuente del costo
+	
+Líneas con último costo conocido
+	
+Líneas con fuente histórica desconocida
+	
+Unidad
+	
+Cantidad
+	
+Tickets
+	
+Subtotal sin IVA
+	
+Costo congelado
+	
+Utilidad
+	
+Margen exacto
+
+
+OWNPOSALG-AZU
+	
+ROLLOS
+	
+Costo exacto del rollo vendido
+	
+0
+	
+0
+	
+Mts.
+	
+30.00
+	
+3
+	
+$2,400.00
+	
+$1,500.00
+	
+$900.00
+	
+37.50%
+
+Totales						30.00		$2,400.00	$1,500.00	$900.00	
+
+Agrupa cantidad por unidad, tickets y subtotal sin IVA del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos; las líneas sin costo cuentan en ventas pero dejan costo, utilidad y margen pendientes.
+
+Tela
+Tela
+	
+Modalidad
+	
+Fuente del costo
+	
+Líneas con último costo conocido
+	
+Líneas con fuente histórica desconocida
+	
+Unidad
+	
+Cantidad
+	
+Tickets
+	
+Subtotal sin IVA
+	
+Costo congelado
+	
+Utilidad
+	
+Margen exacto
+
+
+OWNER POSTREVIEW26 ALGODON
+	
+ROLLOS
+	
+Costo exacto del rollo vendido
+	
+0
+	
+0
+	
+Mts.
+	
+30.00
+	
+3
+	
+$2,400.00
+	
+$1,500.00
+	
+$900.00
+	
+37.50%
+
+Totales						30.00		$2,400.00	$1,500.00	$900.00	
+
+Agrupa cantidad por unidad, tickets y subtotal sin IVA del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos; las líneas sin costo cuentan en ventas pero dejan costo, utilidad y margen pendientes.
+
+Color
+Color
+	
+Modalidad
+	
+Fuente del costo
+	
+Líneas con último costo conocido
+	
+Líneas con fuente histórica desconocida
+	
+Unidad
+	
+Cantidad
+	
+Tickets
+	
+Subtotal sin IVA
+	
+Costo congelado
+	
+Utilidad
+	
+Margen exacto
+
+
+AZUL
+	
+ROLLOS
+	
+Costo exacto del rollo vendido
+	
+0
+	
+0
+	
+Mts.
+	
+30.00
+	
+3
+	
+$2,400.00
+	
+$1,500.00
+	
+$900.00
+	
+37.50%
+
+Totales						30.00		$2,400.00	$1,500.00	$900.00	
+
+Agrupa cantidad por unidad, tickets y subtotal sin IVA del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos; las líneas sin costo cuentan en ventas pero dejan costo, utilidad y margen pendientes.
+
+Vendedor
+Vendedor
+	
+Modalidad
+	
+Fuente del costo
+	
+Líneas con último costo conocido
+	
+Líneas con fuente histórica desconocida
+	
+Unidad
+	
+Cantidad
+	
+Tickets
+	
+Subtotal sin IVA
+	
+Costo congelado
+	
+Utilidad
+	
+Margen exacto
+
+
+Isolated postreview financial admin
+	
+ROLLOS
+	
+Costo exacto del rollo vendido
+	
+0
+	
+0
+	
+Mts.
+	
+30.00
+	
+3
+	
+$2,400.00
+	
+$1,500.00
+	
+$900.00
+	
+37.50%
+
+Totales						30.00		$2,400.00	$1,500.00	$900.00	
+
+Agrupa cantidad por unidad, tickets y subtotal sin IVA del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos; las líneas sin costo cuentan en ventas pero dejan costo, utilidad y margen pendientes.
+
+Cliente
+Cliente
+	
+Modalidad
+	
+Fuente del costo
+	
+Líneas con último costo conocido
+	
+Líneas con fuente histórica desconocida
+	
+Unidad
+	
+Cantidad
+	
+Tickets
+	
+Subtotal sin IVA
+	
+Costo congelado
+	
+Utilidad
+	
+Margen exacto
+
+
+OWNER POSTREVIEW26 CLIENTE
+	
+ROLLOS
+	
+Costo exacto del rollo vendido
+	
+0
+	
+0
+	
+Mts.
+	
+30.00
+	
+3
+	
+$2,400.00
+	
+$1,500.00
+	
+$900.00
+	
+37.50%
+
+Totales						30.00		$2,400.00	$1,500.00	$900.00	
+
+Agrupa cantidad por unidad, tickets y subtotal sin IVA del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos; las líneas sin costo cuentan en ventas pero dejan costo, utilidad y margen pendientes.
+
+Forma de pago
+Forma de pago
+	
+Modalidad
+	
+Tickets
+	
+Cobro asignado por subtotal
+
+
+EFECTIVO
+	
+ROLLOS
+	
+2
+	
+$1,400.00
+
+Totales			$1,400.00
+
+Prorratea el cobro sin IVA por forma de pago y modalidad según el subtotal de línea del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos.
+
+Estado de factura
+Estado de factura
+	
+Modalidad
+	
+Fuente del costo
+	
+Líneas con último costo conocido
+	
+Líneas con fuente histórica desconocida
+	
+Unidad
+	
+Cantidad
+	
+Tickets
+	
+Subtotal sin IVA
+	
+Costo congelado
+	
+Utilidad
+	
+Margen exacto
+
+
+No facturado
+	
+ROLLOS
+	
+Costo exacto del rollo vendido
+	
+0
+	
+0
+	
+Mts.
+	
+30.00
+	
+3
+	
+$2,400.00
+	
+$1,500.00
+	
+$900.00
+	
+37.50%
+
+Totales						30.00		$2,400.00	$1,500.00	$900.00	
+
+Agrupa cantidad por unidad, tickets y subtotal sin IVA del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos; las líneas sin costo cuentan en ventas pero dejan costo, utilidad y margen pendientes.
+
+Mejores productos
+Producto
+	
+Modalidad
+	
+Fuente del costo
+	
+Líneas con último costo conocido
+	
+Líneas con fuente histórica desconocida
+	
+Unidad
+	
+Cantidad
+	
+Tickets
+	
+Subtotal sin IVA
+	
+Costo congelado
+	
+Utilidad
+	
+Margen exacto
+
+
+OWNPOSALG-AZU
+	
+ROLLOS
+	
+Costo exacto del rollo vendido
+	
+0
+	
+0
+	
+Mts.
+	
+30.00
+	
+3
+	
+$2,400.00
+	
+$1,500.00
+	
+$900.00
+	
+37.50%
+
+Totales											
+
+Muestra los 20 SKU con mayor subtotal sin IVA del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos, separados por modalidad y unidad; las líneas sin costo no excluyen ventas.
+
+Peores productos
+Producto
+	
+Modalidad
+	
+Fuente del costo
+	
+Líneas con último costo conocido
+	
+Líneas con fuente histórica desconocida
+	
+Unidad
+	
+Cantidad
+	
+Tickets
+	
+Subtotal sin IVA
+	
+Costo congelado
+	
+Utilidad
+	
+Margen exacto
+
+
+OWNPOSALG-AZU
+	
+ROLLOS
+	
+Costo exacto del rollo vendido
+	
+0
+	
+0
+	
+Mts.
+	
+30.00
+	
+3
+	
+$2,400.00
+	
+$1,500.00
+	
+$900.00
+	
+37.50%
+
+Totales											
+
+Muestra los 20 SKU con menor subtotal sin IVA del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos, separados por modalidad y unidad; las líneas sin costo no excluyen ventas.
+
+Clasificación ABC
+Producto
+	
+Modalidad
+	
+Unidad
+	
+Ventas
+	
+% acumulado
+	
+Clase
+
+
+OWNPOSALG-AZU
+	
+ROLLOS
+	
+Mts.
+	
+$2,400.00
+	
+100.00%
+	
+C
+
+Totales					
+
+Ordena SKU por subtotal sin IVA del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos y clasifica el porcentaje acumulado en A hasta 80%, B hasta 95% y C después.
+
+Pares de productos en canasta
+Producto A
+	
+Modalidad A
+	
+Producto B
+	
+Modalidad B
+	
+Tickets
+
+No hay datos disponibles
+
+Cuenta los tickets vendidos que contienen cada par de SKU distinto del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos, conservando modalidad y unidad de cada línea.
+
+Resumen de cancelaciones
+Modalidad
+	
+Tickets cancelados
+	
+Subtotal cancelado
+
+No hay datos disponibles
+
+Cuenta tickets cancelados y suma su subtotal sin IVA por modalidad del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos; no representa ventas realizadas.
+
+Cancelaciones
+Folio
+	
+Modalidad
+	
+Motivo
+	
+Sitio
+	
+Líneas
+	
+Subtotal cancelado
+
+No hay datos disponibles
+
+Lista cada ticket cancelado con líneas e importe de subtotal sin IVA del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos; no usa costo.
+
+Productos cancelados
+SKU
+	
+Tela
+	
+Color
+	
+Modalidad
+	
+Unidad
+	
+Líneas
+	
+Cantidad
+	
+Importe
+
+No hay datos disponibles
+
+Agrupa líneas canceladas por SKU, modalidad y unidad con su cantidad e importe sin IVA del periodo y filtros seleccionados, en el sitio elegido o todos los sitios permitidos.
+
+Comparativo de Tiendas
+
+Evaluación de rendimiento, ventas y medios de pago por ubicación.
+
+Ventas por Tienda
+
+Evolución diaria de ventas facturadas y público general
+
+26 sep
+$0k
+$0.6k
+$1.2k
+$1.8k
+$2.4k
+OWNER POSTREVIEW26
+
+Suma ventas sin IVA por fecha y tienda dentro del periodo seleccionado, con líneas sin costo aún incluidas.
+
+Participación Global
+
+Distribución de los ingresos
+
+OWNER POSTREVIEW26MarianaCocoCrucesOWNER POSTREVIEW26 DESTINOPOSTREVIEW26 CONC CAJA 1POSTREVIEW26 CONC CAJA 2
+
+Distribuye las ventas sin IVA del periodo seleccionado entre todas las tiendas visibles, incluidas líneas sin costo.
+
+Mezcla de Pago
+
+Preferencias de cobro por tienda
+
+$0k
+$0.6k
+$1.2k
+$1.8k
+$2.4k
+OWNERPOSTREVIEW26
+Mariana
+Coco
+Cruces
+OWNERPOSTREVIEW26DESTINO
+POSTREVIEW26CONC CAJA 1
+POSTREVIEW26CONC CAJA 2
+EfectivoTransferenciaCredito
+
+Suma cobros monetarios por medio de pago y tienda dentro del periodo seleccionado.
+
+Tienda
+	
+Part. %
+	
+Ventas
+	Tendencia	
+Utilidad
+	
+Tickets
+	
+Promedio
+	
+Rollos / Metraje
+	Medios de Pago	Mejor / Peor Día	
+Facturado %
+	
+Dif. Caja
+
+OWNER POSTREVIEW26	100.00%	$2,400.00	
+100.00%	$900.00	3	
+$800.00
+$0.00 vs Gen
+	
+Rollos: 30.00 Mts.
+Rollos: 0.00 Kg.
+Metraje: 0.00 Mts.
+Cajas completas: 0.00 Bolsas
+Bolsas sueltas: 0.00 Bolsas
+	
+Ef: $1,400.00
+Tr: $0.00
+Cr: $1,000.00
+	
+▲ 26 Sep ($2,400.00)
+▼ 26 Sep ($2,400.00)
+	0.00%	+$525.00
+Mariana	0.00%	$0.00	0.00%	$0.00	0	
+$0.00
+-$800.00 vs Gen
+	
+Rollos: 0.00 Mts.
+Rollos: 0.00 Kg.
+Metraje: 0.00 Mts.
+Cajas completas: 0.00 Bolsas
+Bolsas sueltas: 0.00 Bolsas
+	
+Ef: $0.00
+Tr: $0.00
+Cr: $0.00
+		0.00%	$0.00
+Coco	0.00%	$0.00	0.00%	$0.00	0	
+$0.00
+-$800.00 vs Gen
+	
+Rollos: 0.00 Mts.
+Rollos: 0.00 Kg.
+Metraje: 0.00 Mts.
+Cajas completas: 0.00 Bolsas
+Bolsas sueltas: 0.00 Bolsas
+	
+Ef: $0.00
+Tr: $0.00
+Cr: $0.00
+		0.00%	$0.00
+Cruces	0.00%	$0.00	0.00%	$0.00	0	
+$0.00
+-$800.00 vs Gen
+	
+Rollos: 0.00 Mts.
+Rollos: 0.00 Kg.
+Metraje: 0.00 Mts.
+Cajas completas: 0.00 Bolsas
+Bolsas sueltas: 0.00 Bolsas
+	
+Ef: $0.00
+Tr: $0.00
+Cr: $0.00
+		0.00%	$0.00
+OWNER POSTREVIEW26 DESTINO	0.00%	$0.00	0.00%	$0.00	0	
+$0.00
+-$800.00 vs Gen
+	
+Rollos: 0.00 Mts.
+Rollos: 0.00 Kg.
+Metraje: 0.00 Mts.
+Cajas completas: 0.00 Bolsas
+Bolsas sueltas: 0.00 Bolsas
+	
+Ef: $0.00
+Tr: $0.00
+Cr: $0.00
+		0.00%	$0.00
+POSTREVIEW26 CONC CAJA 1	0.00%	$0.00	0.00%	$0.00	0	
+$0.00
+-$800.00 vs Gen
+	
+Rollos: 0.00 Mts.
+Rollos: 0.00 Kg.
+Metraje: 0.00 Mts.
+Cajas completas: 0.00 Bolsas
+Bolsas sueltas: 0.00 Bolsas
+	
+Ef: $0.00
+Tr: $0.00
+Cr: $0.00
+		0.00%	$0.00
+POSTREVIEW26 CONC CAJA 2	0.00%	$0.00	0.00%	$0.00	0	
+$0.00
+-$800.00 vs Gen
+	
+Rollos: 0.00 Mts.
+Rollos: 0.00 Kg.
+Metraje: 0.00 Mts.
+Cajas completas: 0.00 Bolsas
+Bolsas sueltas: 0.00 Bolsas
+	
+Ef: $0.00
+Tr: $0.00
+Cr: $0.00
+		0.00%	$0.00
+Total General	100%	$2,400.00		$900.00	3	$800.00	
+Rollos: 30.00 Mts.
+Rollos: 0.00 Kg.
+Metraje: 0.00 Mts.
+Cajas completas: 0.00 Bolsas
+Bolsas sueltas: 0.00 Bolsas
+	
+Ef: $1,400.00
+Tr: $0.00
+Cr: $1,000.00
+		0.00%	+$525.00
+
+Compara por tienda ventas sin IVA, utilidad con costo congelado, tickets, cantidades por unidad y cobros del periodo seleccionado; la utilidad queda pendiente si falta costo.
+
+Saturday

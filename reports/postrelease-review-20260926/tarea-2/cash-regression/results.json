@@ -1,0 +1,52 @@
+{
+  "results": [
+    {
+      "test": "full frozen endpoint with native E5 contention",
+      "result": "RED_40001",
+      "noPartialPayments": true
+    },
+    {
+      "test": "candidate waits first, holds no ticket/session locks; atomic real collection",
+      "result": "PASS",
+      "state": {
+        "id": 17,
+        "cobrado": true,
+        "total": "1000.00",
+        "usuario_caja_id": 236,
+        "sesion_caja_id": 3,
+        "payments": 1,
+        "amount": "1000.00",
+        "audits": 1
+      }
+    },
+    {
+      "test": "duplicate collection remains409 and one payment",
+      "result": "PASS"
+    },
+    {
+      "test": "two independent concurrent collections commit exactly once",
+      "result": "PASS"
+    },
+    {
+      "test": "same-ticket concurrent race gives200/409, exactly one payment/audit",
+      "result": "PASS"
+    },
+    {
+      "test": "wrong total remains400 with no financial effect",
+      "result": "PASS"
+    },
+    {
+      "test": "final audit rejection rolls back ticket/payment; inventory remains unchanged",
+      "result": "PASS"
+    }
+  ],
+  "publicDml": false,
+  "publicSequencesUsed": false,
+  "fullEndpointBusinessCode": true,
+  "boundary": "Handler invoked directly with authenticated CAJA context. HTTP transport/auth middleware not retested. All native FKs/checks/indexes copied; native E5 serialization triggers retained. Other deferred business graph triggers not cloned.",
+  "tablesCloned": 108,
+  "foreignKeysCloned": 268,
+  "routeSourceSha256": "89326c9d783a7ca1469e0a366d76e8378d0b143e7d534ba5066ab611b89cce95",
+  "sourceParentSha256": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "isolatedSchemaDropped": true
+}

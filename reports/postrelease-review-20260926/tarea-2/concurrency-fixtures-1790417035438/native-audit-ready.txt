@@ -1,0 +1,72 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Vista Global
+1
+I
+
+Isolated postreview financial admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+
+OPERACIÓN DE ALMACÉN
+
+Auditoría de Inventario
+
+Control físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.
+
+OWN · OWNER POSTREVIEW26
+Iniciar auditoría
+Auditorías abiertas en el sitio
+
+No hay auditorías abiertas en este sitio. Puedes iniciar una nueva auditoría.
+
+No hay auditorías registradas
+
+Selecciona un sitio y presiona "Iniciar auditoría" para comenzar.
+
+Auditoría abierta
+OWN-AI-000001 · 20 rollos en snapshot

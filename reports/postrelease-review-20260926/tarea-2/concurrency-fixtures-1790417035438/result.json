@@ -1,0 +1,215 @@
+{
+  "stage": "concurrency-fixtures",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26-T2",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "a296de5707e38b9996293f48f968fca1e480810931b5769286bebe9b75f83f6f",
+  "status": "PASS",
+  "startedAt": "2026-09-26T10:03:55.438Z",
+  "requests": [
+    {
+      "at": "2026-09-26T10:03:56.573Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417036559-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T10:03:57.555Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417036747-7"
+    },
+    {
+      "at": "2026-09-26T10:03:58.140Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417037570-10"
+    },
+    {
+      "at": "2026-09-26T10:03:58.207Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417037565-8"
+    },
+    {
+      "at": "2026-09-26T10:03:59.006Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417038406-15"
+    },
+    {
+      "at": "2026-09-26T10:03:59.017Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417039009-17"
+    },
+    {
+      "at": "2026-09-26T10:03:59.751Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417039019-18"
+    },
+    {
+      "at": "2026-09-26T10:04:00.133Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417039792-19"
+    },
+    {
+      "at": "2026-09-26T10:04:00.326Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417039800-23"
+    },
+    {
+      "at": "2026-09-26T10:04:00.352Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417039799-22"
+    },
+    {
+      "at": "2026-09-26T10:04:00.711Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417039800-24"
+    },
+    {
+      "at": "2026-09-26T10:04:00.792Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417039797-21"
+    },
+    {
+      "at": "2026-09-26T10:04:00.811Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417039801-25"
+    },
+    {
+      "at": "2026-09-26T10:04:01.087Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417039801-26"
+    },
+    {
+      "at": "2026-09-26T10:04:01.426Z",
+      "path": "/api/inventario/auditorias/sitios",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417039802-27"
+    },
+    {
+      "at": "2026-09-26T10:04:01.607Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417039796-20"
+    },
+    {
+      "at": "2026-09-26T10:04:01.847Z",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417039803-28"
+    },
+    {
+      "at": "2026-09-26T10:04:02.191Z",
+      "path": "/api/productos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417039803-29"
+    },
+    {
+      "at": "2026-09-26T10:04:03.091Z",
+      "path": "/api/inventario/auditorias",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417041901-31"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790417035438/task2-open-audit-viewport.png",
+      "bytes": 109028,
+      "sha256": "6f9a833ec72a4cc71d1a4b694f5fa1f1a5776d7ac1400eea7b0044e60df49963"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790417035438/task2-open-audit-full.png",
+      "bytes": 111592,
+      "sha256": "72fd2b82d47597b9c640bb1ee7ef030b5bdab4ee745edec67d797b062cbed958"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790417035438/task2-open-audit.txt",
+      "bytes": 1125,
+      "sha256": "96e5a49da81190650f65f9dcad6c2312d3cf99f5b60b1a2b7991c5967409d394"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790417035438/native-audit-ready-viewport.png",
+      "bytes": 111869,
+      "sha256": "60f9518fa53b2a6b5c69068cd2d1b7fabdf5dc4fc080b5521fe6778299d269aa"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790417035438/native-audit-ready-full.png",
+      "bytes": 110789,
+      "sha256": "f7f5780499a5ae1e7d23ced94e1f5bf55792bcc660deccbbebfc37dfb0ab3b64"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790417035438/native-audit-ready.txt",
+      "bytes": 1125,
+      "sha256": "96e5a49da81190650f65f9dcad6c2312d3cf99f5b60b1a2b7991c5967409d394"
+    }
+  ],
+  "checks": [],
+  "actorId": 234,
+  "fixtureSummary": {
+    "cashiers": [
+      {
+        "id": 235,
+        "rol": "CAJA",
+        "site": 837,
+        "pendingTickets": 12
+      },
+      {
+        "id": 236,
+        "rol": "CAJA",
+        "site": 838,
+        "pendingTickets": 12
+      }
+    ],
+    "auditors": [
+      {
+        "id": 237,
+        "rol": "BODEGA"
+      },
+      {
+        "id": 238,
+        "rol": "BODEGA"
+      },
+      {
+        "id": 239,
+        "rol": "BODEGA"
+      }
+    ],
+    "auditId": 1,
+    "auditSite": 835,
+    "auditSeriesCount": 20
+  },
+  "finishedAt": "2026-09-26T10:04:03.724Z"
+}

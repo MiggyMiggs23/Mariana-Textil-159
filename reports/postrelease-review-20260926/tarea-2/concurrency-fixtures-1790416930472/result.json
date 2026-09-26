@@ -1,0 +1,616 @@
+{
+  "stage": "concurrency-fixtures",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26-T2",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "a296de5707e38b9996293f48f968fca1e480810931b5769286bebe9b75f83f6f",
+  "status": "BLOCKED_OR_DEFECT",
+  "startedAt": "2026-09-26T10:02:10.473Z",
+  "requests": [
+    {
+      "at": "2026-09-26T10:02:11.905Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416931882-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T10:02:13.164Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416932088-7"
+    },
+    {
+      "at": "2026-09-26T10:02:13.773Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416933175-8"
+    },
+    {
+      "at": "2026-09-26T10:02:13.784Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416933778-11"
+    },
+    {
+      "at": "2026-09-26T10:02:13.988Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416933181-10"
+    },
+    {
+      "at": "2026-09-26T10:02:14.515Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416933788-12"
+    },
+    {
+      "at": "2026-09-26T10:02:14.736Z",
+      "path": "/api/locations",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416933999-13"
+    },
+    {
+      "at": "2026-09-26T10:02:14.939Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416934590-14"
+    },
+    {
+      "at": "2026-09-26T10:02:15.341Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416934628-24"
+    },
+    {
+      "at": "2026-09-26T10:02:15.414Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416934595-17"
+    },
+    {
+      "at": "2026-09-26T10:02:15.461Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416934597-20"
+    },
+    {
+      "at": "2026-09-26T10:02:15.558Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416934629-25"
+    },
+    {
+      "at": "2026-09-26T10:02:15.582Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416934627-23"
+    },
+    {
+      "at": "2026-09-26T10:02:15.970Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416934630-26"
+    },
+    {
+      "at": "2026-09-26T10:02:15.993Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416934592-15"
+    },
+    {
+      "at": "2026-09-26T10:02:16.074Z",
+      "path": "/api/admin/cuentas-destino",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416934631-27"
+    },
+    {
+      "at": "2026-09-26T10:02:16.077Z",
+      "path": "/api/admin/dashboard/realtime",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416934632-28"
+    },
+    {
+      "at": "2026-09-26T10:02:16.206Z",
+      "path": "/api/admin/dashboard/realtime/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416934632-29"
+    },
+    {
+      "at": "2026-09-26T10:02:16.364Z",
+      "path": "/api/locations/837/pisos",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416934741-31"
+    },
+    {
+      "at": "2026-09-26T10:02:19.781Z",
+      "path": "/api/inventario/entradas",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416936379-32"
+    },
+    {
+      "at": "2026-09-26T10:02:20.860Z",
+      "path": "/api/users",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416939790-33"
+    },
+    {
+      "at": "2026-09-26T10:02:22.961Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416940868-34"
+    },
+    {
+      "at": "2026-09-26T10:02:25.065Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416942972-35"
+    },
+    {
+      "at": "2026-09-26T10:02:27.155Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416945076-36"
+    },
+    {
+      "at": "2026-09-26T10:02:29.531Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416947166-37"
+    },
+    {
+      "at": "2026-09-26T10:02:30.264Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416949518-38"
+    },
+    {
+      "at": "2026-09-26T10:02:31.612Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416949540-39"
+    },
+    {
+      "at": "2026-09-26T10:02:31.805Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416950996-40"
+    },
+    {
+      "at": "2026-09-26T10:02:33.681Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416951623-41"
+    },
+    {
+      "at": "2026-09-26T10:02:35.744Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416953691-42"
+    },
+    {
+      "at": "2026-09-26T10:02:37.799Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416955754-43"
+    },
+    {
+      "at": "2026-09-26T10:02:39.862Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416957808-44"
+    },
+    {
+      "at": "2026-09-26T10:02:41.924Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416959872-45"
+    },
+    {
+      "at": "2026-09-26T10:02:43.976Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416961933-46"
+    },
+    {
+      "at": "2026-09-26T10:02:46.016Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416965267-48"
+    },
+    {
+      "at": "2026-09-26T10:02:46.027Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416963987-47"
+    },
+    {
+      "at": "2026-09-26T10:02:46.781Z",
+      "path": "/api/locations",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416966037-49"
+    },
+    {
+      "at": "2026-09-26T10:02:46.851Z",
+      "path": "/api/admin/dashboard/realtime/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416966210-50"
+    },
+    {
+      "at": "2026-09-26T10:02:47.549Z",
+      "path": "/api/locations/838/pisos",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416966822-52"
+    },
+    {
+      "at": "2026-09-26T10:02:47.606Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416966821-51"
+    },
+    {
+      "at": "2026-09-26T10:02:50.672Z",
+      "path": "/api/inventario/entradas",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416967556-53"
+    },
+    {
+      "at": "2026-09-26T10:02:51.697Z",
+      "path": "/api/users",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416970683-54"
+    },
+    {
+      "at": "2026-09-26T10:02:53.640Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416971709-55"
+    },
+    {
+      "at": "2026-09-26T10:02:55.579Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416973651-56"
+    },
+    {
+      "at": "2026-09-26T10:02:57.504Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416975590-57"
+    },
+    {
+      "at": "2026-09-26T10:02:59.626Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416977517-58"
+    },
+    {
+      "at": "2026-09-26T10:03:01.558Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416979637-59"
+    },
+    {
+      "at": "2026-09-26T10:03:01.767Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416981018-60"
+    },
+    {
+      "at": "2026-09-26T10:03:03.395Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416982608-62"
+    },
+    {
+      "at": "2026-09-26T10:03:03.493Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416981568-61"
+    },
+    {
+      "at": "2026-09-26T10:03:05.455Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416983513-63"
+    },
+    {
+      "at": "2026-09-26T10:03:07.397Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416985467-64"
+    },
+    {
+      "at": "2026-09-26T10:03:09.347Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416987414-65"
+    },
+    {
+      "at": "2026-09-26T10:03:11.296Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416989359-66"
+    },
+    {
+      "at": "2026-09-26T10:03:13.231Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416991308-67"
+    },
+    {
+      "at": "2026-09-26T10:03:15.161Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416993244-68"
+    },
+    {
+      "at": "2026-09-26T10:03:16.027Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416995467-70"
+    },
+    {
+      "at": "2026-09-26T10:03:16.182Z",
+      "path": "/api/users",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416995175-69"
+    },
+    {
+      "at": "2026-09-26T10:03:17.205Z",
+      "path": "/api/users",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416996196-71"
+    },
+    {
+      "at": "2026-09-26T10:03:17.385Z",
+      "path": "/api/admin/dashboard/realtime/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416996853-73"
+    },
+    {
+      "at": "2026-09-26T10:03:17.408Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416996770-72"
+    },
+    {
+      "at": "2026-09-26T10:03:18.219Z",
+      "path": "/api/users",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416997219-74"
+    },
+    {
+      "at": "2026-09-26T10:03:19.114Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416998559-78"
+    },
+    {
+      "at": "2026-09-26T10:03:19.124Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416999118-80"
+    },
+    {
+      "at": "2026-09-26T10:03:19.819Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416999126-81"
+    },
+    {
+      "at": "2026-09-26T10:03:20.186Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416999869-82"
+    },
+    {
+      "at": "2026-09-26T10:03:20.370Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416999872-85"
+    },
+    {
+      "at": "2026-09-26T10:03:20.462Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416999874-87"
+    },
+    {
+      "at": "2026-09-26T10:03:20.496Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416999873-86"
+    },
+    {
+      "at": "2026-09-26T10:03:20.702Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416999872-84"
+    },
+    {
+      "at": "2026-09-26T10:03:20.762Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416999875-88"
+    },
+    {
+      "at": "2026-09-26T10:03:20.890Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416999875-89"
+    },
+    {
+      "at": "2026-09-26T10:03:20.971Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416999871-83"
+    },
+    {
+      "at": "2026-09-26T10:03:21.043Z",
+      "path": "/api/inventario/auditorias/sitios",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416999876-90"
+    },
+    {
+      "at": "2026-09-26T10:03:21.111Z",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416999878-91"
+    },
+    {
+      "at": "2026-09-26T10:03:21.705Z",
+      "path": "/api/productos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790416999878-92"
+    },
+    {
+      "at": "2026-09-26T10:03:24.714Z",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417004114-94"
+    },
+    {
+      "at": "2026-09-26T10:03:28.343Z",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417007716-95"
+    },
+    {
+      "at": "2026-09-26T10:03:31.944Z",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417011346-96"
+    },
+    {
+      "at": "2026-09-26T10:03:35.524Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417014824-97"
+    },
+    {
+      "at": "2026-09-26T10:03:35.566Z",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417014947-98"
+    },
+    {
+      "at": "2026-09-26T10:03:36.744Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417015974-99"
+    },
+    {
+      "at": "2026-09-26T10:03:39.196Z",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417018569-100"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790416930472/blocked-viewport.png",
+      "bytes": 120088,
+      "sha256": "da92c0c32f24c42050c4549e23522559aaf45050f6e898e8772848ac762784a6"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790416930472/blocked-full.png",
+      "bytes": 120088,
+      "sha256": "da92c0c32f24c42050c4549e23522559aaf45050f6e898e8772848ac762784a6"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790416930472/blocked.txt",
+      "bytes": 1206,
+      "sha256": "65dd69a5cf9c917621036a8c5a2343cb2b510b79836fdcc48e8bbfec997a3cac"
+    }
+  ],
+  "checks": [],
+  "actorId": 234,
+  "error": "locator.click: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('option', { name: 'OWNER POSTREVIEW26', exact: true })\u001b[22m\n",
+  "finishedAt": "2026-09-26T10:03:40.290Z"
+}

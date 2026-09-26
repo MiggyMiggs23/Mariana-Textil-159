@@ -1,0 +1,438 @@
+{
+  "stage": "cashv10-fixtures",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26-T2-CASHV10",
+  "apiSha": "dafb028d684e3de6f04232908c5fa5054c9bb1757d5dc4bb7f40eb2a29585df1",
+  "uiSha": "92f6123346e12d569a724840102d9fff57f915086a8f0e48d4c5b7ccf774bf72",
+  "status": "PASS",
+  "startedAt": "2026-09-26T10:31:45.696Z",
+  "requests": [
+    {
+      "at": "2026-09-26T10:31:47.447Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418707357-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T10:31:48.799Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418707741-7"
+    },
+    {
+      "at": "2026-09-26T10:31:49.411Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418708806-8"
+    },
+    {
+      "at": "2026-09-26T10:31:49.431Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418709415-11"
+    },
+    {
+      "at": "2026-09-26T10:31:49.666Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418708815-10"
+    },
+    {
+      "at": "2026-09-26T10:31:50.170Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418709433-12"
+    },
+    {
+      "at": "2026-09-26T10:31:50.574Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418710230-14"
+    },
+    {
+      "at": "2026-09-26T10:31:50.905Z",
+      "path": "/api/sesiones-caja/2/corte",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418709683-13"
+    },
+    {
+      "at": "2026-09-26T10:31:51.070Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418710233-17"
+    },
+    {
+      "at": "2026-09-26T10:31:51.151Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418710235-20"
+    },
+    {
+      "at": "2026-09-26T10:31:51.205Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418710263-23"
+    },
+    {
+      "at": "2026-09-26T10:31:51.206Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418710264-24"
+    },
+    {
+      "at": "2026-09-26T10:31:51.466Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418710231-15"
+    },
+    {
+      "at": "2026-09-26T10:31:51.549Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418710264-25"
+    },
+    {
+      "at": "2026-09-26T10:31:51.693Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418710266-26"
+    },
+    {
+      "at": "2026-09-26T10:31:51.803Z",
+      "path": "/api/admin/dashboard/realtime/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418710267-29"
+    },
+    {
+      "at": "2026-09-26T10:31:51.844Z",
+      "path": "/api/admin/cuentas-destino",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418710266-27"
+    },
+    {
+      "at": "2026-09-26T10:31:51.852Z",
+      "path": "/api/admin/dashboard/realtime",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418710267-28"
+    },
+    {
+      "at": "2026-09-26T10:31:52.131Z",
+      "path": "/api/locations/837/pisos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418710917-31"
+    },
+    {
+      "at": "2026-09-26T10:31:55.475Z",
+      "path": "/api/inventario/entradas",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418712146-32"
+    },
+    {
+      "at": "2026-09-26T10:31:57.558Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418715483-33"
+    },
+    {
+      "at": "2026-09-26T10:31:59.614Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418717570-34"
+    },
+    {
+      "at": "2026-09-26T10:32:01.687Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418719624-35"
+    },
+    {
+      "at": "2026-09-26T10:32:03.748Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418721699-36"
+    },
+    {
+      "at": "2026-09-26T10:32:05.817Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418723764-37"
+    },
+    {
+      "at": "2026-09-26T10:32:05.887Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418725175-38"
+    },
+    {
+      "at": "2026-09-26T10:32:07.224Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418726470-40"
+    },
+    {
+      "at": "2026-09-26T10:32:07.867Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418725831-39"
+    },
+    {
+      "at": "2026-09-26T10:32:09.917Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418727880-41"
+    },
+    {
+      "at": "2026-09-26T10:32:12.320Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418729931-42"
+    },
+    {
+      "at": "2026-09-26T10:32:14.376Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418732334-43"
+    },
+    {
+      "at": "2026-09-26T10:32:16.431Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418734387-44"
+    },
+    {
+      "at": "2026-09-26T10:32:18.494Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418736445-45"
+    },
+    {
+      "at": "2026-09-26T10:32:20.555Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418738508-46"
+    },
+    {
+      "at": "2026-09-26T10:32:21.594Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418740890-48"
+    },
+    {
+      "at": "2026-09-26T10:32:21.745Z",
+      "path": "/api/sesiones-caja/3/corte",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418740565-47"
+    },
+    {
+      "at": "2026-09-26T10:32:22.431Z",
+      "path": "/api/admin/dashboard/realtime/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418741809-50"
+    },
+    {
+      "at": "2026-09-26T10:32:22.431Z",
+      "path": "/api/locations/838/pisos",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418741754-49"
+    },
+    {
+      "at": "2026-09-26T10:32:23.003Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418742227-51"
+    },
+    {
+      "at": "2026-09-26T10:32:25.759Z",
+      "path": "/api/inventario/entradas",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418742454-52"
+    },
+    {
+      "at": "2026-09-26T10:32:27.837Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418745770-53"
+    },
+    {
+      "at": "2026-09-26T10:32:29.893Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418747850-54"
+    },
+    {
+      "at": "2026-09-26T10:32:31.987Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418749907-55"
+    },
+    {
+      "at": "2026-09-26T10:32:34.052Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418752000-56"
+    },
+    {
+      "at": "2026-09-26T10:32:36.122Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418754068-57"
+    },
+    {
+      "at": "2026-09-26T10:32:37.335Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418756600-59"
+    },
+    {
+      "at": "2026-09-26T10:32:38.174Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418756135-58"
+    },
+    {
+      "at": "2026-09-26T10:32:38.777Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418758007-60"
+    },
+    {
+      "at": "2026-09-26T10:32:40.225Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418758189-61"
+    },
+    {
+      "at": "2026-09-26T10:32:42.273Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418760239-62"
+    },
+    {
+      "at": "2026-09-26T10:32:44.574Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418762292-63"
+    },
+    {
+      "at": "2026-09-26T10:32:47.285Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418764590-64"
+    },
+    {
+      "at": "2026-09-26T10:32:49.345Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418767300-65"
+    },
+    {
+      "at": "2026-09-26T10:32:51.393Z",
+      "path": "/api/tickets",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-cashv10-fixtures-1790418769363-66"
+    }
+  ],
+  "artifacts": [],
+  "checks": [
+    {
+      "oldUncertainPreserved": true,
+      "actors": [
+        {
+          "id": 235,
+          "ticketIds": [
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "baselineCash": "12000.00"
+        },
+        {
+          "id": 236,
+          "ticketIds": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51
+          ],
+          "baselineCash": "0.00"
+        }
+      ]
+    }
+  ],
+  "actorId": 234,
+  "finishedAt": "2026-09-26T10:32:51.680Z"
+}

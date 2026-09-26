@@ -783,8 +783,11 @@ router.post(
           409,
         );
       }
-      const result = await db.transaction((tx) =>
-        cobrarTicket(
+      const result = await db.transaction(async (tx) => {
+        // Coordinate E5 before cobrarTicket takes ticket/session/FK locks.
+        // Waiting at the later UPDATE trigger would invert the graph lock order.
+        await tx.execute(sql`SELECT pg_advisory_xact_lock(650005,5)`);
+        return cobrarTicket(
           tx,
           {
             ticketId: params.id,
@@ -800,8 +803,8 @@ router.post(
             ip: getRequestIp(req),
           },
           true,
-        ),
-      );
+        );
+      });
       res.json(CobrarTicketResponse.parse(result));
     } catch (error) {
       handlePosError(error, res, next);

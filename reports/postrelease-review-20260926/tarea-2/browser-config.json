@@ -1,0 +1,13 @@
+{
+  "status": "READY",
+  "disposable": true,
+  "origin": "http://127.0.0.1:18328",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26-T2",
+  "apiSha256": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha256": "a296de5707e38b9996293f48f968fca1e480810931b5769286bebe9b75f83f6f",
+  "credentialsFile": "/tmp/postrelease-review-20260926/postreview_financial_20260926/credentials.json",
+  "journalDirectory": "/tmp/postrelease-review-20260926/postreview_financial_20260926/browser-task2",
+  "reportDirectory": "reports/postrelease-review-20260926/tarea-2",
+  "authorizationEvidence": "reports/postrelease-review-20260926/autorizacion.txt"
+}

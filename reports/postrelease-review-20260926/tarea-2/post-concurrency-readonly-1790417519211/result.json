@@ -1,0 +1,1309 @@
+{
+  "stage": "post-concurrency-readonly",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26-T2",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "a296de5707e38b9996293f48f968fca1e480810931b5769286bebe9b75f83f6f",
+  "status": "PASS",
+  "startedAt": "2026-09-26T10:11:59.211Z",
+  "requests": [
+    {
+      "at": "2026-09-26T10:12:00.520Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417520500-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T10:12:01.719Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417520680-7"
+    },
+    {
+      "at": "2026-09-26T10:12:02.307Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417521726-8"
+    },
+    {
+      "at": "2026-09-26T10:12:02.316Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417522311-11"
+    },
+    {
+      "at": "2026-09-26T10:12:02.536Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417521733-10"
+    },
+    {
+      "at": "2026-09-26T10:12:03.048Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417522319-12"
+    },
+    {
+      "at": "2026-09-26T10:12:03.473Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417523109-14"
+    },
+    {
+      "at": "2026-09-26T10:12:03.710Z",
+      "path": "/api/sesiones-caja/2/corte",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417522544-13"
+    },
+    {
+      "at": "2026-09-26T10:12:03.910Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417523113-17"
+    },
+    {
+      "at": "2026-09-26T10:12:04.035Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417523114-20"
+    },
+    {
+      "at": "2026-09-26T10:12:04.072Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417523146-24"
+    },
+    {
+      "at": "2026-09-26T10:12:04.138Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417523145-23"
+    },
+    {
+      "at": "2026-09-26T10:12:04.315Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417523148-25"
+    },
+    {
+      "at": "2026-09-26T10:12:04.503Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417523152-26"
+    },
+    {
+      "at": "2026-09-26T10:12:04.520Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417523110-15"
+    },
+    {
+      "at": "2026-09-26T10:12:04.710Z",
+      "path": "/api/admin/dashboard/realtime",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417523157-28"
+    },
+    {
+      "at": "2026-09-26T10:12:04.716Z",
+      "path": "/api/admin/cuentas-destino",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417523154-27"
+    },
+    {
+      "at": "2026-09-26T10:12:04.834Z",
+      "path": "/api/admin/dashboard/realtime/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417523163-29"
+    },
+    {
+      "at": "2026-09-26T10:12:05.485Z",
+      "path": "/api/sesiones-caja/3/corte",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417523744-31"
+    },
+    {
+      "at": "2026-09-26T10:12:06.368Z",
+      "path": "/api/tickets/16",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417525500-32"
+    },
+    {
+      "at": "2026-09-26T10:12:07.172Z",
+      "path": "/api/inventario/auditorias/1",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-post-concurrency-readonly-1790417526373-33"
+    }
+  ],
+  "artifacts": [],
+  "checks": [
+    {
+      "cashierId": 235,
+      "cut": {
+        "sesion": {
+          "id": 2,
+          "ubicacionId": 837,
+          "nombreUbicacion": "POSTREVIEW26 CONC CAJA 1",
+          "usuarioId": 234,
+          "nombreUsuario": "Isolated postreview financial admin",
+          "abiertaAt": "2026-09-26T10:04:57.169Z",
+          "cerradaAt": null,
+          "fondoInicial": "0.00",
+          "efectivoContado": null,
+          "estado": "ABIERTA"
+        },
+        "formasPago": [
+          {
+            "formaPago": "EFECTIVO",
+            "importe": "12000.00",
+            "pagosCount": 12,
+            "ticketsCount": 12
+          },
+          {
+            "formaPago": "TRANSFERENCIA",
+            "importe": "0.00",
+            "pagosCount": 0,
+            "ticketsCount": 0
+          },
+          {
+            "formaPago": "FACTURADO",
+            "importe": "0.00",
+            "pagosCount": 0,
+            "ticketsCount": 0
+          },
+          {
+            "formaPago": "CREDITO",
+            "importe": "0.00",
+            "pagosCount": 0,
+            "ticketsCount": 0
+          }
+        ],
+        "cuentasDestino": [
+          {
+            "formaPago": "EFECTIVO",
+            "cuentaDestino": "CAJA_FISICA",
+            "importe": "12000.00"
+          },
+          {
+            "formaPago": "TRANSFERENCIA",
+            "cuentaDestino": "CUENTA_NO_FISCAL",
+            "importe": "0.00"
+          },
+          {
+            "formaPago": "TRANSFERENCIA",
+            "cuentaDestino": "CUENTA_FISCAL",
+            "importe": "0.00"
+          },
+          {
+            "formaPago": "CREDITO",
+            "cuentaDestino": "CUENTAS_POR_COBRAR",
+            "importe": "0.00"
+          }
+        ],
+        "salidas": [],
+        "salidasPorCuenta": {
+          "CAJA_FISICA": "0.00",
+          "CUENTA_NO_FISCAL": "0.00",
+          "CUENTA_FISCAL": "0.00"
+        },
+        "facturacion": [
+          {
+            "facturado": true,
+            "ticketsCount": 0,
+            "subtotal": "0.00",
+            "iva": "0.00",
+            "importe": "0.00",
+            "efectivo": "0.00",
+            "transferencia": "0.00",
+            "credito": "0.00"
+          },
+          {
+            "facturado": false,
+            "ticketsCount": 12,
+            "subtotal": "12000.00",
+            "iva": "0.00",
+            "importe": "12000.00",
+            "efectivo": "12000.00",
+            "transferencia": "0.00",
+            "credito": "0.00"
+          }
+        ],
+        "metreado": [
+          {
+            "tipo": "NORMAL",
+            "unidad": "METRO",
+            "ticketsCount": 12,
+            "cantidad": "120.000",
+            "importe": "12000.00"
+          }
+        ],
+        "productos": [
+          {
+            "productoId": 2078,
+            "sku": "OWNPOSALG-AZU",
+            "tela": "OWNER POSTREVIEW26 ALGODON",
+            "color": "AZUL",
+            "tipo": "NORMAL",
+            "unidad": "METRO",
+            "cantidad": "120.000",
+            "importe": "12000.00"
+          }
+        ],
+        "pendientes": [],
+        "ticketsCobradosDetalle": [
+          {
+            "ticketId": 4,
+            "folio": 4,
+            "importe": "1000.00",
+            "cobradoAt": "2026-09-26T10:07:45.952Z"
+          },
+          {
+            "ticketId": 5,
+            "folio": 5,
+            "importe": "1000.00",
+            "cobradoAt": "2026-09-26T10:08:02.051Z"
+          },
+          {
+            "ticketId": 6,
+            "folio": 6,
+            "importe": "1000.00",
+            "cobradoAt": "2026-09-26T10:08:17.983Z"
+          },
+          {
+            "ticketId": 7,
+            "folio": 7,
+            "importe": "1000.00",
+            "cobradoAt": "2026-09-26T10:08:33.835Z"
+          },
+          {
+            "ticketId": 8,
+            "folio": 8,
+            "importe": "1000.00",
+            "cobradoAt": "2026-09-26T10:08:49.891Z"
+          },
+          {
+            "ticketId": 9,
+            "folio": 9,
+            "importe": "1000.00",
+            "cobradoAt": "2026-09-26T10:09:06.235Z"
+          },
+          {
+            "ticketId": 10,
+            "folio": 10,
+            "importe": "1000.00",
+            "cobradoAt": "2026-09-26T10:09:22.321Z"
+          },
+          {
+            "ticketId": 11,
+            "folio": 11,
+            "importe": "1000.00",
+            "cobradoAt": "2026-09-26T10:09:37.827Z"
+          },
+          {
+            "ticketId": 12,
+            "folio": 12,
+            "importe": "1000.00",
+            "cobradoAt": "2026-09-26T10:09:53.822Z"
+          },
+          {
+            "ticketId": 13,
+            "folio": 13,
+            "importe": "1000.00",
+            "cobradoAt": "2026-09-26T10:10:09.831Z"
+          },
+          {
+            "ticketId": 14,
+            "folio": 14,
+            "importe": "1000.00",
+            "cobradoAt": "2026-09-26T10:10:26.362Z"
+          },
+          {
+            "ticketId": 15,
+            "folio": 15,
+            "importe": "1000.00",
+            "cobradoAt": "2026-09-26T10:10:42.208Z"
+          }
+        ],
+        "ticketsCobrados": 12,
+        "cancelaciones": [],
+        "fondoInicial": "0.00",
+        "totalCobrado": "12000.00",
+        "ivaCobrado": "0.00",
+        "efectivoEsperado": "12000.00",
+        "efectivoDesglose": {
+          "version": "E2",
+          "fondoInicial": "0.00",
+          "cobrosTickets": "12000.00",
+          "abonosFisicos": "0.00",
+          "cobrosRetenidos": "0.00",
+          "salidasFisicas": "0.00",
+          "efectivoEsperado": "12000.00",
+          "documentos": [
+            {
+              "origen": "FONDO_INICIAL",
+              "id": "2",
+              "folio": null,
+              "importe": "0.00",
+              "href": null,
+              "evidencia": {
+                "referencia": "Sesión de caja #2",
+                "motivo": null,
+                "fecha": "2026-09-26T10:04:57.169Z",
+                "usuarioId": 234,
+                "proveedorId": null,
+                "usuarioNombre": "Isolated postreview financial admin",
+                "proveedorNombre": null
+              }
+            },
+            {
+              "origen": "TICKET",
+              "id": "3",
+              "folio": "4",
+              "importe": "1000.00",
+              "href": "/tickets/4"
+            },
+            {
+              "origen": "TICKET",
+              "id": "5",
+              "folio": "5",
+              "importe": "1000.00",
+              "href": "/tickets/5"
+            },
+            {
+              "origen": "TICKET",
+              "id": "6",
+              "folio": "6",
+              "importe": "1000.00",
+              "href": "/tickets/6"
+            },
+            {
+              "origen": "TICKET",
+              "id": "7",
+              "folio": "7",
+              "importe": "1000.00",
+              "href": "/tickets/7"
+            },
+            {
+              "origen": "TICKET",
+              "id": "8",
+              "folio": "8",
+              "importe": "1000.00",
+              "href": "/tickets/8"
+            },
+            {
+              "origen": "TICKET",
+              "id": "9",
+              "folio": "9",
+              "importe": "1000.00",
+              "href": "/tickets/9"
+            },
+            {
+              "origen": "TICKET",
+              "id": "10",
+              "folio": "10",
+              "importe": "1000.00",
+              "href": "/tickets/10"
+            },
+            {
+              "origen": "TICKET",
+              "id": "11",
+              "folio": "11",
+              "importe": "1000.00",
+              "href": "/tickets/11"
+            },
+            {
+              "origen": "TICKET",
+              "id": "12",
+              "folio": "12",
+              "importe": "1000.00",
+              "href": "/tickets/12"
+            },
+            {
+              "origen": "TICKET",
+              "id": "13",
+              "folio": "13",
+              "importe": "1000.00",
+              "href": "/tickets/13"
+            },
+            {
+              "origen": "TICKET",
+              "id": "14",
+              "folio": "14",
+              "importe": "1000.00",
+              "href": "/tickets/14"
+            },
+            {
+              "origen": "TICKET",
+              "id": "15",
+              "folio": "15",
+              "importe": "1000.00",
+              "href": "/tickets/15"
+            }
+          ]
+        },
+        "efectivoContado": null,
+        "diferencia": null,
+        "hojaVentasDia": {
+          "sitio": "POSTREVIEW26 CONC CAJA 1",
+          "fechaOperativa": "2026-09-26",
+          "cerrada": false,
+          "quienCerro": null,
+          "secciones": [
+            {
+              "modalidad": "ROLLOS",
+              "lineas": [
+                {
+                  "productoId": 2078,
+                  "sku": "OWNPOSALG-AZU",
+                  "tela": "OWNER POSTREVIEW26 ALGODON",
+                  "color": "AZUL",
+                  "tipo": "NORMAL",
+                  "unidad": "ROLLOS",
+                  "cantidad": "12",
+                  "importe": "12000.00"
+                }
+              ],
+              "subtotal": "12000.00"
+            },
+            {
+              "modalidad": "METRAJE",
+              "lineas": [],
+              "subtotal": "0.00"
+            }
+          ],
+          "totalRollos": "12",
+          "totalMetros": "120",
+          "totalKilos": "0",
+          "totalBolsas": "0",
+          "totalPiezas": "0",
+          "subtotal": "12000.00",
+          "ivaFacturado": "0.00",
+          "totalGeneral": "12000.00"
+        }
+      }
+    },
+    {
+      "cashierId": 236,
+      "cut": {
+        "sesion": {
+          "id": 3,
+          "ubicacionId": 838,
+          "nombreUbicacion": "POSTREVIEW26 CONC CAJA 2",
+          "usuarioId": 234,
+          "nombreUsuario": "Isolated postreview financial admin",
+          "abiertaAt": "2026-09-26T10:05:02.305Z",
+          "cerradaAt": null,
+          "fondoInicial": "0.00",
+          "efectivoContado": null,
+          "estado": "ABIERTA"
+        },
+        "formasPago": [
+          {
+            "formaPago": "EFECTIVO",
+            "importe": "0.00",
+            "pagosCount": 0,
+            "ticketsCount": 0
+          },
+          {
+            "formaPago": "TRANSFERENCIA",
+            "importe": "0.00",
+            "pagosCount": 0,
+            "ticketsCount": 0
+          },
+          {
+            "formaPago": "FACTURADO",
+            "importe": "0.00",
+            "pagosCount": 0,
+            "ticketsCount": 0
+          },
+          {
+            "formaPago": "CREDITO",
+            "importe": "0.00",
+            "pagosCount": 0,
+            "ticketsCount": 0
+          }
+        ],
+        "cuentasDestino": [
+          {
+            "formaPago": "EFECTIVO",
+            "cuentaDestino": "CAJA_FISICA",
+            "importe": "0.00"
+          },
+          {
+            "formaPago": "TRANSFERENCIA",
+            "cuentaDestino": "CUENTA_NO_FISCAL",
+            "importe": "0.00"
+          },
+          {
+            "formaPago": "TRANSFERENCIA",
+            "cuentaDestino": "CUENTA_FISCAL",
+            "importe": "0.00"
+          },
+          {
+            "formaPago": "CREDITO",
+            "cuentaDestino": "CUENTAS_POR_COBRAR",
+            "importe": "0.00"
+          }
+        ],
+        "salidas": [],
+        "salidasPorCuenta": {
+          "CAJA_FISICA": "0.00",
+          "CUENTA_NO_FISCAL": "0.00",
+          "CUENTA_FISCAL": "0.00"
+        },
+        "facturacion": [
+          {
+            "facturado": true,
+            "ticketsCount": 0,
+            "subtotal": "0.00",
+            "iva": "0.00",
+            "importe": "0.00",
+            "efectivo": "0.00",
+            "transferencia": "0.00",
+            "credito": "0.00"
+          },
+          {
+            "facturado": false,
+            "ticketsCount": 0,
+            "subtotal": "0.00",
+            "iva": "0.00",
+            "importe": "0.00",
+            "efectivo": "0.00",
+            "transferencia": "0.00",
+            "credito": "0.00"
+          }
+        ],
+        "metreado": [],
+        "productos": [],
+        "pendientes": [
+          {
+            "ticketId": 16,
+            "folio": 16,
+            "total": "1000.00",
+            "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+            "createdAt": "2026-09-26T10:02:52.564Z"
+          },
+          {
+            "ticketId": 17,
+            "folio": 17,
+            "total": "1000.00",
+            "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+            "createdAt": "2026-09-26T10:02:54.510Z"
+          },
+          {
+            "ticketId": 18,
+            "folio": 18,
+            "total": "1000.00",
+            "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+            "createdAt": "2026-09-26T10:02:56.441Z"
+          },
+          {
+            "ticketId": 19,
+            "folio": 19,
+            "total": "1000.00",
+            "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+            "createdAt": "2026-09-26T10:02:58.366Z"
+          },
+          {
+            "ticketId": 20,
+            "folio": 20,
+            "total": "1000.00",
+            "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+            "createdAt": "2026-09-26T10:03:00.494Z"
+          },
+          {
+            "ticketId": 21,
+            "folio": 21,
+            "total": "1000.00",
+            "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+            "createdAt": "2026-09-26T10:03:02.422Z"
+          },
+          {
+            "ticketId": 22,
+            "folio": 22,
+            "total": "1000.00",
+            "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+            "createdAt": "2026-09-26T10:03:04.379Z"
+          },
+          {
+            "ticketId": 23,
+            "folio": 23,
+            "total": "1000.00",
+            "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+            "createdAt": "2026-09-26T10:03:06.330Z"
+          },
+          {
+            "ticketId": 24,
+            "folio": 24,
+            "total": "1000.00",
+            "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+            "createdAt": "2026-09-26T10:03:08.273Z"
+          },
+          {
+            "ticketId": 25,
+            "folio": 25,
+            "total": "1000.00",
+            "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+            "createdAt": "2026-09-26T10:03:10.231Z"
+          },
+          {
+            "ticketId": 26,
+            "folio": 26,
+            "total": "1000.00",
+            "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+            "createdAt": "2026-09-26T10:03:12.159Z"
+          },
+          {
+            "ticketId": 27,
+            "folio": 27,
+            "total": "1000.00",
+            "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+            "createdAt": "2026-09-26T10:03:14.095Z"
+          }
+        ],
+        "ticketsCobradosDetalle": [],
+        "ticketsCobrados": 0,
+        "cancelaciones": [],
+        "fondoInicial": "0.00",
+        "totalCobrado": "0.00",
+        "ivaCobrado": "0.00",
+        "efectivoEsperado": "0.00",
+        "efectivoDesglose": {
+          "version": "E2",
+          "fondoInicial": "0.00",
+          "cobrosTickets": "0.00",
+          "abonosFisicos": "0.00",
+          "cobrosRetenidos": "0.00",
+          "salidasFisicas": "0.00",
+          "efectivoEsperado": "0.00",
+          "documentos": [
+            {
+              "origen": "FONDO_INICIAL",
+              "id": "3",
+              "folio": null,
+              "importe": "0.00",
+              "href": null,
+              "evidencia": {
+                "referencia": "Sesión de caja #3",
+                "motivo": null,
+                "fecha": "2026-09-26T10:05:02.305Z",
+                "usuarioId": 234,
+                "proveedorId": null,
+                "usuarioNombre": "Isolated postreview financial admin",
+                "proveedorNombre": null
+              }
+            }
+          ]
+        },
+        "efectivoContado": null,
+        "diferencia": null,
+        "hojaVentasDia": {
+          "sitio": "POSTREVIEW26 CONC CAJA 2",
+          "fechaOperativa": "2026-09-26",
+          "cerrada": false,
+          "quienCerro": null,
+          "secciones": [
+            {
+              "modalidad": "ROLLOS",
+              "lineas": [],
+              "subtotal": "0.00"
+            },
+            {
+              "modalidad": "METRAJE",
+              "lineas": [],
+              "subtotal": "0.00"
+            }
+          ],
+          "totalRollos": "0",
+          "totalMetros": "0",
+          "totalKilos": "0",
+          "totalBolsas": "0",
+          "totalPiezas": "0",
+          "subtotal": "0.00",
+          "ivaFacturado": "0.00",
+          "totalGeneral": "0.00"
+        }
+      }
+    },
+    {
+      "uncertainTicketIndependent": {
+        "id": 16,
+        "folio": 16,
+        "ubicacionId": 838,
+        "nombreUbicacion": "POSTREVIEW26 CONC CAJA 2",
+        "usuarioTerminalId": 234,
+        "nombreUsuarioTerminal": "Isolated postreview financial admin",
+        "clienteId": 2583,
+        "nombreCliente": "OWNER POSTREVIEW26 CLIENTE",
+        "notaSinPrecios": false,
+        "direccionEntregaEfectiva": null,
+        "subtotal": "1000.00",
+        "iva": "0.00",
+        "tasaIva": "0.1600",
+        "total": "1000.00",
+        "estado": "VENDIDO",
+        "cobrado": false,
+        "cobradoAt": null,
+        "usuarioCajaId": null,
+        "nombreUsuarioCaja": null,
+        "facturado": false,
+        "sesionCajaId": null,
+        "uuidCliente": "3e34621f-4ef4-4107-b8e7-409ec62a690f",
+        "createdAt": "2026-09-26T10:02:52.564Z",
+        "canceladoAt": null,
+        "canceladoPor": null,
+        "nombreUsuarioCancelacion": null,
+        "motivoCancelacion": null,
+        "autorizadoPor": null,
+        "nombreUsuarioAutorizacion": null,
+        "esCredito": false,
+        "importeCredito": "0.00",
+        "diasPlazo": null,
+        "fechaVencimiento": null,
+        "saldoPendiente": "0.00",
+        "estadoNota": null,
+        "telefonoCliente": null,
+        "correoCliente": null,
+        "direccionCliente": null,
+        "remate": false,
+        "rollosRemate": [],
+        "documentoTipo": "TICKET",
+        "autorizacionEstado": "NO_APLICA",
+        "nombreDestinatario": null,
+        "direccionEntregaSnapshot": null,
+        "convertidoANotaPorCobro": false,
+        "diasCreditoCliente": 7,
+        "viaje": null,
+        "salidas": [],
+        "lineas": [
+          {
+            "id": 16,
+            "ticketId": 16,
+            "rolloId": 37,
+            "productoId": 2078,
+            "tipo": "NORMAL",
+            "cantidad": "10.000",
+            "precioUnitario": "100.00",
+            "precioSugerido": "100.00",
+            "importe": "1000.00",
+            "skuProducto": "OWNPOSALG-AZU",
+            "telaProducto": "OWNER POSTREVIEW26 ALGODON",
+            "colorProducto": "AZUL",
+            "unidadProducto": "METRO",
+            "serieRollo": "10000037",
+            "nombreUbicacion": "POSTREVIEW26 CONC CAJA 2",
+            "costoUnitarioCongelado": "50.00",
+            "costoTotalCongelado": "500.00",
+            "costoFuente": "EXACT_ROLL",
+            "margen": "500.00"
+          }
+        ],
+        "pagos": []
+      }
+    },
+    {
+      "audit": {
+        "id": 1,
+        "folio": 1,
+        "folioFormateado": "OWN-AI-000001",
+        "ubicacionId": 835,
+        "nombreUbicacion": "OWNER POSTREVIEW26",
+        "estado": "ABIERTA",
+        "totalSnapshot": 20,
+        "totalEscaneados": 18,
+        "cuadros": 6,
+        "faltantes": 2,
+        "sobrantes": 0,
+        "malAcomodados": 12,
+        "abiertaAt": "2026-09-26T10:04:02.492Z",
+        "creadaPor": "Isolated postreview financial admin",
+        "participantesActivos": 3,
+        "maxParticipantes": 5,
+        "expiracionSegundos": 90,
+        "motivoCancelacion": null,
+        "cerradaAt": null,
+        "confirmadaAt": null,
+        "resultados": [
+          {
+            "usuarioId": 237,
+            "usuarioNombre": "POSTREVIEW26 Auditor 1",
+            "serie": "10000005",
+            "clasificacion": "CUADRO",
+            "rolloId": 5,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 14,
+            "pisoReal": "01 Acceso",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:07:44.302Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 237,
+            "usuarioNombre": "POSTREVIEW26 Auditor 1",
+            "serie": "10000006",
+            "clasificacion": "CUADRO",
+            "rolloId": 6,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 14,
+            "pisoReal": "01 Acceso",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:07:52.338Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 237,
+            "usuarioNombre": "POSTREVIEW26 Auditor 1",
+            "serie": "10000007",
+            "clasificacion": "CUADRO",
+            "rolloId": 7,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 14,
+            "pisoReal": "01 Acceso",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:08:00.236Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 237,
+            "usuarioNombre": "POSTREVIEW26 Auditor 1",
+            "serie": "10000008",
+            "clasificacion": "CUADRO",
+            "rolloId": 8,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 14,
+            "pisoReal": "01 Acceso",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:08:08.209Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 237,
+            "usuarioNombre": "POSTREVIEW26 Auditor 1",
+            "serie": "10000009",
+            "clasificacion": "CUADRO",
+            "rolloId": 9,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 14,
+            "pisoReal": "01 Acceso",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:08:16.319Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 237,
+            "usuarioNombre": "POSTREVIEW26 Auditor 1",
+            "serie": "10000010",
+            "clasificacion": "CUADRO",
+            "rolloId": 10,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 14,
+            "pisoReal": "01 Acceso",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:08:24.364Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": null,
+            "usuarioNombre": null,
+            "serie": "10000023",
+            "clasificacion": "FALTANTE",
+            "rolloId": 23,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": null,
+            "pisoReal": null,
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": null,
+            "sobrante": null
+          },
+          {
+            "usuarioId": null,
+            "usuarioNombre": null,
+            "serie": "10000024",
+            "clasificacion": "FALTANTE",
+            "rolloId": 24,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": null,
+            "pisoReal": null,
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": null,
+            "sobrante": null
+          },
+          {
+            "usuarioId": 238,
+            "usuarioNombre": "POSTREVIEW26 Auditor 2",
+            "serie": "10000011",
+            "clasificacion": "MAL_ACOMODADO",
+            "rolloId": 11,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 15,
+            "pisoReal": "02 Segundo",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:07:44.347Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 238,
+            "usuarioNombre": "POSTREVIEW26 Auditor 2",
+            "serie": "10000012",
+            "clasificacion": "MAL_ACOMODADO",
+            "rolloId": 12,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 15,
+            "pisoReal": "02 Segundo",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:07:52.316Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 238,
+            "usuarioNombre": "POSTREVIEW26 Auditor 2",
+            "serie": "10000013",
+            "clasificacion": "MAL_ACOMODADO",
+            "rolloId": 13,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 15,
+            "pisoReal": "02 Segundo",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:08:00.239Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 238,
+            "usuarioNombre": "POSTREVIEW26 Auditor 2",
+            "serie": "10000014",
+            "clasificacion": "MAL_ACOMODADO",
+            "rolloId": 14,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 15,
+            "pisoReal": "02 Segundo",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:08:08.212Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 238,
+            "usuarioNombre": "POSTREVIEW26 Auditor 2",
+            "serie": "10000015",
+            "clasificacion": "MAL_ACOMODADO",
+            "rolloId": 15,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 15,
+            "pisoReal": "02 Segundo",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:08:16.354Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 238,
+            "usuarioNombre": "POSTREVIEW26 Auditor 2",
+            "serie": "10000016",
+            "clasificacion": "MAL_ACOMODADO",
+            "rolloId": 16,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 15,
+            "pisoReal": "02 Segundo",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:08:24.331Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 239,
+            "usuarioNombre": "POSTREVIEW26 Auditor 3",
+            "serie": "10000017",
+            "clasificacion": "MAL_ACOMODADO",
+            "rolloId": 17,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 16,
+            "pisoReal": "03 Tercero",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:07:44.308Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 239,
+            "usuarioNombre": "POSTREVIEW26 Auditor 3",
+            "serie": "10000018",
+            "clasificacion": "MAL_ACOMODADO",
+            "rolloId": 18,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 16,
+            "pisoReal": "03 Tercero",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:07:52.235Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 239,
+            "usuarioNombre": "POSTREVIEW26 Auditor 3",
+            "serie": "10000019",
+            "clasificacion": "MAL_ACOMODADO",
+            "rolloId": 19,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 16,
+            "pisoReal": "03 Tercero",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:08:00.235Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 239,
+            "usuarioNombre": "POSTREVIEW26 Auditor 3",
+            "serie": "10000020",
+            "clasificacion": "MAL_ACOMODADO",
+            "rolloId": 20,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 16,
+            "pisoReal": "03 Tercero",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:08:08.214Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 239,
+            "usuarioNombre": "POSTREVIEW26 Auditor 3",
+            "serie": "10000021",
+            "clasificacion": "MAL_ACOMODADO",
+            "rolloId": 21,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 16,
+            "pisoReal": "03 Tercero",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:08:16.362Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 239,
+            "usuarioNombre": "POSTREVIEW26 Auditor 3",
+            "serie": "10000022",
+            "clasificacion": "MAL_ACOMODADO",
+            "rolloId": 22,
+            "producto": "OWNPOSALG-AZU · OWNER POSTREVIEW26 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "OWNER POSTREVIEW26",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 16,
+            "pisoReal": "03 Tercero",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T10:08:24.373Z",
+            "sobrante": null
+          }
+        ],
+        "participantes": [
+          {
+            "activo": true,
+            "expiraAt": "2026-09-26T10:12:31.629Z",
+            "usuarioId": 237,
+            "nombre": "POSTREVIEW26 Auditor 1",
+            "escaneos": 6,
+            "primeroAt": "2026-09-26T10:07:41.655Z",
+            "ultimoAt": "2026-09-26T10:11:01.629Z"
+          },
+          {
+            "activo": true,
+            "expiraAt": "2026-09-26T10:12:31.993Z",
+            "usuarioId": 238,
+            "nombre": "POSTREVIEW26 Auditor 2",
+            "escaneos": 6,
+            "primeroAt": "2026-09-26T10:07:42.003Z",
+            "ultimoAt": "2026-09-26T10:11:01.993Z"
+          },
+          {
+            "activo": true,
+            "expiraAt": "2026-09-26T10:12:31.854Z",
+            "usuarioId": 239,
+            "nombre": "POSTREVIEW26 Auditor 3",
+            "escaneos": 6,
+            "primeroAt": "2026-09-26T10:07:41.861Z",
+            "ultimoAt": "2026-09-26T10:11:01.854Z"
+          }
+        ]
+      }
+    },
+    {
+      "postgresIdentity": {
+        "database": "postreview_financial_20260926",
+        "read_only": "on"
+      }
+    },
+    {
+      "postgresPayments": [
+        {
+          "usuario_id": 235,
+          "payments": 12,
+          "amount": "12000.00"
+        }
+      ]
+    },
+    {
+      "postgresFailedTicket": [
+        {
+          "id": 16,
+          "cobrado": false,
+          "payment_rows": 0
+        }
+      ]
+    }
+  ],
+  "actorId": 234,
+  "finishedAt": "2026-09-26T10:12:07.879Z"
+}

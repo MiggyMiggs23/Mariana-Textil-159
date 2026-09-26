@@ -1,0 +1,321 @@
+{
+  "stage": "concurrency-fixtures",
+  "database": "postreview_financial_20260926",
+  "campaignId": "POSTREVIEW26-T2",
+  "apiSha": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "uiSha": "a296de5707e38b9996293f48f968fca1e480810931b5769286bebe9b75f83f6f",
+  "status": "PASS",
+  "startedAt": "2026-09-26T10:04:50.550Z",
+  "requests": [
+    {
+      "at": "2026-09-26T10:04:51.262Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417091244-4",
+      "error": {
+        "error": "Debes iniciar sesión."
+      }
+    },
+    {
+      "at": "2026-09-26T10:04:52.191Z",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417091410-7"
+    },
+    {
+      "at": "2026-09-26T10:04:52.701Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417092205-10"
+    },
+    {
+      "at": "2026-09-26T10:04:52.811Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417092197-8"
+    },
+    {
+      "at": "2026-09-26T10:04:53.631Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417093054-15"
+    },
+    {
+      "at": "2026-09-26T10:04:53.642Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417093636-17"
+    },
+    {
+      "at": "2026-09-26T10:04:54.350Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417093644-18"
+    },
+    {
+      "at": "2026-09-26T10:04:54.715Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417094393-19"
+    },
+    {
+      "at": "2026-09-26T10:04:55.097Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417094398-23"
+    },
+    {
+      "at": "2026-09-26T10:04:55.208Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417094398-22"
+    },
+    {
+      "at": "2026-09-26T10:04:55.227Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417094399-24"
+    },
+    {
+      "at": "2026-09-26T10:04:55.273Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417094395-21"
+    },
+    {
+      "at": "2026-09-26T10:04:55.316Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417094399-25"
+    },
+    {
+      "at": "2026-09-26T10:04:55.478Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417094394-20"
+    },
+    {
+      "at": "2026-09-26T10:04:55.600Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417094400-26"
+    },
+    {
+      "at": "2026-09-26T10:04:56.334Z",
+      "path": "/api/sesiones-caja/actual",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417095826-28"
+    },
+    {
+      "at": "2026-09-26T10:04:57.506Z",
+      "path": "/api/sesiones-caja/abrir",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417096687-29"
+    },
+    {
+      "at": "2026-09-26T10:04:58.599Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417098093-34"
+    },
+    {
+      "at": "2026-09-26T10:04:58.609Z",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417098604-36"
+    },
+    {
+      "at": "2026-09-26T10:04:59.242Z",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417098612-37"
+    },
+    {
+      "at": "2026-09-26T10:04:59.559Z",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417099269-38"
+    },
+    {
+      "at": "2026-09-26T10:04:59.839Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417099272-41"
+    },
+    {
+      "at": "2026-09-26T10:04:59.889Z",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417099273-43"
+    },
+    {
+      "at": "2026-09-26T10:04:59.936Z",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417099270-39"
+    },
+    {
+      "at": "2026-09-26T10:04:59.957Z",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417099272-40"
+    },
+    {
+      "at": "2026-09-26T10:05:00.087Z",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417099274-44"
+    },
+    {
+      "at": "2026-09-26T10:05:00.298Z",
+      "path": "/api/sesiones-caja/actual",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417099273-42"
+    },
+    {
+      "at": "2026-09-26T10:05:00.432Z",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417099278-45"
+    },
+    {
+      "at": "2026-09-26T10:05:00.487Z",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417099279-46"
+    },
+    {
+      "at": "2026-09-26T10:05:00.828Z",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417100318-48"
+    },
+    {
+      "at": "2026-09-26T10:05:01.350Z",
+      "path": "/api/sesiones-caja/actual",
+      "method": "GET",
+      "status": 200,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417100825-52"
+    },
+    {
+      "at": "2026-09-26T10:05:02.703Z",
+      "path": "/api/sesiones-caja/abrir",
+      "method": "POST",
+      "status": 201,
+      "suppliedRequestId": "owner-night-concurrency-fixtures-1790417101711-53"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790417090550/task2-open-cash-0-viewport.png",
+      "bytes": 84425,
+      "sha256": "248da4ad28fcc58aaf13ca4e4624cf7d26754b577024928305b31c4a07d6da2e"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790417090550/task2-open-cash-0-full.png",
+      "bytes": 85512,
+      "sha256": "8d1d1db3914ffd8b6df7b5641d1c3c18ba447c3078634da4b95ea69e47ec1820"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790417090550/task2-open-cash-0.txt",
+      "bytes": 798,
+      "sha256": "e11939cbba8e7df39a21ad2cb9290ad6991f0051420caf5f34eeb89ab2fac124"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790417090550/task2-open-cash-1-viewport.png",
+      "bytes": 85372,
+      "sha256": "b3dcdbfc42635c22d0e011fd6f157347eb8b530439be53232a888866e686a54c"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790417090550/task2-open-cash-1-full.png",
+      "bytes": 85562,
+      "sha256": "b8320af35ca0bcddd5946daf584314765bf29a57d645334ea2cf603883c3672e"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790417090550/task2-open-cash-1.txt",
+      "bytes": 798,
+      "sha256": "8f61a51b2b8a5ab52198ae3f6983a611361a0bd038ea503658187d8ccf76cb33"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790417090550/native-audit-ready-viewport.png",
+      "bytes": 81409,
+      "sha256": "e7d0067e3770ce873958e7715d2b83e99d4908c786c1d94476d3e5809048f06c"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790417090550/native-audit-ready-full.png",
+      "bytes": 81409,
+      "sha256": "e7d0067e3770ce873958e7715d2b83e99d4908c786c1d94476d3e5809048f06c"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/concurrency-fixtures-1790417090550/native-audit-ready.txt",
+      "bytes": 798,
+      "sha256": "8f61a51b2b8a5ab52198ae3f6983a611361a0bd038ea503658187d8ccf76cb33"
+    }
+  ],
+  "checks": [],
+  "actorId": 234,
+  "fixtureSummary": {
+    "cashiers": [
+      {
+        "id": 235,
+        "rol": "CAJA",
+        "site": 837,
+        "pendingTickets": 12
+      },
+      {
+        "id": 236,
+        "rol": "CAJA",
+        "site": 838,
+        "pendingTickets": 12
+      }
+    ],
+    "auditors": [
+      {
+        "id": 237,
+        "rol": "BODEGA"
+      },
+      {
+        "id": 238,
+        "rol": "BODEGA"
+      },
+      {
+        "id": 239,
+        "rol": "BODEGA"
+      }
+    ],
+    "auditId": 1,
+    "auditSite": 835,
+    "auditSeriesCount": 20
+  },
+  "finishedAt": "2026-09-26T10:05:03.577Z"
+}

@@ -1,0 +1,32 @@
+{
+  "status": "NATIVE_FULL_ROUTE_RED_GREEN_MAIN_ACTIVATION_AND_SIX_ACTOR_RETEST_PENDING",
+  "apiEntry": "/home/runner/workspace/artifacts/api-server/dist-owner-cash-v10-20260926/index.mjs",
+  "apiSha256": "dafb028d684e3de6f04232908c5fa5054c9bb1757d5dc4bb7f40eb2a29585df1",
+  "parentApiSha256": "3aa7706416313c4bf5bbb0cfce03ee7f2151d0c36d6008579346b022d9c5a9ea",
+  "apiFiles": {
+    "index.mjs": "dafb028d684e3de6f04232908c5fa5054c9bb1757d5dc4bb7f40eb2a29585df1",
+    "index.mjs.map": "853fa7aa6090447223f3a2b7f9a193020544fe8e1416fd507c69ad514f6280b0",
+    "pino-file.mjs": "0df6c9769d3ce9d6562a2d60a95249cb7a30c1d631649ded666ec136c348ab28",
+    "pino-file.mjs.map": "bc19338eadf62523a122a9cf34b4b7c39cf2bedaa65b847d472e4398a430952c",
+    "pino-pretty.mjs": "1a05aa85bf5ce035c5d1f19a32e0308d6dbab00c7194e1936c7f632d10994fac",
+    "pino-pretty.mjs.map": "a7d3c3a4613f9648f8cb7e69a6abeacdbe3934792fcc24cc0af74fd6fde3eb90",
+    "pino-worker.mjs": "d1fb70e8c5d26942a44815376ccb26fcba415a4bce984354348f14f5d32b34d5",
+    "pino-worker.mjs.map": "9d01e4a15b1d22c224fc292eeb4821156bdc8e3adaea4d4d724f59e4dad4eff7",
+    "thread-stream-worker.mjs": "b490228463d2d47a57932bcbe6bb307af9c54d1b4f3953191e1077e791bb188d",
+    "thread-stream-worker.mjs.map": "e5fd66fcec3ca622f449a275bd6b14d061ed62ce34faadce8716b363a4df878a"
+  },
+  "sourceDeltas": [
+    "artifacts/api-server/src/routes/pos.ts"
+  ],
+  "actualRouteSha256": "89326c9d783a7ca1469e0a366d76e8378d0b143e7d534ba5066ab611b89cce95",
+  "sourceParity": true,
+  "frontendChanges": [],
+  "sqlChanges": [],
+  "writeRetriesAdded": false,
+  "nativePgEvidence": "reports/postrelease-review-20260926/tarea-2/cash-regression/results.json",
+  "preservedUncertainTicket": 16,
+  "healthz": "PENDING_MAIN_ACTIVATION",
+  "typecheck": "PASS",
+  "nativeRegression": "BASELINE_RED_40001_CANDIDATE_6_PASS",
+  "scope": "Full actual route handler and business helpers; native E5 serialization triggers, FKs/checks/indexes; HTTP authentication and other deferred business graphs require owner live-copy retest"
+}

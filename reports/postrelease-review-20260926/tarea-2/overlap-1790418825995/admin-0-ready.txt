@@ -1,0 +1,74 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Sitio
+Vista Global
+I
+
+Isolated postreview financial admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Reportes y Decisiones
+
+Análisis consolidados para seguimiento operativo y financiero.
+
+Normal
+Comparar
+Ventas
+Qué comprar
+Utilidad y márgenes
+Clientes y crédito
+Control operativo
+Este Mes
+Todo
+Todo
+Actualizar
+PDF
+Excel
+
+Cargando ventas...
+
+Comparativo de Tiendas
+
+Evaluación de rendimiento, ventas y medios de pago por ubicación.

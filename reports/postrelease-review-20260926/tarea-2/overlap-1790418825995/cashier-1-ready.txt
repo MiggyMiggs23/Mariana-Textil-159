@@ -1,0 +1,144 @@
+Mariana Textil
+CAJA
+Cobros
+Sitio (Sólo lectura)
+POSTREVIEW26 CONC CAJA 2
+24
+P
+
+POSTREVIEW26 Cashier 2
+
+CAJA
+
+POSTREVIEW26 CONC CAJA 2
+
+Cerrar sesión
+Caja operativa
+Caja Operativa
+
+Cobro de tickets pendientes y cortes de caja.
+
+Sesión Abierta
+Salidas de dinero
+
+Pagos operativos y extraordinarios (E4).
+
+Tipo de Salida
+Extraordinaria
+Extraordinaria
+Monto
+Cuenta de origen
+Efectivo
+Efectivo
+
+E4 opera exclusivamente con Caja Física; Fondo y mezcla E12 están desactivados.
+
+Proveedor
+Sin proveedor
+Sin proveedor
+Motivo
+
+Saldo Caja (servidor): 0.00. Se revalida al confirmar; la API conserva la autoridad final.
+
+Registrar salida extraordinaria
+Registro de Salidas
+
+Sin salidas registradas.
+
+Tickets de Caja
+Ticket folio 16
+4:02 AM
+$1,000.00
+Cobrar
+Ticket folio 17
+4:02 AM
+$1,000.00
+Cobrar
+Ticket folio 18
+4:02 AM
+$1,000.00
+Cobrar
+Ticket folio 19
+4:02 AM
+$1,000.00
+Cobrar
+Ticket folio 20
+4:03 AM
+$1,000.00
+Cobrar
+Ticket folio 21
+4:03 AM
+$1,000.00
+Cobrar
+Ticket folio 22
+4:03 AM
+$1,000.00
+Cobrar
+Ticket folio 23
+4:03 AM
+$1,000.00
+Cobrar
+Ticket folio 24
+4:03 AM
+$1,000.00
+Cobrar
+Ticket folio 25
+4:03 AM
+$1,000.00
+Cobrar
+Ticket folio 26
+4:03 AM
+$1,000.00
+Cobrar
+Ticket folio 27
+4:03 AM
+$1,000.00
+Cobrar
+Ticket folio 40
+4:32 AM
+$1,000.00
+Cobrar
+Ticket folio 41
+4:32 AM
+$1,000.00
+Cobrar
+Ticket folio 42
+4:32 AM
+$1,000.00
+Cobrar
+Ticket folio 43
+4:32 AM
+$1,000.00
+Cobrar
+Ticket folio 44
+4:32 AM
+$1,000.00
+Cobrar
+Ticket folio 45
+4:32 AM
+$1,000.00
+Cobrar
+Ticket folio 46
+4:32 AM
+$1,000.00
+Cobrar
+Ticket folio 47
+4:32 AM
+$1,000.00
+Cobrar
+Ticket folio 48
+4:32 AM
+$1,000.00
+Cobrar
+Ticket folio 49
+4:32 AM
+$1,000.00
+Cobrar
+Ticket folio 50
+4:32 AM
+$1,000.00
+Cobrar
+Ticket folio 51
+4:32 AM
+$1,000.00
+Cobrar
