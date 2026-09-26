@@ -1,0 +1,146 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Vista Global
+1
+N
+
+Noche disposable administrator
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Usuarios
+
+Gestión de personal, accesos y asignación de sitios.
+
+Nuevo Usuario
+Activos
+Nombre / Usuario	Rol	Alcance	Sitio	Estado	Acciones
+
+Administrador
+admin
+	ADMIN	TODAS	Global	Activo	
+Editar
+
+Bodega
+prueba.bodega
+	BODEGA	PROPIA	Don Nacho	Activo	
+Editar
+
+CONTINUACION CONTADOR A
+continuea3e19f8e203
+	CONTADOR	TODAS	Global	Activo	Perfil contable A/F
+Editar
+
+CONTINUACION CONTADOR F
+continuefcb07c5d228
+	CONTADOR	TODAS	Global	Activo	Perfil contable A/F
+Editar
+
+Don Nacho
+prueba.donnacho
+	BODEGA	PROPIA	Don Nacho	Activo	
+Editar
+
+E2E Admin
+e2e_admin_pulextn3
+	ADMIN	TODAS	Global	Activo	
+Editar
+
+E2E Admin
+e2e_admin_1-umo1fc
+	ADMIN	TODAS	Global	Activo	
+Editar
+
+N26 permisos BODEGA
+n26perm_bodega
+	BODEGA	PROPIA	Mariana	Activo	
+Editar
+
+N26 permisos CAJA
+n26perm_caja
+	CAJA	TODAS	Mariana	Activo	
+Editar
+
+N26 permisos CONTADOR
+n26perm_contador
+	CONTADOR	TODAS	Global	Activo	Perfil contable A/F
+Editar
+
+N26 permisos SISTEMAS
+n26perm_sistemas
+	SISTEMAS	TODAS	Global	Activo	
+Editar
+
+N26 permisos SUPERVISOR
+n26perm_supervisor
+	SUPERVISOR	TODAS	Mariana	Activo	
+Editar
+
+N26 permisos TERMINAL
+n26perm_terminal
+	TERMINAL	PROPIA	Mariana	Activo	
+Editar
+
+Noche disposable administrator
+e2e.noche.admin
+	ADMIN	TODAS	Global	Activo	
+Editar
+
+Prueba Caja
+prueba.caja
+	CAJA	PROPIA	Mariana	Activo	
+Editar
+
+Prueba Inventarios
+prueba.inventarios
+	SUPERVISOR	TODAS	Don Nacho	Activo	
+Editar
+
+Prueba Terminal
+prueba.terminal
+	TERMINAL	PROPIA	Mariana	Activo	
+Editar
+Usuario creado correctamente

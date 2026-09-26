@@ -1,0 +1,230 @@
+{
+  "status": "PARTIAL_OR_BLOCKED",
+  "checks": [
+    {
+      "id": "A-quiescent-profile-identity",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Expected values to be strictly equal:\n\n503 !== 200\n"
+    },
+    {
+      "id": "A-api-fondo",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Expected values to be strictly equal:\n\n500 !== 403\n"
+    },
+    {
+      "id": "A-api-proveedores-226-pagos",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Expected values to be strictly equal:\n\n500 !== 403\n"
+    },
+    {
+      "id": "A-api-tickets-10",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Expected values to be strictly equal:\n\n500 !== 403\n"
+    },
+    {
+      "id": "A-api-clientes-2584",
+      "status": "PASS",
+      "evidence": {
+        "status": 403,
+        "endpoint": "/api/clientes/2584"
+      }
+    },
+    {
+      "id": "F-quiescent-profile-identity",
+      "status": "PASS",
+      "evidence": {
+        "status": 200,
+        "perfil": "F"
+      }
+    },
+    {
+      "id": "F-api-fondo",
+      "status": "PASS",
+      "evidence": {
+        "status": 403,
+        "endpoint": "/api/fondo"
+      }
+    },
+    {
+      "id": "F-api-proveedores-226-pagos",
+      "status": "PASS",
+      "evidence": {
+        "status": 403,
+        "endpoint": "/api/proveedores/226/pagos"
+      }
+    },
+    {
+      "id": "F-api-tickets-10",
+      "status": "PASS",
+      "evidence": {
+        "status": 403,
+        "endpoint": "/api/tickets/10"
+      }
+    },
+    {
+      "id": "F-api-clientes-2584",
+      "status": "PASS",
+      "evidence": {
+        "status": 403,
+        "endpoint": "/api/clientes/2584"
+      }
+    },
+    {
+      "id": "fresh-audit-attribution-readback",
+      "status": "PASS",
+      "evidence": {
+        "totalEscaneados": 5,
+        "duplicate": [
+          {
+            "usuarioId": 244,
+            "usuarioNombre": "NOCHE26 Auditor 1",
+            "serie": "10000031",
+            "clasificacion": "CUADRO",
+            "rolloId": 31,
+            "producto": "CON2D0ALG-AZU · CONTINUACION 2D0AA2 ALGODON · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "NOCHE26 AUDIT NATIVO",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso configurado",
+            "pisoRealId": 14,
+            "pisoReal": "01 Acceso configurado",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T03:13:25.245Z",
+            "sobrante": null
+          }
+        ],
+        "desktop": {
+          "usuarioId": 246,
+          "usuarioNombre": "NOCHE26 Auditor 3",
+          "serie": "10000032",
+          "clasificacion": "CUADRO",
+          "rolloId": 32,
+          "producto": "CON2D0ALG-AZU · CONTINUACION 2D0AA2 ALGODON · AZUL",
+          "cantidad": "10.000",
+          "unidad": "METRO",
+          "ubicacionActualId": 835,
+          "ubicacionActual": "NOCHE26 AUDIT NATIVO",
+          "pisoEsperadoId": 14,
+          "pisoEsperado": "01 Acceso configurado",
+          "pisoRealId": 14,
+          "pisoReal": "01 Acceso configurado",
+          "estadoActual": "DISPONIBLE",
+          "resolucion": "PENDIENTE",
+          "escaneadoAt": "2026-09-26T03:37:16.877Z",
+          "sobrante": null
+        }
+      }
+    },
+    {
+      "id": "settled-note-independent-readback",
+      "status": "PASS",
+      "evidence": {
+        "id": 12,
+        "folio": 12,
+        "documentoTipo": "NOTA",
+        "saldoPendiente": "0.00"
+      }
+    },
+    {
+      "id": "six-performance-tickets-remain-unpaid",
+      "status": "PASS",
+      "evidence": {
+        "ids": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "nativeProvenance": true,
+        "payable": true
+      }
+    },
+    {
+      "id": "closed-cash-zero-difference",
+      "status": "PASS",
+      "evidence": {
+        "efectivoContado": "2548.00",
+        "efectivoEsperado": "2548.00",
+        "diferencia": "0.00"
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "tarea-5/independent-final-readbacks/real-settled-note-document.png",
+      "sha256": "0e532daa0dd0dbf66582e2bba4afa1a32b93d80b8db26e8bdc92ebd0b6299faa"
+    }
+  ],
+  "startedAt": "2026-09-26T03:37:20.123Z",
+  "AIdentity": {
+    "status": 503,
+    "body": {
+      "code": "DEPENDENCIA_NO_DISPONIBLE",
+      "message": "No fue posible completar E11; no se usa un lector alternativo.",
+      "requestId": "dc9ad639-f525-4e43-9d55-caa78eb8d21c"
+    }
+  },
+  "FIdentity": {
+    "status": 200,
+    "body": {
+      "usuarioId": 241,
+      "rolBase": "CONTADOR",
+      "perfil": "F",
+      "perfilVersion": 0,
+      "permisosVersion": "a8d8826d08b332e845d62603201ca8083e78b15e589205f91b529f2fd1beaa06",
+      "capacidades": [
+        "FISCAL_LEER",
+        "FISCAL_CONCILIAR"
+      ]
+    }
+  },
+  "auditRows": {
+    "duplicate": [
+      {
+        "usuarioId": 244,
+        "usuarioNombre": "NOCHE26 Auditor 1",
+        "serie": "10000031",
+        "clasificacion": "CUADRO",
+        "rolloId": 31,
+        "producto": "CON2D0ALG-AZU · CONTINUACION 2D0AA2 ALGODON · AZUL",
+        "cantidad": "10.000",
+        "unidad": "METRO",
+        "ubicacionActualId": 835,
+        "ubicacionActual": "NOCHE26 AUDIT NATIVO",
+        "pisoEsperadoId": 14,
+        "pisoEsperado": "01 Acceso configurado",
+        "pisoRealId": 14,
+        "pisoReal": "01 Acceso configurado",
+        "estadoActual": "DISPONIBLE",
+        "resolucion": "PENDIENTE",
+        "escaneadoAt": "2026-09-26T03:13:25.245Z",
+        "sobrante": null
+      }
+    ],
+    "desktop": {
+      "usuarioId": 246,
+      "usuarioNombre": "NOCHE26 Auditor 3",
+      "serie": "10000032",
+      "clasificacion": "CUADRO",
+      "rolloId": 32,
+      "producto": "CON2D0ALG-AZU · CONTINUACION 2D0AA2 ALGODON · AZUL",
+      "cantidad": "10.000",
+      "unidad": "METRO",
+      "ubicacionActualId": 835,
+      "ubicacionActual": "NOCHE26 AUDIT NATIVO",
+      "pisoEsperadoId": 14,
+      "pisoEsperado": "01 Acceso configurado",
+      "pisoRealId": 14,
+      "pisoReal": "01 Acceso configurado",
+      "estadoActual": "DISPONIBLE",
+      "resolucion": "PENDIENTE",
+      "escaneadoAt": "2026-09-26T03:37:16.877Z",
+      "sobrante": null
+    }
+  }
+}

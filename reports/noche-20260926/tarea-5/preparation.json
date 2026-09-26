@@ -1,0 +1,7 @@
+{
+  "status": "PREPARED_AWAITING_MAIN_HANDOFF",
+  "harness": "../browser/run.mjs",
+  "actualBrowserRuns": 0,
+  "actualScreenshots": 0,
+  "note": "Native create F/A and assign A; screen and authenticated API boundary checks; actual nonempty day/week/month fiscal reconciliation and NO_CUADRA ADMIN notice. Closed periods require separate MAIN-controlled environment; never fabricated invoice dates."
+}

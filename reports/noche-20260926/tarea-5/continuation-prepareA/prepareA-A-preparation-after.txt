@@ -1,0 +1,36 @@
+Recuperación E11 pendiente — no crear otra intención
+
+Entrega estos UUID a ADMIN para consultar la evidencia del servidor con autorización vigente. Cambiar perfil o iniciar sesión no prueba que la operación no ocurrió. No se muestra ni recupera aquí el contenido privado anterior.
+
+Actor original 242 · d71a7e9f-aec2-45fa-921e-4f60209f33a6 · PREPARACION · CONFIRMED
+
+Los marcadores no se descartan por confirmación manual: requieren verificación autorizada del resultado. No hay reenvío automático ni botón para generar otro UUID.
+
+Contabilidad · A
+
+Perfil v1 · proyección autorizada, sin documentos operativos privados.
+
+Cerrar sesión
+Finanzas saneadas
+Preparaciones E5 (sin aplicar)
+Preparar aplicación · cliente #2584
+
+Cobro da1a5fde-6de7-4c6d-939c-da8c5180596f · retenido real $900.00 · revisión 5
+
+Importe vacío excluye el cargo. Notas del mismo cliente; propuesta sin efecto financiero. No existe opción de favor para A.
+
+Confirmar destinos explícitos
+
+Nota #10 · cargo #1 · $900.00
+
+Se registra propuesta E5 auténtica. La deuda y el retenido no cambian por preparar.
+
+VolverConfirmar preparación A
+
+Comprobando identidad y registrando…
+
+Reintentar exactamente la intención incierta
+
+Propuesta bef94f2a-c636-4406-b477-36830a61cfd3 preparada · retenido $900.00 sin aplicación. ADMIN resolverá por E5.
+
+Volver a recepciones preparables

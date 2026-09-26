@@ -1,0 +1,9 @@
+Recuperación E11 pendiente — no crear otra intención
+
+Entrega estos UUID a ADMIN para consultar la evidencia del servidor con autorización vigente. Cambiar perfil o iniciar sesión no prueba que la operación no ocurrió. No se muestra ni recupera aquí el contenido privado anterior.
+
+Actor original 234 · 81005b74-1f78-4c5f-84b3-5e71a03d5426 · PERFIL · CONFIRMED
+
+Los marcadores no se descartan por confirmación manual: requieren verificación autorizada del resultado. No hay reenvío automático ni botón para generar otro UUID.
+
+REVISION_OBSOLETA: Conflicto concurrente; recarga y confirma de nuevo. · Solicitud 7e2db38a-ea8b-48ae-8d27-5e21756cfe4b

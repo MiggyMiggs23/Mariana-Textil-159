@@ -1,0 +1,21 @@
+Contabilidad · A
+
+Perfil v1 · proyección autorizada, sin documentos operativos privados.
+
+Cerrar sesión
+Finanzas saneadas
+Preparaciones E5 (sin aplicar)
+Preparar aplicación · cliente #2584
+
+Cobro da1a5fde-6de7-4c6d-939c-da8c5180596f · retenido real $900.00 · revisión 4
+
+Importe vacío excluye el cargo. Notas del mismo cliente; propuesta sin efecto financiero. No existe opción de favor para A.
+
+Confirmar destinos explícitos
+
+Nota #10 · cargo #1 · $900.00
+
+Se registra propuesta E5 auténtica. La deuda y el retenido no cambian por preparar.
+
+VolverConfirmar preparación A
+Volver a recepciones preparables

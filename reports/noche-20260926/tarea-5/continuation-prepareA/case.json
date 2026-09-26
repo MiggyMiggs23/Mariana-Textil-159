@@ -1,0 +1,25 @@
+{
+  "id": "continuation-prepareA",
+  "task": 5,
+  "status": "PASS",
+  "exitCode": 0,
+  "resultFile": "tarea-5/continuation-prepareA/prepareA-result.json",
+  "observations": [
+    {
+      "item": "native-login",
+      "status": 200
+    },
+    {
+      "item": "native-login",
+      "status": 200
+    },
+    {
+      "item": "A-preparation",
+      "status": 200
+    },
+    {
+      "item": "A-legacy-E5-denied",
+      "status": 403
+    }
+  ]
+}

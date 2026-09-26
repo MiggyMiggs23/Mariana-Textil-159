@@ -1,0 +1,304 @@
+{
+  "status": "PARTIAL_OR_BLOCKED",
+  "checks": [
+    {
+      "id": "A-native-login",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Expected values to be strictly equal:\n\nundefined !== 'A'\n"
+    },
+    {
+      "id": "A-ui-denied-fondo",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText(/no puede acceder|no autorizada|sin acceso|acceso denegado|no tienes permiso/i).first() to be visible\u001b[22m\n"
+    },
+    {
+      "id": "A-ui-denied-proveedores",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText(/no puede acceder|no autorizada|sin acceso|acceso denegado|no tienes permiso/i).first() to be visible\u001b[22m\n"
+    },
+    {
+      "id": "A-ui-denied-reportes",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText(/no puede acceder|no autorizada|sin acceso|acceso denegado|no tienes permiso/i).first() to be visible\u001b[22m\n"
+    },
+    {
+      "id": "A-ui-denied-productos",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText(/no puede acceder|no autorizada|sin acceso|acceso denegado|no tienes permiso/i).first() to be visible\u001b[22m\n"
+    },
+    {
+      "id": "A-restricted-object-fixtures",
+      "status": "PASS",
+      "evidence": {
+        "fixtureIdsSupplied": true
+      }
+    },
+    {
+      "id": "A-api--api-fondo",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Forbidden API must return 403, not a hidden UI alone\n\n500 !== 403\n"
+    },
+    {
+      "id": "A-api--api-proveedores-226-pagos",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Forbidden API must return 403, not a hidden UI alone\n\n500 !== 403\n"
+    },
+    {
+      "id": "A-api--api-tickets-10",
+      "status": "PASS",
+      "evidence": {
+        "endpoint": "/api/tickets/10",
+        "status": 403
+      }
+    },
+    {
+      "id": "A-api--api-clientes-2584",
+      "status": "PASS",
+      "evidence": {
+        "endpoint": "/api/clientes/2584",
+        "status": 403
+      }
+    },
+    {
+      "id": "A-permitted-finanzas",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "page.waitForLoadState: Timeout 12000ms exceeded."
+    },
+    {
+      "id": "A-permitted-preparaciones",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('h1').first() to be visible\u001b[22m\n"
+    },
+    {
+      "id": "A-sanitized--api-e11-finanzas-clientes",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Expected values to be strictly equal:\n\n503 !== 200\n"
+    },
+    {
+      "id": "F-native-login",
+      "status": "PASS",
+      "evidence": {
+        "profile": "F",
+        "actorId": 241
+      }
+    },
+    {
+      "id": "F-ui-denied-fondo",
+      "status": "PASS",
+      "evidence": {
+        "route": "/fondo",
+        "denied": true
+      }
+    },
+    {
+      "id": "F-ui-denied-proveedores",
+      "status": "PASS",
+      "evidence": {
+        "route": "/proveedores",
+        "denied": true
+      }
+    },
+    {
+      "id": "F-ui-denied-reportes",
+      "status": "PASS",
+      "evidence": {
+        "route": "/reportes",
+        "denied": true
+      }
+    },
+    {
+      "id": "F-ui-denied-productos",
+      "status": "PASS",
+      "evidence": {
+        "route": "/productos",
+        "denied": true
+      }
+    },
+    {
+      "id": "F-restricted-object-fixtures",
+      "status": "PASS",
+      "evidence": {
+        "fixtureIdsSupplied": true
+      }
+    },
+    {
+      "id": "F-api--api-fondo",
+      "status": "PASS",
+      "evidence": {
+        "endpoint": "/api/fondo",
+        "status": 403
+      }
+    },
+    {
+      "id": "F-api--api-proveedores-226-pagos",
+      "status": "PASS",
+      "evidence": {
+        "endpoint": "/api/proveedores/226/pagos",
+        "status": 403
+      }
+    },
+    {
+      "id": "F-api--api-tickets-10",
+      "status": "PASS",
+      "evidence": {
+        "endpoint": "/api/tickets/10",
+        "status": 403
+      }
+    },
+    {
+      "id": "F-api--api-clientes-2584",
+      "status": "PASS",
+      "evidence": {
+        "endpoint": "/api/clientes/2584",
+        "status": 403
+      }
+    },
+    {
+      "id": "F-permitted-fiscal",
+      "status": "PASS",
+      "evidence": {
+        "route": "/contabilidad/fiscal",
+        "headings": [
+          "Contabilidad · F",
+          "Ventas facturadas y clientes facturados",
+          "Clientes con documentos facturados",
+          "Documentos facturados del intervalo",
+          "Administración y ajustes"
+        ]
+      }
+    },
+    {
+      "id": "F-permitted-conciliaciones",
+      "status": "PASS",
+      "evidence": {
+        "route": "/contabilidad/conciliaciones",
+        "headings": [
+          "Contabilidad · F",
+          "Conciliaciones de ventas facturadas",
+          "DIA · 2026-08-01 a 2026-08-02 (exclusivo)",
+          "MES · 2026-08-01 a 2026-09-01 (exclusivo)",
+          "DIA · 2026-08-02 a 2026-08-03 (exclusivo)",
+          "DIA · 2026-08-03 a 2026-08-04 (exclusivo)",
+          "SEMANA · 2026-08-03 a 2026-08-10 (exclusivo)",
+          "DIA · 2026-08-04 a 2026-08-05 (exclusivo)",
+          "DIA · 2026-08-05 a 2026-08-06 (exclusivo)",
+          "DIA · 2026-08-06 a 2026-08-07 (exclusivo)",
+          "DIA · 2026-08-07 a 2026-08-08 (exclusivo)",
+          "DIA · 2026-08-08 a 2026-08-09 (exclusivo)",
+          "DIA · 2026-08-09 a 2026-08-10 (exclusivo)",
+          "DIA · 2026-08-10 a 2026-08-11 (exclusivo)",
+          "SEMANA · 2026-08-10 a 2026-08-17 (exclusivo)",
+          "DIA · 2026-08-11 a 2026-08-12 (exclusivo)",
+          "DIA · 2026-08-12 a 2026-08-13 (exclusivo)",
+          "DIA · 2026-08-13 a 2026-08-14 (exclusivo)",
+          "DIA · 2026-08-14 a 2026-08-15 (exclusivo)",
+          "DIA · 2026-08-15 a 2026-08-16 (exclusivo)",
+          "DIA · 2026-08-16 a 2026-08-17 (exclusivo)",
+          "DIA · 2026-08-17 a 2026-08-18 (exclusivo)",
+          "Administración y ajustes"
+        ]
+      }
+    },
+    {
+      "id": "F-sanitized--api-e11-fiscal-ventas?desde=2026-09-25&hastaExclusivo=2026-09-27&limit=20",
+      "status": "PASS",
+      "evidence": {
+        "endpoint": "/api/e11/fiscal/ventas?desde=2026-09-25&hastaExclusivo=2026-09-27&limit=20",
+        "sanitized": true
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "tarea-5/accountant-boundaries/A-ui-denied-fondo-0.png",
+      "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+    },
+    {
+      "file": "tarea-5/accountant-boundaries/A-ui-denied-proveedores-0.png",
+      "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+    },
+    {
+      "file": "tarea-5/accountant-boundaries/A-ui-denied-reportes-0.png",
+      "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+    },
+    {
+      "file": "tarea-5/accountant-boundaries/A-ui-denied-productos-0.png",
+      "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+    },
+    {
+      "file": "tarea-5/accountant-boundaries/A-permitted-finanzas-0.png",
+      "sha256": "e00cb7a4b02e52560a6713d6dae83206c0a68359da841d1e237bba4ffa376c85"
+    },
+    {
+      "file": "tarea-5/accountant-boundaries/A-permitted-preparaciones-0.png",
+      "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+    },
+    {
+      "file": "tarea-5/accountant-boundaries/F-ui-denied-fondo-0.png",
+      "sha256": "53d4fcfdddc3a28fb6aa89b3910897d596822ab6bf32560c9a6bfc4428a6eb40"
+    },
+    {
+      "file": "tarea-5/accountant-boundaries/F-ui-denied-proveedores-0.png",
+      "sha256": "53d4fcfdddc3a28fb6aa89b3910897d596822ab6bf32560c9a6bfc4428a6eb40"
+    },
+    {
+      "file": "tarea-5/accountant-boundaries/F-ui-denied-reportes-0.png",
+      "sha256": "53d4fcfdddc3a28fb6aa89b3910897d596822ab6bf32560c9a6bfc4428a6eb40"
+    },
+    {
+      "file": "tarea-5/accountant-boundaries/F-ui-denied-productos-0.png",
+      "sha256": "53d4fcfdddc3a28fb6aa89b3910897d596822ab6bf32560c9a6bfc4428a6eb40"
+    },
+    {
+      "file": "tarea-5/accountant-boundaries/F-permitted-fiscal-0.png",
+      "sha256": "61c9abd4f354855bea24cdd72b5378a480eaa746dd6f839a958c9e27f55676aa"
+    },
+    {
+      "file": "tarea-5/accountant-boundaries/F-permitted-conciliaciones-0.png",
+      "sha256": "92aaf3be48dbb8d6dd10040effb8fda4f64260cf63c590a41f655c21c2a1f421"
+    }
+  ],
+  "startedAt": "2026-09-26T03:20:48.083Z",
+  "technicalErrors": [
+    {
+      "kind": "http",
+      "path": "/api/e11/identidad",
+      "status": 503
+    },
+    {
+      "kind": "http",
+      "path": "/api/auth/me",
+      "status": 500
+    },
+    {
+      "kind": "http",
+      "path": "/api/fondo",
+      "status": 500
+    },
+    {
+      "kind": "http",
+      "path": "/api/auth/me",
+      "status": 500
+    },
+    {
+      "kind": "http",
+      "path": "/api/proveedores/226/pagos",
+      "status": 500
+    },
+    {
+      "kind": "http",
+      "path": "/api/auth/me",
+      "status": 500
+    },
+    {
+      "kind": "http",
+      "path": "/api/e11/finanzas/clientes",
+      "status": 503
+    },
+    {
+      "kind": "http",
+      "path": "/api/auth/me",
+      "status": 500
+    }
+  ]
+}

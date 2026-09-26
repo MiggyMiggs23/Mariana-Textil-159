@@ -1,0 +1,53 @@
+{
+  "id": "continuation-roles",
+  "task": 5,
+  "status": "PARTIAL_OR_BLOCKED",
+  "exitCode": 1,
+  "resultFile": "tarea-5/continuation-roles/roles-result.json",
+  "observations": [
+    {
+      "item": "native-login",
+      "status": 200
+    },
+    {
+      "item": "create-F",
+      "status": 201
+    },
+    {
+      "item": "create-A",
+      "status": 201
+    },
+    {
+      "item": "assign-A",
+      "status": 200
+    },
+    {
+      "item": "native-login",
+      "status": 200
+    },
+    {
+      "item": "native-login",
+      "status": 200
+    },
+    {
+      "item": "identity",
+      "status": "OBSERVED"
+    },
+    {
+      "item": "restricted-legacy",
+      "status": 403
+    },
+    {
+      "item": "restricted-legacy",
+      "status": 403
+    },
+    {
+      "item": "restricted-legacy",
+      "status": 403
+    },
+    {
+      "item": "restricted-legacy",
+      "status": 403
+    }
+  ]
+}

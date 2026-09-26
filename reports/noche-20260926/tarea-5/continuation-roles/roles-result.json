@@ -1,0 +1,108 @@
+{
+  "stage": "roles",
+  "status": "BLOCKED_OR_UNCERTAIN",
+  "steps": [
+    {
+      "action": "native-login",
+      "role": "ADMIN",
+      "status": 200
+    },
+    {
+      "action": "create-F",
+      "httpStatus": 201,
+      "response": {
+        "id": 241,
+        "nombre": "CONTINUACION CONTADOR F",
+        "usuario": "continuefcb07c5d228",
+        "rol": "CONTADOR",
+        "ubicacion": null,
+        "alcanceConsulta": "TODAS",
+        "activo": true,
+        "ultimoAcceso": null
+      },
+      "readback": {
+        "id": 241,
+        "rowVisible": true
+      }
+    },
+    {
+      "action": "create-A",
+      "httpStatus": 201,
+      "response": {
+        "id": 242,
+        "nombre": "CONTINUACION CONTADOR A",
+        "usuario": "continuea3e19f8e203",
+        "rol": "CONTADOR",
+        "ubicacion": null,
+        "alcanceConsulta": "TODAS",
+        "activo": true,
+        "ultimoAcceso": null
+      },
+      "readback": {
+        "id": 242,
+        "rowVisible": true
+      }
+    },
+    {
+      "action": "assign-A",
+      "httpStatus": 200,
+      "response": {
+        "id": "5561afa5-1f56-457c-96db-eedafd01ed8b",
+        "uuid": "81005b74-1f78-4c5f-84b3-5e71a03d5426",
+        "usuarioId": 242,
+        "actorId": 234,
+        "anterior": "F",
+        "posterior": "A",
+        "revision": 1,
+        "motivo": "ENSAYO copia desechable: preparar E5, nunca aplicar",
+        "creadoEn": "2026-09-26T02:58:34.004Z"
+      },
+      "readback": {
+        "profile": "A",
+        "actorId": 242
+      }
+    },
+    {
+      "action": "native-login",
+      "role": "F",
+      "status": 200
+    },
+    {
+      "action": "native-login",
+      "role": "A",
+      "status": 200
+    },
+    {
+      "action": "identity",
+      "role": "F",
+      "actorId": 241,
+      "profileVersion": 0
+    },
+    {
+      "action": "restricted-legacy",
+      "role": "F",
+      "endpoint": "/api/fondo",
+      "status": 403
+    },
+    {
+      "action": "restricted-legacy",
+      "role": "F",
+      "endpoint": "/api/proveedores/0/pagos",
+      "status": 403
+    },
+    {
+      "action": "restricted-legacy",
+      "role": "F",
+      "endpoint": "/api/tickets/0",
+      "status": 403
+    },
+    {
+      "action": "restricted-legacy",
+      "role": "F",
+      "endpoint": "/api/clientes/2583",
+      "status": 403
+    }
+  ],
+  "startedAt": "2026-09-26T02:58:17.046Z",
+  "error": "Readback /api/e11/identidad HTTP 503: {\"code\":\"DEPENDENCIA_NO_DISPONIBLE\",\"message\":\"No fue posible completar E11; no se usa un lector alternativo.\",\"requestId\":\"feb514c8-ff4f-4461-bbb4-a21cc97a1df6\"}"
+}
