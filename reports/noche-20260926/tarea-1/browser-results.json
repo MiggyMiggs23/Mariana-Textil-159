@@ -1,0 +1,1775 @@
+[
+  {
+    "role": "ADMIN",
+    "module": "entradas",
+    "path": "/entradas/pendientes-costo",
+    "controls": {
+      "editar": "^Capturar$"
+    },
+    "fixture": "MA-000002",
+    "actions": {
+      "editar": {
+        "visible": 1,
+        "enabled": 1
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/entradas/pendientes-costo",
+    "fixtureVisible": true,
+    "body": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\n1\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\n1\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAtribución E7\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nADMINISTRACIÓN CONTABLE\nConciliaciones documentales\nAdministrar perfiles A/F\nBorrar datos de prueba\nSitio\nVista Global\nN\n\nNoche disposable administrator\n\nADMIN\n\nGlobal\n\nCerrar sesión\nCostos Pendientes\n\nEntradas registradas que requieren captura de costo para valorizar el inventario.\n\nVolver\nEntradas sin costeo\n\nSe muestran ordenadas desde la más antigua. Las entradas con más de 48 horas sin costo aparecen marcadas.\n\nFolio\tFecha\tSitio\tProveedor\tRollos\tMts.\tKg.\tBolsas\tRegistrado por\tAcción\n\n#MA-000002\n26/09/2026\tMariana\tSkyTex\t1\t10.00\t-\t-\tN26 permisos BODEGA\tCapturar",
+    "buttons": [
+      "Borrar datos de prueba",
+      "",
+      "Cerrar sesión",
+      "Capturar"
+    ],
+    "editDialogVisible": true,
+    "screenshot": "ui-admin-entradas.jpg"
+  },
+  {
+    "role": "ADMIN",
+    "module": "salidas",
+    "path": "/salidas",
+    "controls": {
+      "editar": "Revertir",
+      "autorizar": "Cancelar salida"
+    },
+    "fixture": "MA-000001",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 2,
+        "enabled": 2
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/salidas",
+    "fixtureVisible": true,
+    "body": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\n1\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\n1\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAtribución E7\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nADMINISTRACIÓN CONTABLE\nConciliaciones documentales\nAdministrar perfiles A/F\nBorrar datos de prueba\nSitio\nVista Global\nN\n\nNoche disposable administrator\n\nADMIN\n\nGlobal\n\nCerrar sesión\nSalidas\n\nHistorial completo de salidas y movimientos entre almacenes.\n\nExcel\nNueva Salida\nNueva salida para venta a cliente\nHistorial\nRecepción\nA mostrador\nExtraordinarias\nFiltros\nMA-000002\n26 sep 2026\nMariana\n3Bh Creations SA DE CV\n10.00\nEn curso\nEntregar\nCancelar\nMA-000001\n26 sep 2026\nMariana\n3Bh Creations SA DE CV\n10.00\nEn curso\nEntregar\nCancelar",
+    "buttons": [
+      "Borrar datos de prueba",
+      "",
+      "Cerrar sesión",
+      "Excel",
+      "Nueva Salida",
+      "Nueva salida para venta a cliente",
+      "Filtros",
+      "Entregar",
+      "Cancelar",
+      "Entregar",
+      "Cancelar"
+    ],
+    "screenshot": "ui-admin-salidas.jpg"
+  },
+  {
+    "role": "ADMIN",
+    "module": "etiquetas",
+    "path": "/etiquetas?rolloId=1",
+    "controls": {
+      "editar": "Marcar revisado"
+    },
+    "fixture": "10000001",
+    "actions": {
+      "editar": {
+        "visible": 1,
+        "enabled": 1
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/etiquetas",
+    "fixtureVisible": true,
+    "body": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\n1\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\n1\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAtribución E7\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nADMINISTRACIÓN CONTABLE\nConciliaciones documentales\nAdministrar perfiles A/F\nBorrar datos de prueba\nSitio\nVista Global\nN\n\nNoche disposable administrator\n\nADMIN\n\nGlobal\n\nCerrar sesión\nOPERACIÓN\nEtiquetas\n\nPendientes de revisión: todas las series con tres o más reimpresiones aún no cubiertas.\n\nReimprimir seleccionadas (1)\nBuscar rollos\nHistorial de reimpresiones\nBuscar\nSitio\nTodos\nEstado\nTodos\nProducto\nTodos\nAlta desde\nAlta hasta\nFolio de entrada\nLimpiar filtros\nMostrar todos los rollos\nPendientes de revisión1 rollos\n1/50 seleccionados\n\tSerie\tProducto\tColor\tSKU\tCantidad\tUnidad\tUbicación\tReimpresiones\tÚltima reimpresión\tRevisión\tEstado\tEntrada\tAcción\n\n\t\n10000001\n3 reimpresiones\tTafeta Rojo\tRojo\tTAF-ROJ\t10.00\tMts.\tMariana\t3\t26/09/26, 2:27 a.m.\t\nPendienteMarcar revisado\n\tDISPONIBLE\t—\t\nReimprimir etiqueta\nMostrando 1–1 de 1\nAnterior\nPágina 1 de 1\nSiguiente",
+    "buttons": [
+      "Borrar datos de prueba",
+      "",
+      "Cerrar sesión",
+      " Reimprimir seleccionadas (1)",
+      "Buscar",
+      "Limpiar filtros",
+      "Mostrar todos los rollos",
+      "Marcar revisado",
+      "Reimprimir etiqueta",
+      "Anterior",
+      "Siguiente"
+    ],
+    "screenshot": "ui-admin-etiquetas.jpg"
+  },
+  {
+    "role": "ADMIN",
+    "module": "auditoria_inventario",
+    "path": "/inventario/auditorias",
+    "controls": {
+      "editar": "Escanear",
+      "autorizar": "Confirmar"
+    },
+    "fixture": null,
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/inventario/auditorias",
+    "fixtureVisible": false,
+    "body": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\n1\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\n1\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAtribución E7\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nADMINISTRACIÓN CONTABLE\nConciliaciones documentales\nAdministrar perfiles A/F\nBorrar datos de prueba\nSitio\nVista Global\nN\n\nNoche disposable administrator\n\nADMIN\n\nGlobal\n\nCerrar sesión\n\nOPERACIÓN DE ALMACÉN\n\nAuditoría de Inventario\n\nControl físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.\n\nSeleccionar sitio\nAuditorías abiertas en el sitio\n\nSelecciona un sitio para ver sus auditorías abiertas.\n\nHISTORIAL DEL SITIO\nMA-AI-000001\nABIERTA\nMariana\n0/6",
+    "buttons": [
+      "Borrar datos de prueba",
+      "",
+      "Cerrar sesión",
+      "MA-AI-000001ABIERTAMariana0/6"
+    ],
+    "screenshot": "ui-admin-auditoria_inventario.jpg"
+  },
+  {
+    "role": "ADMIN",
+    "module": "contenedores",
+    "path": "/contenedores/1",
+    "controls": {
+      "editar": "Editar",
+      "autorizar": "Cancelar"
+    },
+    "fixture": "N26 PERM CONTAINER",
+    "actions": {
+      "editar": {
+        "visible": 1,
+        "enabled": 1
+      },
+      "autorizar": {
+        "visible": 1,
+        "enabled": 1
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/contenedores/1",
+    "fixtureVisible": true,
+    "body": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\n1\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\n1\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAtribución E7\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nADMINISTRACIÓN CONTABLE\nConciliaciones documentales\nAdministrar perfiles A/F\nBorrar datos de prueba\nSitio\nVista Global\nN\n\nNoche disposable administrator\n\nADMIN\n\nGlobal\n\nCerrar sesión\nContenedor #00001\nEN TRANSITO\nEditar\nCancelar\nIngresar Mercancía\nResumen Operativo\n\nProveedor\n\nSkyTex\n\nDestino\n\nMariana\n\nLlegada Est.\n\n1 oct 2026\n\nReferencia\n\nN26 PERM CONTAINER\n\nDesglose de Mercancía\nProducto\tEsperado\tRollos\tCosto Ref.\n\nTAF-ROJ\nTafeta - Rojo\n\t10 Mts.\t1\t-\nTotales\nLíneas\n1\nMetros\n10\nKilos\n0",
+    "buttons": [
+      "Borrar datos de prueba",
+      "",
+      "Cerrar sesión",
+      " Editar",
+      " Cancelar"
+    ],
+    "editDialogVisible": false,
+    "screenshot": "ui-admin-contenedores.jpg"
+  },
+  {
+    "role": "ADMIN",
+    "module": "permisos",
+    "path": "/permisos",
+    "controls": {
+      "editar": "Guardar"
+    },
+    "fixture": null,
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/permisos",
+    "fixtureVisible": false,
+    "body": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\n1\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\n1\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAtribución E7\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nADMINISTRACIÓN CONTABLE\nConciliaciones documentales\nAdministrar perfiles A/F\nBorrar datos de prueba\nSitio\nVista Global\nN\n\nNoche disposable administrator\n\nADMIN\n\nGlobal\n\nCerrar sesión\nPermisos\n\nGestión de matriz de accesos y excepciones por usuario.\n\nPor Rol\nPor Usuario\nMatriz de Roles\n\nDefine los accesos base para cada perfil.\n\nCaja\nAdministrador\nEl administrador tiene acceso total a todos los módulos y no puede ser restringido.\nMódulo\tVer\tCrear\tEditar\tAutorizar\ndashboard\t\t\t\t\npos\t\t\t\t\nentradas\t\t\t\t\nsalidas\t\t\t\t\nmovimientos\t\t\t\t\netiquetas\t\t\t\t\ninventario\t\t\t\t\nauditoria_inventario\t\t\t\t\nproductos\t\t\t\t\najustes\t\t\t\t\nclientes\t\t\t\t\nclientes_credito\t\t\t\t\nclientes_precios\t\t\t\t\nclientes_finanzas\t\t\t\t\nproveedores\t\t\t\t\nproveedores_finanzas\t\t\t\t\ncontenedores\t\t\t\t\nubicaciones\t\t\t\t\nusuarios\t\t\t\t\npermisos\t\t\t\t\nresumen_caja\t\t\t\t\ncortes\t\t\t\t\ncobros_pagos\t\n\t\n\t\t\nreportes\t\t\t\t\nconciliacion\t\t\t\t\nauditoria\t\t\t\t\nprecios\t\t\t\t\ncamionetas\t\t\t\t\nchoferes\t\t\t\t\nviajes\t\t\t\t\nsalidas_venta\t\t\t\t\nequipos\t\t\t\t\ncaja_abonos\t\t\t\t\nclientes_recapturas\t\t\t\t\nmarcar_remate\t\t\t\t",
+    "buttons": [
+      "Borrar datos de prueba",
+      "",
+      "Cerrar sesión"
+    ],
+    "screenshot": "ui-admin-permisos.jpg"
+  },
+  {
+    "role": "ADMIN",
+    "module": "clientes_finanzas",
+    "path": "/clientes/8",
+    "controls": {
+      "crear": "Abono|Registrar pago"
+    },
+    "fixture": null,
+    "actions": {
+      "crear": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/clientes/8",
+    "fixtureVisible": false,
+    "body": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\n1\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\n1\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAtribución E7\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nADMINISTRACIÓN CONTABLE\nConciliaciones documentales\nAdministrar perfiles A/F\nBorrar datos de prueba\nSitio\nVista Global\nN\n\nNoche disposable administrator\n\nADMIN\n\nGlobal\n\nCerrar sesión\n3Bh Creations SA DE CV\nActivo\n\nCliente #8 · Alta 25 sep 2026\n\nEditar datos\nDar de baja\nRecaptura Histórica\nUtilidad acumulada\n\n••••••\n\nSe excluyeron 0 línea(s) sin costo asignado.\n\nSaldos del cliente\n\nSALDO DEUDOR\n\n—\n\nRojo significa dinero pendiente de cobro.\n\nSALDO A FAVOR\n\n—\n\nVerde significa dinero recibido disponible para aplicar.\n\nDatos\nCrédito\nEstado de cuenta\nÚltimas ventas\nAnalítica\nDatos de contacto\n\nTELÉFONO\n\n—\n\nCORREO\n\n—\n\nRFC\n\nBCR160426UN8\n\nPREFERENCIA DE IMPRESIÓN\n\nNota con precios\n\nDIRECCIÓN PARTICULAR\n\nNEZAHUALCOYOTL, CDMX\n\nDIRECCIÓN DE ENTREGA\n\nNEZAHUALCOYOTL, CDMX\n\nNOTAS\n\n—\n\nDocumentos de Identidad (INE)\n\nAcceso restringido y auditado. Solo uso interno.\n\nFRENTE\n\nNo hay documento subido.\n\nSubir archivo\n\nREVERSO\n\nNo hay documento subido.\n\nSubir archivo\nActividad del periodo\n\nÚLTIMA COMPRA\n\nSin compras\n\nTICKETS\n\n0\n\nTICKET PROMEDIO\n\n—\n\nTICKET MÁXIMO\n\n—\n\nResume tickets y montos monetarios del cliente en el periodo elegido.\n\nMezcla de pagos\n\nSin pagos en el periodo.\n\nSuma importes monetarios y movimientos por forma de pago del cliente en el periodo elegido.\n\nTendencia mensual\n\nSin tendencia disponible.\n\nAgrupa tickets y ventas monetarias del cliente por mes dentro del periodo elegido.\n\nProductos por unidad, tela y color\n\nSin productos en el periodo.\n\nAgrupa cantidad por unidad, ventas y utilidad monetaria del cliente por producto en el periodo elegido; la utilidad requiere costo.\n\nOrigen y evidencia de crédito\n\nNo hay evidencia visible en tu alcance.\n\nVer salidas pendientes a cobro de este cliente\n\nSelecciona un sitio para consultar cobros retenidos.\n\nSolicitudes de pago dirigido\n\nSin solicitudes para esta entidad.",
+    "buttons": [
+      "Borrar datos de prueba",
+      "",
+      "Cerrar sesión",
+      "Editar datos",
+      "Dar de baja",
+      "Recaptura Histórica",
+      ""
+    ],
+    "screenshot": "ui-admin-clientes_finanzas.jpg"
+  },
+  {
+    "role": "ADMIN",
+    "module": "cobros_pagos",
+    "path": "/cobros",
+    "controls": {
+      "crear": "Cobrar"
+    },
+    "actions": {
+      "crear": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/cobros",
+    "fixtureVisible": false,
+    "body": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\n1\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAtribución E7\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nADMINISTRACIÓN CONTABLE\nConciliaciones documentales\nAdministrar perfiles A/F\nBorrar datos de prueba\nSitio\nVista Global\nN\n\nNoche disposable administrator\n\nADMIN\n\nGlobal\n\nCerrar sesión\nCaja operativa\nCartera / Estado de cuenta\nHistorial de cortes\nSelecciona un sitio\n\nDebes seleccionar tu sitio para operar la caja.",
+    "buttons": [
+      "Borrar datos de prueba",
+      "",
+      "Cerrar sesión",
+      "Caja operativa",
+      "Cartera / Estado de cuenta",
+      "Historial de cortes"
+    ],
+    "screenshot": "ui-admin-cobros_pagos.jpg"
+  },
+  {
+    "role": "ADMIN",
+    "module": "salidas_venta",
+    "path": "/pos",
+    "controls": {
+      "crear": "Generar venta"
+    },
+    "fixture": null,
+    "actions": {
+      "crear": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/pos",
+    "fixtureVisible": false,
+    "body": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\n1\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\n1\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAtribución E7\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nADMINISTRACIÓN CONTABLE\nConciliaciones documentales\nAdministrar perfiles A/F\nBorrar datos de prueba\nSitio\nVista Global\nN\n\nNoche disposable administrator\n\nADMIN\n\nGlobal\n\nCerrar sesión\nSelecciona un sitio\n\nDebes estar en un sitio específico para operar la terminal POS.\n\nSeleccionar tienda o bodega",
+    "buttons": [
+      "Borrar datos de prueba",
+      "",
+      "Cerrar sesión"
+    ],
+    "screenshot": "ui-admin-salidas_venta.jpg"
+  },
+  {
+    "role": "ADMIN",
+    "module": "camionetas",
+    "path": "/directorio/camionetas",
+    "controls": {
+      "editar": "Editar"
+    },
+    "fixture": "N26 PERM VAN",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/directorio/camionetas",
+    "fixtureVisible": true,
+    "body": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\n1\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\n1\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAtribución E7\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nADMINISTRACIÓN CONTABLE\nConciliaciones documentales\nAdministrar perfiles A/F\nBorrar datos de prueba\nSitio\nVista Global\nN\n\nNoche disposable administrator\n\nADMIN\n\nGlobal\n\nCerrar sesión\nCamionetas\n\nGestión de vehículos propios y subcontratados.\n\nNueva Camioneta\nTodos (Tipo)\nActivas\nAlias / Nombre\tPlacas\tVehículo\tTipo\tEstado\tAcciones\nN26 PERM VAN\tN26PERM\t-\t\nPROPIA\tActiva\t",
+    "buttons": [
+      "Borrar datos de prueba",
+      "",
+      "Cerrar sesión",
+      "Nueva Camioneta",
+      ""
+    ],
+    "screenshot": "ui-admin-camionetas.jpg"
+  },
+  {
+    "role": "ADMIN",
+    "module": "choferes",
+    "path": "/directorio/choferes",
+    "controls": {
+      "editar": "Editar N26 PERM DRIVER"
+    },
+    "fixture": "N26 PERM DRIVER",
+    "actions": {
+      "editar": {
+        "visible": 1,
+        "enabled": 1
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/directorio/choferes",
+    "fixtureVisible": true,
+    "body": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\n1\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\n1\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAtribución E7\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nADMINISTRACIÓN CONTABLE\nConciliaciones documentales\nAdministrar perfiles A/F\nBorrar datos de prueba\nSitio\nVista Global\nN\n\nNoche disposable administrator\n\nADMIN\n\nGlobal\n\nCerrar sesión\nChoferes\n\nCatálogo histórico de choferes para transporte.\n\nNuevo chofer\nActivos\nInactivos\nTodos\nNombre completo\tTeléfono\tEstado\tAcciones\nN26 PERM DRIVER\t5550001234\tActivo\t\nDesactivar",
+    "buttons": [
+      "Borrar datos de prueba",
+      "",
+      "Cerrar sesión",
+      "Nuevo chofer",
+      "Activos",
+      "Inactivos",
+      "Todos",
+      "",
+      "Desactivar"
+    ],
+    "editDialogVisible": true,
+    "screenshot": "ui-admin-choferes.jpg"
+  },
+  {
+    "role": "ADMIN",
+    "module": "equipos",
+    "path": "/equipos",
+    "controls": {
+      "editar": "Editar N26-PERM"
+    },
+    "fixture": "N26-PERM",
+    "actions": {
+      "editar": {
+        "visible": 1,
+        "enabled": 1
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/equipos",
+    "fixtureVisible": true,
+    "body": "Mariana Textil\nTiempo Real\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\n1\nPrecios\nStock mínimo\nOPERACIÓN\nVentas / POS\nEntradas\n1\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nCobros\nCortes\nAtribución E7\nAlertas\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nADMINISTRACIÓN CONTABLE\nConciliaciones documentales\nAdministrar perfiles A/F\nBorrar datos de prueba\nSitio\nVista Global\nN\n\nNoche disposable administrator\n\nADMIN\n\nGlobal\n\nCerrar sesión\nEquipos\n\nGestión de hardware de sistema en sucursales y almacenes.\n\nNuevo Equipo\nCoco\n0\nde 0 activos\nCruces\n0\nde 0 activos\nDon Nacho\n0\nde 0 activos\nMariana\n0\nde 1 activos\nTomás\n0\nde 0 activos\nCoco\n0 de 0 activos\nSin equipos registrados en este sitio.\nCruces\n0 de 0 activos\nSin equipos registrados en este sitio.\nDon Nacho\n0 de 0 activos\nSin equipos registrados en este sitio.\nMariana\n0 de 1 activos\nN26-PERM\n\nPistola Escáner\n\n2 faltantes\nMARCA\nN26\nMODELO\nTEST\n\nFALTA COMPROBAR\n\n—\nConfigurada a teclado español\n—\nProbada leyendo un QR de rollo del sistema\nChecklist\nTomás\n0 de 0 activos\nSin equipos registrados en este sitio.",
+    "buttons": [
+      "Borrar datos de prueba",
+      "",
+      "Cerrar sesión",
+      "Nuevo Equipo",
+      "Coco0de 0 activos",
+      "Cruces0de 0 activos",
+      "Don Nacho0de 0 activos",
+      "Mariana0de 1 activos",
+      "Tomás0de 0 activos",
+      "Checklist",
+      ""
+    ],
+    "editDialogVisible": true,
+    "screenshot": "ui-admin-equipos.jpg"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "entradas",
+    "path": "/entradas/pendientes-costo",
+    "controls": {
+      "editar": "^Capturar$"
+    },
+    "fixture": "MA-000002",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/entradas/pendientes-costo",
+    "fixtureVisible": false,
+    "body": "Sin acceso\n\nNo tienes permisos para ver este módulo (entradas).\n\nVolver al inicio",
+    "buttons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-terminal-entradas.jpg"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "salidas",
+    "path": "/salidas",
+    "controls": {
+      "editar": "Revertir",
+      "autorizar": "Cancelar salida"
+    },
+    "fixture": "MA-000001",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/salidas",
+    "fixtureVisible": true,
+    "body": "Sitio (Sólo lectura)\nMariana\nN\n\nN26 permisos TERMINAL\n\nTERMINAL\n\nMariana\n\nCerrar sesión\nSalidas\n\nHistorial completo de salidas y movimientos entre almacenes.\n\nExcel\nHistorial\nRecepción\nFiltros\nMA-000002\n26 sep 2026\nMariana\n3Bh Creations SA DE CV\n10.00\nEn curso\nEntregar\nMA-000001\n26 sep 2026\nMariana\n3Bh Creations SA DE CV\n10.00\nEn curso\nEntregar",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      "Excel",
+      "Filtros",
+      "Entregar",
+      "Entregar"
+    ],
+    "screenshot": "ui-terminal-salidas.jpg"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "etiquetas",
+    "path": "/etiquetas?rolloId=1",
+    "controls": {
+      "editar": "Marcar revisado"
+    },
+    "fixture": "10000001",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/etiquetas",
+    "fixtureVisible": false,
+    "body": "Sin acceso\n\nNo tienes permisos para ver este módulo (etiquetas).\n\nVolver al inicio",
+    "buttons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-terminal-etiquetas.jpg"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "auditoria_inventario",
+    "path": "/inventario/auditorias",
+    "controls": {
+      "editar": "Escanear",
+      "autorizar": "Confirmar"
+    },
+    "fixture": null,
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/inventario/auditorias",
+    "fixtureVisible": false,
+    "body": "Sin acceso\n\nNo tienes permisos para ver este módulo (auditoria_inventario).\n\nVolver al inicio",
+    "buttons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-terminal-auditoria_inventario.jpg"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "contenedores",
+    "path": "/contenedores/1",
+    "controls": {
+      "editar": "Editar",
+      "autorizar": "Cancelar"
+    },
+    "fixture": "N26 PERM CONTAINER",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/contenedores/1",
+    "fixtureVisible": false,
+    "body": "Sin acceso\n\nNo tienes permisos para ver este módulo (contenedores).\n\nVolver al inicio",
+    "buttons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-terminal-contenedores.jpg"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "permisos",
+    "path": "/permisos",
+    "controls": {
+      "editar": "Guardar"
+    },
+    "fixture": null,
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/permisos",
+    "fixtureVisible": false,
+    "body": "Sin acceso\n\nNo tienes permisos para ver este módulo (permisos).\n\nVolver al inicio",
+    "buttons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-terminal-permisos.jpg"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "clientes_finanzas",
+    "path": "/clientes/8",
+    "controls": {
+      "crear": "Abono|Registrar pago"
+    },
+    "fixture": null,
+    "actions": {
+      "crear": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/clientes/8",
+    "fixtureVisible": false,
+    "body": "Sitio (Sólo lectura)\nMariana\nN\n\nN26 permisos TERMINAL\n\nTERMINAL\n\nMariana\n\nCerrar sesión\n3Bh Creations SA DE CV\nActivo\n\nCliente #8 · Alta 25 sep 2026\n\nEditar datos\nDar de baja\nDatos\nCrédito\nAnalítica\nDatos de contacto\n\nTELÉFONO\n\n—\n\nCORREO\n\n—\n\nRFC\n\nBCR160426UN8\n\nPREFERENCIA DE IMPRESIÓN\n\nNota con precios\n\nDIRECCIÓN PARTICULAR\n\nNEZAHUALCOYOTL, CDMX\n\nDIRECCIÓN DE ENTREGA\n\nNEZAHUALCOYOTL, CDMX\n\nNOTAS\n\n—\n\nVer salidas pendientes a cobro de este cliente",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      "Editar datos",
+      "Dar de baja"
+    ],
+    "screenshot": "ui-terminal-clientes_finanzas.jpg"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "cobros_pagos",
+    "path": "/cobros",
+    "controls": {
+      "crear": "Cobrar"
+    },
+    "actions": {
+      "crear": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/cobros",
+    "fixtureVisible": false,
+    "body": "Sitio (Sólo lectura)\nMariana\nN\n\nN26 permisos TERMINAL\n\nTERMINAL\n\nMariana\n\nCerrar sesión\nCaja operativa\nNo se pudo consultar la caja\n\nNo tienes permiso para 'ver' en el módulo 'cobros_pagos'.\n\nIntentar de nuevo",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      "Caja operativa",
+      "Intentar de nuevo"
+    ],
+    "screenshot": "ui-terminal-cobros_pagos.jpg"
+  },
+  {
+    "role": "TERMINAL",
+    "module": "salidas_venta",
+    "path": "/pos",
+    "controls": {
+      "crear": "Generar venta"
+    },
+    "fixture": null,
+    "actions": {
+      "crear": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/pos",
+    "fixtureVisible": false,
+    "body": "Sitio (Sólo lectura)\nMariana\nN\n\nN26 permisos TERMINAL\n\nTERMINAL\n\nMariana\n\nCerrar sesión\nTicket (Contado)\nNotas (Crédito)\nSalidas pendientes a cobro",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      "Ticket (Contado)",
+      "Notas (Crédito)",
+      "Salidas pendientes a cobro"
+    ],
+    "screenshot": "ui-terminal-salidas_venta.jpg"
+  },
+  {
+    "role": "CAJA",
+    "module": "entradas",
+    "path": "/entradas/pendientes-costo",
+    "controls": {
+      "editar": "^Capturar$"
+    },
+    "fixture": "MA-000002",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/entradas/pendientes-costo",
+    "fixtureVisible": false,
+    "body": "Sin acceso\n\nNo tienes permisos para ver este módulo (entradas).\n\nVolver al inicio",
+    "buttons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-caja-entradas.jpg"
+  },
+  {
+    "role": "CAJA",
+    "module": "etiquetas",
+    "path": "/etiquetas?rolloId=1",
+    "controls": {
+      "editar": "Marcar revisado"
+    },
+    "fixture": "10000001",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/etiquetas",
+    "fixtureVisible": false,
+    "body": "Sin acceso\n\nNo tienes permisos para ver este módulo (etiquetas).\n\nVolver al inicio",
+    "buttons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-caja-etiquetas.jpg"
+  },
+  {
+    "role": "CAJA",
+    "module": "auditoria_inventario",
+    "path": "/inventario/auditorias",
+    "controls": {
+      "editar": "Escanear",
+      "autorizar": "Confirmar"
+    },
+    "fixture": null,
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/inventario/auditorias",
+    "fixtureVisible": false,
+    "body": "Sin acceso\n\nNo tienes permisos para ver este módulo (auditoria_inventario).\n\nVolver al inicio",
+    "buttons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-caja-auditoria_inventario.jpg"
+  },
+  {
+    "role": "CAJA",
+    "module": "contenedores",
+    "path": "/contenedores/1",
+    "controls": {
+      "editar": "Editar",
+      "autorizar": "Cancelar"
+    },
+    "fixture": "N26 PERM CONTAINER",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/contenedores/1",
+    "fixtureVisible": false,
+    "body": "Sin acceso\n\nNo tienes permisos para ver este módulo (contenedores).\n\nVolver al inicio",
+    "buttons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-caja-contenedores.jpg"
+  },
+  {
+    "role": "CAJA",
+    "module": "permisos",
+    "path": "/permisos",
+    "controls": {
+      "editar": "Guardar"
+    },
+    "fixture": null,
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/permisos",
+    "fixtureVisible": false,
+    "body": "Sin acceso\n\nNo tienes permisos para ver este módulo (permisos).\n\nVolver al inicio",
+    "buttons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-caja-permisos.jpg"
+  },
+  {
+    "role": "CAJA",
+    "module": "clientes_finanzas",
+    "path": "/clientes/8",
+    "controls": {
+      "crear": "Abono|Registrar pago"
+    },
+    "fixture": null,
+    "actions": {
+      "crear": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/clientes/8",
+    "fixtureVisible": false,
+    "body": "Sin acceso\n\nNo tienes permisos para ver este módulo (clientes).\n\nVolver al inicio",
+    "buttons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-caja-clientes_finanzas.jpg"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "salidas",
+    "path": "/salidas",
+    "controls": {
+      "editar": "Revertir",
+      "autorizar": "Cancelar salida"
+    },
+    "fixture": "MA-000001",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/salidas",
+    "fixtureVisible": true,
+    "body": "Mariana Textil\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nViajes\nMovimientos\nDIRECTORIO\nClientes\nProveedores\nReportes\nPróximos Contenedores\nSitio\nVista Global\nN\n\nN26 permisos SUPERVISOR\n\nSUPERVISOR\n\nMariana\n\nCerrar sesión\nSalidas\n\nHistorial completo de salidas y movimientos entre almacenes.\n\nExcel\nNueva Salida\nNueva salida para venta a cliente\nHistorial\nRecepción\nA mostrador\nFiltros\nMA-000002\n26 sep 2026\nMariana\n3Bh Creations SA DE CV\n10.00\nEn curso\nEntregar\nMA-000001\n26 sep 2026\nMariana\n3Bh Creations SA DE CV\n10.00\nEn curso\nEntregar",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      "Excel",
+      "Nueva Salida",
+      "Nueva salida para venta a cliente",
+      "Filtros",
+      "Entregar",
+      "Entregar"
+    ],
+    "screenshot": "ui-supervisor-salidas.jpg"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "etiquetas",
+    "path": "/etiquetas?rolloId=1",
+    "controls": {
+      "editar": "Marcar revisado"
+    },
+    "fixture": "10000001",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/etiquetas",
+    "fixtureVisible": true,
+    "body": "Mariana Textil\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nViajes\nMovimientos\nDIRECTORIO\nClientes\nProveedores\nReportes\nPróximos Contenedores\nSitio\nVista Global\nN\n\nN26 permisos SUPERVISOR\n\nSUPERVISOR\n\nMariana\n\nCerrar sesión\nOPERACIÓN\nEtiquetas\n\nPendientes de revisión: todas las series con tres o más reimpresiones aún no cubiertas.\n\nReimprimir seleccionadas (1)\nBuscar rollos\nBuscar\nSitio\nTodos\nEstado\nTodos\nProducto\nTodos\nAlta desde\nAlta hasta\nFolio de entrada\nLimpiar filtros\nMostrar todos los rollos\nPendientes de revisión1 rollos\n1/50 seleccionados\n\tSerie\tProducto\tColor\tSKU\tCantidad\tUnidad\tUbicación\tReimpresiones\tÚltima reimpresión\tRevisión\tEstado\tEntrada\tAcción\n\n\t\n10000001\n3 reimpresiones\tTafeta Rojo\tRojo\tTAF-ROJ\t10.00\tMts.\tMariana\t3\t26/09/26, 2:27 a.m.\t\nPendiente\n\tDISPONIBLE\t—\t\nReimprimir etiqueta\nMostrando 1–1 de 1\nAnterior\nPágina 1 de 1\nSiguiente",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      " Reimprimir seleccionadas (1)",
+      "Buscar",
+      "Limpiar filtros",
+      "Mostrar todos los rollos",
+      "Reimprimir etiqueta",
+      "Anterior",
+      "Siguiente"
+    ],
+    "screenshot": "ui-supervisor-etiquetas.jpg"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "auditoria_inventario",
+    "path": "/inventario/auditorias",
+    "controls": {
+      "editar": "Escanear",
+      "autorizar": "Confirmar"
+    },
+    "fixture": null,
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/inventario/auditorias",
+    "fixtureVisible": false,
+    "body": "Mariana Textil\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nViajes\nMovimientos\nDIRECTORIO\nClientes\nProveedores\nReportes\nPróximos Contenedores\nSitio\nVista Global\nN\n\nN26 permisos SUPERVISOR\n\nSUPERVISOR\n\nMariana\n\nCerrar sesión\n\nOPERACIÓN DE ALMACÉN\n\nAuditoría de Inventario\n\nControl físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.\n\nSeleccionar sitio\nAuditorías abiertas en el sitio\n\nSelecciona un sitio para ver sus auditorías abiertas.\n\nHISTORIAL DEL SITIO\nMA-AI-000001\nABIERTA\nMariana\n0/6",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      "MA-AI-000001ABIERTAMariana0/6"
+    ],
+    "screenshot": "ui-supervisor-auditoria_inventario.jpg"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "contenedores",
+    "path": "/contenedores/1",
+    "controls": {
+      "editar": "Editar",
+      "autorizar": "Cancelar"
+    },
+    "fixture": "N26 PERM CONTAINER",
+    "actions": {
+      "editar": {
+        "visible": 1,
+        "enabled": 1
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/contenedores/1",
+    "fixtureVisible": true,
+    "body": "Mariana Textil\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nViajes\nMovimientos\nDIRECTORIO\nClientes\nProveedores\nReportes\nPróximos Contenedores\nSitio\nVista Global\nN\n\nN26 permisos SUPERVISOR\n\nSUPERVISOR\n\nMariana\n\nCerrar sesión\nContenedor #00001\nEN TRANSITO\nEditar\nIngresar Mercancía\nResumen Operativo\n\nProveedor\n\nSkyTex\n\nDestino\n\nMariana\n\nLlegada Est.\n\n1 oct 2026\n\nReferencia\n\nN26 PERM CONTAINER\n\nDesglose de Mercancía\nProducto\tEsperado\tRollos\n\nTAF-ROJ\nTafeta - Rojo\n\t10 Mts.\t1\nTotales\nLíneas\n1\nMetros\n10\nKilos\n0",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      " Editar"
+    ],
+    "screenshot": "ui-supervisor-contenedores.jpg"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "permisos",
+    "path": "/permisos",
+    "controls": {
+      "editar": "Guardar"
+    },
+    "fixture": null,
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/permisos",
+    "fixtureVisible": false,
+    "body": "Sin acceso\n\nNo tienes permisos para ver este módulo (permisos).\n\nVolver al inicio",
+    "buttons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-supervisor-permisos.jpg"
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "clientes_finanzas",
+    "path": "/clientes/8",
+    "controls": {
+      "crear": "Abono|Registrar pago"
+    },
+    "fixture": null,
+    "actions": {
+      "crear": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/clientes/8",
+    "fixtureVisible": false,
+    "body": "Mariana Textil\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nViajes\nMovimientos\nDIRECTORIO\nClientes\nProveedores\nReportes\nPróximos Contenedores\nSitio\nVista Global\nN\n\nN26 permisos SUPERVISOR\n\nSUPERVISOR\n\nMariana\n\nCerrar sesión\n3Bh Creations SA DE CV\nActivo\n\nCliente #8 · Alta 25 sep 2026\n\nEditar datos\nDar de baja\nDatos\nDatos de contacto\n\nTELÉFONO\n\n—\n\nCORREO\n\n—\n\nRFC\n\nBCR160426UN8\n\nPREFERENCIA DE IMPRESIÓN\n\nNota con precios\n\nDIRECCIÓN PARTICULAR\n\nNEZAHUALCOYOTL, CDMX\n\nDIRECCIÓN DE ENTREGA\n\nNEZAHUALCOYOTL, CDMX\n\nNOTAS\n\n—",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      "Editar datos",
+      "Dar de baja"
+    ],
+    "screenshot": "ui-supervisor-clientes_finanzas.jpg"
+  },
+  {
+    "role": "CAJA",
+    "module": "salidas",
+    "path": "/salidas",
+    "controls": {
+      "editar": "Revertir",
+      "autorizar": "Cancelar salida"
+    },
+    "fixture": "MA-000001",
+    "actions": {},
+    "authenticated": true,
+    "error": "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded."
+  },
+  {
+    "role": "CAJA",
+    "module": "salidas_venta",
+    "path": "/pos",
+    "controls": {
+      "crear": "Generar venta"
+    },
+    "fixture": null,
+    "actions": {},
+    "authenticated": true,
+    "error": "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded."
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "cobros_pagos",
+    "path": "/cobros",
+    "controls": {
+      "crear": "Cobrar"
+    },
+    "actions": {},
+    "authenticated": true,
+    "error": "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded."
+  },
+  {
+    "role": "SUPERVISOR",
+    "module": "salidas_venta",
+    "path": "/pos",
+    "controls": {
+      "crear": "Generar venta"
+    },
+    "fixture": null,
+    "actions": {},
+    "authenticated": true,
+    "error": "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded."
+  },
+  {
+    "role": "BODEGA",
+    "module": "entradas",
+    "path": "/entradas/pendientes-costo",
+    "controls": {
+      "editar": "^Capturar$"
+    },
+    "fixture": "MA-000002",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/entradas/pendientes-costo",
+    "fixtureVisible": false,
+    "body": "Mariana Textil\nINVENTARIO\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nMovimientos\nSitio (Sólo lectura)\nMariana\nN\n\nN26 permisos BODEGA\n\nBODEGA\n\nMariana\n\nCerrar sesión\nAcceso Denegado\n\nSolo los administradores pueden capturar costos pendientes.\n\nVolver a Entradas",
+    "buttons": [
+      "",
+      "Cerrar sesión"
+    ],
+    "screenshot": "ui-bodega-entradas.jpg"
+  },
+  {
+    "role": "BODEGA",
+    "module": "salidas",
+    "path": "/salidas",
+    "controls": {
+      "editar": "Revertir",
+      "autorizar": "Cancelar salida"
+    },
+    "fixture": "MA-000001",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/salidas",
+    "fixtureVisible": true,
+    "body": "Mariana Textil\nINVENTARIO\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nMovimientos\nSitio (Sólo lectura)\nMariana\nN\n\nN26 permisos BODEGA\n\nBODEGA\n\nMariana\n\nCerrar sesión\nSalidas\n\nHistorial completo de salidas y movimientos entre almacenes.\n\nExcel\nNueva Salida\nNueva salida para venta a cliente\nHistorial\nRecepción\nA mostrador\nFiltros\nMA-000002\n26 sep 2026\nMariana\n3Bh Creations SA DE CV\n10.00\nEn curso\nEntregar\nMA-000001\n26 sep 2026\nMariana\n3Bh Creations SA DE CV\n10.00\nEn curso\nEntregar",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      "Excel",
+      "Nueva Salida",
+      "Nueva salida para venta a cliente",
+      "Filtros",
+      "Entregar",
+      "Entregar"
+    ],
+    "screenshot": "ui-bodega-salidas.jpg"
+  },
+  {
+    "role": "BODEGA",
+    "module": "etiquetas",
+    "path": "/etiquetas?rolloId=1",
+    "controls": {
+      "editar": "Marcar revisado"
+    },
+    "fixture": "10000001",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/etiquetas",
+    "fixtureVisible": true,
+    "body": "Mariana Textil\nINVENTARIO\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nMovimientos\nSitio (Sólo lectura)\nMariana\nN\n\nN26 permisos BODEGA\n\nBODEGA\n\nMariana\n\nCerrar sesión\nOPERACIÓN\nEtiquetas\n\nPendientes de revisión: todas las series con tres o más reimpresiones aún no cubiertas.\n\nReimprimir seleccionadas (1)\nBuscar rollos\nBuscar\nSitio\nTodos\nEstado\nTodos\nProducto\nTodos\nAlta desde\nAlta hasta\nFolio de entrada\nLimpiar filtros\nMostrar todos los rollos\nPendientes de revisión1 rollos\n1/50 seleccionados\n\tSerie\tProducto\tColor\tSKU\tCantidad\tUnidad\tUbicación\tReimpresiones\tÚltima reimpresión\tRevisión\tEstado\tEntrada\tAcción\n\n\t\n10000001\n3 reimpresiones\tTafeta Rojo\tRojo\tTAF-ROJ\t10.00\tMts.\tMariana\t3\t26/09/26, 2:27 a.m.\t\nPendiente\n\tDISPONIBLE\t—\t\nReimprimir etiqueta\nMostrando 1–1 de 1\nAnterior\nPágina 1 de 1\nSiguiente",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      " Reimprimir seleccionadas (1)",
+      "Buscar",
+      "Limpiar filtros",
+      "Mostrar todos los rollos",
+      "Reimprimir etiqueta",
+      "Anterior",
+      "Siguiente"
+    ],
+    "screenshot": "ui-bodega-etiquetas.jpg"
+  },
+  {
+    "role": "BODEGA",
+    "module": "auditoria_inventario",
+    "path": "/inventario/auditorias",
+    "controls": {
+      "editar": "Escanear",
+      "autorizar": "Confirmar"
+    },
+    "fixture": null,
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/inventario/auditorias",
+    "fixtureVisible": false,
+    "body": "Mariana Textil\nINVENTARIO\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nMovimientos\nSitio (Sólo lectura)\nMariana\nN\n\nN26 permisos BODEGA\n\nBODEGA\n\nMariana\n\nCerrar sesión\n\nOPERACIÓN DE ALMACÉN\n\nAuditoría de Inventario\n\nControl físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.\n\nMA · Mariana\nAuditorías abiertas en el sitio\n\nMA-AI-000001\n\nMariana · Iniciada por Noche disposable administrator\n\n0/6 escaneados\n\nUnirme a la auditoría\nHISTORIAL DEL SITIO\nMA-AI-000001\nABIERTA\nMariana\n0/6\nMA-AI-000001\nEN CURSO\n\nMariana · Iniciada por Noche disposable administrator\n\nImprimir\nCancelar\nAVANCE DEL CONTEO\n0/ 6\n\nINICIO: 26/9/2026, 2:27:44 a.m.\nDURACIÓN: En curso\n\nCUADRO\n0\nFALTANTES\n6\nSOBRANTES\n0\nMAL ACOMODADO\n0\nParticipantes activos: 0 / 5\n\nSin participantes activos\n\nHistorial: 0 usuarios · 0 escaneos\n\nPuedes consultar esta auditoría sin ocupar un lugar. Únete para escanear.\n\nUnirme a la auditoría\n\nPISO REAL DE ESCANEO\n\nPlanta Alta\n\nComputadora: piso de acceso fijo según el orden configurado del sitio.\n\nEscaneados · todos\n\n0\n\nFaltantes · todos\n\n6\n\nESCANEAR SERIE O QR\nFALTANTE\n6\nSerie\tProducto\tCantidad\tUbicación actual\tEstado\tResolución\n\n10000001\n\tTAF-ROJ · Tafeta · Rojo\t10.00 Mts.\tMariana\tDISPONIBLE\tPENDIENTE\n\n10000002\n\tTAF-ROJ · Tafeta · Rojo\t10.00 Mts.\tMariana\tDISPONIBLE\tPENDIENTE\n\n10000003\n\tTAF-ROJ · Tafeta · Rojo\t10.00 Mts.\tMariana\tDISPONIBLE\tPENDIENTE\n\n10000004\n\tTAF-ROJ · Tafeta · Rojo\t10.00 Mts.\tMariana\tDISPONIBLE\tPENDIENTE\n\n10000005\n\tTAF-ROJ · Tafeta · Rojo\t10.00 Mts.\tMariana\tDISPONIBLE\tPENDIENTE\n\n10000006\n\tTAF-ROJ · Tafeta · Rojo\t10.00 Mts.\tMariana\tDISPONIBLE\tPENDIENTE\nSOBRANTE\n0\nNo hay registros en esta categoría.",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      "Unirme a la auditoría",
+      "MA-AI-000001ABIERTAMariana0/6",
+      " Imprimir",
+      "Cancelar",
+      "Unirme a la auditoría"
+    ],
+    "screenshot": "ui-bodega-auditoria_inventario.jpg"
+  },
+  {
+    "role": "BODEGA",
+    "module": "contenedores",
+    "path": "/contenedores/1",
+    "controls": {
+      "editar": "Editar",
+      "autorizar": "Cancelar"
+    },
+    "fixture": "N26 PERM CONTAINER",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/contenedores/1",
+    "fixtureVisible": false,
+    "body": "Sin acceso\n\nNo tienes permisos para ver este módulo (contenedores).\n\nVolver al inicio",
+    "buttons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-bodega-contenedores.jpg"
+  },
+  {
+    "role": "BODEGA",
+    "module": "permisos",
+    "path": "/permisos",
+    "controls": {
+      "editar": "Guardar"
+    },
+    "fixture": null,
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/permisos",
+    "fixtureVisible": false,
+    "body": "Sin acceso\n\nNo tienes permisos para ver este módulo (permisos).\n\nVolver al inicio",
+    "buttons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-bodega-permisos.jpg"
+  },
+  {
+    "role": "BODEGA",
+    "module": "clientes_finanzas",
+    "path": "/clientes/8",
+    "controls": {
+      "crear": "Abono|Registrar pago"
+    },
+    "fixture": null,
+    "actions": {
+      "crear": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/clientes/8",
+    "fixtureVisible": false,
+    "body": "Sin acceso\n\nNo tienes permisos para ver este módulo (clientes).\n\nVolver al inicio",
+    "buttons": [
+      "Volver al inicio"
+    ],
+    "screenshot": "ui-bodega-clientes_finanzas.jpg"
+  },
+  {
+    "role": "BODEGA",
+    "module": "cobros_pagos",
+    "path": "/cobros",
+    "controls": {
+      "crear": "Cobrar"
+    },
+    "actions": {},
+    "authenticated": true,
+    "error": "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded."
+  },
+  {
+    "role": "BODEGA",
+    "module": "salidas_venta",
+    "path": "/pos",
+    "controls": {
+      "crear": "Generar venta"
+    },
+    "fixture": null,
+    "actions": {},
+    "authenticated": true,
+    "error": "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded."
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "salidas",
+    "path": "/salidas",
+    "controls": {
+      "editar": "Revertir",
+      "autorizar": "Cancelar salida"
+    },
+    "fixture": "MA-000001",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/salidas",
+    "fixtureVisible": false,
+    "body": "Mariana Textil\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nPrecios\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nAtribución E7\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nSitio\nVista Global\nN\n\nN26 permisos SISTEMAS\n\nSISTEMAS\n\nSin sitio asignado\n\nCerrar sesión\nSalidas\n\nHistorial completo de salidas y movimientos entre almacenes.\n\nExcel\nNueva Salida\nNueva salida para venta a cliente\nHistorial\nRecepción\nA mostrador\nFiltros\n\nNo tienes una ubicación asignada.",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      "Excel",
+      "Nueva Salida",
+      "Nueva salida para venta a cliente",
+      "Filtros"
+    ],
+    "screenshot": "ui-sistemas-salidas.jpg"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "etiquetas",
+    "path": "/etiquetas?rolloId=1",
+    "controls": {
+      "editar": "Marcar revisado"
+    },
+    "fixture": "10000001",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/etiquetas",
+    "fixtureVisible": true,
+    "body": "Mariana Textil\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nPrecios\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nAtribución E7\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nSitio\nVista Global\nN\n\nN26 permisos SISTEMAS\n\nSISTEMAS\n\nSin sitio asignado\n\nCerrar sesión\nOPERACIÓN\nEtiquetas\n\nPendientes de revisión: todas las series con tres o más reimpresiones aún no cubiertas.\n\nReimprimir seleccionadas (1)\nBuscar rollos\nBuscar\nSitio\nTodos\nEstado\nTodos\nProducto\nTodos\nAlta desde\nAlta hasta\nFolio de entrada\nLimpiar filtros\nMostrar todos los rollos\nPendientes de revisión1 rollos\n1/50 seleccionados\n\tSerie\tProducto\tColor\tSKU\tCantidad\tUnidad\tUbicación\tReimpresiones\tÚltima reimpresión\tRevisión\tEstado\tEntrada\tAcción\n\n\t\n10000001\n3 reimpresiones\tTafeta Rojo\tRojo\tTAF-ROJ\t10.00\tMts.\tMariana\t3\t26/09/26, 2:27 a.m.\t\nPendiente\n\tDISPONIBLE\t—\t\nReimprimir etiqueta\nMostrando 1–1 de 1\nAnterior\nPágina 1 de 1\nSiguiente",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      " Reimprimir seleccionadas (1)",
+      "Buscar",
+      "Limpiar filtros",
+      "Mostrar todos los rollos",
+      "Reimprimir etiqueta",
+      "Anterior",
+      "Siguiente"
+    ],
+    "screenshot": "ui-sistemas-etiquetas.jpg"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "auditoria_inventario",
+    "path": "/inventario/auditorias",
+    "controls": {
+      "editar": "Escanear",
+      "autorizar": "Confirmar"
+    },
+    "fixture": null,
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/inventario/auditorias",
+    "fixtureVisible": false,
+    "body": "Mariana Textil\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nPrecios\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nAtribución E7\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nSitio\nVista Global\nN\n\nN26 permisos SISTEMAS\n\nSISTEMAS\n\nSin sitio asignado\n\nCerrar sesión\n\nOPERACIÓN DE ALMACÉN\n\nAuditoría de Inventario\n\nControl físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.\n\nSeleccionar sitio\nAuditorías abiertas en el sitio\n\nSelecciona un sitio para ver sus auditorías abiertas.\n\nHISTORIAL DEL SITIO\nMA-AI-000001\nABIERTA\nMariana\n0/6",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      "MA-AI-000001ABIERTAMariana0/6"
+    ],
+    "screenshot": "ui-sistemas-auditoria_inventario.jpg"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "contenedores",
+    "path": "/contenedores/1",
+    "controls": {
+      "editar": "Editar",
+      "autorizar": "Cancelar"
+    },
+    "fixture": "N26 PERM CONTAINER",
+    "actions": {
+      "editar": {
+        "visible": 1,
+        "enabled": 1
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/contenedores/1",
+    "fixtureVisible": true,
+    "body": "Mariana Textil\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nPrecios\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nAtribución E7\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nSitio\nVista Global\nN\n\nN26 permisos SISTEMAS\n\nSISTEMAS\n\nSin sitio asignado\n\nCerrar sesión\nContenedor #00001\nEN TRANSITO\nEditar\nIngresar Mercancía\nResumen Operativo\n\nProveedor\n\nSkyTex\n\nDestino\n\nMariana\n\nLlegada Est.\n\n1 oct 2026\n\nReferencia\n\nN26 PERM CONTAINER\n\nDesglose de Mercancía\nProducto\tEsperado\tRollos\n\nTAF-ROJ\nTafeta - Rojo\n\t10 Mts.\t1\nTotales\nLíneas\n1\nMetros\n10\nKilos\n0",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      " Editar"
+    ],
+    "screenshot": "ui-sistemas-contenedores.jpg"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "clientes_finanzas",
+    "path": "/clientes/8",
+    "controls": {
+      "crear": "Abono|Registrar pago"
+    },
+    "fixture": null,
+    "actions": {
+      "crear": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/clientes/8",
+    "fixtureVisible": false,
+    "body": "Mariana Textil\nINVENTARIO\nProductos\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nPrecios\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nViajes\nMovimientos\nCAJA\nCuentas\nAtribución E7\nDIRECTORIO\nClientes\nProveedores\nCamionetas\nChoferes\nEquipos\nReportes\nPróximos Contenedores\nCONFIGURACIÓN\nSitios\nUsuarios\nPermisos\nConciliación de Kardex\nBitácora\nSitio\nVista Global\nN\n\nN26 permisos SISTEMAS\n\nSISTEMAS\n\nSin sitio asignado\n\nCerrar sesión\n3Bh Creations SA DE CV\nActivo\n\nCliente #8 · Alta 25 sep 2026\n\nEditar datos\nDar de baja\nUtilidad acumulada\n\n••••••\n\nSe excluyeron 0 línea(s) sin costo asignado.\n\nSaldos del cliente\n\nSALDO DEUDOR\n\n—\n\nRojo significa dinero pendiente de cobro.\n\nSALDO A FAVOR\n\n—\n\nVerde significa dinero recibido disponible para aplicar.\n\nDatos\nCrédito\nEstado de cuenta\nÚltimas ventas\nAnalítica\nDatos de contacto\n\nTELÉFONO\n\n—\n\nCORREO\n\n—\n\nRFC\n\nBCR160426UN8\n\nPREFERENCIA DE IMPRESIÓN\n\nNota con precios\n\nDIRECCIÓN PARTICULAR\n\nNEZAHUALCOYOTL, CDMX\n\nDIRECCIÓN DE ENTREGA\n\nNEZAHUALCOYOTL, CDMX\n\nNOTAS\n\n—\n\nActividad del periodo\n\nÚLTIMA COMPRA\n\nSin compras\n\nTICKETS\n\n0\n\nTICKET PROMEDIO\n\n—\n\nTICKET MÁXIMO\n\n—\n\nResume tickets y montos monetarios del cliente en el periodo elegido.\n\nMezcla de pagos\n\nSin pagos en el periodo.\n\nSuma importes monetarios y movimientos por forma de pago del cliente en el periodo elegido.\n\nTendencia mensual\n\nSin tendencia disponible.\n\nAgrupa tickets y ventas monetarias del cliente por mes dentro del periodo elegido.\n\nProductos por unidad, tela y color\n\nSin productos en el periodo.\n\nAgrupa cantidad por unidad, ventas y utilidad monetaria del cliente por producto en el periodo elegido; la utilidad requiere costo.\n\nOrigen y evidencia de crédito\n\nNo hay evidencia visible en tu alcance.\n\nSelecciona un sitio para consultar cobros retenidos.\n\nSolicitudes de pago dirigido\n\nSin solicitudes para esta entidad.",
+    "buttons": [
+      "",
+      "Cerrar sesión",
+      "Editar datos",
+      "Dar de baja",
+      ""
+    ],
+    "screenshot": "ui-sistemas-clientes_finanzas.jpg"
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "cobros_pagos",
+    "path": "/cobros",
+    "controls": {
+      "crear": "Cobrar"
+    },
+    "actions": {},
+    "authenticated": true,
+    "error": "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded."
+  },
+  {
+    "role": "SISTEMAS",
+    "module": "salidas_venta",
+    "path": "/pos",
+    "controls": {
+      "crear": "Generar venta"
+    },
+    "fixture": null,
+    "actions": {},
+    "authenticated": true,
+    "error": "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded."
+  },
+  {
+    "role": "CONTADOR",
+    "module": "entradas",
+    "path": "/entradas/pendientes-costo",
+    "controls": {
+      "editar": "^Capturar$"
+    },
+    "fixture": "MA-000002",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/entradas/pendientes-costo",
+    "fixtureVisible": false,
+    "body": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\n\nRuta no autorizada para este perfil. Usa las proyecciones contables, sin acceso legacy.\n\nADMINISTRACIÓN Y AJUSTES\nConciliaciones documentales",
+    "buttons": [
+      "Cerrar sesión"
+    ],
+    "screenshot": "ui-contador-entradas.jpg"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "salidas",
+    "path": "/salidas",
+    "controls": {
+      "editar": "Revertir",
+      "autorizar": "Cancelar salida"
+    },
+    "fixture": "MA-000001",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/salidas",
+    "fixtureVisible": false,
+    "body": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\n\nRuta no autorizada para este perfil. Usa las proyecciones contables, sin acceso legacy.\n\nADMINISTRACIÓN Y AJUSTES\nConciliaciones documentales",
+    "buttons": [
+      "Cerrar sesión"
+    ],
+    "screenshot": "ui-contador-salidas.jpg"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "etiquetas",
+    "path": "/etiquetas?rolloId=1",
+    "controls": {
+      "editar": "Marcar revisado"
+    },
+    "fixture": "10000001",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/etiquetas",
+    "fixtureVisible": false,
+    "body": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\n\nRuta no autorizada para este perfil. Usa las proyecciones contables, sin acceso legacy.\n\nADMINISTRACIÓN Y AJUSTES\nConciliaciones documentales",
+    "buttons": [
+      "Cerrar sesión"
+    ],
+    "screenshot": "ui-contador-etiquetas.jpg"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "auditoria_inventario",
+    "path": "/inventario/auditorias",
+    "controls": {
+      "editar": "Escanear",
+      "autorizar": "Confirmar"
+    },
+    "fixture": null,
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/inventario/auditorias",
+    "fixtureVisible": false,
+    "body": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\n\nRuta no autorizada para este perfil. Usa las proyecciones contables, sin acceso legacy.\n\nADMINISTRACIÓN Y AJUSTES\nConciliaciones documentales",
+    "buttons": [
+      "Cerrar sesión"
+    ],
+    "screenshot": "ui-contador-auditoria_inventario.jpg"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "contenedores",
+    "path": "/contenedores/1",
+    "controls": {
+      "editar": "Editar",
+      "autorizar": "Cancelar"
+    },
+    "fixture": "N26 PERM CONTAINER",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      },
+      "autorizar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/contenedores/1",
+    "fixtureVisible": false,
+    "body": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\n\nRuta no autorizada para este perfil. Usa las proyecciones contables, sin acceso legacy.\n\nADMINISTRACIÓN Y AJUSTES\nConciliaciones documentales",
+    "buttons": [
+      "Cerrar sesión"
+    ],
+    "screenshot": "ui-contador-contenedores.jpg"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "permisos",
+    "path": "/permisos",
+    "controls": {
+      "editar": "Guardar"
+    },
+    "fixture": null,
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/permisos",
+    "fixtureVisible": false,
+    "body": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\n\nRuta no autorizada para este perfil. Usa las proyecciones contables, sin acceso legacy.\n\nADMINISTRACIÓN Y AJUSTES\nConciliaciones documentales",
+    "buttons": [
+      "Cerrar sesión"
+    ],
+    "screenshot": "ui-contador-permisos.jpg"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "clientes_finanzas",
+    "path": "/clientes/8",
+    "controls": {
+      "crear": "Abono|Registrar pago"
+    },
+    "fixture": null,
+    "actions": {
+      "crear": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/contabilidad/fiscal",
+    "fixtureVisible": false,
+    "body": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\nVentas facturadas y clientes facturados\n\n“Factura” identifica el ticket interno marcado facturado. No es un CFDI ni certifica timbrado externo.\n\nClientes con documentos facturados\nTodos los clientes facturados\n\nSin clientes facturados en esta página.\n\nPrimera página / reiniciar cursor\nSiguiente\nDesde (día CDMX)\nHasta, exclusivo (día CDMX)\nConsultar intervalo\nDocumentos facturados del intervalo\n\nTotal facturado del intervalo: $0.00\n\nSin documentos facturados en esta consulta.\n\nPrimera página / reiniciar cursor\nSiguiente\nADMINISTRACIÓN Y AJUSTES\nConciliaciones documentales",
+    "buttons": [
+      "Cerrar sesión",
+      "Todos los clientes facturados",
+      "Primera página / reiniciar cursor",
+      "Siguiente",
+      "Consultar intervalo",
+      "Primera página / reiniciar cursor",
+      "Siguiente"
+    ],
+    "screenshot": "ui-contador-clientes_finanzas.jpg"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "cobros_pagos",
+    "path": "/cobros",
+    "controls": {
+      "crear": "Cobrar"
+    },
+    "actions": {
+      "crear": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/cobros",
+    "fixtureVisible": false,
+    "body": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\n\nRuta no autorizada para este perfil. Usa las proyecciones contables, sin acceso legacy.\n\nADMINISTRACIÓN Y AJUSTES\nConciliaciones documentales",
+    "buttons": [
+      "Cerrar sesión"
+    ],
+    "screenshot": "ui-contador-cobros_pagos.jpg"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "salidas_venta",
+    "path": "/pos",
+    "controls": {
+      "crear": "Generar venta"
+    },
+    "fixture": null,
+    "actions": {
+      "crear": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/pos",
+    "fixtureVisible": false,
+    "body": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\n\nRuta no autorizada para este perfil. Usa las proyecciones contables, sin acceso legacy.\n\nADMINISTRACIÓN Y AJUSTES\nConciliaciones documentales",
+    "buttons": [
+      "Cerrar sesión"
+    ],
+    "screenshot": "ui-contador-salidas_venta.jpg"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "camionetas",
+    "path": "/directorio/camionetas",
+    "controls": {
+      "editar": "Editar"
+    },
+    "fixture": "N26 PERM VAN",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/directorio/camionetas",
+    "fixtureVisible": false,
+    "body": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\n\nRuta no autorizada para este perfil. Usa las proyecciones contables, sin acceso legacy.\n\nADMINISTRACIÓN Y AJUSTES\nConciliaciones documentales",
+    "buttons": [
+      "Cerrar sesión"
+    ],
+    "screenshot": "ui-contador-camionetas.jpg"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "choferes",
+    "path": "/directorio/choferes",
+    "controls": {
+      "editar": "Editar N26 PERM DRIVER"
+    },
+    "fixture": "N26 PERM DRIVER",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/directorio/choferes",
+    "fixtureVisible": false,
+    "body": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\n\nRuta no autorizada para este perfil. Usa las proyecciones contables, sin acceso legacy.\n\nADMINISTRACIÓN Y AJUSTES\nConciliaciones documentales",
+    "buttons": [
+      "Cerrar sesión"
+    ],
+    "screenshot": "ui-contador-choferes.jpg"
+  },
+  {
+    "role": "CONTADOR",
+    "module": "equipos",
+    "path": "/equipos",
+    "controls": {
+      "editar": "Editar N26-PERM"
+    },
+    "fixture": "N26-PERM",
+    "actions": {
+      "editar": {
+        "visible": 0,
+        "enabled": 0
+      }
+    },
+    "authenticated": true,
+    "settled": true,
+    "finalObservation": true,
+    "actualPath": "/equipos",
+    "fixtureVisible": false,
+    "body": "Contabilidad · F\n\nPerfil v0 · proyección autorizada, sin documentos operativos privados.\n\nCerrar sesión\nVentas y clientes facturados\n\nRuta no autorizada para este perfil. Usa las proyecciones contables, sin acceso legacy.\n\nADMINISTRACIÓN Y AJUSTES\nConciliaciones documentales",
+    "buttons": [
+      "Cerrar sesión"
+    ],
+    "screenshot": "ui-contador-equipos.jpg"
+  }
+]

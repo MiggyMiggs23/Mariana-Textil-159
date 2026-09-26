@@ -1,0 +1,511 @@
+[
+  {
+    "module": "camionetas",
+    "action": "editar",
+    "method": "PATCH",
+    "path": "/camionetas/1",
+    "body": {
+      "nombre": "N26 PERM VAN"
+    },
+    "status": 200,
+    "response": {
+      "id": 1,
+      "nombre": "N26 PERM VAN",
+      "placas": "N26PERM",
+      "marca": null,
+      "modelo": null,
+      "tipo": "PROPIA",
+      "activa": true,
+      "createdAt": "2026-09-26T02:27:40.847Z",
+      "updatedAt": "2026-09-26T02:55:50.459Z"
+    }
+  },
+  {
+    "module": "choferes",
+    "action": "editar",
+    "method": "PATCH",
+    "path": "/choferes/1",
+    "body": {
+      "nombreCompleto": "N26 PERM DRIVER"
+    },
+    "status": 200,
+    "response": {
+      "id": 1,
+      "nombreCompleto": "N26 PERM DRIVER",
+      "telefono": "5550001234",
+      "activo": true,
+      "createdAt": "2026-09-26T02:27:41.609Z",
+      "updatedAt": "2026-09-26T02:55:51.231Z"
+    }
+  },
+  {
+    "module": "equipos",
+    "action": "editar",
+    "method": "PATCH",
+    "path": "/equipos/1",
+    "body": {
+      "marca": "N26"
+    },
+    "status": 200,
+    "response": {
+      "id": 1,
+      "ubicacionId": 1,
+      "ubicacionNombre": "Mariana",
+      "tipo": "PISTOLA_ESCANER",
+      "tipoLabel": "Pistola Escáner",
+      "identificador": "N26-PERM",
+      "marca": "N26",
+      "modelo": "TEST",
+      "numeroSerie": null,
+      "notas": null,
+      "activo": false,
+      "faltantes": 2,
+      "checklist": [
+        {
+          "key": "TECLADO_ESPANOL",
+          "label": "Configurada a teclado español",
+          "checked": false,
+          "actorId": null,
+          "actorNombre": null,
+          "checkedAt": null
+        },
+        {
+          "key": "QR_ROLLO",
+          "label": "Probada leyendo un QR de rollo del sistema",
+          "checked": false,
+          "actorId": null,
+          "actorNombre": null,
+          "checkedAt": null
+        }
+      ],
+      "creadoPor": 234,
+      "actualizadoPor": 234,
+      "createdAt": "2026-09-26T02:27:42.333Z",
+      "updatedAt": "2026-09-26T02:55:52.110Z"
+    }
+  },
+  {
+    "module": "contenedores",
+    "action": "editar",
+    "method": "PATCH",
+    "path": "/contenedores/1",
+    "body": {
+      "proveedorId": 1,
+      "referencia": "N26 PERM CONTAINER",
+      "fechaEstimadaLlegada": "2026-10-01",
+      "sitioDestinoId": 1,
+      "lineas": [
+        {
+          "productoId": 1,
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1
+        }
+      ]
+    },
+    "status": 200,
+    "response": {
+      "id": 1,
+      "folio": 1,
+      "proveedorId": 1,
+      "proveedor": "SkyTex",
+      "referencia": "N26 PERM CONTAINER",
+      "fechaPedido": null,
+      "fechaEstimadaLlegada": "2026-10-01",
+      "fechaRealLlegada": null,
+      "sitioDestinoId": 1,
+      "sitioDestino": "Mariana",
+      "entradaId": null,
+      "estado": "EN_TRANSITO",
+      "notas": null,
+      "motivoCancelacion": null,
+      "usuarioId": 234,
+      "createdAt": "2026-09-26T02:27:43.167Z",
+      "updatedAt": "2026-09-26T02:55:53.139Z",
+      "diasTransito": null,
+      "diferenciaFechaEstimada": null,
+      "totalesEsperados": {
+        "lineas": 1,
+        "rollos": 1,
+        "metros": "10.000",
+        "kilos": "0.000",
+        "bolsas": "0.000",
+        "piezas": "0.000"
+      },
+      "totalesRecibidos": {
+        "lineas": 0,
+        "rollos": 0,
+        "metros": "0.000",
+        "kilos": "0.000",
+        "bolsas": "0.000",
+        "piezas": "0.000"
+      },
+      "lineas": [
+        {
+          "id": 2,
+          "productoId": 1,
+          "sku": "TAF-ROJ",
+          "tela": "Tafeta",
+          "color": "Rojo",
+          "unidad": "METRO",
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1,
+          "nota": null,
+          "cantidadRecibida": "0.000",
+          "rollosRecibidos": 0,
+          "diferencia": "-10.000",
+          "costoTotal": null,
+          "costoUnitarioReal": null
+        }
+      ],
+      "costoTotal": null
+    }
+  },
+  {
+    "module": "contenedores",
+    "action": "autorizar",
+    "method": "POST",
+    "path": "/contenedores/1/cancelar",
+    "body": {
+      "motivo": "N26 permissions cancellation"
+    },
+    "status": 200,
+    "response": {
+      "id": 1,
+      "folio": 1,
+      "proveedorId": 1,
+      "proveedor": "SkyTex",
+      "referencia": "N26 PERM CONTAINER",
+      "fechaPedido": null,
+      "fechaEstimadaLlegada": "2026-10-01",
+      "fechaRealLlegada": null,
+      "sitioDestinoId": 1,
+      "sitioDestino": "Mariana",
+      "entradaId": null,
+      "estado": "CANCELADO",
+      "notas": null,
+      "motivoCancelacion": "N26 permissions cancellation",
+      "usuarioId": 234,
+      "createdAt": "2026-09-26T02:27:43.167Z",
+      "updatedAt": "2026-09-26T02:55:54.059Z",
+      "diasTransito": null,
+      "diferenciaFechaEstimada": null,
+      "totalesEsperados": {
+        "lineas": 1,
+        "rollos": 1,
+        "metros": "10.000",
+        "kilos": "0.000",
+        "bolsas": "0.000",
+        "piezas": "0.000"
+      },
+      "totalesRecibidos": {
+        "lineas": 0,
+        "rollos": 0,
+        "metros": "0.000",
+        "kilos": "0.000",
+        "bolsas": "0.000",
+        "piezas": "0.000"
+      },
+      "lineas": [
+        {
+          "id": 2,
+          "productoId": 1,
+          "sku": "TAF-ROJ",
+          "tela": "Tafeta",
+          "color": "Rojo",
+          "unidad": "METRO",
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1,
+          "nota": null,
+          "cantidadRecibida": "0.000",
+          "rollosRecibidos": 0,
+          "diferencia": "-10.000",
+          "costoTotal": null,
+          "costoUnitarioReal": null
+        }
+      ],
+      "costoTotal": null
+    }
+  },
+  {
+    "module": "etiquetas",
+    "action": "editar",
+    "method": "POST",
+    "path": "/etiquetas/rollos/1/revisar",
+    "body": {
+      "ultimaReimpresionId": 3
+    },
+    "status": 201,
+    "response": {
+      "id": 1,
+      "rolloId": 1,
+      "reimpresionId": 3,
+      "revisadoPorId": 234,
+      "revisadoPor": "Noche disposable administrator",
+      "revisadoPorUsuario": "e2e.noche.admin",
+      "revisadoEn": "2026-09-26T02:55:54.942Z",
+      "idempotente": false
+    }
+  },
+  {
+    "module": "entradas",
+    "action": "editar",
+    "method": "POST",
+    "path": "/inventario/entradas/2/costos",
+    "body": {
+      "costosProductos": [
+        {
+          "productoId": 1,
+          "costoUnitario": "100.00"
+        }
+      ],
+      "costosRollos": []
+    },
+    "status": 200,
+    "response": {
+      "id": 2,
+      "folio": 2,
+      "inicialesSitio": "MA",
+      "folioFormateado": "MA-000002",
+      "ubicacionId": 1,
+      "nombreUbicacion": "Mariana",
+      "proveedorId": 1,
+      "nombreProveedor": "SkyTex",
+      "usuarioId": 238,
+      "nombreUsuario": "N26 permisos BODEGA",
+      "fecha": "2026-09-26T02:27:48.015Z",
+      "observaciones": "N26 pending",
+      "totalRollos": 1,
+      "totalCosto": "1000.00",
+      "uuidCliente": "c0f241b6-6d06-45f6-b4f8-fa806db86cc3",
+      "createdAt": "2026-09-26T02:27:47.817Z",
+      "lineas": [
+        {
+          "productoId": 1,
+          "skuProducto": "TAF-ROJ",
+          "telaProducto": "Tafeta",
+          "colorProducto": "Rojo",
+          "unidadProducto": "METRO",
+          "costoUnitario": "100.00",
+          "rollosCount": 1,
+          "cantidadTotal": "10.000",
+          "costoTotal": "1000.00"
+        }
+      ],
+      "rollos": [
+        {
+          "id": 7,
+          "serie": "10000007",
+          "productoId": 1,
+          "cantidadInicial": "10.000",
+          "pisoId": 3,
+          "nombrePiso": "Planta Baja",
+          "costoUnitario": "100.00",
+          "costoTotal": "1000.00"
+        }
+      ]
+    }
+  },
+  {
+    "module": "salidas",
+    "action": "editar",
+    "method": "POST",
+    "path": "/inventario/salidas-extraordinarias/8/revertir",
+    "body": {
+      "justificacion": "N26 permissions valid reversal",
+      "uuidCliente": "28f91282-803a-404c-a9b7-f54146a90381"
+    },
+    "status": 200,
+    "response": {
+      "id": 2,
+      "serie": "10000002",
+      "productoId": 1,
+      "skuProducto": "TAF-ROJ",
+      "telaProducto": "Tafeta",
+      "colorProducto": "Rojo",
+      "unidadProducto": "METRO",
+      "ubicacionId": 1,
+      "nombreUbicacion": "Mariana",
+      "pisoId": 3,
+      "nombrePiso": "Planta Baja",
+      "proveedorId": 1,
+      "estado": "DISPONIBLE",
+      "cantidadInicial": "10.000",
+      "cantidadActual": "10.000",
+      "costoUnitario": "100.00",
+      "costoTotal": "1000.00",
+      "notas": null,
+      "historial": [
+        {
+          "id": 10,
+          "rolloId": 2,
+          "productoId": 1,
+          "ubicacionId": 1,
+          "tipo": "CANCELACION",
+          "cantidad": "10.000",
+          "saldoPosterior": "60.000",
+          "documentoTipo": null,
+          "documentoId": null,
+          "documentoEtiqueta": null,
+          "documentoRuta": null,
+          "documentoClienteId": null,
+          "movimientoOrigenId": 8,
+          "usuarioId": 234,
+          "motivoSalidaExtraordinaria": null,
+          "justificacion": "N26 permissions valid reversal",
+          "revisado": true,
+          "revisadoPor": null,
+          "revisadoAt": null,
+          "uuidCliente": "28f91282-803a-404c-a9b7-f54146a90381",
+          "createdAt": "2026-09-26T02:55:56.727Z"
+        },
+        {
+          "id": 8,
+          "rolloId": 2,
+          "productoId": 1,
+          "ubicacionId": 1,
+          "tipo": "AJUSTE_NEGATIVO",
+          "cantidad": "-10.000",
+          "saldoPosterior": "60.000",
+          "documentoTipo": null,
+          "documentoId": null,
+          "documentoEtiqueta": null,
+          "documentoRuta": null,
+          "documentoClienteId": null,
+          "movimientoOrigenId": null,
+          "usuarioId": 234,
+          "motivoSalidaExtraordinaria": "MUESTRA",
+          "justificacion": "N26 valid permissions fixture",
+          "revisado": true,
+          "revisadoPor": null,
+          "revisadoAt": null,
+          "uuidCliente": "107e8349-7916-4312-82ee-dbefa6489e0b",
+          "createdAt": "2026-09-26T02:27:49.366Z"
+        },
+        {
+          "id": 2,
+          "rolloId": 2,
+          "productoId": 1,
+          "ubicacionId": 1,
+          "tipo": "RECEPCION",
+          "cantidad": "10.000",
+          "saldoPosterior": "20.000",
+          "documentoTipo": "ENTRADA",
+          "documentoId": "1",
+          "documentoEtiqueta": "Entrada MA-000001",
+          "documentoRuta": "/entradas/1/documento",
+          "documentoClienteId": null,
+          "movimientoOrigenId": null,
+          "usuarioId": 234,
+          "motivoSalidaExtraordinaria": null,
+          "justificacion": null,
+          "revisado": true,
+          "revisadoPor": null,
+          "revisadoAt": null,
+          "uuidCliente": null,
+          "createdAt": "2026-09-26T02:27:20.025Z"
+        }
+      ],
+      "createdAt": "2026-09-26T02:27:20.025Z",
+      "updatedAt": "2026-09-26T02:55:57.111Z"
+    }
+  },
+  {
+    "module": "salidas",
+    "action": "autorizar",
+    "method": "POST",
+    "path": "/salidas/1/cancelar",
+    "body": {
+      "motivo": "N26 permissions cancellation"
+    },
+    "status": 200,
+    "response": {
+      "id": 1,
+      "folio": 1,
+      "folioFormateado": "MA-000001",
+      "modalidad": "VENTA_CLIENTE",
+      "estado": "CANCELADA",
+      "origenId": 1,
+      "nombreOrigen": "Mariana",
+      "destinoId": null,
+      "nombreDestino": "3Bh Creations SA DE CV",
+      "clienteId": 8,
+      "nombreCliente": "3Bh Creations SA DE CV",
+      "documentoVenta": null,
+      "autorizada": null,
+      "armadoPorId": 234,
+      "nombreArmadoPor": "Noche disposable administrator",
+      "fechaArmado": "2026-09-26T02:27:51.148Z",
+      "totalProductos": 1,
+      "totalCantidadSolicitada": "10.000",
+      "totalCantidadEnviada": "10.000",
+      "totalCantidadRecibida": "0.000",
+      "totalRollos": 1,
+      "totalMetros": "10.000",
+      "totalKilos": "0.000",
+      "totalBolsas": "0.000",
+      "totalPiezas": "0.000",
+      "usuarioId": 234,
+      "nombreUsuario": "Noche disposable administrator",
+      "transportista": null,
+      "observaciones": "N26 permission fixture",
+      "diferenciasPendientes": false,
+      "createdAt": "2026-09-26T02:27:50.736Z",
+      "updatedAt": "2026-09-26T02:55:58.508Z",
+      "uuidCliente": "82190447-c848-4d95-8c5c-238b42d178c9",
+      "enviadoPorId": 234,
+      "nombreEnviadoPor": "Noche disposable administrator",
+      "fechaEnvio": "2026-09-26T02:27:51.148Z",
+      "transporteEfectivo": null,
+      "viaje": null,
+      "notaEnvio": null,
+      "recibidoPorId": null,
+      "nombreRecibidoPor": null,
+      "fechaRecepcion": null,
+      "notaRecepcion": null,
+      "canceladoPorId": 234,
+      "nombreCanceladoPor": "Noche disposable administrator",
+      "fechaCancelacion": "2026-09-26T02:55:58.508Z",
+      "motivoCancelacion": "N26 permissions cancellation",
+      "pisosRetorno": [],
+      "entregadoPorId": null,
+      "fechaEntrega": null,
+      "lineas": [
+        {
+          "id": 1,
+          "productoId": 1,
+          "skuProducto": "TAF-ROJ",
+          "telaProducto": "Tafeta",
+          "colorProducto": "Rojo",
+          "unidadProducto": "METRO",
+          "cantidadSolicitada": "10.000",
+          "cantidadEnviada": "10.000",
+          "cantidadRecibida": "0.000",
+          "rollosSolicitados": 1,
+          "rollosEnviados": 1,
+          "rollosRecibidos": 0,
+          "nota": null
+        }
+      ],
+      "rollos": [
+        {
+          "id": 1,
+          "lineaId": 1,
+          "rolloId": 3,
+          "serie": "10000003",
+          "estado": "DISPONIBLE",
+          "cantidadEnviada": "10.000",
+          "cantidadRecibida": null,
+          "recibido": false,
+          "diferencia": null,
+          "notaDiferencia": null,
+          "cantidadActual": "10.000",
+          "productoId": 1,
+          "sku": "TAF-ROJ",
+          "tela": "Tafeta",
+          "color": "Rojo",
+          "unidad": "METRO"
+        }
+      ]
+    }
+  }
+]

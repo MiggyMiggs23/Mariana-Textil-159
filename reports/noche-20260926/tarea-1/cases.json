@@ -1,0 +1,174 @@
+[
+  {
+    "module": "camionetas",
+    "action": "editar",
+    "method": "PATCH",
+    "path": "/camionetas/1",
+    "body": {
+      "nombre": "N26 PERM VAN"
+    }
+  },
+  {
+    "module": "choferes",
+    "action": "editar",
+    "method": "PATCH",
+    "path": "/choferes/1",
+    "body": {
+      "nombreCompleto": "N26 PERM DRIVER"
+    }
+  },
+  {
+    "module": "equipos",
+    "action": "editar",
+    "method": "PATCH",
+    "path": "/equipos/1",
+    "body": {
+      "marca": "N26"
+    }
+  },
+  {
+    "module": "contenedores",
+    "action": "editar",
+    "method": "PATCH",
+    "path": "/contenedores/1",
+    "body": {
+      "proveedorId": 1,
+      "referencia": "N26 PERM CONTAINER",
+      "fechaEstimadaLlegada": "2026-10-01",
+      "sitioDestinoId": 1,
+      "lineas": [
+        {
+          "productoId": 1,
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1
+        }
+      ]
+    }
+  },
+  {
+    "module": "contenedores",
+    "action": "autorizar",
+    "method": "POST",
+    "path": "/contenedores/1/cancelar",
+    "body": {
+      "motivo": "N26 permissions cancellation"
+    }
+  },
+  {
+    "module": "auditoria_inventario",
+    "action": "editar",
+    "method": "POST",
+    "path": "/inventario/auditorias/1/escaneos",
+    "body": {
+      "serie": "10000001",
+      "pisoId": 3
+    }
+  },
+  {
+    "module": "etiquetas",
+    "action": "editar",
+    "method": "POST",
+    "path": "/etiquetas/rollos/1/revisar",
+    "body": {
+      "ultimaReimpresionId": 3
+    }
+  },
+  {
+    "module": "entradas",
+    "action": "editar",
+    "method": "POST",
+    "path": "/inventario/entradas/2/costos",
+    "body": {
+      "costosProductos": [
+        {
+          "productoId": 1,
+          "costoUnitario": "100.00"
+        }
+      ],
+      "costosRollos": []
+    }
+  },
+  {
+    "module": "salidas",
+    "action": "editar",
+    "method": "POST",
+    "path": "/inventario/salidas-extraordinarias/8/revertir",
+    "body": {
+      "justificacion": "N26 permissions valid reversal",
+      "uuidCliente": "28f91282-803a-404c-a9b7-f54146a90381"
+    }
+  },
+  {
+    "module": "salidas",
+    "action": "autorizar",
+    "method": "POST",
+    "path": "/salidas/1/cancelar",
+    "body": {
+      "motivo": "N26 permissions cancellation"
+    }
+  },
+  {
+    "module": "salidas_venta",
+    "action": "crear",
+    "method": "POST",
+    "path": "/salidas/venta-cliente/generar-venta",
+    "body": {
+      "uuidCliente": "acf053da-ddaa-4ce0-a668-f9a5e7ce613b",
+      "documentoTipo": "TICKET",
+      "ubicacionId": 1,
+      "clienteId": 8,
+      "salidaIds": [
+        2
+      ],
+      "precios": [
+        {
+          "salidaRolloId": 2,
+          "precioUnitario": 150
+        }
+      ]
+    }
+  },
+  {
+    "module": "cobros_pagos",
+    "action": "crear",
+    "method": "POST",
+    "path": "/tickets/1/cobrar",
+    "body": {
+      "pagos": [
+        {
+          "formaPago": "EFECTIVO",
+          "importe": 1500
+        }
+      ]
+    }
+  },
+  {
+    "module": "permisos",
+    "action": "editar",
+    "method": "PUT",
+    "path": "/permisos/roles/TERMINAL/dashboard",
+    "body": {
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    }
+  },
+  {
+    "module": "clientes_finanzas",
+    "action": "crear",
+    "method": "POST",
+    "path": "/clientes/8/pagos/vista-previa",
+    "body": {
+      "importe": 1,
+      "fechaEfectiva": "2026-09-26T12:00:00.000Z"
+    }
+  },
+  {
+    "module": "auditoria_inventario",
+    "action": "autorizar",
+    "method": "POST",
+    "path": "/inventario/auditorias/1/confirmar",
+    "body": {}
+  }
+]
