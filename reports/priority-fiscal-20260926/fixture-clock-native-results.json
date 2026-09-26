@@ -1,0 +1,64 @@
+{
+  "results": [
+    {
+      "case": "resolver-original",
+      "commit": "RED_55000",
+      "persistedOperations": 0
+    },
+    {
+      "case": "resolver-corrected-same-test-intention",
+      "commit": "PASS"
+    },
+    {
+      "case": "snapshot-DIA",
+      "inicio": "2026-08-05",
+      "finExclusivo": "2026-08-06",
+      "commit": "PASS",
+      "nonemptySales": 1
+    },
+    {
+      "case": "snapshot-SEMANA",
+      "inicio": "2026-08-03",
+      "finExclusivo": "2026-08-10",
+      "commit": "PASS",
+      "nonemptySales": 1
+    },
+    {
+      "case": "snapshot-MES",
+      "inicio": "2026-08-01",
+      "finExclusivo": "2026-09-01",
+      "commit": "PASS",
+      "nonemptySales": 1
+    },
+    {
+      "case": "snapshot-DIA",
+      "inicio": "2026-09-24",
+      "finExclusivo": "2026-09-25",
+      "commit": "PASS",
+      "nonemptySales": 1
+    },
+    {
+      "case": "snapshot-SEMANA",
+      "inicio": "2026-09-21",
+      "finExclusivo": "2026-09-28",
+      "commit": "PASS",
+      "nonemptySales": 1
+    },
+    {
+      "case": "snapshot-MES",
+      "inicio": "2026-09-01",
+      "finExclusivo": "2026-10-01",
+      "commit": "PASS",
+      "nonemptySales": 1
+    },
+    {
+      "case": "unpaired-tombstone-remains-rejected",
+      "commit": "REJECTED_P0001"
+    }
+  ],
+  "publicDataWrites": false,
+  "publicIntentionsCreated": false,
+  "isolatedSchemaDropped": true,
+  "nativeE11ForeignKeysRestored": true,
+  "caveat": "Base application FKs outside E11 are not cloned; E11 FKs and active actor/birth/provenance/deferred graph triggers are real."
+}

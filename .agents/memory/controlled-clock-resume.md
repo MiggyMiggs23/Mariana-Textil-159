@@ -20,3 +20,18 @@ No adelantar globalmente Date para cerrar períodos cuando PostgreSQL conserva s
 **Why:** El login puede crear una sesión con fecha SQL real y rechazarla inmediatamente porque el reloj JavaScript adelantado la considera expirada. Un preload heredado por el worker de logging también puede terminar el servidor antes de probar el negocio.
 
 **How to apply:** Diseñar una inyección de reloj limitada al cálculo temporal que se prueba, identificarla como simulación y conservar el reloj real de sesiones y límites de ejecución. No presentar una prueba instrumentada como una observación natural del bundle publicado.
+
+## Reloj SQL nativo
+
+**Why:** Simular Date en navegador/API no adelanta `clock_timestamp()` ni los
+otros relojes nativos de PostgreSQL. Una función SQL puede seguir clasificando
+un período como abierto aunque el arnés JavaScript lo considere cerrado.
+
+**How to apply:** Inventariar también las expresiones temporales de funciones
+y triggers SQL antes del ensayo. No atribuir esa divergencia al producto ni
+corregir timestamps históricos para obtener PASS. Si el ensayo exige cambiar
+el evaluador SQL, hacerlo sólo en copia aislada y con autorización explícita:
+verificar identidad de base y definición/hash previo, limitar el delta al
+reloj evaluador, comprobar definición posterior y preservar firmas, permisos,
+triggers e invariantes. Registrar el resultado como fixture instrumentado,
+nunca migración/corrección productiva ni evidencia de un cierre natural.

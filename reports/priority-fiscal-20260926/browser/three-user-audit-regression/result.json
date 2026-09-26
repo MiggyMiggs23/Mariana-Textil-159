@@ -1,0 +1,14 @@
+{
+  "status": "PARTIAL_OR_BLOCKED",
+  "startedAt": "2026-09-26T06:01:21.097Z",
+  "apiSha256": "f3870a6e76bee58a0237e345dec303e11cf9e42af6acd99fa6314de416fc0e97",
+  "checks": [
+    {
+      "name": "setup",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "credentials.actors is not iterable"
+    }
+  ],
+  "requests": [],
+  "screenshots": []
+}

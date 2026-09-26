@@ -1,0 +1,79 @@
+✖ large financial directory uses one canonical bulk projection and preserves full revision (75.687892ms)
+✖ session lock permits non-key expiry renewal but still protects deletion (1.042658ms)
+✖ explicit read retries one rolled-back 40001 with fresh identity; delivers once (0.577721ms)
+✖ serialization retry is bounded, never retries timeout, unique conflict, deadlock or writes (0.600939ms)
+✔ delivery failure and true profile revocation never retry or disclose protected result (0.765118ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 1
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 182.148299
+
+✖ failing tests:
+
+test at artifacts/api-server/dist-priority-stability-v3-20260926/baseline-stability.test.cjs:8260:30
+✖ large financial directory uses one canonical bulk projection and preserves full revision (75.687892ms)
+  AssertionError [ERR_ASSERTION]: no per-customer SELECTs
+  
+  2576 !== 1
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/dist-priority-stability-v3-20260926/baseline-stability.test.cjs:8297:25)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 2576,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at artifacts/api-server/dist-priority-stability-v3-20260926/baseline-stability.test.cjs:8320:30
+✖ session lock permits non-key expiry renewal but still protects deletion (1.042658ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /FOR KEY SHARE/. Input:
+  
+  'SELECT id FROM sesiones WHERE id=$1::uuid\n' +
+    '      AND usuario_id=$2 AND expira_at>$3::timestamptz\n' +
+    '      AND created_at>$4::timestamptz FOR SHARE'
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/dist-priority-stability-v3-20260926/baseline-stability.test.cjs:8323:25)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'SELECT id FROM sesiones WHERE id=$1::uuid\n      AND usuario_id=$2 AND expira_at>$3::timestamptz\n      AND created_at>$4::timestamptz FOR SHARE',
+    expected: /FOR KEY SHARE/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at artifacts/api-server/dist-priority-stability-v3-20260926/baseline-stability.test.cjs:8326:30
+✖ explicit read retries one rolled-back 40001 with fresh identity; delivers once (0.577721ms)
+  Error: rolled back serialization
+      at Object.transaction (/home/runner/workspace/artifacts/api-server/dist-priority-stability-v3-20260926/baseline-stability.test.cjs:8332:45)
+      at async e11Execute (/home/runner/workspace/artifacts/api-server/dist-priority-stability-v3-20260926/baseline-stability.test.cjs:8203:14)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/dist-priority-stability-v3-20260926/baseline-stability.test.cjs:8329:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    code: '40001'
+  }
+
+test at artifacts/api-server/dist-priority-stability-v3-20260926/baseline-stability.test.cjs:8353:30
+✖ serialization retry is bounded, never retries timeout, unique conflict, deadlock or writes (0.600939ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 2
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/dist-priority-stability-v3-20260926/baseline-stability.test.cjs:8372:29)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

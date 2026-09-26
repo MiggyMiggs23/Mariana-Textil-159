@@ -1,0 +1,1542 @@
+{
+  "status": "PARTIAL_OR_BLOCKED",
+  "startedAt": "2026-09-26T06:04:00.193Z",
+  "apiSha256": "f3870a6e76bee58a0237e345dec303e11cf9e42af6acd99fa6314de416fc0e97",
+  "checks": [
+    {
+      "name": "A-concurrent-identity-and-session-stability",
+      "status": "PASS",
+      "evidence": {
+        "actorId": 238,
+        "statuses": [
+          200,
+          200,
+          200,
+          200,
+          200,
+          200
+        ]
+      }
+    },
+    {
+      "name": "A-denied--api-fondo",
+      "status": "PASS",
+      "evidence": {
+        "status": 403,
+        "realFixtureEndpoint": "/api/fondo"
+      }
+    },
+    {
+      "name": "A-denied--api-proveedores-226-pagos",
+      "status": "PASS",
+      "evidence": {
+        "status": 403,
+        "realFixtureEndpoint": "/api/proveedores/226/pagos"
+      }
+    },
+    {
+      "name": "A-denied--api-tickets-1",
+      "status": "PASS",
+      "evidence": {
+        "status": 403,
+        "realFixtureEndpoint": "/api/tickets/1"
+      }
+    },
+    {
+      "name": "A-denied--api-clientes-2583",
+      "status": "PASS",
+      "evidence": {
+        "status": 403,
+        "realFixtureEndpoint": "/api/clientes/2583"
+      }
+    },
+    {
+      "name": "A-ui-denied-fondo",
+      "status": "PASS",
+      "evidence": {
+        "route": "/fondo",
+        "denied": true
+      }
+    },
+    {
+      "name": "A-ui-denied-proveedores",
+      "status": "PASS",
+      "evidence": {
+        "route": "/proveedores",
+        "denied": true
+      }
+    },
+    {
+      "name": "A-ui-denied-reportes",
+      "status": "PASS",
+      "evidence": {
+        "route": "/reportes",
+        "denied": true
+      }
+    },
+    {
+      "name": "A-ui-denied-productos",
+      "status": "PASS",
+      "evidence": {
+        "route": "/productos",
+        "denied": true
+      }
+    },
+    {
+      "name": "A-permitted-finanzas",
+      "status": "PASS",
+      "evidence": {
+        "route": "/contabilidad/finanzas",
+        "headings": [
+          "Contabilidad · A",
+          "Clientes · finanzas saneadas A"
+        ]
+      }
+    },
+    {
+      "name": "A-permitted-preparaciones",
+      "status": "PASS",
+      "evidence": {
+        "route": "/contabilidad/preparaciones",
+        "headings": [
+          "Contabilidad · A",
+          "A · preparar dinero retenido existente"
+        ]
+      }
+    },
+    {
+      "name": "A-permitted-projection-sensitive-fields-absent",
+      "status": "PASS",
+      "evidence": {
+        "status": 200,
+        "itemCount": 20,
+        "sensitiveKeysAbsent": true,
+        "actualKeys": [
+          "items",
+          "clienteId",
+          "nombre",
+          "contacto",
+          "limiteCredito",
+          "saldo",
+          "nextCursor",
+          "fuenteRevision"
+        ]
+      }
+    },
+    {
+      "name": "A-cross-profile-denial",
+      "status": "PASS",
+      "evidence": {
+        "endpoint": "/api/e11/fiscal/facturas/1",
+        "status": 403
+      }
+    },
+    {
+      "name": "F-concurrent-identity-and-session-stability",
+      "status": "PASS",
+      "evidence": {
+        "actorId": 237,
+        "statuses": [
+          200,
+          200,
+          200,
+          200,
+          200,
+          200
+        ]
+      }
+    },
+    {
+      "name": "F-denied--api-fondo",
+      "status": "PASS",
+      "evidence": {
+        "status": 403,
+        "realFixtureEndpoint": "/api/fondo"
+      }
+    },
+    {
+      "name": "F-denied--api-proveedores-226-pagos",
+      "status": "PASS",
+      "evidence": {
+        "status": 403,
+        "realFixtureEndpoint": "/api/proveedores/226/pagos"
+      }
+    },
+    {
+      "name": "F-denied--api-tickets-1",
+      "status": "PASS",
+      "evidence": {
+        "status": 403,
+        "realFixtureEndpoint": "/api/tickets/1"
+      }
+    },
+    {
+      "name": "F-denied--api-clientes-2583",
+      "status": "PASS",
+      "evidence": {
+        "status": 403,
+        "realFixtureEndpoint": "/api/clientes/2583"
+      }
+    },
+    {
+      "name": "F-ui-denied-fondo",
+      "status": "PASS",
+      "evidence": {
+        "route": "/fondo",
+        "denied": true
+      }
+    },
+    {
+      "name": "F-ui-denied-proveedores",
+      "status": "PASS",
+      "evidence": {
+        "route": "/proveedores",
+        "denied": true
+      }
+    },
+    {
+      "name": "F-ui-denied-reportes",
+      "status": "PASS",
+      "evidence": {
+        "route": "/reportes",
+        "denied": true
+      }
+    },
+    {
+      "name": "F-ui-denied-productos",
+      "status": "PASS",
+      "evidence": {
+        "route": "/productos",
+        "denied": true
+      }
+    },
+    {
+      "name": "F-permitted-fiscal",
+      "status": "PASS",
+      "evidence": {
+        "route": "/contabilidad/fiscal",
+        "headings": [
+          "Contabilidad · F",
+          "Ventas facturadas y clientes facturados",
+          "Clientes con documentos facturados",
+          "Documentos facturados del intervalo",
+          "ADMINISTRACIÓN Y AJUSTES"
+        ]
+      }
+    },
+    {
+      "name": "F-permitted-conciliaciones",
+      "status": "PASS",
+      "evidence": {
+        "route": "/contabilidad/conciliaciones",
+        "headings": [
+          "Contabilidad · F",
+          "Conciliaciones de ventas facturadas",
+          "DIA · 2026-09-01 a 2026-09-02 (exclusivo)",
+          "MES · 2026-09-01 a 2026-10-01 (exclusivo)",
+          "DIA · 2026-09-02 a 2026-09-03 (exclusivo)",
+          "DIA · 2026-09-03 a 2026-09-04 (exclusivo)",
+          "DIA · 2026-09-04 a 2026-09-05 (exclusivo)",
+          "DIA · 2026-09-05 a 2026-09-06 (exclusivo)",
+          "DIA · 2026-09-06 a 2026-09-07 (exclusivo)",
+          "DIA · 2026-09-07 a 2026-09-08 (exclusivo)",
+          "SEMANA · 2026-09-07 a 2026-09-14 (exclusivo)",
+          "DIA · 2026-09-08 a 2026-09-09 (exclusivo)",
+          "DIA · 2026-09-09 a 2026-09-10 (exclusivo)",
+          "DIA · 2026-09-10 a 2026-09-11 (exclusivo)",
+          "DIA · 2026-09-11 a 2026-09-12 (exclusivo)",
+          "DIA · 2026-09-12 a 2026-09-13 (exclusivo)",
+          "DIA · 2026-09-13 a 2026-09-14 (exclusivo)",
+          "DIA · 2026-09-14 a 2026-09-15 (exclusivo)",
+          "SEMANA · 2026-09-14 a 2026-09-21 (exclusivo)",
+          "DIA · 2026-09-15 a 2026-09-16 (exclusivo)",
+          "DIA · 2026-09-16 a 2026-09-17 (exclusivo)",
+          "DIA · 2026-09-17 a 2026-09-18 (exclusivo)",
+          "ADMINISTRACIÓN Y AJUSTES"
+        ]
+      }
+    },
+    {
+      "name": "F-permitted-projection-sensitive-fields-absent",
+      "status": "PASS",
+      "evidence": {
+        "status": 200,
+        "itemCount": 1,
+        "sensitiveKeysAbsent": true,
+        "actualKeys": [
+          "items",
+          "facturaId",
+          "ventaId",
+          "folioFactura",
+          "cliente",
+          "clienteId",
+          "nombre",
+          "fechaFacturacion",
+          "totalFacturado",
+          "moneda",
+          "estado",
+          "nextCursor",
+          "fuenteRevision"
+        ]
+      }
+    },
+    {
+      "name": "F-cross-profile-denial",
+      "status": "PASS",
+      "evidence": {
+        "endpoint": "/api/e11/finanzas/clientes",
+        "status": 403
+      }
+    },
+    {
+      "name": "prior-500--api-precios",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Expected values to be strictly equal:\n\n500 !== 200\n"
+    },
+    {
+      "name": "prior-500--api-clientes-2583-pagos",
+      "status": "PASS",
+      "evidence": {
+        "endpoint": "/api/clientes/2583/pagos",
+        "status": 200
+      }
+    },
+    {
+      "name": "prior-500--api-clientes-2583-comportamiento-pago",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Expected values to be strictly equal:\n\n500 !== 200\n"
+    },
+    {
+      "name": "independent-uncertain-fiscal-and-audit-readbacks",
+      "status": "PASS",
+      "evidence": {
+        "periods": {
+          "status": 200,
+          "requestId": null,
+          "body": {
+            "items": [
+              {
+                "tipo": "DIA",
+                "inicio": "2026-09-25",
+                "finExclusivo": "2026-09-26",
+                "zona": "America/Mexico_City",
+                "obligatorio": false,
+                "estado": "PENDIENTE",
+                "ultimaConciliacionId": null
+              }
+            ],
+            "nextCursor": null
+          }
+        },
+        "audit": {
+          "status": 200,
+          "totalEscaneados": 0,
+          "participantes": [
+            {
+              "activo": false,
+              "expiraAt": "2026-09-26T06:04:32.416Z",
+              "usuarioId": 239,
+              "nombre": "PRIORITY AUDITOR 0",
+              "escaneos": 0,
+              "primeroAt": "2026-09-26T06:02:22.312Z",
+              "ultimoAt": "2026-09-26T06:03:02.416Z"
+            },
+            {
+              "activo": false,
+              "expiraAt": "2026-09-26T06:04:32.542Z",
+              "usuarioId": 240,
+              "nombre": "PRIORITY AUDITOR 1",
+              "escaneos": 0,
+              "primeroAt": "2026-09-26T06:02:22.420Z",
+              "ultimoAt": "2026-09-26T06:03:02.542Z"
+            },
+            {
+              "activo": false,
+              "expiraAt": "2026-09-26T06:04:32.662Z",
+              "usuarioId": 234,
+              "nombre": "Priority disposable admin",
+              "escaneos": 0,
+              "primeroAt": "2026-09-26T06:02:22.530Z",
+              "ultimoAt": "2026-09-26T06:03:02.662Z"
+            }
+          ],
+          "keys": [
+            "id",
+            "folio",
+            "folioFormateado",
+            "ubicacionId",
+            "nombreUbicacion",
+            "estado",
+            "totalSnapshot",
+            "totalEscaneados",
+            "cuadros",
+            "faltantes",
+            "sobrantes",
+            "malAcomodados",
+            "abiertaAt",
+            "creadaPor",
+            "participantesActivos",
+            "maxParticipantes",
+            "expiracionSegundos",
+            "motivoCancelacion",
+            "cerradaAt",
+            "confirmadaAt",
+            "resultados",
+            "participantes"
+          ]
+        },
+        "browserNow": "2026-10-02T18:00:00.000Z"
+      }
+    }
+  ],
+  "requests": [
+    {
+      "at": "2026-09-26T06:04:00.794Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402640779-4",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T06:04:01.872Z",
+      "actor": "BOUNDARY-A",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402640939-7"
+    },
+    {
+      "at": "2026-09-26T06:04:02.394Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402641879-8"
+    },
+    {
+      "at": "2026-09-26T06:04:02.599Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402641886-13"
+    },
+    {
+      "at": "2026-09-26T06:04:02.603Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402642397-16"
+    },
+    {
+      "at": "2026-09-26T06:04:02.613Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402641885-11"
+    },
+    {
+      "at": "2026-09-26T06:04:02.672Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402641883-10"
+    },
+    {
+      "at": "2026-09-26T06:04:02.740Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402641885-12"
+    },
+    {
+      "at": "2026-09-26T06:04:02.741Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402641886-14"
+    },
+    {
+      "at": "2026-09-26T06:04:02.899Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402641887-15"
+    },
+    {
+      "at": "2026-09-26T06:04:03.182Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/fondo",
+      "status": 403,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402642920-18",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "code": "PERFIL_DENEGADO",
+      "bodyRequestId": "5381b7db-4166-4d74-ae03-42e8f18febf6"
+    },
+    {
+      "at": "2026-09-26T06:04:03.239Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402642604-17"
+    },
+    {
+      "at": "2026-09-26T06:04:03.449Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/proveedores/226/pagos",
+      "status": 403,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402643193-19",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "code": "PERFIL_DENEGADO",
+      "bodyRequestId": "490706f5-5d28-4863-a4a6-74793b322a1c"
+    },
+    {
+      "at": "2026-09-26T06:04:03.728Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/tickets/1",
+      "status": 403,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402643468-22",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "code": "PERFIL_DENEGADO",
+      "bodyRequestId": "84d5cf0d-e992-4769-ae1a-34435a3a52f4"
+    },
+    {
+      "at": "2026-09-26T06:04:04.014Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/clientes/2583",
+      "status": 403,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402643743-23",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "code": "PERFIL_DENEGADO",
+      "bodyRequestId": "82f2fb24-3ff5-43dd-9db5-73d66af723ca"
+    },
+    {
+      "at": "2026-09-26T06:04:04.722Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402644195-27"
+    },
+    {
+      "at": "2026-09-26T06:04:04.735Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402644725-29"
+    },
+    {
+      "at": "2026-09-26T06:04:05.389Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402644735-30"
+    },
+    {
+      "at": "2026-09-26T06:04:06.258Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402645733-34"
+    },
+    {
+      "at": "2026-09-26T06:04:06.269Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402646260-36"
+    },
+    {
+      "at": "2026-09-26T06:04:06.925Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402646273-37"
+    },
+    {
+      "at": "2026-09-26T06:04:07.772Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402647248-41"
+    },
+    {
+      "at": "2026-09-26T06:04:07.781Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402647775-43"
+    },
+    {
+      "at": "2026-09-26T06:04:08.547Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402647894-44"
+    },
+    {
+      "at": "2026-09-26T06:04:09.306Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402648779-48"
+    },
+    {
+      "at": "2026-09-26T06:04:09.314Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402649309-50"
+    },
+    {
+      "at": "2026-09-26T06:04:09.966Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402649316-51"
+    },
+    {
+      "at": "2026-09-26T06:04:10.825Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402650298-55"
+    },
+    {
+      "at": "2026-09-26T06:04:10.837Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402650829-57"
+    },
+    {
+      "at": "2026-09-26T06:04:11.487Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402650839-58"
+    },
+    {
+      "at": "2026-09-26T06:04:12.663Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/finanzas/clientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402651493-59"
+    },
+    {
+      "at": "2026-09-26T06:04:13.496Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402652976-63"
+    },
+    {
+      "at": "2026-09-26T06:04:13.506Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402653499-65"
+    },
+    {
+      "at": "2026-09-26T06:04:14.273Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402653633-66"
+    },
+    {
+      "at": "2026-09-26T06:04:15.010Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/a/preparaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402654279-67"
+    },
+    {
+      "at": "2026-09-26T06:04:15.969Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/finanzas/clientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402655115-69"
+    },
+    {
+      "at": "2026-09-26T06:04:16.462Z",
+      "actor": "BOUNDARY-A",
+      "method": "GET",
+      "path": "/api/e11/fiscal/facturas/1",
+      "status": 403,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-A-1790402655976-70",
+      "message": "El perfil vigente no autoriza esta operación.",
+      "code": "PERFIL_DENEGADO",
+      "bodyRequestId": "c607d0a7-8ffc-49d4-a0ee-08b386b1a7bc"
+    },
+    {
+      "at": "2026-09-26T06:04:16.872Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402656858-74",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T06:04:17.684Z",
+      "actor": "BOUNDARY-F",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402656984-77"
+    },
+    {
+      "at": "2026-09-26T06:04:18.178Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402657696-83"
+    },
+    {
+      "at": "2026-09-26T06:04:18.202Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402657688-78"
+    },
+    {
+      "at": "2026-09-26T06:04:18.208Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402657695-81"
+    },
+    {
+      "at": "2026-09-26T06:04:18.214Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402658206-86"
+    },
+    {
+      "at": "2026-09-26T06:04:18.336Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402657697-84"
+    },
+    {
+      "at": "2026-09-26T06:04:18.336Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402657694-80"
+    },
+    {
+      "at": "2026-09-26T06:04:18.339Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402657696-82"
+    },
+    {
+      "at": "2026-09-26T06:04:18.660Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402657697-85"
+    },
+    {
+      "at": "2026-09-26T06:04:18.856Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402658215-87"
+    },
+    {
+      "at": "2026-09-26T06:04:18.935Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/fondo",
+      "status": 403,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402658667-88",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "code": "PERFIL_DENEGADO",
+      "bodyRequestId": "cd77ea23-ad98-4ed8-a73b-2e534a65fd80"
+    },
+    {
+      "at": "2026-09-26T06:04:19.182Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/proveedores/226/pagos",
+      "status": 403,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402658939-92",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "code": "PERFIL_DENEGADO",
+      "bodyRequestId": "08ad34c5-20ae-47dc-953b-535386ba5a8c"
+    },
+    {
+      "at": "2026-09-26T06:04:19.429Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/tickets/1",
+      "status": 403,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402659187-93",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "code": "PERFIL_DENEGADO",
+      "bodyRequestId": "2107a4e9-c69b-4afc-a33c-fe194c1f7ed1"
+    },
+    {
+      "at": "2026-09-26T06:04:19.545Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/fiscal/ventas",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402658867-89"
+    },
+    {
+      "at": "2026-09-26T06:04:19.547Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/fiscal/clientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402658868-90"
+    },
+    {
+      "at": "2026-09-26T06:04:19.677Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/clientes/2583",
+      "status": 403,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402659434-94",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "code": "PERFIL_DENEGADO",
+      "bodyRequestId": "3d997217-ab02-4c65-b6a0-b434157309a1"
+    },
+    {
+      "at": "2026-09-26T06:04:20.387Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402659895-98"
+    },
+    {
+      "at": "2026-09-26T06:04:20.395Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402660390-100"
+    },
+    {
+      "at": "2026-09-26T06:04:20.997Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402660397-101"
+    },
+    {
+      "at": "2026-09-26T06:04:21.961Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402661476-105"
+    },
+    {
+      "at": "2026-09-26T06:04:21.977Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402661964-107"
+    },
+    {
+      "at": "2026-09-26T06:04:22.577Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402661979-108"
+    },
+    {
+      "at": "2026-09-26T06:04:23.520Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402663033-112"
+    },
+    {
+      "at": "2026-09-26T06:04:23.531Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402663522-114"
+    },
+    {
+      "at": "2026-09-26T06:04:24.137Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402663533-115"
+    },
+    {
+      "at": "2026-09-26T06:04:25.136Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402664651-119"
+    },
+    {
+      "at": "2026-09-26T06:04:25.144Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402665139-121"
+    },
+    {
+      "at": "2026-09-26T06:04:25.801Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402665146-122"
+    },
+    {
+      "at": "2026-09-26T06:04:26.701Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402666211-126"
+    },
+    {
+      "at": "2026-09-26T06:04:26.709Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402666704-128"
+    },
+    {
+      "at": "2026-09-26T06:04:27.320Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402666711-129"
+    },
+    {
+      "at": "2026-09-26T06:04:28.009Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/fiscal/clientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402667327-131"
+    },
+    {
+      "at": "2026-09-26T06:04:28.010Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/fiscal/ventas",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402667326-130"
+    },
+    {
+      "at": "2026-09-26T06:04:28.909Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402668385-135"
+    },
+    {
+      "at": "2026-09-26T06:04:28.917Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402668912-137"
+    },
+    {
+      "at": "2026-09-26T06:04:29.568Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402668919-138"
+    },
+    {
+      "at": "2026-09-26T06:04:30.263Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402669576-139"
+    },
+    {
+      "at": "2026-09-26T06:04:31.204Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/fiscal/ventas",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402670522-141"
+    },
+    {
+      "at": "2026-09-26T06:04:31.701Z",
+      "actor": "BOUNDARY-F",
+      "method": "GET",
+      "path": "/api/e11/finanzas/clientes",
+      "status": 403,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-BOUNDARY-F-1790402671210-142",
+      "message": "El perfil vigente no autoriza esta operación.",
+      "code": "PERFIL_DENEGADO",
+      "bodyRequestId": "4366046e-e48b-428e-8715-fe0a3d033f2d"
+    },
+    {
+      "at": "2026-09-26T06:04:32.086Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402672066-146",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T06:04:32.893Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402672183-149"
+    },
+    {
+      "at": "2026-09-26T06:04:33.575Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402673055-155"
+    },
+    {
+      "at": "2026-09-26T06:04:33.584Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402673579-158"
+    },
+    {
+      "at": "2026-09-26T06:04:38.792Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/precios",
+      "status": 500,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402673056-157",
+      "error": "No se pudo completar la operación. No se guardaron cambios; intenta nuevamente. Si el problema continúa, reporta la pantalla y la hora del intento.",
+      "code": "INTERNAL_ERROR"
+    },
+    {
+      "at": "2026-09-26T06:04:41.867Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402679168-163"
+    },
+    {
+      "at": "2026-09-26T06:04:41.875Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402681869-166"
+    },
+    {
+      "at": "2026-09-26T06:04:42.169Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/clientes/2583/pagos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402679171-165"
+    },
+    {
+      "at": "2026-09-26T06:04:42.904Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402682382-171"
+    },
+    {
+      "at": "2026-09-26T06:04:42.912Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402682906-174"
+    },
+    {
+      "at": "2026-09-26T06:04:48.309Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/clientes/2583/comportamiento-pago",
+      "status": 500,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402682384-173",
+      "error": "No se pudo completar la operación. No se guardaron cambios; intenta nuevamente. Si el problema continúa, reporta la pantalla y la hora del intento.",
+      "code": "INTERNAL_ERROR"
+    },
+    {
+      "at": "2026-09-26T06:04:48.577Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402682914-175"
+    },
+    {
+      "at": "2026-09-26T06:04:48.965Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688659-179"
+    },
+    {
+      "at": "2026-09-26T06:04:48.955Z",
+      "actor": "F-READBACK",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-READBACK-1790402688943-198",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T06:04:49.181Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688661-182"
+    },
+    {
+      "at": "2026-09-26T06:04:49.213Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688662-183"
+    },
+    {
+      "at": "2026-09-26T06:04:49.224Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688663-184"
+    },
+    {
+      "at": "2026-09-26T06:04:49.251Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688661-181"
+    },
+    {
+      "at": "2026-09-26T06:04:49.269Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688660-180"
+    },
+    {
+      "at": "2026-09-26T06:04:49.515Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688664-185"
+    },
+    {
+      "at": "2026-09-26T06:04:49.723Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688664-186"
+    },
+    {
+      "at": "2026-09-26T06:04:49.813Z",
+      "actor": "F-READBACK",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-READBACK-1790402689089-201"
+    },
+    {
+      "at": "2026-09-26T06:04:50.038Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/clientes/2583/compras",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688666-190"
+    },
+    {
+      "at": "2026-09-26T06:04:50.044Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/clientes/2583",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688664-187"
+    },
+    {
+      "at": "2026-09-26T06:04:50.087Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/clientes/2583/credito",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688665-188"
+    },
+    {
+      "at": "2026-09-26T06:04:55.138Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/clientes/2583/comportamiento-pago",
+      "status": 500,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688665-189",
+      "error": "No se pudo completar la operación. No se guardaron cambios; intenta nuevamente. Si el problema continúa, reporta la pantalla y la hora del intento.",
+      "code": "INTERNAL_ERROR"
+    },
+    {
+      "at": "2026-09-26T06:04:55.145Z",
+      "actor": "F-READBACK",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 500,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-READBACK-1790402689818-202",
+      "error": "No se pudo completar la operación. No se guardaron cambios; intenta nuevamente. Si el problema continúa, reporta la pantalla y la hora del intento.",
+      "code": "INTERNAL_ERROR"
+    },
+    {
+      "at": "2026-09-26T06:04:55.184Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/clientes/2583/estadisticas",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688666-191"
+    },
+    {
+      "at": "2026-09-26T06:04:55.301Z",
+      "actor": "F-READBACK",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-READBACK-1790402689824-204"
+    },
+    {
+      "at": "2026-09-26T06:04:55.441Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/clientes/2583/analitica",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688667-192"
+    },
+    {
+      "at": "2026-09-26T06:04:55.660Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/locations",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688668-196"
+    },
+    {
+      "at": "2026-09-26T06:04:55.679Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/clientes/2583/pagos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688668-194"
+    },
+    {
+      "at": "2026-09-26T06:04:55.879Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/clientes/cartera",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688668-193"
+    },
+    {
+      "at": "2026-09-26T06:04:55.888Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/clientes/2583/precios",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402688668-195"
+    },
+    {
+      "at": "2026-09-26T06:04:55.964Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402690069-206"
+    },
+    {
+      "at": "2026-09-26T06:04:56.003Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/clientes/2583/documentos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402690068-205"
+    },
+    {
+      "at": "2026-09-26T06:04:56.173Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/clientes/2583/evidencia-credito",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402690070-207"
+    },
+    {
+      "at": "2026-09-26T06:04:56.191Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/pagos-dirigidos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402690070-208"
+    },
+    {
+      "at": "2026-09-26T06:04:56.770Z",
+      "actor": "ADMIN-REGRESSION",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REGRESSION-1790402695304-209"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "corrected-profile-boundaries/A-ui-denied-fondo-0.png",
+      "sha256": "8ffac8c9a95c36bcc15f454670c49a9ba844ea0b66f9f37b9becbdc7bb097835"
+    },
+    {
+      "file": "corrected-profile-boundaries/A-ui-denied-proveedores-0.png",
+      "sha256": "8ffac8c9a95c36bcc15f454670c49a9ba844ea0b66f9f37b9becbdc7bb097835"
+    },
+    {
+      "file": "corrected-profile-boundaries/A-ui-denied-reportes-0.png",
+      "sha256": "8ffac8c9a95c36bcc15f454670c49a9ba844ea0b66f9f37b9becbdc7bb097835"
+    },
+    {
+      "file": "corrected-profile-boundaries/A-ui-denied-productos-0.png",
+      "sha256": "8ffac8c9a95c36bcc15f454670c49a9ba844ea0b66f9f37b9becbdc7bb097835"
+    },
+    {
+      "file": "corrected-profile-boundaries/A-permitted-finanzas-0.png",
+      "sha256": "e00cb7a4b02e52560a6713d6dae83206c0a68359da841d1e237bba4ffa376c85"
+    },
+    {
+      "file": "corrected-profile-boundaries/A-permitted-preparaciones-0.png",
+      "sha256": "e1b96eead65736c9c15ddd4ead9aca72cda1b8f5059a347e56fa870abe73e9c3"
+    },
+    {
+      "file": "corrected-profile-boundaries/F-ui-denied-fondo-0.png",
+      "sha256": "53d4fcfdddc3a28fb6aa89b3910897d596822ab6bf32560c9a6bfc4428a6eb40"
+    },
+    {
+      "file": "corrected-profile-boundaries/F-ui-denied-proveedores-0.png",
+      "sha256": "53d4fcfdddc3a28fb6aa89b3910897d596822ab6bf32560c9a6bfc4428a6eb40"
+    },
+    {
+      "file": "corrected-profile-boundaries/F-ui-denied-reportes-0.png",
+      "sha256": "53d4fcfdddc3a28fb6aa89b3910897d596822ab6bf32560c9a6bfc4428a6eb40"
+    },
+    {
+      "file": "corrected-profile-boundaries/F-ui-denied-productos-0.png",
+      "sha256": "53d4fcfdddc3a28fb6aa89b3910897d596822ab6bf32560c9a6bfc4428a6eb40"
+    },
+    {
+      "file": "corrected-profile-boundaries/F-permitted-fiscal-0.png",
+      "sha256": "bcd03cf3efe6440670b23c2d5fba96710a777a87f9d464acf171060b12d67f03"
+    },
+    {
+      "file": "corrected-profile-boundaries/F-permitted-conciliaciones-0.png",
+      "sha256": "c0311ef785a8fe22023d3f28f063a099b657e0010ccd0da98838cb63c4ed9ca2"
+    },
+    {
+      "file": "corrected-profile-boundaries/prior-500--api-precios-0.png",
+      "sha256": "ebcf686a4004686e5a65ba78d477226cc547c5a6e0a81323f8f0001328e71328"
+    },
+    {
+      "file": "corrected-profile-boundaries/prior-500--api-clientes-2583-pagos-0.png",
+      "sha256": "ebcf686a4004686e5a65ba78d477226cc547c5a6e0a81323f8f0001328e71328"
+    },
+    {
+      "file": "corrected-profile-boundaries/prior-500--api-clientes-2583-comportamiento-pago-0.png",
+      "sha256": "ebcf686a4004686e5a65ba78d477226cc547c5a6e0a81323f8f0001328e71328"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "at": "2026-09-26T04:55:42.582Z",
+  "readOnly": true,
+  "equal": false,
+  "applicationDefinitionsEqual": true,
+  "differences": [
+    "function:public.fips_mode()"
+  ],
+  "versionDifference": "Target pgcrypto adds fips_mode(); newer PostgreSQL exposes NOT NULL in pg_constraint. Column NOT NULL compared explicitly, contype=n excluded.",
+  "scope": "Exact ordered definitions of public constraints, indexes, noninternal triggers, functions/procedures; owners/ACL intentionally excluded",
+  "source": {
+    "column": 948,
+    "constraint": 656,
+    "function": 117,
+    "index": 325,
+    "trigger": 255
+  },
+  "copy": {
+    "column": 948,
+    "constraint": 656,
+    "function": 118,
+    "index": 325,
+    "trigger": 255
+  }
+}

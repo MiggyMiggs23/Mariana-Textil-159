@@ -1,0 +1,16 @@
+{
+  "released": true,
+  "browsersClosed": true,
+  "status": "CONCRETE_DEFECTS_AND_CLOCK_BLOCKER",
+  "profileBoundaryChecksPassed": 26,
+  "fiscalSnapshotUncertainUuid": "b2548914-0933-4a8f-a67d-b925b0a8df68",
+  "fiscalSnapshotRequestId": "b52512fe-ec67-40a2-a42c-d60d6342a476",
+  "fiscalSnapshotPostReplayed": false,
+  "auditId": 1,
+  "auditActors": [234, 239, 240],
+  "auditScansPosted": 0,
+  "auditApplied": false,
+  "noApplicationEditsOrRestarts": true,
+  "privateJournal": "/tmp/priority-fiscal-20260926/browser/state.json",
+  "report": "reports/priority-fiscal-20260926/browser/resultado.md"
+}

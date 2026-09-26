@@ -1,0 +1,3427 @@
+{
+  "status": "PASS",
+  "startedAt": "2026-09-26T06:50:58.591Z",
+  "apiSha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+  "checks": [
+    {
+      "name": "fresh-own-fixture-readback-native-audit-open",
+      "status": "PASS",
+      "evidence": {
+        "auditId": 1,
+        "actors": [
+          234,
+          239,
+          240
+        ],
+        "series": [
+          "10000003",
+          "10000004",
+          "10000005",
+          "10000006",
+          "10000007",
+          "10000008"
+        ]
+      }
+    },
+    {
+      "name": "three-concurrent-joins-fixed-session-readbacks",
+      "status": "PASS",
+      "evidence": {
+        "participants": 3
+      }
+    },
+    {
+      "name": "three-concurrent-distinct-scans",
+      "status": "PASS",
+      "evidence": {
+        "total": 3,
+        "rows": [
+          {
+            "usuarioId": 234,
+            "usuarioNombre": "Priority disposable admin",
+            "serie": "10000003",
+            "clasificacion": "CUADRO",
+            "rolloId": 3,
+            "producto": "PRIALGNAT-AZU · PRIORITY ALGODON NATIVO · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "PRIORITY NATIVO",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 14,
+            "pisoReal": "01 Acceso",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T06:51:28.988Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 239,
+            "usuarioNombre": "PRIORITY AUDITOR 0",
+            "serie": "10000004",
+            "clasificacion": "MAL_ACOMODADO",
+            "rolloId": 4,
+            "producto": "PRIALGNAT-AZU · PRIORITY ALGODON NATIVO · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "PRIORITY NATIVO",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 15,
+            "pisoReal": "02 Segundo",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T06:51:28.938Z",
+            "sobrante": null
+          },
+          {
+            "usuarioId": 240,
+            "usuarioNombre": "PRIORITY AUDITOR 1",
+            "serie": "10000005",
+            "clasificacion": "MAL_ACOMODADO",
+            "rolloId": 5,
+            "producto": "PRIALGNAT-AZU · PRIORITY ALGODON NATIVO · AZUL",
+            "cantidad": "10.000",
+            "unidad": "METRO",
+            "ubicacionActualId": 835,
+            "ubicacionActual": "PRIORITY NATIVO",
+            "pisoEsperadoId": 14,
+            "pisoEsperado": "01 Acceso",
+            "pisoRealId": 16,
+            "pisoReal": "03 Tercero",
+            "estadoActual": "DISPONIBLE",
+            "resolucion": "PENDIENTE",
+            "escaneadoAt": "2026-09-26T06:51:29.009Z",
+            "sobrante": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "repeated-heartbeats-three-usable-sessions",
+      "status": "PASS",
+      "evidence": {
+        "statuses": [
+          200,
+          200,
+          200
+        ],
+        "participants": [
+          {
+            "activo": true,
+            "expiraAt": "2026-09-26T06:53:36.005Z",
+            "usuarioId": 239,
+            "nombre": "PRIORITY AUDITOR 0",
+            "escaneos": 1,
+            "primeroAt": "2026-09-26T06:51:26.426Z",
+            "ultimoAt": "2026-09-26T06:52:06.005Z"
+          },
+          {
+            "activo": true,
+            "expiraAt": "2026-09-26T06:53:36.123Z",
+            "usuarioId": 240,
+            "nombre": "PRIORITY AUDITOR 1",
+            "escaneos": 1,
+            "primeroAt": "2026-09-26T06:51:26.303Z",
+            "ultimoAt": "2026-09-26T06:52:06.123Z"
+          },
+          {
+            "activo": true,
+            "expiraAt": "2026-09-26T06:53:36.237Z",
+            "usuarioId": 234,
+            "nombre": "Priority disposable admin",
+            "escaneos": 1,
+            "primeroAt": "2026-09-26T06:51:26.186Z",
+            "ultimoAt": "2026-09-26T06:52:06.237Z"
+          }
+        ],
+        "total": 3,
+        "browserNow": "2026-09-26T06:52:19.126Z"
+      }
+    },
+    {
+      "name": "simultaneous-duplicate-preserves-original-author-and-toast",
+      "status": "PASS",
+      "evidence": {
+        "original": {
+          "usuarioId": 234,
+          "usuarioNombre": "Priority disposable admin",
+          "serie": "10000006",
+          "clasificacion": "CUADRO",
+          "rolloId": 6,
+          "producto": "PRIALGNAT-AZU · PRIORITY ALGODON NATIVO · AZUL",
+          "cantidad": "10.000",
+          "unidad": "METRO",
+          "ubicacionActualId": 835,
+          "ubicacionActual": "PRIORITY NATIVO",
+          "pisoEsperadoId": 14,
+          "pisoEsperado": "01 Acceso",
+          "pisoRealId": 14,
+          "pisoReal": "01 Acceso",
+          "estadoActual": "DISPONIBLE",
+          "resolucion": "PENDIENTE",
+          "escaneadoAt": "2026-09-26T06:52:20.070Z",
+          "sobrante": null
+        },
+        "sameAuthorFloorAndTimestamp": true,
+        "stableSessions": [
+          200,
+          200,
+          200
+        ],
+        "total": 4
+      }
+    }
+  ],
+  "requests": [
+    {
+      "at": "2026-09-26T06:50:59.128Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405459068-4",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T06:51:00.183Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405459311-7"
+    },
+    {
+      "at": "2026-09-26T06:51:01.144Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405460403-13"
+    },
+    {
+      "at": "2026-09-26T06:51:01.165Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405461148-15"
+    },
+    {
+      "at": "2026-09-26T06:51:01.828Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405461167-16"
+    },
+    {
+      "at": "2026-09-26T06:51:02.185Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405461875-17"
+    },
+    {
+      "at": "2026-09-26T06:51:02.564Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405461879-22"
+    },
+    {
+      "at": "2026-09-26T06:51:02.598Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405461878-20"
+    },
+    {
+      "at": "2026-09-26T06:51:02.616Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405461877-19"
+    },
+    {
+      "at": "2026-09-26T06:51:02.666Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405461879-21"
+    },
+    {
+      "at": "2026-09-26T06:51:02.759Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405461880-23"
+    },
+    {
+      "at": "2026-09-26T06:51:02.894Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405461876-18"
+    },
+    {
+      "at": "2026-09-26T06:51:03.050Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405461881-24"
+    },
+    {
+      "at": "2026-09-26T06:51:03.111Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/locations",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405461882-26"
+    },
+    {
+      "at": "2026-09-26T06:51:03.148Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/users",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405461882-25"
+    },
+    {
+      "at": "2026-09-26T06:51:04.938Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "POST",
+      "path": "/api/users",
+      "status": 201,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405464021-28"
+    },
+    {
+      "at": "2026-09-26T06:51:05.813Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405465332-33"
+    },
+    {
+      "at": "2026-09-26T06:51:05.865Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405465838-35"
+    },
+    {
+      "at": "2026-09-26T06:51:06.464Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405465872-36"
+    },
+    {
+      "at": "2026-09-26T06:51:06.778Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405466506-37"
+    },
+    {
+      "at": "2026-09-26T06:51:06.993Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405466510-41"
+    },
+    {
+      "at": "2026-09-26T06:51:07.016Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405466509-40"
+    },
+    {
+      "at": "2026-09-26T06:51:07.019Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405466509-39"
+    },
+    {
+      "at": "2026-09-26T06:51:07.068Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405466510-42"
+    },
+    {
+      "at": "2026-09-26T06:51:07.108Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405466507-38"
+    },
+    {
+      "at": "2026-09-26T06:51:07.276Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405466511-43"
+    },
+    {
+      "at": "2026-09-26T06:51:07.475Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405466512-44"
+    },
+    {
+      "at": "2026-09-26T06:51:07.546Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/users",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405466512-45"
+    },
+    {
+      "at": "2026-09-26T06:51:07.566Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "GET",
+      "path": "/api/locations",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405466512-46"
+    },
+    {
+      "at": "2026-09-26T06:51:09.403Z",
+      "actor": "ADMIN-AUDIT-SEED",
+      "method": "POST",
+      "path": "/api/users",
+      "status": 201,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-AUDIT-SEED-1790405468474-48"
+    },
+    {
+      "at": "2026-09-26T06:51:10.216Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405470199-53",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T06:51:11.397Z",
+      "actor": "AUDIT-0",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405470342-56"
+    },
+    {
+      "at": "2026-09-26T06:51:11.801Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405471787-62",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T06:51:12.636Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405471403-57"
+    },
+    {
+      "at": "2026-09-26T06:51:12.648Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405472641-66"
+    },
+    {
+      "at": "2026-09-26T06:51:13.025Z",
+      "actor": "AUDIT-1",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405471921-65"
+    },
+    {
+      "at": "2026-09-26T06:51:13.283Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405472650-67"
+    },
+    {
+      "at": "2026-09-26T06:51:13.439Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405473425-90",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T06:51:13.529Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405473030-68"
+    },
+    {
+      "at": "2026-09-26T06:51:13.542Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405473535-93"
+    },
+    {
+      "at": "2026-09-26T06:51:13.655Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405473321-73"
+    },
+    {
+      "at": "2026-09-26T06:51:13.826Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405473324-79"
+    },
+    {
+      "at": "2026-09-26T06:51:13.854Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405473323-76"
+    },
+    {
+      "at": "2026-09-26T06:51:13.873Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405473348-82"
+    },
+    {
+      "at": "2026-09-26T06:51:14.051Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405473322-74"
+    },
+    {
+      "at": "2026-09-26T06:51:14.073Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405473348-83"
+    },
+    {
+      "at": "2026-09-26T06:51:14.146Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405473349-84"
+    },
+    {
+      "at": "2026-09-26T06:51:14.262Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405473654-94"
+    },
+    {
+      "at": "2026-09-26T06:51:14.310Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405473350-85"
+    },
+    {
+      "at": "2026-09-26T06:51:14.471Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/admin/cuentas-destino",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405473350-86"
+    },
+    {
+      "at": "2026-09-26T06:51:14.476Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/admin/dashboard/realtime",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405473351-87"
+    },
+    {
+      "at": "2026-09-26T06:51:14.604Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/admin/dashboard/realtime/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405473351-88"
+    },
+    {
+      "at": "2026-09-26T06:51:14.637Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405474302-96"
+    },
+    {
+      "at": "2026-09-26T06:51:14.643Z",
+      "actor": "AUDIT-2",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405473673-95"
+    },
+    {
+      "at": "2026-09-26T06:51:14.795Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405474304-99"
+    },
+    {
+      "at": "2026-09-26T06:51:14.879Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405474306-102"
+    },
+    {
+      "at": "2026-09-26T06:51:14.940Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405474321-106"
+    },
+    {
+      "at": "2026-09-26T06:51:14.944Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405474303-97"
+    },
+    {
+      "at": "2026-09-26T06:51:14.983Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405474320-105"
+    },
+    {
+      "at": "2026-09-26T06:51:15.156Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405474649-113"
+    },
+    {
+      "at": "2026-09-26T06:51:15.169Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405475160-116"
+    },
+    {
+      "at": "2026-09-26T06:51:15.172Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/locations",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405474662-115"
+    },
+    {
+      "at": "2026-09-26T06:51:15.175Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405474321-107"
+    },
+    {
+      "at": "2026-09-26T06:51:15.257Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405474322-108"
+    },
+    {
+      "at": "2026-09-26T06:51:15.424Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/admin/dashboard/realtime/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405474323-111"
+    },
+    {
+      "at": "2026-09-26T06:51:15.445Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/admin/cuentas-destino",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405474323-109"
+    },
+    {
+      "at": "2026-09-26T06:51:15.493Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/admin/dashboard/realtime",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405474323-110"
+    },
+    {
+      "at": "2026-09-26T06:51:15.746Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/locations/835/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405475176-118"
+    },
+    {
+      "at": "2026-09-26T06:51:15.781Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405475171-117"
+    },
+    {
+      "at": "2026-09-26T06:51:16.113Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405475823-120"
+    },
+    {
+      "at": "2026-09-26T06:51:16.308Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405475826-123"
+    },
+    {
+      "at": "2026-09-26T06:51:16.327Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405475827-126"
+    },
+    {
+      "at": "2026-09-26T06:51:16.367Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405475853-129"
+    },
+    {
+      "at": "2026-09-26T06:51:16.417Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405475854-130"
+    },
+    {
+      "at": "2026-09-26T06:51:16.462Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405475824-121"
+    },
+    {
+      "at": "2026-09-26T06:51:16.495Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/entradas/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405475755-119"
+    },
+    {
+      "at": "2026-09-26T06:51:16.631Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405475854-131"
+    },
+    {
+      "at": "2026-09-26T06:51:16.761Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405475855-132"
+    },
+    {
+      "at": "2026-09-26T06:51:16.838Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/admin/cuentas-destino",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405475856-133"
+    },
+    {
+      "at": "2026-09-26T06:51:16.872Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/admin/dashboard/realtime",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405475856-134"
+    },
+    {
+      "at": "2026-09-26T06:51:16.971Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/admin/dashboard/realtime/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405475856-135"
+    },
+    {
+      "at": "2026-09-26T06:51:17.240Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405476797-140"
+    },
+    {
+      "at": "2026-09-26T06:51:17.249Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405477243-142"
+    },
+    {
+      "at": "2026-09-26T06:51:17.809Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405477251-143"
+    },
+    {
+      "at": "2026-09-26T06:51:18.100Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405477844-144"
+    },
+    {
+      "at": "2026-09-26T06:51:18.351Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405477847-148"
+    },
+    {
+      "at": "2026-09-26T06:51:18.369Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405477847-147"
+    },
+    {
+      "at": "2026-09-26T06:51:18.390Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405477851-149"
+    },
+    {
+      "at": "2026-09-26T06:51:18.436Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405477847-146"
+    },
+    {
+      "at": "2026-09-26T06:51:18.472Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405477845-145"
+    },
+    {
+      "at": "2026-09-26T06:51:18.566Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405477851-150"
+    },
+    {
+      "at": "2026-09-26T06:51:18.852Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405477852-151"
+    },
+    {
+      "at": "2026-09-26T06:51:18.918Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/sitios",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405477852-152"
+    },
+    {
+      "at": "2026-09-26T06:51:18.930Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405477852-153"
+    },
+    {
+      "at": "2026-09-26T06:51:19.265Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/productos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405477852-154"
+    },
+    {
+      "at": "2026-09-26T06:51:20.208Z",
+      "actor": "AUDIT-0",
+      "method": "POST",
+      "path": "/api/inventario/auditorias",
+      "status": 201,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405479248-156"
+    },
+    {
+      "at": "2026-09-26T06:51:21.118Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405480608-170"
+    },
+    {
+      "at": "2026-09-26T06:51:21.126Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405480636-172"
+    },
+    {
+      "at": "2026-09-26T06:51:21.249Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405480593-168"
+    },
+    {
+      "at": "2026-09-26T06:51:21.341Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405481247-174"
+    },
+    {
+      "at": "2026-09-26T06:51:21.341Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405481247-175"
+    },
+    {
+      "at": "2026-09-26T06:51:21.342Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405481247-176"
+    },
+    {
+      "at": "2026-09-26T06:51:21.897Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405481340-178"
+    },
+    {
+      "at": "2026-09-26T06:51:21.971Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405481340-179"
+    },
+    {
+      "at": "2026-09-26T06:51:22.047Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405481340-177"
+    },
+    {
+      "at": "2026-09-26T06:51:22.519Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405482117-180"
+    },
+    {
+      "at": "2026-09-26T06:51:22.623Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405482119-192"
+    },
+    {
+      "at": "2026-09-26T06:51:22.624Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405482126-204"
+    },
+    {
+      "at": "2026-09-26T06:51:22.830Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405482120-195"
+    },
+    {
+      "at": "2026-09-26T06:51:22.833Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405482118-183"
+    },
+    {
+      "at": "2026-09-26T06:51:22.880Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405482118-184"
+    },
+    {
+      "at": "2026-09-26T06:51:22.968Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405482118-185"
+    },
+    {
+      "at": "2026-09-26T06:51:22.969Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405482121-196"
+    },
+    {
+      "at": "2026-09-26T06:51:23.247Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405482117-182"
+    },
+    {
+      "at": "2026-09-26T06:51:23.253Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405482117-181"
+    },
+    {
+      "at": "2026-09-26T06:51:23.387Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405482120-194"
+    },
+    {
+      "at": "2026-09-26T06:51:23.629Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405482131-207"
+    },
+    {
+      "at": "2026-09-26T06:51:23.739Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405482120-193"
+    },
+    {
+      "at": "2026-09-26T06:51:23.873Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405482131-208"
+    },
+    {
+      "at": "2026-09-26T06:51:23.971Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405482132-209"
+    },
+    {
+      "at": "2026-09-26T06:51:24.099Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405482127-206"
+    },
+    {
+      "at": "2026-09-26T06:51:24.100Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405482121-197"
+    },
+    {
+      "at": "2026-09-26T06:51:24.102Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405482126-205"
+    },
+    {
+      "at": "2026-09-26T06:51:24.103Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405482118-186"
+    },
+    {
+      "at": "2026-09-26T06:51:24.105Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405482121-198"
+    },
+    {
+      "at": "2026-09-26T06:51:24.109Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405482132-210"
+    },
+    {
+      "at": "2026-09-26T06:51:24.110Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405482118-187"
+    },
+    {
+      "at": "2026-09-26T06:51:24.112Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/sitios",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405482119-188"
+    },
+    {
+      "at": "2026-09-26T06:51:24.113Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405482124-199"
+    },
+    {
+      "at": "2026-09-26T06:51:24.114Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/sitios",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405482125-200"
+    },
+    {
+      "at": "2026-09-26T06:51:24.118Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405482119-189"
+    },
+    {
+      "at": "2026-09-26T06:51:24.118Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405482133-211"
+    },
+    {
+      "at": "2026-09-26T06:51:24.120Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405482125-201"
+    },
+    {
+      "at": "2026-09-26T06:51:24.121Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/productos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405482119-190"
+    },
+    {
+      "at": "2026-09-26T06:51:24.122Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/sitios",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405482133-212"
+    },
+    {
+      "at": "2026-09-26T06:51:24.287Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405482134-213"
+    },
+    {
+      "at": "2026-09-26T06:51:24.323Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/productos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405482125-202"
+    },
+    {
+      "at": "2026-09-26T06:51:24.428Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/productos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405482134-214"
+    },
+    {
+      "at": "2026-09-26T06:51:25.260Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405484566-216"
+    },
+    {
+      "at": "2026-09-26T06:51:25.308Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405484623-217"
+    },
+    {
+      "at": "2026-09-26T06:51:25.381Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405484626-218"
+    },
+    {
+      "at": "2026-09-26T06:51:26.151Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405485566-220"
+    },
+    {
+      "at": "2026-09-26T06:51:26.234Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405485569-223"
+    },
+    {
+      "at": "2026-09-26T06:51:26.273Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405485570-224"
+    },
+    {
+      "at": "2026-09-26T06:51:26.292Z",
+      "actor": "AUDIT-0",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/participar",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405485567-221"
+    },
+    {
+      "at": "2026-09-26T06:51:26.414Z",
+      "actor": "AUDIT-2",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/participar",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405485569-222"
+    },
+    {
+      "at": "2026-09-26T06:51:26.548Z",
+      "actor": "AUDIT-1",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/participar",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405485565-219"
+    },
+    {
+      "at": "2026-09-26T06:51:27.785Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405486929-225"
+    },
+    {
+      "at": "2026-09-26T06:51:27.789Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405486981-226"
+    },
+    {
+      "at": "2026-09-26T06:51:28.017Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405487289-227"
+    },
+    {
+      "at": "2026-09-26T06:51:28.899Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405488262-228"
+    },
+    {
+      "at": "2026-09-26T06:51:29.080Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405488357-229"
+    },
+    {
+      "at": "2026-09-26T06:51:29.195Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405488411-230"
+    },
+    {
+      "at": "2026-09-26T06:51:29.325Z",
+      "actor": "AUDIT-1",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/escaneos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405488443-233"
+    },
+    {
+      "at": "2026-09-26T06:51:29.713Z",
+      "actor": "AUDIT-0",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/escaneos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405488441-232"
+    },
+    {
+      "at": "2026-09-26T06:51:29.790Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405489195-234"
+    },
+    {
+      "at": "2026-09-26T06:51:29.803Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405489275-236"
+    },
+    {
+      "at": "2026-09-26T06:51:29.840Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405489237-235"
+    },
+    {
+      "at": "2026-09-26T06:51:29.959Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405489327-237"
+    },
+    {
+      "at": "2026-09-26T06:51:30.127Z",
+      "actor": "AUDIT-2",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/escaneos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405488441-231"
+    },
+    {
+      "at": "2026-09-26T06:51:30.391Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405489715-238"
+    },
+    {
+      "at": "2026-09-26T06:51:30.569Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405489964-239"
+    },
+    {
+      "at": "2026-09-26T06:51:30.838Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405490129-240"
+    },
+    {
+      "at": "2026-09-26T06:51:31.062Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405490393-241"
+    },
+    {
+      "at": "2026-09-26T06:51:31.552Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405490839-242"
+    },
+    {
+      "at": "2026-09-26T06:51:32.510Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405491788-243"
+    },
+    {
+      "at": "2026-09-26T06:51:33.354Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405492857-246"
+    },
+    {
+      "at": "2026-09-26T06:51:33.375Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405492792-244"
+    },
+    {
+      "at": "2026-09-26T06:51:33.407Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405492856-245"
+    },
+    {
+      "at": "2026-09-26T06:51:33.661Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405492962-247"
+    },
+    {
+      "at": "2026-09-26T06:51:34.139Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405493393-248"
+    },
+    {
+      "at": "2026-09-26T06:51:34.241Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405493571-249"
+    },
+    {
+      "at": "2026-09-26T06:51:34.524Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405493840-250"
+    },
+    {
+      "at": "2026-09-26T06:51:34.684Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405494064-251"
+    },
+    {
+      "at": "2026-09-26T06:51:35.245Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405494553-252"
+    },
+    {
+      "at": "2026-09-26T06:51:36.875Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405496377-254"
+    },
+    {
+      "at": "2026-09-26T06:51:36.918Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405496356-253"
+    },
+    {
+      "at": "2026-09-26T06:51:36.978Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405496410-255"
+    },
+    {
+      "at": "2026-09-26T06:51:37.373Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405496663-256"
+    },
+    {
+      "at": "2026-09-26T06:51:37.447Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405496899-257"
+    },
+    {
+      "at": "2026-09-26T06:51:37.581Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405496973-258"
+    },
+    {
+      "at": "2026-09-26T06:51:37.667Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405497052-259"
+    },
+    {
+      "at": "2026-09-26T06:51:37.755Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405497142-260"
+    },
+    {
+      "at": "2026-09-26T06:51:37.942Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405497243-261"
+    },
+    {
+      "at": "2026-09-26T06:51:38.137Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405497525-262"
+    },
+    {
+      "at": "2026-09-26T06:51:38.350Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405497685-263"
+    },
+    {
+      "at": "2026-09-26T06:51:38.664Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405498060-264"
+    },
+    {
+      "at": "2026-09-26T06:51:38.849Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405498246-265"
+    },
+    {
+      "at": "2026-09-26T06:51:38.956Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405498406-267"
+    },
+    {
+      "at": "2026-09-26T06:51:38.959Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405498364-266"
+    },
+    {
+      "at": "2026-09-26T06:51:40.452Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405499876-268"
+    },
+    {
+      "at": "2026-09-26T06:51:40.468Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405499920-269"
+    },
+    {
+      "at": "2026-09-26T06:51:40.562Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405499980-270"
+    },
+    {
+      "at": "2026-09-26T06:51:41.096Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405500374-271"
+    },
+    {
+      "at": "2026-09-26T06:51:41.468Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405500757-272"
+    },
+    {
+      "at": "2026-09-26T06:51:41.611Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405500944-273"
+    },
+    {
+      "at": "2026-09-26T06:51:41.851Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405501139-274"
+    },
+    {
+      "at": "2026-09-26T06:51:42.051Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405501352-275"
+    },
+    {
+      "at": "2026-09-26T06:51:42.570Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405501852-276"
+    },
+    {
+      "at": "2026-09-26T06:51:44.046Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405503470-278"
+    },
+    {
+      "at": "2026-09-26T06:51:44.047Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405503454-277"
+    },
+    {
+      "at": "2026-09-26T06:51:44.114Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405503564-279"
+    },
+    {
+      "at": "2026-09-26T06:51:44.816Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405504099-280"
+    },
+    {
+      "at": "2026-09-26T06:51:45.141Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405504470-281"
+    },
+    {
+      "at": "2026-09-26T06:51:45.316Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405504614-282"
+    },
+    {
+      "at": "2026-09-26T06:51:45.573Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405504853-283"
+    },
+    {
+      "at": "2026-09-26T06:51:45.767Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405505053-284"
+    },
+    {
+      "at": "2026-09-26T06:51:46.144Z",
+      "actor": "AUDIT-1",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/participar",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405505408-285"
+    },
+    {
+      "at": "2026-09-26T06:51:46.261Z",
+      "actor": "AUDIT-0",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/participar",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405505459-286"
+    },
+    {
+      "at": "2026-09-26T06:51:46.287Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405505572-288"
+    },
+    {
+      "at": "2026-09-26T06:51:46.393Z",
+      "actor": "AUDIT-2",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/participar",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405505527-287"
+    },
+    {
+      "at": "2026-09-26T06:51:47.643Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405507047-289"
+    },
+    {
+      "at": "2026-09-26T06:51:47.643Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405507048-290"
+    },
+    {
+      "at": "2026-09-26T06:51:47.681Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405507116-291"
+    },
+    {
+      "at": "2026-09-26T06:51:48.492Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405507817-292"
+    },
+    {
+      "at": "2026-09-26T06:51:48.875Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405508143-293"
+    },
+    {
+      "at": "2026-09-26T06:51:49.035Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405508317-294"
+    },
+    {
+      "at": "2026-09-26T06:51:49.257Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405508573-295"
+    },
+    {
+      "at": "2026-09-26T06:51:49.497Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405508775-296"
+    },
+    {
+      "at": "2026-09-26T06:51:49.993Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405509290-297"
+    },
+    {
+      "at": "2026-09-26T06:51:51.229Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405510646-298"
+    },
+    {
+      "at": "2026-09-26T06:51:51.241Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405510648-299"
+    },
+    {
+      "at": "2026-09-26T06:51:51.276Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405510685-300"
+    },
+    {
+      "at": "2026-09-26T06:51:52.227Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405511494-301"
+    },
+    {
+      "at": "2026-09-26T06:51:52.611Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405511878-302"
+    },
+    {
+      "at": "2026-09-26T06:51:52.739Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405512041-303"
+    },
+    {
+      "at": "2026-09-26T06:51:53.139Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405512262-304"
+    },
+    {
+      "at": "2026-09-26T06:51:53.319Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405512450-305"
+    },
+    {
+      "at": "2026-09-26T06:51:53.667Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405512499-306"
+    },
+    {
+      "at": "2026-09-26T06:51:53.722Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405512583-307"
+    },
+    {
+      "at": "2026-09-26T06:51:53.775Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405512669-308"
+    },
+    {
+      "at": "2026-09-26T06:51:54.227Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405512999-309"
+    },
+    {
+      "at": "2026-09-26T06:51:54.584Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405513669-310"
+    },
+    {
+      "at": "2026-09-26T06:51:54.806Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405513959-311"
+    },
+    {
+      "at": "2026-09-26T06:51:54.890Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405514232-313"
+    },
+    {
+      "at": "2026-09-26T06:51:54.944Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405514243-314"
+    },
+    {
+      "at": "2026-09-26T06:51:54.967Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405514277-315"
+    },
+    {
+      "at": "2026-09-26T06:51:55.050Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405513961-312"
+    },
+    {
+      "at": "2026-09-26T06:51:55.941Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405515230-316"
+    },
+    {
+      "at": "2026-09-26T06:51:56.295Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405515615-317"
+    },
+    {
+      "at": "2026-09-26T06:51:56.471Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405515742-318"
+    },
+    {
+      "at": "2026-09-26T06:51:56.840Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405516138-319"
+    },
+    {
+      "at": "2026-09-26T06:51:57.399Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405516670-320"
+    },
+    {
+      "at": "2026-09-26T06:51:57.946Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405517231-321"
+    },
+    {
+      "at": "2026-09-26T06:51:58.545Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405517893-322"
+    },
+    {
+      "at": "2026-09-26T06:51:58.552Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405517969-324"
+    },
+    {
+      "at": "2026-09-26T06:51:58.553Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405517948-323"
+    },
+    {
+      "at": "2026-09-26T06:51:59.874Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405518942-325"
+    },
+    {
+      "at": "2026-09-26T06:51:59.982Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405519299-326"
+    },
+    {
+      "at": "2026-09-26T06:52:00.202Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405519476-327"
+    },
+    {
+      "at": "2026-09-26T06:52:00.565Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405519843-328"
+    },
+    {
+      "at": "2026-09-26T06:52:01.133Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405520402-329"
+    },
+    {
+      "at": "2026-09-26T06:52:01.703Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405520951-330"
+    },
+    {
+      "at": "2026-09-26T06:52:02.124Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405521564-332"
+    },
+    {
+      "at": "2026-09-26T06:52:02.130Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405521568-333"
+    },
+    {
+      "at": "2026-09-26T06:52:02.186Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405521548-331"
+    },
+    {
+      "at": "2026-09-26T06:52:03.599Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405522877-334"
+    },
+    {
+      "at": "2026-09-26T06:52:03.673Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405522984-335"
+    },
+    {
+      "at": "2026-09-26T06:52:03.877Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405523204-336"
+    },
+    {
+      "at": "2026-09-26T06:52:04.284Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405523566-337"
+    },
+    {
+      "at": "2026-09-26T06:52:04.806Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405524135-338"
+    },
+    {
+      "at": "2026-09-26T06:52:05.423Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405524704-339"
+    },
+    {
+      "at": "2026-09-26T06:52:05.694Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405525125-340"
+    },
+    {
+      "at": "2026-09-26T06:52:05.697Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405525132-341"
+    },
+    {
+      "at": "2026-09-26T06:52:05.736Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405525144-342"
+    },
+    {
+      "at": "2026-09-26T06:52:06.111Z",
+      "actor": "AUDIT-1",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/participar",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405525408-343"
+    },
+    {
+      "at": "2026-09-26T06:52:06.247Z",
+      "actor": "AUDIT-2",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/participar",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405525527-345"
+    },
+    {
+      "at": "2026-09-26T06:52:06.353Z",
+      "actor": "AUDIT-0",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/participar",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405525459-344"
+    },
+    {
+      "at": "2026-09-26T06:52:07.298Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405526675-347"
+    },
+    {
+      "at": "2026-09-26T06:52:07.315Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405526601-346"
+    },
+    {
+      "at": "2026-09-26T06:52:07.552Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405526879-348"
+    },
+    {
+      "at": "2026-09-26T06:52:08.001Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405527287-349"
+    },
+    {
+      "at": "2026-09-26T06:52:08.484Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405527808-350"
+    },
+    {
+      "at": "2026-09-26T06:52:08.974Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405528318-351"
+    },
+    {
+      "at": "2026-09-26T06:52:09.139Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405528424-352"
+    },
+    {
+      "at": "2026-09-26T06:52:09.221Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405528704-354"
+    },
+    {
+      "at": "2026-09-26T06:52:09.267Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405528703-353"
+    },
+    {
+      "at": "2026-09-26T06:52:09.283Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405528737-356"
+    },
+    {
+      "at": "2026-09-26T06:52:09.348Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405528729-355"
+    },
+    {
+      "at": "2026-09-26T06:52:09.405Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405528776-357"
+    },
+    {
+      "at": "2026-09-26T06:52:10.184Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405529585-358"
+    },
+    {
+      "at": "2026-09-26T06:52:10.414Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405529808-359"
+    },
+    {
+      "at": "2026-09-26T06:52:10.642Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405530054-360"
+    },
+    {
+      "at": "2026-09-26T06:52:11.005Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405530317-362"
+    },
+    {
+      "at": "2026-09-26T06:52:11.013Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405530300-361"
+    },
+    {
+      "at": "2026-09-26T06:52:11.274Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405530554-363"
+    },
+    {
+      "at": "2026-09-26T06:52:11.721Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405531004-364"
+    },
+    {
+      "at": "2026-09-26T06:52:12.202Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405531486-365"
+    },
+    {
+      "at": "2026-09-26T06:52:12.810Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405532222-367"
+    },
+    {
+      "at": "2026-09-26T06:52:12.835Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405532269-368"
+    },
+    {
+      "at": "2026-09-26T06:52:12.839Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405532285-369"
+    },
+    {
+      "at": "2026-09-26T06:52:12.854Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405532141-366"
+    },
+    {
+      "at": "2026-09-26T06:52:14.687Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405534015-371"
+    },
+    {
+      "at": "2026-09-26T06:52:14.718Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405534007-370"
+    },
+    {
+      "at": "2026-09-26T06:52:14.961Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405534267-372"
+    },
+    {
+      "at": "2026-09-26T06:52:15.671Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405534723-373"
+    },
+    {
+      "at": "2026-09-26T06:52:15.895Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405535204-374"
+    },
+    {
+      "at": "2026-09-26T06:52:16.389Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405535839-376"
+    },
+    {
+      "at": "2026-09-26T06:52:16.397Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405535811-375"
+    },
+    {
+      "at": "2026-09-26T06:52:16.424Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405535841-377"
+    },
+    {
+      "at": "2026-09-26T06:52:16.542Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405535855-378"
+    },
+    {
+      "at": "2026-09-26T06:52:18.362Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405537871-382"
+    },
+    {
+      "at": "2026-09-26T06:52:18.372Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405537871-383"
+    },
+    {
+      "at": "2026-09-26T06:52:18.376Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405537689-379"
+    },
+    {
+      "at": "2026-09-26T06:52:18.390Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405537869-381"
+    },
+    {
+      "at": "2026-09-26T06:52:18.429Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405537721-380"
+    },
+    {
+      "at": "2026-09-26T06:52:18.633Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405537963-384"
+    },
+    {
+      "at": "2026-09-26T06:52:19.122Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405538409-385"
+    },
+    {
+      "at": "2026-09-26T06:52:19.344Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405538672-386"
+    },
+    {
+      "at": "2026-09-26T06:52:19.623Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405538897-387"
+    },
+    {
+      "at": "2026-09-26T06:52:19.973Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405539422-388"
+    },
+    {
+      "at": "2026-09-26T06:52:19.991Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405539428-390"
+    },
+    {
+      "at": "2026-09-26T06:52:20.005Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405539423-389"
+    },
+    {
+      "at": "2026-09-26T06:52:20.233Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405539544-391"
+    },
+    {
+      "at": "2026-09-26T06:52:20.453Z",
+      "actor": "AUDIT-0",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/escaneos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405539582-392"
+    },
+    {
+      "at": "2026-09-26T06:52:20.786Z",
+      "actor": "AUDIT-1",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/escaneos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405539582-393"
+    },
+    {
+      "at": "2026-09-26T06:52:21.072Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405540455-394"
+    },
+    {
+      "at": "2026-09-26T06:52:21.461Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405540787-395"
+    },
+    {
+      "at": "2026-09-26T06:52:21.689Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405541073-396"
+    },
+    {
+      "at": "2026-09-26T06:52:22.137Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405541463-397"
+    },
+    {
+      "at": "2026-09-26T06:52:23.024Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405542346-398"
+    },
+    {
+      "at": "2026-09-26T06:52:23.482Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405542976-399"
+    },
+    {
+      "at": "2026-09-26T06:52:23.567Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405542993-400"
+    },
+    {
+      "at": "2026-09-26T06:52:23.590Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405543007-401"
+    },
+    {
+      "at": "2026-09-26T06:52:23.905Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405543235-402"
+    },
+    {
+      "at": "2026-09-26T06:52:23.931Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405543410-404"
+    },
+    {
+      "at": "2026-09-26T06:52:23.935Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405543406-403"
+    },
+    {
+      "at": "2026-09-26T06:52:23.994Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405543443-405"
+    },
+    {
+      "at": "2026-09-26T06:52:24.605Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405543977-406"
+    },
+    {
+      "at": "2026-09-26T06:52:24.783Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405544073-407"
+    },
+    {
+      "at": "2026-09-26T06:52:24.958Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405544352-408"
+    },
+    {
+      "at": "2026-09-26T06:52:25.017Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405544406-409"
+    },
+    {
+      "at": "2026-09-26T06:52:25.129Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405544413-410"
+    },
+    {
+      "at": "2026-09-26T06:52:25.152Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405544463-411"
+    },
+    {
+      "at": "2026-09-26T06:52:25.373Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405544690-412"
+    },
+    {
+      "at": "2026-09-26T06:52:25.849Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405545138-413"
+    },
+    {
+      "at": "2026-09-26T06:52:26.066Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405545465-416"
+    },
+    {
+      "at": "2026-09-26T06:52:26.170Z",
+      "actor": "AUDIT-0",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/participar",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405545465-417"
+    },
+    {
+      "at": "2026-09-26T06:52:26.187Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405545643-420"
+    },
+    {
+      "at": "2026-09-26T06:52:26.195Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405545187-414"
+    },
+    {
+      "at": "2026-09-26T06:52:26.282Z",
+      "actor": "AUDIT-2",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/participar",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405545526-419"
+    },
+    {
+      "at": "2026-09-26T06:52:26.420Z",
+      "actor": "AUDIT-1",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/participar",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405545465-415"
+    },
+    {
+      "at": "2026-09-26T06:52:26.693Z",
+      "actor": "AUDIT-2",
+      "method": "POST",
+      "path": "/api/inventario/auditorias/1/escaneos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405545486-418"
+    },
+    {
+      "at": "2026-09-26T06:52:27.056Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405546487-422"
+    },
+    {
+      "at": "2026-09-26T06:52:27.072Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405546568-423"
+    },
+    {
+      "at": "2026-09-26T06:52:27.179Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405546592-424"
+    },
+    {
+      "at": "2026-09-26T06:52:27.372Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405546703-425"
+    },
+    {
+      "at": "2026-09-26T06:52:27.665Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405547049-427"
+    },
+    {
+      "at": "2026-09-26T06:52:28.041Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/inventario/auditorias/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405547373-428"
+    },
+    {
+      "at": "2026-09-26T06:52:28.084Z",
+      "actor": "AUDIT-1",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-1-1790405547672-430"
+    },
+    {
+      "at": "2026-09-26T06:52:28.112Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405547671-429"
+    },
+    {
+      "at": "2026-09-26T06:52:28.187Z",
+      "actor": "AUDIT-2",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-2-1790405547672-431"
+    },
+    {
+      "at": "2026-09-26T06:52:28.428Z",
+      "actor": "AUDIT-0",
+      "method": "GET",
+      "path": "/api/inventario/auditorias",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-0-1790405547784-432"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "three-user-audit-confirmed/fresh-own-fixture-readback-native-audit-open-0.png",
+      "sha256": "c5e9ab1563f092ffe61a352eecd637a62041c50f022ed999e609746c09735c00"
+    },
+    {
+      "file": "three-user-audit-confirmed/three-concurrent-joins-fixed-session-readbacks-0.png",
+      "sha256": "c03024d8e718d5c6fa4a290ddc180735e3402908c0210131ec589ac51303d4b6"
+    },
+    {
+      "file": "three-user-audit-confirmed/three-concurrent-joins-fixed-session-readbacks-1.png",
+      "sha256": "46f9dc7a218ade9a1858344a8f7d439b36d026f375317021fb7635b7a6d8cccc"
+    },
+    {
+      "file": "three-user-audit-confirmed/three-concurrent-joins-fixed-session-readbacks-2.png",
+      "sha256": "028aa25bde671423cda4c060fed79fb234fb6695d9bb5cc7c79bcc6486c2f5cc"
+    },
+    {
+      "file": "three-user-audit-confirmed/three-concurrent-distinct-scans-0.png",
+      "sha256": "cac029694708781351fb5c7b0036578dbc43d8a01ea4cb6742b2d9982dd2e1ff"
+    },
+    {
+      "file": "three-user-audit-confirmed/three-concurrent-distinct-scans-1.png",
+      "sha256": "a4403dea9589c3e9d0414fd93f8d54081feab81f3578dbcda4312642d7df39e9"
+    },
+    {
+      "file": "three-user-audit-confirmed/three-concurrent-distinct-scans-2.png",
+      "sha256": "1f84264189cf9d34585c5d54d77ad57a61e8f4d0579f9a43b4c1e6c2cdcf85b7"
+    },
+    {
+      "file": "three-user-audit-confirmed/repeated-heartbeats-three-usable-sessions-0.png",
+      "sha256": "6fd40a665796bca675951db5f797eb40995a0614bd544443b3c74227a86a7b1a"
+    },
+    {
+      "file": "three-user-audit-confirmed/repeated-heartbeats-three-usable-sessions-1.png",
+      "sha256": "9a6f37ef2b864ef36e90b68ae7509bd1717ff4e5927ae0e02e422f0005c80750"
+    },
+    {
+      "file": "three-user-audit-confirmed/repeated-heartbeats-three-usable-sessions-2.png",
+      "sha256": "685628c80464e0875d30186c1a1fe0354c6e7bddd9a16286573b55ec63e5dcd6"
+    },
+    {
+      "file": "three-user-audit-confirmed/concurrent-duplicate-toast-0.png",
+      "sha256": "db5ae7735cd384e79ee14b3a9aab1954d084909cd2e053c305b75ecbb5c229ba"
+    },
+    {
+      "file": "three-user-audit-confirmed/concurrent-duplicate-toast-1.png",
+      "sha256": "ad7aad9b2d146ff254821692d476f891092a41a3aa4a9faf85060723a55d1684"
+    },
+    {
+      "file": "three-user-audit-confirmed/native-already-registered-toast.png",
+      "sha256": "836aa535a671a256c787a5974e3726fb3ba2055d6be19426df52722b4194fd3c"
+    },
+    {
+      "file": "three-user-audit-confirmed/simultaneous-duplicate-preserves-original-author-and-toast-0.png",
+      "sha256": "db5ae7735cd384e79ee14b3a9aab1954d084909cd2e053c305b75ecbb5c229ba"
+    },
+    {
+      "file": "three-user-audit-confirmed/simultaneous-duplicate-preserves-original-author-and-toast-1.png",
+      "sha256": "ad7aad9b2d146ff254821692d476f891092a41a3aa4a9faf85060723a55d1684"
+    },
+    {
+      "file": "three-user-audit-confirmed/simultaneous-duplicate-preserves-original-author-and-toast-2.png",
+      "sha256": "193bb10e2e9d42b9635d0da84b1b9255ae17485a1388693623d3e4376ad5b248"
+    }
+  ]
+}

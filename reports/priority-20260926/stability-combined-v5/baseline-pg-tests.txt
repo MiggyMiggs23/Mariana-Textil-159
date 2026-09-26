@@ -1,0 +1,122 @@
+(node:2925) Warning: SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as aliases for 'verify-full'.
+In the next major version (pg-connection-string v3.0.0 and pg v9.0.0), these modes will adopt standard libpq semantics, which have weaker security guarantees.
+
+To prepare for this change:
+- If you want the current behavior, explicitly use 'sslmode=verify-full'
+- If you want libpq compatibility now, use 'uselibpqcompat=true&sslmode=require'
+
+See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode definitions.
+(Use `node --trace-warnings ...` to show where the warning was created)
+▶ real PG: canonical bulk parity, lock compatibility, rolled-back read retry, revocation
+  ✖ directory exactly matches all canonical individual DTOs; two queries (5399.116632ms)
+  ✖ identity row lock permits renewal but blocks logout deletion (1425.972109ms)
+  ✖ deterministic real 40001 restarts full read after rollback, delivers once (388.623724ms)
+  ✔ deleted session cannot be reauthorized (156.919903ms)
+✖ real PG: canonical bulk parity, lock compatibility, rolled-back read retry, revocation (8424.742578ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 1
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8547.153272
+
+✖ failing tests:
+
+test at artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:16373:13
+✖ directory exactly matches all canonical individual DTOs; two queries (5399.116632ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  201 !== 2
+  
+      at /home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:16381:31
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async _NodePgSession.transaction (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:11887:22)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:16374:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:16373:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 201,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:16389:13
+✖ identity row lock permits renewal but blocks logout deletion (1425.972109ms)
+  error: canceling statement due to lock timeout
+      at /home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:4324:15
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:16404:9)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:16389:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    length: 155,
+    severity: 'ERROR',
+    code: '55P03',
+    detail: undefined,
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: 'while updating tuple (0,1) in relation "sesiones"',
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'postgres.c',
+    line: '3440',
+    routine: 'ProcessInterrupts'
+  }
+
+test at artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:16414:13
+✖ deterministic real 40001 restarts full read after rollback, delivers once (388.623724ms)
+  Error: Failed query: SELECT id FROM sesiones WHERE id=$1::uuid
+        AND usuario_id=$2 AND expira_at>$3::timestamptz
+        AND created_at>$4::timestamptz FOR SHARE
+  params: 6fe0a860-9d95-4942-9f49-9852aaedd016,7,2026-09-26T05:08:33.439Z,2026-09-25T13:08:33.439Z
+      at NodePgPreparedQuery.queryWithCache (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:11582:15)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async e11Identity (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:16217:22)
+      ... 4 lines matching cause stack trace ...
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:16435:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:16414:5) {
+    query: 'SELECT id FROM sesiones WHERE id=$1::uuid\n      AND usuario_id=$2 AND expira_at>$3::timestamptz\n      AND created_at>$4::timestamptz FOR SHARE',
+    params: [ '6fe0a860-9d95-4942-9f49-9852aaedd016', 7, '2026-09-26T05:08:33.439Z', '2026-09-25T13:08:33.439Z' ],
+    cause: error: could not serialize access due to concurrent update
+        at /home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:4188:21
+        at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at async /home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:11814:20
+        at async NodePgPreparedQuery.queryWithCache (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:11580:16)
+        at async e11Identity (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:16217:22)
+        at async e11Runtime.transaction.isolationLevel (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:16280:24)
+        at async _NodePgSession.transaction (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:11887:22)
+        at async Object.transaction (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:16419:18)
+        at async e11Execute (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:16278:14)
+        at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/baseline-stability.pg.test.cjs:16435:7) {
+      length: 114,
+      severity: 'ERROR',
+      code: '40001',
+      detail: undefined,
+      hint: undefined,
+      position: undefined,
+      internalPosition: undefined,
+      internalQuery: undefined,
+      where: undefined,
+      schema: undefined,
+      table: undefined,
+      column: undefined,
+      dataType: undefined,
+      constraint: undefined,
+      file: 'nodeLockRows.c',
+      line: '226',
+      routine: 'ExecLockRows'
+    }
+  }

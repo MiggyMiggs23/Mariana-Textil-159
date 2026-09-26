@@ -1,0 +1,21 @@
+{
+  "apiEntry": "/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v8-20260926/index.mjs",
+  "apiSha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+  "frontendRoot": "/home/runner/workspace/artifacts/mariana-textil/dist-priority-e11-confirmed-lifecycle-20260926",
+  "frontendFiles": {
+    "assets/index-B0-IUrPy.css": "0b62686a09fd30a42563837ce058fe54af675ea5c740dde89355723236aff2bf",
+    "assets/index-CJ5sQYvB.js": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c",
+    "assets/index-pVAMTjDC.js": "400a5c8c05a4c09092c7fe385addc43a498f3a87d2583f65805dfc1daa6693e4",
+    "assets/mariana-textil-logo-FFOiXRd3.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "assets/mariana-textil-logo-monochrome-_7AVoW2A.png": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24",
+    "favicon.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "index.html": "02e8384c8f458daa0d29a958bc1c519ca7e2b75705a47db3d8b514527965ad78",
+    "robots.txt": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+    "sounds/alerta.ogg": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e",
+    "sounds/aviso.ogg": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4",
+    "sounds/solicitud.ogg": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+  },
+  "originalApiEntry": "/home/runner/workspace/artifacts/api-server/dist-auditoria-colaborativa-final-20260925/index.mjs",
+  "originalApiSha256": "e62a79333d0ee1433c114656af980e33ff420b728688a121ee586efdfab1b30d",
+  "instrumentation": "none; combined candidate after baseline"
+}

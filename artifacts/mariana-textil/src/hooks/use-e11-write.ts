@@ -80,14 +80,23 @@ export function useE11Write<C extends { uuid: string }, R>(operation: string, ca
       if (!corresponding(response, command)) throw new Error("Respuesta no correspondiente; conserva UUID y solicita recuperación.");
       accepted = true; settled.current = true;
       // Commit knowledge before refresh; refresh failure never permits a second write.
-      sessionStorage.setItem(key, JSON.stringify({ scope: session.key, operation, command, confirmed: true }));
+      const confirmedRecord = JSON.stringify({ scope: session.key, operation, command, confirmed: true });
+      sessionStorage.setItem(key, confirmedRecord);
       e11MarkRecovery(command.uuid, operation, "CONFIRMED", session.identity.usuarioId);
       setResult(response);
       await queryClient.invalidateQueries({ predicate: q => /^\/api\/(e11|e5|notificaciones)/.test(String(q.queryKey[0])) }, { throwOnError: true });
       await session.check();
-      if (!alive.current) return;
+      // Durable settlement belongs to the acknowledged operation, not the
+      // component lifetime. Invalidation may legitimately unmount this hook.
+      // Never erase a replacement intention, quarantined marker or failed read.
+      if (sessionStorage.getItem(key) !== confirmedRecord
+        || !e11Recoveries().some(r => matches(r, command.uuid) && r.state === "CONFIRMED")) {
+        throw new Error("La intención o recuperación cambió durante la actualización; se conserva para revisión ADMIN.");
+      }
       sessionStorage.removeItem(key); e11ClearRecovery(command.uuid, operation, session.identity.usuarioId);
-      saved.current = null; setPending(null);
+      if (alive.current && saved.current?.uuid === command.uuid) {
+        saved.current = null; setPending(null);
+      }
     } catch (e) {
       if (!alive.current) return;
       if (accepted) { setError(`Resultado confirmado; recuperación/actualización pendiente. No volver a enviar UUID ${command.uuid}. ${e11Error(e)}`); return; }

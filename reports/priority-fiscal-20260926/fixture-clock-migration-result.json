@@ -1,0 +1,23 @@
+{
+  "fixtureOnly": true,
+  "releaseCodeChanged": false,
+  "publicDataWrites": false,
+  "preimage": "751271d21509f86c435e706a46f6a29e08e6f499d92684b0cb62107b2892fefe",
+  "postimage": "2a3286ecc129daefa258bc3bdeefee3a84d218c666fb50bbd01a614b28a9dee2",
+  "closedPeriods": [
+    {
+      "tipo": "DIA",
+      "closed": true
+    },
+    {
+      "tipo": "SEMANA",
+      "closed": true
+    },
+    {
+      "tipo": "MES",
+      "closed": true
+    }
+  ],
+  "status": "FIXTURE_CLOCK_COMMITTED",
+  "identityPrivilegesTriggersUnchanged": true
+}

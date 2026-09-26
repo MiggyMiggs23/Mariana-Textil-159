@@ -33,6 +33,7 @@ import { priceMetrics, validPositiveMoney, weightedCurrentUnitCost } from "../li
 import { meteredReferenceCost } from "../lib/metered-reference-cost";
 import { PRICE_FLOOR_RELEASED } from "../lib/tarea4-gates";
 import { assertPriceFloor, PriceFloorError } from "../lib/tarea4-price-floor";
+import { mapReadWorkload, withReadWorkload } from "../lib/read-workload";
 
 const router: IRouter = Router();
 router.use("/precios", requireSession);
@@ -193,7 +194,7 @@ router.get("/precios", requierePermiso("precios", "ver"), async (req, res): Prom
   if (query.data.unidad) conditions.push(eq(productosTable.unidad, query.data.unidad));
   const products = await db.select().from(productosTable).where(conditions.length ? and(...conditions) : undefined)
     .orderBy(productosTable.tela, productosTable.color);
-  const rows = (await Promise.all(products.map((product) => presentProduct(product)))).filter(
+  const rows = (await mapReadWorkload(products, (product) => presentProduct(product))).filter(
     (row) =>
       (!query.data.semaforo ||
         row.preciosPorModo[modoPrecio].semaforo === query.data.semaforo) &&
@@ -217,7 +218,7 @@ router.get("/precios/:id", requierePermiso("precios", "ver"), async (req, res): 
   const history = await db.select().from(precioHistorialTable)
     .where(eq(precioHistorialTable.productoId, product.id))
     .orderBy(desc(precioHistorialTable.createdAt));
-  const response = { ...(await presentProduct(product)), historial: history.map(presentHistory), puntosGrafica: [...history].reverse().map(presentHistory) };
+  const response = { ...(await withReadWorkload(() => presentProduct(product))), historial: history.map(presentHistory), puntosGrafica: [...history].reverse().map(presentHistory) };
   res.json(GetPrecioResponse.parse(response));
 });
 

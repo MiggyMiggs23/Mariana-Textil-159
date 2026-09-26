@@ -1,0 +1,43 @@
+{
+  "results": [
+    {
+      "case": "resolver-original",
+      "commit": "RED_55000",
+      "persistedOperations": 0
+    },
+    {
+      "case": "resolver-corrected-same-test-intention",
+      "commit": "PASS"
+    },
+    {
+      "case": "snapshot-DIA",
+      "commit": "PASS",
+      "nonemptySales": 1
+    },
+    {
+      "case": "snapshot-SEMANA",
+      "commit": "PASS",
+      "nonemptySales": 1
+    },
+    {
+      "case": "snapshot-MES",
+      "commit": "PASS",
+      "nonemptySales": 1
+    },
+    {
+      "case": "frozen-app-closed-real-PG-open-week",
+      "commit": "REJECTED_P0001",
+      "messageSha256": "2758515d7a2fd0dacde69944bb2b7fc80a89ee4d8a058cab55afa9c817b53b96",
+      "newSnapshotPersisted": false
+    },
+    {
+      "case": "unpaired-tombstone-remains-rejected",
+      "commit": "REJECTED_P0001"
+    }
+  ],
+  "publicDataWrites": false,
+  "publicIntentionsCreated": false,
+  "isolatedSchemaDropped": true,
+  "nativeE11ForeignKeysRestored": true,
+  "caveat": "Base application FKs outside E11 are not cloned; E11 FKs and active actor/birth/provenance/deferred graph triggers are real."
+}

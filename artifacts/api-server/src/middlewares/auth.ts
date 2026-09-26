@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { e11AuthIdentity } from "../lib/e11-repository";
 import { e11ErrorBody, E11Error, type E11Identity } from "../lib/e11";
-import { and, eq, gt } from "drizzle-orm";
+import { and, eq, gt, lt } from "drizzle-orm";
 import {
   db,
   sesionesTable,
@@ -114,7 +114,8 @@ export async function requireSession(
   await db
     .update(sesionesTable)
     .set({ expiraAt: nextExpiry })
-    .where(eq(sesionesTable.id, sessionId));
+    .where(and(eq(sesionesTable.id, sessionId),
+      gt(sesionesTable.expiraAt, now), lt(sesionesTable.expiraAt, nextExpiry)));
 
   req.auth = {
     sessionId,

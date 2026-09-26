@@ -1,0 +1,102 @@
+{
+  "status": "RECOVERED_READY_FOR_MAIN_START",
+  "at": "2026-09-26T05:57:27.373Z",
+  "checks": [
+    {
+      "database": "priority_20260926",
+      "resetSyntheticIds": [
+        234,
+        237,
+        238
+      ],
+      "before": {
+        "tickets": 2,
+        "payments": 1,
+        "clients": 2577,
+        "snapshots": 0,
+        "decisions": 0
+      },
+      "after": {
+        "tickets": 2,
+        "payments": 1,
+        "clients": 2577,
+        "snapshots": 0,
+        "decisions": 0
+      },
+      "invoice": {
+        "id": 1,
+        "cliente_id": 2583,
+        "ubicacion_id": 835,
+        "total": "1160.00",
+        "cobrado_at": "2026-09-26T05:13:43.647Z",
+        "facturado": true,
+        "cobrado": true
+      }
+    },
+    {
+      "database": "priority_fiscal_20260926",
+      "resetSyntheticIds": [
+        234,
+        237,
+        238
+      ],
+      "before": {
+        "tickets": 2,
+        "payments": 1,
+        "clients": 2577,
+        "snapshots": 0,
+        "decisions": 0
+      },
+      "after": {
+        "tickets": 2,
+        "payments": 1,
+        "clients": 2577,
+        "snapshots": 0,
+        "decisions": 0
+      },
+      "invoice": {
+        "id": 1,
+        "cliente_id": 2583,
+        "ubicacion_id": 835,
+        "total": "1160.00",
+        "cobrado_at": "2026-09-26T05:13:43.647Z",
+        "facturado": true,
+        "cobrado": true
+      }
+    },
+    {
+      "database": "priority_perf_20260926",
+      "resetSyntheticIds": [
+        234
+      ],
+      "before": {
+        "tickets": 54750,
+        "payments": 41063,
+        "clients": 2576,
+        "snapshots": 0,
+        "decisions": 0
+      },
+      "after": {
+        "tickets": 54750,
+        "payments": 41063,
+        "clients": 2576,
+        "snapshots": 0,
+        "decisions": 0
+      },
+      "invoice": null
+    }
+  ],
+  "connectionSource": "Fresh Neon MCP connection lookup for exact authorized branches",
+  "clockISO": "2026-10-02T18:00:00.000Z",
+  "clockRollback": false,
+  "apiSha256": "f3870a6e76bee58a0237e345dec303e11cf9e42af6acd99fa6314de416fc0e97",
+  "frontendIndexSha256": "c80639769e32336b6fcb64d990c14c7b6324bee4bcb61a9793355bbda17ae446",
+  "browserStateSource": "native-prep/result.json + copy-ready.json + DB readback",
+  "fiscalOperationsFound": 0,
+  "passwordChangeScope": "Only authorized existing synthetic identities; no new users; no business rows written",
+  "sourceApplicationAccess": false,
+  "launchers": [
+    "reports/priority-fiscal-20260926/launch-private.mjs",
+    "reports/priority-perf-20260926/launch-private.mjs"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "at": "2026-09-26T06:07:25.442Z",
+  "actor": 237,
+  "intent": "b2548914-0933-4a8f-a67d-b925b0a8df68",
+  "mutation": false,
+  "replay": false,
+  "database": "priority_fiscal_20260926",
+  "lock": true,
+  "operations": [],
+  "resolutions": [],
+  "snapshots": [],
+  "activity": [
+    {
+      "pid": 1144,
+      "state": "idle",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": null,
+      "query_age_seconds": 564.998096
+    }
+  ],
+  "status": "LOCKED_READ_ONLY_INSPECTION_COMPLETE"
+}

@@ -1,0 +1,6 @@
+{
+  "status": "NOT_EXTRACTED_SCOPE_RESTRICTION",
+  "logExisted": true,
+  "bytes": 166448,
+  "explanation": "Worker developer scope prohibits reading workflow/console logs, including local parsing of private API console output. No log content inspected; residual login500 cause not established by this worker."
+}

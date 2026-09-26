@@ -1,0 +1,42 @@
+{
+  "at": "2026-09-26T06:58:23.504Z",
+  "archives": [
+    "original-terminal-journal-2026-09-26T06-58-23.504Z.json",
+    "fiscal-terminal-journal-2026-09-26T06-58-23.504Z.json",
+    "fiscal-terminal-sanitized-observer-2026-09-26T06-58-23.504Z.ndjson"
+  ],
+  "ports": [
+    {
+      "port": 18227,
+      "status": "ECONNREFUSED"
+    },
+    {
+      "port": 18228,
+      "status": "ECONNREFUSED"
+    },
+    {
+      "port": 18237,
+      "status": "ECONNREFUSED"
+    },
+    {
+      "port": 18238,
+      "status": "ECONNREFUSED"
+    },
+    {
+      "port": 18247,
+      "status": "ECONNREFUSED"
+    },
+    {
+      "port": 18248,
+      "status": "ECONNREFUSED"
+    }
+  ],
+  "residualLoginCause": {
+    "status": "NOT_EXTRACTED_SCOPE_RESTRICTION",
+    "logExisted": true,
+    "bytes": 166448,
+    "explanation": "Worker developer scope prohibits reading workflow/console logs, including local parsing of private API console output. No log content inspected; residual login500 cause not established by this worker."
+  },
+  "noDatabaseAccess": true,
+  "noTeardownYet": true
+}

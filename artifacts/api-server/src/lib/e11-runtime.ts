@@ -4,6 +4,7 @@ import { E11_ENABLED, E11_PROFILE_ASSIGNMENT_ENABLED, E11_RECONCILIATION_ENABLED
 import { E5_ENABLED, E5_CONTADOR_A_ENABLED } from "./e5-feature";
 import type { E5Sql } from "./e5-repository";
 import type { CreditLedgerMovement } from "./credit-allocation";
+import type { CustomerCreditProjection } from "./credit-aging-read-model";
 
 export type E11RuntimeFlags = Readonly<{
   enabled: boolean; profiles: boolean; reconciliation: boolean; preparation: boolean;
@@ -17,6 +18,7 @@ export type E11Runtime = Readonly<{
   uuid: () => string;
   transaction: E11Transaction;
   ledger: (tx: E5Sql, clientId: number) => Promise<CreditLedgerMovement[]>;
+  projections: (tx: E5Sql, clientIds: number[]) => Promise<Map<number, CustomerCreditProjection>>;
 }>;
 export type E11RuntimeOptions = Partial<Omit<E11Runtime, "flags">> & { flags?: Partial<E11RuntimeFlags> };
 const production: E11Runtime = Object.freeze({
@@ -31,6 +33,10 @@ const production: E11Runtime = Object.freeze({
   ledger: async (tx: E5Sql, clientId: number) => {
     const { loadCustomerCreditLedgerInTransaction } = await import("./credit-aging-read-model");
     return loadCustomerCreditLedgerInTransaction(clientId, tx);
+  },
+  projections: async (tx: E5Sql, clientIds: number[]) => {
+    const { loadCustomerCreditProjectionsInTransaction } = await import("./credit-aging-read-model");
+    return loadCustomerCreditProjectionsInTransaction(clientIds, tx);
   },
 });
 const context = new AsyncLocalStorage<E11Runtime>();

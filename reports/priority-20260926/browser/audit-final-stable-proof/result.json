@@ -1,0 +1,63 @@
+{
+  "status": "PARTIAL_OR_BLOCKED",
+  "startedAt": "2026-09-26T06:53:06.215Z",
+  "apiSha256": "1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e",
+  "checks": [
+    {
+      "name": "setup",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Native login must succeed\n\n500 !== 200\n"
+    }
+  ],
+  "requests": [
+    {
+      "at": "2026-09-26T06:53:07.673Z",
+      "actor": "AUDIT-FINAL-1",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-FINAL-1-1790405587360-10",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T06:53:07.675Z",
+      "actor": "AUDIT-FINAL-0",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-FINAL-0-1790405587360-11",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T06:53:07.676Z",
+      "actor": "AUDIT-FINAL-2",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-FINAL-2-1790405587462-16",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T06:53:08.791Z",
+      "actor": "AUDIT-FINAL-2",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-FINAL-2-1790405587855-19"
+    },
+    {
+      "at": "2026-09-26T06:53:09.153Z",
+      "actor": "AUDIT-FINAL-1",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 500,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-AUDIT-FINAL-1-1790405588233-20"
+    }
+  ],
+  "screenshots": []
+}

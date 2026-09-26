@@ -51,8 +51,6 @@ export function activityReadQuery(ids: number[], siteIds: number[] | null, perio
 
 export async function readClientesListado(database: CreditLedgerQuery, input: ListadoQuery, financial: boolean, siteIds: number[] | null) {
   const page = input.page ?? 1, pageSize = input.pageSize ?? 50;
-  // Small master catalog stays bounded on the wire; only one canonical bulk
-  // ledger read, not one query/client. Search happens before expensive reads.
   const result = await database.query<Customer>(`SELECT id,nombre,telefono,correo,
     direccion_particular AS "direccionParticular",direccion_particular AS direccion,
     direccion_entrega AS "direccionEntrega",rfc,notas,activo,es_sistema AS "esSistema",
@@ -63,28 +61,12 @@ export async function readClientesListado(database: CreditLedgerQuery, input: Li
     [input.active === undefined ? null : input.active === "true"]);
   const rows = result.rows.filter(row => matchesCustomer(row, input.q ?? ""));
   for (const row of rows) { row.movementCount = financial ? 0 : null; row.lastActivity = null; }
-  if (financial && rows.length) {
-    const ids = rows.map(row => row.id);
-    const activityQuery = activityReadQuery(ids, siteIds, input.period ?? "all");
-    const activity = await database.query<{ cliente_id: number; count: number; last: Date | null }>(activityQuery.text, activityQuery.values);
-    const byId = new Map(activity.rows.map(row => [row.cliente_id, row]));
-    // Debt is global canonical FIFO, exactly as the existing customer list;
-    // activity alone is limited to the authorized sites.
-    const balances = await loadCustomerCreditProjections(ids, database);
-    for (const row of rows) {
-      row.movementCount = byId.get(row.id)?.count ?? 0;
-      const last = byId.get(row.id)?.last;
-      row.lastActivity = last ? new Date(last).toISOString() : null;
-      row.saldoActual = centsToMoney(balances.get(row.id)?.balanceCents ?? 0);
-      row.saldoAFavor = centsToMoney(balances.get(row.id)?.overpaymentCents ?? 0);
-    }
-  }
   let sort = input.sort ?? "lastActivity", direction = input.direction ?? "desc";
   if (!financial && ["limiteCredito", "saldoActual", "movementCount", "lastActivity"].includes(sort)) {
     sort = "nombre"; direction = "asc";
   }
   const collator = new Intl.Collator("es", { numeric: true, sensitivity: "base" });
-  rows.sort((a, b) => {
+  const compare = (a: Customer, b: Customer) => {
     const av = a[sort], bv = b[sort];
     // Unknown values always last in both directions.
     if (av == null && bv != null) return 1;
@@ -92,6 +74,31 @@ export async function readClientesListado(database: CreditLedgerQuery, input: Li
     const numeric = ["limiteCredito", "saldoActual", "movementCount"].includes(sort);
     const comparison = numeric ? Number(av ?? 0) - Number(bv ?? 0) : collator.compare(String(av ?? ""), String(bv ?? ""));
     return (direction === "asc" ? comparison : -comparison) || collator.compare(a.nombre, b.nombre) || a.id - b.id;
-  });
-  return { items: rows.slice((page - 1) * pageSize, page * pageSize), total: rows.length, page, pageSize };
+  };
+  // Only master-field orderings are independent of ledger/activity hydration.
+  // Derived and unknown orderings retain the original full-catalog behavior.
+  const pageBeforeHydration = ["nombre", "rfc", "telefono", "limiteCredito"].includes(sort);
+  const selected = pageBeforeHydration
+    ? rows.sort(compare).slice((page - 1) * pageSize, page * pageSize)
+    : rows;
+  if (financial && selected.length) {
+    const ids = selected.map(row => row.id);
+    const activityQuery = activityReadQuery(ids, siteIds, input.period ?? "all");
+    const activity = await database.query<{ cliente_id: number; count: number; last: Date | null }>(activityQuery.text, activityQuery.values);
+    const byId = new Map(activity.rows.map(row => [row.cliente_id, row]));
+    // Only the customer ID set is narrowed, NEVER the historical ledger.
+    // Debt/favor stay global; activity alone is authorized-site scoped.
+    const balances = await loadCustomerCreditProjections(ids, database);
+    for (const row of selected) {
+      row.movementCount = byId.get(row.id)?.count ?? 0;
+      const last = byId.get(row.id)?.last;
+      row.lastActivity = last ? new Date(last).toISOString() : null;
+      row.saldoActual = centsToMoney(balances.get(row.id)?.balanceCents ?? 0);
+      row.saldoAFavor = centsToMoney(balances.get(row.id)?.overpaymentCents ?? 0);
+    }
+  }
+  const items = pageBeforeHydration
+    ? selected
+    : rows.sort(compare).slice((page - 1) * pageSize, page * pageSize);
+  return { items, total: rows.length, page, pageSize };
 }

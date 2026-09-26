@@ -363,10 +363,10 @@ SET search_path=pg_catalog AS $$
 DECLARE r record; o record; metadata jsonb; target jsonb; previous jsonb; expected jsonb;
 BEGIN
   FOR o IN SELECT * FROM public.e11_operaciones WHERE estado='CERRADA_SIN_EFECTO' LOOP
-    IF NOT EXISTS(SELECT 1 FROM public.e11_resoluciones r
-      WHERE r.actor_original_id=o.actor_id AND r.accion=o.operacion AND r.uuid_original=o.uuid
-        AND r.estado=o.estado AND r.birth_xid=o.birth_xid
-        AND r.solicitud_hash=o.solicitud_hash AND r.respuesta=o.respuesta)
+    IF NOT EXISTS(SELECT 1 FROM public.e11_resoluciones resolution_row
+      WHERE resolution_row.actor_original_id=o.actor_id AND resolution_row.accion=o.operacion AND resolution_row.uuid_original=o.uuid
+        AND resolution_row.estado=o.estado AND resolution_row.birth_xid=o.birth_xid
+        AND resolution_row.solicitud_hash=o.solicitud_hash AND resolution_row.respuesta=o.respuesta)
     THEN RAISE EXCEPTION 'E11: tombstone sin resolución ADMIN propia'; END IF;
     IF (o.operacion='PERFIL' AND EXISTS(SELECT 1 FROM public.e11_perfil_eventos
           WHERE actor_id=o.actor_id AND uuid=o.uuid))

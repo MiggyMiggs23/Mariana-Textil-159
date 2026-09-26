@@ -70,7 +70,7 @@ import { ordenarEspanol } from "../lib/spanish-order";
 import { buildTicketDetail } from "../lib/pos";
 import { breakdownIvaIncluded } from "../lib/iva";
 import { accountedDocumentAt, accountedDocumentPredicate } from "../lib/accounted-document";
-import { loadPaymentBehaviorList } from "../lib/payment-behavior";
+import { loadPaymentBehaviorClient, loadPaymentBehaviorList } from "../lib/payment-behavior";
 import { buildCreditMovementDetail } from "../lib/credit-movement-detail";
 import {
   FechaEfectivaValidationError,
@@ -1018,7 +1018,7 @@ router.get(
   async (req, res, next) => {
     try {
       const { id } = ObtenerComportamientoPagoClienteParams.parse(req.params);
-      const item = (await loadPaymentBehaviorList()).find((row) => row.clienteId === id);
+      const item = await loadPaymentBehaviorClient(id);
       if (!item) { res.status(404).json({ error: "Cliente no encontrado." }); return; }
       res.json(ObtenerComportamientoPagoClienteResponse.parse(item));
     } catch (error) { next(error); }

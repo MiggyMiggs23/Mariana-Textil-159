@@ -1,0 +1,19 @@
+{
+  "status": "HISTORICAL_BLOCKER_RESOLVED_BY_AUTHORIZED_CHILD_BRANCH",
+  "resolvedBranch": "br-hidden-lab-axibqutc",
+  "resolvedDatabase": "priority_fiscal_20260926",
+  "currentEvidence": "copy-ready.json and closed-period-verification.json",
+  "sourceDatabase": "priority_20260926",
+  "requestedDatabase": "priority_fiscal_20260926",
+  "methodAttempted": "CREATE DATABASE priority_fiscal_20260926 TEMPLATE priority_20260926",
+  "attempts": 2,
+  "sqlstate": "55006",
+  "reason": "Source database is being accessed by 1 other session",
+  "noSourceDataWrites": true,
+  "noSessionTerminations": true,
+  "clockAdvanced": false,
+  "fallbackDumpConstraint": "Neon server 18.6; existing pg_dump is16.10. Installing dependencies through standard tooling would restart workflows, so not attempted.",
+  "nextStep": "MAIN release/stop remaining primary private connections, then rerun node reports/priority-fiscal-20260926/setup.mjs. Script refuses overwrite and validates native invoice1160 after exact full template clone.",
+  "configuredFutureClock": "2026-10-02T18:00:00.000Z",
+  "configuredFuturePorts": [18247, 18248]
+}

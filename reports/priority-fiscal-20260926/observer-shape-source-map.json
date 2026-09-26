@@ -1,0 +1,343 @@
+{
+  "window": [
+    "06:12:15",
+    "06:12:40"
+  ],
+  "poolAcquireFailures": 1140,
+  "maxWaiting": 2576,
+  "shapes": [
+    {
+      "shape": "d3cf7b2b5c44a772a4750e553e4ba1b103b03dee881e186077499a54cc90a637",
+      "verb": "SELECT",
+      "dispatched": 1967,
+      "sourceMatches": [
+        {
+          "file": "../src/lib/credit-aging-read-model.ts",
+          "line": 31
+        }
+      ]
+    },
+    {
+      "shape": "68c2daa143c1be779155b884a2de5c294c2f492ac19f2e6581df60d886338f23",
+      "verb": "SELECT",
+      "dispatched": 971,
+      "sourceMatches": [
+        {
+          "file": "src/routes/precios.ts",
+          "line": 49,
+          "verified": "Drizzle generated SQL fingerprint reconstructed"
+        }
+      ]
+    },
+    {
+      "shape": "205129f88c9a5948ae2b837cf8d53cf2be69133876686f66d66a5ea2bf6ef515",
+      "verb": "SELECT",
+      "dispatched": 969,
+      "sourceMatches": [
+        {
+          "file": "src/lib/metered-reference-cost.ts",
+          "line": 158,
+          "verified": "Drizzle generated SQL fingerprint reconstructed"
+        }
+      ]
+    },
+    {
+      "shape": "c4cff6adcf6ecc287a30f071f85edabdb7064049d120ca520a92d942a2194a51",
+      "verb": "SELECT",
+      "dispatched": 968,
+      "sourceMatches": [
+        {
+          "file": "src/routes/precios.ts",
+          "line": 153,
+          "verified": "Drizzle generated SQL fingerprint reconstructed"
+        }
+      ]
+    },
+    {
+      "shape": "aa79168d85637ea8334509bc8f5c6686d92572297d75a9b821ec56ddf787c879",
+      "verb": "SELECT",
+      "dispatched": 50,
+      "sourceMatches": [
+        {
+          "file": "../src/lib/e11-repository.ts",
+          "line": 25
+        }
+      ]
+    },
+    {
+      "shape": "feace0ef558b4877f9aa415d6b3541a7895633997dc9059f7ade4adfc176237e",
+      "verb": "SELECT",
+      "dispatched": 43,
+      "sourceMatches": [
+        {
+          "file": "../src/lib/e11-repository.ts",
+          "line": 30
+        }
+      ]
+    },
+    {
+      "shape": "08f7a7dd017aa8d0c2b33c5c6422fbb0115ccd59d694c574c385c0eb3c3f1ea9",
+      "verb": "SELECT",
+      "dispatched": 43,
+      "sourceMatches": [
+        {
+          "file": "../src/lib/e11-repository.ts",
+          "line": 39
+        }
+      ]
+    },
+    {
+      "shape": "9505cacb7c710ed17125fcc6cb3669e8ddca6c8cd8af6a31f6b3cd64604c3098",
+      "verb": "COMMIT",
+      "dispatched": 41,
+      "sourceMatches": []
+    },
+    {
+      "shape": "81354678f9824f8781dafcf62c6f54f829ad69366b8c549b66777f00eb507a58",
+      "verb": "SELECT",
+      "dispatched": 40,
+      "sourceMatches": [
+        {
+          "file": "../src/lib/e11-repository.ts",
+          "line": 34
+        }
+      ]
+    },
+    {
+      "shape": "e6f07d43b5c21db0fbb9a31feac2dc599787763393dd5acbfad80e247eb02ad5",
+      "verb": "BEGIN",
+      "dispatched": 34,
+      "sourceMatches": []
+    },
+    {
+      "shape": "674e269bd72a547eb9a895a615f19521b7020f8b21d8f0b752c9f05f1e10b911",
+      "verb": "SELECT",
+      "dispatched": 26,
+      "sourceMatches": []
+    },
+    {
+      "shape": "da1b9edaaf21d7d62828e9e6dbf1ea6d7c29a6da885a27fe34545860dfb7026d",
+      "verb": "UPDATE",
+      "dispatched": 26,
+      "sourceMatches": []
+    },
+    {
+      "shape": "a25b6cc7ddd0477f34e731d522fe028d299ef35960c512e22c23b18326c63736",
+      "verb": "BEGIN",
+      "dispatched": 7,
+      "sourceMatches": []
+    },
+    {
+      "shape": "42c9bc7e13089595fd405775e2e0b27c7dd9851f6b57f4651d574adbbc7b7e7e",
+      "verb": "SELECT",
+      "dispatched": 4,
+      "sourceMatches": [
+        {
+          "file": "../src/lib/e11-repository.ts",
+          "line": 66
+        },
+        {
+          "file": "../src/lib/e11-repository.ts",
+          "line": 241
+        },
+        {
+          "file": "../src/lib/e11-repository.ts",
+          "line": 268
+        },
+        {
+          "file": "../src/lib/e5-repository.ts",
+          "line": 87
+        },
+        {
+          "file": "../src/lib/e12-supplier-cash-repository.ts",
+          "line": 55
+        },
+        {
+          "file": "../src/lib/e9-repository.ts",
+          "line": 10
+        }
+      ]
+    },
+    {
+      "shape": "d2bec6c84c0e4b109a056da114473378c375feeeac255210dae2093baddb6d8e",
+      "verb": "SELECT",
+      "dispatched": 3,
+      "sourceMatches": [
+        {
+          "file": "../src/lib/e11-repository.ts",
+          "line": 129
+        },
+        {
+          "file": "../src/lib/e11-repository.ts",
+          "line": 389
+        }
+      ]
+    },
+    {
+      "shape": "9ce203f51bde41d2956af5118ffb4621f3d045633caff3f5668b9a8816f8e226",
+      "verb": "SELECT",
+      "dispatched": 3,
+      "sourceMatches": [
+        {
+          "file": "../src/lib/e11-repository.ts",
+          "line": 391
+        }
+      ]
+    },
+    {
+      "shape": "8a45e82dd679cf86a01c465bdbe4f6bf7113de6037acc03e80b360f611f74436",
+      "verb": "SELECT",
+      "dispatched": 3,
+      "sourceMatches": [
+        {
+          "file": "../src/lib/e11-repository.ts",
+          "line": 393
+        }
+      ]
+    },
+    {
+      "shape": "2b3c36d25cab55a5d07740a47060176fa1b18d9bd0eb0c3d9c405f12f5d0aad8",
+      "verb": "WITH",
+      "dispatched": 1,
+      "sourceMatches": [
+        {
+          "file": "../src/routes/auth.ts",
+          "line": 48
+        }
+      ]
+    },
+    {
+      "shape": "aa0f79e0e6ea5feba7413d29055b503a6fdc77aa5880e7e2bdad6031268f5092",
+      "verb": "SELECT",
+      "dispatched": 1,
+      "sourceMatches": []
+    },
+    {
+      "shape": "6404bff0cda3eed448c9ee33d46dae20d66a05019acf1b1d4dffdfa4f62c03be",
+      "verb": "INSERT",
+      "dispatched": 1,
+      "sourceMatches": []
+    },
+    {
+      "shape": "a0f0eb883a7f5b79b6b678a2aebf2b1dbdc9aed6a9a917ed5c44097d08b595d5",
+      "verb": "UPDATE",
+      "dispatched": 1,
+      "sourceMatches": []
+    },
+    {
+      "shape": "427503413585e74af2f64ffe085a570462a6db586acb3f4f34796075b71b3e83",
+      "verb": "INSERT",
+      "dispatched": 1,
+      "sourceMatches": []
+    },
+    {
+      "shape": "fd38c12f27d73498c8b1402464653f50b7edd212a937630ffe8e1232ca66d2d5",
+      "verb": "SELECT",
+      "dispatched": 1,
+      "sourceMatches": []
+    },
+    {
+      "shape": "fe6a25169442bc8529faa7c8b5fe85d593d296585910d3715dcb13197385f2cf",
+      "verb": "SELECT",
+      "dispatched": 1,
+      "sourceMatches": []
+    },
+    {
+      "shape": "46d30653a888a65a8302d4e7458b1321af16070e67762357bcd1daf4546659c7",
+      "verb": "SELECT",
+      "dispatched": 1,
+      "sourceMatches": []
+    },
+    {
+      "shape": "f769257e9e6290c62a314035123232f968391742b8f83b6fe62206e5a41877e3",
+      "verb": "SELECT",
+      "dispatched": 1,
+      "sourceMatches": []
+    },
+    {
+      "shape": "74fae5a093cb93c7e760a290d55d5ada61fd21af89927c6aafec4f8ac0b94406",
+      "verb": "SELECT",
+      "dispatched": 1,
+      "sourceMatches": [
+        {
+          "file": "../src/routes/notificaciones.ts",
+          "line": 336
+        }
+      ]
+    },
+    {
+      "shape": "37db1c779a4d02be9a2492f61370953ed80d038bc0df59304f0a4c2049e7824a",
+      "verb": "SELECT",
+      "dispatched": 1,
+      "sourceMatches": []
+    },
+    {
+      "shape": "8babe7360093fa827f773e69ce0c30b529ae09a524c66dc3dd45e3953914d6ad",
+      "verb": "SELECT",
+      "dispatched": 1,
+      "sourceMatches": [
+        {
+          "file": "../src/lib/admin-alertas.ts",
+          "line": 128
+        }
+      ]
+    },
+    {
+      "shape": "edeb83c0ad7efdd5b901cf148e711d79d873f7aeebf19176bed87b5f9d47ef17",
+      "verb": "SELECT",
+      "dispatched": 1,
+      "sourceMatches": []
+    },
+    {
+      "shape": "cac95e5c09010672093b39e6f7d1cd0271507962803b2f74215075398a403267",
+      "verb": "SELECT",
+      "dispatched": 1,
+      "sourceMatches": []
+    },
+    {
+      "shape": "ea8139b41f7a40bb0212d25a010776eb879680ba20184e11afa49c18d8a81c3e",
+      "verb": "SELECT",
+      "dispatched": 1,
+      "sourceMatches": []
+    },
+    {
+      "shape": "297f148038a1e01024066f1e2118258d0d7d421d28e01361ead29da42efbbdd9",
+      "verb": "SELECT",
+      "dispatched": 1,
+      "sourceMatches": [
+        {
+          "file": "../src/lib/e11-repository.ts",
+          "line": 414
+        }
+      ]
+    },
+    {
+      "shape": "5352e59ef02707aa402f1cdb30aedb854bcc43b0c79a0a82d58e633911a53f6f",
+      "verb": "INSERT",
+      "dispatched": 1,
+      "sourceMatches": [
+        {
+          "file": "../src/lib/e11-repository.ts",
+          "line": 431
+        }
+      ]
+    },
+    {
+      "shape": "3cd095d4f7380a49b70c5feb2faaf5cf4e22f38e70755bb5ff1a22c73d8c836e",
+      "verb": "INSERT",
+      "dispatched": 1,
+      "sourceMatches": [
+        {
+          "file": "../src/lib/e11-repository.ts",
+          "line": 435
+        }
+      ]
+    },
+    {
+      "shape": "da25480fb483e6ce3d30f1a179c3c07e9f3b045425b0ac54acc6758a97e2db62",
+      "verb": "ROLLBACK",
+      "dispatched": 1,
+      "sourceMatches": []
+    }
+  ]
+}

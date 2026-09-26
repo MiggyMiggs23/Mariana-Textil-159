@@ -1,0 +1,93 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>Informe de estabilidad</title><style>body{max-width:1000px;margin:40px auto;padding:24px;font:15px/1.6 system-ui;color:#172334}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}</style><h1>Informe de estabilidad</h1><pre># Estabilidad: corregido, medido y pendiente
+
+## Dictamen
+
+**Los escenarios principales de auditoría y conciliación fiscal pasan según la validación final comunicada por MAIN. Existe un 500 residual de login concurrente cuya causa SQL todavía no está identificada. No se declara estabilidad global ni cierre total del incidente.**
+
+Este informe distingue pruebas ejecutadas por este agente de resultados de navegador suministrados por MAIN. No se leyeron logs privados completos, no se reiniciaron procesos y no se hizo una corrección adicional de autenticación.
+
+## Candidato y linaje
+
+- API V8: `artifacts/api-server/dist-priority-stability-combined-v8-20260926/index.mjs`.
+- SHA256: `1de24ede8cad2ee2290987c6d718e85937515f3a7a7e306c7d32d155613c065e`.
+- Diez deltas allowlisted frente al baseline original; cuatro frente a V6. Incluye el overlay autorizado del listado de clientes. La ruta clientes se compuso desde frozen, no desde el HEAD completo.
+- UI seleccionada en ambos manifiestos actuales: `artifacts/mariana-textil/dist-priority-e11-confirmed-lifecycle-20260926`, index SHA256 `02e8384c8f458daa0d29a958bc1c519ca7e2b75705a47db3d8b514527965ad78`.
+- Linaje API/pruebas: `reports/priority-20260926/stability-combined-v8/`. UI: `reports/priority-20260926/e11-confirmed-lifecycle/`.
+- El hook de ciclo confirmado ya se sincronizó con la fuente de trabajo tras verificar su preimagen; coincide byte por byte con el candidato. No reconstruir HEAD indiscriminadamente.
+
+## Corregido y evidencia
+
+| Problema acreditado | Corrección acotada / fuente | Verificación |
+|---|---|---|
+| Lista financiera E11 ejecutaba 1+2N consultas antes de paginar | `api-server/src/lib/e11-repository.ts:168-180`; adaptador canónico `credit-aging-read-model.ts:233+`, mismo tx y DTO/revisión completos | PG real: directorio de 100 clientes, 201→2 consultas, paridad no vacía. V8 suite PG5PASS; baseline1PASS/4FAIL |
+| Lectura de sesión bloqueaba renovación no-clave | `e11-repository.ts:30-39`: sesión `FOR KEY SHARE`, usuario/perfil conservan `FOR SHARE`; `middlewares/auth.ts:114-119`: renovación condicionada | PG renovación permitida y DELETE/logout protegido. No se relajan locks de usuario/perfil |
+| Lectura SERIALIZABLE podía recibir 40001 | `e11-repository.ts:454-481`: un único retry de GET explícito, nueva transacción e identidad; entrega sigue reautorizada `:492-504` | 40001 real determinista y entrega única; sin retry de escritura, timeout, deadlock, unicidad o entrega |
+| Precios lanzaba fan-out de consultas por todos los productos | `routes/precios.ts:135-158,197-204`; admisión compartida `lib/read-workload.ts:4-39` | 103 productos: pico206→6 consultas internas; DTO completo, orden y filtros iguales al V6 |
+| Detalle de comportamiento calculaba el historial de todos los clientes | `routes/clientes.ts:1016-1024` frozen con llamada corregida; `lib/payment-behavior.ts:85-107` | 103 clientes: pico103→3; detalle un ledger y cero ajenos; inexistente no carga ledger; paridad canónica no vacía |
+| Resolver abortaba COMMIT55000 por record `r` sin asignar | Alias de primera consulta de `e11_recovery_check`; SQL canónico `reports/e11/01-preparado.sql:361-383` | Pre/posthash exactos, ensayo ROLLBACK y COMMIT fiscal, OID/ACL/triggers intactos. Native PG viejo RED55000/corregido PASS con misma intención del test; tombstone huérfano sigue rechazado |
+| Journal CONFIRMED quedaba tras desmontarse writer durante refresh | Fuente candidata `e11-confirmed-lifecycle/frozen-root/artifacts/mariana-textil/src/hooks/use-e11-write.ts:81-101`: limpieza sólo tras ACK, invalidación y check frescos, coincidencia exacta de registro/actor/acción/UUID | Informe del propietario UI:10/10 tests de hook montado; conserva intención reemplazada, payload cambiado, cuarentena y errores. MAIN confirma ciclo fiscal final |
+| SEMANA parecía cerrada en Node pero abierta en PostgreSQL | **Sólo fixture fiscal**: gate de `e11_graph` usa constante confiable02oct en vez de reloj real26sep; no cambia política productiva | Hash P0001 exacto y READ ONLY probaron reloj discordante; reproducción nativa RED con mismo hash. Después: DIA24sep/SEMANA21sep/MES01sep no vacíos COMMIT PASS |
+
+Pruebas adicionales ejecutadas: typecheck API completo PASS;13 tests canónicos de costos/comportamiento PASS;2 tests de admisión compartida PASS; suite E11 de estabilidad offline candidato5PASS frente a baseline4FAIL.
+
+La prueba nativa de grafo usa schema desechable propio, checks/índices/FKs E11 y triggers reales de actor, birth, procedencia y validación diferida. No copia FKs de tablas base ajenas a E11. Se destruyó el schema; no creó intenciones públicas ni tocó evidencia pública de aplicación.
+
+## Medición operativa: alcance exacto
+
+### Antes de la corrección de fan-out
+
+Observer saneado06:12:15–40:5.217 consultas enviadas,1.140 adquisiciones fallidas, waiting máximo2.576. Precios concentró2.908 consultas de costo/historial; comportamiento1.967 ledgers. Tras drenar: pool12/idle12/waiting0/préstamos0. Esto acreditó fan-out, no fuga persistente. Mapa: `priority-fiscal-20260926/observer-shape-source-map.json`.
+
+### Validación final de MAIN
+
+- Auditoría en **copia original con reloj normal**, no fiscal congelada.
+- Tres participantes concurrentes; ventanas45s+45s;45 heartbeats comunicados como correctos.
+- Duplicado conserva autor original y no crea presencia duplicada: MAIN reporta PASS.
+- UI ya mostraba “Serie ya registrada” / “Escaneado por”: `mariana-textil/src/pages/auditorias-inventario.tsx:649-650`. Servidor conserva inserción conflict-safe y flag: `api-server/src/lib/auditoria-inventario.ts:268,310`. No se sustituyó esto por una relajación de autorización.
+- MAIN reporta **DIA, SEMANA y MES fiscales PASS**, con lifecycle UI corregido.
+
+Estos resultados no equivalen a un percentil universal, una prueba de carga ilimitada o garantía de cero errores de autenticación.
+
+## Residual abierto: login500 a06:53:09.153
+
+MAIN observó un500 durante tres logins frescos concurrentes en la copia de reloj normal. Única evidencia saneada disponible aquí: fallo en `UPDATE usuarios SET ultimo_acceso ... WHERE id ...`. **Falta la causa anidada original**, su SQLSTATE y la relación temporal con otras transacciones.
+
+Fuente verificada idéntica al bundle V8:
+
+1. `routes/auth.ts:116-135`: un tx inserta sesión, actualiza `usuarios.ultimoAcceso` (`:124-127`) y registra auditoría. No solicita aislamiento SERIALIZABLE ni contiene retry.
+2. `routes/auth.ts:138-139`: permisos y `e11AuthIdentity` del login se consultan **después** de esa transacción. No atribuir al mismo login una identidad posterior como bloqueador de su UPDATE anterior.
+3. `lib/e11-repository.ts:30`: identidad de **otros trabajos** mantiene `usuarios FOR SHARE`; `:39` mantiene perfil `FOR SHARE`. Estos locks pueden hacer esperar al UPDATE no-clave de último acceso. Espera no prueba deadlock ni40001.
+4. `e11AuthIdentity`, `:59-61`, usa la transacción default del runtime. Sólo `e11Execute`, `:469-479`, solicita SERIALIZABLE. Por ello **no es correcto deducir40001 automáticamente** para el UPDATE de login: la fuente no declara ese aislamiento para ese tx.
+5. El retry GET explícito de `:454-481` no envuelve login ni sus escrituras. El error no clasificado cae en `app.ts:108-113`, devolviendo500.
+
+**No probado:**40001,40P01,55P03,57014, timeout cliente/pool, error de trigger, duración de espera, mismo usuario o usuarios diferentes. Tampoco se ha probado que los tres logins por sí solos causen un ciclo de locks. No ampliar retry ni cambiar el lock de usuario por conjetura.
+
+MAIN debe extraer de su log restringido sólo: cadena de causas con `name/code`, categoría/hash de mensaje, fase/query, requestId/tiempo; si están disponibles, duración, aislamiento efectivo y pares PID/bloqueador. No publicar SQL con valores, cookies, credenciales ni DTOs. No es necesario otro navegador para obtener esta evidencia.
+
+### Reproducción enfocada posible después de identificar la causa
+
+Puede hacerse sin escrituras de aplicación ni navegador: schema propio, misma forma de usuarios/sesiones/FKs y triggers relevantes, transacciones del orden real `INSERT sesión → UPDATE usuario → INSERT auditoría`, más barrera controlada que sostenga el `FOR SHARE` de identidad de otro actor/sesión. Primero demostrar espera y liberación normales; después reproducir **el SQLSTATE observado**, no inyectar uno arbitrario y llamarlo explicación del incidente.
+
+- Si es40P01, reproducir el ciclo completo y su orden de locks.
+- Si es40001, verificar aislamiento/snapshot efectivos antes de construir el conflicto.
+- Si es timeout, medir quién retiene el lock y cuánto; no confundir wait SQL con adquisición de pool.
+- Si es error de trigger, cotejar definición instalada y hash exacto de su mensaje.
+
+Esta reproducción no se ejecutó todavía porque falta la causa que debe discriminar. No se aplicó fix de login. Las regresiones anteriores de40001 probaron otro punto —el SELECT SERIALIZABLE de identidad— y no acreditan la causa de este nuevo UPDATE fallido.
+
+## Límites de cierre y preservación
+
+- Auditoría principal y ciclo fiscal: **PASS informado por MAIN**, respaldados por regresiones específicas.
+- Alias SQL, fan-out, sesión, retry GET y lifecycle: corregidos con alcance delimitado.
+- Constante temporal SQL: **fixture-only**, jamás release/app DB. Artefactos `priority-fiscal-20260926/fixture-clock-*`; API V8 no fue reconstruida por ese ajuste.
+- Login concurrente residual: **ABIERTO / causa pendiente**. No hay afirmación de “todo resuelto”.
+- Mantener protocolos de recuperación y evidencia original. Una lectura sin filas bajo lock no sustituye cierre durable; no limpiar journal manualmente ni generar UUID para eludir intención incierta.
+## Cierre de MAIN
+
+- NO LIBERADO: la aplicación continúa con sus builds anteriores, verificados por SHA256 al reiniciar. Los candidatos corregidos no están activos. La migración de alias no se aplicó a la base de la aplicación.
+- Clientes: objetivo estricto &lt;2s NO cumplido. Tres aperturas con UI paralela: 2606.842, 1614.573, 1608.571 ms. Dos de tres pasan; no se excluye la primera.
+- Crédito: sin modificaciones. Diagnóstico anual: 16,268 filas, aproximadamente 238,227 nodos DOM; bloqueos de 5.3–6.9s tras respuesta. Se recomienda paginar presentación manteniendo totales y exportaciones completos, pendiente de decisión.
+- Login concurrente: sólo consta el fallo de UPDATE usuarios.ultimo_acceso; el log conservado no contiene SQLSTATE extraíble. Causa pendiente, no atribuir a deadlock ni serialización sin evidencia.
+- Evidencia final fiscal: reports/priority-fiscal-20260926/browser/fiscal-final-proof/result.json. Evidencia auditoría: reports/priority-20260926/browser/audit-final-stable-sequential-login/result.json.
+- Ambas ramas Neon desechables eliminadas y ausencia verificada por 404. Puertos privados cerrados. Sin pruebas ni migraciones en la base de la aplicación.
+</pre></html>

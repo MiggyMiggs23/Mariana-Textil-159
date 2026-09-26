@@ -1,0 +1,13 @@
+✔ large financial directory uses one canonical bulk projection and preserves full revision (47.976346ms)
+✔ session lock permits non-key expiry renewal but still protects deletion (0.730539ms)
+✔ explicit read retries one rolled-back 40001 with fresh identity; delivers once (26.703715ms)
+✔ serialization retry is bounded, never retries timeout, unique conflict, deadlock or writes (25.652203ms)
+✔ delivery failure and true profile revocation never retry or disclose protected result (0.720615ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 192.857953

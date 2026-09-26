@@ -1,0 +1,77 @@
+{
+  "status": "OFFLINE_VERIFIED_PG_AND_BROWSER_PENDING",
+  "apiEntry": "/home/runner/workspace/artifacts/api-server/dist-priority-stability-v4-20260926/index.mjs",
+  "apiSha256": "88ad382682d339dcf4f3282937c752e9770850f8944453e3bf648b47157fe8d2",
+  "parentApiSha256": "e62a79333d0ee1433c114656af980e33ff420b728688a121ee586efdfab1b30d",
+  "apiFiles": {
+    "baseline-stability.pg.test.cjs": "2ff9003e827fbf68973314a72c886fd5e2cd85435876201379493d2efabf553d",
+    "baseline-stability.pg.test.cjs.map": "898e24a85a48a005443da6e4401aefc4b0214a5cf6d2f004b73f32b33553737e",
+    "baseline-stability.test.cjs": "4888508499e9796ae13121270e014a1db833563f9546c2bd92c572babdf48ac1",
+    "baseline-stability.test.cjs.map": "a670835338f07691d28d2ee9e2fe043cba0919b1458af46aa2b7fbc056d507b8",
+    "candidate-stability.pg.test.cjs": "196f1f05aad4dadc7a574461b2c93831d9c49436c4ea99fece8663cbf6818065",
+    "candidate-stability.pg.test.cjs.map": "e9b80cb520693d021675342c9db665ea4acfda908a4c77f977a1d665daabf503",
+    "candidate-stability.test.cjs": "871470e0a437e73687714bd72c28485f90cc77530209ea71b9bc1955edfd7860",
+    "candidate-stability.test.cjs.map": "1e01bf114762fc589ee8feaa00ace8abd11238040d84b08cde0e69fea43f9321",
+    "index.mjs": "88ad382682d339dcf4f3282937c752e9770850f8944453e3bf648b47157fe8d2",
+    "index.mjs.map": "cd1b96e9925112e8fd518a506f2edf23aaf92663bf7b5f8961bb36d09d225954",
+    "pino-file.mjs": "5923cfcf59995d4bf2fd8c95d6dea78360fa369829fada2abaf0daf12081a0bb",
+    "pino-file.mjs.map": "f432eaa17fb6656af63cbf1e8885bcab82ca1136dab9cce6032fcdd0a1437a6f",
+    "pino-pretty.mjs": "1a05aa85bf5ce035c5d1f19a32e0308d6dbab00c7194e1936c7f632d10994fac",
+    "pino-pretty.mjs.map": "a7d3c3a4613f9648f8cb7e69a6abeacdbe3934792fcc24cc0af74fd6fde3eb90",
+    "pino-worker.mjs": "e8792c28fbc7dd8bb19b436ec3c03d0aaf03204730bb22b0f7a8f9103a3342c6",
+    "pino-worker.mjs.map": "329a78863713a483ffb80c41a9e4e0533e45befa5797f9caf0882c78390f9d18",
+    "thread-stream-worker.mjs": "b490228463d2d47a57932bcbe6bb307af9c54d1b4f3953191e1077e791bb188d",
+    "thread-stream-worker.mjs.map": "e5fd66fcec3ca622f449a275bd6b14d061ed62ce34faadce8716b363a4df878a"
+  },
+  "inputs": [
+    {
+      "path": "artifacts/api-server/src/lib/e11-runtime.ts",
+      "parentSha256": "ad64af6f1efe5d1bd96ab90f35cd01b7e417362a5e4143fdb31af4c0f04cc28f",
+      "overlaySha256": "7c33b6e9feaa0a2b4ed34a5a2fe14b94e0e49405846408e801436d2b6eb22a27",
+      "headInputSha256": "7c33b6e9feaa0a2b4ed34a5a2fe14b94e0e49405846408e801436d2b6eb22a27"
+    },
+    {
+      "path": "artifacts/api-server/src/lib/e11-repository.ts",
+      "parentSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "overlaySha256": "850e4a31f783b8081c2414b9469fb18bcd2b8ad19ee3e335f3a73a0499fece0b",
+      "headInputSha256": "850e4a31f783b8081c2414b9469fb18bcd2b8ad19ee3e335f3a73a0499fece0b"
+    },
+    {
+      "path": "artifacts/api-server/src/lib/credit-aging-read-model.ts",
+      "parentSha256": "315085339a169249d9d45a4ec4f6e04158b789d4b64dce546465a8d6d9dd7ed0",
+      "overlaySha256": "153649960f62b7bc281ec181e214220caa7e2b073bbf47ae4164eb33bca63292",
+      "headInputSha256": "ffe4069f43c87916e4f3ba5c29674388bb56eefc7ea3ea0d27bb00080db758b1"
+    },
+    {
+      "path": "artifacts/api-server/src/routes/e11.ts",
+      "parentSha256": "cc75e3a9073088e08ee216889d6960708f3ffac661131ab44a4346ceb77857b2",
+      "overlaySha256": "21d5f46d1e290aace20f64caa31c82878568d7337f3c9e6bdee13f782b58ed71",
+      "headInputSha256": "21d5f46d1e290aace20f64caa31c82878568d7337f3c9e6bdee13f782b58ed71"
+    },
+    {
+      "path": "artifacts/api-server/src/middlewares/auth.ts",
+      "parentSha256": "7bb195f9ab2233e55aff004df49676713c39a5b6650baa1cc06126b45a9f0ec1",
+      "overlaySha256": "bdb0d1d407a33603db061fdc4cfa0ee2bcedb9795049142d1ab4d3562104ea7a",
+      "headInputSha256": "bdb0d1d407a33603db061fdc4cfa0ee2bcedb9795049142d1ab4d3562104ea7a"
+    }
+  ],
+  "sourceDeltas": [
+    "artifacts/api-server/src/lib/credit-aging-read-model.ts",
+    "artifacts/api-server/src/lib/e11-repository.ts",
+    "artifacts/api-server/src/lib/e11-runtime.ts",
+    "artifacts/api-server/src/middlewares/auth.ts",
+    "artifacts/api-server/src/routes/e11.ts"
+  ],
+  "offlineTests": {
+    "baseline": {
+      "exitCode": 1,
+      "signal": null
+    },
+    "candidate": {
+      "exitCode": 0,
+      "signal": null
+    }
+  },
+  "frontendChanges": [],
+  "note": "No activation or DB access. Compose separately with clientlist overlay; do not rebuild HEAD."
+}

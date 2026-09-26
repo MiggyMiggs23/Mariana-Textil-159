@@ -1,0 +1,59 @@
+(node:2943) Warning: SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as aliases for 'verify-full'.
+In the next major version (pg-connection-string v3.0.0 and pg v9.0.0), these modes will adopt standard libpq semantics, which have weaker security guarantees.
+
+To prepare for this change:
+- If you want the current behavior, explicitly use 'sslmode=verify-full'
+- If you want libpq compatibility now, use 'uselibpqcompat=true&sslmode=require'
+
+See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode definitions.
+(Use `node --trace-warnings ...` to show where the warning was created)
+▶ real PG: canonical bulk parity, lock compatibility, rolled-back read retry, revocation
+  ✖ directory exactly matches all canonical individual DTOs; two queries (108.086023ms)
+  ✔ identity row lock permits renewal but blocks logout deletion (1471.316272ms)
+  ✖ deterministic real 40001 restarts full read after rollback, delivers once (645.499186ms)
+  ✔ deleted session cannot be reauthorized (210.70659ms)
+✖ real PG: canonical bulk parity, lock compatibility, rolled-back read retry, revocation (3047.22638ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 2
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3175.490234
+
+✖ failing tests:
+
+test at artifacts/api-server/dist-priority-stability-combined-v5-20260926/candidate-stability.pg.test.cjs:16410:13
+✖ directory exactly matches all canonical individual DTOs; two queries (108.086023ms)
+  TypeError: Right-hand side of 'instanceof' is not an object
+      at is (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/candidate-stability.pg.test.cjs:5190:13)
+      at prepareTyping (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/candidate-stability.pg.test.cjs:8792:9)
+      at /home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/candidate-stability.pg.test.cjs:6263:26
+      at Array.map (<anonymous>)
+      at _SQL.buildQueryFromSourceParams (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/candidate-stability.pg.test.cjs:6196:36)
+      at /home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/candidate-stability.pg.test.cjs:6175:30
+      at Object.startActiveSpan (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/candidate-stability.pg.test.cjs:5972:18)
+      at _SQL.toQuery (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/candidate-stability.pg.test.cjs:6174:23)
+      at PgDialect.sqlToQuery (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/candidate-stability.pg.test.cjs:8809:17)
+      at _NodePgTransaction.execute (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/candidate-stability.pg.test.cjs:11499:37)
+
+test at artifacts/api-server/dist-priority-stability-combined-v5-20260926/candidate-stability.pg.test.cjs:16451:13
+✖ deterministic real 40001 restarts full read after rollback, delivers once (645.499186ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/candidate-stability.pg.test.cjs:16483:29)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/candidate-stability.pg.test.cjs:16451:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

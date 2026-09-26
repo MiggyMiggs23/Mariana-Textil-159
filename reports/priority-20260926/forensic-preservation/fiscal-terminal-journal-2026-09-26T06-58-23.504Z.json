@@ -1,0 +1,696 @@
+{
+  "capturedAt": "2026-09-26T06:58:23.504Z",
+  "scope": "fiscal",
+  "snapshotSha256": "74d257fcc094630ea27c8995f9026f5a4992b80e361893ffe2ce53c44492da50",
+  "sourceDeletedAfterArchival": true,
+  "fields": [
+    {
+      "path": "roles.F.id",
+      "value": 237
+    },
+    {
+      "path": "roles.A.id",
+      "value": 238
+    },
+    {
+      "path": "operations.native-isolated-site-and-three-floors.status",
+      "value": "RECOVERED_CONFIRMED"
+    },
+    {
+      "path": "operations.native-supplier-product-client.status",
+      "value": "RECOVERED_CONFIRMED"
+    },
+    {
+      "path": "operations.native-eight-roll-entry.status",
+      "value": "RECOVERED_CONFIRMED"
+    },
+    {
+      "path": "operations.native-open-own-cash-session.status",
+      "value": "RECOVERED_CONFIRMED"
+    },
+    {
+      "path": "operations.native-sale-invoice.status",
+      "value": "RECOVERED_CONFIRMED"
+    },
+    {
+      "path": "operations.native-sale-note.status",
+      "value": "RECOVERED_CONFIRMED"
+    },
+    {
+      "path": "operations.native-pay-fiscal-sale-transfer.status",
+      "value": "RECOVERED_CONFIRMED"
+    },
+    {
+      "path": "operations.native-nonempty-fiscal-source-and-clone-handoff.status",
+      "value": "RECOVERED_CONFIRMED"
+    },
+    {
+      "path": "operations.site.status",
+      "value": "RECOVERED_DO_NOT_REPLAY"
+    },
+    {
+      "path": "operations.supplier.status",
+      "value": "RECOVERED_DO_NOT_REPLAY"
+    },
+    {
+      "path": "operations.product.status",
+      "value": "RECOVERED_DO_NOT_REPLAY"
+    },
+    {
+      "path": "operations.client.status",
+      "value": "RECOVERED_DO_NOT_REPLAY"
+    },
+    {
+      "path": "operations.entrada.status",
+      "value": "RECOVERED_DO_NOT_REPLAY"
+    },
+    {
+      "path": "operations.cash-session.status",
+      "value": "RECOVERED_DO_NOT_REPLAY"
+    },
+    {
+      "path": "operations.sale-invoice.status",
+      "value": "RECOVERED_DO_NOT_REPLAY"
+    },
+    {
+      "path": "operations.sale-note.status",
+      "value": "RECOVERED_DO_NOT_REPLAY"
+    },
+    {
+      "path": "operations.pay-invoice.status",
+      "value": "RECOVERED_DO_NOT_REPLAY"
+    },
+    {
+      "path": "operations.create-F.status",
+      "value": "RECOVERED_DO_NOT_REPLAY"
+    },
+    {
+      "path": "operations.create-A.status",
+      "value": "RECOVERED_DO_NOT_REPLAY"
+    },
+    {
+      "path": "operations.assign-A.status",
+      "value": "RECOVERED_DO_NOT_REPLAY"
+    },
+    {
+      "path": "operations.DIA-NO_CUADRA-snapshot.status",
+      "value": "FAILED"
+    },
+    {
+      "path": "operations.native-auditor-0.status",
+      "value": "ACK"
+    },
+    {
+      "path": "operations.native-auditor-1.status",
+      "value": "ACK"
+    },
+    {
+      "path": "operations.audit-open.status",
+      "value": "ACK"
+    },
+    {
+      "path": "operations.audit-three-scans.status",
+      "value": "UNCERTAIN"
+    },
+    {
+      "path": "operations.audit-duplicate.status",
+      "value": "UNCERTAIN"
+    },
+    {
+      "path": "operations.observed-DIA-NO_CUADRA-snapshot.status",
+      "value": "ACK"
+    },
+    {
+      "path": "operations.observed-DIA-NO_CUADRA-decision.status",
+      "value": "ACK"
+    },
+    {
+      "path": "operations.observed-DIA-ACEPTADA-snapshot.status",
+      "value": "ACK"
+    },
+    {
+      "path": "operations.observed-DIA-ACEPTADA-decision.status",
+      "value": "ACK"
+    },
+    {
+      "path": "operations.observed-SEMANA-ACEPTADA-snapshot.status",
+      "value": "UNCERTAIN"
+    },
+    {
+      "path": "operations.clock-consistent-SEMANA-ACEPTADA-snapshot.status",
+      "value": "ACK"
+    },
+    {
+      "path": "operations.clock-consistent-SEMANA-ACEPTADA-decision.status",
+      "value": "ACK"
+    },
+    {
+      "path": "operations.clock-consistent-MES-ACEPTADA-snapshot.status",
+      "value": "ACK"
+    },
+    {
+      "path": "operations.clock-consistent-MES-ACEPTADA-decision.status",
+      "value": "ACK"
+    },
+    {
+      "path": "reconciliations.DIA-NO_CUADRA.id",
+      "value": "59625031-5fa3-40d0-adbf-3eaacea36fd2"
+    },
+    {
+      "path": "reconciliations.DIA-ACEPTADA.id",
+      "value": "c6a50b09-06f4-4ed3-8464-e51dbf855484"
+    },
+    {
+      "path": "reconciliations.DIA-ACEPTADA.anteriorId",
+      "value": "59625031-5fa3-40d0-adbf-3eaacea36fd2"
+    },
+    {
+      "path": "reconciliations.DIA-ACEPTADA.resultado",
+      "value": "ACEPTADA"
+    },
+    {
+      "path": "reconciliations.DIA-ACEPTADA.avisoAdminId",
+      "value": null
+    },
+    {
+      "path": "reconciliations.SEMANA-ACEPTADA.id",
+      "value": "72128be9-82a3-43de-8413-4bbf0666dd8a"
+    },
+    {
+      "path": "reconciliations.SEMANA-ACEPTADA.anteriorId",
+      "value": null
+    },
+    {
+      "path": "reconciliations.SEMANA-ACEPTADA.resultado",
+      "value": "ACEPTADA"
+    },
+    {
+      "path": "reconciliations.SEMANA-ACEPTADA.avisoAdminId",
+      "value": null
+    },
+    {
+      "path": "reconciliations.MES-ACEPTADA.id",
+      "value": "89cc6705-a917-4053-adc8-e9d8e519b3b1"
+    },
+    {
+      "path": "reconciliations.MES-ACEPTADA.anteriorId",
+      "value": null
+    },
+    {
+      "path": "reconciliations.MES-ACEPTADA.resultado",
+      "value": "ACEPTADA"
+    },
+    {
+      "path": "reconciliations.MES-ACEPTADA.avisoAdminId",
+      "value": null
+    },
+    {
+      "path": "site.id",
+      "value": 835
+    },
+    {
+      "path": "site.tipo",
+      "value": "TIENDA"
+    },
+    {
+      "path": "floors.0.id",
+      "value": 14
+    },
+    {
+      "path": "floors.0.ubicacionId",
+      "value": 835
+    },
+    {
+      "path": "floors.0.createdAt",
+      "value": "2026-09-26T05:11:55.947Z"
+    },
+    {
+      "path": "floors.0.updatedAt",
+      "value": "2026-09-26T05:11:55.947Z"
+    },
+    {
+      "path": "floors.1.id",
+      "value": 15
+    },
+    {
+      "path": "floors.1.ubicacionId",
+      "value": 835
+    },
+    {
+      "path": "floors.1.createdAt",
+      "value": "2026-09-26T05:11:56.601Z"
+    },
+    {
+      "path": "floors.1.updatedAt",
+      "value": "2026-09-26T05:11:56.601Z"
+    },
+    {
+      "path": "floors.2.id",
+      "value": 16
+    },
+    {
+      "path": "floors.2.ubicacionId",
+      "value": 835
+    },
+    {
+      "path": "floors.2.createdAt",
+      "value": "2026-09-26T05:11:57.268Z"
+    },
+    {
+      "path": "floors.2.updatedAt",
+      "value": "2026-09-26T05:11:57.268Z"
+    },
+    {
+      "path": "supplier.id",
+      "value": 226
+    },
+    {
+      "path": "product.id",
+      "value": 2078
+    },
+    {
+      "path": "client.id",
+      "value": 2583
+    },
+    {
+      "path": "sales.invoice.id",
+      "value": 1
+    },
+    {
+      "path": "sales.invoice.folio",
+      "value": 1
+    },
+    {
+      "path": "sales.note.id",
+      "value": 2
+    },
+    {
+      "path": "sales.note.folio",
+      "value": 2
+    },
+    {
+      "path": "auditActors.0.id",
+      "value": 239
+    },
+    {
+      "path": "auditActors.1.id",
+      "value": 240
+    },
+    {
+      "path": "entry.id",
+      "value": 1
+    },
+    {
+      "path": "entry.folio",
+      "value": 1
+    },
+    {
+      "path": "entry.ubicacionId",
+      "value": 835
+    },
+    {
+      "path": "entry.proveedorId",
+      "value": 226
+    },
+    {
+      "path": "entry.createdAt",
+      "value": "2026-09-26T05:12:14.476Z"
+    },
+    {
+      "path": "entry.lineas.0.productoId",
+      "value": 2078
+    },
+    {
+      "path": "entry.lineas.0.rollosCount",
+      "value": 8
+    },
+    {
+      "path": "entry.rollos.0.id",
+      "value": 1
+    },
+    {
+      "path": "entry.rollos.0.productoId",
+      "value": 2078
+    },
+    {
+      "path": "entry.rollos.0.pisoId",
+      "value": 14
+    },
+    {
+      "path": "entry.rollos.1.id",
+      "value": 2
+    },
+    {
+      "path": "entry.rollos.1.productoId",
+      "value": 2078
+    },
+    {
+      "path": "entry.rollos.1.pisoId",
+      "value": 14
+    },
+    {
+      "path": "entry.rollos.2.id",
+      "value": 3
+    },
+    {
+      "path": "entry.rollos.2.productoId",
+      "value": 2078
+    },
+    {
+      "path": "entry.rollos.2.pisoId",
+      "value": 14
+    },
+    {
+      "path": "entry.rollos.3.id",
+      "value": 4
+    },
+    {
+      "path": "entry.rollos.3.productoId",
+      "value": 2078
+    },
+    {
+      "path": "entry.rollos.3.pisoId",
+      "value": 14
+    },
+    {
+      "path": "entry.rollos.4.id",
+      "value": 5
+    },
+    {
+      "path": "entry.rollos.4.productoId",
+      "value": 2078
+    },
+    {
+      "path": "entry.rollos.4.pisoId",
+      "value": 14
+    },
+    {
+      "path": "entry.rollos.5.id",
+      "value": 6
+    },
+    {
+      "path": "entry.rollos.5.productoId",
+      "value": 2078
+    },
+    {
+      "path": "entry.rollos.5.pisoId",
+      "value": 14
+    },
+    {
+      "path": "entry.rollos.6.id",
+      "value": 7
+    },
+    {
+      "path": "entry.rollos.6.productoId",
+      "value": 2078
+    },
+    {
+      "path": "entry.rollos.6.pisoId",
+      "value": 14
+    },
+    {
+      "path": "entry.rollos.7.id",
+      "value": 8
+    },
+    {
+      "path": "entry.rollos.7.productoId",
+      "value": 2078
+    },
+    {
+      "path": "entry.rollos.7.pisoId",
+      "value": 14
+    },
+    {
+      "path": "audit.id",
+      "value": 1
+    },
+    {
+      "path": "audit.folio",
+      "value": 1
+    },
+    {
+      "path": "audit.ubicacionId",
+      "value": 835
+    },
+    {
+      "path": "audit.estado",
+      "value": "ABIERTA"
+    },
+    {
+      "path": "audit.abiertaAt",
+      "value": "2026-09-26T06:02:16.988Z"
+    },
+    {
+      "path": "audit.cerradaAt",
+      "value": null
+    },
+    {
+      "path": "audit.confirmadaAt",
+      "value": null
+    },
+    {
+      "path": "audit.resultados.0.rolloId",
+      "value": 3
+    },
+    {
+      "path": "audit.resultados.0.ubicacionActualId",
+      "value": 835
+    },
+    {
+      "path": "audit.resultados.0.pisoEsperadoId",
+      "value": 14
+    },
+    {
+      "path": "audit.resultados.0.pisoRealId",
+      "value": null
+    },
+    {
+      "path": "audit.resultados.0.escaneadoAt",
+      "value": null
+    },
+    {
+      "path": "audit.resultados.1.rolloId",
+      "value": 4
+    },
+    {
+      "path": "audit.resultados.1.ubicacionActualId",
+      "value": 835
+    },
+    {
+      "path": "audit.resultados.1.pisoEsperadoId",
+      "value": 14
+    },
+    {
+      "path": "audit.resultados.1.pisoRealId",
+      "value": null
+    },
+    {
+      "path": "audit.resultados.1.escaneadoAt",
+      "value": null
+    },
+    {
+      "path": "audit.resultados.2.rolloId",
+      "value": 5
+    },
+    {
+      "path": "audit.resultados.2.ubicacionActualId",
+      "value": 835
+    },
+    {
+      "path": "audit.resultados.2.pisoEsperadoId",
+      "value": 14
+    },
+    {
+      "path": "audit.resultados.2.pisoRealId",
+      "value": null
+    },
+    {
+      "path": "audit.resultados.2.escaneadoAt",
+      "value": null
+    },
+    {
+      "path": "audit.resultados.3.rolloId",
+      "value": 6
+    },
+    {
+      "path": "audit.resultados.3.ubicacionActualId",
+      "value": 835
+    },
+    {
+      "path": "audit.resultados.3.pisoEsperadoId",
+      "value": 14
+    },
+    {
+      "path": "audit.resultados.3.pisoRealId",
+      "value": null
+    },
+    {
+      "path": "audit.resultados.3.escaneadoAt",
+      "value": null
+    },
+    {
+      "path": "audit.resultados.4.rolloId",
+      "value": 7
+    },
+    {
+      "path": "audit.resultados.4.ubicacionActualId",
+      "value": 835
+    },
+    {
+      "path": "audit.resultados.4.pisoEsperadoId",
+      "value": 14
+    },
+    {
+      "path": "audit.resultados.4.pisoRealId",
+      "value": null
+    },
+    {
+      "path": "audit.resultados.4.escaneadoAt",
+      "value": null
+    },
+    {
+      "path": "audit.resultados.5.rolloId",
+      "value": 8
+    },
+    {
+      "path": "audit.resultados.5.ubicacionActualId",
+      "value": 835
+    },
+    {
+      "path": "audit.resultados.5.pisoEsperadoId",
+      "value": 14
+    },
+    {
+      "path": "audit.resultados.5.pisoRealId",
+      "value": null
+    },
+    {
+      "path": "audit.resultados.5.escaneadoAt",
+      "value": null
+    },
+    {
+      "path": "originalSnapshotResolver.status",
+      "value": "ACK"
+    },
+    {
+      "path": "originalSnapshotResolver.attempts.0.at",
+      "value": "2026-09-26T06:32:08.153Z"
+    },
+    {
+      "path": "originalSnapshotResolution.actorId",
+      "value": 237
+    },
+    {
+      "path": "originalSnapshotResolution.estado",
+      "value": "CERRADA_SIN_EFECTO"
+    },
+    {
+      "path": "originalSnapshotResolution.resolucionId",
+      "value": "4c4fa161-e762-4909-b45d-f5bf0d713e51"
+    },
+    {
+      "path": "confirmedSnapshotRecovery.originalSnapshotResolver.status",
+      "value": "ACK"
+    },
+    {
+      "path": "confirmedSnapshotRecovery.originalSnapshotResolver.attempts.0.at",
+      "value": "2026-09-26T06:34:51.347Z"
+    },
+    {
+      "path": "confirmedSnapshotRecovery.originalSnapshotResolution.actorId",
+      "value": 237
+    },
+    {
+      "path": "confirmedSnapshotRecovery.originalSnapshotResolution.estado",
+      "value": "CONFIRMADA"
+    },
+    {
+      "path": "confirmedSnapshotRecovery.originalSnapshotResolution.resolucionId",
+      "value": "1fddb078-963c-404c-b283-0f5e6b0cd27b"
+    },
+    {
+      "path": "confirmedDecisionRecovery.originalSnapshotResolver.status",
+      "value": "ACK"
+    },
+    {
+      "path": "confirmedDecisionRecovery.originalSnapshotResolver.attempts.0.at",
+      "value": "2026-09-26T06:41:21.735Z"
+    },
+    {
+      "path": "confirmedDecisionRecovery.originalSnapshotResolution.actorId",
+      "value": 237
+    },
+    {
+      "path": "confirmedDecisionRecovery.originalSnapshotResolution.estado",
+      "value": "CONFIRMADA"
+    },
+    {
+      "path": "confirmedDecisionRecovery.originalSnapshotResolution.resolucionId",
+      "value": "266621ff-5dfc-463c-8d45-d305bf83ac85"
+    },
+    {
+      "path": "weekSnapshotRecovery.originalSnapshotResolver.status",
+      "value": "ACK"
+    },
+    {
+      "path": "weekSnapshotRecovery.originalSnapshotResolver.attempts.0.at",
+      "value": "2026-09-26T06:47:38.207Z"
+    },
+    {
+      "path": "weekSnapshotRecovery.originalSnapshotResolution.actorId",
+      "value": 237
+    },
+    {
+      "path": "weekSnapshotRecovery.originalSnapshotResolution.estado",
+      "value": "CERRADA_SIN_EFECTO"
+    },
+    {
+      "path": "weekSnapshotRecovery.originalSnapshotResolution.resolucionId",
+      "value": "ad823ee0-e73e-4df6-bea9-15be20cff5ef"
+    }
+  ],
+  "operationKeys": [
+    "native-isolated-site-and-three-floors",
+    "native-supplier-product-client",
+    "native-eight-roll-entry",
+    "native-open-own-cash-session",
+    "native-sale-invoice",
+    "native-sale-note",
+    "native-pay-fiscal-sale-transfer",
+    "native-nonempty-fiscal-source-and-clone-handoff",
+    "site",
+    "supplier",
+    "product",
+    "client",
+    "entrada",
+    "cash-session",
+    "sale-invoice",
+    "sale-note",
+    "pay-invoice",
+    "create-F",
+    "create-A",
+    "assign-A",
+    "DIA-NO_CUADRA-snapshot",
+    "native-auditor-0",
+    "native-auditor-1",
+    "audit-open",
+    "audit-three-scans",
+    "audit-duplicate",
+    "observed-DIA-NO_CUADRA-snapshot",
+    "observed-DIA-NO_CUADRA-decision",
+    "observed-DIA-ACEPTADA-snapshot",
+    "observed-DIA-ACEPTADA-decision",
+    "observed-SEMANA-ACEPTADA-snapshot",
+    "clock-consistent-SEMANA-ACEPTADA-snapshot",
+    "clock-consistent-SEMANA-ACEPTADA-decision",
+    "clock-consistent-MES-ACEPTADA-snapshot",
+    "clock-consistent-MES-ACEPTADA-decision"
+  ],
+  "reconciliationKeys": [
+    "DIA-NO_CUADRA",
+    "DIA-ACEPTADA",
+    "SEMANA-ACEPTADA",
+    "MES-ACEPTADA"
+  ],
+  "note": "Final preservation snapshot, not an assertion every operation succeeded; only allowlisted IDs/statuses/timestamps/numbers retained."
+}

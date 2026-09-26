@@ -1,0 +1,31 @@
+✖ real PG: canonical bulk parity, lock compatibility, rolled-back read retry, revocation (1.274038ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 154.072221
+
+✖ failing tests:
+
+test at artifacts/api-server/dist-priority-stability-combined-v7-20260926/candidate-stability.pg.test.cjs:4878:30
+✖ real PG: canonical bulk parity, lock compatibility, rolled-back read retry, revocation (1.274038ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /(?:test|disposable|stability)|^priority_20260926$/i. Input:
+  
+  'priority_fiscal_20260926'
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v7-20260926/candidate-stability.pg.test.cjs:4884:25)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'priority_fiscal_20260926',
+    expected: /(?:test|disposable|stability)|^priority_20260926$/i,
+    operator: 'match',
+    diff: 'simple'
+  }
+

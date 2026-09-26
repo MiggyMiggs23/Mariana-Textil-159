@@ -1,0 +1,25 @@
+{
+  "status": "LOADED_DATABASE_READY_NOT_STARTED",
+  "branch": "br-snowy-sea-ax2ft2er",
+  "project": "withered-block-09991755",
+  "database": "priority_perf_20260926",
+  "clients": {
+    "total": 2576,
+    "nonsystem": 2575
+  },
+  "admin": {
+    "id": 234,
+    "usuario": "e2e.priority.perf"
+  },
+  "snapshotSource": "Existing original application.dump; NOT a dump of actively used primary test DB",
+  "dumpSha256": "70e7c466c8791ffa78337617126055479c067b6c3430354c2797542d51dd3523",
+  "sameMethodology": "Prior annual-load.mjs unchanged except isolation paths",
+  "apiSha256": "f3870a6e76bee58a0237e345dec303e11cf9e42af6acd99fa6314de416fc0e97",
+  "frontendIndexSha256": "09e9fb57f7fc495b98107b86d796e5cbce980aa5755a62a6bb47a87bd98ad9c9",
+  "ports": [
+    18237,
+    18238
+  ],
+  "caveat": "Separate database but shared Neon branch compute; annual loader may contend for CPU/I/O",
+  "createdAt": "2026-09-26T05:11:50.306Z"
+}

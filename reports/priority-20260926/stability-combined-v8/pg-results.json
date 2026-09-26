@@ -1,0 +1,36 @@
+{
+  "baseline": {
+    "status": 1,
+    "summary": [
+      "ℹ tests 5",
+      "ℹ suites 0",
+      "ℹ pass 1",
+      "ℹ fail 4",
+      "ℹ cancelled 0",
+      "ℹ skipped 0",
+      "ℹ todo 0",
+      "ℹ duration_ms 9295.949008",
+      "✖ failing tests:",
+      "✖ directory exactly matches all canonical individual DTOs; two queries (6490.934526ms)",
+      "✖ identity row lock permits renewal but blocks logout deletion (1429.546061ms)",
+      "✖ deterministic real 40001 restarts full read after rollback, delivers once (376.926084ms)"
+    ]
+  },
+  "candidate": {
+    "status": 0,
+    "summary": [
+      "  ✔ identity row lock permits renewal but blocks logout deletion (1443.837839ms)",
+      "  ✔ deterministic real 40001 restarts full read after rollback, delivers once (820.299654ms)",
+      "  ✔ deleted session cannot be reauthorized (192.443057ms)",
+      "✔ real PG: canonical bulk parity, lock compatibility, rolled-back read retry, revocation (9699.15221ms)",
+      "ℹ tests 5",
+      "ℹ suites 0",
+      "ℹ pass 5",
+      "ℹ fail 0",
+      "ℹ cancelled 0",
+      "ℹ skipped 0",
+      "ℹ todo 0",
+      "ℹ duration_ms 9875.642762"
+    ]
+  }
+}

@@ -230,6 +230,23 @@ export async function loadCustomerCreditProjectionInTransaction(
 }
 
 /** Bulk adapter. It always performs at most one ledger query, including on a transaction. */
+export async function loadCustomerCreditProjectionsInTransaction(
+  clienteIds: number[],
+  tx: { execute(query: any): Promise<unknown> },
+): Promise<Map<number, CustomerCreditProjection>> {
+  return loadCustomerCreditProjections(clienteIds, {
+    async query<T>(text: string, values?: readonly unknown[]) {
+      // The canonical bulk reader has exactly one array parameter. Bind it on
+      // the caller transaction; never interpolate IDs or borrow another client.
+      const parts = text.split("$1");
+      if (parts.length !== 2 || values?.length !== 1)
+        throw new Error("Unexpected canonical bulk-ledger query parameters.");
+      return await tx.execute(sql`${sql.raw(parts[0])}${sql.param(values[0])}${sql.raw(parts[1])}`) as { rows: T[] };
+    },
+  });
+}
+
+/** Bulk adapter. It always performs at most one ledger query, including on a transaction. */
 export async function loadCustomerCreditProjections(
   clienteIds: number[],
   database: CreditLedgerQuery = pool,

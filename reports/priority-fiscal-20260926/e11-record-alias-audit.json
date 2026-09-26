@@ -1,0 +1,120 @@
+{
+  "functions": 19,
+  "review": "The only remaining name collision is p inside e11_graph EXECUTE $query$: dynamic SQL binds its own table alias, not PL/pgSQL records. Installed static graph aliases already use profile_event, snapshot_row, decision_row, operation_row. No additional installed alias correction was needed.",
+  "canonicalSourceCaveat": "01-preparado.sql contains older graph aliases than the installed fiscal graph; this authorized patch changes only e11_recovery_check. Do not install the whole prepared schema as a migration.",
+  "inventory": [
+    {
+      "name": "e11_actor",
+      "recordVariables": [
+        "u",
+        "p"
+      ],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_before",
+      "recordVariables": [],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_canonical",
+      "recordVariables": [],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_closed",
+      "recordVariables": [],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_e5_a_validate",
+      "recordVariables": [
+        "r"
+      ],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_e5_capture",
+      "recordVariables": [],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_fin",
+      "recordVariables": [],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_fuente",
+      "recordVariables": [],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_graph",
+      "recordVariables": [
+        "p",
+        "e",
+        "s",
+        "d",
+        "a",
+        "o",
+        "prev"
+      ],
+      "sqlAliasCollisions": [
+        "p"
+      ]
+    },
+    {
+      "name": "e11_hash",
+      "recordVariables": [],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_immutable",
+      "recordVariables": [],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_iso",
+      "recordVariables": [],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_keys",
+      "recordVariables": [],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_notification",
+      "recordVariables": [],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_recovery_before",
+      "recordVariables": [],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_recovery_check",
+      "recordVariables": [
+        "r",
+        "o"
+      ],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_replay_lock",
+      "recordVariables": [],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_technical_insert",
+      "recordVariables": [],
+      "sqlAliasCollisions": []
+    },
+    {
+      "name": "e11_user_change",
+      "recordVariables": [],
+      "sqlAliasCollisions": []
+    }
+  ]
+}

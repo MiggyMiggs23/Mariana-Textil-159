@@ -1,0 +1,218 @@
+{
+  "scope": "fiscal",
+  "sourceSha256": "9197c8130a067b9e389ed72bbb30b5e2f85481988863e376e57d3b2306bdcfb6",
+  "capturedAt": "2026-09-26T06:43:41.436Z",
+  "ongoingSnapshotNotFinal": true,
+  "credentialsExcluded": true,
+  "actors": [
+    {
+      "role": "F",
+      "id": 237
+    },
+    {
+      "role": "A",
+      "id": 238
+    }
+  ],
+  "siteId": 835,
+  "invoiceId": 1,
+  "noteId": 2,
+  "operations": [
+    {
+      "key": "native-isolated-site-and-three-floors",
+      "status": "RECOVERED_CONFIRMED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "native-supplier-product-client",
+      "status": "RECOVERED_CONFIRMED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "native-eight-roll-entry",
+      "status": "RECOVERED_CONFIRMED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "native-open-own-cash-session",
+      "status": "RECOVERED_CONFIRMED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "native-sale-invoice",
+      "status": "RECOVERED_CONFIRMED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "native-sale-note",
+      "status": "RECOVERED_CONFIRMED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "native-pay-fiscal-sale-transfer",
+      "status": "RECOVERED_CONFIRMED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "native-nonempty-fiscal-source-and-clone-handoff",
+      "status": "RECOVERED_CONFIRMED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "site",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "supplier",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "product",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "client",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "entrada",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "cash-session",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "sale-invoice",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "sale-note",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "pay-invoice",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "create-F",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "create-A",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "assign-A",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "DIA-NO_CUADRA-snapshot",
+      "status": "FAILED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "native-auditor-0",
+      "status": "ACK",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "native-auditor-1",
+      "status": "ACK",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "audit-open",
+      "status": "ACK",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "audit-three-scans",
+      "status": "UNCERTAIN",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "audit-duplicate",
+      "status": "UNCERTAIN",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "observed-DIA-NO_CUADRA-snapshot",
+      "status": "ACK",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "observed-DIA-NO_CUADRA-decision",
+      "status": "ACK",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "observed-DIA-ACEPTADA-snapshot",
+      "status": "ACK",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "observed-DIA-ACEPTADA-decision",
+      "status": "ACK",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "observed-SEMANA-ACEPTADA-snapshot",
+      "status": "UNCERTAIN",
+      "at": null,
+      "resultId": null
+    }
+  ],
+  "reconciliationKeys": [
+    "DIA-NO_CUADRA",
+    "DIA-ACEPTADA"
+  ],
+  "recoverySectionsPresent": [
+    "originalSnapshotResolver",
+    "originalSnapshotResolution",
+    "confirmedSnapshotRecovery",
+    "confirmedDecisionRecovery"
+  ]
+}

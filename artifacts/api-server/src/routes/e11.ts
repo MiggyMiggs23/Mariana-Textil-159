@@ -44,6 +44,7 @@ function endpoint(capability: string | null, output: { parse(value: unknown): un
       const userId = req.auth!.user.id, session = req.auth!.sessionId;
       await e11Execute({
         userId, sessionId: session, capability, exclusive,
+        readOnly: req.method === "GET",
         mutationUuid: ["POST", "PUT"].includes(req.method) ? e11Uuid.parse(req.body?.uuid) : undefined,
         work: (tx, identity) => work(tx, identity, req),
         parse: value => output.parse(value),

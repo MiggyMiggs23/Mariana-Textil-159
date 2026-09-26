@@ -1,0 +1,14 @@
+{
+  "database_clock": "2026-09-26T06:43:13.626Z",
+  "application_frozen_clock": "2026-10-02T18:00:00.000Z",
+  "period_end": "2026-09-28T06:00:00.000Z",
+  "database_considers_open": true,
+  "source_hash_matches_request": true,
+  "source_sales": 1,
+  "operations": 0,
+  "resolutions": 0,
+  "snapshots": 0,
+  "producerLock": true,
+  "readOnly": true,
+  "publicMutation": false
+}

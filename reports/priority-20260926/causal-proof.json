@@ -1,0 +1,6411 @@
+{
+  "capturedAt": "2026-09-26T05:03:48.689Z",
+  "readOnly": true,
+  "database": "priority_20260926",
+  "archivedWindow": {
+    "start": "2026-09-26T04:57:40.000Z",
+    "end": "2026-09-26T05:00:15.999Z",
+    "records": 7163,
+    "fieldWhitelistValidated": true
+  },
+  "interpretation": {
+    "pidWarning": "Observer query_end PID is node client/pooler virtual identity; NOT assumed equal to PostgreSQL backend PID.",
+    "directBackendMapping": "Backend1447 absent in fresh sample; historical observer lacked query hash so cannot retrospectively assert its query-shape identity.",
+    "causalityLimit": "Historical blocker edges prove lock blocking. Pool/query timing and live fingerprints must be correlated, not mistaken for exact historical SQL evidence."
+  },
+  "queryShapes": {
+    "e6f07d43b5c21db0fbb9a31feac2dc599787763393dd5acbfad80e247eb02ad5": {
+      "count": 108,
+      "failed": 0,
+      "maxMs": 93.49354500000481,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827,
+        2096832937,
+        -405888880,
+        -1449155126,
+        -2119515331,
+        -597825138,
+        815274516,
+        1312292428,
+        1370995679,
+        1183884878,
+        -285039651,
+        416269802,
+        1915753745
+      ]
+    },
+    "aa79168d85637ea8334509bc8f5c6686d92572297d75a9b821ec56ddf787c879": {
+      "count": 177,
+      "failed": 0,
+      "maxMs": 537.0382950000057,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827,
+        2096832937,
+        -405888880,
+        -1449155126,
+        -2119515331,
+        -597825138,
+        815274516,
+        1312292428,
+        1370995679,
+        1183884878,
+        -285039651,
+        416269802,
+        1915753745
+      ]
+    },
+    "feace0ef558b4877f9aa415d6b3541a7895633997dc9059f7ade4adfc176237e": {
+      "count": 146,
+      "failed": 0,
+      "maxMs": 40.4846530000068,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827,
+        2096832937,
+        -405888880,
+        -1449155126,
+        -2119515331,
+        -597825138,
+        815274516,
+        1312292428,
+        1370995679,
+        1183884878,
+        -285039651,
+        416269802,
+        1915753745
+      ]
+    },
+    "a4ae17ded936f10b5b6eb0f7614a8d1ef96a9aa8b315af6d77b06398311e79ce": {
+      "count": 139,
+      "failed": 4,
+      "maxMs": 60.72272000000521,
+      "codes": {
+        "40001": 4
+      },
+      "virtualClientPids": [
+        -31173827,
+        2096832937,
+        -405888880,
+        -1449155126,
+        -2119515331,
+        -597825138,
+        815274516,
+        1312292428,
+        1370995679,
+        1183884878,
+        -285039651,
+        416269802,
+        1915753745
+      ]
+    },
+    "08f7a7dd017aa8d0c2b33c5c6422fbb0115ccd59d694c574c385c0eb3c3f1ea9": {
+      "count": 142,
+      "failed": 0,
+      "maxMs": 59.429234999988694,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827,
+        2096832937,
+        -405888880,
+        -1449155126,
+        -2119515331,
+        -597825138,
+        815274516,
+        1312292428,
+        1370995679,
+        1183884878,
+        -285039651,
+        416269802,
+        1915753745
+      ]
+    },
+    "9505cacb7c710ed17125fcc6cb3669e8ddca6c8cd8af6a31f6b3cd64604c3098": {
+      "count": 135,
+      "failed": 0,
+      "maxMs": 50.82879499999399,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827,
+        2096832937,
+        -405888880,
+        -1449155126,
+        -2119515331,
+        -597825138,
+        815274516,
+        1312292428,
+        1370995679,
+        1183884878,
+        -285039651,
+        416269802,
+        1915753745
+      ]
+    },
+    "674e269bd72a547eb9a895a615f19521b7020f8b21d8f0b752c9f05f1e10b911": {
+      "count": 85,
+      "failed": 0,
+      "maxMs": 688.9448600000178,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827,
+        2096832937,
+        -405888880,
+        -1449155126,
+        -2119515331,
+        -597825138,
+        815274516,
+        1312292428,
+        1370995679,
+        1183884878,
+        -285039651,
+        416269802,
+        1915753745
+      ]
+    },
+    "c3c0ff4c53e74a92c59e60a7719e536d831b2dd15dbb032515c6128efb374c14": {
+      "count": 84,
+      "failed": 6,
+      "maxMs": 35001.02132999999,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827,
+        2096832937,
+        -405888880,
+        -1449155126,
+        -2119515331,
+        -597825138,
+        815274516,
+        1312292428,
+        1370995679,
+        1183884878,
+        -285039651,
+        416269802,
+        1915753745
+      ]
+    },
+    "7bb6ff3dbaa32ee602a0226f8c4ec819f204c7f257cff2f1fb0282338f90aa73": {
+      "count": 2,
+      "failed": 0,
+      "maxMs": 34.88772299999255,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827,
+        -405888880
+      ]
+    },
+    "a25b6cc7ddd0477f34e731d522fe028d299ef35960c512e22c23b18326c63736": {
+      "count": 32,
+      "failed": 0,
+      "maxMs": 44.08939999999711,
+      "codes": {},
+      "virtualClientPids": [
+        2096832937,
+        -31173827,
+        -405888880,
+        -1449155126,
+        -2119515331,
+        -597825138,
+        815274516,
+        1312292428,
+        1370995679,
+        1183884878,
+        -285039651,
+        416269802,
+        1915753745
+      ]
+    },
+    "d2bec6c84c0e4b109a056da114473378c375feeeac255210dae2093baddb6d8e": {
+      "count": 4,
+      "failed": 0,
+      "maxMs": 34.14168599998811,
+      "codes": {},
+      "virtualClientPids": [
+        2096832937,
+        -405888880,
+        1312292428
+      ]
+    },
+    "666daa395a765c3208d9d514f04b179ad281e95d6d4730ffcb2967ea4c039803": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 32.0732330000028,
+      "codes": {},
+      "virtualClientPids": [
+        2096832937
+      ]
+    },
+    "42c9bc7e13089595fd405775e2e0b27c7dd9851f6b57f4651d574adbbc7b7e7e": {
+      "count": 4,
+      "failed": 0,
+      "maxMs": 34.047747000004165,
+      "codes": {},
+      "virtualClientPids": [
+        -405888880,
+        -31173827,
+        2096832937,
+        1312292428
+      ]
+    },
+    "9ce203f51bde41d2956af5118ffb4621f3d045633caff3f5668b9a8816f8e226": {
+      "count": 3,
+      "failed": 0,
+      "maxMs": 34.27831900000456,
+      "codes": {},
+      "virtualClientPids": [
+        -405888880,
+        2096832937,
+        1312292428
+      ]
+    },
+    "8a45e82dd679cf86a01c465bdbe4f6bf7113de6037acc03e80b360f611f74436": {
+      "count": 3,
+      "failed": 0,
+      "maxMs": 34.42238699999871,
+      "codes": {},
+      "virtualClientPids": [
+        -405888880,
+        2096832937,
+        1312292428
+      ]
+    },
+    "20d6c92b9021b3c1d5a2b43833822246e33b0e146592d12ed54345dffea1c3b6": {
+      "count": 2,
+      "failed": 0,
+      "maxMs": 275.486367000005,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827
+      ]
+    },
+    "bd7785656c26242eca6dd6ea0649ebfe704b27a34911c4eb48f05ff2069429c0": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 33.921853000007104,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827
+      ]
+    },
+    "8e6b04250db49d4a8c71938a33b6e13128daa21172c0bb85e1439173b975d16f": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 33.64377000000968,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827
+      ]
+    },
+    "d6aa8c6a20404a28f0df7129a8bdeb6cbdcc7110e1198a77a9c6bf31102832e4": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 33.685574000002816,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827
+      ]
+    },
+    "5006bd07cd831927ad4cad4572fcbb6f3d45dc98104ef5c52ab1b43e1d804a6c": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 36.328731000001426,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827
+      ]
+    },
+    "5efd61de50f4c53dbbe371d6af96657c5b6de8f94b25970112c6abc5d41fe2ec": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 38.79130399999849,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827
+      ]
+    },
+    "2eddac614973c8cd9ead07712f0001c2b1815bca2f7b9245a80b65482e2bd93b": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 36.88605000000098,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827
+      ]
+    },
+    "da25480fb483e6ce3d30f1a179c3c07e9f3b045425b0ac54acc6758a97e2db62": {
+      "count": 4,
+      "failed": 0,
+      "maxMs": 33.28402000000642,
+      "codes": {},
+      "virtualClientPids": [
+        -2119515331,
+        -597825138,
+        -31173827,
+        2096832937
+      ]
+    },
+    "8e5b15ad070bcdfc318380a76711d87d8def9058ec6030216cdd29f62e8969ec": {
+      "count": 2,
+      "failed": 0,
+      "maxMs": 30.47875500000373,
+      "codes": {},
+      "virtualClientPids": [
+        -597825138,
+        1462608899
+      ]
+    },
+    "f769257e9e6290c62a314035123232f968391742b8f83b6fe62206e5a41877e3": {
+      "count": 10,
+      "failed": 0,
+      "maxMs": 36.00354700000025,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827,
+        232715667,
+        1370995679,
+        -597825138,
+        1183884878,
+        416269802,
+        -2119515331,
+        -405888880
+      ]
+    },
+    "46d30653a888a65a8302d4e7458b1321af16070e67762357bcd1daf4546659c7": {
+      "count": 10,
+      "failed": 0,
+      "maxMs": 35.99655000001076,
+      "codes": {},
+      "virtualClientPids": [
+        815274516,
+        -1449155126,
+        -597825138,
+        1370995679,
+        1183884878,
+        -2119515331,
+        -285039651,
+        416269802,
+        1915753745
+      ]
+    },
+    "c4aec294c5238484d0d74cd9d526f3db1030a85541d315fa49782cd23e8516bf": {
+      "count": 2,
+      "failed": 0,
+      "maxMs": 35.00184199999785,
+      "codes": {},
+      "virtualClientPids": [
+        1312292428,
+        -597825138
+      ]
+    },
+    "74fae5a093cb93c7e760a290d55d5ada61fd21af89927c6aafec4f8ac0b94406": {
+      "count": 10,
+      "failed": 0,
+      "maxMs": 37.03631399999722,
+      "codes": {},
+      "virtualClientPids": [
+        815274516,
+        -1449155126,
+        1370995679,
+        -2119515331,
+        -285039651,
+        -405888880
+      ]
+    },
+    "ca34fc84878310dfb01c3f67f83029b7103a1535f23761db6dba7afcef7bb7c5": {
+      "count": 2,
+      "failed": 0,
+      "maxMs": 38.61441299998842,
+      "codes": {},
+      "virtualClientPids": [
+        1312292428,
+        -597825138
+      ]
+    },
+    "cac95e5c09010672093b39e6f7d1cd0271507962803b2f74215075398a403267": {
+      "count": 10,
+      "failed": 0,
+      "maxMs": 32.21776599998702,
+      "codes": {},
+      "virtualClientPids": [
+        -2119515331,
+        696695228,
+        -405888880,
+        416269802,
+        1183884878,
+        1915753745
+      ]
+    },
+    "edeb83c0ad7efdd5b901cf148e711d79d873f7aeebf19176bed87b5f9d47ef17": {
+      "count": 10,
+      "failed": 0,
+      "maxMs": 37.35028899999452,
+      "codes": {},
+      "virtualClientPids": [
+        -597825138,
+        1462608899,
+        1312292428,
+        -2119515331,
+        -405888880,
+        1183884878
+      ]
+    },
+    "ea8139b41f7a40bb0212d25a010776eb879680ba20184e11afa49c18d8a81c3e": {
+      "count": 10,
+      "failed": 0,
+      "maxMs": 35.29476099999738,
+      "codes": {},
+      "virtualClientPids": [
+        -1449155126,
+        1370995679,
+        -405888880,
+        1183884878,
+        -285039651,
+        1915753745,
+        416269802
+      ]
+    },
+    "37db1c779a4d02be9a2492f61370953ed80d038bc0df59304f0a4c2049e7824a": {
+      "count": 10,
+      "failed": 0,
+      "maxMs": 37.034920999984024,
+      "codes": {},
+      "virtualClientPids": [
+        815274516,
+        -1449155126,
+        1370995679,
+        -2119515331,
+        -285039651,
+        -405888880
+      ]
+    },
+    "8babe7360093fa827f773e69ce0c30b529ae09a524c66dc3dd45e3953914d6ad": {
+      "count": 10,
+      "failed": 0,
+      "maxMs": 35.506589000011445,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827,
+        232715667,
+        -597825138,
+        1183884878,
+        416269802,
+        1915753745,
+        -2119515331
+      ]
+    },
+    "2b3c36d25cab55a5d07740a47060176fa1b18d9bd0eb0c3d9c405f12f5d0aad8": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 34.15466299999389,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827
+      ]
+    },
+    "aa0f79e0e6ea5feba7413d29055b503a6fdc77aa5880e7e2bdad6031268f5092": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 309.90509299999394,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827
+      ]
+    },
+    "6404bff0cda3eed448c9ee33d46dae20d66a05019acf1b1d4dffdfa4f62c03be": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 33.89988899999298,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827
+      ]
+    },
+    "a0f0eb883a7f5b79b6b678a2aebf2b1dbdc9aed6a9a917ed5c44097d08b595d5": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 33.943442000003415,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827
+      ]
+    },
+    "427503413585e74af2f64ffe085a570462a6db586acb3f4f34796075b71b3e83": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 34.13814700000512,
+      "codes": {},
+      "virtualClientPids": [
+        -31173827
+      ]
+    },
+    "18ab3f1ff0626d1f66a987affd98b9d0222d628b6b0193cb65508e3c4b4a53ae": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 58.37674500000139,
+      "codes": {},
+      "virtualClientPids": [
+        2096832937
+      ]
+    },
+    "1bed07d4986f858e6c1d629f4b04a47cb2308a196abb3f431a612d13f93b4d86": {
+      "count": 2430,
+      "failed": 0,
+      "maxMs": 301.5340869999782,
+      "codes": {},
+      "virtualClientPids": [
+        2096832937
+      ]
+    },
+    "8ed359165303279e31eab056e450065c57fb1c052bb9321f3b57d00afea6aab9": {
+      "count": 2430,
+      "failed": 0,
+      "maxMs": 666.6073840000026,
+      "codes": {},
+      "virtualClientPids": [
+        2096832937
+      ]
+    },
+    "5426ceb22412bdb8c4eede0dbc540ef7421c3106f5a3c6626a9b3667d92bb2da": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 34.97325300000375,
+      "codes": {},
+      "virtualClientPids": [
+        815274516
+      ]
+    },
+    "4727bcb8bc6bb9864646e2c2f592cbf507a2d5560358cf3c098716beb6d367df": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 26.38181999999506,
+      "codes": {},
+      "virtualClientPids": [
+        -405888880
+      ]
+    },
+    "3ee4735d6995bd4e346008bc2a30c4290923e445d86ad472b99f84d9440a5656": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 35.395372999992105,
+      "codes": {},
+      "virtualClientPids": [
+        1312292428
+      ]
+    },
+    "4b4e1690491fe40ec5756b19de756f8181403194630be5a20d4b0ab3c6531565": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 26.78933899999538,
+      "codes": {},
+      "virtualClientPids": [
+        -2119515331
+      ]
+    },
+    "ee7c71558737236a501bf976b09224b3956197aeac0dafff77ee7d45898e0b54": {
+      "count": 1,
+      "failed": 0,
+      "maxMs": 29.06286399999226,
+      "codes": {},
+      "virtualClientPids": [
+        -597825138
+      ]
+    },
+    "f692e55344b2ee625b8d8bed04c7a55ffad9d86231634afd7de5d8c668557243": {
+      "count": 3,
+      "failed": 0,
+      "maxMs": 35.20378900000651,
+      "codes": {},
+      "virtualClientPids": [
+        815274516,
+        -2119515331
+      ]
+    }
+  },
+  "occupancy": {
+    "samples": 156,
+    "maxWaiting": 0,
+    "maxIdle": 9,
+    "minIdle": 2
+  },
+  "historicalBlockedEdges": [
+    {
+      "at": "2026-09-26T04:57:45.102Z",
+      "pid": 1446,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "advisory",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 0.085743,
+      "query_age_seconds": 0.059326
+    },
+    {
+      "at": "2026-09-26T04:57:50.103Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 0.359293,
+      "query_age_seconds": 0.359159
+    },
+    {
+      "at": "2026-09-26T04:57:51.102Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 1.358882,
+      "query_age_seconds": 1.358749
+    },
+    {
+      "at": "2026-09-26T04:57:52.103Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 2.359484,
+      "query_age_seconds": 2.35935
+    },
+    {
+      "at": "2026-09-26T04:57:53.103Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 3.359607,
+      "query_age_seconds": 3.359474
+    },
+    {
+      "at": "2026-09-26T04:57:54.102Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 4.359401,
+      "query_age_seconds": 4.359267
+    },
+    {
+      "at": "2026-09-26T04:57:55.102Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 5.359273,
+      "query_age_seconds": 5.359139
+    },
+    {
+      "at": "2026-09-26T04:57:56.103Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 6.359828,
+      "query_age_seconds": 6.359694
+    },
+    {
+      "at": "2026-09-26T04:57:57.103Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 7.360183,
+      "query_age_seconds": 7.360049
+    },
+    {
+      "at": "2026-09-26T04:57:58.103Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 8.359785,
+      "query_age_seconds": 8.359651
+    },
+    {
+      "at": "2026-09-26T04:57:59.104Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 9.361055,
+      "query_age_seconds": 9.360921
+    },
+    {
+      "at": "2026-09-26T04:58:00.105Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 10.361576,
+      "query_age_seconds": 10.361442
+    },
+    {
+      "at": "2026-09-26T04:58:01.104Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 11.360999,
+      "query_age_seconds": 11.360865
+    },
+    {
+      "at": "2026-09-26T04:58:02.104Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 12.361445,
+      "query_age_seconds": 12.361311
+    },
+    {
+      "at": "2026-09-26T04:58:03.104Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 13.361143,
+      "query_age_seconds": 13.361009
+    },
+    {
+      "at": "2026-09-26T04:58:04.105Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 14.361808,
+      "query_age_seconds": 14.361674
+    },
+    {
+      "at": "2026-09-26T04:58:05.106Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 0.888448,
+      "query_age_seconds": 0.888347
+    },
+    {
+      "at": "2026-09-26T04:58:05.106Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 15.363037,
+      "query_age_seconds": 15.362904
+    },
+    {
+      "at": "2026-09-26T04:58:06.107Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 1.889503,
+      "query_age_seconds": 1.889402
+    },
+    {
+      "at": "2026-09-26T04:58:06.107Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 16.364092,
+      "query_age_seconds": 16.363958
+    },
+    {
+      "at": "2026-09-26T04:58:07.107Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 2.889199,
+      "query_age_seconds": 2.889098
+    },
+    {
+      "at": "2026-09-26T04:58:07.107Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 17.363789,
+      "query_age_seconds": 17.363655
+    },
+    {
+      "at": "2026-09-26T04:58:08.108Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 3.889932,
+      "query_age_seconds": 3.889832
+    },
+    {
+      "at": "2026-09-26T04:58:08.108Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 18.364522,
+      "query_age_seconds": 18.364388
+    },
+    {
+      "at": "2026-09-26T04:58:09.108Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 4.890424,
+      "query_age_seconds": 4.890324
+    },
+    {
+      "at": "2026-09-26T04:58:09.108Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 19.365061,
+      "query_age_seconds": 19.364931
+    },
+    {
+      "at": "2026-09-26T04:58:10.107Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 5.889689,
+      "query_age_seconds": 5.889588
+    },
+    {
+      "at": "2026-09-26T04:58:10.107Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 20.364278,
+      "query_age_seconds": 20.364144
+    },
+    {
+      "at": "2026-09-26T04:58:11.108Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 6.889555,
+      "query_age_seconds": 6.889454
+    },
+    {
+      "at": "2026-09-26T04:58:11.108Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 21.364145,
+      "query_age_seconds": 21.364011
+    },
+    {
+      "at": "2026-09-26T04:58:12.108Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 7.889723,
+      "query_age_seconds": 7.889623
+    },
+    {
+      "at": "2026-09-26T04:58:12.108Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 22.364313,
+      "query_age_seconds": 22.36418
+    },
+    {
+      "at": "2026-09-26T04:58:13.109Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 8.889719,
+      "query_age_seconds": 8.889618
+    },
+    {
+      "at": "2026-09-26T04:58:13.109Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 23.364309,
+      "query_age_seconds": 23.364175
+    },
+    {
+      "at": "2026-09-26T04:58:14.108Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 9.890062,
+      "query_age_seconds": 9.889962
+    },
+    {
+      "at": "2026-09-26T04:58:14.108Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 24.364652,
+      "query_age_seconds": 24.364518
+    },
+    {
+      "at": "2026-09-26T04:58:15.111Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 10.892895,
+      "query_age_seconds": 10.892795
+    },
+    {
+      "at": "2026-09-26T04:58:15.111Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 25.367485,
+      "query_age_seconds": 25.367352
+    },
+    {
+      "at": "2026-09-26T04:58:16.110Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 11.892034,
+      "query_age_seconds": 11.891933
+    },
+    {
+      "at": "2026-09-26T04:58:16.110Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 26.366624,
+      "query_age_seconds": 26.36649
+    },
+    {
+      "at": "2026-09-26T04:58:17.109Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 12.891558,
+      "query_age_seconds": 12.891457
+    },
+    {
+      "at": "2026-09-26T04:58:17.109Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 27.366147,
+      "query_age_seconds": 27.366013
+    },
+    {
+      "at": "2026-09-26T04:58:18.110Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 13.891861,
+      "query_age_seconds": 13.891761
+    },
+    {
+      "at": "2026-09-26T04:58:18.110Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 28.366451,
+      "query_age_seconds": 28.366317
+    },
+    {
+      "at": "2026-09-26T04:58:19.110Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 14.892242,
+      "query_age_seconds": 14.892142
+    },
+    {
+      "at": "2026-09-26T04:58:19.110Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 29.366832,
+      "query_age_seconds": 29.366698
+    },
+    {
+      "at": "2026-09-26T04:58:20.110Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 15.891835,
+      "query_age_seconds": 15.891734
+    },
+    {
+      "at": "2026-09-26T04:58:20.110Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 30.366425,
+      "query_age_seconds": 30.366291
+    },
+    {
+      "at": "2026-09-26T04:58:21.208Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 16.988361,
+      "query_age_seconds": 16.988261
+    },
+    {
+      "at": "2026-09-26T04:58:21.208Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 31.462953,
+      "query_age_seconds": 31.462819
+    },
+    {
+      "at": "2026-09-26T04:58:22.110Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 17.89256,
+      "query_age_seconds": 17.89246
+    },
+    {
+      "at": "2026-09-26T04:58:22.110Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 32.367151,
+      "query_age_seconds": 32.367017
+    },
+    {
+      "at": "2026-09-26T04:58:23.110Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 18.892436,
+      "query_age_seconds": 18.892336
+    },
+    {
+      "at": "2026-09-26T04:58:23.110Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 33.367026,
+      "query_age_seconds": 33.366892
+    },
+    {
+      "at": "2026-09-26T04:58:24.111Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1448
+      ],
+      "transaction_age_seconds": 19.892622,
+      "query_age_seconds": 19.892521
+    },
+    {
+      "at": "2026-09-26T04:58:24.111Z",
+      "pid": 1448,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 34.367212,
+      "query_age_seconds": 34.367078
+    },
+    {
+      "at": "2026-09-26T04:58:25.111Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 20.893847,
+      "query_age_seconds": 20.893747
+    },
+    {
+      "at": "2026-09-26T04:58:25.111Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1442
+      ],
+      "transaction_age_seconds": 0.315826,
+      "query_age_seconds": 0.31567
+    },
+    {
+      "at": "2026-09-26T04:58:26.111Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 21.893727,
+      "query_age_seconds": 21.893626
+    },
+    {
+      "at": "2026-09-26T04:58:26.111Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1442
+      ],
+      "transaction_age_seconds": 1.315705,
+      "query_age_seconds": 1.315549
+    },
+    {
+      "at": "2026-09-26T04:58:27.111Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 22.89358,
+      "query_age_seconds": 22.89348
+    },
+    {
+      "at": "2026-09-26T04:58:27.111Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1442
+      ],
+      "transaction_age_seconds": 2.315559,
+      "query_age_seconds": 2.315404
+    },
+    {
+      "at": "2026-09-26T04:58:28.113Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 23.895429,
+      "query_age_seconds": 23.895328
+    },
+    {
+      "at": "2026-09-26T04:58:28.113Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1442
+      ],
+      "transaction_age_seconds": 3.317407,
+      "query_age_seconds": 3.317252
+    },
+    {
+      "at": "2026-09-26T04:58:29.111Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 24.893915,
+      "query_age_seconds": 24.893815
+    },
+    {
+      "at": "2026-09-26T04:58:29.111Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1442
+      ],
+      "transaction_age_seconds": 4.315894,
+      "query_age_seconds": 4.315738
+    },
+    {
+      "at": "2026-09-26T04:58:30.111Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 25.893936,
+      "query_age_seconds": 25.893835
+    },
+    {
+      "at": "2026-09-26T04:58:30.111Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1442
+      ],
+      "transaction_age_seconds": 5.315914,
+      "query_age_seconds": 5.315759
+    },
+    {
+      "at": "2026-09-26T04:58:31.111Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 26.893334,
+      "query_age_seconds": 26.893233
+    },
+    {
+      "at": "2026-09-26T04:58:31.111Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1442
+      ],
+      "transaction_age_seconds": 6.315312,
+      "query_age_seconds": 6.315157
+    },
+    {
+      "at": "2026-09-26T04:58:32.111Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 27.893557,
+      "query_age_seconds": 27.893456
+    },
+    {
+      "at": "2026-09-26T04:58:32.111Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1442
+      ],
+      "transaction_age_seconds": 7.315535,
+      "query_age_seconds": 7.315379
+    },
+    {
+      "at": "2026-09-26T04:58:33.112Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 28.894118,
+      "query_age_seconds": 28.894018
+    },
+    {
+      "at": "2026-09-26T04:58:33.112Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1442
+      ],
+      "transaction_age_seconds": 8.316097,
+      "query_age_seconds": 8.315941
+    },
+    {
+      "at": "2026-09-26T04:58:34.112Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 29.894646,
+      "query_age_seconds": 29.894545
+    },
+    {
+      "at": "2026-09-26T04:58:34.112Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1442
+      ],
+      "transaction_age_seconds": 9.316624,
+      "query_age_seconds": 9.316469
+    },
+    {
+      "at": "2026-09-26T04:58:35.112Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 30.894577,
+      "query_age_seconds": 30.894476
+    },
+    {
+      "at": "2026-09-26T04:58:35.112Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1442
+      ],
+      "transaction_age_seconds": 10.316556,
+      "query_age_seconds": 10.3164
+    },
+    {
+      "at": "2026-09-26T04:58:36.112Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 31.894563,
+      "query_age_seconds": 31.894463
+    },
+    {
+      "at": "2026-09-26T04:58:36.112Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1442
+      ],
+      "transaction_age_seconds": 11.316542,
+      "query_age_seconds": 11.316386
+    },
+    {
+      "at": "2026-09-26T04:58:37.113Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 32.895097,
+      "query_age_seconds": 32.894997
+    },
+    {
+      "at": "2026-09-26T04:58:37.113Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1442
+      ],
+      "transaction_age_seconds": 12.317076,
+      "query_age_seconds": 12.31692
+    },
+    {
+      "at": "2026-09-26T04:58:38.112Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 33.89468,
+      "query_age_seconds": 33.89458
+    },
+    {
+      "at": "2026-09-26T04:58:38.112Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1442
+      ],
+      "transaction_age_seconds": 13.316659,
+      "query_age_seconds": 13.316503
+    },
+    {
+      "at": "2026-09-26T04:58:39.116Z",
+      "pid": 1442,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 34.898075,
+      "query_age_seconds": 34.897974
+    },
+    {
+      "at": "2026-09-26T04:58:39.116Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1442
+      ],
+      "transaction_age_seconds": 14.320053,
+      "query_age_seconds": 14.319898
+    },
+    {
+      "at": "2026-09-26T04:58:40.112Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 15.316776,
+      "query_age_seconds": 15.316621
+    },
+    {
+      "at": "2026-09-26T04:58:41.113Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 16.317215,
+      "query_age_seconds": 16.31706
+    },
+    {
+      "at": "2026-09-26T04:58:42.114Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 17.318075,
+      "query_age_seconds": 17.31792
+    },
+    {
+      "at": "2026-09-26T04:58:43.114Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 18.318805,
+      "query_age_seconds": 18.318649
+    },
+    {
+      "at": "2026-09-26T04:58:44.115Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 19.318695,
+      "query_age_seconds": 19.31854
+    },
+    {
+      "at": "2026-09-26T04:58:45.114Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 20.318698,
+      "query_age_seconds": 20.318543
+    },
+    {
+      "at": "2026-09-26T04:58:46.115Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 21.319032,
+      "query_age_seconds": 21.318876
+    },
+    {
+      "at": "2026-09-26T04:58:47.115Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 22.3197,
+      "query_age_seconds": 22.319545
+    },
+    {
+      "at": "2026-09-26T04:58:48.115Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 23.319791,
+      "query_age_seconds": 23.319635
+    },
+    {
+      "at": "2026-09-26T04:58:49.115Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 24.31953,
+      "query_age_seconds": 24.319374
+    },
+    {
+      "at": "2026-09-26T04:58:50.116Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 25.320072,
+      "query_age_seconds": 25.319917
+    },
+    {
+      "at": "2026-09-26T04:58:51.115Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 26.319339,
+      "query_age_seconds": 26.319183
+    },
+    {
+      "at": "2026-09-26T04:58:52.115Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 27.319559,
+      "query_age_seconds": 27.319404
+    },
+    {
+      "at": "2026-09-26T04:58:53.116Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 28.320072,
+      "query_age_seconds": 28.319916
+    },
+    {
+      "at": "2026-09-26T04:58:54.115Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 29.31933,
+      "query_age_seconds": 29.319174
+    },
+    {
+      "at": "2026-09-26T04:58:55.116Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 30.320173,
+      "query_age_seconds": 30.320017
+    },
+    {
+      "at": "2026-09-26T04:58:55.116Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1443
+      ],
+      "transaction_age_seconds": 0.822595,
+      "query_age_seconds": 0.822439
+    },
+    {
+      "at": "2026-09-26T04:58:56.145Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 31.340383,
+      "query_age_seconds": 31.340227
+    },
+    {
+      "at": "2026-09-26T04:58:56.145Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1443
+      ],
+      "transaction_age_seconds": 1.842806,
+      "query_age_seconds": 1.842649
+    },
+    {
+      "at": "2026-09-26T04:58:57.115Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 32.319897,
+      "query_age_seconds": 32.319741
+    },
+    {
+      "at": "2026-09-26T04:58:57.115Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1443
+      ],
+      "transaction_age_seconds": 2.822319,
+      "query_age_seconds": 2.822163
+    },
+    {
+      "at": "2026-09-26T04:58:58.115Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 33.319525,
+      "query_age_seconds": 33.31937
+    },
+    {
+      "at": "2026-09-26T04:58:58.115Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1443
+      ],
+      "transaction_age_seconds": 3.821948,
+      "query_age_seconds": 3.821791
+    },
+    {
+      "at": "2026-09-26T04:58:59.115Z",
+      "pid": 1443,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 34.319062,
+      "query_age_seconds": 34.318906
+    },
+    {
+      "at": "2026-09-26T04:58:59.115Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1443
+      ],
+      "transaction_age_seconds": 4.821485,
+      "query_age_seconds": 4.821328
+    },
+    {
+      "at": "2026-09-26T04:59:00.116Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 0.260512,
+      "query_age_seconds": 0.260375
+    },
+    {
+      "at": "2026-09-26T04:59:00.116Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 5.822327,
+      "query_age_seconds": 5.82217
+    },
+    {
+      "at": "2026-09-26T04:59:01.115Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 1.260204,
+      "query_age_seconds": 1.260067
+    },
+    {
+      "at": "2026-09-26T04:59:01.115Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 6.822019,
+      "query_age_seconds": 6.821862
+    },
+    {
+      "at": "2026-09-26T04:59:02.116Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 2.260595,
+      "query_age_seconds": 2.260457
+    },
+    {
+      "at": "2026-09-26T04:59:02.116Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 7.822409,
+      "query_age_seconds": 7.822253
+    },
+    {
+      "at": "2026-09-26T04:59:03.118Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 3.262866,
+      "query_age_seconds": 3.262728
+    },
+    {
+      "at": "2026-09-26T04:59:03.118Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 8.82468,
+      "query_age_seconds": 8.824523
+    },
+    {
+      "at": "2026-09-26T04:59:04.118Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 4.263301,
+      "query_age_seconds": 4.263164
+    },
+    {
+      "at": "2026-09-26T04:59:04.118Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 9.825116,
+      "query_age_seconds": 9.824959
+    },
+    {
+      "at": "2026-09-26T04:59:05.119Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 5.263371,
+      "query_age_seconds": 5.263234
+    },
+    {
+      "at": "2026-09-26T04:59:05.119Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 10.825186,
+      "query_age_seconds": 10.825029
+    },
+    {
+      "at": "2026-09-26T04:59:06.119Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 6.263853,
+      "query_age_seconds": 6.263715
+    },
+    {
+      "at": "2026-09-26T04:59:06.119Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 11.825667,
+      "query_age_seconds": 11.825511
+    },
+    {
+      "at": "2026-09-26T04:59:07.120Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 7.26468,
+      "query_age_seconds": 7.264543
+    },
+    {
+      "at": "2026-09-26T04:59:07.120Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 12.826495,
+      "query_age_seconds": 12.826338
+    },
+    {
+      "at": "2026-09-26T04:59:08.120Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 8.264691,
+      "query_age_seconds": 8.264553
+    },
+    {
+      "at": "2026-09-26T04:59:08.120Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 13.826505,
+      "query_age_seconds": 13.826349
+    },
+    {
+      "at": "2026-09-26T04:59:09.121Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 9.265808,
+      "query_age_seconds": 9.265671
+    },
+    {
+      "at": "2026-09-26T04:59:09.121Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 14.827648,
+      "query_age_seconds": 14.827496
+    },
+    {
+      "at": "2026-09-26T04:59:10.122Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 10.266798,
+      "query_age_seconds": 10.26666
+    },
+    {
+      "at": "2026-09-26T04:59:10.122Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 15.828612,
+      "query_age_seconds": 15.828456
+    },
+    {
+      "at": "2026-09-26T04:59:11.122Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 11.267385,
+      "query_age_seconds": 11.267247
+    },
+    {
+      "at": "2026-09-26T04:59:11.122Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 16.8292,
+      "query_age_seconds": 16.829043
+    },
+    {
+      "at": "2026-09-26T04:59:12.123Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 12.267466,
+      "query_age_seconds": 12.267329
+    },
+    {
+      "at": "2026-09-26T04:59:12.123Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 17.829281,
+      "query_age_seconds": 17.829124
+    },
+    {
+      "at": "2026-09-26T04:59:13.122Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 13.267253,
+      "query_age_seconds": 13.267115
+    },
+    {
+      "at": "2026-09-26T04:59:13.122Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 18.829067,
+      "query_age_seconds": 18.828911
+    },
+    {
+      "at": "2026-09-26T04:59:14.123Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 14.267279,
+      "query_age_seconds": 14.267142
+    },
+    {
+      "at": "2026-09-26T04:59:14.123Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 19.829094,
+      "query_age_seconds": 19.828937
+    },
+    {
+      "at": "2026-09-26T04:59:15.123Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 15.267539,
+      "query_age_seconds": 15.267401
+    },
+    {
+      "at": "2026-09-26T04:59:15.123Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 20.829353,
+      "query_age_seconds": 20.829197
+    },
+    {
+      "at": "2026-09-26T04:59:16.126Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 16.269564,
+      "query_age_seconds": 16.269427
+    },
+    {
+      "at": "2026-09-26T04:59:16.126Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 21.831379,
+      "query_age_seconds": 21.831222
+    },
+    {
+      "at": "2026-09-26T04:59:17.123Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 17.267535,
+      "query_age_seconds": 17.267397
+    },
+    {
+      "at": "2026-09-26T04:59:17.123Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 22.829349,
+      "query_age_seconds": 22.829192
+    },
+    {
+      "at": "2026-09-26T04:59:18.122Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 18.26706,
+      "query_age_seconds": 18.266923
+    },
+    {
+      "at": "2026-09-26T04:59:18.122Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 23.828876,
+      "query_age_seconds": 23.828719
+    },
+    {
+      "at": "2026-09-26T04:59:19.125Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 19.267211,
+      "query_age_seconds": 19.267073
+    },
+    {
+      "at": "2026-09-26T04:59:19.125Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 24.829026,
+      "query_age_seconds": 24.828869
+    },
+    {
+      "at": "2026-09-26T04:59:20.123Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 20.267717,
+      "query_age_seconds": 20.26758
+    },
+    {
+      "at": "2026-09-26T04:59:20.123Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 25.829532,
+      "query_age_seconds": 25.829375
+    },
+    {
+      "at": "2026-09-26T04:59:21.124Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 21.268579,
+      "query_age_seconds": 21.268442
+    },
+    {
+      "at": "2026-09-26T04:59:21.124Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 26.830394,
+      "query_age_seconds": 26.830237
+    },
+    {
+      "at": "2026-09-26T04:59:22.123Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 22.268393,
+      "query_age_seconds": 22.268256
+    },
+    {
+      "at": "2026-09-26T04:59:22.123Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 27.830208,
+      "query_age_seconds": 27.830051
+    },
+    {
+      "at": "2026-09-26T04:59:23.126Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 23.270687,
+      "query_age_seconds": 23.270549
+    },
+    {
+      "at": "2026-09-26T04:59:23.126Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 28.832501,
+      "query_age_seconds": 28.832345
+    },
+    {
+      "at": "2026-09-26T04:59:24.123Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 24.26804,
+      "query_age_seconds": 24.267903
+    },
+    {
+      "at": "2026-09-26T04:59:24.123Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 29.829855,
+      "query_age_seconds": 29.829698
+    },
+    {
+      "at": "2026-09-26T04:59:25.128Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 25.27251,
+      "query_age_seconds": 25.272372
+    },
+    {
+      "at": "2026-09-26T04:59:25.128Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 30.83433,
+      "query_age_seconds": 30.834173
+    },
+    {
+      "at": "2026-09-26T04:59:26.128Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 26.2727,
+      "query_age_seconds": 26.272562
+    },
+    {
+      "at": "2026-09-26T04:59:26.128Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 31.834514,
+      "query_age_seconds": 31.834358
+    },
+    {
+      "at": "2026-09-26T04:59:27.128Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 27.273189,
+      "query_age_seconds": 27.273052
+    },
+    {
+      "at": "2026-09-26T04:59:27.128Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 32.835004,
+      "query_age_seconds": 32.834847
+    },
+    {
+      "at": "2026-09-26T04:59:28.157Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 28.301108,
+      "query_age_seconds": 28.300971
+    },
+    {
+      "at": "2026-09-26T04:59:28.157Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 33.862923,
+      "query_age_seconds": 33.862766
+    },
+    {
+      "at": "2026-09-26T04:59:29.153Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "tuple",
+      "blockers": [
+        1537
+      ],
+      "transaction_age_seconds": 29.28153,
+      "query_age_seconds": 29.281393
+    },
+    {
+      "at": "2026-09-26T04:59:29.153Z",
+      "pid": 1537,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 34.843346,
+      "query_age_seconds": 34.843189
+    },
+    {
+      "at": "2026-09-26T04:59:30.128Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 30.272995,
+      "query_age_seconds": 30.272857
+    },
+    {
+      "at": "2026-09-26T04:59:31.128Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 31.273102,
+      "query_age_seconds": 31.272965
+    },
+    {
+      "at": "2026-09-26T04:59:32.128Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 32.272848,
+      "query_age_seconds": 32.272711
+    },
+    {
+      "at": "2026-09-26T04:59:33.128Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 33.273152,
+      "query_age_seconds": 33.273014
+    },
+    {
+      "at": "2026-09-26T04:59:34.128Z",
+      "pid": 1435,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 34.273096,
+      "query_age_seconds": 34.272959
+    },
+    {
+      "at": "2026-09-26T04:59:35.128Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 0.090683,
+      "query_age_seconds": 0.090527
+    },
+    {
+      "at": "2026-09-26T04:59:36.129Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 1.091701,
+      "query_age_seconds": 1.091544
+    },
+    {
+      "at": "2026-09-26T04:59:37.130Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 2.093527,
+      "query_age_seconds": 2.093371
+    },
+    {
+      "at": "2026-09-26T04:59:38.129Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 3.092364,
+      "query_age_seconds": 3.092208
+    },
+    {
+      "at": "2026-09-26T04:59:39.129Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 4.092225,
+      "query_age_seconds": 4.092068
+    },
+    {
+      "at": "2026-09-26T04:59:40.130Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 5.092322,
+      "query_age_seconds": 5.092165
+    },
+    {
+      "at": "2026-09-26T04:59:41.130Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 6.092376,
+      "query_age_seconds": 6.092219
+    },
+    {
+      "at": "2026-09-26T04:59:42.130Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 7.092468,
+      "query_age_seconds": 7.092311
+    },
+    {
+      "at": "2026-09-26T04:59:43.129Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 8.092055,
+      "query_age_seconds": 8.091899
+    },
+    {
+      "at": "2026-09-26T04:59:44.130Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 9.092547,
+      "query_age_seconds": 9.092391
+    },
+    {
+      "at": "2026-09-26T04:59:45.130Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 10.092549,
+      "query_age_seconds": 10.092392
+    },
+    {
+      "at": "2026-09-26T04:59:46.129Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 11.092051,
+      "query_age_seconds": 11.091894
+    },
+    {
+      "at": "2026-09-26T04:59:47.130Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 12.092702,
+      "query_age_seconds": 12.092545
+    },
+    {
+      "at": "2026-09-26T04:59:48.129Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 13.092181,
+      "query_age_seconds": 13.092024
+    },
+    {
+      "at": "2026-09-26T04:59:49.129Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 14.091955,
+      "query_age_seconds": 14.091798
+    },
+    {
+      "at": "2026-09-26T04:59:50.130Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 15.092864,
+      "query_age_seconds": 15.092708
+    },
+    {
+      "at": "2026-09-26T04:59:51.129Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 16.092177,
+      "query_age_seconds": 16.09202
+    },
+    {
+      "at": "2026-09-26T04:59:52.130Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 17.09302,
+      "query_age_seconds": 17.092863
+    },
+    {
+      "at": "2026-09-26T04:59:53.130Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 18.092505,
+      "query_age_seconds": 18.092348
+    },
+    {
+      "at": "2026-09-26T04:59:54.130Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 19.092985,
+      "query_age_seconds": 19.092828
+    },
+    {
+      "at": "2026-09-26T04:59:55.130Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 20.09306,
+      "query_age_seconds": 20.092904
+    },
+    {
+      "at": "2026-09-26T04:59:56.130Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 21.093342,
+      "query_age_seconds": 21.093186
+    },
+    {
+      "at": "2026-09-26T04:59:57.130Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 22.093007,
+      "query_age_seconds": 22.09285
+    },
+    {
+      "at": "2026-09-26T04:59:58.131Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 23.093678,
+      "query_age_seconds": 23.093521
+    },
+    {
+      "at": "2026-09-26T04:59:59.131Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 24.09425,
+      "query_age_seconds": 24.094094
+    },
+    {
+      "at": "2026-09-26T05:00:00.131Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 25.094217,
+      "query_age_seconds": 25.09406
+    },
+    {
+      "at": "2026-09-26T05:00:01.131Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 26.09414,
+      "query_age_seconds": 26.093984
+    },
+    {
+      "at": "2026-09-26T05:00:02.131Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 27.093936,
+      "query_age_seconds": 27.093779
+    },
+    {
+      "at": "2026-09-26T05:00:03.133Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 28.095376,
+      "query_age_seconds": 28.095219
+    },
+    {
+      "at": "2026-09-26T05:00:04.131Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 29.093865,
+      "query_age_seconds": 29.093708
+    },
+    {
+      "at": "2026-09-26T05:00:05.132Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 30.094396,
+      "query_age_seconds": 30.094239
+    },
+    {
+      "at": "2026-09-26T05:00:06.131Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 31.094214,
+      "query_age_seconds": 31.094057
+    },
+    {
+      "at": "2026-09-26T05:00:07.131Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 32.094165,
+      "query_age_seconds": 32.094009
+    },
+    {
+      "at": "2026-09-26T05:00:08.131Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 33.094212,
+      "query_age_seconds": 33.094055
+    },
+    {
+      "at": "2026-09-26T05:00:09.131Z",
+      "pid": 1711,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 34.094108,
+      "query_age_seconds": 34.093952
+    },
+    {
+      "at": "2026-09-26T05:00:11.131Z",
+      "pid": 1619,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 0.373361,
+      "query_age_seconds": 0.373157
+    },
+    {
+      "at": "2026-09-26T05:00:12.131Z",
+      "pid": 1619,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 1.373542,
+      "query_age_seconds": 1.373338
+    },
+    {
+      "at": "2026-09-26T05:00:13.132Z",
+      "pid": 1619,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 2.374114,
+      "query_age_seconds": 2.37391
+    },
+    {
+      "at": "2026-09-26T05:00:14.131Z",
+      "pid": 1619,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 3.373585,
+      "query_age_seconds": 3.373382
+    },
+    {
+      "at": "2026-09-26T05:00:15.132Z",
+      "pid": 1619,
+      "state": "active",
+      "wait_event_type": "Lock",
+      "wait_event": "transactionid",
+      "blockers": [
+        1447
+      ],
+      "transaction_age_seconds": 4.373953,
+      "query_age_seconds": 4.37375
+    }
+  ],
+  "historicalBackend1447": [
+    {
+      "at": "2026-09-26T04:57:40.099Z",
+      "pid": 1447,
+      "state": "idle",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": null,
+      "query_age_seconds": 2.138651
+    },
+    {
+      "at": "2026-09-26T04:57:41.099Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 0.199374,
+      "query_age_seconds": 0.024863
+    },
+    {
+      "at": "2026-09-26T04:57:42.099Z",
+      "pid": 1447,
+      "state": "idle",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": null,
+      "query_age_seconds": 0.790885
+    },
+    {
+      "at": "2026-09-26T04:57:43.099Z",
+      "pid": 1447,
+      "state": "idle",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": null,
+      "query_age_seconds": 0.075332
+    },
+    {
+      "at": "2026-09-26T04:57:44.103Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 0.020344,
+      "query_age_seconds": 0.020344
+    },
+    {
+      "at": "2026-09-26T04:57:45.102Z",
+      "pid": 1447,
+      "state": "idle",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": null,
+      "query_age_seconds": 0.670508
+    },
+    {
+      "at": "2026-09-26T04:57:46.101Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 0.141472,
+      "query_age_seconds": 0.026123
+    },
+    {
+      "at": "2026-09-26T04:57:47.100Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 0.33577,
+      "query_age_seconds": 0.018752
+    },
+    {
+      "at": "2026-09-26T04:57:48.101Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 0.114062,
+      "query_age_seconds": 0.026918
+    },
+    {
+      "at": "2026-09-26T04:57:49.102Z",
+      "pid": 1447,
+      "state": "idle",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": null,
+      "query_age_seconds": 0.119358
+    },
+    {
+      "at": "2026-09-26T04:57:50.103Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 0.65455,
+      "query_age_seconds": 0.004685
+    },
+    {
+      "at": "2026-09-26T04:57:51.102Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 1.65414,
+      "query_age_seconds": 0.003249
+    },
+    {
+      "at": "2026-09-26T04:57:52.103Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 2.654741,
+      "query_age_seconds": 0.025064
+    },
+    {
+      "at": "2026-09-26T04:57:53.103Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 3.654864,
+      "query_age_seconds": 0.019893
+    },
+    {
+      "at": "2026-09-26T04:57:54.102Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 4.654659,
+      "query_age_seconds": 0.020042
+    },
+    {
+      "at": "2026-09-26T04:57:55.102Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 5.65453,
+      "query_age_seconds": 0.026188
+    },
+    {
+      "at": "2026-09-26T04:57:56.103Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 6.655086,
+      "query_age_seconds": 0.02596
+    },
+    {
+      "at": "2026-09-26T04:57:57.103Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 7.65544,
+      "query_age_seconds": 0.002857
+    },
+    {
+      "at": "2026-09-26T04:57:58.103Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 8.655042,
+      "query_age_seconds": 0.004701
+    },
+    {
+      "at": "2026-09-26T04:57:59.104Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 9.656312,
+      "query_age_seconds": 0.005999
+    },
+    {
+      "at": "2026-09-26T04:58:00.105Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 10.656833,
+      "query_age_seconds": 0.005785
+    },
+    {
+      "at": "2026-09-26T04:58:01.104Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 11.656257,
+      "query_age_seconds": 0.007716
+    },
+    {
+      "at": "2026-09-26T04:58:02.104Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 12.656703,
+      "query_age_seconds": 0.025436
+    },
+    {
+      "at": "2026-09-26T04:58:03.104Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 13.656401,
+      "query_age_seconds": 0.01721
+    },
+    {
+      "at": "2026-09-26T04:58:04.105Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 14.657065,
+      "query_age_seconds": 0.020166
+    },
+    {
+      "at": "2026-09-26T04:58:05.106Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 15.658296,
+      "query_age_seconds": 0.025741
+    },
+    {
+      "at": "2026-09-26T04:58:06.107Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 16.65935,
+      "query_age_seconds": 0.024373
+    },
+    {
+      "at": "2026-09-26T04:58:07.107Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 17.659046,
+      "query_age_seconds": 0.024125
+    },
+    {
+      "at": "2026-09-26T04:58:08.108Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 18.65978,
+      "query_age_seconds": 0.020997
+    },
+    {
+      "at": "2026-09-26T04:58:09.108Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 19.660302,
+      "query_age_seconds": 0.020674
+    },
+    {
+      "at": "2026-09-26T04:58:10.107Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 20.659536,
+      "query_age_seconds": 0.014148
+    },
+    {
+      "at": "2026-09-26T04:58:11.108Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 21.659403,
+      "query_age_seconds": 0.011282
+    },
+    {
+      "at": "2026-09-26T04:58:12.108Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 22.659571,
+      "query_age_seconds": 0.006242
+    },
+    {
+      "at": "2026-09-26T04:58:13.109Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 23.659567,
+      "query_age_seconds": 0.006232
+    },
+    {
+      "at": "2026-09-26T04:58:14.108Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 24.65991,
+      "query_age_seconds": 0.005831
+    },
+    {
+      "at": "2026-09-26T04:58:15.111Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 25.662743,
+      "query_age_seconds": 0.00607
+    },
+    {
+      "at": "2026-09-26T04:58:16.110Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 26.661882,
+      "query_age_seconds": 0.003961
+    },
+    {
+      "at": "2026-09-26T04:58:17.109Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 27.661405,
+      "query_age_seconds": 0.029529
+    },
+    {
+      "at": "2026-09-26T04:58:18.110Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 28.661709,
+      "query_age_seconds": 0.013074
+    },
+    {
+      "at": "2026-09-26T04:58:19.110Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 29.66209,
+      "query_age_seconds": 0.012815
+    },
+    {
+      "at": "2026-09-26T04:58:20.110Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 30.661683,
+      "query_age_seconds": 0.012693
+    },
+    {
+      "at": "2026-09-26T04:58:21.208Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": null,
+      "wait_event": null,
+      "blockers": [],
+      "transaction_age_seconds": 31.75821,
+      "query_age_seconds": 0.005256
+    },
+    {
+      "at": "2026-09-26T04:58:22.110Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 32.662409,
+      "query_age_seconds": 0.0212
+    },
+    {
+      "at": "2026-09-26T04:58:23.110Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 33.662284,
+      "query_age_seconds": 0.021946
+    },
+    {
+      "at": "2026-09-26T04:58:24.111Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 34.66247,
+      "query_age_seconds": 0.019821
+    },
+    {
+      "at": "2026-09-26T04:58:25.111Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 35.663697,
+      "query_age_seconds": 0.021548
+    },
+    {
+      "at": "2026-09-26T04:58:26.111Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 36.663576,
+      "query_age_seconds": 0.013828
+    },
+    {
+      "at": "2026-09-26T04:58:27.111Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 37.66343,
+      "query_age_seconds": 0.013108
+    },
+    {
+      "at": "2026-09-26T04:58:28.113Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 38.665278,
+      "query_age_seconds": 0.010206
+    },
+    {
+      "at": "2026-09-26T04:58:29.111Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 39.663764,
+      "query_age_seconds": 0.006915
+    },
+    {
+      "at": "2026-09-26T04:58:30.111Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 40.663784,
+      "query_age_seconds": 0.003167
+    },
+    {
+      "at": "2026-09-26T04:58:31.111Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 41.663183,
+      "query_age_seconds": 0.002639
+    },
+    {
+      "at": "2026-09-26T04:58:32.111Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 42.663405,
+      "query_age_seconds": 0.00386
+    },
+    {
+      "at": "2026-09-26T04:58:33.112Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 43.663967,
+      "query_age_seconds": 0.002806
+    },
+    {
+      "at": "2026-09-26T04:58:34.112Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 44.664492,
+      "query_age_seconds": 0.005496
+    },
+    {
+      "at": "2026-09-26T04:58:35.112Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 45.664424,
+      "query_age_seconds": 0.028069
+    },
+    {
+      "at": "2026-09-26T04:58:36.112Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 46.664409,
+      "query_age_seconds": 0.006251
+    },
+    {
+      "at": "2026-09-26T04:58:37.113Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 47.664943,
+      "query_age_seconds": 0.027942
+    },
+    {
+      "at": "2026-09-26T04:58:38.112Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 48.664526,
+      "query_age_seconds": 0.017819
+    },
+    {
+      "at": "2026-09-26T04:58:39.116Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 49.667921,
+      "query_age_seconds": 0.013514
+    },
+    {
+      "at": "2026-09-26T04:58:40.112Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 50.664645,
+      "query_age_seconds": 0.001844
+    },
+    {
+      "at": "2026-09-26T04:58:41.113Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 51.665084,
+      "query_age_seconds": 0.0259
+    },
+    {
+      "at": "2026-09-26T04:58:42.114Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 52.665944,
+      "query_age_seconds": 0.02695
+    },
+    {
+      "at": "2026-09-26T04:58:43.114Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 53.666674,
+      "query_age_seconds": 0.027239
+    },
+    {
+      "at": "2026-09-26T04:58:44.115Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 54.666564,
+      "query_age_seconds": 0.024257
+    },
+    {
+      "at": "2026-09-26T04:58:45.114Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 55.666566,
+      "query_age_seconds": 0.013943
+    },
+    {
+      "at": "2026-09-26T04:58:46.115Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 56.6669,
+      "query_age_seconds": 0.005629
+    },
+    {
+      "at": "2026-09-26T04:58:47.115Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 57.667569,
+      "query_age_seconds": 0.028872
+    },
+    {
+      "at": "2026-09-26T04:58:48.115Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 58.667659,
+      "query_age_seconds": 0.001008
+    },
+    {
+      "at": "2026-09-26T04:58:49.115Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 59.667399,
+      "query_age_seconds": 0.026824
+    },
+    {
+      "at": "2026-09-26T04:58:50.116Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 60.667941,
+      "query_age_seconds": 0.021126
+    },
+    {
+      "at": "2026-09-26T04:58:51.115Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 61.667207,
+      "query_age_seconds": 0.013941
+    },
+    {
+      "at": "2026-09-26T04:58:52.115Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 62.667428,
+      "query_age_seconds": 0.014866
+    },
+    {
+      "at": "2026-09-26T04:58:53.116Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 63.66794,
+      "query_age_seconds": 0.01497
+    },
+    {
+      "at": "2026-09-26T04:58:54.115Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 64.667199,
+      "query_age_seconds": 0.009774
+    },
+    {
+      "at": "2026-09-26T04:58:55.116Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 65.668041,
+      "query_age_seconds": 0.00914
+    },
+    {
+      "at": "2026-09-26T04:58:56.145Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 66.688252,
+      "query_age_seconds": 0.042456
+    },
+    {
+      "at": "2026-09-26T04:58:57.115Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 67.667766,
+      "query_age_seconds": 0.003787
+    },
+    {
+      "at": "2026-09-26T04:58:58.115Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 68.667394,
+      "query_age_seconds": 0.007256
+    },
+    {
+      "at": "2026-09-26T04:58:59.115Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 69.66693,
+      "query_age_seconds": 0.004035
+    },
+    {
+      "at": "2026-09-26T04:59:00.116Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 70.667774,
+      "query_age_seconds": 0.02688
+    },
+    {
+      "at": "2026-09-26T04:59:01.115Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 71.667465,
+      "query_age_seconds": 0.024847
+    },
+    {
+      "at": "2026-09-26T04:59:02.116Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 72.667855,
+      "query_age_seconds": 0.02227
+    },
+    {
+      "at": "2026-09-26T04:59:03.118Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 73.670126,
+      "query_age_seconds": 0.021688
+    },
+    {
+      "at": "2026-09-26T04:59:04.118Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 74.670562,
+      "query_age_seconds": 0.020676
+    },
+    {
+      "at": "2026-09-26T04:59:05.119Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 75.670632,
+      "query_age_seconds": 0.02046
+    },
+    {
+      "at": "2026-09-26T04:59:06.119Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 76.671114,
+      "query_age_seconds": 0.021012
+    },
+    {
+      "at": "2026-09-26T04:59:07.120Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 77.671941,
+      "query_age_seconds": 0.018986
+    },
+    {
+      "at": "2026-09-26T04:59:08.120Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 78.671951,
+      "query_age_seconds": 0.01376
+    },
+    {
+      "at": "2026-09-26T04:59:09.121Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 79.673077,
+      "query_age_seconds": 0.012498
+    },
+    {
+      "at": "2026-09-26T04:59:10.122Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 80.674058,
+      "query_age_seconds": 0.011549
+    },
+    {
+      "at": "2026-09-26T04:59:11.122Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 81.674646,
+      "query_age_seconds": 0.009914
+    },
+    {
+      "at": "2026-09-26T04:59:12.123Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 82.674727,
+      "query_age_seconds": 0.003892
+    },
+    {
+      "at": "2026-09-26T04:59:13.122Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 83.674513,
+      "query_age_seconds": 0.027973
+    },
+    {
+      "at": "2026-09-26T04:59:14.123Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 84.67454,
+      "query_age_seconds": 0.019523
+    },
+    {
+      "at": "2026-09-26T04:59:15.123Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 85.674799,
+      "query_age_seconds": 0.016093
+    },
+    {
+      "at": "2026-09-26T04:59:16.126Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 86.676825,
+      "query_age_seconds": 0.014875
+    },
+    {
+      "at": "2026-09-26T04:59:17.123Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 87.674795,
+      "query_age_seconds": 0.004816
+    },
+    {
+      "at": "2026-09-26T04:59:18.122Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 88.674322,
+      "query_age_seconds": 0.025746
+    },
+    {
+      "at": "2026-09-26T04:59:19.125Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 89.674472,
+      "query_age_seconds": 0.023867
+    },
+    {
+      "at": "2026-09-26T04:59:20.123Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 90.674978,
+      "query_age_seconds": 0.022161
+    },
+    {
+      "at": "2026-09-26T04:59:21.124Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 91.67584,
+      "query_age_seconds": 0.021065
+    },
+    {
+      "at": "2026-09-26T04:59:22.123Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 92.675654,
+      "query_age_seconds": 0.022779
+    },
+    {
+      "at": "2026-09-26T04:59:23.126Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 93.677948,
+      "query_age_seconds": 0.016537
+    },
+    {
+      "at": "2026-09-26T04:59:24.123Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 94.675301,
+      "query_age_seconds": 0.025707
+    },
+    {
+      "at": "2026-09-26T04:59:25.128Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 95.67977,
+      "query_age_seconds": 0.026798
+    },
+    {
+      "at": "2026-09-26T04:59:26.128Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 96.679961,
+      "query_age_seconds": 0.021194
+    },
+    {
+      "at": "2026-09-26T04:59:27.128Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 97.68045,
+      "query_age_seconds": 0.018858
+    },
+    {
+      "at": "2026-09-26T04:59:28.157Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 98.708369,
+      "query_age_seconds": 0.039967
+    },
+    {
+      "at": "2026-09-26T04:59:29.153Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 99.688792,
+      "query_age_seconds": 0.009712
+    },
+    {
+      "at": "2026-09-26T04:59:30.128Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 100.680256,
+      "query_age_seconds": 0.004905
+    },
+    {
+      "at": "2026-09-26T04:59:31.128Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 101.680363,
+      "query_age_seconds": 0.001403
+    },
+    {
+      "at": "2026-09-26T04:59:32.128Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 102.680109,
+      "query_age_seconds": 0.019318
+    },
+    {
+      "at": "2026-09-26T04:59:33.128Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 103.680412,
+      "query_age_seconds": 0.01642
+    },
+    {
+      "at": "2026-09-26T04:59:34.128Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 104.680357,
+      "query_age_seconds": 0.004
+    },
+    {
+      "at": "2026-09-26T04:59:35.128Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 105.679903,
+      "query_age_seconds": 0.029671
+    },
+    {
+      "at": "2026-09-26T04:59:36.129Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 106.68092,
+      "query_age_seconds": 0.028229
+    },
+    {
+      "at": "2026-09-26T04:59:37.130Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 107.682747,
+      "query_age_seconds": 0.029291
+    },
+    {
+      "at": "2026-09-26T04:59:38.129Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 108.681585,
+      "query_age_seconds": 0.024839
+    },
+    {
+      "at": "2026-09-26T04:59:39.129Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 109.681446,
+      "query_age_seconds": 0.022715
+    },
+    {
+      "at": "2026-09-26T04:59:40.130Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 110.681542,
+      "query_age_seconds": 0.016902
+    },
+    {
+      "at": "2026-09-26T04:59:41.130Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 111.681596,
+      "query_age_seconds": 0.010621
+    },
+    {
+      "at": "2026-09-26T04:59:42.130Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 112.681688,
+      "query_age_seconds": 0.003612
+    },
+    {
+      "at": "2026-09-26T04:59:43.129Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 113.681276,
+      "query_age_seconds": 0.027029
+    },
+    {
+      "at": "2026-09-26T04:59:44.130Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 114.681768,
+      "query_age_seconds": 0.014132
+    },
+    {
+      "at": "2026-09-26T04:59:45.130Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 115.681769,
+      "query_age_seconds": 0.010061
+    },
+    {
+      "at": "2026-09-26T04:59:46.129Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 116.681271,
+      "query_age_seconds": 0.005284
+    },
+    {
+      "at": "2026-09-26T04:59:47.130Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 117.681922,
+      "query_age_seconds": 0.004116
+    },
+    {
+      "at": "2026-09-26T04:59:48.129Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 118.681401,
+      "query_age_seconds": 0.003487
+    },
+    {
+      "at": "2026-09-26T04:59:49.129Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 119.681175,
+      "query_age_seconds": 0.025812
+    },
+    {
+      "at": "2026-09-26T04:59:50.130Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 120.682085,
+      "query_age_seconds": 0.019415
+    },
+    {
+      "at": "2026-09-26T04:59:51.129Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 121.681397,
+      "query_age_seconds": 0.010495
+    },
+    {
+      "at": "2026-09-26T04:59:52.130Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 122.68224,
+      "query_age_seconds": 0.002394
+    },
+    {
+      "at": "2026-09-26T04:59:53.130Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 123.681725,
+      "query_age_seconds": 0.02328
+    },
+    {
+      "at": "2026-09-26T04:59:54.130Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 124.682205,
+      "query_age_seconds": 0.018186
+    },
+    {
+      "at": "2026-09-26T04:59:55.130Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 125.682281,
+      "query_age_seconds": 0.014421
+    },
+    {
+      "at": "2026-09-26T04:59:56.130Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 126.682563,
+      "query_age_seconds": 0.014153
+    },
+    {
+      "at": "2026-09-26T04:59:57.130Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 127.682227,
+      "query_age_seconds": 0.011128
+    },
+    {
+      "at": "2026-09-26T04:59:58.131Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 128.682898,
+      "query_age_seconds": 0.005078
+    },
+    {
+      "at": "2026-09-26T04:59:59.131Z",
+      "pid": 1447,
+      "state": "active",
+      "wait_event_type": null,
+      "wait_event": null,
+      "blockers": [],
+      "transaction_age_seconds": 129.683471,
+      "query_age_seconds": 0.001165
+    },
+    {
+      "at": "2026-09-26T05:00:00.131Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 130.683437,
+      "query_age_seconds": 0.020964
+    },
+    {
+      "at": "2026-09-26T05:00:01.131Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 131.68336,
+      "query_age_seconds": 0.017665
+    },
+    {
+      "at": "2026-09-26T05:00:02.131Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 132.683156,
+      "query_age_seconds": 0.012809
+    },
+    {
+      "at": "2026-09-26T05:00:03.133Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 133.684596,
+      "query_age_seconds": 0.011624
+    },
+    {
+      "at": "2026-09-26T05:00:04.131Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 134.683085,
+      "query_age_seconds": 0.013408
+    },
+    {
+      "at": "2026-09-26T05:00:05.132Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 135.683616,
+      "query_age_seconds": 0.002648
+    },
+    {
+      "at": "2026-09-26T05:00:06.131Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 136.683434,
+      "query_age_seconds": 0.027032
+    },
+    {
+      "at": "2026-09-26T05:00:07.131Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 137.683385,
+      "query_age_seconds": 0.029079
+    },
+    {
+      "at": "2026-09-26T05:00:08.131Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 138.683432,
+      "query_age_seconds": 0.023711
+    },
+    {
+      "at": "2026-09-26T05:00:09.131Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 139.683328,
+      "query_age_seconds": 0.025748
+    },
+    {
+      "at": "2026-09-26T05:00:10.842Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 141.108794,
+      "query_age_seconds": 0.02746
+    },
+    {
+      "at": "2026-09-26T05:00:11.131Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 141.683467,
+      "query_age_seconds": 0.028183
+    },
+    {
+      "at": "2026-09-26T05:00:12.131Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 142.683646,
+      "query_age_seconds": 0.020053
+    },
+    {
+      "at": "2026-09-26T05:00:13.132Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 143.68422,
+      "query_age_seconds": 0.004274
+    },
+    {
+      "at": "2026-09-26T05:00:14.131Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 144.683692,
+      "query_age_seconds": 0.00159
+    },
+    {
+      "at": "2026-09-26T05:00:15.132Z",
+      "pid": 1447,
+      "state": "idle in transaction",
+      "wait_event_type": "Client",
+      "wait_event": "ClientRead",
+      "blockers": [],
+      "transaction_age_seconds": 145.68406,
+      "query_age_seconds": 0.026255
+    }
+  ],
+  "liveBackend1447": [],
+  "liveSnapshots": [
+    {
+      "at": "2026-09-26T05:03:34.667Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 450.353093,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.483129,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:34.902Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 450.588186,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.718222,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:35.134Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 450.820965,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.951001,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:35.368Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 451.05436,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.184619,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:35.600Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 451.287185,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.417445,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:35.833Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 451.51991,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.650171,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:36.066Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 451.752312,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.882571,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:36.298Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 451.984979,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.113456,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:36.533Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 452.217612,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.346088,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:36.766Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 452.452265,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.580742,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:36.999Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 452.685087,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.813564,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:37.231Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 452.917801,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.046293,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:37.464Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 453.150055,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.2786,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:37.696Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 453.383281,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.511772,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:37.930Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 453.615692,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.744186,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:38.162Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 453.848799,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.977291,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:38.394Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 454.080852,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.208458,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:38.627Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 454.313811,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.441418,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:38.859Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 454.545924,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.673531,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:39.091Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 454.777693,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.905299,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:39.323Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 455.010259,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.138382,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:39.556Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 455.242647,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.370769,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:39.789Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 455.475634,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.603757,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:40.022Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 455.708723,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.836869,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:40.255Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 455.941137,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.068089,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:40.487Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 456.174175,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.30113,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:40.719Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 456.405598,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.53255,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:40.952Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 456.638009,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.764999,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:41.184Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 456.871148,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.9981,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:41.417Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 457.103564,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.230892,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:41.649Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 457.336071,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.463399,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:41.884Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 457.569647,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.696976,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:42.117Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 457.803382,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.930711,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:42.349Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 458.035924,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.16104,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:42.581Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 458.26803,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.393148,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:42.813Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 458.500089,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.625204,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:43.045Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 458.732156,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.857274,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:43.278Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 458.964422,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.09003,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:43.509Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 459.196576,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.322185,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:43.741Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 459.428569,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.554178,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:43.974Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 459.660832,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.786441,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:44.206Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 459.893218,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.018207,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:44.439Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 460.125808,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.250797,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:44.671Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 460.357714,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.482704,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:44.903Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 460.589974,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.714964,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:45.135Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 460.821916,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.946906,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:45.368Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 461.054482,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.179225,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:45.600Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 461.286852,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.411595,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:45.833Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 461.518675,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.643418,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:46.066Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 461.752159,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.876902,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:46.298Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 461.985225,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.108855,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:46.531Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 462.217563,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.341193,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:46.763Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 462.450677,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.574306,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:46.996Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 462.682601,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.806231,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:47.228Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 462.915029,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.038777,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:47.460Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 463.147168,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.270917,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:47.692Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 463.37937,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.503118,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:47.924Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 463.611124,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.734873,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:48.156Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 463.843249,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.966997,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-26T05:03:48.389Z",
+      "rows": [
+        {
+          "pid": 1202,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 464.075802,
+          "verb": "SELECT",
+          "shapeSha256": "59b5505431995a99d5b00d681efe2f36f605154b474c4185760155d7646fbee8"
+        },
+        {
+          "pid": 1207,
+          "state": "idle",
+          "wait_event_type": "Client",
+          "wait_event": "ClientRead",
+          "blockers": [],
+          "transaction_age_seconds": null,
+          "query_age_seconds": 0.199076,
+          "verb": "SELECT",
+          "shapeSha256": "e0b0a87797e8e21f4029b9d00cadb9f659b42dccf1db05b3b75f53e21001398d"
+        }
+      ]
+    }
+  ],
+  "finalRemainingTransactions": [],
+  "finalBlockedBackends": []
+}

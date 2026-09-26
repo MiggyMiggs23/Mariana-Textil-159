@@ -1,0 +1,144 @@
+{
+  "scope": "original",
+  "sourceSha256": "9725d7c307be83ac771598c0df60ff113bad1590e025652a6072b344edffee06",
+  "capturedAt": "2026-09-26T06:43:41.436Z",
+  "ongoingSnapshotNotFinal": true,
+  "credentialsExcluded": true,
+  "actors": [
+    {
+      "role": "F",
+      "id": 237
+    },
+    {
+      "role": "A",
+      "id": 238
+    }
+  ],
+  "siteId": 835,
+  "invoiceId": 1,
+  "noteId": 2,
+  "operations": [
+    {
+      "key": "native-isolated-site-and-three-floors",
+      "status": "RECOVERED_CONFIRMED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "native-supplier-product-client",
+      "status": "RECOVERED_CONFIRMED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "native-eight-roll-entry",
+      "status": "RECOVERED_CONFIRMED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "native-open-own-cash-session",
+      "status": "RECOVERED_CONFIRMED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "native-sale-invoice",
+      "status": "RECOVERED_CONFIRMED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "native-sale-note",
+      "status": "RECOVERED_CONFIRMED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "native-pay-fiscal-sale-transfer",
+      "status": "RECOVERED_CONFIRMED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "native-nonempty-fiscal-source-and-clone-handoff",
+      "status": "RECOVERED_CONFIRMED",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "site",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "supplier",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "product",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "client",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "entrada",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "cash-session",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "sale-invoice",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "sale-note",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "pay-invoice",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "create-F",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "create-A",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    },
+    {
+      "key": "assign-A",
+      "status": "RECOVERED_DO_NOT_REPLAY",
+      "at": null,
+      "resultId": null
+    }
+  ],
+  "reconciliationKeys": [],
+  "recoverySectionsPresent": []
+}

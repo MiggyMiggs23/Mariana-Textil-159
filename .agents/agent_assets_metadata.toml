@@ -2635,3 +2635,17 @@ mtime_ms = 1790396797308
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/36c0371f-e8d4-4f2d-8511-554941009eb3/30cb5c22-3f13-46af-83f2-6e82eb1cbd1d"
 storage_version_token = "1790396811502085"
 content_type = "text/html"
+
+[[outputs]]
+id = "ko-l2GhDn7kZUTFG_qfeD"
+uri = "file://reports/prioridad-estabilidad-20260926/informe-final.html"
+type = "html"
+title = "Informe: corregido, medido y pendiente"
+description = "Causas con referencias, pruebas reales, mediciones y bloqueos de liberación."
+logical_id = "e7e3a0b0-0198-42e7-8500-d6a32134a733"
+content_hash = "sha256:0b8cb92d2f29df5ffc85230024cb27de8cf330d38af6bebb66a4e32c1b589a05"
+size = 11345
+mtime_ms = 1790405998236
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e7e3a0b0-0198-42e7-8500-d6a32134a733/17e8b2f7-7706-4c5c-886b-d7b659683c75"
+storage_version_token = "1790405999255721"
+content_type = "text/html"

@@ -1,0 +1,84 @@
+{
+  "status": "OFFLINE_VERIFIED_PG_AND_BROWSER_PENDING",
+  "apiEntry": "/home/runner/workspace/artifacts/api-server/dist-priority-stability-combined-v5-20260926/index.mjs",
+  "apiSha256": "8bff51ec9710adbdc90cc7a2012eef6fcf68fac95cb7771972f798f0fe5dceee",
+  "parentApiSha256": "e62a79333d0ee1433c114656af980e33ff420b728688a121ee586efdfab1b30d",
+  "apiFiles": {
+    "baseline-stability.pg.test.cjs": "6b687e867c6a3ae8d35424b1e7d10c09771242d7759090b9205c7c7c9e2a0b7c",
+    "baseline-stability.pg.test.cjs.map": "120bc116955b51cc0b2035e1ef03da3cfbdfe3ce1aec621601c0afa06cfd9d70",
+    "baseline-stability.test.cjs": "4888508499e9796ae13121270e014a1db833563f9546c2bd92c572babdf48ac1",
+    "baseline-stability.test.cjs.map": "a670835338f07691d28d2ee9e2fe043cba0919b1458af46aa2b7fbc056d507b8",
+    "candidate-stability.pg.test.cjs": "0c69835d4a25b4f1863384056df5e8539aec190b1a70d6a52be9ca399545fd88",
+    "candidate-stability.pg.test.cjs.map": "0999432cd10c760536c016ea20ac2d7f98e805f69cbfd233997f44fd00649148",
+    "candidate-stability.test.cjs": "871470e0a437e73687714bd72c28485f90cc77530209ea71b9bc1955edfd7860",
+    "candidate-stability.test.cjs.map": "1e01bf114762fc589ee8feaa00ace8abd11238040d84b08cde0e69fea43f9321",
+    "index.mjs": "8bff51ec9710adbdc90cc7a2012eef6fcf68fac95cb7771972f798f0fe5dceee",
+    "index.mjs.map": "650db109afb7f656c61f3a75d474207d581c0d1ef55184ed3f39ac9c9bb49f9f",
+    "pino-file.mjs": "4a8dcd7659fbae92e520d663d0ff7c2daf8396681e6d7feff577aa4279f41332",
+    "pino-file.mjs.map": "d29718dce0ed13f6127ae6534760c4e4ddaff2227a9dbae4b5bb487e80bced1f",
+    "pino-pretty.mjs": "1a05aa85bf5ce035c5d1f19a32e0308d6dbab00c7194e1936c7f632d10994fac",
+    "pino-pretty.mjs.map": "a7d3c3a4613f9648f8cb7e69a6abeacdbe3934792fcc24cc0af74fd6fde3eb90",
+    "pino-worker.mjs": "ff00db7476006b27a06d1d59e99eabaa7ab29ae49b7df2ed8743298678572e6c",
+    "pino-worker.mjs.map": "295fad0311b7373848a060d2d0b40e05d764efac86f157d7577fd54442b0ce51",
+    "thread-stream-worker.mjs": "b490228463d2d47a57932bcbe6bb307af9c54d1b4f3953191e1077e791bb188d",
+    "thread-stream-worker.mjs.map": "e5fd66fcec3ca622f449a275bd6b14d061ed62ce34faadce8716b363a4df878a"
+  },
+  "inputs": [
+    {
+      "path": "artifacts/api-server/src/lib/e11-runtime.ts",
+      "parentSha256": "ad64af6f1efe5d1bd96ab90f35cd01b7e417362a5e4143fdb31af4c0f04cc28f",
+      "overlaySha256": "7c33b6e9feaa0a2b4ed34a5a2fe14b94e0e49405846408e801436d2b6eb22a27",
+      "headInputSha256": "7c33b6e9feaa0a2b4ed34a5a2fe14b94e0e49405846408e801436d2b6eb22a27"
+    },
+    {
+      "path": "artifacts/api-server/src/lib/e11-repository.ts",
+      "parentSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "overlaySha256": "850e4a31f783b8081c2414b9469fb18bcd2b8ad19ee3e335f3a73a0499fece0b",
+      "headInputSha256": "850e4a31f783b8081c2414b9469fb18bcd2b8ad19ee3e335f3a73a0499fece0b"
+    },
+    {
+      "path": "artifacts/api-server/src/lib/credit-aging-read-model.ts",
+      "parentSha256": "315085339a169249d9d45a4ec4f6e04158b789d4b64dce546465a8d6d9dd7ed0",
+      "overlaySha256": "153649960f62b7bc281ec181e214220caa7e2b073bbf47ae4164eb33bca63292",
+      "headInputSha256": "ffe4069f43c87916e4f3ba5c29674388bb56eefc7ea3ea0d27bb00080db758b1"
+    },
+    {
+      "path": "artifacts/api-server/src/routes/e11.ts",
+      "parentSha256": "cc75e3a9073088e08ee216889d6960708f3ffac661131ab44a4346ceb77857b2",
+      "overlaySha256": "21d5f46d1e290aace20f64caa31c82878568d7337f3c9e6bdee13f782b58ed71",
+      "headInputSha256": "21d5f46d1e290aace20f64caa31c82878568d7337f3c9e6bdee13f782b58ed71"
+    },
+    {
+      "path": "artifacts/api-server/src/middlewares/auth.ts",
+      "parentSha256": "7bb195f9ab2233e55aff004df49676713c39a5b6650baa1cc06126b45a9f0ec1",
+      "overlaySha256": "bdb0d1d407a33603db061fdc4cfa0ee2bcedb9795049142d1ab4d3562104ea7a",
+      "headInputSha256": "bdb0d1d407a33603db061fdc4cfa0ee2bcedb9795049142d1ab4d3562104ea7a"
+    },
+    {
+      "path": "artifacts/api-server/src/lib/clientes-listado.ts",
+      "parentSha256": "cb998546b22b91d08c89adf75d84dddc3f24887de9738c4a0c7dce7f96d4c300",
+      "overlaySha256": "35ec356f44e7d1c057932449f6afd2acbc9871d358639d5fa04f7836e5bbfec9",
+      "headInputSha256": "35ec356f44e7d1c057932449f6afd2acbc9871d358639d5fa04f7836e5bbfec9"
+    }
+  ],
+  "sourceDeltas": [
+    "artifacts/api-server/src/lib/clientes-listado.ts",
+    "artifacts/api-server/src/lib/credit-aging-read-model.ts",
+    "artifacts/api-server/src/lib/e11-repository.ts",
+    "artifacts/api-server/src/lib/e11-runtime.ts",
+    "artifacts/api-server/src/middlewares/auth.ts",
+    "artifacts/api-server/src/routes/e11.ts"
+  ],
+  "offlineTests": {
+    "baseline": {
+      "exitCode": 1,
+      "signal": null
+    },
+    "candidate": {
+      "exitCode": 0,
+      "signal": null
+    }
+  },
+  "frontendChanges": [],
+  "note": "No activation or DB access by builder. Includes authorized clientlist overlay; no blanket HEAD."
+}

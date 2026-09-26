@@ -1,0 +1,610 @@
+{
+  "status": "PASS",
+  "startedAt": "2026-09-26T06:49:21.155Z",
+  "apiSha256": "8846ae19105467727b01b66fb4183747ef132a22cedfa8349e34cfdb68bf290d",
+  "checks": [
+    {
+      "name": "DIA-NO_CUADRA-independent-final-native-readback",
+      "status": "PASS",
+      "evidence": {
+        "id": "59625031-5fa3-40d0-adbf-3eaacea36fd2",
+        "periodo": {
+          "tipo": "DIA",
+          "inicio": "2026-09-25",
+          "finExclusivo": "2026-09-26",
+          "zona": "America/Mexico_City",
+          "obligatorio": false,
+          "estado": "REQUIERE_REVISION",
+          "ultimaConciliacionId": "c6a50b09-06f4-4ed3-8464-e51dbf855484"
+        },
+        "anteriorId": null,
+        "vigente": false,
+        "total": "1160.00",
+        "decision": {
+          "id": "126fabe1-f168-4f37-8d55-71a9e32c183d",
+          "uuid": "b9d1a6c9-59d0-40d0-ae42-d03766b3889f",
+          "actorId": 237,
+          "creadoEn": "2026-10-02T18:00:00.000Z",
+          "resultado": "NO_CUADRA",
+          "totalExterno": "1159.00",
+          "referenciaExterna": "PRIORITY-NATIVO-DIA-NO_CUADRA",
+          "observacion": "Ensayo documental declarado: registro externo de prueba 1159 frente a factura real1160; diferencia1. Sin modificar dinero ni factura.",
+          "avisoAdminId": "319bc678-c406-46a5-adcd-65d7892ff1ed"
+        },
+        "stableSession": true
+      }
+    },
+    {
+      "name": "DIA-ACEPTADA-independent-final-native-readback",
+      "status": "PASS",
+      "evidence": {
+        "id": "c6a50b09-06f4-4ed3-8464-e51dbf855484",
+        "periodo": {
+          "tipo": "DIA",
+          "inicio": "2026-09-25",
+          "finExclusivo": "2026-09-26",
+          "zona": "America/Mexico_City",
+          "obligatorio": false,
+          "estado": "ACEPTADA",
+          "ultimaConciliacionId": "c6a50b09-06f4-4ed3-8464-e51dbf855484"
+        },
+        "anteriorId": "59625031-5fa3-40d0-adbf-3eaacea36fd2",
+        "vigente": true,
+        "total": "1160.00",
+        "decision": {
+          "id": "c65233ff-4c5b-4c2a-a778-75cc26b8aae4",
+          "uuid": "49a00e78-4360-4f27-8416-8d87fd207aa3",
+          "actorId": 237,
+          "creadoEn": "2026-10-02T18:00:00.000Z",
+          "resultado": "ACEPTADA",
+          "totalExterno": "1160.00",
+          "referenciaExterna": "PRIORITY-NATIVO-DIA-ACEPTADA",
+          "observacion": "",
+          "avisoAdminId": null
+        },
+        "stableSession": true
+      }
+    },
+    {
+      "name": "SEMANA-ACEPTADA-independent-final-native-readback",
+      "status": "PASS",
+      "evidence": {
+        "id": "72128be9-82a3-43de-8413-4bbf0666dd8a",
+        "periodo": {
+          "tipo": "SEMANA",
+          "inicio": "2026-09-21",
+          "finExclusivo": "2026-09-28",
+          "zona": "America/Mexico_City",
+          "obligatorio": true,
+          "estado": "ACEPTADA",
+          "ultimaConciliacionId": "72128be9-82a3-43de-8413-4bbf0666dd8a"
+        },
+        "anteriorId": null,
+        "vigente": true,
+        "total": "1160.00",
+        "decision": {
+          "id": "9f2df1e8-a04b-4942-b63f-368480a70d7b",
+          "uuid": "612c9d2e-d215-4604-baf0-f1edc83ae70a",
+          "actorId": 237,
+          "creadoEn": "2026-10-02T18:00:00.000Z",
+          "resultado": "ACEPTADA",
+          "totalExterno": "1160.00",
+          "referenciaExterna": "PRIORITY-NATIVO-SEMANA-ACEPTADA",
+          "observacion": "",
+          "avisoAdminId": null
+        },
+        "stableSession": true
+      }
+    },
+    {
+      "name": "MES-ACEPTADA-independent-final-native-readback",
+      "status": "PASS",
+      "evidence": {
+        "id": "89cc6705-a917-4053-adc8-e9d8e519b3b1",
+        "periodo": {
+          "tipo": "MES",
+          "inicio": "2026-09-01",
+          "finExclusivo": "2026-10-01",
+          "zona": "America/Mexico_City",
+          "obligatorio": true,
+          "estado": "ACEPTADA",
+          "ultimaConciliacionId": "89cc6705-a917-4053-adc8-e9d8e519b3b1"
+        },
+        "anteriorId": null,
+        "vigente": true,
+        "total": "1160.00",
+        "decision": {
+          "id": "7f7ffd94-7c6e-4593-b9fe-4e2aaa03266e",
+          "uuid": "c5509cf5-1dd2-4916-9c98-4151177fb442",
+          "actorId": 237,
+          "creadoEn": "2026-10-02T18:00:00.000Z",
+          "resultado": "ACEPTADA",
+          "totalExterno": "1160.00",
+          "referenciaExterna": "PRIORITY-NATIVO-MES-ACEPTADA",
+          "observacion": "",
+          "avisoAdminId": null
+        },
+        "stableSession": true
+      }
+    },
+    {
+      "name": "historical-invoice-unchanged",
+      "status": "PASS",
+      "evidence": {
+        "invoiceId": 1,
+        "total": "1160.00",
+        "date": "2026-09-26T05:13:43.647Z"
+      }
+    },
+    {
+      "name": "admin-original-discrepancy-notice-survives-acceptance",
+      "status": "PASS",
+      "evidence": {
+        "originalNoCuadraId": "59625031-5fa3-40d0-adbf-3eaacea36fd2",
+        "preservedNoticeAndNativeNavigation": true
+      }
+    }
+  ],
+  "requests": [
+    {
+      "at": "2026-09-26T06:49:21.627Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405361601-4",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T06:49:22.420Z",
+      "actor": "F-FINAL",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405361763-7"
+    },
+    {
+      "at": "2026-09-26T06:49:22.869Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405362427-8"
+    },
+    {
+      "at": "2026-09-26T06:49:22.881Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405362873-11"
+    },
+    {
+      "at": "2026-09-26T06:49:23.181Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones/59625031-5fa3-40d0-adbf-3eaacea36fd2",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405362431-10"
+    },
+    {
+      "at": "2026-09-26T06:49:23.845Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405363350-16"
+    },
+    {
+      "at": "2026-09-26T06:49:23.855Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405363848-18"
+    },
+    {
+      "at": "2026-09-26T06:49:24.474Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405363858-19"
+    },
+    {
+      "at": "2026-09-26T06:49:25.144Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones/59625031-5fa3-40d0-adbf-3eaacea36fd2",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405364484-20"
+    },
+    {
+      "at": "2026-09-26T06:49:25.915Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones/59625031-5fa3-40d0-adbf-3eaacea36fd2/ventas",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405365148-21"
+    },
+    {
+      "at": "2026-09-26T06:49:26.482Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405365977-22"
+    },
+    {
+      "at": "2026-09-26T06:49:27.397Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones/c6a50b09-06f4-4ed3-8464-e51dbf855484",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405366666-23"
+    },
+    {
+      "at": "2026-09-26T06:49:28.069Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405367565-27"
+    },
+    {
+      "at": "2026-09-26T06:49:28.079Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405368073-29"
+    },
+    {
+      "at": "2026-09-26T06:49:28.693Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405368082-30"
+    },
+    {
+      "at": "2026-09-26T06:49:29.361Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones/c6a50b09-06f4-4ed3-8464-e51dbf855484",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405368699-31"
+    },
+    {
+      "at": "2026-09-26T06:49:30.129Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones/c6a50b09-06f4-4ed3-8464-e51dbf855484/ventas",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405369364-32"
+    },
+    {
+      "at": "2026-09-26T06:49:30.681Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405370185-33"
+    },
+    {
+      "at": "2026-09-26T06:49:31.501Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones/72128be9-82a3-43de-8413-4bbf0666dd8a",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405370762-34"
+    },
+    {
+      "at": "2026-09-26T06:49:32.194Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405371691-38"
+    },
+    {
+      "at": "2026-09-26T06:49:32.210Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405372199-40"
+    },
+    {
+      "at": "2026-09-26T06:49:32.918Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405372210-41"
+    },
+    {
+      "at": "2026-09-26T06:49:33.686Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones/72128be9-82a3-43de-8413-4bbf0666dd8a",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405372945-42"
+    },
+    {
+      "at": "2026-09-26T06:49:34.388Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones/72128be9-82a3-43de-8413-4bbf0666dd8a/ventas",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405373695-43"
+    },
+    {
+      "at": "2026-09-26T06:49:35.278Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405374832-44"
+    },
+    {
+      "at": "2026-09-26T06:49:36.044Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones/89cc6705-a917-4053-adc8-e9d8e519b3b1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405375377-45"
+    },
+    {
+      "at": "2026-09-26T06:49:36.748Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405376300-49"
+    },
+    {
+      "at": "2026-09-26T06:49:36.757Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405376751-51"
+    },
+    {
+      "at": "2026-09-26T06:49:37.395Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405376839-52"
+    },
+    {
+      "at": "2026-09-26T06:49:38.136Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones/89cc6705-a917-4053-adc8-e9d8e519b3b1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405377402-53"
+    },
+    {
+      "at": "2026-09-26T06:49:38.831Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones/89cc6705-a917-4053-adc8-e9d8e519b3b1/ventas",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405378140-54"
+    },
+    {
+      "at": "2026-09-26T06:49:39.402Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405378929-55"
+    },
+    {
+      "at": "2026-09-26T06:49:40.166Z",
+      "actor": "F-FINAL",
+      "method": "GET",
+      "path": "/api/e11/fiscal/facturas/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-FINAL-1790405379581-56"
+    },
+    {
+      "at": "2026-09-26T06:49:40.661Z",
+      "actor": "ADMIN-FINAL",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-FINAL-1790405380648-60",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T06:49:41.497Z",
+      "actor": "ADMIN-FINAL",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-FINAL-1790405380830-63"
+    },
+    {
+      "at": "2026-09-26T06:49:42.270Z",
+      "actor": "ADMIN-FINAL",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-FINAL-1790405381771-69"
+    },
+    {
+      "at": "2026-09-26T06:49:42.286Z",
+      "actor": "ADMIN-FINAL",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-FINAL-1790405382274-71"
+    },
+    {
+      "at": "2026-09-26T06:49:42.923Z",
+      "actor": "ADMIN-FINAL",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-FINAL-1790405382288-72"
+    },
+    {
+      "at": "2026-09-26T06:49:43.265Z",
+      "actor": "ADMIN-FINAL",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-FINAL-1790405382974-73"
+    },
+    {
+      "at": "2026-09-26T06:49:43.586Z",
+      "actor": "ADMIN-FINAL",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-FINAL-1790405382978-77"
+    },
+    {
+      "at": "2026-09-26T06:49:43.702Z",
+      "actor": "ADMIN-FINAL",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-FINAL-1790405382978-78"
+    },
+    {
+      "at": "2026-09-26T06:49:43.785Z",
+      "actor": "ADMIN-FINAL",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-FINAL-1790405382978-79"
+    },
+    {
+      "at": "2026-09-26T06:49:43.794Z",
+      "actor": "ADMIN-FINAL",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-FINAL-1790405382975-75"
+    },
+    {
+      "at": "2026-09-26T06:49:43.926Z",
+      "actor": "ADMIN-FINAL",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-FINAL-1790405382975-74"
+    },
+    {
+      "at": "2026-09-26T06:49:44.048Z",
+      "actor": "ADMIN-FINAL",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-FINAL-1790405382979-80"
+    },
+    {
+      "at": "2026-09-26T06:49:44.138Z",
+      "actor": "ADMIN-FINAL",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-FINAL-1790405382977-76"
+    },
+    {
+      "at": "2026-09-26T06:49:44.235Z",
+      "actor": "ADMIN-FINAL",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-FINAL-1790405382980-81"
+    },
+    {
+      "at": "2026-09-26T06:49:45.031Z",
+      "actor": "ADMIN-FINAL",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones/59625031-5fa3-40d0-adbf-3eaacea36fd2",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-FINAL-1790405384294-83"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "fiscal-final-proof/DIA-NO_CUADRA-independent-final-native-readback-0.png",
+      "sha256": "2c03dd9d12d067b3db76b5a06cfa00dfa1bde86d1664c6cab05387d928c971d2"
+    },
+    {
+      "file": "fiscal-final-proof/DIA-ACEPTADA-independent-final-native-readback-0.png",
+      "sha256": "9dc5074e65fc2f940ce3ed892632ef381d5e4a590907baa1e73c7698f10fe851"
+    },
+    {
+      "file": "fiscal-final-proof/SEMANA-ACEPTADA-independent-final-native-readback-0.png",
+      "sha256": "c94eb0424e5e122a5ee1e4e4f083f670e643fdf25e1be8c4b1f9b6a72066a88f"
+    },
+    {
+      "file": "fiscal-final-proof/MES-ACEPTADA-independent-final-native-readback-0.png",
+      "sha256": "16cd7e31a32a649c665087291d596a8dc37004c6f4e9bfb34ab1ec74bcc11858"
+    },
+    {
+      "file": "fiscal-final-proof/final-admin-notice.png",
+      "sha256": "255d3574eb3e0518efbe5fda21728433a8fb8b703d1572e34de86177398c5f2e"
+    },
+    {
+      "file": "fiscal-final-proof/admin-original-discrepancy-notice-survives-acceptance-0.png",
+      "sha256": "3770242dfb11cd1f9f82e24f7d381bd8190d384d906d8ccc8cce91ee7bbfec9e"
+    }
+  ]
+}

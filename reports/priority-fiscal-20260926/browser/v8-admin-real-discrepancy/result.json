@@ -1,0 +1,193 @@
+{
+  "status": "PASS",
+  "startedAt": "2026-09-26T06:35:48.402Z",
+  "apiSha256": "8846ae19105467727b01b66fb4183747ef132a22cedfa8349e34cfdb68bf290d",
+  "checks": [
+    {
+      "name": "native-admin-no-cuadra-notice-and-document",
+      "status": "PASS",
+      "evidence": {
+        "snapshotId": "59625031-5fa3-40d0-adbf-3eaacea36fd2",
+        "actualTotal": "1160.00",
+        "decision": {
+          "id": "126fabe1-f168-4f37-8d55-71a9e32c183d",
+          "uuid": "b9d1a6c9-59d0-40d0-ae42-d03766b3889f",
+          "actorId": 237,
+          "creadoEn": "2026-10-02T18:00:00.000Z",
+          "resultado": "NO_CUADRA",
+          "totalExterno": "1159.00",
+          "referenciaExterna": "PRIORITY-NATIVO-DIA-NO_CUADRA",
+          "observacion": "Ensayo documental declarado: registro externo de prueba 1159 frente a factura real1160; diferencia1. Sin modificar dinero ni factura.",
+          "avisoAdminId": "319bc678-c406-46a5-adcd-65d7892ff1ed"
+        },
+        "documentOpened": true
+      }
+    }
+  ],
+  "requests": [
+    {
+      "at": "2026-09-26T06:35:48.936Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404548921-4",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T06:35:49.908Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404549082-7"
+    },
+    {
+      "at": "2026-09-26T06:35:50.426Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404549911-8"
+    },
+    {
+      "at": "2026-09-26T06:35:50.436Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404550428-11"
+    },
+    {
+      "at": "2026-09-26T06:35:50.896Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones/59625031-5fa3-40d0-adbf-3eaacea36fd2",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404549918-10"
+    },
+    {
+      "at": "2026-09-26T06:35:51.544Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404551096-16"
+    },
+    {
+      "at": "2026-09-26T06:35:51.552Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404551547-18"
+    },
+    {
+      "at": "2026-09-26T06:35:52.114Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404551555-19"
+    },
+    {
+      "at": "2026-09-26T06:35:52.474Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404552200-20"
+    },
+    {
+      "at": "2026-09-26T06:35:52.901Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404552203-24"
+    },
+    {
+      "at": "2026-09-26T06:35:52.940Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404552204-26"
+    },
+    {
+      "at": "2026-09-26T06:35:52.948Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404552204-25"
+    },
+    {
+      "at": "2026-09-26T06:35:53.001Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404552202-22"
+    },
+    {
+      "at": "2026-09-26T06:35:53.070Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404552203-23"
+    },
+    {
+      "at": "2026-09-26T06:35:53.181Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404552201-21"
+    },
+    {
+      "at": "2026-09-26T06:35:53.421Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404552204-27"
+    },
+    {
+      "at": "2026-09-26T06:35:54.341Z",
+      "actor": "ADMIN-REAL-NOTICE",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones/59625031-5fa3-40d0-adbf-3eaacea36fd2",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-REAL-NOTICE-1790404553608-30"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "v8-admin-real-discrepancy/admin-genuine-no-cuadra-link.png",
+      "sha256": "28f94897bb1afcf0c9a58d87df1c3cf7d492c1ee228460309af99935103000ee"
+    },
+    {
+      "file": "v8-admin-real-discrepancy/native-admin-no-cuadra-notice-and-document-0.png",
+      "sha256": "a3797c625a54c8da93c117fdf148a84c91f426ba32ccdba337885765efa6f4ee"
+    }
+  ]
+}

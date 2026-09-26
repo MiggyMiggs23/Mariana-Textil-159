@@ -1,0 +1,14 @@
+[
+  {
+    "alias": "r",
+    "status": "ERROR",
+    "sqlstate": "55000",
+    "messageSha256": "0b55c3b8807d06ab42de29e42cb4902a0955c37327979b62db084d73e4e4dbca",
+    "persistentWrites": false
+  },
+  {
+    "alias": "catalog_row",
+    "status": "PASS",
+    "persistentWrites": false
+  }
+]

@@ -1,8 +1,9 @@
 import { clientesTable, db } from "@workspace/db";
-import { asc } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { loadCustomerCreditLedger } from "./credit-aging-read-model";
 import { projectCreditLedger, type CreditLedgerMovement } from "./credit-allocation";
 import { mexicoCityDate } from "./clientes-aging";
+import { mapReadWorkload, withReadWorkload } from "./read-workload";
 
 /** Business traffic-light thresholds; percentages are inclusive. */
 export const PAYMENT_BEHAVIOR_GREEN_MIN_PERCENT = 90;
@@ -85,9 +86,22 @@ export async function loadPaymentBehaviorList() {
   const clients = await db.select({
     id: clientesTable.id, nombre: clientesTable.nombre, limiteCredito: clientesTable.limiteCredito,
   }).from(clientesTable).orderBy(asc(clientesTable.nombre));
-  return Promise.all(clients.map(async (client) => ({
+  return mapReadWorkload(clients, async (client) => ({
     clienteId: client.id,
     clienteNombre: client.nombre,
     ...projectPaymentBehavior(await loadCustomerCreditLedger(client.id), client.limiteCredito),
-  })));
+  }));
+}
+
+/** Detail must never calculate payment history for unrelated customers. */
+export async function loadPaymentBehaviorClient(clienteId: number) {
+  const [client] = await db.select({
+    id: clientesTable.id, nombre: clientesTable.nombre, limiteCredito: clientesTable.limiteCredito,
+  }).from(clientesTable).where(eq(clientesTable.id, clienteId)).limit(1);
+  if (!client) return undefined;
+  return withReadWorkload(async () => ({
+    clienteId: client.id,
+    clienteNombre: client.nombre,
+    ...projectPaymentBehavior(await loadCustomerCreditLedger(client.id), client.limiteCredito),
+  }));
 }

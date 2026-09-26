@@ -1,0 +1,1706 @@
+{
+  "status": "PASS",
+  "startedAt": "2026-09-26T05:11:48.192Z",
+  "apiSha256": "f3870a6e76bee58a0237e345dec303e11cf9e42af6acd99fa6314de416fc0e97",
+  "checks": [
+    {
+      "name": "native-isolated-site-and-three-floors",
+      "status": "PASS",
+      "evidence": {
+        "site": 835,
+        "floors": [
+          14,
+          15,
+          16
+        ]
+      }
+    },
+    {
+      "name": "native-supplier-product-client",
+      "status": "PASS",
+      "evidence": {
+        "supplierId": 226,
+        "productId": 2078,
+        "clientId": 2583
+      }
+    },
+    {
+      "name": "native-eight-roll-entry",
+      "status": "PASS",
+      "evidence": {
+        "id": 1,
+        "series": [
+          "10000001",
+          "10000002",
+          "10000003",
+          "10000004",
+          "10000005",
+          "10000006",
+          "10000007",
+          "10000008"
+        ]
+      }
+    },
+    {
+      "name": "native-open-own-cash-session",
+      "status": "PASS",
+      "evidence": {
+        "id": 1,
+        "site": 835
+      }
+    },
+    {
+      "name": "native-sale-invoice",
+      "status": "PASS",
+      "evidence": {
+        "id": 1,
+        "folio": 1,
+        "facturado": true,
+        "documentoTipo": "TICKET"
+      }
+    },
+    {
+      "name": "native-sale-note",
+      "status": "PASS",
+      "evidence": {
+        "id": 2,
+        "folio": 2,
+        "facturado": false,
+        "documentoTipo": "NOTA"
+      }
+    },
+    {
+      "name": "native-pay-fiscal-sale-transfer",
+      "status": "PASS",
+      "evidence": {
+        "id": 1,
+        "facturado": true,
+        "total": "1160.00",
+        "cobrado": true
+      }
+    },
+    {
+      "name": "native-nonempty-fiscal-source-and-clone-handoff",
+      "status": "PASS",
+      "evidence": {
+        "invoiceId": 1,
+        "day": "2026-09-25",
+        "nextDay": "2026-09-26",
+        "nonempty": true,
+        "privateHandoff": "/tmp/priority-20260926/browser/clock-handoff.json"
+      }
+    }
+  ],
+  "requests": [
+    {
+      "at": "2026-09-26T05:11:49.169Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399508997-4",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T05:11:50.166Z",
+      "actor": "ADMIN-PREP",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399509318-7"
+    },
+    {
+      "at": "2026-09-26T05:11:51.196Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399510480-13"
+    },
+    {
+      "at": "2026-09-26T05:11:51.208Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399511202-15"
+    },
+    {
+      "at": "2026-09-26T05:11:51.845Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399511211-16"
+    },
+    {
+      "at": "2026-09-26T05:11:52.199Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399511907-17"
+    },
+    {
+      "at": "2026-09-26T05:11:52.500Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399511910-22"
+    },
+    {
+      "at": "2026-09-26T05:11:52.580Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399511908-19"
+    },
+    {
+      "at": "2026-09-26T05:11:52.645Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399511910-21"
+    },
+    {
+      "at": "2026-09-26T05:11:52.693Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399511909-20"
+    },
+    {
+      "at": "2026-09-26T05:11:52.734Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399511912-23"
+    },
+    {
+      "at": "2026-09-26T05:11:52.872Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399511908-18"
+    },
+    {
+      "at": "2026-09-26T05:11:52.924Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399511913-24"
+    },
+    {
+      "at": "2026-09-26T05:11:53.044Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/locations",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399511913-25"
+    },
+    {
+      "at": "2026-09-26T05:11:54.095Z",
+      "actor": "ADMIN-PREP",
+      "method": "POST",
+      "path": "/api/locations",
+      "status": 201,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399513535-27"
+    },
+    {
+      "at": "2026-09-26T05:11:54.566Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/locations",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399514097-28"
+    },
+    {
+      "at": "2026-09-26T05:11:55.123Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/locations/835/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399514632-29"
+    },
+    {
+      "at": "2026-09-26T05:11:56.075Z",
+      "actor": "ADMIN-PREP",
+      "method": "POST",
+      "path": "/api/locations/835/pisos",
+      "status": 201,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399515497-30"
+    },
+    {
+      "at": "2026-09-26T05:11:56.570Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/locations/835/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399516076-31"
+    },
+    {
+      "at": "2026-09-26T05:11:56.720Z",
+      "actor": "ADMIN-PREP",
+      "method": "POST",
+      "path": "/api/locations/835/pisos",
+      "status": 201,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399516180-32"
+    },
+    {
+      "at": "2026-09-26T05:11:57.174Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/locations/835/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399516722-33"
+    },
+    {
+      "at": "2026-09-26T05:11:57.395Z",
+      "actor": "ADMIN-PREP",
+      "method": "POST",
+      "path": "/api/locations/835/pisos",
+      "status": 201,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399516814-34"
+    },
+    {
+      "at": "2026-09-26T05:11:58.261Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399517852-39"
+    },
+    {
+      "at": "2026-09-26T05:11:58.271Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399518264-41"
+    },
+    {
+      "at": "2026-09-26T05:11:58.774Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399518274-42"
+    },
+    {
+      "at": "2026-09-26T05:11:59.061Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399518830-43"
+    },
+    {
+      "at": "2026-09-26T05:11:59.267Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399518832-46"
+    },
+    {
+      "at": "2026-09-26T05:11:59.380Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399518833-47"
+    },
+    {
+      "at": "2026-09-26T05:11:59.422Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399518832-45"
+    },
+    {
+      "at": "2026-09-26T05:11:59.441Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399518833-48"
+    },
+    {
+      "at": "2026-09-26T05:11:59.496Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399518834-49"
+    },
+    {
+      "at": "2026-09-26T05:11:59.611Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399518831-44"
+    },
+    {
+      "at": "2026-09-26T05:11:59.723Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399518834-50"
+    },
+    {
+      "at": "2026-09-26T05:11:59.879Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/proveedores",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399518834-51"
+    },
+    {
+      "at": "2026-09-26T05:11:59.964Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/proveedores/analitica-global",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399518835-52"
+    },
+    {
+      "at": "2026-09-26T05:11:59.995Z",
+      "actor": "ADMIN-PREP",
+      "method": "POST",
+      "path": "/api/proveedores",
+      "status": 201,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399519482-55"
+    },
+    {
+      "at": "2026-09-26T05:12:00.885Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399520315-60"
+    },
+    {
+      "at": "2026-09-26T05:12:00.898Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399520893-62"
+    },
+    {
+      "at": "2026-09-26T05:12:01.625Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399520902-63"
+    },
+    {
+      "at": "2026-09-26T05:12:01.988Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399521669-64"
+    },
+    {
+      "at": "2026-09-26T05:12:02.162Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399521669-65"
+    },
+    {
+      "at": "2026-09-26T05:12:02.206Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399521671-68"
+    },
+    {
+      "at": "2026-09-26T05:12:02.211Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399521672-69"
+    },
+    {
+      "at": "2026-09-26T05:12:02.236Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399521671-67"
+    },
+    {
+      "at": "2026-09-26T05:12:02.292Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399521670-66"
+    },
+    {
+      "at": "2026-09-26T05:12:02.580Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399521672-70"
+    },
+    {
+      "at": "2026-09-26T05:12:02.693Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399521672-71"
+    },
+    {
+      "at": "2026-09-26T05:12:03.122Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/productos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399521673-72"
+    },
+    {
+      "at": "2026-09-26T05:12:04.351Z",
+      "actor": "ADMIN-PREP",
+      "method": "POST",
+      "path": "/api/productos",
+      "status": 201,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399523620-74"
+    },
+    {
+      "at": "2026-09-26T05:12:05.226Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399524704-79"
+    },
+    {
+      "at": "2026-09-26T05:12:05.235Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399525229-81"
+    },
+    {
+      "at": "2026-09-26T05:12:05.889Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399525239-82"
+    },
+    {
+      "at": "2026-09-26T05:12:06.267Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399525974-83"
+    },
+    {
+      "at": "2026-09-26T05:12:06.511Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399525978-87"
+    },
+    {
+      "at": "2026-09-26T05:12:06.532Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399525977-86"
+    },
+    {
+      "at": "2026-09-26T05:12:06.579Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399525978-88"
+    },
+    {
+      "at": "2026-09-26T05:12:06.585Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399525976-84"
+    },
+    {
+      "at": "2026-09-26T05:12:06.614Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399525977-85"
+    },
+    {
+      "at": "2026-09-26T05:12:06.803Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399525979-89"
+    },
+    {
+      "at": "2026-09-26T05:12:07.037Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399525980-90"
+    },
+    {
+      "at": "2026-09-26T05:12:07.584Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/clientes/listado",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399526542-92"
+    },
+    {
+      "at": "2026-09-26T05:12:07.758Z",
+      "actor": "ADMIN-PREP",
+      "method": "POST",
+      "path": "/api/clientes",
+      "status": 201,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399526898-93"
+    },
+    {
+      "at": "2026-09-26T05:12:09.126Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399528456-98"
+    },
+    {
+      "at": "2026-09-26T05:12:09.142Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399529130-100"
+    },
+    {
+      "at": "2026-09-26T05:12:09.922Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399529146-101"
+    },
+    {
+      "at": "2026-09-26T05:12:10.259Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399529971-102"
+    },
+    {
+      "at": "2026-09-26T05:12:10.442Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399529975-107"
+    },
+    {
+      "at": "2026-09-26T05:12:10.480Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399529974-106"
+    },
+    {
+      "at": "2026-09-26T05:12:10.532Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399529973-104"
+    },
+    {
+      "at": "2026-09-26T05:12:10.574Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399529973-103"
+    },
+    {
+      "at": "2026-09-26T05:12:10.610Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/entradas",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399529974-105"
+    },
+    {
+      "at": "2026-09-26T05:12:10.786Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399529976-108"
+    },
+    {
+      "at": "2026-09-26T05:12:10.889Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/fecha-servidor",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399529980-113"
+    },
+    {
+      "at": "2026-09-26T05:12:10.958Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399529976-109"
+    },
+    {
+      "at": "2026-09-26T05:12:11.008Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399529977-110"
+    },
+    {
+      "at": "2026-09-26T05:12:11.122Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/entradas/catalogos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399529979-111"
+    },
+    {
+      "at": "2026-09-26T05:12:11.167Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/locations",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399529979-112"
+    },
+    {
+      "at": "2026-09-26T05:12:12.092Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/contenedores/disponibles-entrada",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399531558-116"
+    },
+    {
+      "at": "2026-09-26T05:12:12.188Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/locations/835/pisos",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399531557-115"
+    },
+    {
+      "at": "2026-09-26T05:12:16.461Z",
+      "actor": "ADMIN-PREP",
+      "method": "POST",
+      "path": "/api/inventario/entradas",
+      "status": 201,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399533790-117"
+    },
+    {
+      "at": "2026-09-26T05:12:17.561Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399537007-134"
+    },
+    {
+      "at": "2026-09-26T05:12:17.570Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399537565-140"
+    },
+    {
+      "at": "2026-09-26T05:12:18.252Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399537572-141"
+    },
+    {
+      "at": "2026-09-26T05:12:18.580Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399538280-148"
+    },
+    {
+      "at": "2026-09-26T05:12:19.031Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399538282-149"
+    },
+    {
+      "at": "2026-09-26T05:12:19.077Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399538282-151"
+    },
+    {
+      "at": "2026-09-26T05:12:19.374Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399538283-152"
+    },
+    {
+      "at": "2026-09-26T05:12:19.375Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399538282-150"
+    },
+    {
+      "at": "2026-09-26T05:12:19.377Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399538283-153"
+    },
+    {
+      "at": "2026-09-26T05:12:19.429Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399538284-154"
+    },
+    {
+      "at": "2026-09-26T05:12:19.624Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399538285-155"
+    },
+    {
+      "at": "2026-09-26T05:12:22.222Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399541622-159"
+    },
+    {
+      "at": "2026-09-26T05:12:27.664Z",
+      "actor": "ADMIN-PREP",
+      "method": "POST",
+      "path": "/api/sesiones-caja/abrir",
+      "status": 201,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399546700-160"
+    },
+    {
+      "at": "2026-09-26T05:12:28.836Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399547666-161"
+    },
+    {
+      "at": "2026-09-26T05:12:29.427Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399548868-162"
+    },
+    {
+      "at": "2026-09-26T05:12:29.504Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/caja/tickets",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399548870-165"
+    },
+    {
+      "at": "2026-09-26T05:12:29.899Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399548870-164"
+    },
+    {
+      "at": "2026-09-26T05:12:29.973Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/sesiones-caja/1/salidas-dinero",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399548869-163"
+    },
+    {
+      "at": "2026-09-26T05:12:31.571Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399551020-169"
+    },
+    {
+      "at": "2026-09-26T05:12:31.579Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399551574-171"
+    },
+    {
+      "at": "2026-09-26T05:12:32.267Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399551582-172"
+    },
+    {
+      "at": "2026-09-26T05:12:32.613Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399552299-173"
+    },
+    {
+      "at": "2026-09-26T05:12:32.834Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399552303-178"
+    },
+    {
+      "at": "2026-09-26T05:12:32.839Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/locations",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399552302-177"
+    },
+    {
+      "at": "2026-09-26T05:12:32.861Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399552302-176"
+    },
+    {
+      "at": "2026-09-26T05:12:32.895Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399552301-174"
+    },
+    {
+      "at": "2026-09-26T05:12:32.931Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399552301-175"
+    },
+    {
+      "at": "2026-09-26T05:12:33.190Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399552304-179"
+    },
+    {
+      "at": "2026-09-26T05:12:33.366Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399552304-180"
+    },
+    {
+      "at": "2026-09-26T05:12:33.367Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399552305-181"
+    },
+    {
+      "at": "2026-09-26T05:12:42.335Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399561769-188"
+    },
+    {
+      "at": "2026-09-26T05:12:42.669Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/pos/buscar",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399562084-189"
+    },
+    {
+      "at": "2026-09-26T05:12:42.921Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/clientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399561769-187"
+    },
+    {
+      "at": "2026-09-26T05:12:45.754Z",
+      "actor": "ADMIN-PREP",
+      "method": "POST",
+      "path": "/api/pos/validar-precio",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399565118-190"
+    },
+    {
+      "at": "2026-09-26T05:12:48.136Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399567435-191"
+    },
+    {
+      "at": "2026-09-26T05:12:48.558Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399567897-192"
+    },
+    {
+      "at": "2026-09-26T05:12:58.967Z",
+      "actor": "ADMIN-PREP",
+      "method": "POST",
+      "path": "/api/tickets",
+      "status": 201,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399576999-197"
+    },
+    {
+      "at": "2026-09-26T05:12:59.528Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399578978-198"
+    },
+    {
+      "at": "2026-09-26T05:12:59.810Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/tickets/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399578985-201"
+    },
+    {
+      "at": "2026-09-26T05:12:59.815Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/tickets/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399578978-199"
+    },
+    {
+      "at": "2026-09-26T05:13:02.043Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399581468-207"
+    },
+    {
+      "at": "2026-09-26T05:13:02.053Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399582046-209"
+    },
+    {
+      "at": "2026-09-26T05:13:02.759Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399582056-210"
+    },
+    {
+      "at": "2026-09-26T05:13:03.119Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399582795-211"
+    },
+    {
+      "at": "2026-09-26T05:13:03.232Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399582798-216"
+    },
+    {
+      "at": "2026-09-26T05:13:03.307Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399582796-214"
+    },
+    {
+      "at": "2026-09-26T05:13:03.486Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/locations",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399582797-215"
+    },
+    {
+      "at": "2026-09-26T05:13:03.571Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399582796-213"
+    },
+    {
+      "at": "2026-09-26T05:13:03.652Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399582798-218"
+    },
+    {
+      "at": "2026-09-26T05:13:03.668Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399582795-212"
+    },
+    {
+      "at": "2026-09-26T05:13:03.708Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399582798-217"
+    },
+    {
+      "at": "2026-09-26T05:13:03.842Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399582798-219"
+    },
+    {
+      "at": "2026-09-26T05:13:11.785Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399591219-226"
+    },
+    {
+      "at": "2026-09-26T05:13:12.125Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/pos/buscar",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399591535-227"
+    },
+    {
+      "at": "2026-09-26T05:13:12.379Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/clientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399591218-225"
+    },
+    {
+      "at": "2026-09-26T05:13:15.202Z",
+      "actor": "ADMIN-PREP",
+      "method": "POST",
+      "path": "/api/pos/validar-precio",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399594565-228"
+    },
+    {
+      "at": "2026-09-26T05:13:18.634Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399597761-229"
+    },
+    {
+      "at": "2026-09-26T05:13:19.371Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399598670-230"
+    },
+    {
+      "at": "2026-09-26T05:13:22.253Z",
+      "actor": "ADMIN-PREP",
+      "method": "POST",
+      "path": "/api/tickets",
+      "status": 201,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399600422-234"
+    },
+    {
+      "at": "2026-09-26T05:13:22.776Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399602265-236"
+    },
+    {
+      "at": "2026-09-26T05:13:23.109Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/tickets/2",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399602281-239"
+    },
+    {
+      "at": "2026-09-26T05:13:23.125Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/tickets/2",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399602266-237"
+    },
+    {
+      "at": "2026-09-26T05:13:23.691Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399603141-241"
+    },
+    {
+      "at": "2026-09-26T05:13:23.875Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/tickets/2/documento-impresion",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399603141-242"
+    },
+    {
+      "at": "2026-09-26T05:13:23.954Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/tickets/2/documento-impresion",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399603142-243"
+    },
+    {
+      "at": "2026-09-26T05:13:24.018Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/clientes/2583/notas/2",
+      "status": 404,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399603140-240",
+      "error": "La nota de crédito no corresponde al cliente."
+    },
+    {
+      "at": "2026-09-26T05:13:26.480Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399605913-250"
+    },
+    {
+      "at": "2026-09-26T05:13:26.489Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399606483-252"
+    },
+    {
+      "at": "2026-09-26T05:13:27.192Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399606492-253"
+    },
+    {
+      "at": "2026-09-26T05:13:27.550Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399607232-254"
+    },
+    {
+      "at": "2026-09-26T05:13:27.774Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399607235-259"
+    },
+    {
+      "at": "2026-09-26T05:13:27.789Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399607234-257"
+    },
+    {
+      "at": "2026-09-26T05:13:27.809Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399607234-256"
+    },
+    {
+      "at": "2026-09-26T05:13:27.824Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399607234-258"
+    },
+    {
+      "at": "2026-09-26T05:13:27.904Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399607233-255"
+    },
+    {
+      "at": "2026-09-26T05:13:28.145Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399607237-260"
+    },
+    {
+      "at": "2026-09-26T05:13:28.308Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399607237-261"
+    },
+    {
+      "at": "2026-09-26T05:13:31.617Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399610572-263"
+    },
+    {
+      "at": "2026-09-26T05:13:32.795Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399611633-264"
+    },
+    {
+      "at": "2026-09-26T05:13:33.081Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/caja/tickets",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399611635-267"
+    },
+    {
+      "at": "2026-09-26T05:13:33.528Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/sesiones-caja/1/salidas-dinero",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399611634-265"
+    },
+    {
+      "at": "2026-09-26T05:13:33.598Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399611635-266"
+    },
+    {
+      "at": "2026-09-26T05:13:36.507Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/tickets/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399615668-269"
+    },
+    {
+      "at": "2026-09-26T05:13:42.917Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399622206-273"
+    },
+    {
+      "at": "2026-09-26T05:13:43.568Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399622909-275"
+    },
+    {
+      "at": "2026-09-26T05:13:43.748Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/caja/tickets",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399623083-276"
+    },
+    {
+      "at": "2026-09-26T05:13:44.090Z",
+      "actor": "ADMIN-PREP",
+      "method": "POST",
+      "path": "/api/tickets/1/cobrar",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399622829-274"
+    },
+    {
+      "at": "2026-09-26T05:13:44.762Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/caja/tickets",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399624092-277"
+    },
+    {
+      "at": "2026-09-26T05:13:44.951Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/tickets/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399624126-279"
+    },
+    {
+      "at": "2026-09-26T05:13:49.510Z",
+      "actor": "F-PREP",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-PREP-1790399629497-285",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T05:13:49.627Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/sesiones-caja/1/salidas-dinero",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399628529-280"
+    },
+    {
+      "at": "2026-09-26T05:13:49.769Z",
+      "actor": "ADMIN-PREP",
+      "method": "GET",
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-PREP-1790399628601-281"
+    },
+    {
+      "at": "2026-09-26T05:13:50.371Z",
+      "actor": "F-PREP",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-PREP-1790399629636-288"
+    },
+    {
+      "at": "2026-09-26T05:13:51.157Z",
+      "actor": "F-PREP",
+      "method": "GET",
+      "path": "/api/e11/fiscal/facturas/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-PREP-1790399630417-292"
+    },
+    {
+      "at": "2026-09-26T05:13:51.721Z",
+      "actor": "F-PREP",
+      "method": "GET",
+      "path": "/api/e11/fiscal/facturas/2",
+      "status": 404,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-PREP-1790399631160-293",
+      "code": "NO_ENCONTRADO",
+      "bodyRequestId": "252643f5-efd1-4ec5-86e1-ec541a95e775"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "native-prep/native-isolated-site-and-three-floors-0.png",
+      "sha256": "10d7d3254d8a712644d685e7c5e271eabcc5e32bf3e99ed1a7e5e5d475698430"
+    },
+    {
+      "file": "native-prep/native-supplier-product-client-0.png",
+      "sha256": "0a62cae81ddcec40af72a35ad7c4e0fc35f3ce705655346dd3d9e47f5fa51ff9"
+    },
+    {
+      "file": "native-prep/native-eight-roll-entry-0.png",
+      "sha256": "67d0cf228da49a19901c09e79b853f19dc153bd395cd30959d7e23aedddaf3a4"
+    },
+    {
+      "file": "native-prep/native-open-own-cash-session-0.png",
+      "sha256": "b384bb20638a74ae692440f7d3323afba873db9b54ae71c66faae7c21e82bd82"
+    },
+    {
+      "file": "native-prep/native-sale-invoice-0.png",
+      "sha256": "60843cb7cd647aaa4dc893ebc3be15ffc1bc70963fb32a0e404f204994ebe87c"
+    },
+    {
+      "file": "native-prep/native-sale-note-0.png",
+      "sha256": "7035dee555fb0b1f063f57d21672dd32742df0f331746f70a9650ce1641214e8"
+    },
+    {
+      "file": "native-prep/native-pay-fiscal-sale-transfer-0.png",
+      "sha256": "842244d2862d96947a74e8558257492e8ec58291c338f12a9c75daa01826ffde"
+    }
+  ]
+}

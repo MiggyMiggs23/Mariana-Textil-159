@@ -1,0 +1,24 @@
+(node:3473) Warning: SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as aliases for 'verify-full'.
+In the next major version (pg-connection-string v3.0.0 and pg v9.0.0), these modes will adopt standard libpq semantics, which have weaker security guarantees.
+
+To prepare for this change:
+- If you want the current behavior, explicitly use 'sslmode=verify-full'
+- If you want libpq compatibility now, use 'uselibpqcompat=true&sslmode=require'
+
+See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode definitions.
+(Use `node --trace-warnings ...` to show where the warning was created)
+▶ real PG: canonical bulk parity, lock compatibility, rolled-back read retry, revocation
+  ✔ directory exactly matches all canonical individual DTOs; two queries (6627.894768ms)
+  ✔ identity row lock permits renewal but blocks logout deletion (1443.837839ms)
+  ✔ deterministic real 40001 restarts full read after rollback, delivers once (820.299654ms)
+  ✔ deleted session cannot be reauthorized (192.443057ms)
+✔ real PG: canonical bulk parity, lock compatibility, rolled-back read retry, revocation (9699.15221ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9875.642762
+

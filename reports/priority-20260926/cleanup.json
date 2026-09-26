@@ -1,0 +1,78 @@
+{
+  "status": "BRANCHES_ABSENT_CREDENTIALS_REMOVED_RESIDUAL_LOG_PRESERVED_FOR_MAIN",
+  "at": "2026-09-26T06:59:14.675Z",
+  "project": "withered-block-09991755",
+  "branchDeletionOrder": [
+    {
+      "branch": "br-hidden-lab-axibqutc",
+      "deleteSucceeded": true,
+      "independentDescribe": "HTTP404 branch not found"
+    },
+    {
+      "branch": "br-snowy-sea-ax2ft2er",
+      "deleteSucceeded": true,
+      "independentDescribe": "HTTP404 branch not found"
+    }
+  ],
+  "otherBranchesTouched": false,
+  "applicationDatabaseAccess": false,
+  "managedWorkflowsTouched": false,
+  "ports": [
+    {
+      "port": 18227,
+      "status": "ECONNREFUSED"
+    },
+    {
+      "port": 18228,
+      "status": "ECONNREFUSED"
+    },
+    {
+      "port": 18237,
+      "status": "ECONNREFUSED"
+    },
+    {
+      "port": 18238,
+      "status": "ECONNREFUSED"
+    },
+    {
+      "port": 18247,
+      "status": "ECONNREFUSED"
+    },
+    {
+      "port": 18248,
+      "status": "ECONNREFUSED"
+    }
+  ],
+  "removal": [
+    {
+      "root": "/tmp/priority-20260926",
+      "beforeFiles": 6,
+      "removedFiles": 5,
+      "remaining": [
+        "private-api.log"
+      ]
+    },
+    {
+      "root": "/tmp/priority-perf-20260926",
+      "beforeFiles": 4,
+      "removedFiles": 4,
+      "remaining": []
+    },
+    {
+      "root": "/tmp/priority-fiscal-20260926",
+      "beforeFiles": 10,
+      "removedFiles": 10,
+      "remaining": []
+    }
+  ],
+  "credentialsDumpsEnvAndBrowserSessionsRemoved": true,
+  "retainedPrivateException": {
+    "path": "/tmp/priority-20260926/private-api.log",
+    "mode": "0600 under0700 directory",
+    "reason": "MAIN requested residual login500 cause preservation. Worker cannot inspect console logs under developer scope, so preserve only this original log for MAIN rather than irreversibly destroy unextracted evidence.",
+    "nextStep": "MAIN extract sanitized exception cause if authorized, then delete this last private log and directory."
+  },
+  "reportsAndScreenshotsRetained": true,
+  "finalArchival": "final-archival.json",
+  "residualCauseReport": "residual-login-cause.json"
+}

@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "baselinePeak": 103,
+  "candidatePeak": 3,
+  "listCustomers": 103,
+  "nonemptyCanonicalProjectionParity": true,
+  "detailLedgerCalls": 1,
+  "unrelatedCustomerLedgers": 0,
+  "absentCustomerLedgerCalls": 0,
+  "priceProducts": 103,
+  "priceBaselinePeak": 206,
+  "priceCandidatePeak": 6,
+  "completePriceDtoFilterOrderParity": true
+}

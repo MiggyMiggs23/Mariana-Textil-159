@@ -1,0 +1,1195 @@
+{
+  "status": "RUNNING",
+  "startedAt": "2026-09-26T04:57:28.693Z",
+  "apiSha256": "e6da4a89804e6bd0b52a22ab97eb7539e91d9c1cb5102e7ce4d762a18fa0b3b8",
+  "checks": [
+    {
+      "name": "native-create-F",
+      "status": "PASS",
+      "evidence": {
+        "id": 237
+      }
+    },
+    {
+      "name": "native-create-A",
+      "status": "PASS",
+      "evidence": {
+        "id": 238
+      }
+    },
+    {
+      "name": "native-assign-A",
+      "status": "PASS",
+      "evidence": {
+        "status": 200,
+        "requestId": null,
+        "body": {
+          "usuarioId": 238,
+          "rolBase": "CONTADOR",
+          "perfil": "A",
+          "perfilVersion": 1,
+          "permisosVersion": "a042f7e3e78d4179dda77e8bc083bde3f326031ea2b88da96a77eef265c9e4e7",
+          "capacidades": [
+            "FINANZAS_LIMITADAS_LEER",
+            "E5_PREPARAR"
+          ]
+        }
+      }
+    },
+    {
+      "name": "A-native-login",
+      "status": "PASS",
+      "evidence": {
+        "id": 238
+      }
+    },
+    {
+      "name": "A-SPA-identity-0",
+      "status": "BLOCKED_OR_DEFECT",
+      "response": {
+        "status": 409,
+        "requestId": null,
+        "body": {
+          "code": "REVISION_OBSOLETA",
+          "message": "Conflicto concurrente; recarga y confirma de nuevo.",
+          "requestId": "0212dee8-b116-4c29-b4b2-dbe9077fb69c"
+        }
+      },
+      "error": "Expected values to be strictly equal:\n\n409 !== 200\n"
+    },
+    {
+      "name": "A-SPA-identity-1",
+      "status": "PASS",
+      "response": {
+        "status": 200,
+        "requestId": null,
+        "body": {
+          "usuarioId": 238,
+          "rolBase": "CONTADOR",
+          "perfil": "A",
+          "perfilVersion": 1,
+          "permisosVersion": "a042f7e3e78d4179dda77e8bc083bde3f326031ea2b88da96a77eef265c9e4e7",
+          "capacidades": [
+            "FINANZAS_LIMITADAS_LEER",
+            "E5_PREPARAR"
+          ]
+        }
+      },
+      "evidence": {
+        "status": 200,
+        "requestId": null,
+        "body": {
+          "usuarioId": 238,
+          "rolBase": "CONTADOR",
+          "perfil": "A",
+          "perfilVersion": 1,
+          "permisosVersion": "a042f7e3e78d4179dda77e8bc083bde3f326031ea2b88da96a77eef265c9e4e7",
+          "capacidades": [
+            "FINANZAS_LIMITADAS_LEER",
+            "E5_PREPARAR"
+          ]
+        }
+      }
+    },
+    {
+      "name": "A-SPA-identity-2",
+      "status": "PASS",
+      "response": {
+        "status": 200,
+        "requestId": null,
+        "body": {
+          "usuarioId": 238,
+          "rolBase": "CONTADOR",
+          "perfil": "A",
+          "perfilVersion": 1,
+          "permisosVersion": "a042f7e3e78d4179dda77e8bc083bde3f326031ea2b88da96a77eef265c9e4e7",
+          "capacidades": [
+            "FINANZAS_LIMITADAS_LEER",
+            "E5_PREPARAR"
+          ]
+        }
+      },
+      "evidence": {
+        "status": 200,
+        "requestId": null,
+        "body": {
+          "usuarioId": 238,
+          "rolBase": "CONTADOR",
+          "perfil": "A",
+          "perfilVersion": 1,
+          "permisosVersion": "a042f7e3e78d4179dda77e8bc083bde3f326031ea2b88da96a77eef265c9e4e7",
+          "capacidades": [
+            "FINANZAS_LIMITADAS_LEER",
+            "E5_PREPARAR"
+          ]
+        }
+      }
+    },
+    {
+      "name": "A-SPA--api-auth-me",
+      "status": "BLOCKED_OR_DEFECT",
+      "response": {
+        "status": 500,
+        "requestId": null,
+        "error": "No se pudo completar la operación. No se guardaron cambios; intenta nuevamente. Si el problema continúa, reporta la pantalla y la hora del intento.",
+        "code": "INTERNAL_ERROR"
+      },
+      "error": "Expected values to be strictly equal:\n\n500 !== 200\n"
+    },
+    {
+      "name": "A-SPA--api-fondo",
+      "status": "BLOCKED_OR_DEFECT",
+      "response": {
+        "status": 500,
+        "requestId": null,
+        "error": "No se pudo completar la operación. No se guardaron cambios; intenta nuevamente. Si el problema continúa, reporta la pantalla y la hora del intento.",
+        "code": "INTERNAL_ERROR"
+      },
+      "error": "Expected values to be strictly equal:\n\n500 !== 403\n"
+    },
+    {
+      "name": "A-SPA--api-e11-finanzas-clientes",
+      "status": "BLOCKED_OR_DEFECT",
+      "response": {
+        "status": 503,
+        "requestId": null,
+        "code": "DEPENDENCIA_NO_DISPONIBLE"
+      },
+      "error": "Expected values to be strictly equal:\n\n503 !== 200\n"
+    },
+    {
+      "name": "A-QUIESCENT-identity-0",
+      "status": "BLOCKED_OR_DEFECT",
+      "response": {
+        "status": 503,
+        "requestId": null,
+        "body": {
+          "code": "DEPENDENCIA_NO_DISPONIBLE",
+          "message": "No fue posible completar E11; no se usa un lector alternativo.",
+          "requestId": "218ee785-2886-4dd8-a833-9407efdb548e"
+        }
+      },
+      "error": "Expected values to be strictly equal:\n\n503 !== 200\n"
+    },
+    {
+      "name": "A-QUIESCENT-identity-1",
+      "status": "PASS",
+      "response": {
+        "status": 200,
+        "requestId": null,
+        "body": {
+          "usuarioId": 238,
+          "rolBase": "CONTADOR",
+          "perfil": "A",
+          "perfilVersion": 1,
+          "permisosVersion": "a042f7e3e78d4179dda77e8bc083bde3f326031ea2b88da96a77eef265c9e4e7",
+          "capacidades": [
+            "FINANZAS_LIMITADAS_LEER",
+            "E5_PREPARAR"
+          ]
+        }
+      },
+      "evidence": {
+        "status": 200,
+        "requestId": null,
+        "body": {
+          "usuarioId": 238,
+          "rolBase": "CONTADOR",
+          "perfil": "A",
+          "perfilVersion": 1,
+          "permisosVersion": "a042f7e3e78d4179dda77e8bc083bde3f326031ea2b88da96a77eef265c9e4e7",
+          "capacidades": [
+            "FINANZAS_LIMITADAS_LEER",
+            "E5_PREPARAR"
+          ]
+        }
+      }
+    },
+    {
+      "name": "A-QUIESCENT-identity-2",
+      "status": "PASS",
+      "response": {
+        "status": 200,
+        "requestId": null,
+        "body": {
+          "usuarioId": 238,
+          "rolBase": "CONTADOR",
+          "perfil": "A",
+          "perfilVersion": 1,
+          "permisosVersion": "a042f7e3e78d4179dda77e8bc083bde3f326031ea2b88da96a77eef265c9e4e7",
+          "capacidades": [
+            "FINANZAS_LIMITADAS_LEER",
+            "E5_PREPARAR"
+          ]
+        }
+      },
+      "evidence": {
+        "status": 200,
+        "requestId": null,
+        "body": {
+          "usuarioId": 238,
+          "rolBase": "CONTADOR",
+          "perfil": "A",
+          "perfilVersion": 1,
+          "permisosVersion": "a042f7e3e78d4179dda77e8bc083bde3f326031ea2b88da96a77eef265c9e4e7",
+          "capacidades": [
+            "FINANZAS_LIMITADAS_LEER",
+            "E5_PREPARAR"
+          ]
+        }
+      }
+    },
+    {
+      "name": "A-QUIESCENT--api-auth-me",
+      "status": "PASS",
+      "response": {
+        "status": 200,
+        "requestId": null
+      },
+      "evidence": {
+        "status": 200,
+        "requestId": null
+      }
+    },
+    {
+      "name": "A-QUIESCENT--api-fondo",
+      "status": "PASS",
+      "response": {
+        "status": 403,
+        "requestId": null,
+        "code": "PERFIL_DENEGADO"
+      },
+      "evidence": {
+        "status": 403,
+        "requestId": null,
+        "code": "PERFIL_DENEGADO"
+      }
+    },
+    {
+      "name": "A-QUIESCENT--api-e11-finanzas-clientes",
+      "status": "RUNNING"
+    }
+  ],
+  "requests": [
+    {
+      "at": "2026-09-26T04:57:29.404Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398649373-4",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T04:57:30.385Z",
+      "actor": "ADMIN",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398649547-7"
+    },
+    {
+      "at": "2026-09-26T04:57:31.256Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398650577-13"
+    },
+    {
+      "at": "2026-09-26T04:57:31.266Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398651260-15"
+    },
+    {
+      "at": "2026-09-26T04:57:31.864Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398651268-16"
+    },
+    {
+      "at": "2026-09-26T04:57:32.186Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398651910-17"
+    },
+    {
+      "at": "2026-09-26T04:57:32.593Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398651912-20"
+    },
+    {
+      "at": "2026-09-26T04:57:32.690Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398651914-23"
+    },
+    {
+      "at": "2026-09-26T04:57:32.722Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398651912-21"
+    },
+    {
+      "at": "2026-09-26T04:57:32.750Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398651914-22"
+    },
+    {
+      "at": "2026-09-26T04:57:32.772Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398651912-19"
+    },
+    {
+      "at": "2026-09-26T04:57:32.823Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398651911-18"
+    },
+    {
+      "at": "2026-09-26T04:57:33.160Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398651914-24"
+    },
+    {
+      "at": "2026-09-26T04:57:33.196Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/users",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398651915-25"
+    },
+    {
+      "at": "2026-09-26T04:57:33.259Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/locations",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398651915-26"
+    },
+    {
+      "at": "2026-09-26T04:57:35.134Z",
+      "actor": "ADMIN",
+      "method": "POST",
+      "path": "/api/users",
+      "status": 201,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398654210-28"
+    },
+    {
+      "at": "2026-09-26T04:57:36.244Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398655732-33"
+    },
+    {
+      "at": "2026-09-26T04:57:36.253Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398656247-35"
+    },
+    {
+      "at": "2026-09-26T04:57:36.892Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398656256-36"
+    },
+    {
+      "at": "2026-09-26T04:57:37.214Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398656919-37"
+    },
+    {
+      "at": "2026-09-26T04:57:37.427Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398656922-39"
+    },
+    {
+      "at": "2026-09-26T04:57:37.439Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398656923-41"
+    },
+    {
+      "at": "2026-09-26T04:57:37.482Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398656922-40"
+    },
+    {
+      "at": "2026-09-26T04:57:37.515Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398656920-38"
+    },
+    {
+      "at": "2026-09-26T04:57:37.536Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398656924-42"
+    },
+    {
+      "at": "2026-09-26T04:57:37.756Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398656924-43"
+    },
+    {
+      "at": "2026-09-26T04:57:37.945Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398656925-44"
+    },
+    {
+      "at": "2026-09-26T04:57:37.960Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/users",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398656926-45"
+    },
+    {
+      "at": "2026-09-26T04:57:38.068Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/locations",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398656926-46"
+    },
+    {
+      "at": "2026-09-26T04:57:39.904Z",
+      "actor": "ADMIN",
+      "method": "POST",
+      "path": "/api/users",
+      "status": 201,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398658921-48"
+    },
+    {
+      "at": "2026-09-26T04:57:40.495Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/users",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398659905-49"
+    },
+    {
+      "at": "2026-09-26T04:57:41.278Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/usuarios/238/perfil/historial",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398660617-51"
+    },
+    {
+      "at": "2026-09-26T04:57:41.404Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/usuarios/238/perfil",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398660616-50"
+    },
+    {
+      "at": "2026-09-26T04:57:42.215Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398661517-52"
+    },
+    {
+      "at": "2026-09-26T04:57:42.981Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398662216-53"
+    },
+    {
+      "at": "2026-09-26T04:57:43.808Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/usuarios/238/perfil",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398662983-54"
+    },
+    {
+      "at": "2026-09-26T04:57:44.400Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398663810-55"
+    },
+    {
+      "at": "2026-09-26T04:57:45.635Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/operaciones/234/PERFIL/e87693c5-4a0d-419c-b2ec-d14d66de9441",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398664406-57"
+    },
+    {
+      "at": "2026-09-26T04:57:45.727Z",
+      "actor": "ADMIN",
+      "method": "PUT",
+      "path": "/api/e11/usuarios/238/perfil",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398664403-56"
+    },
+    {
+      "at": "2026-09-26T04:57:46.265Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398665728-59"
+    },
+    {
+      "at": "2026-09-26T04:57:46.276Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398665636-58"
+    },
+    {
+      "at": "2026-09-26T04:57:46.345Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398666269-61"
+    },
+    {
+      "at": "2026-09-26T04:57:46.453Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/usuarios/238/perfil",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398665733-60"
+    },
+    {
+      "at": "2026-09-26T04:57:46.670Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/usuarios/238/perfil/historial",
+      "status": 409,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398666272-66",
+      "code": "REVISION_OBSOLETA",
+      "bodyRequestId": "3090799b-5704-468b-bc49-d7ec40fb63b7"
+    },
+    {
+      "at": "2026-09-26T04:57:46.697Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/usuarios/238/perfil",
+      "status": 409,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398666272-65",
+      "code": "REVISION_OBSOLETA",
+      "bodyRequestId": "81fd5ef6-2c40-4293-8293-8b1fc1bec70c"
+    },
+    {
+      "at": "2026-09-26T04:57:46.764Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 409,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398666269-62",
+      "code": "REVISION_OBSOLETA",
+      "bodyRequestId": "56508595-7249-43bf-b230-23f4490f7cdb"
+    },
+    {
+      "at": "2026-09-26T04:57:47.024Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398667012-71",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T04:57:47.875Z",
+      "actor": "A",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398667142-74"
+    },
+    {
+      "at": "2026-09-26T04:57:48.304Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 409,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398667888-77",
+      "code": "REVISION_OBSOLETA",
+      "bodyRequestId": "0212dee8-b116-4c29-b4b2-dbe9077fb69c"
+    },
+    {
+      "at": "2026-09-26T04:57:48.437Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398667881-75"
+    },
+    {
+      "at": "2026-09-26T04:57:48.447Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398668441-79"
+    },
+    {
+      "at": "2026-09-26T04:57:48.958Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398668309-78"
+    },
+    {
+      "at": "2026-09-26T04:57:49.142Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398668449-80"
+    },
+    {
+      "at": "2026-09-26T04:57:49.666Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398668964-81"
+    },
+    {
+      "at": "2026-09-26T04:58:02.497Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398681772-85"
+    },
+    {
+      "at": "2026-09-26T04:58:02.857Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398682534-86"
+    },
+    {
+      "at": "2026-09-26T04:58:02.985Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398682537-89"
+    },
+    {
+      "at": "2026-09-26T04:58:03.003Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398682538-91"
+    },
+    {
+      "at": "2026-09-26T04:58:03.075Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398682536-88"
+    },
+    {
+      "at": "2026-09-26T04:58:03.144Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398682537-90"
+    },
+    {
+      "at": "2026-09-26T04:58:03.364Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398682535-87"
+    },
+    {
+      "at": "2026-09-26T04:58:03.504Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/users",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398682539-94"
+    },
+    {
+      "at": "2026-09-26T04:58:03.517Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398682539-93"
+    },
+    {
+      "at": "2026-09-26T04:58:03.575Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/locations",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398682540-95"
+    },
+    {
+      "at": "2026-09-26T04:58:03.624Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398682538-92"
+    },
+    {
+      "at": "2026-09-26T04:58:04.179Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/operaciones/234/PERFIL/e87693c5-4a0d-419c-b2ec-d14d66de9441",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398682540-96"
+    },
+    {
+      "at": "2026-09-26T04:58:04.214Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398682540-97"
+    },
+    {
+      "at": "2026-09-26T04:58:04.772Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398684180-100"
+    },
+    {
+      "at": "2026-09-26T04:58:18.096Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398697500-101"
+    },
+    {
+      "at": "2026-09-26T04:58:18.958Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398698366-102"
+    },
+    {
+      "at": "2026-09-26T04:58:24.716Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 500,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398669672-84",
+      "error": "No se pudo completar la operación. No se guardaron cambios; intenta nuevamente. Si el problema continúa, reporta la pantalla y la hora del intento.",
+      "code": "INTERNAL_ERROR"
+    },
+    {
+      "at": "2026-09-26T04:58:33.805Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398713098-104"
+    },
+    {
+      "at": "2026-09-26T04:58:34.794Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398713960-105"
+    },
+    {
+      "at": "2026-09-26T04:58:39.189Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 503,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398684146-99",
+      "code": "DEPENDENCIA_NO_DISPONIBLE",
+      "bodyRequestId": "4f11bca9-619a-486d-a7a7-c19cb9bc54e3"
+    },
+    {
+      "at": "2026-09-26T04:58:49.331Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398728808-106"
+    },
+    {
+      "at": "2026-09-26T04:58:50.339Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398729796-107"
+    },
+    {
+      "at": "2026-09-26T04:58:59.774Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/fondo",
+      "status": 500,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398704723-103",
+      "error": "No se pudo completar la operación. No se guardaron cambios; intenta nuevamente. Si el problema continúa, reporta la pantalla y la hora del intento.",
+      "code": "INTERNAL_ERROR"
+    },
+    {
+      "at": "2026-09-26T04:59:04.104Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398743627-110"
+    },
+    {
+      "at": "2026-09-26T04:59:04.881Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398744333-111"
+    },
+    {
+      "at": "2026-09-26T04:59:06.081Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398745342-112"
+    },
+    {
+      "at": "2026-09-26T04:59:20.528Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398759888-113"
+    },
+    {
+      "at": "2026-09-26T04:59:21.699Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398761085-114"
+    },
+    {
+      "at": "2026-09-26T04:59:29.268Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 503,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398734213-108",
+      "code": "DEPENDENCIA_NO_DISPONIBLE",
+      "bodyRequestId": "2bbf7bbe-0464-4691-b4a8-32859ccde4c2"
+    },
+    {
+      "at": "2026-09-26T04:59:34.833Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/e11/finanzas/clientes",
+      "status": 503,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398739788-109",
+      "code": "DEPENDENCIA_NO_DISPONIBLE",
+      "bodyRequestId": "074e673e-4a18-4fa0-bb39-da70d8d80a65"
+    },
+    {
+      "at": "2026-09-26T04:59:36.101Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398775531-117"
+    },
+    {
+      "at": "2026-09-26T04:59:37.468Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398776702-118"
+    },
+    {
+      "at": "2026-09-26T04:59:51.735Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398791106-119"
+    },
+    {
+      "at": "2026-09-26T04:59:53.077Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398792471-120"
+    },
+    {
+      "at": "2026-09-26T05:00:04.691Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398804124-121"
+    },
+    {
+      "at": "2026-09-26T05:00:07.386Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398806737-122"
+    },
+    {
+      "at": "2026-09-26T05:00:08.701Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398808079-123"
+    },
+    {
+      "at": "2026-09-26T05:00:10.009Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 503,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398774967-116",
+      "code": "DEPENDENCIA_NO_DISPONIBLE",
+      "bodyRequestId": "218ee785-2886-4dd8-a833-9407efdb548e"
+    },
+    {
+      "at": "2026-09-26T05:00:23.040Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398822389-125"
+    },
+    {
+      "at": "2026-09-26T05:00:24.541Z",
+      "actor": "ADMIN",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-1790398823704-126"
+    },
+    {
+      "at": "2026-09-26T05:00:25.194Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398810029-124"
+    },
+    {
+      "at": "2026-09-26T05:00:25.937Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398825220-127"
+    },
+    {
+      "at": "2026-09-26T05:00:26.489Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398825954-128"
+    },
+    {
+      "at": "2026-09-26T05:00:26.758Z",
+      "actor": "A",
+      "method": "GET",
+      "path": "/api/fondo",
+      "status": 403,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-A-1790398826499-129",
+      "code": "PERFIL_DENEGADO",
+      "bodyRequestId": "f58f042f-6cd3-4c3a-befe-ab243dd326e1"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "profiles-baseline/native-create-F-0.png",
+      "sha256": "a2915a4098d152524f04ce5d9107c59985c12991cc19fe4e87ca484adfabf2da"
+    },
+    {
+      "file": "profiles-baseline/native-create-A-0.png",
+      "sha256": "4c32fa2d0975d75649cca87b7933c855b8da14ca67ae34aeaa20ee3ed10d098c"
+    },
+    {
+      "file": "profiles-baseline/native-assign-A-0.png",
+      "sha256": "78f728d35a4676228c2dbfaa782d8b63105f9ca11da4e264071dec79e1ad111f"
+    }
+  ]
+}

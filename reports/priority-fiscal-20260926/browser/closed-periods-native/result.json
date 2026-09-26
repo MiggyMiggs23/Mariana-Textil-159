@@ -1,0 +1,542 @@
+{
+  "status": "PARTIAL_OR_BLOCKED",
+  "startedAt": "2026-09-26T05:58:14.991Z",
+  "apiSha256": "f3870a6e76bee58a0237e345dec303e11cf9e42af6acd99fa6314de416fc0e97",
+  "checks": [
+    {
+      "name": "controlled-clock-and-native-nonempty-fiscal-document",
+      "status": "PASS",
+      "evidence": {
+        "nativeInvoice": {
+          "facturaId": 1,
+          "ventaId": 1,
+          "folioFactura": "1",
+          "cliente": {
+            "clienteId": 2583,
+            "nombre": "PRIORITY CLIENTE NATIVO"
+          },
+          "fechaFacturacion": "2026-09-26T05:13:43.647Z",
+          "totalFacturado": "1160.00",
+          "moneda": "MXN",
+          "estado": "VIGENTE"
+        },
+        "fixedClock": "2026-10-02T18:00:00Z",
+        "historyUnchanged": true
+      }
+    },
+    {
+      "name": "DIA-NO_CUADRA-native-snapshot-and-decision",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "The expression evaluated to a falsy value:\n\n  assert.ok(await next.isEnabled())\n"
+    },
+    {
+      "name": "DIA-ACEPTADA-native-snapshot-and-decision",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "The expression evaluated to a falsy value:\n\n  assert.ok(await next.isEnabled())\n"
+    },
+    {
+      "name": "SEMANA-ACEPTADA-native-snapshot-and-decision",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "The expression evaluated to a falsy value:\n\n  assert.ok(await next.isEnabled())\n"
+    },
+    {
+      "name": "MES-ACEPTADA-native-snapshot-and-decision",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "The expression evaluated to a falsy value:\n\n  assert.ok(await next.isEnabled())\n"
+    }
+  ],
+  "requests": [
+    {
+      "at": "2026-09-26T05:58:15.810Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402295772-4",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T05:58:16.730Z",
+      "actor": "F-CLOSED",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402296023-7"
+    },
+    {
+      "at": "2026-09-26T05:58:17.167Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402297149-13",
+      "error": "Debes iniciar sesión."
+    },
+    {
+      "at": "2026-09-26T05:58:17.268Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402296735-8"
+    },
+    {
+      "at": "2026-09-26T05:58:17.281Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402297273-16"
+    },
+    {
+      "at": "2026-09-26T05:58:17.889Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402297283-17"
+    },
+    {
+      "at": "2026-09-26T05:58:18.265Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402297333-18"
+    },
+    {
+      "at": "2026-09-26T05:58:18.651Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/fiscal/ventas",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402297901-19"
+    },
+    {
+      "at": "2026-09-26T05:58:18.725Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/fiscal/clientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402297902-20"
+    },
+    {
+      "at": "2026-09-26T05:58:18.794Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402298269-22"
+    },
+    {
+      "at": "2026-09-26T05:58:18.804Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402298798-25"
+    },
+    {
+      "at": "2026-09-26T05:58:18.915Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/fiscal/facturas/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402298284-24"
+    },
+    {
+      "at": "2026-09-26T05:58:19.456Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402298805-26"
+    },
+    {
+      "at": "2026-09-26T05:58:19.571Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402299084-30"
+    },
+    {
+      "at": "2026-09-26T05:58:19.580Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402299574-49"
+    },
+    {
+      "at": "2026-09-26T05:58:19.800Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "GET",
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402299495-32"
+    },
+    {
+      "at": "2026-09-26T05:58:20.177Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402299581-50"
+    },
+    {
+      "at": "2026-09-26T05:58:20.196Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "GET",
+      "path": "/api/notificaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402299517-41"
+    },
+    {
+      "at": "2026-09-26T05:58:20.391Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402299497-35"
+    },
+    {
+      "at": "2026-09-26T05:58:20.391Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402299518-42"
+    },
+    {
+      "at": "2026-09-26T05:58:20.393Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402299498-38"
+    },
+    {
+      "at": "2026-09-26T05:58:20.394Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "GET",
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402299495-33"
+    },
+    {
+      "at": "2026-09-26T05:58:20.395Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402299519-43"
+    },
+    {
+      "at": "2026-09-26T05:58:20.653Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "GET",
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402299520-44"
+    },
+    {
+      "at": "2026-09-26T05:58:20.764Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/fiscal/clientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402300183-52"
+    },
+    {
+      "at": "2026-09-26T05:58:20.773Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "GET",
+      "path": "/api/admin/dashboard/realtime/pendientes",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402299523-47"
+    },
+    {
+      "at": "2026-09-26T05:58:20.801Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "GET",
+      "path": "/api/admin/cuentas-destino",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402299520-45"
+    },
+    {
+      "at": "2026-09-26T05:58:21.038Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "GET",
+      "path": "/api/admin/dashboard/realtime",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402299523-46"
+    },
+    {
+      "at": "2026-09-26T05:58:21.254Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/fiscal/ventas",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402300441-53"
+    },
+    {
+      "at": "2026-09-26T05:58:22.332Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/fiscal/facturas/1",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402301763-54"
+    },
+    {
+      "at": "2026-09-26T05:58:22.512Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/fiscal/ventas",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402301832-56"
+    },
+    {
+      "at": "2026-09-26T05:58:23.196Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402302671-60"
+    },
+    {
+      "at": "2026-09-26T05:58:23.204Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402303198-62"
+    },
+    {
+      "at": "2026-09-26T05:58:23.853Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402303207-63"
+    },
+    {
+      "at": "2026-09-26T05:58:24.726Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402304041-65"
+    },
+    {
+      "at": "2026-09-26T05:58:25.590Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/fiscal/ventas",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402304903-66"
+    },
+    {
+      "at": "2026-09-26T05:58:26.296Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402305754-70"
+    },
+    {
+      "at": "2026-09-26T05:58:26.307Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402306299-72"
+    },
+    {
+      "at": "2026-09-26T05:58:26.956Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402306309-73"
+    },
+    {
+      "at": "2026-09-26T05:58:27.806Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402307126-75"
+    },
+    {
+      "at": "2026-09-26T05:58:28.566Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/fiscal/ventas",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402307887-76"
+    },
+    {
+      "at": "2026-09-26T05:58:29.253Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402308729-80"
+    },
+    {
+      "at": "2026-09-26T05:58:29.262Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402309256-82"
+    },
+    {
+      "at": "2026-09-26T05:58:29.916Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402309266-83"
+    },
+    {
+      "at": "2026-09-26T05:58:30.769Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402310090-85"
+    },
+    {
+      "at": "2026-09-26T05:58:31.602Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/fiscal/ventas",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402310912-86"
+    },
+    {
+      "at": "2026-09-26T05:58:32.286Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402311763-90"
+    },
+    {
+      "at": "2026-09-26T05:58:32.295Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402312289-92"
+    },
+    {
+      "at": "2026-09-26T05:58:32.943Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402312297-93"
+    },
+    {
+      "at": "2026-09-26T05:58:33.805Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402313124-95"
+    },
+    {
+      "at": "2026-09-26T05:58:34.521Z",
+      "actor": "F-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/conciliaciones",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-F-CLOSED-1790402313840-96"
+    },
+    {
+      "at": "2026-09-26T05:58:35.040Z",
+      "actor": "ADMIN-CLOSED",
+      "method": "GET",
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "requestId": null,
+      "suppliedRequestId": "priority-browser-ADMIN-CLOSED-1790402314458-97"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "closed-periods-native/controlled-clock-and-native-nonempty-fiscal-document-0.png",
+      "sha256": "70dd983bfeb25d44d947321814f4924f1bbddf407a8c6f58848a38e0d0b537a6"
+    },
+    {
+      "file": "closed-periods-native/DIA-NO_CUADRA-native-snapshot-and-decision-0.png",
+      "sha256": "d838fe32af909a29549eecf180edfd40a33e5c565ebf8f0db0460de3855645bb"
+    },
+    {
+      "file": "closed-periods-native/DIA-ACEPTADA-native-snapshot-and-decision-0.png",
+      "sha256": "d838fe32af909a29549eecf180edfd40a33e5c565ebf8f0db0460de3855645bb"
+    },
+    {
+      "file": "closed-periods-native/SEMANA-ACEPTADA-native-snapshot-and-decision-0.png",
+      "sha256": "8767eedcefccef1468c28009bac684232f6e444e81de667cd19458159f0ce505"
+    },
+    {
+      "file": "closed-periods-native/MES-ACEPTADA-native-snapshot-and-decision-0.png",
+      "sha256": "514c687007f9b8fe27da4b036e5ff64bd0148c450f4c51cbce34898043cd011e"
+    }
+  ]
+}

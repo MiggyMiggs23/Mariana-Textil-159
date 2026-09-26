@@ -1,0 +1,587 @@
+{
+  "operation": "search",
+  "sample": "3",
+  "apiSha256": "f3870a6e76bee58a0237e345dec303e11cf9e42af6acd99fa6314de416fc0e97",
+  "frontendIndexSha256": "09e9fb57f7fc495b98107b86d796e5cbce980aa5755a62a6bb47a87bd98ad9c9",
+  "thresholdMs": 2000,
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "query": "",
+      "status": 401,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401699259.0342,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.359,
+        "responseStart": 4.526,
+        "responseEnd": 18.066
+      },
+      "headers": {}
+    },
+    {
+      "path": "/api/auth/login",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "POST",
+      "timing": {
+        "startTime": 1790401699424.326,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.493,
+        "responseStart": 625.939,
+        "responseEnd": 632.429
+      },
+      "headers": {
+        "cache-control": "no-store"
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401700064.023,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.288,
+        "responseStart": 419.293,
+        "responseEnd": 427.541
+      },
+      "headers": {
+        "cache-control": "no-store"
+      }
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401700490.739,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.368,
+        "responseStart": 1.395,
+        "responseEnd": 5.163
+      },
+      "headers": {}
+    },
+    {
+      "path": "/api/e11/identidad",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401700503.687,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.342,
+        "responseStart": 527.208,
+        "responseEnd": 536.625
+      },
+      "headers": {
+        "cache-control": "no-store"
+      }
+    },
+    {
+      "path": "/api/admin/test-reset",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401701091.934,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 4.611,
+        "responseStart": 238.624,
+        "responseEnd": 275.027
+      },
+      "headers": {
+        "cache-control": "no-store"
+      }
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401701116.052,
+        "domainLookupStart": 8.873,
+        "domainLookupEnd": 8.88,
+        "connectStart": 8.88,
+        "secureConnectionStart": -1,
+        "connectEnd": 8.988,
+        "requestStart": 9.209,
+        "responseStart": 432.256,
+        "responseEnd": 451.043
+      },
+      "headers": {
+        "cache-control": "no-store"
+      }
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401701095.3003,
+        "domainLookupStart": 29.082,
+        "domainLookupEnd": 29.091,
+        "connectStart": 29.091,
+        "secureConnectionStart": -1,
+        "connectEnd": 29.771,
+        "requestStart": 29.852,
+        "responseStart": 503.926,
+        "responseEnd": 539.064
+      },
+      "headers": {
+        "cache-control": "no-store"
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401701094.6,
+        "domainLookupStart": 1.4,
+        "domainLookupEnd": 1.406,
+        "connectStart": 1.406,
+        "secureConnectionStart": -1,
+        "connectEnd": 1.815,
+        "requestStart": 2.252,
+        "responseStart": 576.868,
+        "responseEnd": 613.436
+      },
+      "headers": {
+        "cache-control": "no-store"
+      }
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401701118.446,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 213.687,
+        "responseStart": 710.68,
+        "responseEnd": 731.655
+      },
+      "headers": {
+        "cache-control": "no-store"
+      }
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401701118.591,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 431.291,
+        "responseStart": 904.336,
+        "responseEnd": 925.197
+      },
+      "headers": {
+        "cache-control": "no-store"
+      }
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401701092.195,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 4.503,
+        "responseStart": 1174.491,
+        "responseEnd": 1213.541
+      },
+      "headers": {
+        "cache-control": "private, no-store"
+      }
+    },
+    {
+      "path": "/api/notificaciones",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401701114.6018,
+        "domainLookupStart": 9.954,
+        "domainLookupEnd": 9.96,
+        "connectStart": 9.96,
+        "secureConnectionStart": -1,
+        "connectEnd": 10.445,
+        "requestStart": 10.598,
+        "responseStart": 1248.404,
+        "responseEnd": 1273.936
+      },
+      "headers": {
+        "cache-control": "no-store"
+      }
+    },
+    {
+      "path": "/api/admin/test-reset",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401702634.495,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.498,
+        "responseStart": 284.478,
+        "responseEnd": 320.92
+      },
+      "headers": {
+        "cache-control": "no-store"
+      }
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401702638.794,
+        "domainLookupStart": 2.987,
+        "domainLookupEnd": 2.993,
+        "connectStart": 2.993,
+        "secureConnectionStart": -1,
+        "connectEnd": 3.37,
+        "requestStart": 3.667,
+        "responseStart": 446.083,
+        "responseEnd": 484.771
+      },
+      "headers": {
+        "cache-control": "no-store"
+      }
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401702639.7258,
+        "domainLookupStart": 2.257,
+        "domainLookupEnd": 2.261,
+        "connectStart": 2.261,
+        "secureConnectionStart": -1,
+        "connectEnd": 2.446,
+        "requestStart": 2.861,
+        "responseStart": 549.712,
+        "responseEnd": 588.096
+      },
+      "headers": {
+        "cache-control": "no-store"
+      }
+    },
+    {
+      "path": "/api/auth/me",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401702638.605,
+        "domainLookupStart": 3.024,
+        "domainLookupEnd": 3.037,
+        "connectStart": 3.037,
+        "secureConnectionStart": -1,
+        "connectEnd": 3.545,
+        "requestStart": 3.694,
+        "responseStart": 562.025,
+        "responseEnd": 601.353
+      },
+      "headers": {
+        "cache-control": "no-store"
+      }
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401702638.9822,
+        "domainLookupStart": 2.929,
+        "domainLookupEnd": 2.933,
+        "connectStart": 2.933,
+        "secureConnectionStart": -1,
+        "connectEnd": 3.229,
+        "requestStart": 3.605,
+        "responseStart": 595.768,
+        "responseEnd": 633.945
+      },
+      "headers": {
+        "cache-control": "no-store"
+      }
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401702639.936,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 280.758,
+        "responseStart": 734.454,
+        "responseEnd": 772.341
+      },
+      "headers": {
+        "cache-control": "no-store"
+      }
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "query": "",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401702635.7,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.639,
+        "responseStart": 1086.059,
+        "responseEnd": 1131.871
+      },
+      "headers": {
+        "cache-control": "private, no-store"
+      }
+    },
+    {
+      "path": "/api/clientes/listado",
+      "query": "?q=%5Bredacted%3A0%5D&sort=nombre&direction=asc&period=all&page=1&pageSize=50&active=true",
+      "status": 200,
+      "inMeasuredAction": false,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401703260.0078,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.373,
+        "responseStart": 1155.965,
+        "responseEnd": 1161.347
+      },
+      "headers": {
+        "cache-control": "private, no-store"
+      }
+    },
+    {
+      "path": "/api/clientes/listado",
+      "query": "?q=%5Bredacted%3A13%5D&sort=nombre&direction=asc&period=all&page=1&pageSize=50&active=true",
+      "status": 200,
+      "inMeasuredAction": true,
+      "completion": "finished",
+      "method": "GET",
+      "timing": {
+        "startTime": 1790401704680.923,
+        "domainLookupStart": -1,
+        "domainLookupEnd": -1,
+        "connectStart": -1,
+        "secureConnectionStart": -1,
+        "connectEnd": -1,
+        "requestStart": 0.448,
+        "responseStart": 1023.637,
+        "responseEnd": 1037.66
+      },
+      "headers": {
+        "cache-control": "private, no-store"
+      }
+    }
+  ],
+  "errors": [],
+  "definition": "Fresh real browser/session; action to visible loaded table plus two animation frames; setup/login excluded. Default request sort observed, never inferred from current source.",
+  "actionStartEpochMs": 1790401704481,
+  "actionStartNodeMonotonicMs": 6231.671221,
+  "visibleDetectedEpochMs": 1790401705728,
+  "durationMs": 1272.203606,
+  "actionEndEpochMs": 1790401705753,
+  "actionEndNodeMonotonicMs": 7503.874827,
+  "browserAtVisible": {
+    "timeOriginEpochMs": 1790401698902.2,
+    "nowMs": 6852,
+    "visibleEpochMs": 1790401705754.2,
+    "navigation": [
+      {
+        "name": "http://127.0.0.1:18238/login",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 319.70000000018626,
+        "navigationId": 3600,
+        "initiatorType": "navigation",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 1.3999999999068677,
+        "domainLookupStart": 1.3999999999068677,
+        "domainLookupEnd": 1.3999999999068677,
+        "connectStart": 1.3999999999068677,
+        "secureConnectionStart": 0,
+        "connectEnd": 1.3999999999068677,
+        "requestStart": 11.200000000186265,
+        "responseStart": 13.5,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 13.5,
+        "responseEnd": 14.700000000186265,
+        "transferSize": 1632,
+        "encodedBodySize": 1332,
+        "decodedBodySize": 1332,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 0,
+        "unloadEventEnd": 0,
+        "domInteractive": 32,
+        "domContentLoadedEventStart": 318.60000000009313,
+        "domContentLoadedEventEnd": 318.70000000018626,
+        "domComplete": 319.60000000009313,
+        "loadEventStart": 319.70000000018626,
+        "loadEventEnd": 319.70000000018626,
+        "type": "navigate",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "high"
+        }
+      }
+    ],
+    "longTasks": [
+      {
+        "startEpochMs": 1790401699054,
+        "durationMs": 167
+      },
+      {
+        "startEpochMs": 1790401701033.4,
+        "durationMs": 78
+      },
+      {
+        "startEpochMs": 1790401702557.5999,
+        "durationMs": 74
+      },
+      {
+        "startEpochMs": 1790401703203.4,
+        "durationMs": 54
+      }
+    ],
+    "reportTableRows": 0,
+    "directoryRows": 1,
+    "domElements": 458
+  },
+  "phaseIntervals": [
+    {
+      "path": "/api/clientes/listado",
+      "actionToRequestStartMs": 199.923095703125,
+      "requestDurationMs": 1037.66,
+      "responseEndToVisibleMs": 9.4169921875
+    }
+  ],
+  "status": "PASS"
+}

@@ -33,7 +33,7 @@ export async function e11Identity(tx: E11Sql, userId: number, sessionId?: string
     const now = e11Runtime().now();
     const session = (await tx.execute(sql`SELECT id FROM sesiones WHERE id=${sessionId}::uuid
       AND usuario_id=${userId} AND expira_at>${now.toISOString()}::timestamptz
-      AND created_at>${new Date(now.getTime() - 16 * 3600000).toISOString()}::timestamptz FOR SHARE`)).rows[0];
+      AND created_at>${new Date(now.getTime() - 16 * 3600000).toISOString()}::timestamptz FOR KEY SHARE`)).rows[0];
     if (!session) throw new E11Error("NO_AUTENTICADO", "La sesión no está vigente.", 401);
   }
   const row = (await tx.execute(sql`SELECT perfil,version FROM e11_perfiles WHERE usuario_id=${userId} FOR SHARE`)).rows[0];
@@ -166,10 +166,18 @@ export async function e11FinanceClient(tx: E11Sql, id: number) {
     limiteCredito: String(row.limite_credito), saldo: e11Money(BigInt(projection.balanceCents)) }, ledger, projection };
 }
 export async function e11FinanceClients(tx: E11Sql) {
-  const ids = (await tx.execute(sql`SELECT id FROM clientes WHERE es_sistema=false ORDER BY id`)).rows;
-  const result = [];
-  for (const row of ids) result.push((await e11FinanceClient(tx, Number(row.id))).cliente);
-  return result;
+  const rows = (await tx.execute(sql`SELECT id,nombre,telefono,correo,limite_credito::text
+    FROM clientes WHERE es_sistema=false ORDER BY id`)).rows;
+  const projections = await e11Runtime().projections(tx, rows.map(row => Number(row.id)));
+  // Preserve the complete ordered DTO/revision used by every cursor. Only the
+  // database round trips change: one directory read and one canonical ledger.
+  return rows.map(row => {
+    const projection = projections.get(Number(row.id));
+    if (!projection) throw new E11Error("DEPENDENCIA_NO_DISPONIBLE", "Falta la proyección canónica del cliente.", 503);
+    return { clienteId: Number(row.id), nombre: String(row.nombre),
+      contacto: row.telefono == null ? row.correo == null ? null : String(row.correo) : String(row.telefono),
+      limiteCredito: String(row.limite_credito), saldo: e11Money(BigInt(projection.balanceCents)) };
+  });
 }
 export async function e11FinanceNotes(tx: E11Sql, id: number) {
   const data = await e11FinanceClient(tx, id);
@@ -434,18 +442,31 @@ export async function e11Resolve(tx: E11Sql, actor: E11Identity, target: Recover
 
 export type E11Execution<T> = {
   userId: number; sessionId: string; capability: string | null; exclusive?: boolean;
+  /** Explicit HTTP GET opt-in; absence never implies a retryable command. */
+  readOnly?: boolean;
   /** Present for HTTP mutations only, validated from the original intent before work starts. */
   mutationUuid?: string;
   work: (tx: E11Sql, identity: E11Identity) => Promise<unknown>;
   parse: (value: unknown) => T;
   deliver: (payload: T, identity: E11Identity) => void | Promise<void>;
 };
+/** Retry only a fully rejected/rolled-back read transaction, never delivery or writes. */
+export async function e11ReadSerializationRetry<T>(work: () => Promise<T>): Promise<T> {
+  for (let attempt = 0; ; attempt++) {
+    try { return await work(); }
+    catch (error) {
+      const pg = error as { code?: string; cause?: { code?: string } };
+      if (attempt >= 1 || (pg?.code ?? pg?.cause?.code) !== "40001") throw error;
+      await new Promise(resolve => setTimeout(resolve, 25));
+    }
+  }
+}
 /** Actual route coordinator: commit all work or rollback, then reauthorize delivery under lock. */
 export async function e11Execute<T>(command: E11Execution<T>): Promise<void> {
   let workCompleted = false;
   let result: { identity: E11Identity; payload: T };
   try {
-    result = await e11Runtime().transaction(async tx => {
+    const run = () => e11Runtime().transaction(async tx => {
       await e11SecurityLock(tx, command.exclusive);
       const identity = await e11Identity(tx, command.userId, command.sessionId);
       if (command.capability) e11Capability(identity, command.capability);
@@ -456,6 +477,8 @@ export async function e11Execute<T>(command: E11Execution<T>): Promise<void> {
       workCompleted = true;
       return { identity, payload };
     }, { isolationLevel: "serializable" });
+    result = command.readOnly === true && !command.mutationUuid && !command.exclusive
+      ? await e11ReadSerializationRetry(run) : await run();
   } catch (error) {
     const pg = error as { code?: string; cause?: { code?: string } };
     const code = pg?.code ?? pg?.cause?.code ?? "";

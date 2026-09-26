@@ -1,0 +1,59 @@
+{
+  "status": "DATABASE_READY_NOT_STARTED",
+  "closedNonemptyPeriodVerification": "closed-period-verification.json",
+  "fiscalCloneOnlyClockDDL": "sesiones.created_at default fixed to2026-10-02T18:00:00Z for new logins; original invoice/session data untouched",
+  "database": "priority_fiscal_20260926",
+  "sourceDatabase": "priority_20260926",
+  "branch": "br-hidden-lab-axibqutc",
+  "parentBranch": "br-snowy-sea-ax2ft2er",
+  "project": "withered-block-09991755",
+  "cloneMethod": "Neon child branch from own primary branch at LSN0/11569308; renamed inherited primary DB only on child; full native catalog/data, no initializers",
+  "sourceDataWrites": false,
+  "authorizedOwnSourceConnectionsTerminated": [],
+  "copiedNativeInvoice": {
+    "id": 1,
+    "folio": 1,
+    "cliente_id": 2583,
+    "ubicacion_id": 835,
+    "total": "1160.00",
+    "facturado": true,
+    "cobrado": true,
+    "estado": "VENDIDO",
+    "documento_tipo": "TICKET",
+    "cobrado_at": "2026-09-26T05:13:43.647Z",
+    "line_count": 1,
+    "transfer_total": "1160.00"
+  },
+  "roles": [
+    {
+      "id": 237,
+      "usuario": "priorityf6d5388eb",
+      "rol": "CONTADOR"
+    },
+    {
+      "id": 238,
+      "usuario": "priorityacc48a090",
+      "rol": "CONTADOR"
+    }
+  ],
+  "customers": {
+    "total": 2577
+  },
+  "apiSha256": "f3870a6e76bee58a0237e345dec303e11cf9e42af6acd99fa6314de416fc0e97",
+  "frontendIndexSha256": "09e9fb57f7fc495b98107b86d796e5cbce980aa5755a62a6bb47a87bd98ad9c9",
+  "clockISO": "2026-10-02T18:00:00.000Z",
+  "clockLocal": "2026-10-02 12:00:00 America/Mexico_City",
+  "clockScope": "Server/browser JavaScript Date frozen identically; PostgreSQL/system wall clock untouched. Existing invoice timestamp not changed.",
+  "browserSetup": "context timezoneId America/Mexico_City; await context.addInitScript({path: reports/priority-fiscal-20260926/browser-clock.js}) BEFORE first page; use fresh login for F237/A238 because old sessions may be expired under advanced JS clock",
+  "periods": {
+    "day": "2026-09-25",
+    "week": "2026-09-21",
+    "month": "2026-09-01"
+  },
+  "ports": [
+    18247,
+    18248
+  ],
+  "started": false,
+  "at": "2026-09-26T05:30:17.545Z"
+}

@@ -83,13 +83,13 @@
 - [Entrada CLI bajo symlinks](cli-symlink-preflight.md) — exit 0 puede significar que main nunca corrió; exigir evidencia positiva del preflight.
 - [Fidelidad de catálogos reconstruidos](reconstructed-catalog-fidelity.md) — recrear triggers y enums puede perder ALWAYS o posiciones incrementales; no atribuir el rechazo a drift sin comparar.
 - [Vida de PostgreSQL desechable](disposable-postgres-process-lifetime.md) — comprobar proceso y socket entre herramientas; conservar el directorio no demuestra que el servidor siga activo.
-- [Recuperación de operaciones inciertas](uncertain-operation-recovery.md) — pérdida de acceso no prueba rollback; resolver ausencia bajo el mismo lock y bloquear solicitudes tardías.
+- [Recuperación de operaciones inciertas](uncertain-operation-recovery.md) — pérdida de acceso no prueba rollback; resolver bajo lock; limpieza confirmada sobrevive al desmontaje sólo con guardas exactas de sesión/intención.
 - [Vida de árboles aislados](isolated-test-tree-lifetime.md) — espacio libre no descarta cuotas; archivar evidencia antes de limpiar los temporales propios de cada ciclo.
 - [Identidad y preparación en workers](disposable-worker-readiness.md) — verificar aislamiento no exige que los datos del seed permanezcan intactos durante un caso.
 - [Registro del runner nativo](native-runner-lifecycle.md) — con isolation=none, esperar node:test durante el import puede bloquear el bootstrap; cerrar recursos en hooks.
 - [Integridad de suites concurrentes](concurrent-suite-source-integrity.md) — congelar o aislar el árbol antes de una comparación global; cambios paralelos ajenos pueden invalidar la corrida.
 - [Precedencia de operadores JSON en SQL](sql-json-operator-precedence.md) — parentetizar la extracción JSON antes de restar claves y diagnosticar el valor/tipo exactos ante 22P02.
 - [Procedencia de fixtures de navegador](browser-fixture-provenance.md) — validar entrada/proveedor/recepción antes de vender; cerrar al final o usar otro sitio sintético.
-- [Reanudación con reloj controlado](controlled-clock-resume.md) — no reiniciar el reloj sobre una historia avanzada; archivar intentos contaminados y repetir desde copia fresca.
+- [Reanudación con reloj controlado](controlled-clock-resume.md) — no reiniciar historias avanzadas; distinguir relojes JavaScript, autenticación y SQL nativo; fixtures SQL sólo en copia autorizada.
 - [Capturas entregables](browser-evidence-delivery.md) — comprobar archivos y contenido; un ID de observación o una pantalla de sesión no acredita el estado solicitado.
 - [Visibilidad en directorios](directory-visibility-decisions.md) — teléfono/RFC visibles; plegar análisis no autoriza simplificar Últimas ventas ni Estado de cuenta.

@@ -1,0 +1,60 @@
+{
+  "status": "CLOSED_NONEMPTY_PERIODS_VERIFIED_BEFORE_RUNTIME",
+  "periods": [
+    {
+      "type": "DIA",
+      "start": "2026-09-25",
+      "endExclusive": "2026-09-26",
+      "closedAtConfiguredClock": true,
+      "invoices": 1,
+      "total": "1160.00",
+      "invoice_ids": [
+        1
+      ]
+    },
+    {
+      "type": "SEMANA",
+      "start": "2026-09-21",
+      "endExclusive": "2026-09-28",
+      "closedAtConfiguredClock": true,
+      "invoices": 1,
+      "total": "1160.00",
+      "invoice_ids": [
+        1
+      ]
+    },
+    {
+      "type": "MES",
+      "start": "2026-09-01",
+      "endExclusive": "2026-10-01",
+      "closedAtConfiguredClock": true,
+      "invoices": 1,
+      "total": "1160.00",
+      "invoice_ids": [
+        1
+      ]
+    }
+  ],
+  "roles": [
+    {
+      "usuario_id": 237,
+      "perfil": "F"
+    },
+    {
+      "usuario_id": 238,
+      "perfil": "A"
+    }
+  ],
+  "clock": {
+    "configuredISO": "2026-10-02T18:00:00.000Z",
+    "browserScriptVerifiedISO": "2026-10-02T18:00:00.000Z",
+    "serverUsesIdenticalScript": true,
+    "browserTimezoneId": "America/Mexico_City",
+    "timersAndPerformanceNowUnchanged": true
+  },
+  "fiscalOnlyClockSupportDDL": "sesiones.created_at default fixed to same October2 instant for NEW login sessions; required by E11 sixteen-hour max-age guard. No invoice/existing-session timestamps rewritten.",
+  "realSystemAndPgClockUnchanged": true,
+  "sourceDataWrites": false,
+  "browserAcceptanceNotYetRun": true,
+  "at": "2026-09-26T05:31:14.920Z"
+}
