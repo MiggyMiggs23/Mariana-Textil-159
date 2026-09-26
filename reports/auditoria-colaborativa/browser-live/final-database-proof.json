@@ -1,0 +1,55 @@
+{
+  "database": "scanner_collab_e2e_20260926",
+  "audits": [
+    {
+      "id": 1,
+      "estado": "CERRADA",
+      "creada_por_id": 1,
+      "cerrada_por_id": 2
+    },
+    {
+      "id": 2,
+      "estado": "CERRADA",
+      "creada_por_id": 1,
+      "cerrada_por_id": 1
+    },
+    {
+      "id": 3,
+      "estado": "ABIERTA",
+      "creada_por_id": 1,
+      "cerrada_por_id": null
+    }
+  ],
+  "scans": [
+    {
+      "serie": "990260001",
+      "usuario_id": 2,
+      "nombre": "E2E Scanner 1",
+      "piso_real_id": 3,
+      "unchanged_inventory_floor": 1
+    },
+    {
+      "serie": "990260002",
+      "usuario_id": 3,
+      "nombre": "E2E Scanner 2",
+      "piso_real_id": 1,
+      "unchanged_inventory_floor": 1
+    },
+    {
+      "serie": "990260003",
+      "usuario_id": 4,
+      "nombre": "E2E Scanner 3",
+      "piso_real_id": 4,
+      "unchanged_inventory_floor": 1
+    },
+    {
+      "serie": "990260004",
+      "usuario_id": 4,
+      "nombre": "E2E Scanner 3",
+      "piso_real_id": 4,
+      "unchanged_inventory_floor": 1
+    }
+  ],
+  "preserved": true,
+  "noStockConfirmation": true
+}

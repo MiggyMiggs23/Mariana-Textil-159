@@ -1,0 +1,138 @@
+{
+  "status": "FAILED",
+  "candidate": "e62a79333d0ee1433c114656af980e33ff420b728688a121ee586efdfab1b30d",
+  "frontendIndex": "7939daf161141b6f0eb5774307930f08f6157dc9811bc7f117163266a0949f70",
+  "checks": [
+    {
+      "name": "Empty south site offers start to authorized creator",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "Six authenticated browsers browse without consuming seats",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "Three concurrent mobile-UA touch contexts explicitly join and select three distinct configured floors",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "Promise.all real input scans propagate shared count3 to all three",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "MAL_ACOMODADO retains expected Primer piso, actual Segundo piso, original author; no autoapply",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "Concurrent duplicate creates one row; repeated warning preserves original author and floor",
+      "passed": true,
+      "details": {
+        "usuario_id": 4,
+        "piso_real_id": 4
+      }
+    },
+    {
+      "name": "All three real browser sessions see missing7 and all three per-roll authors",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "Desktop UA admission fixes first configured Primer piso with no change control",
+      "passed": true,
+      "details": true
+    }
+  ],
+  "images": [
+    {
+      "file": "screenshots/01-empty-south-start.png",
+      "name": "01-empty-south-start",
+      "bytes": 108491,
+      "sha256": "ae1088c45a7e8056a7c98ed790635f43efcaf2a3debc95f134c7d4b21556e8be",
+      "actor": "admin",
+      "mobile": false
+    },
+    {
+      "file": "screenshots/02-mobile-explicit-join.png",
+      "name": "02-mobile-explicit-join",
+      "bytes": 65935,
+      "sha256": "b4089c167b971ea2eae62f4fcfb812f5a8eeab37c0cab102573b968aef4d016a",
+      "actor": "e2e.scanner.1",
+      "mobile": true
+    },
+    {
+      "file": "screenshots/03-shared-three-user-1.png",
+      "name": "03-shared-three-user-1",
+      "bytes": 94691,
+      "sha256": "5e5f12a3761b5b99c3da09650cc76ce16120d290019ea4a888f4c34d129caaf3",
+      "actor": "e2e.scanner.1",
+      "mobile": true
+    },
+    {
+      "file": "screenshots/03-shared-three-user-2.png",
+      "name": "03-shared-three-user-2",
+      "bytes": 192379,
+      "sha256": "d32c77768e8d60a0edbd6daf61b227b55e41e592d932951e63de8a8d3dde1c4f",
+      "actor": "e2e.scanner.2",
+      "mobile": true
+    },
+    {
+      "file": "screenshots/03-shared-three-user-3.png",
+      "name": "03-shared-three-user-3",
+      "bytes": 192280,
+      "sha256": "1de4cdbca552788521cc75bed39baee68fc9d137afd6e9684942f88a57457354",
+      "actor": "e2e.scanner.3",
+      "mobile": true
+    },
+    {
+      "file": "screenshots/04-duplicate-original-author.png",
+      "name": "04-duplicate-original-author",
+      "bytes": 96703,
+      "sha256": "fc416197a0b5d76fd46a26d7480e67424dc3f0f17613fc06ef12151823773571",
+      "actor": "e2e.scanner.1",
+      "mobile": true
+    },
+    {
+      "file": "screenshots/05-desktop-fixed-primer-piso.png",
+      "name": "05-desktop-fixed-primer-piso",
+      "bytes": 197212,
+      "sha256": "ee8d3224de0023e52ef171c00419d68682c89d7106a22d41c12611f209103152",
+      "actor": "e2e.scanner.4",
+      "mobile": false
+    }
+  ],
+  "contexts": 6,
+  "auditId": 2,
+  "folio": "ESN-AI-000002",
+  "error": "The expression evaluated to a falsy value:\n\n  assert.ok(network.some(r => r.sessionId === contexts[5].sessionId && r.url.endsWith(\"/participar\") && r.status === 409))\n",
+  "lastUi": [
+    {
+      "actor": "e2e.scanner.1",
+      "text": "Mariana Textil\nCerrar sesión\n\nE2E Scanner 1\n\nBODEGA · E2E Scanner Norte\n\nE2E Scanner Norte\n\nOPERACIÓN DE ALMACÉN\n\nAuditoría de Inventario\n\nControl físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.\n\nESN · E2E Scanner Norte\nAuditorías abiertas en el sitio\n\nESN-AI-000002\n\nE2E Scanner Norte · Iniciada por Administrador\n\n4/11 escaneados\n\nParticipando\nHISTORIAL DEL SITIO\nESN-AI-000002\nABIERTA\nE2E Scanner Norte\n4/11\nESN-AI-000001\nCERRADA\nE2E Scanner Norte\n0/11\nESN-AI-000002\nEN CURSO\n\nE2E Scanner Norte · Iniciada por Administrador\n\nImprimir\nCancelar\nAVANCE DEL CONTEO\n4/ 11\n\nINICIO: 26/9/2026, 1:38:53 a.m.\nDURACIÓN: En curso\n\nCUADRO\n1\nFALTANTES\n7\nSOBRANTES\n0\nMAL ACOMODADO\n3\nParticipantes activos: 5 / 5\n\nE2E Scanner 1, E2E Scanner 2, E2E Scanner 3, E2E Scanner 4, E2E Scanner 5\n\nHistorial: 5 usuarios · 4 escaneos\n\nEstás participando. Puedes escanear.\n\nPISO REAL DE ESCANEO\n\nSegundo piso\n\nCambiar piso\n\nEscaneados · todos\n\n4\n\nFaltantes · todos\n\n7\n\nESCANEAR SERIE O QR\nFALTANTE\n7\nSerie\tProducto\tCantidad\tUbicación actual\tEstado\tResolución\n\n990260005\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260006\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260007\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260008\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260009\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260010\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260011\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\nSOBRANTE\n0\nNo hay registros en esta categoría.\nCUADRO\n1\nSerie\tProducto\tCantidad\tUbicación actual\tEstado\tResolución\n\n990260002\nEscaneado por E2E Scanner 2 · 26/9/2026, 1:39:17 a.m.\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\nMAL ACOMODADO\n3\nSerie\tProducto\tCantidad\tPiso Esperado\tPiso Real\tEstado\tResolución\n\n990260001\nEscaneado por E2E Scanner 1 · 26/9/2026, 1:39:17 a.m.\nEsperado: Primer piso\nReal: Segundo piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tSegundo piso\tDISPONIBLE\tPENDIENTE\n\n990260003\nEscaneado por E2E Scanner 3 · 26/9/2026, 1:39:17 a.m.\nEsperado: Primer piso\nReal: Tercer piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tTercer piso\tDISPONIBLE\tPENDIENTE\n\n990260004\nEscaneado por E2E Scanner 3 · 26/9/2026, 1:39:24 a.m.\nEsperado: Primer piso\nReal: Tercer piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tTercer piso\tDISPONIBLE\tPENDIENTE\nSerie ya registrada\n990260004 · CUADRO · DISPONIBLE · Escaneado por E2E Scanner 3"
+    },
+    {
+      "actor": "e2e.scanner.2",
+      "text": "Mariana Textil\nINVENTARIO\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nMovimientos\nSitio (Sólo lectura)\nE2E Scanner Norte\nE\n\nE2E Scanner 2\n\nBODEGA\n\nE2E Scanner Norte\n\nCerrar sesión\n\nOPERACIÓN DE ALMACÉN\n\nAuditoría de Inventario\n\nControl físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.\n\nESN · E2E Scanner Norte\nAuditorías abiertas en el sitio\n\nESN-AI-000002\n\nE2E Scanner Norte · Iniciada por Administrador\n\n4/11 escaneados\n\nParticipando\nHISTORIAL DEL SITIO\nESN-AI-000002\nABIERTA\nE2E Scanner Norte\n4/11\nESN-AI-000001\nCERRADA\nE2E Scanner Norte\n0/11\nESN-AI-000002\nEN CURSO\n\nE2E Scanner Norte · Iniciada por Administrador\n\nImprimir\nCancelar\nAVANCE DEL CONTEO\n4/ 11\n\nINICIO: 26/9/2026, 1:38:53 a.m.\nDURACIÓN: En curso\n\nCUADRO\n1\nFALTANTES\n7\nSOBRANTES\n0\nMAL ACOMODADO\n3\nParticipantes activos: 3 / 5\n\nE2E Scanner 1, E2E Scanner 2, E2E Scanner 3\n\nHistorial: 3 usuarios · 4 escaneos\n\nEstás participando. Puedes escanear.\n\nPISO REAL DE ESCANEO\n\nPrimer piso\n\nCambiar piso\n\nEscaneados · todos\n\n4\n\nFaltantes · todos\n\n7\n\nESCANEAR SERIE O QR\nFALTANTE\n7\nSerie\tProducto\tCantidad\tUbicación actual\tEstado\tResolución\n\n990260005\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260006\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260007\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260008\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260009\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260010\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260011\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\nSOBRANTE\n0\nNo hay registros en esta categoría.\nCUADRO\n1\nSerie\tProducto\tCantidad\tUbicación actual\tEstado\tResolución\n\n990260002\nEscaneado por E2E Scanner 2 · 26/9/2026, 1:39:17 a.m.\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\nMAL ACOMODADO\n3\nSerie\tProducto\tCantidad\tPiso Esperado\tPiso Real\tEstado\tResolución\n\n990260001\nEscaneado por E2E Scanner 1 · 26/9/2026, 1:39:17 a.m.\nEsperado: Primer piso\nReal: Segundo piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tSegundo piso\tDISPONIBLE\tPENDIENTE\n\n990260003\nEscaneado por E2E Scanner 3 · 26/9/2026, 1:39:17 a.m.\nEsperado: Primer piso\nReal: Tercer piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tTercer piso\tDISPONIBLE\tPENDIENTE\n\n990260004\nEscaneado por E2E Scanner 3 · 26/9/2026, 1:39:24 a.m.\nEsperado: Primer piso\nReal: Tercer piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tTercer piso\tDISPONIBLE\tPENDIENTE"
+    },
+    {
+      "actor": "e2e.scanner.3",
+      "text": "Mariana Textil\nINVENTARIO\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nMovimientos\nSitio (Sólo lectura)\nE2E Scanner Norte\nE\n\nE2E Scanner 3\n\nBODEGA\n\nE2E Scanner Norte\n\nCerrar sesión\n\nOPERACIÓN DE ALMACÉN\n\nAuditoría de Inventario\n\nControl físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.\n\nESN · E2E Scanner Norte\nAuditorías abiertas en el sitio\n\nESN-AI-000002\n\nE2E Scanner Norte · Iniciada por Administrador\n\n4/11 escaneados\n\nParticipando\nHISTORIAL DEL SITIO\nESN-AI-000002\nABIERTA\nE2E Scanner Norte\n4/11\nESN-AI-000001\nCERRADA\nE2E Scanner Norte\n0/11\nESN-AI-000002\nEN CURSO\n\nE2E Scanner Norte · Iniciada por Administrador\n\nImprimir\nCancelar\nAVANCE DEL CONTEO\n4/ 11\n\nINICIO: 26/9/2026, 1:38:53 a.m.\nDURACIÓN: En curso\n\nCUADRO\n1\nFALTANTES\n7\nSOBRANTES\n0\nMAL ACOMODADO\n3\nParticipantes activos: 5 / 5\n\nE2E Scanner 1, E2E Scanner 2, E2E Scanner 3, E2E Scanner 4, E2E Scanner 5\n\nHistorial: 5 usuarios · 4 escaneos\n\nEstás participando. Puedes escanear.\n\nPISO REAL DE ESCANEO\n\nTercer piso\n\nCambiar piso\n\nEscaneados · todos\n\n4\n\nFaltantes · todos\n\n7\n\nESCANEAR SERIE O QR\nFALTANTE\n7\nSerie\tProducto\tCantidad\tUbicación actual\tEstado\tResolución\n\n990260005\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260006\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260007\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260008\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260009\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260010\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260011\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\nSOBRANTE\n0\nNo hay registros en esta categoría.\nCUADRO\n1\nSerie\tProducto\tCantidad\tUbicación actual\tEstado\tResolución\n\n990260002\nEscaneado por E2E Scanner 2 · 26/9/2026, 1:39:17 a.m.\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\nMAL ACOMODADO\n3\nSerie\tProducto\tCantidad\tPiso Esperado\tPiso Real\tEstado\tResolución\n\n990260001\nEscaneado por E2E Scanner 1 · 26/9/2026, 1:39:17 a.m.\nEsperado: Primer piso\nReal: Segundo piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tSegundo piso\tDISPONIBLE\tPENDIENTE\n\n990260003\nEscaneado por E2E Scanner 3 · 26/9/2026, 1:39:17 a.m.\nEsperado: Primer piso\nReal: Tercer piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tTercer piso\tDISPONIBLE\tPENDIENTE\n\n990260004\nEscaneado por E2E Scanner 3 · 26/9/2026, 1:39:24 a.m.\nEsperado: Primer piso\nReal: Tercer piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tTercer piso\tDISPONIBLE\tPENDIENTE"
+    },
+    {
+      "actor": "e2e.scanner.4",
+      "text": "Mariana Textil\nINVENTARIO\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nMovimientos\nSitio (Sólo lectura)\nE2E Scanner Norte\nE\n\nE2E Scanner 4\n\nBODEGA\n\nE2E Scanner Norte\n\nCerrar sesión\n\nOPERACIÓN DE ALMACÉN\n\nAuditoría de Inventario\n\nControl físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.\n\nESN · E2E Scanner Norte\nAuditorías abiertas en el sitio\n\nESN-AI-000002\n\nE2E Scanner Norte · Iniciada por Administrador\n\n4/11 escaneados\n\nParticipando\nHISTORIAL DEL SITIO\nESN-AI-000002\nABIERTA\nE2E Scanner Norte\n4/11\nESN-AI-000001\nCERRADA\nE2E Scanner Norte\n0/11\nESN-AI-000002\nEN CURSO\n\nE2E Scanner Norte · Iniciada por Administrador\n\nImprimir\nCancelar\nAVANCE DEL CONTEO\n4/ 11\n\nINICIO: 26/9/2026, 1:38:53 a.m.\nDURACIÓN: En curso\n\nCUADRO\n1\nFALTANTES\n7\nSOBRANTES\n0\nMAL ACOMODADO\n3\nParticipantes activos: 3 / 5\n\nE2E Scanner 1, E2E Scanner 2, E2E Scanner 3\n\nHistorial: 3 usuarios · 4 escaneos\n\nEstás participando. Puedes escanear.\n\nPISO REAL DE ESCANEO\n\nPrimer piso\n\nComputadora: piso de acceso fijo según el orden configurado del sitio.\n\nEscaneados · todos\n\n4\n\nFaltantes · todos\n\n7\n\nESCANEAR SERIE O QR\nFALTANTE\n7\nSerie\tProducto\tCantidad\tUbicación actual\tEstado\tResolución\n\n990260005\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260006\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260007\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260008\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260009\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260010\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260011\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\nSOBRANTE\n0\nNo hay registros en esta categoría.\nCUADRO\n1\nSerie\tProducto\tCantidad\tUbicación actual\tEstado\tResolución\n\n990260002\nEscaneado por E2E Scanner 2 · 26/9/2026, 1:39:17 a.m.\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\nMAL ACOMODADO\n3\nSerie\tProducto\tCantidad\tPiso Esperado\tPiso Real\tEstado\tResolución\n\n990260001\nEscaneado por E2E Scanner 1 · 26/9/2026, 1:39:17 a.m.\nEsperado: Primer piso\nReal: Segundo piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tSegundo piso\tDISPONIBLE\tPENDIENTE\n\n990260003\nEscaneado por E2E Scanner 3 · 26/9/2026, 1:39:17 a.m.\nEsperado: Primer piso\nReal: Tercer piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tTercer piso\tDISPONIBLE\tPENDIENTE\n\n990260004\nEscaneado por E2E Scanner 3 · 26/9/2026, 1:39:24 a.m.\nEsperado: Primer piso\nReal: Tercer piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tTercer piso\tDISPONIBLE\tPENDIENTE"
+    },
+    {
+      "actor": "e2e.scanner.5",
+      "text": "Mariana Textil\nINVENTARIO\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nMovimientos\nSitio (Sólo lectura)\nE2E Scanner Norte\nE\n\nE2E Scanner 5\n\nBODEGA\n\nE2E Scanner Norte\n\nCerrar sesión\n\nOPERACIÓN DE ALMACÉN\n\nAuditoría de Inventario\n\nControl físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.\n\nESN · E2E Scanner Norte\nAuditorías abiertas en el sitio\n\nESN-AI-000002\n\nE2E Scanner Norte · Iniciada por Administrador\n\n4/11 escaneados\n\nParticipando\nHISTORIAL DEL SITIO\nESN-AI-000002\nABIERTA\nE2E Scanner Norte\n4/11\nESN-AI-000001\nCERRADA\nE2E Scanner Norte\n0/11\nESN-AI-000002\nEN CURSO\n\nE2E Scanner Norte · Iniciada por Administrador\n\nImprimir\nCancelar\nAVANCE DEL CONTEO\n4/ 11\n\nINICIO: 26/9/2026, 1:38:53 a.m.\nDURACIÓN: En curso\n\nCUADRO\n1\nFALTANTES\n7\nSOBRANTES\n0\nMAL ACOMODADO\n3\nParticipantes activos: 3 / 5\n\nE2E Scanner 1, E2E Scanner 2, E2E Scanner 3\n\nHistorial: 3 usuarios · 4 escaneos\n\nEstás participando. Puedes escanear.\n\nPISO REAL DE ESCANEO\n\nPrimer piso\n\nComputadora: piso de acceso fijo según el orden configurado del sitio.\n\nEscaneados · todos\n\n4\n\nFaltantes · todos\n\n7\n\nESCANEAR SERIE O QR\nFALTANTE\n7\nSerie\tProducto\tCantidad\tUbicación actual\tEstado\tResolución\n\n990260005\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260006\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260007\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260008\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260009\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260010\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260011\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\nSOBRANTE\n0\nNo hay registros en esta categoría.\nCUADRO\n1\nSerie\tProducto\tCantidad\tUbicación actual\tEstado\tResolución\n\n990260002\nEscaneado por E2E Scanner 2 · 26/9/2026, 1:39:17 a.m.\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\nMAL ACOMODADO\n3\nSerie\tProducto\tCantidad\tPiso Esperado\tPiso Real\tEstado\tResolución\n\n990260001\nEscaneado por E2E Scanner 1 · 26/9/2026, 1:39:17 a.m.\nEsperado: Primer piso\nReal: Segundo piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tSegundo piso\tDISPONIBLE\tPENDIENTE\n\n990260003\nEscaneado por E2E Scanner 3 · 26/9/2026, 1:39:17 a.m.\nEsperado: Primer piso\nReal: Tercer piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tTercer piso\tDISPONIBLE\tPENDIENTE\n\n990260004\nEscaneado por E2E Scanner 3 · 26/9/2026, 1:39:24 a.m.\nEsperado: Primer piso\nReal: Tercer piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tTercer piso\tDISPONIBLE\tPENDIENTE"
+    },
+    {
+      "actor": "e2e.scanner.6",
+      "text": "Mariana Textil\nINVENTARIO\nInventario\nVista Global\nAjustes\nAuditorías\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nMovimientos\nSitio (Sólo lectura)\nE2E Scanner Norte\nE\n\nE2E Scanner 6\n\nBODEGA\n\nE2E Scanner Norte\n\nCerrar sesión\n\nOPERACIÓN DE ALMACÉN\n\nAuditoría de Inventario\n\nControl físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.\n\nESN · E2E Scanner Norte\nAuditorías abiertas en el sitio\n\nESN-AI-000002\n\nE2E Scanner Norte · Iniciada por Administrador\n\n4/11 escaneados\n\nUniéndote...\nHISTORIAL DEL SITIO\nESN-AI-000002\nABIERTA\nE2E Scanner Norte\n4/11\nESN-AI-000001\nCERRADA\nE2E Scanner Norte\n0/11\nESN-AI-000002\nEN CURSO\n\nE2E Scanner Norte · Iniciada por Administrador\n\nImprimir\nCancelar\nAVANCE DEL CONTEO\n4/ 11\n\nINICIO: 26/9/2026, 1:38:53 a.m.\nDURACIÓN: En curso\n\nCUADRO\n1\nFALTANTES\n7\nSOBRANTES\n0\nMAL ACOMODADO\n3\nParticipantes activos: 3 / 5\n\nE2E Scanner 1, E2E Scanner 2, E2E Scanner 3\n\nHistorial: 3 usuarios · 4 escaneos\n\nUniéndote a la auditoría. Escaneo bloqueado mientras se confirma tu lugar.\n\nPISO REAL DE ESCANEO\n\nPrimer piso\n\nComputadora: piso de acceso fijo según el orden configurado del sitio.\n\nEscaneados · todos\n\n4\n\nFaltantes · todos\n\n7\n\nESCANEAR SERIE O QR\nFALTANTE\n7\nSerie\tProducto\tCantidad\tUbicación actual\tEstado\tResolución\n\n990260005\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260006\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260007\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260008\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260009\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260010\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\n\n990260011\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\nSOBRANTE\n0\nNo hay registros en esta categoría.\nCUADRO\n1\nSerie\tProducto\tCantidad\tUbicación actual\tEstado\tResolución\n\n990260002\nEscaneado por E2E Scanner 2 · 26/9/2026, 1:39:17 a.m.\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tE2E Scanner Norte\tDISPONIBLE\tPENDIENTE\nMAL ACOMODADO\n3\nSerie\tProducto\tCantidad\tPiso Esperado\tPiso Real\tEstado\tResolución\n\n990260001\nEscaneado por E2E Scanner 1 · 26/9/2026, 1:39:17 a.m.\nEsperado: Primer piso\nReal: Segundo piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tSegundo piso\tDISPONIBLE\tPENDIENTE\n\n990260003\nEscaneado por E2E Scanner 3 · 26/9/2026, 1:39:17 a.m.\nEsperado: Primer piso\nReal: Tercer piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tTercer piso\tDISPONIBLE\tPENDIENTE\n\n990260004\nEscaneado por E2E Scanner 3 · 26/9/2026, 1:39:24 a.m.\nEsperado: Primer piso\nReal: Tercer piso\n\tE2ESCAN · E2E Tela Scanner · E2E Azul\t25.00 Mts.\tPrimer piso\tTercer piso\tDISPONIBLE\tPENDIENTE"
+    }
+  ]
+}

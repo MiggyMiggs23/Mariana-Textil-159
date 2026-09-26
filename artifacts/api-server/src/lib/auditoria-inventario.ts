@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, eq, inArray, sql } from "drizzle-orm";
 import {
   auditoriaInventarioEscaneosTable,
   auditoriaInventarioFolioTable,
@@ -166,26 +166,89 @@ export async function createAuditoria(
   return created!;
 }
 
+export const AUDIT_MAX_PARTICIPANTS = 5;
+export const AUDIT_PARTICIPANT_EXPIRY_SECONDS = 90;
+
+// Header lock is always first, shared with scan/close/cancel. Read the clock
+// afterwards: transaction_timestamp()/now() could predate a wait for this lock.
+export async function participarAuditoria(
+  tx: Tx,
+  input: { auditoriaId: number; usuarioId: number },
+) {
+  const [header] = await tx.select().from(auditoriasInventarioTable)
+    .where(eq(auditoriasInventarioTable.id, input.auditoriaId)).for("update").limit(1);
+  if (!header) throw new AuditoriaInventarioError("Auditoría no encontrada.", "NOT_FOUND");
+  if (header.estado !== "ABIERTA") {
+    throw new AuditoriaInventarioError("La auditoría ya no está ABIERTA.", "NOT_OPEN");
+  }
+  const clock = await tx.execute(sql`SELECT clock_timestamp()::text AS ahora`);
+  const ahora = String(clock.rows[0]!.ahora);
+  const active = await tx.execute(sql`
+    SELECT usuario_id FROM auditoria_inventario_participantes
+    WHERE auditoria_id=${input.auditoriaId}
+      AND ultimo_at > ${ahora}::timestamptz - interval '90 seconds'
+  `);
+  const existing = active.rows.some((row) => Number(row.usuario_id) === input.usuarioId);
+  if (!existing && active.rows.length >= AUDIT_MAX_PARTICIPANTS) {
+    throw new AuditoriaInventarioError(
+      "Ya hay 5 usuarios activos en esta auditoría. Espera a que se libere un lugar.",
+      "AUDIT_PARTICIPANT_LIMIT",
+    );
+  }
+  const refreshed = await tx.execute(sql`
+    INSERT INTO auditoria_inventario_participantes (auditoria_id, usuario_id, escaneos, primero_at, ultimo_at)
+    VALUES (${input.auditoriaId}, ${input.usuarioId}, 0, ${ahora}::timestamptz, ${ahora}::timestamptz)
+    ON CONFLICT (auditoria_id, usuario_id) DO UPDATE SET ultimo_at=EXCLUDED.ultimo_at
+    RETURNING ultimo_at + interval '90 seconds' AS expira_at
+  `);
+  return {
+    participantesActivos: active.rows.length + (existing ? 0 : 1),
+    maxParticipantes: AUDIT_MAX_PARTICIPANTS,
+    expiracionSegundos: AUDIT_PARTICIPANT_EXPIRY_SECONDS,
+    expiraAt: new Date(String(refreshed.rows[0]!.expira_at)).toISOString(),
+  };
+}
+
+// Equipment records are site assets, not authenticated browser registrations.
+// UA is an ergonomic heuristic, NOT an authorization/security boundary.
+export function isDesktopAuditScanner(userAgent: string | undefined): boolean {
+  return !/Android|iPhone|iPad|iPod|Mobile|Tablet/i.test(userAgent ?? "");
+}
+
 export async function scanAuditoria(
   tx: Tx,
-    input: { auditoriaId: number; serie: string; usuarioId: number; ip: string; pisoId?: number | null },
+    input: { auditoriaId: number; serie: string; usuarioId: number; ip: string; pisoId?: number | null; desktop?: boolean },
 ) {
   const serie = input.serie.trim();
+  const participacion = await participarAuditoria(tx, input);
   const [header] = await tx
     .select()
     .from(auditoriasInventarioTable)
     .where(eq(auditoriasInventarioTable.id, input.auditoriaId))
-    .for("share")
+    .for("update")
     .limit(1);
   if (!header) throw new AuditoriaInventarioError("Auditoría no encontrada.", "NOT_FOUND");
   if (header.estado !== "ABIERTA") {
     throw new AuditoriaInventarioError("El conteo está cerrado y no admite escaneos.", "NOT_OPEN");
   }
   const activeFloors = await tx.select({ id: pisosTable.id, nombre: pisosTable.nombre }).from(pisosTable)
-    .where(and(eq(pisosTable.ubicacionId, header.ubicacionId), eq(pisosTable.activo, true)));
+    .where(and(eq(pisosTable.ubicacionId, header.ubicacionId), eq(pisosTable.activo, true)))
+    .orderBy(asc(pisosTable.nombre));
+  if (!activeFloors.length) {
+    throw new AuditoriaInventarioError(
+      "Configura al menos un piso activo del sitio antes de escanear.",
+      "FLOOR_CONFIGURATION_REQUIRED",
+    );
+  }
   const realFloor = input.pisoId == null ? null : activeFloors.find((floor) => floor.id === input.pisoId);
-  if ((activeFloors.length && !realFloor) || (!activeFloors.length && input.pisoId != null)) {
+  if (!realFloor) {
     throw new AuditoriaInventarioError("El piso real debe ser activo y pertenecer al sitio auditado.", "INVALID_FLOOR");
+  }
+  if ((input.desktop ?? true) && realFloor.id !== activeFloors[0]!.id) {
+    throw new AuditoriaInventarioError(
+      `La computadora solo puede escanear en el piso de acceso: ${activeFloors[0]!.nombre}.`,
+      "DESKTOP_ACCESS_FLOOR_REQUIRED",
+    );
   }
   const [roll] = await tx
     .select({ id: rollosTable.id, estado: rollosTable.estado })
@@ -214,24 +277,20 @@ export async function scanAuditoria(
       ),
     )
     .limit(1);
-  await tx
-    .insert(auditoriaInventarioParticipantesTable)
-    .values({
-      auditoriaId: input.auditoriaId,
-      usuarioId: input.usuarioId,
-      escaneos: inserted.length,
-      ultimoAt: new Date(),
-    })
-    .onConflictDoUpdate({
-      target: [
-        auditoriaInventarioParticipantesTable.auditoriaId,
-        auditoriaInventarioParticipantesTable.usuarioId,
-      ],
-      set: {
-        ultimoAt: new Date(),
-        escaneos: sql`${auditoriaInventarioParticipantesTable.escaneos} + ${inserted.length}`,
-      },
-    });
+  await tx.update(auditoriaInventarioParticipantesTable)
+    .set({ escaneos: sql`${auditoriaInventarioParticipantesTable.escaneos} + ${inserted.length}` })
+    .where(and(
+      eq(auditoriaInventarioParticipantesTable.auditoriaId, input.auditoriaId),
+      eq(auditoriaInventarioParticipantesTable.usuarioId, input.usuarioId),
+    ));
+  const [original] = await tx.select({
+    usuarioId: auditoriaInventarioEscaneosTable.usuarioId,
+    usuarioNombre: usuariosTable.nombre,
+    escaneadoAt: auditoriaInventarioEscaneosTable.escaneadoAt,
+  }).from(auditoriaInventarioEscaneosTable)
+    .innerJoin(usuariosTable, eq(usuariosTable.id, auditoriaInventarioEscaneosTable.usuarioId))
+    .where(and(eq(auditoriaInventarioEscaneosTable.auditoriaId, input.auditoriaId),
+      eq(auditoriaInventarioEscaneosTable.serie, serie)));
   if (inserted.length) {
     await audit(tx, {
       usuarioId: input.usuarioId,
@@ -243,6 +302,10 @@ export async function scanAuditoria(
     });
   }
   return {
+    ...participacion,
+    usuarioId: original!.usuarioId,
+    usuarioNombre: original!.usuarioNombre,
+    escaneadoAt: original!.escaneadoAt.toISOString(),
     serie,
     duplicado: inserted.length === 0,
     clasificacion: snapshot ? ("CUADRO" as const) : ("SOBRANTE" as const),
@@ -810,6 +873,7 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
        CASE WHEN s.serie IS NOT NULL THEN s.estado_snapshot
             WHEN ${usarVivoParaSobrantes} THEN COALESCE(r.estado::text, 'SIN_REGISTRO')
             ELSE e.estado_cierre END estado_actual,
+       e.usuario_id, scanner.nombre usuario_nombre,
        e.escaneado_at, e.resolucion resolucion_escaneo,
         s.resolucion resolucion_snapshot,
         s.piso_snapshot_id, s.piso_snapshot, e.piso_real_id, e.piso_real
@@ -819,6 +883,7 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
     LEFT JOIN rollos r ON r.id = COALESCE(s.rollo_id, e.rollo_id)
     LEFT JOIN productos p ON p.id = r.producto_id
     LEFT JOIN ubicaciones u ON u.id = r.ubicacion_id
+    LEFT JOIN usuarios scanner ON scanner.id = e.usuario_id
     WHERE COALESCE(s.auditoria_id, e.auditoria_id) = ${id}
     ORDER BY clasificacion, serie
   `);
@@ -846,6 +911,8 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
       estadoActual: String(row.estado_actual),
       resolucion,
       escaneadoAt: row.escaneado_at == null ? null : new Date(String(row.escaneado_at)).toISOString(),
+      usuarioId: row.usuario_id == null ? null : Number(row.usuario_id),
+      usuarioNombre: row.usuario_nombre == null ? null : String(row.usuario_nombre),
       sobrante: clasificacion === "SOBRANTE"
         ? await getSobranteContexto(tx, id, header.ubicacionId, String(row.serie))
         : null,
@@ -853,7 +920,9 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
   }));
   const participantsResult = await tx.execute(sql`
     SELECT ap.usuario_id, u.nombre, ap.escaneos,
-      ap.primero_at, ap.ultimo_at
+      ap.primero_at, ap.ultimo_at,
+      ap.ultimo_at + interval '90 seconds' expira_at,
+      (${header.estado} = 'ABIERTA' AND ap.ultimo_at > statement_timestamp() - interval '90 seconds') activo
     FROM auditoria_inventario_participantes ap
     JOIN usuarios u ON u.id=ap.usuario_id
     WHERE ap.auditoria_id=${id} ORDER BY u.nombre
@@ -864,6 +933,8 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
     escaneos: Number(row.escaneos),
     primeroAt: new Date(String(row.primero_at)).toISOString(),
     ultimoAt: new Date(String(row.ultimo_at)).toISOString(),
+    expiraAt: new Date(String(row.expira_at)).toISOString(),
+    activo: row.activo === true,
   }));
   const count = (kind: string) => resultados.filter((r) => r.clasificacion === kind).length;
   const totalSnapshot = count("CUADRO") + count("FALTANTE") + count("MAL_ACOMODADO");
@@ -888,5 +959,8 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
     confirmadaAt: header.confirmadaAt?.toISOString() ?? null,
     resultados,
     participantes,
+    participantesActivos: participantes.filter((p) => p.activo).length,
+    maxParticipantes: AUDIT_MAX_PARTICIPANTS,
+    expiracionSegundos: AUDIT_PARTICIPANT_EXPIRY_SECONDS,
   };
 }

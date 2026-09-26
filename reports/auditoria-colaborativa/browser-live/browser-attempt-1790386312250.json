@@ -1,0 +1,48 @@
+{
+  "status": "FAILED",
+  "candidate": "c0ca9433ca934569b40e35913e7d6e6ef408bc09dc4f1c38cd79c5344c985b6c",
+  "frontendIndex": "f07eecd0f9368da00691b314afa9e660db63bb6eb76b34a99ca21503f352815f",
+  "checks": [
+    {
+      "name": "Empty south site offers start to authorized creator",
+      "passed": true,
+      "details": true
+    }
+  ],
+  "images": [
+    {
+      "file": "screenshots/01-empty-south-start.png",
+      "name": "01-empty-south-start",
+      "bytes": 107719,
+      "sha256": "168e9f8f1fb6eab5bb522603913182768fe7de94932602d55ce8196a3db8bdb4",
+      "actor": "admin",
+      "mobile": false
+    }
+  ],
+  "contexts": 6,
+  "auditId": 1,
+  "folio": "ESN-AI-000001",
+  "error": "UI timeout: authenticated login",
+  "lastUi": [
+    {
+      "text": "Mariana Textil\n\nSistema de Gestión Interna\n\nUsuario\nContraseña\nIngresar"
+    },
+    {
+      "actor": "e2e.scanner.2",
+      "text": "Mariana Textil\nINVENTARIO\nInventario\nVista Global\nAjustes\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nMovimientos\nSitio (Sólo lectura)\nE2E Scanner Norte\nE\n\nE2E Scanner 2\n\nBODEGA\n\nE2E Scanner Norte\n\nCerrar sesión\nDashboard - E2E Scanner Norte\n\nResumen de existencias por sitio.\n\nInventario por Sitio\nSitio\tMts.\tKg.\tRollos\nE2E Scanner Norte\t275.00\t0.00\t11\n\nSuma la cantidad actual y cuenta los rollos disponibles por sitio, separando metros, kilos, bolsas y piezas. Respeta el alcance de consulta y no incluye mercancía en tránsito."
+    },
+    {
+      "text": "Mariana Textil\n\nSistema de Gestión Interna\n\nUsuario\nContraseña\nIngresar"
+    },
+    {
+      "text": "Mariana Textil\n\nSistema de Gestión Interna\n\nUsuario\nContraseña\nIngresar"
+    },
+    {
+      "text": "Mariana Textil\n\nSistema de Gestión Interna\n\nUsuario\nContraseña\nIngresar"
+    },
+    {
+      "actor": "e2e.scanner.6",
+      "text": "Mariana Textil\nINVENTARIO\nInventario\nVista Global\nAjustes\nEtiquetas\nStock mínimo\nOPERACIÓN\nEntradas\nSalidas\nMovimientos\nSitio (Sólo lectura)\nE2E Scanner Norte\nE\n\nE2E Scanner 6\n\nBODEGA\n\nE2E Scanner Norte\n\nCerrar sesión\nDashboard - E2E Scanner Norte\n\nResumen de existencias por sitio.\n\nInventario por Sitio\nSitio\tMts.\tKg.\tRollos\nE2E Scanner Norte\t275.00\t0.00\t11\n\nSuma la cantidad actual y cuenta los rollos disponibles por sitio, separando metros, kilos, bolsas y piezas. Respeta el alcance de consulta y no incluye mercancía en tránsito."
+    }
+  ]
+}

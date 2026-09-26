@@ -1,0 +1,50 @@
+--- /home/runner/workspace/reports/auditoria-colaborativa/final/before/artifacts/mariana-textil/src/pages/auditorias-inventario.tsx	2026-09-26 01:36:34.496917268 +0000
++++ /home/runner/workspace/reports/auditoria-colaborativa/final/overlays/artifacts/mariana-textil/src/pages/auditorias-inventario.tsx	2026-09-26 01:36:34.496917268 +0000
+@@ -111,6 +111,8 @@
+   const scanRef = useRef<HTMLInputElement>(null);
+   const canCreateProduct = hasPermission(user, Modules.PRODUCTOS, "crear");
+   const canCreateAudit = hasPermission(user, Modules.AUDITORIA_INVENTARIO, "crear");
++  const canEditAudit = hasPermission(user, Modules.AUDITORIA_INVENTARIO, "editar");
++  const canCloseAudit = canEditAudit && hasPermission(user, Modules.AUDITORIA_INVENTARIO, "autorizar");
+   const products = useListProductos({}, {
+     query: {
+       enabled: canCreateProduct,
+@@ -210,7 +212,7 @@
+   const currentDetail = previousUserId.current && user?.id !== previousUserId.current
+     ? undefined
+     : detail.data?.id === selectedId ? detail.data : undefined;
+-  const mayScan = !!user?.id && hasPermission(user, Modules.AUDITORIA_INVENTARIO, "editar")
++  const mayScan = !!user?.id && canEditAudit
+     && currentDetail?.estado === "ABIERTA";
+   const selectedJoinKey = user?.id && selectedId && currentDetail
+     ? `${user.id}:${currentDetail.ubicacionId}:${selectedId}` : null;
+@@ -486,14 +488,16 @@
+                       <Button variant="outline" size="sm" className="h-9 font-medium" data-testid="button-print-audit" onClick={print}>
+                         <Printer className="mr-2 h-4 w-4" /> Imprimir
+                       </Button>
+-                      {detail.data.estado === "ABIERTA" && (
++                      {detail.data.estado === "ABIERTA" && canEditAudit && (
+                         <>
+                           <Button variant="outline" size="sm" className="h-9 font-medium text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20" data-testid="button-cancel-audit" onClick={() => setCancelOpen(true)}>
+                             Cancelar
+                           </Button>
+-                          <Button size="sm" variant="secondary" className="h-9 font-bold bg-foreground text-background hover:bg-foreground/90 shadow-sm" data-testid="button-close-audit" disabled={pending} onClick={() => run(close as never, { id: detail.data!.id } as never)}>
+-                            Cerrar Conteo
+-                          </Button>
++                          {canCloseAudit && (
++                            <Button size="sm" variant="secondary" className="h-9 font-bold bg-foreground text-background hover:bg-foreground/90 shadow-sm" data-testid="button-close-audit" disabled={pending} onClick={() => run(close as never, { id: detail.data!.id } as never)}>
++                              Cerrar Conteo
++                            </Button>
++                          )}
+                         </>
+                       )}
+                       {detail.data.estado === "CERRADA" && user?.rol === "ADMIN" && (
+@@ -1009,7 +1013,7 @@
+       </Dialog>
+ 
+       {/* Cancel Dialog */}
+-      <Dialog open={cancelOpen} onOpenChange={setCancelOpen}>
++      <Dialog open={cancelOpen && canEditAudit && currentDetail?.estado === "ABIERTA"} onOpenChange={setCancelOpen}>
+         <DialogContent className="sm:max-w-md">
+           <DialogHeader>
+             <DialogTitle className="text-xl text-destructive flex items-center gap-2">

@@ -10,6 +10,10 @@ import type { AuditoriaInventarioResultadoResolucion } from './auditoriaInventar
 import type { AuditoriaSobranteContexto } from './auditoriaSobranteContexto';
 
 export interface AuditoriaInventarioResultado {
+  /** @nullable */
+  usuarioId: number | null;
+  /** @nullable */
+  usuarioNombre: string | null;
   serie: string;
   clasificacion: AuditoriaInventarioResultadoClasificacion;
   /** @nullable */

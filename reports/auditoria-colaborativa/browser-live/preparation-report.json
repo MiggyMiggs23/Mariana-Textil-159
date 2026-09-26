@@ -1,0 +1,43 @@
+{
+  "status": "schema-seed-fixtures-ready-awaiting-approved-candidate-and-private-server",
+  "project": "withered-block-09991755",
+  "branch": "br-fancy-sound-ax3sbznv",
+  "database": "scanner_collab_e2e_20260926",
+  "identityEvidence": {
+    "createdWithTemplate0": true,
+    "publicTablesBeforeSchema": 0,
+    "publicTablesAfterSchemaAndSeed": 71,
+    "effectiveCurrentDatabaseMatchedBeforeFixtures": true,
+    "testEndpointStructurallyDifferentFromLive": true,
+    "liveDatabaseConnectionsPerformed": 0,
+    "copiedApplicationRows": 0
+  },
+  "schema": "lib/db/src/schema/index.ts via push-force, exit 0",
+  "seed": "lib/db/src/seed.mjs, exit 0; only seeded administrator before explicit fixture insertion",
+  "fixturePath": "reports/auditoria-colaborativa/browser-live/fixture.json",
+  "fixtureScript": "reports/auditoria-colaborativa/browser-live/prepare-fixtures.mjs",
+  "privateEnvironmentPath": "/tmp/scanner-e2e-isolated/test-env.json",
+  "privateCredentialsPath": "/tmp/scanner-e2e-isolated/credentials.json",
+  "secretFileMode": "0600",
+  "secretDirectoryMode": "0700",
+  "syntheticScanners": ["e2e.scanner.1", "e2e.scanner.2", "e2e.scanner.3", "e2e.scanner.4", "e2e.scanner.5", "e2e.scanner.6"],
+  "scannerRole": "BODEGA",
+  "scannerScope": "PROPIA / E2E Scanner Norte",
+  "scannerPermissionVerified": "auditoria_inventario ver/crear/editar all true in approved seeded role matrix",
+  "adminClosureActor": "admin from approved seed, no additional administrator",
+  "syntheticSites": ["E2E Scanner Norte", "E2E Scanner Sur"],
+  "floor": "E2E Planta baja at each site",
+  "productSku": "E2ESCAN",
+  "northRollSeries": "990260001–990260011",
+  "southRollSeries": "990260012",
+  "serverUrl": null,
+  "browserPassExecuted": false,
+  "pending": [
+    "Builder supplies retained no-RFC candidate plus collaboration overlays and SHA-256 manifest.",
+    "Owning agent starts private server against verified test URL; subagent scope prohibits starting app or workflows.",
+    "Apply candidate-compatible startup initializers and released auxiliary SQL, including E11 auth dependency, only to this database.",
+    "Verify current_database from actual API connection after startup and every override.",
+    "Actual six-context Chromium/CDP pass and evidence gallery."
+  ],
+  "shutdown": "No server or browser process started by preparation. Once owner starts private processes, stop only their recorded PIDs. Preserve branch, credentials and fixture pending evidence review; no deletion authorized yet."
+}

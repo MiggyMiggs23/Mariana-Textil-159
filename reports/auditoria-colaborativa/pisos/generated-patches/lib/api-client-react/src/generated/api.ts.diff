@@ -1,0 +1,170 @@
+diff --git a/lib/api-client-react/src/generated/api.ts b/lib/api-client-react/src/generated/api.ts
+index e2f3d30b..922d74dd 100644
+--- a/lib/api-client-react/src/generated/api.ts
++++ b/lib/api-client-react/src/generated/api.ts
+@@ -41,6 +41,8 @@ import type {
+   AuditoriaInventarioEscaneoInput,
+   AuditoriaInventarioEscaneoResult,
+   AuditoriaInventarioInput,
++  AuditoriaInventarioParticipacion,
++  AuditoriaInventarioPiso,
+   AuditoriaInventarioResumen,
+   AuditoriaInventarioSitio,
+   AuditoriaListResult,
+@@ -11164,6 +11166,148 @@ export function useGetAuditoriaInventario<TData = Awaited<ReturnType<typeof getA
+ 
+ 
+ 
++export const getListPisosAuditoriaInventarioUrl = (id: number,) => {
++
++
++
++
++  return `/api/inventario/auditorias/${id}/pisos`
++}
++
++/**
++ * @summary Pisos activos del sitio auditado ordenados por nombre
++ */
++export const listPisosAuditoriaInventario = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaInventarioPiso[]> => {
++
++  return customFetch<AuditoriaInventarioPiso[]>(getListPisosAuditoriaInventarioUrl(id),
++  {
++    ...options,
++    method: 'GET'
++
++
++  }
++);}
++
++
++
++
++
++export const getListPisosAuditoriaInventarioQueryKey = (id: number,) => {
++    return [
++    `/api/inventario/auditorias/${id}/pisos`
++    ] as const;
++    }
++
++
++export const getListPisosAuditoriaInventarioQueryOptions = <TData = Awaited<ReturnType<typeof listPisosAuditoriaInventario>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPisosAuditoriaInventario>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
++) => {
++
++const {query: queryOptions, request: requestOptions} = options ?? {};
++
++  const queryKey =  queryOptions?.queryKey ?? getListPisosAuditoriaInventarioQueryKey(id);
++
++
++
++    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPisosAuditoriaInventario>>> = ({ signal }) => listPisosAuditoriaInventario(id, { signal, ...requestOptions });
++
++
++
++
++
++   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPisosAuditoriaInventario>>, TError, TData> & { queryKey: QueryKey }
++}
++
++export type ListPisosAuditoriaInventarioQueryResult = NonNullable<Awaited<ReturnType<typeof listPisosAuditoriaInventario>>>
++export type ListPisosAuditoriaInventarioQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
++
++
++/**
++ * @summary Pisos activos del sitio auditado ordenados por nombre
++ */
++
++export function useListPisosAuditoriaInventario<TData = Awaited<ReturnType<typeof listPisosAuditoriaInventario>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
++ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPisosAuditoriaInventario>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
++
++ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
++
++  const queryOptions = getListPisosAuditoriaInventarioQueryOptions(id,options)
++
++  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
++
++  return withQueryKey(query, queryOptions.queryKey);
++}
++
++
++
++
++
++
++
++export const getParticiparAuditoriaInventarioUrl = (id: number,) => {
++
++
++
++
++  return `/api/inventario/auditorias/${id}/participar`
++}
++
++export const participarAuditoriaInventario = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaInventarioParticipacion> => {
++
++  return customFetch<AuditoriaInventarioParticipacion>(getParticiparAuditoriaInventarioUrl(id),
++  {
++    ...options,
++    method: 'POST'
++
++
++  }
++);}
++
++
++
++
++
++export const getParticiparAuditoriaInventarioMutationOptions = <TError = ErrorType<void>,
++    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof participarAuditoriaInventario>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
++): UseMutationOptions<Awaited<ReturnType<typeof participarAuditoriaInventario>>, TError,{id: number}, TContext> => {
++
++const mutationKey = ['participarAuditoriaInventario'];
++const {mutation: mutationOptions, request: requestOptions} = options ?
++      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
++      options
++      : {...options, mutation: {...options.mutation, mutationKey}}
++      : {mutation: { mutationKey, }, request: undefined};
++
++
++
++
++      const mutationFn: MutationFunction<Awaited<ReturnType<typeof participarAuditoriaInventario>>, {id: number}> = (props) => {
++          const {id} = props ?? {};
++
++          return  participarAuditoriaInventario(id,requestOptions)
++        }
++
++
++
++
++
++
++  return  { mutationFn, ...mutationOptions }}
++
++    export type ParticiparAuditoriaInventarioMutationResult = NonNullable<Awaited<ReturnType<typeof participarAuditoriaInventario>>>
++
++    export type ParticiparAuditoriaInventarioMutationError = ErrorType<void>
++
++    export const useParticiparAuditoriaInventario = <TError = ErrorType<void>,
++    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof participarAuditoriaInventario>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
++ ): UseMutationResult<
++        Awaited<ReturnType<typeof participarAuditoriaInventario>>,
++        TError,
++        {id: number},
++        TContext
++      > => {
++      return useMutation(getParticiparAuditoriaInventarioMutationOptions(options));
++    }
++
+ export const getScanAuditoriaInventarioUrl = (id: number,) => {
+ 
+ 
+@@ -11173,6 +11317,7 @@ export const getScanAuditoriaInventarioUrl = (id: number,) => {
+ }
+ 
+ /**
++ * Exige piso activo del sitio. Sin pisos activos devuelve 400 FLOOR_CONFIGURATION_REQUIRED; piso ausente o inválido devuelve 400 INVALID_FLOOR. Computadora (heurística User-Agent del servidor, no autorización) solo admite el primer piso activo ordenado por nombre ASC, de lo contrario 400 DESKTOP_ACCESS_FLOOR_REQUIRED. Móvil admite cualquier piso válido. Sexto usuario activo devuelve 409 AUDIT_PARTICIPANT_LIMIT. Un duplicado conserva autor, hora y piso del primer escaneo; nunca sustituye su atribución.
+  * @summary Registra una serie por presencia de forma idempotente
+  */
+ export const scanAuditoriaInventario = async (id: number,

@@ -1,0 +1,7 @@
+{
+  "actor": "e2e.scanner.1",
+  "role": "BODEGA",
+  "auditCreatedBy": "admin",
+  "status": 200,
+  "state": "CERRADA"
+}

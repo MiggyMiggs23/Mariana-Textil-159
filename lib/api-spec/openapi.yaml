@@ -2876,11 +2876,53 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
+  /inventario/auditorias/{id}/pisos:
+    get:
+      operationId: listPisosAuditoriaInventario
+      tags: [auditoria-inventario]
+      summary: Pisos activos del sitio auditado ordenados por nombre
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: number, minimum: 1 } }
+      responses:
+        "200":
+          description: Pisos activos en orden nombre ASC; el primero es el piso de acceso
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/AuditoriaInventarioPiso" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /inventario/auditorias/{id}/participar:
+    post:
+      operationId: participarAuditoriaInventario
+      tags: [Inventario]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Participación renovada durante 90 segundos
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuditoriaInventarioParticipacion" }
+        "409":
+          description: Auditoría cerrada o AUDIT_PARTICIPANT_LIMIT (ya hay 5 usuarios activos)
   /inventario/auditorias/{id}/escaneos:
     post:
       operationId: scanAuditoriaInventario
       tags: [auditoria-inventario]
       summary: Registra una serie por presencia de forma idempotente
+      description: >-
+        Exige piso activo del sitio. Sin pisos activos devuelve 400 FLOOR_CONFIGURATION_REQUIRED;
+        piso ausente o inválido devuelve 400 INVALID_FLOOR. Computadora (heurística User-Agent
+        del servidor, no autorización) solo admite el primer piso activo ordenado por nombre ASC,
+        de lo contrario 400 DESKTOP_ACCESS_FLOOR_REQUIRED. Móvil admite cualquier piso válido.
+        Sexto usuario activo devuelve 409 AUDIT_PARTICIPANT_LIMIT. Un duplicado conserva autor,
+        hora y piso del primer escaneo; nunca sustituye su atribución.
       parameters:
         - { in: path, name: id, required: true, schema: { type: number, minimum: 1 } }
       requestBody:
@@ -2902,6 +2944,7 @@ paths:
   /inventario/auditorias/{id}/cerrar:
     post:
       operationId: closeAuditoriaInventario
+      description: Requiere permisos editar y autorizar de auditoria_inventario, rol operativo y acceso al sitio; participar o crear no concede permiso de cierre.
       tags: [auditoria-inventario]
       summary: Cierra y congela el conteo sin alterar inventario
       parameters:
@@ -16763,8 +16806,10 @@ components:
         creadaPor: { type: string }
     AuditoriaInventarioResultado:
       type: object
-      required: [serie, clasificacion, cantidad, unidad, estadoActual, resolucion]
+      required: [serie, clasificacion, cantidad, unidad, estadoActual, resolucion, usuarioId, usuarioNombre]
       properties:
+        usuarioId: { type: [number, "null"] }
+        usuarioNombre: { type: [string, "null"] }
         serie: { type: string }
         clasificacion: { type: string, enum: [CUADRO, FALTANTE, SOBRANTE, MAL_ACOMODADO] }
         rolloId: { type: [number, "null"] }
@@ -16868,8 +16913,10 @@ components:
         auditoriasPosteriores: { type: array, items: { $ref: "#/components/schemas/ReactivacionAuditoriaPosterior" } }
     AuditoriaInventarioParticipante:
       type: object
-      required: [usuarioId, nombre, escaneos, primeroAt, ultimoAt]
+      required: [usuarioId, nombre, escaneos, primeroAt, ultimoAt, activo, expiraAt]
       properties:
+        activo: { type: boolean }
+        expiraAt: { type: string, format: date-time }
         usuarioId: { type: number }
         nombre: { type: string }
         escaneos: { type: number }
@@ -16879,8 +16926,11 @@ components:
       allOf:
         - $ref: "#/components/schemas/AuditoriaInventarioResumen"
         - type: object
-          required: [resultados, participantes]
+          required: [resultados, participantes, participantesActivos, maxParticipantes, expiracionSegundos]
           properties:
+            participantesActivos: { type: integer }
+            maxParticipantes: { type: integer }
+            expiracionSegundos: { type: integer }
             motivoCancelacion: { type: [string, "null"] }
             cerradaAt: { type: [string, "null"], format: date-time }
             confirmadaAt: { type: [string, "null"], format: date-time }
@@ -16890,10 +16940,33 @@ components:
             participantes:
               type: array
               items: { $ref: "#/components/schemas/AuditoriaInventarioParticipante" }
+    AuditoriaInventarioPiso:
+      type: object
+      required: [id, nombre, ubicacionId, activo]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+        ubicacionId: { type: number }
+        activo: { type: boolean }
+    AuditoriaInventarioParticipacion:
+      type: object
+      required: [participantesActivos, maxParticipantes, expiracionSegundos, expiraAt]
+      properties:
+        participantesActivos: { type: integer }
+        maxParticipantes: { type: integer }
+        expiracionSegundos: { type: integer }
+        expiraAt: { type: string, format: date-time }
     AuditoriaInventarioEscaneoResult:
       type: object
-      required: [serie, duplicado, clasificacion, estadoActual]
+      required: [serie, duplicado, clasificacion, estadoActual, participantesActivos, maxParticipantes, expiracionSegundos, expiraAt, usuarioId, usuarioNombre, escaneadoAt]
       properties:
+        participantesActivos: { type: integer }
+        maxParticipantes: { type: integer }
+        expiracionSegundos: { type: integer }
+        expiraAt: { type: string, format: date-time }
+        usuarioId: { type: number }
+        usuarioNombre: { type: string }
+        escaneadoAt: { type: string, format: date-time }
         serie: { type: string }
         duplicado: { type: boolean }
         clasificacion: { type: string, enum: [CUADRO, SOBRANTE] }

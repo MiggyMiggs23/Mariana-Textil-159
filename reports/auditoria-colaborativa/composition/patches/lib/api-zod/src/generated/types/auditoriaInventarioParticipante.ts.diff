@@ -1,0 +1,13 @@
+diff --git a/lib/api-zod/src/generated/types/auditoriaInventarioParticipante.ts b/lib/api-zod/src/generated/types/auditoriaInventarioParticipante.ts
+index c4426050..6a673afd 100644
+--- a/lib/api-zod/src/generated/types/auditoriaInventarioParticipante.ts
++++ b/lib/api-zod/src/generated/types/auditoriaInventarioParticipante.ts
+@@ -7,6 +7,8 @@
+  */
+ 
+ export interface AuditoriaInventarioParticipante {
++  activo: boolean;
++  expiraAt: Date;
+   usuarioId: number;
+   nombre: string;
+   escaneos: number;

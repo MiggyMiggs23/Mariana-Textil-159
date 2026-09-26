@@ -1,0 +1,110 @@
+{
+  "status": "candidate-only-not-activated",
+  "baseline": "reports/auditoria-colaborativa/floor-baseline/manifest.json",
+  "stage": "reports/auditoria-colaborativa/staging/frontend-root-pisos",
+  "api": "artifacts/api-server/dist-auditoria-colaborativa-pisos-20260925",
+  "frontend": "artifacts/mariana-textil/dist-auditoria-colaborativa-pisos-20260925",
+  "apiSourceDeltas": [
+    "artifacts/api-server/src/lib/auditoria-inventario.ts",
+    "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "lib/api-zod/src/generated/api.ts"
+  ],
+  "overlays": [
+    {
+      "path": "artifacts/api-server/src/lib/auditoria-inventario.ts",
+      "previousCandidateSha256": "741d0b9d6c717ea2fc2bd6b364c100b1edaaf8375b295bb30f1a2b366ce827f3",
+      "sha256": "c2fe536c4cb396780744f3e090017fd0e9a18b06651cd42249ea84d2566915a9",
+      "method": "Task-only full overlay, original active audit sources verified equal to frozen HEAD"
+    },
+    {
+      "path": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+      "previousCandidateSha256": "f61f341372911a76a9ea007e7fd2f0162542a4a89474d1c5c061d6b6842d61ca",
+      "sha256": "eb48dc710e31090346f25edbf7e58788b68abe2f6468e17ce0f847b76e5baa28",
+      "method": "Task-only full overlay, original active audit sources verified equal to frozen HEAD"
+    },
+    {
+      "path": "artifacts/mariana-textil/src/pages/auditorias-inventario.tsx",
+      "previousCandidateSha256": "6648297e33f8186d6c70abeabbc2de62f60637e1dccf34d2a34a0fffb1aaffa6",
+      "sha256": "5b903a69120ab07c29c09085e7453da2be81d968d034141774cbb56efd35a48c",
+      "method": "Task-only full overlay, original active audit sources verified equal to frozen HEAD"
+    },
+    {
+      "path": "artifacts/mariana-textil/src/components/auditoria/audit-collaboration.tsx",
+      "previousCandidateSha256": "07156cd508a8ded3279bfb1fb5cfc98a393fe8436a94951ee27150026e115a61",
+      "sha256": "07156cd508a8ded3279bfb1fb5cfc98a393fe8436a94951ee27150026e115a61",
+      "method": "Task-only full overlay, original active audit sources verified equal to frozen HEAD"
+    },
+    {
+      "path": "artifacts/mariana-textil/src/components/auditoria/use-audit-participation.ts",
+      "previousCandidateSha256": "d23e29ae57b8c7574761b1b605abed803c80d28daa5abb7838eb9dfa5d4412eb",
+      "sha256": "d23e29ae57b8c7574761b1b605abed803c80d28daa5abb7838eb9dfa5d4412eb",
+      "method": "Task-only full overlay, original active audit sources verified equal to frozen HEAD"
+    },
+    {
+      "path": "artifacts/mariana-textil/src/components/auditoria/audit-floor-station.tsx",
+      "previousCandidateSha256": null,
+      "sha256": "da4e0c51bf6bdcddbcedf5986e3d677242f99243fa32822f7a66d675b36d70da",
+      "method": "Task-only full overlay, original active audit sources verified equal to frozen HEAD"
+    },
+    {
+      "path": "artifacts/mariana-textil/src/components/auditoria/use-audit-floors.ts",
+      "previousCandidateSha256": null,
+      "sha256": "64d9ef01cb0209ba3e545120801c4ea9cc4b7cfdc86f7431b74b86f600ccb1c0",
+      "method": "Task-only full overlay, original active audit sources verified equal to frozen HEAD"
+    },
+    {
+      "path": "lib/api-zod/src/generated/api.ts",
+      "previousCandidateSha256": "c4943b4274d3c31abd780911fb2b1380b45b138716bcae37ac4c0cacd6550889",
+      "sha256": "900f791798764765b41ada882f806b85259d243ac5c5a52dca276300116d7a88",
+      "method": "Exact audit-only HEAD-to-task generated hunks on frozen active generated source"
+    },
+    {
+      "path": "lib/api-client-react/src/generated/api.ts",
+      "previousCandidateSha256": "a18589aac92d99b98f0e23f984e011a8e67c0308eba86aecf5c0e98e76e648e6",
+      "sha256": "e5af44a3dcf3e0e43fd510711cab504358b4c5c30c8a810efe76a5410fd5f81c",
+      "method": "Exact audit-only HEAD-to-task generated hunks on frozen active generated source"
+    },
+    {
+      "path": "lib/api-client-react/src/generated/api.schemas.ts",
+      "previousCandidateSha256": "a5b868d426ed2fa74f02c8aef87846bbfb890bdd7630c4ffca014c3b7b299df0",
+      "sha256": "566c6ccc4122cb20a5d9b5fbab356d5965f18546949a04950d7bdbd0608530e8",
+      "method": "Exact audit-only HEAD-to-task generated hunks on frozen active generated source"
+    },
+    {
+      "path": "lib/api-zod/src/index.ts",
+      "previousCandidateSha256": "eebf58d1b824c9adec5883414f46338fdc9985ff49b1da44aca7ad0f5a1bfa29",
+      "sha256": "6ee28cc2e4a298ac485e8738bbdd413615c794e943d532fcf5c544042077f1e0",
+      "method": "Exact audit-only HEAD-to-task generated hunks on frozen active generated source"
+    },
+    {
+      "path": "lib/api-zod/src/generated/types/index.ts",
+      "previousCandidateSha256": "3ad572c9a2aa6cda31530850a485a941858c55bd1ead4665a6f834adb74ec3c5",
+      "sha256": "c55149486509f34d782f3e6083a2293eca96314f946633b8de176cadebd360a1",
+      "method": "Exact audit-only HEAD-to-task generated hunks on frozen active generated source"
+    },
+    {
+      "path": "lib/api-zod/src/generated/types/auditoriaInventarioPiso.ts",
+      "previousCandidateSha256": null,
+      "sha256": "885ca96676993d3cfbcecfdf5a50de3d054bc11444b3f6290f8244ae0eb858c5",
+      "method": "Task-only full overlay, original active audit sources verified equal to frozen HEAD"
+    }
+  ],
+  "retainedFrontendSourceChanges": [
+    "artifacts/mariana-textil/src/pages/auditorias-inventario.tsx",
+    "lib/api-client-react/src/generated/api.schemas.ts",
+    "lib/api-client-react/src/generated/api.ts",
+    "lib/api-zod/src/generated/api.ts",
+    "lib/api-zod/src/generated/types/index.ts",
+    "lib/api-zod/src/index.ts"
+  ],
+  "isolatedFrontendTypecheck": "passed",
+  "apiSyntax": "passed-all-mjs",
+  "sourcePreservation": "passed",
+  "noApiWorkspaceModulesRemoved": true,
+  "priorCandidatesUnchanged": true,
+  "activeArtifactsUnchanged": true,
+  "ddl": "none",
+  "databaseAccess": "none",
+  "activation": "not-performed",
+  "servicesStarted": "none"
+}

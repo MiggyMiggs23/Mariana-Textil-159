@@ -1,5 +1,5 @@
 import { Router, type Request, type Response, type NextFunction } from "express";
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { and, asc, desc, eq, inArray } from "drizzle-orm";
 import { interpretarCodigoEscaneado } from "@workspace/scanned-code";
 import { z } from "zod";
 import {
@@ -20,6 +20,10 @@ import {
   ScanAuditoriaInventarioBody,
   ScanAuditoriaInventarioParams,
   ScanAuditoriaInventarioResponse,
+  ParticiparAuditoriaInventarioParams,
+  ParticiparAuditoriaInventarioResponse,
+  ListPisosAuditoriaInventarioParams,
+  ListPisosAuditoriaInventarioResponse,
   ResolverSobranteAuditoriaInventarioBody,
   ResolverSobranteAuditoriaInventarioParams,
   ResolverSobranteAuditoriaInventarioResponse,
@@ -33,6 +37,7 @@ import {
   auditoriasInventarioTable,
   db,
   ubicacionesTable,
+  pisosTable,
 } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
@@ -43,6 +48,8 @@ import {
   confirmAuditoria,
   createAuditoria,
   scanAuditoria,
+  participarAuditoria,
+  isDesktopAuditScanner,
   transitionAuditoria,
 } from "../lib/auditoria-inventario";
 import { resolverSobrante } from "../lib/auditoria-resoluciones";
@@ -97,7 +104,7 @@ function handleError(error: unknown, res: Response, next: NextFunction): void {
     const status =
       error.code === "NOT_FOUND"
         ? 404
-        : error.code.includes("OPEN") || error.code === "NOT_CLOSED"
+        : error.code.includes("OPEN") || error.code === "NOT_CLOSED" || error.code === "AUDIT_PARTICIPANT_LIMIT"
           ? 409
           : 400;
     res.status(status).json({ error: error.message, code: error.code });
@@ -211,6 +218,58 @@ router.get(
   },
 );
 
+router.get(
+  "/auditorias/:id/pisos",
+  requireSession,
+  requierePermiso("auditoria_inventario", "ver"),
+  requireOperationalRole,
+  async (req, res, next): Promise<void> => {
+    try {
+      const { id } = ListPisosAuditoriaInventarioParams.parse(req.params);
+      const visible = await getVisibleHeader(req, id);
+      if (!visible.header) {
+        res.status(404).json({ error: "Auditoría no encontrada." }); return;
+      }
+      if (visible.error) {
+        res.status(403).json({ error: visible.error }); return;
+      }
+      const floors = await db.select({
+        id: pisosTable.id, nombre: pisosTable.nombre,
+        ubicacionId: pisosTable.ubicacionId, activo: pisosTable.activo,
+      }).from(pisosTable)
+        .where(and(eq(pisosTable.ubicacionId, visible.header.ubicacionId), eq(pisosTable.activo, true)))
+        .orderBy(asc(pisosTable.nombre));
+      res.json(ListPisosAuditoriaInventarioResponse.parse(floors));
+    } catch (error) {
+      handleError(error, res, next);
+    }
+  },
+);
+
+router.post(
+  "/auditorias/:id/participar",
+  requireSession,
+  requierePermiso("auditoria_inventario", "editar"),
+  requireOperationalRole,
+  async (req, res, next): Promise<void> => {
+    try {
+      const { id } = ParticiparAuditoriaInventarioParams.parse(req.params);
+      const visible = await getVisibleHeader(req, id);
+      if (!visible.header) {
+        res.status(404).json({ error: "Auditoría no encontrada." }); return;
+      }
+      if (visible.error) {
+        res.status(403).json({ error: visible.error }); return;
+      }
+      const result = await db.transaction((tx) =>
+        participarAuditoria(tx, { auditoriaId: id, usuarioId: req.auth!.user.id }));
+      res.json(ParticiparAuditoriaInventarioResponse.parse(result));
+    } catch (error) {
+      handleError(error, res, next);
+    }
+  },
+);
+
 router.post(
   "/auditorias/:id/escaneos",
   requireSession,
@@ -236,6 +295,7 @@ router.post(
           auditoriaId: id,
           serie,
           pisoId: body.pisoId,
+          desktop: isDesktopAuditScanner(req.get("user-agent")),
           usuarioId: req.auth!.user.id,
           ip: getRequestIp(req),
         }),
@@ -252,6 +312,7 @@ for (const action of ["cerrar", "cancelar"] as const) {
     `/auditorias/:id/${action}`,
     requireSession,
     requierePermiso("auditoria_inventario", "editar"),
+    ...(action === "cerrar" ? [requierePermiso("auditoria_inventario", "autorizar")] : []),
     requireOperationalRole,
     async (req, res, next): Promise<void> => {
       try {

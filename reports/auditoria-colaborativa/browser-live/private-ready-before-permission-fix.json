@@ -1,0 +1,77 @@
+{
+  "status": "READY",
+  "database": "scanner_collab_e2e_20260926",
+  "apiSha256": "c0ca9433ca934569b40e35913e7d6e6ef408bc09dc4f1c38cd79c5344c985b6c",
+  "frontendFiles": {
+    "assets/index-B0-IUrPy.css": "0b62686a09fd30a42563837ce058fe54af675ea5c740dde89355723236aff2bf",
+    "assets/index-CJ5sQYvB.js": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c",
+    "assets/index-pGxxOy8a.js": "d24e6008b8c8c38dcd809d26a6722c903936cc92865e59e3ce84aded4451d40a",
+    "assets/mariana-textil-logo-FFOiXRd3.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "assets/mariana-textil-logo-monochrome-_7AVoW2A.png": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24",
+    "favicon.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "index.html": "f07eecd0f9368da00691b314afa9e660db63bb6eb76b34a99ca21503f352815f",
+    "robots.txt": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+    "sounds/alerta.ogg": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e",
+    "sounds/aviso.ogg": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4",
+    "sounds/solicitud.ogg": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+  },
+  "apiPid": 7196,
+  "launcherPid": 7166,
+  "url": "http://127.0.0.1:18128",
+  "apiUrl": "http://127.0.0.1:18127",
+  "publicTables": 106,
+  "loginResults": [
+    {
+      "usuario": "admin",
+      "login": 200,
+      "authenticatedMe": 200
+    },
+    {
+      "usuario": "e2e.scanner.1",
+      "login": 200,
+      "authenticatedMe": 200
+    },
+    {
+      "usuario": "e2e.scanner.2",
+      "login": 200,
+      "authenticatedMe": 200
+    },
+    {
+      "usuario": "e2e.scanner.3",
+      "login": 200,
+      "authenticatedMe": 200
+    },
+    {
+      "usuario": "e2e.scanner.4",
+      "login": 200,
+      "authenticatedMe": 200
+    },
+    {
+      "usuario": "e2e.scanner.5",
+      "login": 200,
+      "authenticatedMe": 200
+    },
+    {
+      "usuario": "e2e.scanner.6",
+      "login": 200,
+      "authenticatedMe": 200
+    }
+  ],
+  "sqlFingerprints": {
+    "baselineE1E2()": "7588bbec117bc3b7619545a06deae09dbb83e1c6fce5646e3481d9a6818ad84a",
+    "reports/e3-apertura-preparada-20260922/sql/01-install-prepared.sql": "15754c178aa05204cfaabd0dc17c9907e76db6d7553e9ddbadb0b4197d291c87",
+    "reports/e3-apertura-preparada-20260922/sql/03-prepare-ordinary-cash-gate-retirement.REHEARSAL-ONLY.sql": "52e9b857e1431b68ecb43cb0b0f6a171d3b5a1103713da14b57b3d7ac9c78a61",
+    "reports/tanda-b-b0-b1-20260923/r5/sql/1.sql": "046c8dcdd02310b5590c3182f26c5dd7a653454021596caeaa96ef0ff2d27d60",
+    "reports/tanda-b-b0-b1-20260923/r5/sql/2.sql": "85993f89f7304ccb975998602b3d17217656781dcc0d48206e73838824bed85a",
+    "reports/tanda-b-b0-b1-20260923/r5/sql/3.sql": "232fb182ee8394a0c0a72a852ef5815e5a56d5451f7c8e00ba1662745751bba4",
+    "reports/tanda-b-b0-b1-20260923/r5/sql/4.sql": "d9194959d2343d4e4786535d5acdea945139f392c3ee21ad55b73a69c1c017fa",
+    "reports/trabajo-nocturno-20260925/tarea-2/historical-pre-e11-graph.sql": "b2078da89b306d088da4c908b5d19121e3729d1954914954e4b1c12eb4753369",
+    "reports/e11/01-preparado.sql": "d331e06d47dab2bd71834339ad972eaf3c5a3d005ae6822013252bcc517b4842",
+    "reports/trabajo-nocturno-20260925/tarea-1/installed-graph-readonly.sql": "d9a1a41f6675ecb42ea74168ef01eef432707cd7635040e07ce1402e9f703c49",
+    "reports/tanda-e-20260923/tarea-2/01-corregir-e11-graph-alias.sql": "3904a9a65f6fac836b9cb9ec8644869f44fce0388f1c4c58d14391a64722e44a",
+    "e11AliasState": "already-corrected-verified-no-DDL"
+  },
+  "startupMode": "INSPECTION",
+  "initializedFromExactCandidate": true,
+  "checkedAt": "2026-09-26T01:28:37.822Z"
+}

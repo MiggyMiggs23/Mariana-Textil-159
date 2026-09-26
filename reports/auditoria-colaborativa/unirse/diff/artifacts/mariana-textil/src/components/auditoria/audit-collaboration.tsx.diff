@@ -1,0 +1,45 @@
+--- /home/runner/workspace/reports/auditoria-colaborativa/staging/frontend-root/artifacts/mariana-textil/src/components/auditoria/audit-collaboration.tsx	2026-09-26 01:05:55.269659585 +0000
++++ /home/runner/workspace/reports/auditoria-colaborativa/staging/frontend-root-unirse/artifacts/mariana-textil/src/components/auditoria/audit-collaboration.tsx	2026-09-26 01:13:29.585211236 +0000
+@@ -11,14 +11,17 @@
+ }
+ 
+ export function AuditCollaboration({
+-  detail, active, joining, error, expired, onRetry,
++  detail, active, joining, error, expired, requested, canJoin, onRetry, onJoin,
+ }: {
+   detail: AuditoriaInventarioDetail;
+   active: boolean;
+   joining: boolean;
+   error: unknown;
+   expired: boolean;
++  requested: boolean;
++  canJoin: boolean;
+   onRetry: () => void;
++  onJoin: () => void;
+ }) {
+   const activePeople = detail.participantes?.filter((person) => person.activo) ?? [];
+   return (
+@@ -37,7 +40,9 @@
+       ) : (
+         <div role="status" data-testid="status-audit-participation" className="space-y-2">
+           <p className="text-amber-700 dark:text-amber-400">
+-            {auditParticipantLimit(error)
++            {!requested
++              ? canJoin ? "Puedes consultar esta auditoría sin ocupar un lugar. Únete para escanear." : "Consulta de solo lectura. No tienes permiso para escanear en este sitio."
++              : auditParticipantLimit(error)
+               ? "Ya hay 5 usuarios activos en esta auditoría. Espera a que se libere un lugar."
+               : error
+                 ? `${admissionError(error)} Escaneo bloqueado hasta volver a unirte.`
+@@ -47,7 +52,11 @@
+                     ? "Uniéndote a la auditoría. Escaneo bloqueado mientras se confirma tu lugar."
+                     : "Escaneo bloqueado hasta confirmar tu participación."}
+           </p>
+-          {!joining && <Button type="button" size="sm" variant="outline" onClick={onRetry} data-testid="button-audit-retry-join">Reintentar participación</Button>}
++          {!requested && canJoin ? (
++            <Button type="button" size="lg" className="w-full sm:w-auto min-h-12 text-base font-bold" onClick={onJoin} data-testid="button-audit-detail-join">Unirme a la auditoría</Button>
++          ) : requested && !joining && (
++            <Button type="button" size="sm" variant="outline" onClick={onRetry} data-testid="button-audit-retry-join">Reintentar participación</Button>
++          )}
+         </div>
+       )}
+     </div>

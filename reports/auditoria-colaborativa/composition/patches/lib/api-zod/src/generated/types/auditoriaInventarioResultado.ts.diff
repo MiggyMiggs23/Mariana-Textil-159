@@ -1,0 +1,15 @@
+diff --git a/lib/api-zod/src/generated/types/auditoriaInventarioResultado.ts b/lib/api-zod/src/generated/types/auditoriaInventarioResultado.ts
+index 495009dd..8d94fa11 100644
+--- a/lib/api-zod/src/generated/types/auditoriaInventarioResultado.ts
++++ b/lib/api-zod/src/generated/types/auditoriaInventarioResultado.ts
+@@ -10,6 +10,10 @@ import type { AuditoriaInventarioResultadoResolucion } from './auditoriaInventar
+ import type { AuditoriaSobranteContexto } from './auditoriaSobranteContexto';
+ 
+ export interface AuditoriaInventarioResultado {
++  /** @nullable */
++  usuarioId: number | null;
++  /** @nullable */
++  usuarioNombre: string | null;
+   serie: string;
+   clasificacion: AuditoriaInventarioResultadoClasificacion;
+   /** @nullable */

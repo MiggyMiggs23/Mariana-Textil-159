@@ -1,0 +1,84 @@
+diff --git a/lib/api-client-react/src/generated/api.ts b/lib/api-client-react/src/generated/api.ts
+index e2f3d30b..4f9c32b8 100644
+--- a/lib/api-client-react/src/generated/api.ts
++++ b/lib/api-client-react/src/generated/api.ts
+@@ -41,6 +41,7 @@ import type {
+   AuditoriaInventarioEscaneoInput,
+   AuditoriaInventarioEscaneoResult,
+   AuditoriaInventarioInput,
++  AuditoriaInventarioParticipacion,
+   AuditoriaInventarioResumen,
+   AuditoriaInventarioSitio,
+   AuditoriaListResult,
+@@ -11164,6 +11165,71 @@ export function useGetAuditoriaInventario<TData = Awaited<ReturnType<typeof getA
+ 
+ 
+ 
++export const getParticiparAuditoriaInventarioUrl = (id: number,) => {
++
++
++
++
++  return `/api/inventario/auditorias/${id}/participar`
++}
++
++export const participarAuditoriaInventario = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaInventarioParticipacion> => {
++
++  return customFetch<AuditoriaInventarioParticipacion>(getParticiparAuditoriaInventarioUrl(id),
++  {
++    ...options,
++    method: 'POST'
++
++
++  }
++);}
++
++
++
++
++
++export const getParticiparAuditoriaInventarioMutationOptions = <TError = ErrorType<void>,
++    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof participarAuditoriaInventario>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
++): UseMutationOptions<Awaited<ReturnType<typeof participarAuditoriaInventario>>, TError,{id: number}, TContext> => {
++
++const mutationKey = ['participarAuditoriaInventario'];
++const {mutation: mutationOptions, request: requestOptions} = options ?
++      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
++      options
++      : {...options, mutation: {...options.mutation, mutationKey}}
++      : {mutation: { mutationKey, }, request: undefined};
++
++
++
++
++      const mutationFn: MutationFunction<Awaited<ReturnType<typeof participarAuditoriaInventario>>, {id: number}> = (props) => {
++          const {id} = props ?? {};
++
++          return  participarAuditoriaInventario(id,requestOptions)
++        }
++
++
++
++
++
++
++  return  { mutationFn, ...mutationOptions }}
++
++    export type ParticiparAuditoriaInventarioMutationResult = NonNullable<Awaited<ReturnType<typeof participarAuditoriaInventario>>>
++
++    export type ParticiparAuditoriaInventarioMutationError = ErrorType<void>
++
++    export const useParticiparAuditoriaInventario = <TError = ErrorType<void>,
++    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof participarAuditoriaInventario>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
++ ): UseMutationResult<
++        Awaited<ReturnType<typeof participarAuditoriaInventario>>,
++        TError,
++        {id: number},
++        TContext
++      > => {
++      return useMutation(getParticiparAuditoriaInventarioMutationOptions(options));
++    }
++
+ export const getScanAuditoriaInventarioUrl = (id: number,) => {
+ 
+ 

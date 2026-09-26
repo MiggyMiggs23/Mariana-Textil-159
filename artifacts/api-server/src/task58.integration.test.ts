@@ -413,6 +413,7 @@ test("Task 58: pisos funcionan de extremo a extremo sin contaminar el kardex", a
         auditoriaId: opened.id,
         serie: rolls[0]!.serie,
         pisoId: floorB,
+        desktop: false,
         usuarioId: admin.id,
         ip: "127.0.0.1",
       }));
@@ -420,6 +421,7 @@ test("Task 58: pisos funcionan de extremo a extremo sin contaminar el kardex", a
         auditoriaId: opened.id,
         serie: misplaced.serie,
         pisoId: floorB,
+        desktop: false,
         usuarioId: admin.id,
         ip: "127.0.0.1",
       }));
@@ -427,6 +429,7 @@ test("Task 58: pisos funcionan de extremo a extremo sin contaminar el kardex", a
         auditoriaId: opened.id,
         serie: raced.serie,
         pisoId: floorB,
+        desktop: false,
         usuarioId: admin.id,
         ip: "127.0.0.1",
       }));
@@ -515,6 +518,7 @@ test("Task 58: pisos funcionan de extremo a extremo sin contaminar el kardex", a
           auditoriaId: surplusAudit.id,
           serie: item.serie,
           pisoId: floorB,
+          desktop: false,
           usuarioId: admin.id,
           ip: "127.0.0.1",
         }));
@@ -525,6 +529,7 @@ test("Task 58: pisos funcionan de extremo a extremo sin contaminar el kardex", a
           auditoriaId: surplusAudit.id,
           serie: item.serie,
           pisoId: floorB,
+          desktop: false,
           usuarioId: admin.id,
           ip: "127.0.0.1",
         }));

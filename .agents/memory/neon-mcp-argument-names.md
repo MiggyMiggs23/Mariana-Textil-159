@@ -8,3 +8,9 @@ Si Neon rechaza los argumentos camelCase del skill, usar los nombres snake_case 
 **Why:** La herramienta de eliminación de ramas rechazó `projectId` y `branchId`, aunque el skill los documentaba, y exigió `project_id` y `branch_id`. El intento rechazado no ejecutó la eliminación.
 
 **How to apply:** Ante `Invalid arguments`, consultar el esquema que devuelve el proveedor y corregir exclusivamente los nombres. No repetir cambios de datos ni asumir que el primer intento se ejecutó.
+
+La creación de ramas también puede rechazar opciones de nombre y caducidad documentadas, incluso traducidas a snake_case, y aceptar únicamente el identificador del proyecto.
+
+**Why:** El proveedor expuso una firma más reducida que la documentación. Crear sin caducidad no programa su eliminación automática.
+
+**How to apply:** Conservar el identificador devuelto para la limpieza explícita de la rama desechable; nunca afirmar que expirará sola cuando el argumento de caducidad fue rechazado.

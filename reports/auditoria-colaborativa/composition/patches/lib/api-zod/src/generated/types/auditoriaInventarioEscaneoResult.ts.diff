@@ -1,0 +1,18 @@
+diff --git a/lib/api-zod/src/generated/types/auditoriaInventarioEscaneoResult.ts b/lib/api-zod/src/generated/types/auditoriaInventarioEscaneoResult.ts
+index 9b1b282f..09f2ddab 100644
+--- a/lib/api-zod/src/generated/types/auditoriaInventarioEscaneoResult.ts
++++ b/lib/api-zod/src/generated/types/auditoriaInventarioEscaneoResult.ts
+@@ -8,6 +8,13 @@
+ import type { AuditoriaInventarioEscaneoResultClasificacion } from './auditoriaInventarioEscaneoResultClasificacion';
+ 
+ export interface AuditoriaInventarioEscaneoResult {
++  participantesActivos: number;
++  maxParticipantes: number;
++  expiracionSegundos: number;
++  expiraAt: Date;
++  usuarioId: number;
++  usuarioNombre: string;
++  escaneadoAt: Date;
+   serie: string;
+   duplicado: boolean;
+   clasificacion: AuditoriaInventarioEscaneoResultClasificacion;

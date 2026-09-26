@@ -1,0 +1,14 @@
+diff --git a/lib/api-zod/src/generated/types/auditoriaInventarioDetail.ts b/lib/api-zod/src/generated/types/auditoriaInventarioDetail.ts
+index 4995826c..5e33873e 100644
+--- a/lib/api-zod/src/generated/types/auditoriaInventarioDetail.ts
++++ b/lib/api-zod/src/generated/types/auditoriaInventarioDetail.ts
+@@ -10,6 +10,9 @@ import type { AuditoriaInventarioResultado } from './auditoriaInventarioResultad
+ import type { AuditoriaInventarioResumen } from './auditoriaInventarioResumen';
+ 
+ export type AuditoriaInventarioDetail = AuditoriaInventarioResumen & ({
++  participantesActivos: number;
++  maxParticipantes: number;
++  expiracionSegundos: number;
+   /** @nullable */
+   motivoCancelacion?: string | null;
+   /** @nullable */

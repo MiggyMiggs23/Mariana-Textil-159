@@ -1,0 +1,105 @@
+/* Reconciled Caja en Tiempo Real layout, scoped to this page only. */
+
+.tiempo-real-layout .recon-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.tiempo-real-layout .recon-icon-box.blue {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.tiempo-real-layout .recon-icon-box.green {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.tiempo-real-layout .recon-top-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+}
+
+.tiempo-real-layout .recon-top-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.tiempo-real-layout .recon-top-card-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.tiempo-real-layout .recon-top-card-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.dark .tiempo-real-layout .recon-top-card-value {
+  color: #f9fafb;
+}
+
+.tiempo-real-layout .recon-top-card-sub {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.tiempo-real-layout .recon-store-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.tiempo-real-layout .recon-store-item-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.tiempo-real-layout .recon-store-item-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.dark .tiempo-real-layout .recon-store-item-val {
+  color: #f9fafb;
+}
+
+.tiempo-real-layout .recon-store-item-val.green {
+  color: #15803d;
+}
+
+.dark .tiempo-real-layout .recon-store-item-val.green {
+  color: #4ade80;
+}
+
+.tiempo-real-layout .recon-store-item-val.amber {
+  color: #b45309;
+}
+
+.dark .tiempo-real-layout .recon-store-item-val.amber {
+  color: #fbbf24;
+}
+
+.tiempo-real-layout .recon-heading {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 16px;
+}
+
+.dark .tiempo-real-layout .recon-heading {
+  color: #f9fafb;
+}

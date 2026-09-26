@@ -1,0 +1,216 @@
+--- /home/runner/workspace/reports/auditoria-colaborativa/staging/frontend-root/artifacts/mariana-textil/src/pages/auditorias-inventario.tsx	2026-09-26 01:05:55.269659585 +0000
++++ /home/runner/workspace/reports/auditoria-colaborativa/staging/frontend-root-unirse/artifacts/mariana-textil/src/pages/auditorias-inventario.tsx	2026-09-26 01:13:29.573211236 +0000
+@@ -98,6 +98,7 @@
+   const syncedAuditId = useRef<number | null>(null);
+   const previousUserId = useRef<number | null>(null);
+   const scanBusy = useRef(false);
++  const [joinIntent, setJoinIntent] = useState<string | null>(null);
+   const [scan, setScan] = useState("");
+   const [cancelOpen, setCancelOpen] = useState(false);
+   const [cancelReason, setCancelReason] = useState("");
+@@ -107,6 +108,7 @@
+   const [addColor, setAddColor] = useState("");
+   const scanRef = useRef<HTMLInputElement>(null);
+   const canCreateProduct = hasPermission(user, Modules.PRODUCTOS, "crear");
++  const canCreateAudit = hasPermission(user, Modules.AUDITORIA_INVENTARIO, "crear");
+   const products = useListProductos({}, {
+     query: {
+       enabled: canCreateProduct,
+@@ -157,16 +159,19 @@
+     const requested = Number(new URLSearchParams(search).get("auditoriaId"));
+     if (Number.isInteger(requested) && requested > 0) {
+       selectionInitialized.current = true;
++      setJoinIntent(null);
+       setSelectedId(requested);
+     }
+   }, [search]);
+ 
+   useEffect(() => {
+-    if (!selectionInitialized.current && selectedId == null && audits.data?.length) {
++    if (!selectionInitialized.current && selectedId == null && siteId && audits.data?.length) {
++      const openAudit = audits.data.find((item) =>
++        item.estado === "ABIERTA" && String(item.ubicacionId) === siteId);
+       selectionInitialized.current = true;
+-      setSelectedId(audits.data.find((item) => item.estado === "ABIERTA")?.id ?? audits.data[0]!.id);
++      if (openAudit) setSelectedId(openAudit.id);
+     }
+-  }, [audits.data, selectedId]);
++  }, [audits.data, selectedId, siteId]);
+ 
+   useEffect(() => {
+     setSelectedPiso("none");
+@@ -174,8 +179,8 @@
+   }, [selectedId, siteId]);
+ 
+   useEffect(() => {
+-    if (!user?.id) return;
+-    if (previousUserId.current && previousUserId.current !== user.id) {
++    if (previousUserId.current && previousUserId.current !== (user?.id ?? null)) {
++      setJoinIntent(null);
+       setSelectedId(null);
+       setSiteId("");
+       syncedAuditId.current = null;
+@@ -187,7 +192,7 @@
+           && query.queryKey[0].startsWith("/api/inventario/auditorias/"),
+       });
+     }
+-    previousUserId.current = user.id;
++    previousUserId.current = user?.id ?? null;
+   }, [user?.id, queryClient]);
+ 
+   const detail = useGetAuditoriaInventario(selectedId ?? 0, {
+@@ -204,7 +209,14 @@
+     : detail.data?.id === selectedId ? detail.data : undefined;
+   const mayScan = !!user?.id && hasPermission(user, Modules.AUDITORIA_INVENTARIO, "editar")
+     && currentDetail?.estado === "ABIERTA";
+-  const participation = useAuditParticipation(mayScan ? selectedId : null, user?.id ?? null, mayScan);
++  const selectedJoinKey = user?.id && selectedId && currentDetail
++    ? `${user.id}:${currentDetail.ubicacionId}:${selectedId}` : null;
++  const requestedJoin = !!selectedJoinKey && joinIntent === selectedJoinKey;
++  const participation = useAuditParticipation(mayScan && requestedJoin ? selectedId : null, user?.id ?? null, mayScan && requestedJoin);
++
++  useEffect(() => {
++    if (participation.active && requestedJoin) scanRef.current?.focus();
++  }, [participation.active, requestedJoin, selectedId]);
+ 
+   useEffect(() => {
+     if (selectedId == null) {
+@@ -219,11 +231,24 @@
+     () => audits.data?.filter((audit) => !siteId || String(audit.ubicacionId) === siteId) ?? [],
+     [audits.data, siteId],
+   );
++  const openSiteAudits = siteId ? siteAudits.filter((audit) => audit.estado === "ABIERTA") : [];
++
++  const selectAudit = (id: number) => {
++    if (selectedId !== id) setJoinIntent(null);
++    setSelectedId(id);
++  };
++  const joinAudit = (id: number, locationId: number) => {
++    if (!user?.id || !hasPermission(user, Modules.AUDITORIA_INVENTARIO, "editar")
++      || !siteId || Number(siteId) !== locationId) return;
++    selectAudit(id);
++    setJoinIntent(`${user.id}:${locationId}:${id}`);
++  };
+ 
+   const changeSite = (id: string) => {
+     if (id === siteId) return;
+     selectionInitialized.current = true;
+     syncedAuditId.current = null;
++    setJoinIntent(null);
+     setSelectedId(null);
+     setSiteId(id);
+   };
+@@ -297,7 +322,7 @@
+               {sites.data?.map((site) => <SelectItem key={site.id} value={String(site.id)}>{site.iniciales} · {site.nombre}</SelectItem>)}
+             </SelectContent>
+           </Select>
+-          <Button
++          {siteId && audits.data && openSiteAudits.length === 0 && canCreateAudit && <Button
+             data-testid="button-open-audit"
+             disabled={!siteId || pending}
+             size="lg"
+@@ -305,6 +330,7 @@
+             onClick={() => create.mutate({ data: { ubicacionId: Number(siteId) } }, {
+               onSuccess: (data) => {
+                 setSelectedId(data.id);
++                 setJoinIntent(user?.id ? `${user.id}:${siteId}:${data.id}` : null);
+                 void invalidate(data.id);
+                 toast({ title: "Auditoría abierta", description: `${data.folioFormateado} · ${data.totalSnapshot} rollos en snapshot` });
+               },
+@@ -313,7 +339,7 @@
+           >
+             {create.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Play className="mr-2 h-5 w-5 fill-current" />}
+             Iniciar auditoría
+-          </Button>
++          </Button>}
+         </div>
+       </header>
+ 
+@@ -329,11 +355,49 @@
+         </div>
+       )}
+ 
++      {!audits.isLoading && !audits.isError && (
++        <section className="no-print mb-6" data-testid="audit-entry">
++          <h2 className="text-lg font-bold mb-3">Auditorías abiertas en el sitio</h2>
++          {!siteId ? (
++            <p className="rounded-xl border border-dashed p-4 text-sm text-muted-foreground">Selecciona un sitio para ver sus auditorías abiertas.</p>
++          ) : openSiteAudits.length === 0 ? (
++            <p className="rounded-xl border border-dashed p-4 text-sm text-muted-foreground" data-testid="status-no-open-audits">
++              No hay auditorías abiertas en este sitio.
++              {canCreateAudit ? " Puedes iniciar una nueva auditoría." : " Consulta el historial sin iniciar una nueva."}
++            </p>
++          ) : (
++            <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3" data-testid="open-audit-list">
++              {openSiteAudits.map((item) => {
++                const joined = selectedId === item.id && participation.active;
++                const joining = selectedId === item.id && participation.joining;
++                return (
++                  <Card key={item.id} className="p-4 flex flex-col gap-3" data-testid={`open-audit-${item.id}`}>
++                    <div>
++                      <p className="font-mono text-lg font-bold">{item.folioFormateado}</p>
++                      <p className="text-sm text-muted-foreground">{item.nombreUbicacion} · Iniciada por {item.creadaPor}</p>
++                      <p className="text-sm text-muted-foreground">{item.totalEscaneados}/{item.totalSnapshot} escaneados</p>
++                    </div>
++                    <Button type="button" size="lg" className="w-full min-h-12 text-base font-bold"
++                      data-testid={`button-join-audit-${item.id}`}
++                      disabled={!user?.id || !hasPermission(user, Modules.AUDITORIA_INVENTARIO, "editar") || joining || joined}
++                      onClick={() => joinAudit(item.id, item.ubicacionId)}>
++                      {joined ? "Participando" : joining ? "Uniéndote..." : "Unirme a la auditoría"}
++                    </Button>
++                  </Card>
++                );
++              })}
++            </div>
++          )}
++        </section>
++      )}
++
+       {!audits.isLoading && !audits.isError && audits.data?.length === 0 && (
+         <div className="rounded-2xl border border-dashed p-12 text-center bg-card/50" data-testid="status-audits-empty">
+           <ScanLine className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
+           <h3 className="text-lg font-bold text-foreground mb-1">No hay auditorías registradas</h3>
+-          <p className="text-sm text-muted-foreground">Selecciona un sitio y presiona "Iniciar auditoría" para comenzar.</p>
++          <p className="text-sm text-muted-foreground">{canCreateAudit
++            ? 'Selecciona un sitio y presiona "Iniciar auditoría" para comenzar.'
++            : "Selecciona un sitio para consultar auditorías; necesitas permiso de creación para iniciar una."}</p>
+         </div>
+       )}
+ 
+@@ -357,7 +421,7 @@
+                     key={item.id}
+                     type="button"
+                     data-testid={`button-audit-${item.id}`}
+-                    onClick={() => setSelectedId(item.id)}
++                    onClick={() => selectAudit(item.id)}
+                     className={`group relative w-full text-left transition-all duration-200 rounded-xl border p-4 ${
+                       isSelected
+                         ? "border-primary/60 bg-primary/[0.03] shadow-sm ring-1 ring-primary/20"
+@@ -504,7 +568,10 @@
+                      joining={participation.joining}
+                      error={participation.error}
+                      expired={participation.expired}
++                      requested={requestedJoin}
++                      canJoin={mayScan && siteId === String(detail.data.ubicacionId)}
+                      onRetry={participation.retry}
++                      onJoin={() => joinAudit(detail.data!.id, detail.data!.ubicacionId)}
+                    />
+                  )}
+ 
+@@ -513,6 +580,16 @@
+                   <div className="sticky top-4 z-20 rounded-2xl bg-card shadow-lg ring-1 ring-primary/20 overflow-hidden transform transition-all">
+                     <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent pointer-events-none" />
+                     <div className="relative p-5 md:p-6">
++                       <div className="grid grid-cols-2 gap-3 mb-5" data-testid="audit-shared-progress">
++                         <div className="rounded-lg border bg-background/80 px-3 py-2">
++                           <p className="text-xs font-semibold text-muted-foreground">Escaneados · todos</p>
++                           <p className="font-mono text-2xl font-bold" data-testid="shared-escaneados">{detail.data.totalEscaneados}</p>
++                         </div>
++                         <div className="rounded-lg border bg-background/80 px-3 py-2">
++                           <p className="text-xs font-semibold text-muted-foreground">Faltantes · todos</p>
++                           <p className="font-mono text-2xl font-bold" data-testid="shared-faltantes">{detail.data.faltantes}</p>
++                         </div>
++                       </div>
+                       <div className="flex flex-col sm:flex-row gap-4 mb-3 items-start sm:items-center justify-between">
+                         <label className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary" htmlFor="audit-scan">
+                           <ScanLine className="h-5 w-5" /> Escanear Serie o QR

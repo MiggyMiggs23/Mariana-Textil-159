@@ -1,0 +1,8 @@
+{
+  "database": "scanner_collab_e2e_20260926",
+  "apiSha256": "c0ca9433ca934569b40e35913e7d6e6ef408bc09dc4f1c38cd79c5344c985b6c",
+  "initializer": "approved-bundle.ensureStartupSchemas",
+  "comparatorDatabase": "scanner_collab_guard_20260926",
+  "completedAt": "2026-09-26T01:28:17.520Z",
+  "serverStarted": false
+}

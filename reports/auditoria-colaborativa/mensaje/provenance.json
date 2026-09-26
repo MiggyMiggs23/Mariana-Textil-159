@@ -1,0 +1,26 @@
+{
+  "status": "frontend-text-candidate-pending-main-activation",
+  "parent": "reports/auditoria-colaborativa/final/candidate.json",
+  "stage": "reports/auditoria-colaborativa/staging/frontend-root-mensaje",
+  "frontend": "artifacts/mariana-textil/dist-auditoria-colaborativa-mensaje-20260925",
+  "overlays": [
+    {
+      "path": "artifacts/mariana-textil/src/pages/auditorias-inventario.tsx",
+      "baseSha256": "d4168cdf3dd497e8bbfefd9507f5c5ff119af7fb84cadffd6085e1623255a472",
+      "sha256": "37c8738fbe0c47a1aef2ed5263b769fac4c8db5168f1d48dad4d1ff5584f4f23",
+      "delta": "One toast description replaces classification with neutral Registrado; leading whitespace only otherwise"
+    }
+  ],
+  "isolatedFrontendTypecheck": "passed",
+  "productionBuild": "passed",
+  "sourcePreservation": "passed",
+  "apiUnchanged": true,
+  "priorFrontendUnchanged": true,
+  "generatedSourcesUnchanged": true,
+  "priorE2E": "15 passed against final candidate; no new browser run for text-only revision",
+  "mountedTests": "17 passed reported by UI agent/MAIN",
+  "activation": "not-performed",
+  "servicesStarted": "none",
+  "databaseAccess": "none",
+  "ddl": "none"
+}

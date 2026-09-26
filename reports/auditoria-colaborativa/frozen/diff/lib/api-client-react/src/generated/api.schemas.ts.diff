@@ -1,0 +1,256 @@
+--- /home/runner/workspace/reports/auditoria-colaborativa/frozen/base/lib/api-client-react/src/generated/api.schemas.ts	2026-09-26 01:00:04.628953184 +0000
++++ /home/runner/workspace/reports/auditoria-colaborativa/frozen/head/lib/api-client-react/src/generated/api.schemas.ts	2026-09-26 01:00:04.628953184 +0000
+@@ -5,6 +5,31 @@
+  * API para el sistema interno de Mariana Textil.
+  * OpenAPI spec version: 0.1.0
+  */
++export type TestResetInputConfirmation = typeof TestResetInputConfirmation[keyof typeof TestResetInputConfirmation];
++
++
++export const TestResetInputConfirmation = {
++  BORRAR: 'BORRAR',
++} as const;
++
++export interface TestResetInput {
++  confirmation: TestResetInputConfirmation;
++}
++
++export interface TestResetResult {
++  success: boolean;
++  requiresLogin: boolean;
++  message: string;
++}
++
++export interface TestResetStatus {
++  enabled: boolean;
++  protectCustomers: boolean;
++  confirmation: string;
++  preserves: string[];
++  clears: string[];
++}
++
+ export interface RolloRemateInput {
+   /** @minLength 1 */
+   motivo: string;
+@@ -3777,6 +3802,7 @@
+   REVERSO_ABONO_SALDO_FAVOR: 'REVERSO_ABONO_SALDO_FAVOR',
+   E5_RECEPCION: 'E5_RECEPCION',
+   E5_DEVOLUCION: 'E5_DEVOLUCION',
++  DEVOLUCION_COMERCIAL: 'DEVOLUCION_COMERCIAL',
+ } as const;
+ 
+ export interface AdminCuentaDestinoMovimiento {
+@@ -3879,6 +3905,8 @@
+   recepcionesRetenidas?: string;
+   /** Salidas E5 de caja o cuenta del periodo */
+   devolucionesRetenidas?: string;
++  /** Efectivo devuelto por devoluciones comerciales registradas en el periodo y tienda receptora; positivo a restar */
++  devolucionesComerciales?: string;
+   total: string;
+   /** @nullable */
+   totalAnterior: string | null;
+@@ -5447,8 +5475,14 @@
+   ABONO: 'ABONO',
+   REVERSO: 'REVERSO',
+   AJUSTE: 'AJUSTE',
++  DEVOLUCION_COMERCIAL: 'DEVOLUCION_COMERCIAL',
+ } as const;
+ 
++/**
++ * Documento inmutable nuevo; no es un abono ni un reverso.
++ */
++export type ClientePagoDetalleDevolucionComercial = { [key: string]: unknown };
++
+ export interface ClientePagoDetalle {
+   id: number;
+   clienteId: number;
+@@ -5471,6 +5505,8 @@
+   /** Nombre del cliente al que pertenece el movimiento. */
+   clienteNombre?: string;
+   tipo?: ClientePagoDetalleTipo;
++  /** Documento inmutable nuevo; no es un abono ni un reverso. */
++  devolucionComercial?: ClientePagoDetalleDevolucionComercial;
+   /** Importe firmado del movimiento. */
+   importe?: string;
+   fechaEfectiva?: string;
+@@ -9738,6 +9774,86 @@
+ 
+ export type AnalyticsUbicacionIdParameter = number;
+ 
++export type PreviewCommercialReturnBody = {
++  uuidCliente: string;
++  /** @minimum 1 */
++  ticketId: number;
++  /** @minimum 1 */
++  lineaId: number;
++  /** @minimum 1 */
++  ubicacionRecepcionId: number;
++  /** @minimum 1 */
++  sesionCajaId: number;
++  /** @pattern ^(0|[1-9][0-9]{0,6})\.[0-9]{3}$ */
++  cantidad: string;
++  /**
++     * @minLength 1
++     * @maxLength 400
++     */
++  motivo: string;
++};
++
++export type PreviewCommercialReturn200 = {
++  ticketId: number;
++  lineaId: number;
++  serie: string;
++  ubicacionRecepcionId: number;
++  sesionCajaId: number;
++  cantidad: string;
++  importeRollo: string;
++  deudaCancelada: string;
++  efectivoDevuelto: string;
++};
++
++/**
++ * Importes revisados; cualquier cambio al confirmar rechaza toda la operación.
++ */
++export type CreateCommercialReturnBodyRevision = {
++  /** @pattern ^(0|[1-9][0-9]*)\.[0-9]{2}$ */
++  importeRollo: string;
++  /** @pattern ^(0|[1-9][0-9]*)\.[0-9]{2}$ */
++  deudaCancelada: string;
++  /** @pattern ^(0|[1-9][0-9]*)\.[0-9]{2}$ */
++  efectivoDevuelto: string;
++};
++
++export type CreateCommercialReturnBody = {
++  uuidCliente: string;
++  /** @minimum 1 */
++  ticketId: number;
++  /** @minimum 1 */
++  lineaId: number;
++  /** @minimum 1 */
++  ubicacionRecepcionId: number;
++  /** @minimum 1 */
++  sesionCajaId: number;
++  /** @pattern ^(0|[1-9][0-9]{0,6})\.[0-9]{3}$ */
++  cantidad: string;
++  /**
++     * @minLength 1
++     * @maxLength 400
++     */
++  motivo: string;
++  /** Importes revisados; cualquier cambio al confirmar rechaza toda la operación. */
++  revision: CreateCommercialReturnBodyRevision;
++};
++
++export type CreateCommercialReturn201 = {
++  id: string;
++  ticketId: number;
++  lineaId: number;
++  rolloId: number;
++  serie: string;
++  ubicacionRecepcionId: number;
++  sesionCajaId: number;
++  cantidad: string;
++  importeRollo: string;
++  deudaCancelada: string;
++  efectivoDevuelto: string;
++  motivo: string;
++  createdAt: string;
++};
++
+ export type GetE7Disponibilidad200 = {
+   enabled: boolean;
+   clienteFinanzas: boolean;
+@@ -10613,6 +10729,85 @@
+   total?: number;
+ };
+ 
++export type ListClientesListadoParams = {
++/**
++ * @maxLength 200
++ */
++q?: string;
++sort?: ListClientesListadoSort;
++direction?: ListClientesListadoDirection;
++period?: ListClientesListadoPeriod;
++/**
++ * @minimum 1
++ */
++page?: number;
++/**
++ * @minimum 1
++ * @maximum 100
++ */
++pageSize?: number;
++active?: ListClientesListadoActive;
++};
++
++export type ListClientesListadoSort = typeof ListClientesListadoSort[keyof typeof ListClientesListadoSort];
++
++
++export const ListClientesListadoSort = {
++  nombre: 'nombre',
++  rfc: 'rfc',
++  telefono: 'telefono',
++  limiteCredito: 'limiteCredito',
++  saldoActual: 'saldoActual',
++  movementCount: 'movementCount',
++  lastActivity: 'lastActivity',
++} as const;
++
++export type ListClientesListadoDirection = typeof ListClientesListadoDirection[keyof typeof ListClientesListadoDirection];
++
++
++export const ListClientesListadoDirection = {
++  asc: 'asc',
++  desc: 'desc',
++} as const;
++
++export type ListClientesListadoPeriod = typeof ListClientesListadoPeriod[keyof typeof ListClientesListadoPeriod];
++
++
++export const ListClientesListadoPeriod = {
++  '1m': '1m',
++  '3m': '3m',
++  '1y': '1y',
++  all: 'all',
++} as const;
++
++export type ListClientesListadoActive = typeof ListClientesListadoActive[keyof typeof ListClientesListadoActive];
++
++
++export const ListClientesListadoActive = {
++  true: 'true',
++  false: 'false',
++} as const;
++
++export type ListClientesListado200ItemsItem = Cliente & ({
++  /**
++     * @minimum 0
++     * @nullable
++     */
++  movementCount: number | null;
++  /** @nullable */
++  lastActivity: string | null;
++});
++
++export type ListClientesListado200 = {
++  items: ListClientesListado200ItemsItem[];
++  /** @minimum 0 */
++  total: number;
++  /** @minimum 1 */
++  page: number;
++  /** @minimum 1 */
++  pageSize: number;
++};
++
+ export type GetClientesCarteraParams = {
+ /**
+  * Ubicación única solicitada para el alcance. No combinar con ubicacionIds.
+@@ -11036,6 +11231,7 @@
+   CREDITO: 'CREDITO',
+   ABONO: 'ABONO',
+   ABONO_SALDO_FAVOR: 'ABONO_SALDO_FAVOR',
++  DEVOLUCION_COMERCIAL: 'DEVOLUCION_COMERCIAL',
+ } as const;
+ 
+ export type ListAdminCuentaDestinoMovimientosPreset = typeof ListAdminCuentaDestinoMovimientosPreset[keyof typeof ListAdminCuentaDestinoMovimientosPreset];

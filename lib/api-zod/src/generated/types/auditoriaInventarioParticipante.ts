@@ -7,6 +7,8 @@
  */
 
 export interface AuditoriaInventarioParticipante {
+  activo: boolean;
+  expiraAt: Date;
   usuarioId: number;
   nombre: string;
   escaneos: number;

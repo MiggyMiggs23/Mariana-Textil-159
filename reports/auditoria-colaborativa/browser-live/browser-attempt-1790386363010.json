@@ -1,0 +1,47 @@
+{
+  "status": "FAILED",
+  "candidate": "c0ca9433ca934569b40e35913e7d6e6ef408bc09dc4f1c38cd79c5344c985b6c",
+  "frontendIndex": "f07eecd0f9368da00691b314afa9e660db63bb6eb76b34a99ca21503f352815f",
+  "checks": [
+    {
+      "name": "Empty south site offers start to authorized creator",
+      "passed": true,
+      "details": true
+    }
+  ],
+  "images": [
+    {
+      "file": "screenshots/01-empty-south-start.png",
+      "name": "01-empty-south-start",
+      "bytes": 107703,
+      "sha256": "4be082574682f99fde7bbc655e579cf68bc86b77b94afc392759a092f6a6afe6",
+      "actor": "admin",
+      "mobile": false
+    }
+  ],
+  "contexts": 6,
+  "auditId": 1,
+  "folio": "ESN-AI-000001",
+  "error": "Actual isolated API browser login\n\n500 !== 200\n",
+  "lastUi": [
+    {
+      "text": "Mariana Textil\n\nSistema de Gestión Interna\n\nUsuario\nContraseña\nIngresar"
+    },
+    {
+      "text": "Mariana Textil\n\nSistema de Gestión Interna\n\nUsuario\nContraseña\nIngresar"
+    },
+    {
+      "text": "Mariana Textil\n\nSistema de Gestión Interna\n\nUsuario\nContraseña\nIngresar"
+    },
+    {
+      "text": "Mariana Textil\n\nSistema de Gestión Interna\n\nUsuario\nContraseña\nIngresar"
+    },
+    {
+      "text": "Mariana Textil\n\nSistema de Gestión Interna\n\nUsuario\nContraseña\nIngresar"
+    },
+    {
+      "actor": "admin",
+      "text": "Mariana Textil\n\nSistema de Gestión Interna\n\nUsuario\nContraseña\nIngresar"
+    }
+  ]
+}

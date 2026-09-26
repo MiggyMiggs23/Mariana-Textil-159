@@ -1,0 +1,32 @@
+{
+  "status": "candidate-only-not-activated",
+  "parent": "reports/auditoria-colaborativa/pisos/candidate.json",
+  "stage": "reports/auditoria-colaborativa/staging/frontend-root-final",
+  "overlays": [
+    {
+      "path": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+      "baseSha256": "eb48dc710e31090346f25edbf7e58788b68abe2f6468e17ce0f847b76e5baa28",
+      "sha256": "8669e870d6da9f7a86619ef8150d8f5d01df017831ea0bab561bd5c130598c7a"
+    },
+    {
+      "path": "artifacts/mariana-textil/src/pages/auditorias-inventario.tsx",
+      "baseSha256": "5b903a69120ab07c29c09085e7453da2be81d968d034141774cbb56efd35a48c",
+      "sha256": "d4168cdf3dd497e8bbfefd9507f5c5ff119af7fb84cadffd6085e1623255a472"
+    }
+  ],
+  "apiSourceDeltas": [
+    "artifacts/api-server/src/routes/auditorias-inventario.ts"
+  ],
+  "frontendSourceDeltas": [
+    "artifacts/mariana-textil/src/pages/auditorias-inventario.tsx"
+  ],
+  "isolatedFrontendTypecheck": "passed",
+  "apiSyntax": "passed-all-mjs",
+  "sourcePreservation": "passed",
+  "priorCandidatesUnchanged": true,
+  "generatedSourcesUnchanged": true,
+  "ddl": "none",
+  "databaseAccess": "none",
+  "activation": "not-performed",
+  "servicesStarted": "none"
+}

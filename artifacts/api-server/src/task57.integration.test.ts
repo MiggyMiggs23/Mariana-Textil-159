@@ -82,6 +82,10 @@ test("Task 57: auditoría concurrente y purga fail-closed usan únicamente la DB
       [`${tag} otro sitio`, otherLocationInitials],
     );
     ids.locations.push(Number(location.id), Number(otherLocation.id));
+    const auditFloor = await one(
+      `INSERT INTO pisos(ubicacion_id,nombre,activo) VALUES($1,'Acceso de prueba',true) RETURNING id`,
+      [location.id],
+    );
     const actor = await one(
       `INSERT INTO usuarios(nombre,usuario,password_hash,rol,ubicacion_id,activo,alcance_consulta)
        VALUES($1,$2,crypt('Task57-Admin-Test!',gen_salt('bf',8)),'ADMIN',$3,true,'TODAS') RETURNING id`,
@@ -148,6 +152,7 @@ test("Task 57: auditoría concurrente y purga fail-closed usan únicamente la DB
     const scans = await Promise.all(
       [0, 1].map(() => db.transaction((tx) => inventoryAudit.scanAuditoria(tx, {
         auditoriaId: auditId, serie: String(surplus.serie), usuarioId: Number(actor.id), ip: "127.0.0.1",
+        pisoId: Number(auditFloor.id), desktop: true,
       }))),
     );
     assert.deepEqual(scans.map((scan) => scan.duplicado).sort(), [false, true]);

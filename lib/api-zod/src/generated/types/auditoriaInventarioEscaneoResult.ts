@@ -8,6 +8,13 @@
 import type { AuditoriaInventarioEscaneoResultClasificacion } from './auditoriaInventarioEscaneoResultClasificacion';
 
 export interface AuditoriaInventarioEscaneoResult {
+  participantesActivos: number;
+  maxParticipantes: number;
+  expiracionSegundos: number;
+  expiraAt: Date;
+  usuarioId: number;
+  usuarioNombre: string;
+  escaneadoAt: Date;
   serie: string;
   duplicado: boolean;
   clasificacion: AuditoriaInventarioEscaneoResultClasificacion;

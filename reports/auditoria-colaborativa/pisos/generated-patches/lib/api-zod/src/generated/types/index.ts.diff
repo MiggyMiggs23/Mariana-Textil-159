@@ -1,0 +1,14 @@
+diff --git a/lib/api-zod/src/generated/types/index.ts b/lib/api-zod/src/generated/types/index.ts
+index e384eea6..a8e64f85 100644
+--- a/lib/api-zod/src/generated/types/index.ts
++++ b/lib/api-zod/src/generated/types/index.ts
+@@ -110,7 +110,9 @@ export * from './auditoriaInventarioEscaneoInput';
+ export * from './auditoriaInventarioEscaneoResult';
+ export * from './auditoriaInventarioEscaneoResultClasificacion';
+ export * from './auditoriaInventarioInput';
++export * from './auditoriaInventarioParticipacion';
+ export * from './auditoriaInventarioParticipante';
++export * from './auditoriaInventarioPiso';
+ export * from './auditoriaInventarioResultado';
+ export * from './auditoriaInventarioResultadoClasificacion';
+ export * from './auditoriaInventarioResultadoResolucion';

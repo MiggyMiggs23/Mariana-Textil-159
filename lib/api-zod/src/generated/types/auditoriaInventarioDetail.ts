@@ -10,6 +10,9 @@ import type { AuditoriaInventarioResultado } from './auditoriaInventarioResultad
 import type { AuditoriaInventarioResumen } from './auditoriaInventarioResumen';
 
 export type AuditoriaInventarioDetail = AuditoriaInventarioResumen & ({
+  participantesActivos: number;
+  maxParticipantes: number;
+  expiracionSegundos: number;
   /** @nullable */
   motivoCancelacion?: string | null;
   /** @nullable */

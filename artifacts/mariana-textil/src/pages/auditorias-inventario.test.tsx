@@ -57,7 +57,6 @@ describe("AuditoriasInventario Component", () => {
     vi.spyOn(apiClient, "useListSitiosAuditoriaInventario").mockReturnValue(hookResult([{ id: 1, nombre: "Bodega Centro", iniciales: "BC" }]) as any);
     vi.spyOn(apiClient, "useListAuditoriasInventario").mockReturnValue(hookResult([{ id: 41, ubicacionId: 1, estado: "CONFIRMADA", folioFormateado: "BC-AI-000041", nombreUbicacion: "Bodega Centro", totalEscaneados: 2, totalSnapshot: 1 }]) as any);
     vi.spyOn(apiClient, "useListProductos").mockReturnValue(hookResult([]) as any);
-    vi.spyOn(apiClient, "useListPisosLocation").mockReturnValue(hookResult([]) as any);
     vi.spyOn(apiClient, "useCreateProducto").mockReturnValue({ mutate: vi.fn(), isPending: false } as any);
     vi.spyOn(apiClient, "useScanAuditoriaInventario").mockReturnValue({ mutate: vi.fn(), isPending: false } as any);
     vi.spyOn(apiClient, "useCloseAuditoriaInventario").mockReturnValue({ mutate: vi.fn(), isPending: false } as any);
@@ -150,6 +149,8 @@ describe("AuditoriasInventario Component", () => {
       </QueryClientProvider>
     );
 
+    // Closed history is opened explicitly; the entry view no longer auto-selects it.
+    fireEvent.click(screen.getByTestId("button-audit-41"));
     const financial = screen.getByText("Riesgo Financiero: Vendidos Físicamente Aquí").closest("div.border");
     expect(financial).not.toBeNull();
     expect(within(financial as HTMLElement).getByText("SOLD-123")).toBeTruthy();
@@ -180,7 +181,6 @@ describe("AuditoriasInventario Component", () => {
     vi.spyOn(apiClient, "useListSitiosAuditoriaInventario").mockReturnValue(hookResult([]) as any);
     vi.spyOn(apiClient, "useListAuditoriasInventario").mockReturnValue(hookResult([]) as any);
     vi.spyOn(apiClient, "useListProductos").mockReturnValue(hookResult([]) as any);
-    vi.spyOn(apiClient, "useListPisosLocation").mockReturnValue(hookResult([]) as any);
     for (const name of ["useCreateProducto", "useScanAuditoriaInventario", "useCloseAuditoriaInventario", "useCancelAuditoriaInventario", "useConfirmAuditoriaInventario", "useCreateAuditoriaInventario"] as const) {
       vi.spyOn(apiClient, name).mockReturnValue({ mutate: vi.fn(), isPending: false } as any);
     }

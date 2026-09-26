@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "removedApiWorkspaceModules": [],
+  "retainedFrontendChangedFiles": [
+    "artifacts/mariana-textil/src/pages/auditorias-inventario.tsx",
+    "lib/api-client-react/src/generated/api.schemas.ts",
+    "lib/api-client-react/src/generated/api.ts",
+    "lib/api-zod/src/generated/api.ts",
+    "lib/api-zod/src/generated/types/auditoriaInventarioDetail.ts",
+    "lib/api-zod/src/generated/types/auditoriaInventarioEscaneoResult.ts",
+    "lib/api-zod/src/generated/types/auditoriaInventarioParticipante.ts",
+    "lib/api-zod/src/generated/types/auditoriaInventarioResultado.ts",
+    "lib/api-zod/src/generated/types/index.ts",
+    "lib/api-zod/src/index.ts"
+  ],
+  "allRetainedFrontendChangesApproved": true,
+  "activeParentApiUnchanged": true,
+  "activeParentFrontendUnchanged": true
+}

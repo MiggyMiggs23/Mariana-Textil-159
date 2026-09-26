@@ -1,0 +1,18 @@
+{
+  "apiEntry": "/home/runner/workspace/artifacts/api-server/dist-auditoria-colaborativa-20260925/index.mjs",
+  "apiSha256": "aeea9b30f64eed3f82e680cc77f636d7284f55ec6188458f2e9e23165dd38900",
+  "frontendRoot": "/home/runner/workspace/artifacts/mariana-textil/dist-auditoria-colaborativa-unirse-20260925",
+  "frontendFiles": {
+    "assets/index-B0-IUrPy.css": "0b62686a09fd30a42563837ce058fe54af675ea5c740dde89355723236aff2bf",
+    "assets/index-CcfNH4UG.js": "1aca688fa246fe8f9eecbcffd7ad2a704ed75e04465dce9bc6f29c4d16f49d5e",
+    "assets/index-CJ5sQYvB.js": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c",
+    "assets/mariana-textil-logo-FFOiXRd3.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "assets/mariana-textil-logo-monochrome-_7AVoW2A.png": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24",
+    "favicon.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "index.html": "e1b725305625ffa0d161c885864fdc0164dc956ff7ebbc0ec2448cea1a11f955",
+    "robots.txt": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+    "sounds/alerta.ogg": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e",
+    "sounds/aviso.ogg": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4",
+    "sounds/solicitud.ogg": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+  }
+}

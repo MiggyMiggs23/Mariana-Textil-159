@@ -1,0 +1,62 @@
+diff --git a/lib/api-client-react/src/generated/api.schemas.ts b/lib/api-client-react/src/generated/api.schemas.ts
+index 2e10daf7..1ece440a 100644
+--- a/lib/api-client-react/src/generated/api.schemas.ts
++++ b/lib/api-client-react/src/generated/api.schemas.ts
+@@ -9471,6 +9471,10 @@ export interface AuditoriaSobranteContexto {
+ }
+ 
+ export interface AuditoriaInventarioResultado {
++  /** @nullable */
++  usuarioId: number | null;
++  /** @nullable */
++  usuarioNombre: string | null;
+   serie: string;
+   clasificacion: AuditoriaInventarioResultadoClasificacion;
+   /** @nullable */
+@@ -9599,6 +9603,8 @@ export interface ReactivacionFaltanteContexto {
+ }
+ 
+ export interface AuditoriaInventarioParticipante {
++  activo: boolean;
++  expiraAt: string;
+   usuarioId: number;
+   nombre: string;
+   escaneos: number;
+@@ -9607,6 +9613,9 @@ export interface AuditoriaInventarioParticipante {
+ }
+ 
+ export type AuditoriaInventarioDetail = AuditoriaInventarioResumen & ({
++  participantesActivos: number;
++  maxParticipantes: number;
++  expiracionSegundos: number;
+   /** @nullable */
+   motivoCancelacion?: string | null;
+   /** @nullable */
+@@ -9617,6 +9626,13 @@ export type AuditoriaInventarioDetail = AuditoriaInventarioResumen & ({
+   participantes: AuditoriaInventarioParticipante[];
+ });
+ 
++export interface AuditoriaInventarioParticipacion {
++  participantesActivos: number;
++  maxParticipantes: number;
++  expiracionSegundos: number;
++  expiraAt: string;
++}
++
+ export type AuditoriaInventarioEscaneoResultClasificacion = typeof AuditoriaInventarioEscaneoResultClasificacion[keyof typeof AuditoriaInventarioEscaneoResultClasificacion];
+ 
+ 
+@@ -9626,6 +9642,13 @@ export const AuditoriaInventarioEscaneoResultClasificacion = {
+ } as const;
+ 
+ export interface AuditoriaInventarioEscaneoResult {
++  participantesActivos: number;
++  maxParticipantes: number;
++  expiracionSegundos: number;
++  expiraAt: string;
++  usuarioId: number;
++  usuarioNombre: string;
++  escaneadoAt: string;
+   serie: string;
+   duplicado: boolean;
+   clasificacion: AuditoriaInventarioEscaneoResultClasificacion;

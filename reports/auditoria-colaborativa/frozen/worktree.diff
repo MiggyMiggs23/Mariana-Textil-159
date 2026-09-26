@@ -1,0 +1,928 @@
+diff --git a/artifacts/api-server/src/lib/auditoria-inventario.ts b/artifacts/api-server/src/lib/auditoria-inventario.ts
+index 8f26b4fa..559b1254 100644
+--- a/artifacts/api-server/src/lib/auditoria-inventario.ts
++++ b/artifacts/api-server/src/lib/auditoria-inventario.ts
+@@ -166,16 +166,60 @@ export async function createAuditoria(
+   return created!;
+ }
+ 
++export const AUDIT_MAX_PARTICIPANTS = 5;
++export const AUDIT_PARTICIPANT_EXPIRY_SECONDS = 90;
++
++// Header lock is always first, shared with scan/close/cancel. Read the clock
++// afterwards: transaction_timestamp()/now() could predate a wait for this lock.
++export async function participarAuditoria(
++  tx: Tx,
++  input: { auditoriaId: number; usuarioId: number },
++) {
++  const [header] = await tx.select().from(auditoriasInventarioTable)
++    .where(eq(auditoriasInventarioTable.id, input.auditoriaId)).for("update").limit(1);
++  if (!header) throw new AuditoriaInventarioError("Auditoría no encontrada.", "NOT_FOUND");
++  if (header.estado !== "ABIERTA") {
++    throw new AuditoriaInventarioError("La auditoría ya no está ABIERTA.", "NOT_OPEN");
++  }
++  const clock = await tx.execute(sql`SELECT clock_timestamp() AS ahora`);
++  const ahora = new Date(String(clock.rows[0]!.ahora)).toISOString();
++  const active = await tx.execute(sql`
++    SELECT usuario_id FROM auditoria_inventario_participantes
++    WHERE auditoria_id=${input.auditoriaId}
++      AND ultimo_at > ${ahora}::timestamptz - interval '90 seconds'
++  `);
++  const existing = active.rows.some((row) => Number(row.usuario_id) === input.usuarioId);
++  if (!existing && active.rows.length >= AUDIT_MAX_PARTICIPANTS) {
++    throw new AuditoriaInventarioError(
++      "Ya hay 5 usuarios activos en esta auditoría. Espera a que se libere un lugar.",
++      "AUDIT_PARTICIPANT_LIMIT",
++    );
++  }
++  const refreshed = await tx.execute(sql`
++    INSERT INTO auditoria_inventario_participantes (auditoria_id, usuario_id, escaneos, primero_at, ultimo_at)
++    VALUES (${input.auditoriaId}, ${input.usuarioId}, 0, ${ahora}::timestamptz, ${ahora}::timestamptz)
++    ON CONFLICT (auditoria_id, usuario_id) DO UPDATE SET ultimo_at=EXCLUDED.ultimo_at
++    RETURNING ultimo_at + interval '90 seconds' AS expira_at
++  `);
++  return {
++    participantesActivos: active.rows.length + (existing ? 0 : 1),
++    maxParticipantes: AUDIT_MAX_PARTICIPANTS,
++    expiracionSegundos: AUDIT_PARTICIPANT_EXPIRY_SECONDS,
++    expiraAt: new Date(String(refreshed.rows[0]!.expira_at)).toISOString(),
++  };
++}
++
+ export async function scanAuditoria(
+   tx: Tx,
+     input: { auditoriaId: number; serie: string; usuarioId: number; ip: string; pisoId?: number | null },
+ ) {
+   const serie = input.serie.trim();
++  const participacion = await participarAuditoria(tx, input);
+   const [header] = await tx
+     .select()
+     .from(auditoriasInventarioTable)
+     .where(eq(auditoriasInventarioTable.id, input.auditoriaId))
+-    .for("share")
++    .for("update")
+     .limit(1);
+   if (!header) throw new AuditoriaInventarioError("Auditoría no encontrada.", "NOT_FOUND");
+   if (header.estado !== "ABIERTA") {
+@@ -214,24 +258,20 @@ export async function scanAuditoria(
+       ),
+     )
+     .limit(1);
+-  await tx
+-    .insert(auditoriaInventarioParticipantesTable)
+-    .values({
+-      auditoriaId: input.auditoriaId,
+-      usuarioId: input.usuarioId,
+-      escaneos: inserted.length,
+-      ultimoAt: new Date(),
+-    })
+-    .onConflictDoUpdate({
+-      target: [
+-        auditoriaInventarioParticipantesTable.auditoriaId,
+-        auditoriaInventarioParticipantesTable.usuarioId,
+-      ],
+-      set: {
+-        ultimoAt: new Date(),
+-        escaneos: sql`${auditoriaInventarioParticipantesTable.escaneos} + ${inserted.length}`,
+-      },
+-    });
++  await tx.update(auditoriaInventarioParticipantesTable)
++    .set({ escaneos: sql`${auditoriaInventarioParticipantesTable.escaneos} + ${inserted.length}` })
++    .where(and(
++      eq(auditoriaInventarioParticipantesTable.auditoriaId, input.auditoriaId),
++      eq(auditoriaInventarioParticipantesTable.usuarioId, input.usuarioId),
++    ));
++  const [original] = await tx.select({
++    usuarioId: auditoriaInventarioEscaneosTable.usuarioId,
++    usuarioNombre: usuariosTable.nombre,
++    escaneadoAt: auditoriaInventarioEscaneosTable.escaneadoAt,
++  }).from(auditoriaInventarioEscaneosTable)
++    .innerJoin(usuariosTable, eq(usuariosTable.id, auditoriaInventarioEscaneosTable.usuarioId))
++    .where(and(eq(auditoriaInventarioEscaneosTable.auditoriaId, input.auditoriaId),
++      eq(auditoriaInventarioEscaneosTable.serie, serie)));
+   if (inserted.length) {
+     await audit(tx, {
+       usuarioId: input.usuarioId,
+@@ -243,6 +283,10 @@ export async function scanAuditoria(
+     });
+   }
+   return {
++    ...participacion,
++    usuarioId: original!.usuarioId,
++    usuarioNombre: original!.usuarioNombre,
++    escaneadoAt: original!.escaneadoAt.toISOString(),
+     serie,
+     duplicado: inserted.length === 0,
+     clasificacion: snapshot ? ("CUADRO" as const) : ("SOBRANTE" as const),
+@@ -810,6 +854,7 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
+        CASE WHEN s.serie IS NOT NULL THEN s.estado_snapshot
+             WHEN ${usarVivoParaSobrantes} THEN COALESCE(r.estado::text, 'SIN_REGISTRO')
+             ELSE e.estado_cierre END estado_actual,
++       e.usuario_id, scanner.nombre usuario_nombre,
+        e.escaneado_at, e.resolucion resolucion_escaneo,
+         s.resolucion resolucion_snapshot,
+         s.piso_snapshot_id, s.piso_snapshot, e.piso_real_id, e.piso_real
+@@ -819,6 +864,7 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
+     LEFT JOIN rollos r ON r.id = COALESCE(s.rollo_id, e.rollo_id)
+     LEFT JOIN productos p ON p.id = r.producto_id
+     LEFT JOIN ubicaciones u ON u.id = r.ubicacion_id
++    LEFT JOIN usuarios scanner ON scanner.id = e.usuario_id
+     WHERE COALESCE(s.auditoria_id, e.auditoria_id) = ${id}
+     ORDER BY clasificacion, serie
+   `);
+@@ -846,6 +892,8 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
+       estadoActual: String(row.estado_actual),
+       resolucion,
+       escaneadoAt: row.escaneado_at == null ? null : new Date(String(row.escaneado_at)).toISOString(),
++      usuarioId: row.usuario_id == null ? null : Number(row.usuario_id),
++      usuarioNombre: row.usuario_nombre == null ? null : String(row.usuario_nombre),
+       sobrante: clasificacion === "SOBRANTE"
+         ? await getSobranteContexto(tx, id, header.ubicacionId, String(row.serie))
+         : null,
+@@ -853,7 +901,9 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
+   }));
+   const participantsResult = await tx.execute(sql`
+     SELECT ap.usuario_id, u.nombre, ap.escaneos,
+-      ap.primero_at, ap.ultimo_at
++      ap.primero_at, ap.ultimo_at,
++      ap.ultimo_at + interval '90 seconds' expira_at,
++      (${header.estado} = 'ABIERTA' AND ap.ultimo_at > statement_timestamp() - interval '90 seconds') activo
+     FROM auditoria_inventario_participantes ap
+     JOIN usuarios u ON u.id=ap.usuario_id
+     WHERE ap.auditoria_id=${id} ORDER BY u.nombre
+@@ -864,6 +914,8 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
+     escaneos: Number(row.escaneos),
+     primeroAt: new Date(String(row.primero_at)).toISOString(),
+     ultimoAt: new Date(String(row.ultimo_at)).toISOString(),
++    expiraAt: new Date(String(row.expira_at)).toISOString(),
++    activo: row.activo === true,
+   }));
+   const count = (kind: string) => resultados.filter((r) => r.clasificacion === kind).length;
+   const totalSnapshot = count("CUADRO") + count("FALTANTE") + count("MAL_ACOMODADO");
+@@ -888,5 +940,8 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
+     confirmadaAt: header.confirmadaAt?.toISOString() ?? null,
+     resultados,
+     participantes,
++    participantesActivos: participantes.filter((p) => p.activo).length,
++    maxParticipantes: AUDIT_MAX_PARTICIPANTS,
++    expiracionSegundos: AUDIT_PARTICIPANT_EXPIRY_SECONDS,
+   };
+ }
+\ No newline at end of file
+diff --git a/artifacts/api-server/src/routes/auditorias-inventario.ts b/artifacts/api-server/src/routes/auditorias-inventario.ts
+index 11b7e419..f0f9c56c 100644
+--- a/artifacts/api-server/src/routes/auditorias-inventario.ts
++++ b/artifacts/api-server/src/routes/auditorias-inventario.ts
+@@ -20,6 +20,8 @@ import {
+   ScanAuditoriaInventarioBody,
+   ScanAuditoriaInventarioParams,
+   ScanAuditoriaInventarioResponse,
++  ParticiparAuditoriaInventarioParams,
++  ParticiparAuditoriaInventarioResponse,
+   ResolverSobranteAuditoriaInventarioBody,
+   ResolverSobranteAuditoriaInventarioParams,
+   ResolverSobranteAuditoriaInventarioResponse,
+@@ -43,6 +45,7 @@ import {
+   confirmAuditoria,
+   createAuditoria,
+   scanAuditoria,
++  participarAuditoria,
+   transitionAuditoria,
+ } from "../lib/auditoria-inventario";
+ import { resolverSobrante } from "../lib/auditoria-resoluciones";
+@@ -97,7 +100,7 @@ function handleError(error: unknown, res: Response, next: NextFunction): void {
+     const status =
+       error.code === "NOT_FOUND"
+         ? 404
+-        : error.code.includes("OPEN") || error.code === "NOT_CLOSED"
++        : error.code.includes("OPEN") || error.code === "NOT_CLOSED" || error.code === "AUDIT_PARTICIPANT_LIMIT"
+           ? 409
+           : 400;
+     res.status(status).json({ error: error.message, code: error.code });
+@@ -211,6 +214,30 @@ router.get(
+   },
+ );
+ 
++router.post(
++  "/auditorias/:id/participar",
++  requireSession,
++  requierePermiso("auditoria_inventario", "editar"),
++  requireOperationalRole,
++  async (req, res, next): Promise<void> => {
++    try {
++      const { id } = ParticiparAuditoriaInventarioParams.parse(req.params);
++      const visible = await getVisibleHeader(req, id);
++      if (!visible.header) {
++        res.status(404).json({ error: "Auditoría no encontrada." }); return;
++      }
++      if (visible.error) {
++        res.status(403).json({ error: visible.error }); return;
++      }
++      const result = await db.transaction((tx) =>
++        participarAuditoria(tx, { auditoriaId: id, usuarioId: req.auth!.user.id }));
++      res.json(ParticiparAuditoriaInventarioResponse.parse(result));
++    } catch (error) {
++      handleError(error, res, next);
++    }
++  },
++);
++
+ router.post(
+   "/auditorias/:id/escaneos",
+   requireSession,
+diff --git a/artifacts/mariana-textil/src/pages/auditorias-inventario.tsx b/artifacts/mariana-textil/src/pages/auditorias-inventario.tsx
+index 7f71379d..e54b62fb 100644
+--- a/artifacts/mariana-textil/src/pages/auditorias-inventario.tsx
++++ b/artifacts/mariana-textil/src/pages/auditorias-inventario.tsx
+@@ -57,6 +57,8 @@ import { AuditoriaSobranteResolutionDialog } from "@/components/auditoria/audito
+ import { ReactivacionFaltanteDialog } from "@/components/auditoria/reactivacion-faltante-dialog";
+ import { AuditoriaInventarioPrint } from "@/components/auditoria-inventario-print";
+ import { ApiErrorDetails } from "@/lib/api-error";
++import { AuditCollaboration, AuditScannerAttribution } from "@/components/auditoria/audit-collaboration";
++import { auditParticipantLimit, useAuditParticipation } from "@/components/auditoria/use-audit-participation";
+ 
+ function message(error: unknown): string {
+   if (error && typeof error === "object" && "data" in error) {
+@@ -92,6 +94,8 @@ export default function AuditoriasInventario() {
+   });
+   const selectionInitialized = useRef(selectedId != null);
+   const syncedAuditId = useRef<number | null>(null);
++  const previousUserId = useRef<number | null>(null);
++  const scanBusy = useRef(false);
+   const [scan, setScan] = useState("");
+   const [cancelOpen, setCancelOpen] = useState(false);
+   const [cancelReason, setCancelReason] = useState("");
+@@ -167,6 +171,23 @@ export default function AuditoriasInventario() {
+     setScan("");
+   }, [selectedId, siteId]);
+ 
++  useEffect(() => {
++    if (!user?.id) return;
++    if (previousUserId.current && previousUserId.current !== user.id) {
++      setSelectedId(null);
++      setSiteId("");
++      syncedAuditId.current = null;
++      selectionInitialized.current = false;
++      queryClient.removeQueries({ queryKey: getListAuditoriasInventarioQueryKey() });
++      // Never carry a former user's detail/participant history into this session.
++      queryClient.removeQueries({
++        predicate: (query) => typeof query.queryKey[0] === "string"
++          && query.queryKey[0].startsWith("/api/inventario/auditorias/"),
++      });
++    }
++    previousUserId.current = user.id;
++  }, [user?.id, queryClient]);
++
+   const detail = useGetAuditoriaInventario(selectedId ?? 0, {
+     query: {
+       enabled: selectedId != null,
+@@ -175,6 +196,10 @@ export default function AuditoriasInventario() {
+         query.state.data?.estado === "ABIERTA" ? 3000 : false,
+     },
+   });
++  const currentDetail = detail.data?.id === selectedId ? detail.data : undefined;
++  const mayScan = !!user?.id && hasPermission(user, Modules.AUDITORIA_INVENTARIO, "editar")
++    && currentDetail?.estado === "ABIERTA";
++  const participation = useAuditParticipation(mayScan ? selectedId : null, user?.id ?? null, mayScan);
+ 
+   useEffect(() => {
+     if (selectedId == null) {
+@@ -226,11 +251,11 @@ export default function AuditoriasInventario() {
+   const pending = create.isPending || scanMutation.isPending || close.isPending || cancel.isPending || confirm.isPending;
+ 
+   const grouped = useMemo(() => ({
+-    CUADRO: detail.data?.resultados.filter((row) => row.clasificacion === "CUADRO") ?? [],
+-    FALTANTE: detail.data?.resultados.filter((row) => row.clasificacion === "FALTANTE") ?? [],
+-    SOBRANTE: detail.data?.resultados.filter((row) => row.clasificacion === "SOBRANTE") ?? [],
+-    MAL_ACOMODADO: detail.data?.resultados.filter((row) => row.clasificacion === "MAL_ACOMODADO") ?? [],
+-  }), [detail.data]);
++    CUADRO: currentDetail?.resultados.filter((row) => row.clasificacion === "CUADRO") ?? [],
++    FALTANTE: currentDetail?.resultados.filter((row) => row.clasificacion === "FALTANTE") ?? [],
++    SOBRANTE: currentDetail?.resultados.filter((row) => row.clasificacion === "SOBRANTE") ?? [],
++    MAL_ACOMODADO: currentDetail?.resultados.filter((row) => row.clasificacion === "MAL_ACOMODADO") ?? [],
++  }), [currentDetail]);
+ 
+   const run = (
+     mutation: { mutate: (variables: never, options: { onSuccess: (data: { id: number }) => void; onError: (error: unknown) => void }) => void },
+@@ -369,7 +394,7 @@ export default function AuditoriasInventario() {
+               </div>
+             )}
+ 
+-            {detail.data && (
++            {currentDetail && (
+               <>
+                 {/* Header Card */}
+                 <Card className="overflow-hidden border-border/60 shadow-sm rounded-2xl">
+@@ -466,7 +491,19 @@ export default function AuditoriasInventario() {
+                   </div>
+                 </Card>
+ 
+-                {/* Scanner Area */}
++                 {/* Collaboration is scoped to the selected audit, never to the site. */}
++                 {detail.data.estado === "ABIERTA" && (
++                   <AuditCollaboration
++                     detail={detail.data}
++                     active={participation.active}
++                     joining={participation.joining}
++                     error={participation.error}
++                     expired={participation.expired}
++                     onRetry={participation.retry}
++                   />
++                 )}
++
++                 {/* Scanner Area */}
+                 {detail.data.estado === "ABIERTA" && (
+                   <div className="sticky top-4 z-20 rounded-2xl bg-card shadow-lg ring-1 ring-primary/20 overflow-hidden transform transition-all">
+                     <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent pointer-events-none" />
+@@ -508,21 +545,34 @@ export default function AuditoriasInventario() {
+                         ref={scanRef}
+                         value={scan}
+                         onChange={setScan}
+-                        disabled={scanMutation.isPending || (pisosActivos.length > 0 && selectedPiso === "none")}
++                         disabled={!participation.active || scanMutation.isPending || (pisosActivos.length > 0 && selectedPiso === "none")}
+                         data-testid="input-audit-scan"
+                         placeholder={pisosActivos.length > 0 && selectedPiso === "none" ? "Selecciona un piso antes de escanear" : "Serie o SKU-SERIE; Enter para registrar"}
+                         className="h-16 font-mono text-2xl shadow-inner bg-background/50 focus-visible:bg-background border-primary/30 focus-visible:border-primary transition-colors"
+                         onScan={async (serie) => {
+-                          await scanMutation.mutateAsync({ id: detail.data!.id, data: { serie, pisoId: selectedPiso === "none" ? null : Number(selectedPiso) } }, {
+-                            onSuccess: (result) => {
+-                              void invalidate(detail.data!.id);
+-                              toast({
+-                                title: result.duplicado ? "Serie ya registrada" : "Presencia registrada",
+-                                description: `${result.serie} · ${result.clasificacion} · ${result.estadoActual}`,
+-                              });
+-                            },
+-                            onError: (error) => toast({ title: "Escaneo rechazado", description: message(error), variant: "destructive" }),
+-                          });
++                           // The input can still call onScan while disabled (camera/queued Enter).
++                           // Serialize locally as well as relying on the backend's row lock.
++                           if (!participation.active || !mayScan || scanBusy.current || !currentDetail
++                             || (pisosActivos.length > 0 && selectedPiso === "none")) return;
++                           scanBusy.current = true;
++                           try {
++                             const result = await scanMutation.mutateAsync({
++                               id: currentDetail.id,
++                               data: { serie, pisoId: selectedPiso === "none" ? null : Number(selectedPiso) },
++                             });
++                             void invalidate(currentDetail.id);
++                             toast({
++                               title: result.duplicado ? "Serie ya registrada" : "Presencia registrada",
++                               description: `${result.serie} · ${result.clasificacion} · ${result.estadoActual}${result.duplicado && result.usuarioNombre ? ` · Escaneado por ${result.usuarioNombre}` : ""}`,
++                             });
++                           } catch (error) {
++                             if (auditParticipantLimit(error) || (error && typeof error === "object" && "status" in error && [403, 409].includes(Number(error.status)))) {
++                               participation.reject(error);
++                             }
++                             toast({ title: "Escaneo rechazado", description: message(error), variant: "destructive" });
++                           } finally {
++                             scanBusy.current = false;
++                           }
+                         }}
+                       />
+                     </div>
+@@ -581,7 +631,7 @@ export default function AuditoriasInventario() {
+                                     const sobrante = row.sobrante!;
+                                     return (
+                                       <TableRow key={row.serie} data-testid={`row-audit-result-sold-${row.serie}`} className="border-b-border/40 last:border-0 hover:bg-transparent">
+-                                        <TableCell className="font-mono font-bold text-[13px]">{row.serie}</TableCell>
++                                         <TableCell className="font-mono font-bold text-[13px]">{row.serie}<AuditScannerAttribution row={row} /></TableCell>
+                                         <TableCell className="text-[13px]">{row.producto}</TableCell>
+                                         <TableCell className="font-mono text-right text-[13px]">{row.cantidad != null ? formatNumber(row.cantidad, { kind: "quantity" }) : '-'} <span className="text-[10px] text-muted-foreground ml-1">{row.unidad ? formatUnit(row.unidad) : ""}</span></TableCell>
+                                         <TableCell className="text-xs">
+@@ -651,7 +701,7 @@ export default function AuditoriasInventario() {
+                                     const sobrante = row.sobrante!;
+                                     return (
+                                       <TableRow key={row.serie} data-testid={`row-audit-result-unknown-${row.serie}`} className="border-b-amber-200 dark:border-b-amber-900/40 last:border-0 hover:bg-transparent">
+-                                        <TableCell className="font-mono font-bold text-[13px] text-amber-900 dark:text-amber-200">{row.serie}</TableCell>
++                                         <TableCell className="font-mono font-bold text-[13px] text-amber-900 dark:text-amber-200">{row.serie}<AuditScannerAttribution row={row} /></TableCell>
+                                         <TableCell className="text-[13px] font-medium text-amber-700 dark:text-amber-400">
+                                           <div className="flex flex-col gap-0.5">
+                                             <span className={sobrante.estadoResolucion === 'PENDIENTE' ? 'font-bold' : ''}>{sobrante.estadoResolucion.replaceAll("_", " ")}</span>
+@@ -716,7 +766,8 @@ export default function AuditoriasInventario() {
+                                     return (
+                                       <TableRow key={row.serie} data-testid={`row-audit-result-${row.serie}`} className="group border-b-border/40 last:border-0">
+                                         <TableCell className="py-2">
+-                                          <div className="font-mono font-bold text-[13px]">{row.serie}</div>
++                                           <div className="font-mono font-bold text-[13px]">{row.serie}</div>
++                                           <AuditScannerAttribution row={row} />
+                                         </TableCell>
+                                         <TableCell className="text-[13px]">{row.producto ?? <span className="text-muted-foreground italic">Sin registro</span>}</TableCell>
+                                         <TableCell className="font-mono text-right text-[13px]">{row.cantidad != null ? formatNumber(row.cantidad, { kind: "quantity" }) : '-'} <span className="text-[10px] text-muted-foreground ml-1">{row.unidad ? formatUnit(row.unidad) : ""}</span></TableCell>
+@@ -784,7 +835,7 @@ export default function AuditoriasInventario() {
+       )}
+ 
+       {/* Print View */}
+-      {detail.data && <AuditoriaInventarioPrint detail={detail.data} />}
++       {currentDetail && <AuditoriaInventarioPrint detail={currentDetail} />}
+ 
+       <Dialog
+         open={addColorOpen}
+diff --git a/lib/api-client-react/src/generated/api.schemas.ts b/lib/api-client-react/src/generated/api.schemas.ts
+index 2e10daf7..1ece440a 100644
+--- a/lib/api-client-react/src/generated/api.schemas.ts
++++ b/lib/api-client-react/src/generated/api.schemas.ts
+@@ -9471,6 +9471,10 @@ export interface AuditoriaSobranteContexto {
+ }
+ 
+ export interface AuditoriaInventarioResultado {
++  /** @nullable */
++  usuarioId: number | null;
++  /** @nullable */
++  usuarioNombre: string | null;
+   serie: string;
+   clasificacion: AuditoriaInventarioResultadoClasificacion;
+   /** @nullable */
+@@ -9599,6 +9603,8 @@ export interface ReactivacionFaltanteContexto {
+ }
+ 
+ export interface AuditoriaInventarioParticipante {
++  activo: boolean;
++  expiraAt: string;
+   usuarioId: number;
+   nombre: string;
+   escaneos: number;
+@@ -9607,6 +9613,9 @@ export interface AuditoriaInventarioParticipante {
+ }
+ 
+ export type AuditoriaInventarioDetail = AuditoriaInventarioResumen & ({
++  participantesActivos: number;
++  maxParticipantes: number;
++  expiracionSegundos: number;
+   /** @nullable */
+   motivoCancelacion?: string | null;
+   /** @nullable */
+@@ -9617,6 +9626,13 @@ export type AuditoriaInventarioDetail = AuditoriaInventarioResumen & ({
+   participantes: AuditoriaInventarioParticipante[];
+ });
+ 
++export interface AuditoriaInventarioParticipacion {
++  participantesActivos: number;
++  maxParticipantes: number;
++  expiracionSegundos: number;
++  expiraAt: string;
++}
++
+ export type AuditoriaInventarioEscaneoResultClasificacion = typeof AuditoriaInventarioEscaneoResultClasificacion[keyof typeof AuditoriaInventarioEscaneoResultClasificacion];
+ 
+ 
+@@ -9626,6 +9642,13 @@ export const AuditoriaInventarioEscaneoResultClasificacion = {
+ } as const;
+ 
+ export interface AuditoriaInventarioEscaneoResult {
++  participantesActivos: number;
++  maxParticipantes: number;
++  expiracionSegundos: number;
++  expiraAt: string;
++  usuarioId: number;
++  usuarioNombre: string;
++  escaneadoAt: string;
+   serie: string;
+   duplicado: boolean;
+   clasificacion: AuditoriaInventarioEscaneoResultClasificacion;
+diff --git a/lib/api-client-react/src/generated/api.ts b/lib/api-client-react/src/generated/api.ts
+index e2f3d30b..4f9c32b8 100644
+--- a/lib/api-client-react/src/generated/api.ts
++++ b/lib/api-client-react/src/generated/api.ts
+@@ -41,6 +41,7 @@ import type {
+   AuditoriaInventarioEscaneoInput,
+   AuditoriaInventarioEscaneoResult,
+   AuditoriaInventarioInput,
++  AuditoriaInventarioParticipacion,
+   AuditoriaInventarioResumen,
+   AuditoriaInventarioSitio,
+   AuditoriaListResult,
+@@ -11164,6 +11165,71 @@ export function useGetAuditoriaInventario<TData = Awaited<ReturnType<typeof getA
+ 
+ 
+ 
++export const getParticiparAuditoriaInventarioUrl = (id: number,) => {
++
++
++
++
++  return `/api/inventario/auditorias/${id}/participar`
++}
++
++export const participarAuditoriaInventario = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaInventarioParticipacion> => {
++
++  return customFetch<AuditoriaInventarioParticipacion>(getParticiparAuditoriaInventarioUrl(id),
++  {
++    ...options,
++    method: 'POST'
++
++
++  }
++);}
++
++
++
++
++
++export const getParticiparAuditoriaInventarioMutationOptions = <TError = ErrorType<void>,
++    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof participarAuditoriaInventario>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
++): UseMutationOptions<Awaited<ReturnType<typeof participarAuditoriaInventario>>, TError,{id: number}, TContext> => {
++
++const mutationKey = ['participarAuditoriaInventario'];
++const {mutation: mutationOptions, request: requestOptions} = options ?
++      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
++      options
++      : {...options, mutation: {...options.mutation, mutationKey}}
++      : {mutation: { mutationKey, }, request: undefined};
++
++
++
++
++      const mutationFn: MutationFunction<Awaited<ReturnType<typeof participarAuditoriaInventario>>, {id: number}> = (props) => {
++          const {id} = props ?? {};
++
++          return  participarAuditoriaInventario(id,requestOptions)
++        }
++
++
++
++
++
++
++  return  { mutationFn, ...mutationOptions }}
++
++    export type ParticiparAuditoriaInventarioMutationResult = NonNullable<Awaited<ReturnType<typeof participarAuditoriaInventario>>>
++
++    export type ParticiparAuditoriaInventarioMutationError = ErrorType<void>
++
++    export const useParticiparAuditoriaInventario = <TError = ErrorType<void>,
++    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof participarAuditoriaInventario>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
++ ): UseMutationResult<
++        Awaited<ReturnType<typeof participarAuditoriaInventario>>,
++        TError,
++        {id: number},
++        TContext
++      > => {
++      return useMutation(getParticiparAuditoriaInventarioMutationOptions(options));
++    }
++
+ export const getScanAuditoriaInventarioUrl = (id: number,) => {
+ 
+ 
+diff --git a/lib/api-spec/openapi.yaml b/lib/api-spec/openapi.yaml
+index 881686c9..88bc5045 100644
+--- a/lib/api-spec/openapi.yaml
++++ b/lib/api-spec/openapi.yaml
+@@ -2876,6 +2876,23 @@ paths:
+         "401": { $ref: "#/components/responses/Unauthorized" }
+         "403": { $ref: "#/components/responses/Forbidden" }
+         "404": { $ref: "#/components/responses/NotFound" }
++  /inventario/auditorias/{id}/participar:
++    post:
++      operationId: participarAuditoriaInventario
++      tags: [Inventario]
++      parameters:
++        - name: id
++          in: path
++          required: true
++          schema: { type: integer }
++      responses:
++        "200":
++          description: Participación renovada durante 90 segundos
++          content:
++            application/json:
++              schema: { $ref: "#/components/schemas/AuditoriaInventarioParticipacion" }
++        "409":
++          description: Auditoría cerrada o AUDIT_PARTICIPANT_LIMIT (ya hay 5 usuarios activos)
+   /inventario/auditorias/{id}/escaneos:
+     post:
+       operationId: scanAuditoriaInventario
+@@ -16763,8 +16780,10 @@ components:
+         creadaPor: { type: string }
+     AuditoriaInventarioResultado:
+       type: object
+-      required: [serie, clasificacion, cantidad, unidad, estadoActual, resolucion]
++      required: [serie, clasificacion, cantidad, unidad, estadoActual, resolucion, usuarioId, usuarioNombre]
+       properties:
++        usuarioId: { type: [number, "null"] }
++        usuarioNombre: { type: [string, "null"] }
+         serie: { type: string }
+         clasificacion: { type: string, enum: [CUADRO, FALTANTE, SOBRANTE, MAL_ACOMODADO] }
+         rolloId: { type: [number, "null"] }
+@@ -16868,8 +16887,10 @@ components:
+         auditoriasPosteriores: { type: array, items: { $ref: "#/components/schemas/ReactivacionAuditoriaPosterior" } }
+     AuditoriaInventarioParticipante:
+       type: object
+-      required: [usuarioId, nombre, escaneos, primeroAt, ultimoAt]
++      required: [usuarioId, nombre, escaneos, primeroAt, ultimoAt, activo, expiraAt]
+       properties:
++        activo: { type: boolean }
++        expiraAt: { type: string, format: date-time }
+         usuarioId: { type: number }
+         nombre: { type: string }
+         escaneos: { type: number }
+@@ -16879,8 +16900,11 @@ components:
+       allOf:
+         - $ref: "#/components/schemas/AuditoriaInventarioResumen"
+         - type: object
+-          required: [resultados, participantes]
++          required: [resultados, participantes, participantesActivos, maxParticipantes, expiracionSegundos]
+           properties:
++            participantesActivos: { type: integer }
++            maxParticipantes: { type: integer }
++            expiracionSegundos: { type: integer }
+             motivoCancelacion: { type: [string, "null"] }
+             cerradaAt: { type: [string, "null"], format: date-time }
+             confirmadaAt: { type: [string, "null"], format: date-time }
+@@ -16890,10 +16914,25 @@ components:
+             participantes:
+               type: array
+               items: { $ref: "#/components/schemas/AuditoriaInventarioParticipante" }
++    AuditoriaInventarioParticipacion:
++      type: object
++      required: [participantesActivos, maxParticipantes, expiracionSegundos, expiraAt]
++      properties:
++        participantesActivos: { type: integer }
++        maxParticipantes: { type: integer }
++        expiracionSegundos: { type: integer }
++        expiraAt: { type: string, format: date-time }
+     AuditoriaInventarioEscaneoResult:
+       type: object
+-      required: [serie, duplicado, clasificacion, estadoActual]
++      required: [serie, duplicado, clasificacion, estadoActual, participantesActivos, maxParticipantes, expiracionSegundos, expiraAt, usuarioId, usuarioNombre, escaneadoAt]
+       properties:
++        participantesActivos: { type: integer }
++        maxParticipantes: { type: integer }
++        expiracionSegundos: { type: integer }
++        expiraAt: { type: string, format: date-time }
++        usuarioId: { type: number }
++        usuarioNombre: { type: string }
++        escaneadoAt: { type: string, format: date-time }
+         serie: { type: string }
+         duplicado: { type: boolean }
+         clasificacion: { type: string, enum: [CUADRO, SOBRANTE] }
+diff --git a/lib/api-zod/src/generated/api.ts b/lib/api-zod/src/generated/api.ts
+index 8112b1b4..fbc768c4 100644
+--- a/lib/api-zod/src/generated/api.ts
++++ b/lib/api-zod/src/generated/api.ts
+@@ -8306,10 +8306,15 @@ export const CreateAuditoriaInventarioResponse = zod.object({
+   "abiertaAt": zod.coerce.date(),
+   "creadaPor": zod.string()
+ }).and(zod.object({
++  "participantesActivos": zod.number().int(),
++  "maxParticipantes": zod.number().int(),
++  "expiracionSegundos": zod.number().int(),
+   "motivoCancelacion": zod.string().nullish(),
+   "cerradaAt": zod.coerce.date().nullish(),
+   "confirmadaAt": zod.coerce.date().nullish(),
+   "resultados": zod.array(zod.object({
++  "usuarioId": zod.number().nullable(),
++  "usuarioNombre": zod.string().nullable(),
+   "serie": zod.string(),
+   "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
+   "rolloId": zod.number().nullish(),
+@@ -8352,6 +8357,8 @@ export const CreateAuditoriaInventarioResponse = zod.object({
+ }),zod.null()]).optional()
+ })),
+   "participantes": zod.array(zod.object({
++  "activo": zod.boolean(),
++  "expiraAt": zod.coerce.date(),
+   "usuarioId": zod.number(),
+   "nombre": zod.string(),
+   "escaneos": zod.number(),
+@@ -8390,10 +8397,15 @@ export const GetAuditoriaInventarioResponse = zod.object({
+   "abiertaAt": zod.coerce.date(),
+   "creadaPor": zod.string()
+ }).and(zod.object({
++  "participantesActivos": zod.number().int(),
++  "maxParticipantes": zod.number().int(),
++  "expiracionSegundos": zod.number().int(),
+   "motivoCancelacion": zod.string().nullish(),
+   "cerradaAt": zod.coerce.date().nullish(),
+   "confirmadaAt": zod.coerce.date().nullish(),
+   "resultados": zod.array(zod.object({
++  "usuarioId": zod.number().nullable(),
++  "usuarioNombre": zod.string().nullable(),
+   "serie": zod.string(),
+   "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
+   "rolloId": zod.number().nullish(),
+@@ -8436,6 +8448,8 @@ export const GetAuditoriaInventarioResponse = zod.object({
+ }),zod.null()]).optional()
+ })),
+   "participantes": zod.array(zod.object({
++  "activo": zod.boolean(),
++  "expiraAt": zod.coerce.date(),
+   "usuarioId": zod.number(),
+   "nombre": zod.string(),
+   "escaneos": zod.number(),
+@@ -8445,6 +8459,18 @@ export const GetAuditoriaInventarioResponse = zod.object({
+ }))
+ 
+ 
++export const ParticiparAuditoriaInventarioParams = zod.object({
++  "id": zod.coerce.number().int()
++})
++
++export const ParticiparAuditoriaInventarioResponse = zod.object({
++  "participantesActivos": zod.number().int(),
++  "maxParticipantes": zod.number().int(),
++  "expiracionSegundos": zod.number().int(),
++  "expiraAt": zod.coerce.date()
++})
++
++
+ /**
+  * @summary Registra una serie por presencia de forma idempotente
+  */
+@@ -8465,6 +8491,13 @@ export const ScanAuditoriaInventarioBody = zod.object({
+ })
+ 
+ export const ScanAuditoriaInventarioResponse = zod.object({
++  "participantesActivos": zod.number().int(),
++  "maxParticipantes": zod.number().int(),
++  "expiracionSegundos": zod.number().int(),
++  "expiraAt": zod.coerce.date(),
++  "usuarioId": zod.number(),
++  "usuarioNombre": zod.string(),
++  "escaneadoAt": zod.coerce.date(),
+   "serie": zod.string(),
+   "duplicado": zod.boolean(),
+   "clasificacion": zod.enum(['CUADRO', 'SOBRANTE']),
+@@ -8501,10 +8534,15 @@ export const CloseAuditoriaInventarioResponse = zod.object({
+   "abiertaAt": zod.coerce.date(),
+   "creadaPor": zod.string()
+ }).and(zod.object({
++  "participantesActivos": zod.number().int(),
++  "maxParticipantes": zod.number().int(),
++  "expiracionSegundos": zod.number().int(),
+   "motivoCancelacion": zod.string().nullish(),
+   "cerradaAt": zod.coerce.date().nullish(),
+   "confirmadaAt": zod.coerce.date().nullish(),
+   "resultados": zod.array(zod.object({
++  "usuarioId": zod.number().nullable(),
++  "usuarioNombre": zod.string().nullable(),
+   "serie": zod.string(),
+   "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
+   "rolloId": zod.number().nullish(),
+@@ -8547,6 +8585,8 @@ export const CloseAuditoriaInventarioResponse = zod.object({
+ }),zod.null()]).optional()
+ })),
+   "participantes": zod.array(zod.object({
++  "activo": zod.boolean(),
++  "expiraAt": zod.coerce.date(),
+   "usuarioId": zod.number(),
+   "nombre": zod.string(),
+   "escaneos": zod.number(),
+@@ -8594,10 +8634,15 @@ export const CancelAuditoriaInventarioResponse = zod.object({
+   "abiertaAt": zod.coerce.date(),
+   "creadaPor": zod.string()
+ }).and(zod.object({
++  "participantesActivos": zod.number().int(),
++  "maxParticipantes": zod.number().int(),
++  "expiracionSegundos": zod.number().int(),
+   "motivoCancelacion": zod.string().nullish(),
+   "cerradaAt": zod.coerce.date().nullish(),
+   "confirmadaAt": zod.coerce.date().nullish(),
+   "resultados": zod.array(zod.object({
++  "usuarioId": zod.number().nullable(),
++  "usuarioNombre": zod.string().nullable(),
+   "serie": zod.string(),
+   "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
+   "rolloId": zod.number().nullish(),
+@@ -8640,6 +8685,8 @@ export const CancelAuditoriaInventarioResponse = zod.object({
+ }),zod.null()]).optional()
+ })),
+   "participantes": zod.array(zod.object({
++  "activo": zod.boolean(),
++  "expiraAt": zod.coerce.date(),
+   "usuarioId": zod.number(),
+   "nombre": zod.string(),
+   "escaneos": zod.number(),
+@@ -8694,10 +8741,15 @@ export const ResolverSobranteAuditoriaInventarioResponse = zod.object({
+   "abiertaAt": zod.coerce.date(),
+   "creadaPor": zod.string()
+ }).and(zod.object({
++  "participantesActivos": zod.number().int(),
++  "maxParticipantes": zod.number().int(),
++  "expiracionSegundos": zod.number().int(),
+   "motivoCancelacion": zod.string().nullish(),
+   "cerradaAt": zod.coerce.date().nullish(),
+   "confirmadaAt": zod.coerce.date().nullish(),
+   "resultados": zod.array(zod.object({
++  "usuarioId": zod.number().nullable(),
++  "usuarioNombre": zod.string().nullable(),
+   "serie": zod.string(),
+   "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
+   "rolloId": zod.number().nullish(),
+@@ -8740,6 +8792,8 @@ export const ResolverSobranteAuditoriaInventarioResponse = zod.object({
+ }),zod.null()]).optional()
+ })),
+   "participantes": zod.array(zod.object({
++  "activo": zod.boolean(),
++  "expiraAt": zod.coerce.date(),
+   "usuarioId": zod.number(),
+   "nombre": zod.string(),
+   "escaneos": zod.number(),
+@@ -8862,10 +8916,15 @@ export const ConfirmAuditoriaInventarioResponse = zod.object({
+   "abiertaAt": zod.coerce.date(),
+   "creadaPor": zod.string()
+ }).and(zod.object({
++  "participantesActivos": zod.number().int(),
++  "maxParticipantes": zod.number().int(),
++  "expiracionSegundos": zod.number().int(),
+   "motivoCancelacion": zod.string().nullish(),
+   "cerradaAt": zod.coerce.date().nullish(),
+   "confirmadaAt": zod.coerce.date().nullish(),
+   "resultados": zod.array(zod.object({
++  "usuarioId": zod.number().nullable(),
++  "usuarioNombre": zod.string().nullable(),
+   "serie": zod.string(),
+   "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
+   "rolloId": zod.number().nullish(),
+@@ -8908,6 +8967,8 @@ export const ConfirmAuditoriaInventarioResponse = zod.object({
+ }),zod.null()]).optional()
+ })),
+   "participantes": zod.array(zod.object({
++  "activo": zod.boolean(),
++  "expiraAt": zod.coerce.date(),
+   "usuarioId": zod.number(),
+   "nombre": zod.string(),
+   "escaneos": zod.number(),
+diff --git a/lib/api-zod/src/generated/types/auditoriaInventarioDetail.ts b/lib/api-zod/src/generated/types/auditoriaInventarioDetail.ts
+index 4995826c..5e33873e 100644
+--- a/lib/api-zod/src/generated/types/auditoriaInventarioDetail.ts
++++ b/lib/api-zod/src/generated/types/auditoriaInventarioDetail.ts
+@@ -10,6 +10,9 @@ import type { AuditoriaInventarioResultado } from './auditoriaInventarioResultad
+ import type { AuditoriaInventarioResumen } from './auditoriaInventarioResumen';
+ 
+ export type AuditoriaInventarioDetail = AuditoriaInventarioResumen & ({
++  participantesActivos: number;
++  maxParticipantes: number;
++  expiracionSegundos: number;
+   /** @nullable */
+   motivoCancelacion?: string | null;
+   /** @nullable */
+diff --git a/lib/api-zod/src/generated/types/auditoriaInventarioEscaneoResult.ts b/lib/api-zod/src/generated/types/auditoriaInventarioEscaneoResult.ts
+index 9b1b282f..09f2ddab 100644
+--- a/lib/api-zod/src/generated/types/auditoriaInventarioEscaneoResult.ts
++++ b/lib/api-zod/src/generated/types/auditoriaInventarioEscaneoResult.ts
+@@ -8,6 +8,13 @@
+ import type { AuditoriaInventarioEscaneoResultClasificacion } from './auditoriaInventarioEscaneoResultClasificacion';
+ 
+ export interface AuditoriaInventarioEscaneoResult {
++  participantesActivos: number;
++  maxParticipantes: number;
++  expiracionSegundos: number;
++  expiraAt: Date;
++  usuarioId: number;
++  usuarioNombre: string;
++  escaneadoAt: Date;
+   serie: string;
+   duplicado: boolean;
+   clasificacion: AuditoriaInventarioEscaneoResultClasificacion;
+diff --git a/lib/api-zod/src/generated/types/auditoriaInventarioParticipante.ts b/lib/api-zod/src/generated/types/auditoriaInventarioParticipante.ts
+index c4426050..6a673afd 100644
+--- a/lib/api-zod/src/generated/types/auditoriaInventarioParticipante.ts
++++ b/lib/api-zod/src/generated/types/auditoriaInventarioParticipante.ts
+@@ -7,6 +7,8 @@
+  */
+ 
+ export interface AuditoriaInventarioParticipante {
++  activo: boolean;
++  expiraAt: Date;
+   usuarioId: number;
+   nombre: string;
+   escaneos: number;
+diff --git a/lib/api-zod/src/generated/types/auditoriaInventarioResultado.ts b/lib/api-zod/src/generated/types/auditoriaInventarioResultado.ts
+index 495009dd..8d94fa11 100644
+--- a/lib/api-zod/src/generated/types/auditoriaInventarioResultado.ts
++++ b/lib/api-zod/src/generated/types/auditoriaInventarioResultado.ts
+@@ -10,6 +10,10 @@ import type { AuditoriaInventarioResultadoResolucion } from './auditoriaInventar
+ import type { AuditoriaSobranteContexto } from './auditoriaSobranteContexto';
+ 
+ export interface AuditoriaInventarioResultado {
++  /** @nullable */
++  usuarioId: number | null;
++  /** @nullable */
++  usuarioNombre: string | null;
+   serie: string;
+   clasificacion: AuditoriaInventarioResultadoClasificacion;
+   /** @nullable */
+diff --git a/lib/api-zod/src/generated/types/index.ts b/lib/api-zod/src/generated/types/index.ts
+index e384eea6..a017ecd6 100644
+--- a/lib/api-zod/src/generated/types/index.ts
++++ b/lib/api-zod/src/generated/types/index.ts
+@@ -110,6 +110,7 @@ export * from './auditoriaInventarioEscaneoInput';
+ export * from './auditoriaInventarioEscaneoResult';
+ export * from './auditoriaInventarioEscaneoResultClasificacion';
+ export * from './auditoriaInventarioInput';
++export * from './auditoriaInventarioParticipacion';
+ export * from './auditoriaInventarioParticipante';
+ export * from './auditoriaInventarioResultado';
+ export * from './auditoriaInventarioResultadoClasificacion';
+diff --git a/lib/api-zod/src/index.ts b/lib/api-zod/src/index.ts
+index 96ac52bc..d699d861 100644
+--- a/lib/api-zod/src/index.ts
++++ b/lib/api-zod/src/index.ts
+@@ -110,6 +110,7 @@ export * from "./generated/types/auditoriaInventarioEscaneoInput";
+ export * from "./generated/types/auditoriaInventarioEscaneoResult";
+ export * from "./generated/types/auditoriaInventarioEscaneoResultClasificacion";
+ export * from "./generated/types/auditoriaInventarioInput";
++export * from "./generated/types/auditoriaInventarioParticipacion";
+ export * from "./generated/types/auditoriaInventarioParticipante";
+ export * from "./generated/types/auditoriaInventarioResultado";
+ export * from "./generated/types/auditoriaInventarioResultadoClasificacion";

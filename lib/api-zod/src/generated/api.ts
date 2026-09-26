@@ -8306,10 +8306,15 @@ export const CreateAuditoriaInventarioResponse = zod.object({
   "abiertaAt": zod.coerce.date(),
   "creadaPor": zod.string()
 }).and(zod.object({
+  "participantesActivos": zod.number().int(),
+  "maxParticipantes": zod.number().int(),
+  "expiracionSegundos": zod.number().int(),
   "motivoCancelacion": zod.string().nullish(),
   "cerradaAt": zod.coerce.date().nullish(),
   "confirmadaAt": zod.coerce.date().nullish(),
   "resultados": zod.array(zod.object({
+  "usuarioId": zod.number().nullable(),
+  "usuarioNombre": zod.string().nullable(),
   "serie": zod.string(),
   "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
   "rolloId": zod.number().nullish(),
@@ -8352,6 +8357,8 @@ export const CreateAuditoriaInventarioResponse = zod.object({
 }),zod.null()]).optional()
 })),
   "participantes": zod.array(zod.object({
+  "activo": zod.boolean(),
+  "expiraAt": zod.coerce.date(),
   "usuarioId": zod.number(),
   "nombre": zod.string(),
   "escaneos": zod.number(),
@@ -8390,10 +8397,15 @@ export const GetAuditoriaInventarioResponse = zod.object({
   "abiertaAt": zod.coerce.date(),
   "creadaPor": zod.string()
 }).and(zod.object({
+  "participantesActivos": zod.number().int(),
+  "maxParticipantes": zod.number().int(),
+  "expiracionSegundos": zod.number().int(),
   "motivoCancelacion": zod.string().nullish(),
   "cerradaAt": zod.coerce.date().nullish(),
   "confirmadaAt": zod.coerce.date().nullish(),
   "resultados": zod.array(zod.object({
+  "usuarioId": zod.number().nullable(),
+  "usuarioNombre": zod.string().nullable(),
   "serie": zod.string(),
   "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
   "rolloId": zod.number().nullish(),
@@ -8436,6 +8448,8 @@ export const GetAuditoriaInventarioResponse = zod.object({
 }),zod.null()]).optional()
 })),
   "participantes": zod.array(zod.object({
+  "activo": zod.boolean(),
+  "expiraAt": zod.coerce.date(),
   "usuarioId": zod.number(),
   "nombre": zod.string(),
   "escaneos": zod.number(),
@@ -8446,6 +8460,38 @@ export const GetAuditoriaInventarioResponse = zod.object({
 
 
 /**
+ * @summary Pisos activos del sitio auditado ordenados por nombre
+ */
+
+
+
+export const ListPisosAuditoriaInventarioParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const ListPisosAuditoriaInventarioResponseItem = zod.object({
+  "id": zod.number(),
+  "nombre": zod.string(),
+  "ubicacionId": zod.number(),
+  "activo": zod.boolean()
+})
+export const ListPisosAuditoriaInventarioResponse = zod.array(ListPisosAuditoriaInventarioResponseItem)
+
+
+export const ParticiparAuditoriaInventarioParams = zod.object({
+  "id": zod.coerce.number().int()
+})
+
+export const ParticiparAuditoriaInventarioResponse = zod.object({
+  "participantesActivos": zod.number().int(),
+  "maxParticipantes": zod.number().int(),
+  "expiracionSegundos": zod.number().int(),
+  "expiraAt": zod.coerce.date()
+})
+
+
+/**
+ * Exige piso activo del sitio. Sin pisos activos devuelve 400 FLOOR_CONFIGURATION_REQUIRED; piso ausente o inválido devuelve 400 INVALID_FLOOR. Computadora (heurística User-Agent del servidor, no autorización) solo admite el primer piso activo ordenado por nombre ASC, de lo contrario 400 DESKTOP_ACCESS_FLOOR_REQUIRED. Móvil admite cualquier piso válido. Sexto usuario activo devuelve 409 AUDIT_PARTICIPANT_LIMIT. Un duplicado conserva autor, hora y piso del primer escaneo; nunca sustituye su atribución.
  * @summary Registra una serie por presencia de forma idempotente
  */
 
@@ -8465,6 +8511,13 @@ export const ScanAuditoriaInventarioBody = zod.object({
 })
 
 export const ScanAuditoriaInventarioResponse = zod.object({
+  "participantesActivos": zod.number().int(),
+  "maxParticipantes": zod.number().int(),
+  "expiracionSegundos": zod.number().int(),
+  "expiraAt": zod.coerce.date(),
+  "usuarioId": zod.number(),
+  "usuarioNombre": zod.string(),
+  "escaneadoAt": zod.coerce.date(),
   "serie": zod.string(),
   "duplicado": zod.boolean(),
   "clasificacion": zod.enum(['CUADRO', 'SOBRANTE']),
@@ -8473,6 +8526,7 @@ export const ScanAuditoriaInventarioResponse = zod.object({
 
 
 /**
+ * Requiere permisos editar y autorizar de auditoria_inventario, rol operativo y acceso al sitio; participar o crear no concede permiso de cierre.
  * @summary Cierra y congela el conteo sin alterar inventario
  */
 
@@ -8501,10 +8555,15 @@ export const CloseAuditoriaInventarioResponse = zod.object({
   "abiertaAt": zod.coerce.date(),
   "creadaPor": zod.string()
 }).and(zod.object({
+  "participantesActivos": zod.number().int(),
+  "maxParticipantes": zod.number().int(),
+  "expiracionSegundos": zod.number().int(),
   "motivoCancelacion": zod.string().nullish(),
   "cerradaAt": zod.coerce.date().nullish(),
   "confirmadaAt": zod.coerce.date().nullish(),
   "resultados": zod.array(zod.object({
+  "usuarioId": zod.number().nullable(),
+  "usuarioNombre": zod.string().nullable(),
   "serie": zod.string(),
   "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
   "rolloId": zod.number().nullish(),
@@ -8547,6 +8606,8 @@ export const CloseAuditoriaInventarioResponse = zod.object({
 }),zod.null()]).optional()
 })),
   "participantes": zod.array(zod.object({
+  "activo": zod.boolean(),
+  "expiraAt": zod.coerce.date(),
   "usuarioId": zod.number(),
   "nombre": zod.string(),
   "escaneos": zod.number(),
@@ -8594,10 +8655,15 @@ export const CancelAuditoriaInventarioResponse = zod.object({
   "abiertaAt": zod.coerce.date(),
   "creadaPor": zod.string()
 }).and(zod.object({
+  "participantesActivos": zod.number().int(),
+  "maxParticipantes": zod.number().int(),
+  "expiracionSegundos": zod.number().int(),
   "motivoCancelacion": zod.string().nullish(),
   "cerradaAt": zod.coerce.date().nullish(),
   "confirmadaAt": zod.coerce.date().nullish(),
   "resultados": zod.array(zod.object({
+  "usuarioId": zod.number().nullable(),
+  "usuarioNombre": zod.string().nullable(),
   "serie": zod.string(),
   "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
   "rolloId": zod.number().nullish(),
@@ -8640,6 +8706,8 @@ export const CancelAuditoriaInventarioResponse = zod.object({
 }),zod.null()]).optional()
 })),
   "participantes": zod.array(zod.object({
+  "activo": zod.boolean(),
+  "expiraAt": zod.coerce.date(),
   "usuarioId": zod.number(),
   "nombre": zod.string(),
   "escaneos": zod.number(),
@@ -8694,10 +8762,15 @@ export const ResolverSobranteAuditoriaInventarioResponse = zod.object({
   "abiertaAt": zod.coerce.date(),
   "creadaPor": zod.string()
 }).and(zod.object({
+  "participantesActivos": zod.number().int(),
+  "maxParticipantes": zod.number().int(),
+  "expiracionSegundos": zod.number().int(),
   "motivoCancelacion": zod.string().nullish(),
   "cerradaAt": zod.coerce.date().nullish(),
   "confirmadaAt": zod.coerce.date().nullish(),
   "resultados": zod.array(zod.object({
+  "usuarioId": zod.number().nullable(),
+  "usuarioNombre": zod.string().nullable(),
   "serie": zod.string(),
   "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
   "rolloId": zod.number().nullish(),
@@ -8740,6 +8813,8 @@ export const ResolverSobranteAuditoriaInventarioResponse = zod.object({
 }),zod.null()]).optional()
 })),
   "participantes": zod.array(zod.object({
+  "activo": zod.boolean(),
+  "expiraAt": zod.coerce.date(),
   "usuarioId": zod.number(),
   "nombre": zod.string(),
   "escaneos": zod.number(),
@@ -8862,10 +8937,15 @@ export const ConfirmAuditoriaInventarioResponse = zod.object({
   "abiertaAt": zod.coerce.date(),
   "creadaPor": zod.string()
 }).and(zod.object({
+  "participantesActivos": zod.number().int(),
+  "maxParticipantes": zod.number().int(),
+  "expiracionSegundos": zod.number().int(),
   "motivoCancelacion": zod.string().nullish(),
   "cerradaAt": zod.coerce.date().nullish(),
   "confirmadaAt": zod.coerce.date().nullish(),
   "resultados": zod.array(zod.object({
+  "usuarioId": zod.number().nullable(),
+  "usuarioNombre": zod.string().nullable(),
   "serie": zod.string(),
   "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
   "rolloId": zod.number().nullish(),
@@ -8908,6 +8988,8 @@ export const ConfirmAuditoriaInventarioResponse = zod.object({
 }),zod.null()]).optional()
 })),
   "participantes": zod.array(zod.object({
+  "activo": zod.boolean(),
+  "expiraAt": zod.coerce.date(),
   "usuarioId": zod.number(),
   "nombre": zod.string(),
   "escaneos": zod.number(),

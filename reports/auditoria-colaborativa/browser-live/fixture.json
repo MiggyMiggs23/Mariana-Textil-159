@@ -1,0 +1,178 @@
+{
+  "database": "scanner_collab_e2e_20260926",
+  "branch": "br-fancy-sound-ax3sbznv",
+  "sites": [
+    {
+      "id": 10,
+      "nombre": "E2E Scanner Norte",
+      "floor": 1,
+      "floors": [
+        {
+          "id": 1,
+          "nombre": "Primer piso"
+        },
+        {
+          "id": 3,
+          "nombre": "Segundo piso"
+        },
+        {
+          "id": 4,
+          "nombre": "Tercer piso"
+        }
+      ],
+      "floorOrder": "API order: nombre ascending"
+    },
+    {
+      "id": 11,
+      "nombre": "E2E Scanner Sur",
+      "floor": null,
+      "floors": [],
+      "inactiveFloorRetained": true
+    }
+  ],
+  "product": {
+    "id": 1,
+    "sku": "E2ESCAN"
+  },
+  "rolls": [
+    {
+      "id": 1,
+      "serie": "990260001",
+      "ubicacion_id": 10,
+      "piso_id": 1
+    },
+    {
+      "id": 2,
+      "serie": "990260002",
+      "ubicacion_id": 10,
+      "piso_id": 1
+    },
+    {
+      "id": 3,
+      "serie": "990260003",
+      "ubicacion_id": 10,
+      "piso_id": 1
+    },
+    {
+      "id": 4,
+      "serie": "990260004",
+      "ubicacion_id": 10,
+      "piso_id": 1
+    },
+    {
+      "id": 5,
+      "serie": "990260005",
+      "ubicacion_id": 10,
+      "piso_id": 1
+    },
+    {
+      "id": 6,
+      "serie": "990260006",
+      "ubicacion_id": 10,
+      "piso_id": 1
+    },
+    {
+      "id": 7,
+      "serie": "990260007",
+      "ubicacion_id": 10,
+      "piso_id": 1
+    },
+    {
+      "id": 8,
+      "serie": "990260008",
+      "ubicacion_id": 10,
+      "piso_id": 1
+    },
+    {
+      "id": 9,
+      "serie": "990260009",
+      "ubicacion_id": 10,
+      "piso_id": 1
+    },
+    {
+      "id": 10,
+      "serie": "990260010",
+      "ubicacion_id": 10,
+      "piso_id": 1
+    },
+    {
+      "id": 11,
+      "serie": "990260011",
+      "ubicacion_id": 10,
+      "piso_id": 1
+    },
+    {
+      "id": 12,
+      "serie": "990260012",
+      "ubicacion_id": 11,
+      "piso_id": null
+    }
+  ],
+  "users": [
+    {
+      "id": 2,
+      "nombre": "E2E Scanner 1",
+      "usuario": "e2e.scanner.1"
+    },
+    {
+      "id": 3,
+      "nombre": "E2E Scanner 2",
+      "usuario": "e2e.scanner.2"
+    },
+    {
+      "id": 4,
+      "nombre": "E2E Scanner 3",
+      "usuario": "e2e.scanner.3"
+    },
+    {
+      "id": 5,
+      "nombre": "E2E Scanner 4",
+      "usuario": "e2e.scanner.4"
+    },
+    {
+      "id": 6,
+      "nombre": "E2E Scanner 5",
+      "usuario": "e2e.scanner.5"
+    },
+    {
+      "id": 7,
+      "nombre": "E2E Scanner 6",
+      "usuario": "e2e.scanner.6"
+    }
+  ],
+  "seedAdmin": "admin",
+  "effectiveDatabaseVerified": true,
+  "distinctLiveEndpoint": true,
+  "floorScenario": {
+    "desktopFixedFloor": {
+      "id": 1,
+      "nombre": "Primer piso"
+    },
+    "concurrentMobileChoices": [
+      {
+        "id": 1,
+        "nombre": "Primer piso"
+      },
+      {
+        "id": 3,
+        "nombre": "Segundo piso"
+      },
+      {
+        "id": 4,
+        "nombre": "Tercer piso"
+      }
+    ],
+    "misplacedRoll": "990260001",
+    "expectedFloor": {
+      "id": 1,
+      "nombre": "Primer piso"
+    },
+    "scannedFloor": {
+      "id": 3,
+      "nombre": "Segundo piso"
+    },
+    "expectedResult": "MAL_ACOMODADO",
+    "automaticApplicationForbidden": true,
+    "auditTrailRowsPreserved": 0
+  }
+}

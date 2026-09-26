@@ -1,0 +1,18 @@
+{
+  "database": "scanner_collab_e2e_20260926",
+  "e11": "e11_perfiles",
+  "graph": "e11_graph()",
+  "participants": "auditoria_inventario_participantes",
+  "scanners": 6,
+  "preserved_closed": 1,
+  "previousApiSha256": "c0ca9433ca934569b40e35913e7d6e6ef408bc09dc4f1c38cd79c5344c985b6c",
+  "apiSha256": "e62a79333d0ee1433c114656af980e33ff420b728688a121ee586efdfab1b30d",
+  "unchangedInitializerSources": true,
+  "changedSources": [
+    "../src/routes/auditorias-inventario.ts"
+  ],
+  "reseed": false,
+  "reinitialize": false,
+  "reset": false,
+  "checkedAt": "2026-09-26T01:38:14.747Z"
+}

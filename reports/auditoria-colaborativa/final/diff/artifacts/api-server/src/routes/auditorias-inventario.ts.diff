@@ -1,0 +1,10 @@
+--- /home/runner/workspace/reports/auditoria-colaborativa/final/before/artifacts/api-server/src/routes/auditorias-inventario.ts	2026-09-26 01:36:34.448917268 +0000
++++ /home/runner/workspace/reports/auditoria-colaborativa/final/overlays/artifacts/api-server/src/routes/auditorias-inventario.ts	2026-09-26 01:36:34.448917268 +0000
+@@ -312,6 +312,7 @@
+     `/auditorias/:id/${action}`,
+     requireSession,
+     requierePermiso("auditoria_inventario", "editar"),
++    ...(action === "cerrar" ? [requierePermiso("auditoria_inventario", "autorizar")] : []),
+     requireOperationalRole,
+     async (req, res, next): Promise<void> => {
+       try {

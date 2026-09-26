@@ -1,0 +1,164 @@
+{
+  "status": "FAILED",
+  "candidate": "e62a79333d0ee1433c114656af980e33ff420b728688a121ee586efdfab1b30d",
+  "frontendIndex": "7939daf161141b6f0eb5774307930f08f6157dc9811bc7f117163266a0949f70",
+  "checks": [
+    {
+      "name": "Empty south site offers start to authorized creator",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "Six authenticated browsers browse without consuming seats",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "Three concurrent mobile-UA touch contexts explicitly join and select three distinct configured floors",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "Promise.all real input scans propagate shared count3 to all three",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "MAL_ACOMODADO retains expected Primer piso, actual Segundo piso, original author; no autoapply",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "Concurrent duplicate creates one row; repeated warning preserves original author and floor",
+      "passed": true,
+      "details": {
+        "usuario_id": 4,
+        "piso_real_id": 4
+      }
+    },
+    {
+      "name": "All three real browser sessions see missing7 and all three per-roll authors",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "Desktop UA admission fixes first configured Primer piso with no change control",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "Actors4/5 admitted; actor6 explicit join returns409 and disables scanner",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "Same-user refresh/rejoin at five allowed; all five original leases heartbeat",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "Scanner with editar=true/autorizar=false gets close403 and hidden closure control",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "Scoped BODEGA cross-site join and scan both403",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "No-active-floor site visibly disables scanning and backend rejects",
+      "passed": true,
+      "details": 400
+    },
+    {
+      "name": "Seeded real ADMIN closes north audit through actual API; no stock confirmation",
+      "passed": true,
+      "details": true
+    }
+  ],
+  "images": [
+    {
+      "file": "screenshots/01-empty-south-start.png",
+      "name": "01-empty-south-start",
+      "bytes": 108491,
+      "sha256": "ae1088c45a7e8056a7c98ed790635f43efcaf2a3debc95f134c7d4b21556e8be",
+      "actor": "admin",
+      "mobile": false
+    },
+    {
+      "file": "screenshots/02-mobile-explicit-join.png",
+      "name": "02-mobile-explicit-join",
+      "bytes": 65935,
+      "sha256": "b4089c167b971ea2eae62f4fcfb812f5a8eeab37c0cab102573b968aef4d016a",
+      "actor": "e2e.scanner.1",
+      "mobile": true
+    },
+    {
+      "file": "screenshots/03-shared-three-user-1.png",
+      "name": "03-shared-three-user-1",
+      "bytes": 94691,
+      "sha256": "5e5f12a3761b5b99c3da09650cc76ce16120d290019ea4a888f4c34d129caaf3",
+      "actor": "e2e.scanner.1",
+      "mobile": true
+    },
+    {
+      "file": "screenshots/03-shared-three-user-2.png",
+      "name": "03-shared-three-user-2",
+      "bytes": 192379,
+      "sha256": "d32c77768e8d60a0edbd6daf61b227b55e41e592d932951e63de8a8d3dde1c4f",
+      "actor": "e2e.scanner.2",
+      "mobile": true
+    },
+    {
+      "file": "screenshots/03-shared-three-user-3.png",
+      "name": "03-shared-three-user-3",
+      "bytes": 192280,
+      "sha256": "1de4cdbca552788521cc75bed39baee68fc9d137afd6e9684942f88a57457354",
+      "actor": "e2e.scanner.3",
+      "mobile": true
+    },
+    {
+      "file": "screenshots/04-duplicate-original-author.png",
+      "name": "04-duplicate-original-author",
+      "bytes": 96703,
+      "sha256": "fc416197a0b5d76fd46a26d7480e67424dc3f0f17613fc06ef12151823773571",
+      "actor": "e2e.scanner.1",
+      "mobile": true
+    },
+    {
+      "file": "screenshots/05-desktop-fixed-primer-piso.png",
+      "name": "05-desktop-fixed-primer-piso",
+      "bytes": 197212,
+      "sha256": "ee8d3224de0023e52ef171c00419d68682c89d7106a22d41c12611f209103152",
+      "actor": "e2e.scanner.4",
+      "mobile": false
+    },
+    {
+      "file": "screenshots/06-sixth-full-disabled.png",
+      "name": "06-sixth-full-disabled",
+      "bytes": 217585,
+      "sha256": "4e80166057b171f55e42a55ccdf016984d10b76602c8c1893f20cbc40215fffa",
+      "actor": "e2e.scanner.6",
+      "mobile": false
+    },
+    {
+      "file": "screenshots/07-no-floors-hard-block.png",
+      "name": "07-no-floors-hard-block",
+      "bytes": 241708,
+      "sha256": "da77de8a493baeb6b43cc82cbf6bf007c81671d04662e3c684bdd4851c2ab23d",
+      "actor": "admin",
+      "mobile": false
+    }
+  ],
+  "contexts": 6,
+  "auditId": 2,
+  "folio": "ESN-AI-000002",
+  "error": "UI timeout: preserved closed audit result",
+  "lastUi": [
+    {
+      "actor": "e2e.scanner.1",
+      "text": "Mariana Textil\nCerrar sesión\n\nE2E Scanner 1\n\nBODEGA · E2E Scanner Norte\n\nE2E Scanner Norte\n\nOPERACIÓN DE ALMACÉN\n\nAuditoría de Inventario\n\nControl físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.\n\nESN · E2E Scanner Norte\nIniciar auditoría\nAuditorías abiertas en el sitio\n\nNo hay auditorías abiertas en este sitio. Puedes iniciar una nueva auditoría.\n\nHISTORIAL DEL SITIO\nESN-AI-000002\nCERRADA\nE2E Scanner Norte\n4/11\nESN-AI-000001\nCERRADA\nE2E Scanner Norte\n0/11"
+    }
+  ]
+}

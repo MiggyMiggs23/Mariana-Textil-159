@@ -1,0 +1,11 @@
+--- /home/runner/workspace/reports/auditoria-colaborativa/mensaje/before/artifacts/mariana-textil/src/pages/auditorias-inventario.tsx	2026-09-26 01:48:46.860203311 +0000
++++ /home/runner/workspace/reports/auditoria-colaborativa/mensaje/overlays/artifacts/mariana-textil/src/pages/auditorias-inventario.tsx	2026-09-26 01:48:46.860203311 +0000
+@@ -647,7 +647,7 @@
+                              void invalidate(currentDetail.id);
+                              toast({
+                                title: result.duplicado ? "Serie ya registrada" : "Presencia registrada",
+-                               description: `${result.serie} · ${result.clasificacion} · ${result.estadoActual}${result.duplicado && result.usuarioNombre ? ` · Escaneado por ${result.usuarioNombre}` : ""}`,
++                                description: `${result.serie} · Registrado · ${result.estadoActual}${result.duplicado && result.usuarioNombre ? ` · Escaneado por ${result.usuarioNombre}` : ""}`,
+                              });
+                            } catch (error) {
+                              if (auditParticipantLimit(error) || (error && typeof error === "object" && "status" in error && [403, 409].includes(Number(error.status)))) {

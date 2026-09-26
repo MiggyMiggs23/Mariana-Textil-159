@@ -1,0 +1,6 @@
+# Handoff: piso de auditoría (frontend ↔ backend)
+
+- Frontend clasifica móvil con `/Android|iPhone|iPad|iPod|Mobile|Tablet/i.test(navigator.userAgent)`, **no** por ancho de pantalla. Coincide literalmente con `isDesktopAuditScanner` del backend en `artifacts/api-server/src/lib/auditoria-inventario.ts`. Redimensionar u orientar no altera la clasificación.
+- La consulta de pisos de la estación es `GET /api/inventario/auditorias/:id/pisos` con alcance de **auditoría seleccionada + usuario** en React Query; no se usa la ruta administrativa `/api/locations/:id/pisos` ni se requiere `ubicaciones/ver`. Backend aplica lectura/alcance del sitio de la auditoría. La respuesta contiene pisos activos `{id,nombre,ubicacionId,activo}[]` en orden `nombre ASC`.
+- Desktop envía exclusivamente `pisosActivos[0].id`, del orden de esta nueva ruta (igual que la validación del servidor). Móvil solo envía el piso configurado confirmado por el usuario.
+- UI deshabilita escaneo si la consulta está cargando/falla, no hay pisos activos o el piso confirmado dejó de ser activo. El servidor continúa siendo autoridad para esas comprobaciones.

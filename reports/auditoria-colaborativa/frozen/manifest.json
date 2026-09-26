@@ -1,0 +1,83 @@
+{
+  "capturedAt": "2026-09-26T01:00:05.826Z",
+  "head": "c3f167c785173c77cfc2ff89b308bb69301b7926",
+  "apiParent": "artifacts/api-server/dist-directorios-sitios-20260925-sin-rfc",
+  "frontendParentStage": "reports/directorios-sitios-20260925/staging/frontend-root-sin-rfc",
+  "apiMapSha256": "8d64d7bce241577fb5629ac7a9c737f09722016c06dcfa98ac35a57b5706735a",
+  "apiEntrySha256": "4366c5679e58432587b91a88c843df5ad2490096c73707f7bcb88b4d64806ae1",
+  "frontendIndexSha256": "7f7650f603302b32a985eac9fbb64e0fd4e3897c17093f307f912dcede21b926",
+  "items": [
+    {
+      "path": "artifacts/api-server/src/lib/auditoria-inventario.ts",
+      "baseSha256": "2e90ff7eb6cbb6b3eb88b4f48e6678f356e9f074336c30a24b1edc8374325df4",
+      "headSha256": "2e90ff7eb6cbb6b3eb88b4f48e6678f356e9f074336c30a24b1edc8374325df4",
+      "workSha256": "11284186087e98a083dc8bb3ccff134da31d378824939816ad7d680c5533817d",
+      "baseEqualsHead": true,
+      "baseEqualsWork": false,
+      "headEqualsWork": false
+    },
+    {
+      "path": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+      "baseSha256": "b7ca281c3090d42707fa0049b652628b74865a0b9ad3d4bd99cc52ab54f37019",
+      "headSha256": "b7ca281c3090d42707fa0049b652628b74865a0b9ad3d4bd99cc52ab54f37019",
+      "workSha256": "f61f341372911a76a9ea007e7fd2f0162542a4a89474d1c5c061d6b6842d61ca",
+      "baseEqualsHead": true,
+      "baseEqualsWork": false,
+      "headEqualsWork": false
+    },
+    {
+      "path": "artifacts/api-server/src/lib/auditoria-owner.ts",
+      "baseSha256": "967272a7bc8b8d3e8c95bb33f66323646b741bb07cb49dc98b75ae36b94f9d8b",
+      "headSha256": "967272a7bc8b8d3e8c95bb33f66323646b741bb07cb49dc98b75ae36b94f9d8b",
+      "workSha256": "967272a7bc8b8d3e8c95bb33f66323646b741bb07cb49dc98b75ae36b94f9d8b",
+      "baseEqualsHead": true,
+      "baseEqualsWork": true,
+      "headEqualsWork": true
+    },
+    {
+      "path": "artifacts/mariana-textil/src/pages/auditorias-inventario.tsx",
+      "baseSha256": "633d76fabc47c616e950f6b10cb3037dddd699392165d91b1036962cfb3f7f4a",
+      "headSha256": "633d76fabc47c616e950f6b10cb3037dddd699392165d91b1036962cfb3f7f4a",
+      "workSha256": "631f9bb39521a57544719cbe38b3b64bfbc5ff4d75b2e14af17ced249a201f07",
+      "baseEqualsHead": true,
+      "baseEqualsWork": false,
+      "headEqualsWork": false
+    },
+    {
+      "path": "lib/api-zod/src/generated/api.ts",
+      "baseSha256": "87f6407a88e4f9f4f60ed230d55531f18f83edb44ca799f9ca8197585f157fad",
+      "headSha256": "3986ca0e8d4e0dd4d4624ba571be7ef4bc96bd9e73e80505b4fa9d1393b78885",
+      "workSha256": "f739c9144a75b8b2bbffa26ce9991afe68e7f6908a372e927d70ce583746006a",
+      "baseEqualsHead": false,
+      "baseEqualsWork": false,
+      "headEqualsWork": false
+    },
+    {
+      "path": "lib/api-client-react/src/generated/api.ts",
+      "baseSha256": "d2f11d0feb720275822c4053e7e72399d523cb9f2119a9c00ada4478458a8d0a",
+      "headSha256": "3c18223f89872a57850fed0f637d9fdfc37b54ae9b8184eaf4c694bb1e79d9d2",
+      "workSha256": "4d822c9e217482b6aa5e54b81d1a33ccefc1da8aad63da0024e5c4a3ed3165c0",
+      "baseEqualsHead": false,
+      "baseEqualsWork": false,
+      "headEqualsWork": false
+    },
+    {
+      "path": "lib/api-client-react/src/generated/api.schemas.ts",
+      "baseSha256": "16fa313cfb3945a5a32332f210cfdbcc359fa6d73dccd052e29488b1509174eb",
+      "headSha256": "82921287fa332e5c2baefe26ff034846f9f320e3550ba11276419cfbc92728a8",
+      "workSha256": "06c74a42d50ff4a833ec20af3466628bd042c1c046efc4dba92bb5ee489e2532",
+      "baseEqualsHead": false,
+      "baseEqualsWork": false,
+      "headEqualsWork": false
+    },
+    {
+      "path": "lib/api-spec/openapi.yaml",
+      "baseSha256": null,
+      "headSha256": "254867ff4d6634d54a366998bbfbaa5baf342e34babbfb52ccadb3aa0c8baa94",
+      "workSha256": "1e6a11a88b8b6c440d2569e1213cb0a7c347e93493014a28637e4e8928f7580e",
+      "baseEqualsHead": false,
+      "baseEqualsWork": false,
+      "headEqualsWork": false
+    }
+  ]
+}

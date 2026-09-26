@@ -1,0 +1,42 @@
+{
+  "status": "candidate-only-not-activated",
+  "parentProvenance": "reports/auditoria-colaborativa/provenance.json",
+  "parentStage": "reports/auditoria-colaborativa/staging/frontend-root",
+  "stage": "reports/auditoria-colaborativa/staging/frontend-root-unirse",
+  "apiEntry": "/home/runner/workspace/artifacts/api-server/dist-auditoria-colaborativa-20260925/index.mjs",
+  "apiSha256": "aeea9b30f64eed3f82e680cc77f636d7284f55ec6188458f2e9e23165dd38900",
+  "apiUnchanged": true,
+  "previousFrontendUnchanged": true,
+  "frontendRoot": "/home/runner/workspace/artifacts/mariana-textil/dist-auditoria-colaborativa-unirse-20260925",
+  "overlays": [
+    {
+      "path": "artifacts/mariana-textil/src/pages/auditorias-inventario.tsx",
+      "parentSha256": "003f27998ad54073d092edd8793ccfc803087c5eae98dbbf9efb488bd6a828f2",
+      "sha256": "6648297e33f8186d6c70abeabbc2de62f60637e1dccf34d2a34a0fffb1aaffa6",
+      "composition": "Explicit participation join UI task-only revision"
+    },
+    {
+      "path": "artifacts/mariana-textil/src/components/auditoria/audit-collaboration.tsx",
+      "parentSha256": "499ad46f2cc652f6c98d8999ef932eee4fd78e9d04d42f717fec93dcf06dd836",
+      "sha256": "07156cd508a8ded3279bfb1fb5cfc98a393fe8436a94951ee27150026e115a61",
+      "composition": "Explicit participation join UI task-only revision"
+    },
+    {
+      "path": "artifacts/mariana-textil/src/components/auditoria/use-audit-participation.ts",
+      "parentSha256": "d23e29ae57b8c7574761b1b605abed803c80d28daa5abb7838eb9dfa5d4412eb",
+      "sha256": "d23e29ae57b8c7574761b1b605abed803c80d28daa5abb7838eb9dfa5d4412eb",
+      "composition": "Explicit participation join UI task-only revision"
+    }
+  ],
+  "retainedSourceChanges": [
+    "artifacts/mariana-textil/src/components/auditoria/audit-collaboration.tsx",
+    "artifacts/mariana-textil/src/pages/auditorias-inventario.tsx"
+  ],
+  "generatedSourcesUnchanged": true,
+  "isolatedFrontendTypecheck": "passed",
+  "productionBuild": "passed",
+  "databaseAccess": "none",
+  "ddl": "none",
+  "servicesStarted": "none",
+  "activation": "not-performed"
+}

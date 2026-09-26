@@ -1,0 +1,17 @@
+ M artifacts/api-server/src/lib/auditoria-inventario.ts
+ M artifacts/api-server/src/routes/auditorias-inventario.ts
+ M artifacts/mariana-textil/src/pages/auditorias-inventario.tsx
+ M lib/api-client-react/src/generated/api.schemas.ts
+ M lib/api-client-react/src/generated/api.ts
+ M lib/api-spec/openapi.yaml
+ M lib/api-zod/src/generated/api.ts
+ M lib/api-zod/src/generated/types/auditoriaInventarioDetail.ts
+ M lib/api-zod/src/generated/types/auditoriaInventarioEscaneoResult.ts
+ M lib/api-zod/src/generated/types/auditoriaInventarioParticipante.ts
+ M lib/api-zod/src/generated/types/auditoriaInventarioResultado.ts
+ M lib/api-zod/src/generated/types/index.ts
+ M lib/api-zod/src/index.ts
+?? artifacts/mariana-textil/src/components/auditoria/audit-collaboration.tsx
+?? artifacts/mariana-textil/src/components/auditoria/use-audit-participation.ts
+?? lib/api-zod/src/generated/types/auditoriaInventarioParticipacion.ts
+?? reports/auditoria-colaborativa/

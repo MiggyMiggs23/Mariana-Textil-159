@@ -13,7 +13,6 @@ import {
   useListAuditoriasInventario,
   useListSitiosAuditoriaInventario,
   useScanAuditoriaInventario,
-  useListPisosLocation,
   getListRollosQueryKey,
   getListProductosQueryKey,
   getGetExistenciasAgrupadasQueryKey,
@@ -57,6 +56,10 @@ import { AuditoriaSobranteResolutionDialog } from "@/components/auditoria/audito
 import { ReactivacionFaltanteDialog } from "@/components/auditoria/reactivacion-faltante-dialog";
 import { AuditoriaInventarioPrint } from "@/components/auditoria-inventario-print";
 import { ApiErrorDetails } from "@/lib/api-error";
+import { AuditCollaboration, AuditScannerAttribution } from "@/components/auditoria/audit-collaboration";
+import { auditParticipantLimit, useAuditParticipation } from "@/components/auditoria/use-audit-participation";
+import { AuditFloorStation, isMobileAuditDevice } from "@/components/auditoria/audit-floor-station";
+import { useAuditFloors } from "@/components/auditoria/use-audit-floors";
 
 function message(error: unknown): string {
   if (error && typeof error === "object" && "data" in error) {
@@ -82,7 +85,9 @@ export default function AuditoriasInventario() {
   const { data: user } = useGetCurrentUser();
   const search = useSearch();
   const sites = useListSitiosAuditoriaInventario();
-  const audits = useListAuditoriasInventario();
+  const audits = useListAuditoriasInventario({}, {
+    query: { queryKey: getListAuditoriasInventarioQueryKey(), refetchInterval: 3000, refetchIntervalInBackground: true, refetchOnMount: "always" },
+  });
   const [siteId, setSiteId] = useState("");
   const [selectedId, setSelectedId] = useState<number | null>(() => {
     const requested = Number(
@@ -92,15 +97,22 @@ export default function AuditoriasInventario() {
   });
   const selectionInitialized = useRef(selectedId != null);
   const syncedAuditId = useRef<number | null>(null);
+  const previousUserId = useRef<number | null>(null);
+  const scanBusy = useRef(false);
+  const [joinIntent, setJoinIntent] = useState<string | null>(null);
   const [scan, setScan] = useState("");
   const [cancelOpen, setCancelOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
-  const [selectedPiso, setSelectedPiso] = useState<string>("none");
+  const [selectedPiso, setSelectedPiso] = useState<number | null>(null);
+  const mobileScanner = isMobileAuditDevice(navigator.userAgent);
   const [addColorOpen, setAddColorOpen] = useState(false);
   const [addColorTela, setAddColorTela] = useState("");
   const [addColor, setAddColor] = useState("");
   const scanRef = useRef<HTMLInputElement>(null);
   const canCreateProduct = hasPermission(user, Modules.PRODUCTOS, "crear");
+  const canCreateAudit = hasPermission(user, Modules.AUDITORIA_INVENTARIO, "crear");
+  const canEditAudit = hasPermission(user, Modules.AUDITORIA_INVENTARIO, "editar");
+  const canCloseAudit = canEditAudit && hasPermission(user, Modules.AUDITORIA_INVENTARIO, "autorizar");
   const products = useListProductos({}, {
     query: {
       enabled: canCreateProduct,
@@ -151,30 +163,61 @@ export default function AuditoriasInventario() {
     const requested = Number(new URLSearchParams(search).get("auditoriaId"));
     if (Number.isInteger(requested) && requested > 0) {
       selectionInitialized.current = true;
+      setJoinIntent(null);
       setSelectedId(requested);
     }
   }, [search]);
 
   useEffect(() => {
-    if (!selectionInitialized.current && selectedId == null && audits.data?.length) {
+    if (!selectionInitialized.current && selectedId == null && siteId && audits.data?.length) {
+      const openAudit = audits.data.find((item) =>
+        item.estado === "ABIERTA" && String(item.ubicacionId) === siteId);
       selectionInitialized.current = true;
-      setSelectedId(audits.data.find((item) => item.estado === "ABIERTA")?.id ?? audits.data[0]!.id);
+      if (openAudit) setSelectedId(openAudit.id);
     }
-  }, [audits.data, selectedId]);
+  }, [audits.data, selectedId, siteId]);
 
   useEffect(() => {
-    setSelectedPiso("none");
+    setSelectedPiso(null);
     setScan("");
   }, [selectedId, siteId]);
+
+  useEffect(() => {
+    if (previousUserId.current && previousUserId.current !== (user?.id ?? null)) {
+      setJoinIntent(null);
+      setSelectedId(null);
+      setSiteId("");
+      syncedAuditId.current = null;
+      selectionInitialized.current = false;
+      queryClient.removeQueries({ queryKey: getListAuditoriasInventarioQueryKey() });
+      queryClient.removeQueries({ queryKey: ["audit-floors"] });
+      // Never carry a former user's detail/participant history into this session.
+      queryClient.removeQueries({
+        predicate: (query) => typeof query.queryKey[0] === "string"
+          && query.queryKey[0].startsWith("/api/inventario/auditorias/"),
+      });
+    }
+    previousUserId.current = user?.id ?? null;
+  }, [user?.id, queryClient]);
 
   const detail = useGetAuditoriaInventario(selectedId ?? 0, {
     query: {
       enabled: selectedId != null,
       queryKey: getGetAuditoriaInventarioQueryKey(selectedId ?? 0),
+       refetchIntervalInBackground: true,
       refetchInterval: (query) =>
         query.state.data?.estado === "ABIERTA" ? 3000 : false,
     },
   });
+  const currentDetail = previousUserId.current && user?.id !== previousUserId.current
+    ? undefined
+    : detail.data?.id === selectedId ? detail.data : undefined;
+  const mayScan = !!user?.id && canEditAudit
+    && currentDetail?.estado === "ABIERTA";
+  const selectedJoinKey = user?.id && selectedId && currentDetail
+    ? `${user.id}:${currentDetail.ubicacionId}:${selectedId}` : null;
+  const requestedJoin = !!selectedJoinKey && joinIntent === selectedJoinKey;
+  const participation = useAuditParticipation(mayScan && requestedJoin ? selectedId : null, user?.id ?? null, mayScan && requestedJoin);
 
   useEffect(() => {
     if (selectedId == null) {
@@ -189,19 +232,38 @@ export default function AuditoriasInventario() {
     () => audits.data?.filter((audit) => !siteId || String(audit.ubicacionId) === siteId) ?? [],
     [audits.data, siteId],
   );
+  const openSiteAudits = siteId ? siteAudits.filter((audit) => audit.estado === "ABIERTA") : [];
+
+  const selectAudit = (id: number) => {
+    if (selectedId !== id) setJoinIntent(null);
+    setSelectedId(id);
+  };
+  const joinAudit = (id: number, locationId: number) => {
+    if (!user?.id || !hasPermission(user, Modules.AUDITORIA_INVENTARIO, "editar")
+      || !siteId || Number(siteId) !== locationId) return;
+    selectAudit(id);
+    setJoinIntent(`${user.id}:${locationId}:${id}`);
+  };
 
   const changeSite = (id: string) => {
     if (id === siteId) return;
     selectionInitialized.current = true;
     syncedAuditId.current = null;
+    setJoinIntent(null);
     setSelectedId(null);
     setSiteId(id);
   };
 
-  const { data: pisos } = useListPisosLocation(detail.data?.ubicacionId ?? 0, {
-    query: { enabled: !!detail.data?.ubicacionId, queryKey: ['pisosLocation', detail.data?.ubicacionId ?? 0] }
-  });
-  const pisosActivos = pisos?.filter(p => p.activo) || [];
+  const floorsQuery = useAuditFloors(currentDetail?.id ?? null, user?.id ?? null, currentDetail?.estado === "ABIERTA");
+  const pisosActivos = useMemo(() => floorsQuery.data?.filter((floor) => floor.activo) ?? [], [floorsQuery.data]);
+  const floorsReady = !!currentDetail && !floorsQuery.isLoading && !floorsQuery.isError && !!floorsQuery.data;
+  const floorForScan = floorsReady
+    ? mobileScanner ? pisosActivos.find((floor) => floor.id === selectedPiso) : pisosActivos[0]
+    : undefined;
+
+  useEffect(() => {
+    if (participation.active && floorForScan) scanRef.current?.focus();
+  }, [participation.active, floorForScan, selectedId]);
 
   const invalidate = async (id?: number) => {
     await queryClient.invalidateQueries({ queryKey: getListAuditoriasInventarioQueryKey() });
@@ -226,11 +288,11 @@ export default function AuditoriasInventario() {
   const pending = create.isPending || scanMutation.isPending || close.isPending || cancel.isPending || confirm.isPending;
 
   const grouped = useMemo(() => ({
-    CUADRO: detail.data?.resultados.filter((row) => row.clasificacion === "CUADRO") ?? [],
-    FALTANTE: detail.data?.resultados.filter((row) => row.clasificacion === "FALTANTE") ?? [],
-    SOBRANTE: detail.data?.resultados.filter((row) => row.clasificacion === "SOBRANTE") ?? [],
-    MAL_ACOMODADO: detail.data?.resultados.filter((row) => row.clasificacion === "MAL_ACOMODADO") ?? [],
-  }), [detail.data]);
+    CUADRO: currentDetail?.resultados.filter((row) => row.clasificacion === "CUADRO") ?? [],
+    FALTANTE: currentDetail?.resultados.filter((row) => row.clasificacion === "FALTANTE") ?? [],
+    SOBRANTE: currentDetail?.resultados.filter((row) => row.clasificacion === "SOBRANTE") ?? [],
+    MAL_ACOMODADO: currentDetail?.resultados.filter((row) => row.clasificacion === "MAL_ACOMODADO") ?? [],
+  }), [currentDetail]);
 
   const run = (
     mutation: { mutate: (variables: never, options: { onSuccess: (data: { id: number }) => void; onError: (error: unknown) => void }) => void },
@@ -267,7 +329,7 @@ export default function AuditoriasInventario() {
               {sites.data?.map((site) => <SelectItem key={site.id} value={String(site.id)}>{site.iniciales} · {site.nombre}</SelectItem>)}
             </SelectContent>
           </Select>
-          <Button
+          {siteId && audits.data && openSiteAudits.length === 0 && canCreateAudit && <Button
             data-testid="button-open-audit"
             disabled={!siteId || pending}
             size="lg"
@@ -275,6 +337,7 @@ export default function AuditoriasInventario() {
             onClick={() => create.mutate({ data: { ubicacionId: Number(siteId) } }, {
               onSuccess: (data) => {
                 setSelectedId(data.id);
+                 setJoinIntent(user?.id ? `${user.id}:${siteId}:${data.id}` : null);
                 void invalidate(data.id);
                 toast({ title: "Auditoría abierta", description: `${data.folioFormateado} · ${data.totalSnapshot} rollos en snapshot` });
               },
@@ -283,7 +346,7 @@ export default function AuditoriasInventario() {
           >
             {create.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Play className="mr-2 h-5 w-5 fill-current" />}
             Iniciar auditoría
-          </Button>
+          </Button>}
         </div>
       </header>
 
@@ -299,11 +362,49 @@ export default function AuditoriasInventario() {
         </div>
       )}
 
+      {!audits.isLoading && !audits.isError && (
+        <section className="no-print mb-6" data-testid="audit-entry">
+          <h2 className="text-lg font-bold mb-3">Auditorías abiertas en el sitio</h2>
+          {!siteId ? (
+            <p className="rounded-xl border border-dashed p-4 text-sm text-muted-foreground">Selecciona un sitio para ver sus auditorías abiertas.</p>
+          ) : openSiteAudits.length === 0 ? (
+            <p className="rounded-xl border border-dashed p-4 text-sm text-muted-foreground" data-testid="status-no-open-audits">
+              No hay auditorías abiertas en este sitio.
+              {canCreateAudit ? " Puedes iniciar una nueva auditoría." : " Consulta el historial sin iniciar una nueva."}
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3" data-testid="open-audit-list">
+              {openSiteAudits.map((item) => {
+                const joined = selectedId === item.id && participation.active;
+                const joining = selectedId === item.id && participation.joining;
+                return (
+                  <Card key={item.id} className="p-4 flex flex-col gap-3" data-testid={`open-audit-${item.id}`}>
+                    <div>
+                      <p className="font-mono text-lg font-bold">{item.folioFormateado}</p>
+                      <p className="text-sm text-muted-foreground">{item.nombreUbicacion} · Iniciada por {item.creadaPor}</p>
+                      <p className="text-sm text-muted-foreground">{item.totalEscaneados}/{item.totalSnapshot} escaneados</p>
+                    </div>
+                    <Button type="button" size="lg" className="w-full min-h-12 text-base font-bold"
+                      data-testid={`button-join-audit-${item.id}`}
+                      disabled={!user?.id || !hasPermission(user, Modules.AUDITORIA_INVENTARIO, "editar") || joining || joined}
+                      onClick={() => joinAudit(item.id, item.ubicacionId)}>
+                      {joined ? "Participando" : joining ? "Uniéndote..." : "Unirme a la auditoría"}
+                    </Button>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+        </section>
+      )}
+
       {!audits.isLoading && !audits.isError && audits.data?.length === 0 && (
         <div className="rounded-2xl border border-dashed p-12 text-center bg-card/50" data-testid="status-audits-empty">
           <ScanLine className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-foreground mb-1">No hay auditorías registradas</h3>
-          <p className="text-sm text-muted-foreground">Selecciona un sitio y presiona "Iniciar auditoría" para comenzar.</p>
+          <p className="text-sm text-muted-foreground">{canCreateAudit
+            ? 'Selecciona un sitio y presiona "Iniciar auditoría" para comenzar.'
+            : "Selecciona un sitio para consultar auditorías; necesitas permiso de creación para iniciar una."}</p>
         </div>
       )}
 
@@ -327,7 +428,7 @@ export default function AuditoriasInventario() {
                     key={item.id}
                     type="button"
                     data-testid={`button-audit-${item.id}`}
-                    onClick={() => setSelectedId(item.id)}
+                    onClick={() => selectAudit(item.id)}
                     className={`group relative w-full text-left transition-all duration-200 rounded-xl border p-4 ${
                       isSelected
                         ? "border-primary/60 bg-primary/[0.03] shadow-sm ring-1 ring-primary/20"
@@ -369,7 +470,7 @@ export default function AuditoriasInventario() {
               </div>
             )}
 
-            {detail.data && (
+            {currentDetail && detail.data && (
               <>
                 {/* Header Card */}
                 <Card className="overflow-hidden border-border/60 shadow-sm rounded-2xl">
@@ -387,14 +488,16 @@ export default function AuditoriasInventario() {
                       <Button variant="outline" size="sm" className="h-9 font-medium" data-testid="button-print-audit" onClick={print}>
                         <Printer className="mr-2 h-4 w-4" /> Imprimir
                       </Button>
-                      {detail.data.estado === "ABIERTA" && (
+                      {detail.data.estado === "ABIERTA" && canEditAudit && (
                         <>
                           <Button variant="outline" size="sm" className="h-9 font-medium text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20" data-testid="button-cancel-audit" onClick={() => setCancelOpen(true)}>
                             Cancelar
                           </Button>
-                          <Button size="sm" variant="secondary" className="h-9 font-bold bg-foreground text-background hover:bg-foreground/90 shadow-sm" data-testid="button-close-audit" disabled={pending} onClick={() => run(close as never, { id: detail.data!.id } as never)}>
-                            Cerrar Conteo
-                          </Button>
+                          {canCloseAudit && (
+                            <Button size="sm" variant="secondary" className="h-9 font-bold bg-foreground text-background hover:bg-foreground/90 shadow-sm" data-testid="button-close-audit" disabled={pending} onClick={() => run(close as never, { id: detail.data!.id } as never)}>
+                              Cerrar Conteo
+                            </Button>
+                          )}
                         </>
                       )}
                       {detail.data.estado === "CERRADA" && user?.rol === "ADMIN" && (
@@ -466,11 +569,45 @@ export default function AuditoriasInventario() {
                   </div>
                 </Card>
 
-                {/* Scanner Area */}
+                 {/* Collaboration is scoped to the selected audit, never to the site. */}
+                 {detail.data.estado === "ABIERTA" && (
+                   <AuditCollaboration
+                     detail={detail.data}
+                     active={participation.active}
+                     joining={participation.joining}
+                     error={participation.error}
+                     expired={participation.expired}
+                      requested={requestedJoin}
+                      canJoin={mayScan && siteId === String(detail.data.ubicacionId)}
+                     onRetry={participation.retry}
+                      onJoin={() => joinAudit(detail.data!.id, detail.data!.ubicacionId)}
+                   />
+                 )}
+
+                 {/* Scanner Area */}
                 {detail.data.estado === "ABIERTA" && (
                   <div className="sticky top-4 z-20 rounded-2xl bg-card shadow-lg ring-1 ring-primary/20 overflow-hidden transform transition-all">
                     <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent pointer-events-none" />
                     <div className="relative p-5 md:p-6">
+                       <AuditFloorStation key={detail.data.id}
+                         floors={pisosActivos}
+                         ready={floorsReady}
+                         error={!!floorsQuery.isError}
+                         mobile={mobileScanner}
+                         joined={participation.active}
+                         selectedId={selectedPiso}
+                         onSelect={setSelectedPiso}
+                       />
+                       <div className="grid grid-cols-2 gap-3 mb-5" data-testid="audit-shared-progress">
+                         <div className="rounded-lg border bg-background/80 px-3 py-2">
+                           <p className="text-xs font-semibold text-muted-foreground">Escaneados · todos</p>
+                           <p className="font-mono text-2xl font-bold" data-testid="shared-escaneados">{detail.data.totalEscaneados}</p>
+                         </div>
+                         <div className="rounded-lg border bg-background/80 px-3 py-2">
+                           <p className="text-xs font-semibold text-muted-foreground">Faltantes · todos</p>
+                           <p className="font-mono text-2xl font-bold" data-testid="shared-faltantes">{detail.data.faltantes}</p>
+                         </div>
+                       </div>
                       <div className="flex flex-col sm:flex-row gap-4 mb-3 items-start sm:items-center justify-between">
                         <label className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary" htmlFor="audit-scan">
                           <ScanLine className="h-5 w-5" /> Escanear Serie o QR
@@ -486,43 +623,40 @@ export default function AuditoriasInventario() {
                             <Plus className="mr-2 h-4 w-4" /> Alta de color
                           </Button>
                         )}
-                        {pisosActivos.length > 0 && (
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Piso Real:</span>
-                            <Select value={selectedPiso} onValueChange={setSelectedPiso}>
-                              <SelectTrigger className="h-8 w-[160px] text-xs font-bold bg-background">
-                                <SelectValue placeholder="Sin piso" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="none">Sin piso</SelectItem>
-                                {pisosActivos.map(p => (
-                                  <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        )}
                       </div>
                       <CampoEscaneo
                         id="audit-scan"
                         ref={scanRef}
                         value={scan}
                         onChange={setScan}
-                        disabled={scanMutation.isPending || (pisosActivos.length > 0 && selectedPiso === "none")}
+                         disabled={!participation.active || !floorForScan || scanMutation.isPending}
                         data-testid="input-audit-scan"
-                        placeholder={pisosActivos.length > 0 && selectedPiso === "none" ? "Selecciona un piso antes de escanear" : "Serie o SKU-SERIE; Enter para registrar"}
+                         placeholder={!floorForScan ? "Selecciona un piso activo antes de escanear" : "Serie o SKU-SERIE; Enter para registrar"}
                         className="h-16 font-mono text-2xl shadow-inner bg-background/50 focus-visible:bg-background border-primary/30 focus-visible:border-primary transition-colors"
                         onScan={async (serie) => {
-                          await scanMutation.mutateAsync({ id: detail.data!.id, data: { serie, pisoId: selectedPiso === "none" ? null : Number(selectedPiso) } }, {
-                            onSuccess: (result) => {
-                              void invalidate(detail.data!.id);
-                              toast({
-                                title: result.duplicado ? "Serie ya registrada" : "Presencia registrada",
-                                description: `${result.serie} · ${result.clasificacion} · ${result.estadoActual}`,
-                              });
-                            },
-                            onError: (error) => toast({ title: "Escaneo rechazado", description: message(error), variant: "destructive" }),
-                          });
+                           // The input can still call onScan while disabled (camera/queued Enter).
+                           // Serialize locally as well as relying on the backend's row lock.
+                           if (!participation.isValid() || !mayScan || scanBusy.current || !currentDetail
+                             || !floorForScan) return;
+                           scanBusy.current = true;
+                           try {
+                             const result = await scanMutation.mutateAsync({
+                               id: currentDetail.id,
+                               data: { serie, pisoId: floorForScan.id },
+                             });
+                             void invalidate(currentDetail.id);
+                             toast({
+                               title: result.duplicado ? "Serie ya registrada" : "Presencia registrada",
+                                description: `${result.serie} · Registrado · ${result.estadoActual}${result.duplicado && result.usuarioNombre ? ` · Escaneado por ${result.usuarioNombre}` : ""}`,
+                             });
+                           } catch (error) {
+                             if (auditParticipantLimit(error) || (error && typeof error === "object" && "status" in error && [403, 409].includes(Number(error.status)))) {
+                               participation.reject(error);
+                             }
+                             toast({ title: "Escaneo rechazado", description: message(error), variant: "destructive" });
+                           } finally {
+                             scanBusy.current = false;
+                           }
                         }}
                       />
                     </div>
@@ -581,7 +715,7 @@ export default function AuditoriasInventario() {
                                     const sobrante = row.sobrante!;
                                     return (
                                       <TableRow key={row.serie} data-testid={`row-audit-result-sold-${row.serie}`} className="border-b-border/40 last:border-0 hover:bg-transparent">
-                                        <TableCell className="font-mono font-bold text-[13px]">{row.serie}</TableCell>
+                                         <TableCell className="font-mono font-bold text-[13px]">{row.serie}<AuditScannerAttribution row={row} /></TableCell>
                                         <TableCell className="text-[13px]">{row.producto}</TableCell>
                                         <TableCell className="font-mono text-right text-[13px]">{row.cantidad != null ? formatNumber(row.cantidad, { kind: "quantity" }) : '-'} <span className="text-[10px] text-muted-foreground ml-1">{row.unidad ? formatUnit(row.unidad) : ""}</span></TableCell>
                                         <TableCell className="text-xs">
@@ -651,7 +785,7 @@ export default function AuditoriasInventario() {
                                     const sobrante = row.sobrante!;
                                     return (
                                       <TableRow key={row.serie} data-testid={`row-audit-result-unknown-${row.serie}`} className="border-b-amber-200 dark:border-b-amber-900/40 last:border-0 hover:bg-transparent">
-                                        <TableCell className="font-mono font-bold text-[13px] text-amber-900 dark:text-amber-200">{row.serie}</TableCell>
+                                         <TableCell className="font-mono font-bold text-[13px] text-amber-900 dark:text-amber-200">{row.serie}<AuditScannerAttribution row={row} /></TableCell>
                                         <TableCell className="text-[13px] font-medium text-amber-700 dark:text-amber-400">
                                           <div className="flex flex-col gap-0.5">
                                             <span className={sobrante.estadoResolucion === 'PENDIENTE' ? 'font-bold' : ''}>{sobrante.estadoResolucion.replaceAll("_", " ")}</span>
@@ -716,7 +850,14 @@ export default function AuditoriasInventario() {
                                     return (
                                       <TableRow key={row.serie} data-testid={`row-audit-result-${row.serie}`} className="group border-b-border/40 last:border-0">
                                         <TableCell className="py-2">
-                                          <div className="font-mono font-bold text-[13px]">{row.serie}</div>
+                                           <div className="font-mono font-bold text-[13px]">{row.serie}</div>
+                                           <AuditScannerAttribution row={row} />
+                                           {isMalAcomodado && (
+                                             <div className="flex flex-wrap gap-2 mt-1 text-xs" data-testid={`audit-floor-difference-${row.serie}`}>
+                                               <span>Esperado: <strong>{row.pisoEsperado ?? "Sin piso"}</strong></span>
+                                               <span>Real: <strong>{row.pisoReal ?? "Desconocido"}</strong></span>
+                                             </div>
+                                           )}
                                         </TableCell>
                                         <TableCell className="text-[13px]">{row.producto ?? <span className="text-muted-foreground italic">Sin registro</span>}</TableCell>
                                         <TableCell className="font-mono text-right text-[13px]">{row.cantidad != null ? formatNumber(row.cantidad, { kind: "quantity" }) : '-'} <span className="text-[10px] text-muted-foreground ml-1">{row.unidad ? formatUnit(row.unidad) : ""}</span></TableCell>
@@ -784,7 +925,7 @@ export default function AuditoriasInventario() {
       )}
 
       {/* Print View */}
-      {detail.data && <AuditoriaInventarioPrint detail={detail.data} />}
+       {currentDetail && <AuditoriaInventarioPrint detail={currentDetail} />}
 
       <Dialog
         open={addColorOpen}
@@ -872,7 +1013,7 @@ export default function AuditoriasInventario() {
       </Dialog>
 
       {/* Cancel Dialog */}
-      <Dialog open={cancelOpen} onOpenChange={setCancelOpen}>
+      <Dialog open={cancelOpen && canEditAudit && currentDetail?.estado === "ABIERTA"} onOpenChange={setCancelOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-xl text-destructive flex items-center gap-2">
