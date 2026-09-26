@@ -1,0 +1,117 @@
+[
+  {
+    "tablename": "clientes",
+    "indexname": "clientes_activos_no_sistema_nombre_normalizado_uidx",
+    "indexdef": "CREATE UNIQUE INDEX clientes_activos_no_sistema_nombre_normalizado_uidx ON public.clientes USING btree (lower(btrim(nombre))) WHERE (activo AND (NOT es_sistema))"
+  },
+  {
+    "tablename": "clientes",
+    "indexname": "clientes_pkey",
+    "indexdef": "CREATE UNIQUE INDEX clientes_pkey ON public.clientes USING btree (id)"
+  },
+  {
+    "tablename": "movimientos_credito",
+    "indexname": "movimientos_credito_cliente_created_at_idx",
+    "indexdef": "CREATE INDEX movimientos_credito_cliente_created_at_idx ON public.movimientos_credito USING btree (cliente_id, created_at)"
+  },
+  {
+    "tablename": "movimientos_credito",
+    "indexname": "movimientos_credito_pkey",
+    "indexdef": "CREATE UNIQUE INDEX movimientos_credito_pkey ON public.movimientos_credito USING btree (id)"
+  },
+  {
+    "tablename": "movimientos_credito",
+    "indexname": "movimientos_credito_reverso_origen_uidx",
+    "indexdef": "CREATE UNIQUE INDEX movimientos_credito_reverso_origen_uidx ON public.movimientos_credito USING btree (movimiento_origen_id) WHERE ((tipo = 'REVERSO'::tipo_movimiento_credito) AND (movimiento_origen_id IS NOT NULL))"
+  },
+  {
+    "tablename": "movimientos_credito",
+    "indexname": "movimientos_credito_ticket_idx",
+    "indexdef": "CREATE INDEX movimientos_credito_ticket_idx ON public.movimientos_credito USING btree (ticket_id)"
+  },
+  {
+    "tablename": "movimientos_credito",
+    "indexname": "movimientos_operacion_uq_e1",
+    "indexdef": "CREATE UNIQUE INDEX movimientos_operacion_uq_e1 ON public.movimientos_credito USING btree (operacion_productor, operacion_clave) WHERE (operacion_productor IS NOT NULL)"
+  },
+  {
+    "tablename": "ticket_pagos",
+    "indexname": "ticket_pagos_pkey",
+    "indexdef": "CREATE UNIQUE INDEX ticket_pagos_pkey ON public.ticket_pagos USING btree (id)"
+  },
+  {
+    "tablename": "ticket_pagos",
+    "indexname": "ticket_pagos_ticket_idx",
+    "indexdef": "CREATE INDEX ticket_pagos_ticket_idx ON public.ticket_pagos USING btree (ticket_id)"
+  },
+  {
+    "tablename": "tickets",
+    "indexname": "tickets_cliente_created_at_idx",
+    "indexdef": "CREATE INDEX tickets_cliente_created_at_idx ON public.tickets USING btree (cliente_id, created_at)"
+  },
+  {
+    "tablename": "tickets",
+    "indexname": "tickets_cobrado_created_at_idx",
+    "indexdef": "CREATE INDEX tickets_cobrado_created_at_idx ON public.tickets USING btree (created_at, ubicacion_id) WHERE (cobrado = true)"
+  },
+  {
+    "tablename": "tickets",
+    "indexname": "tickets_cobrado_idx",
+    "indexdef": "CREATE INDEX tickets_cobrado_idx ON public.tickets USING btree (cobrado)"
+  },
+  {
+    "tablename": "tickets",
+    "indexname": "tickets_contabilizados_sitio_fecha_ga_candidate",
+    "indexdef": "CREATE INDEX tickets_contabilizados_sitio_fecha_ga_candidate ON public.tickets USING btree (ubicacion_id, (\nCASE\n    WHEN (documento_tipo = 'TICKET'::text) THEN cobrado_at\n    ELSE autorizado_at\nEND)) WHERE ((estado = 'VENDIDO'::estado_ticket) AND (((documento_tipo = 'TICKET'::text) AND (cobrado = true)) OR ((documento_tipo = 'NOTA'::text) AND (autorizacion_estado = 'AUTORIZADA'::text))))"
+  },
+  {
+    "tablename": "tickets",
+    "indexname": "tickets_created_at_idx",
+    "indexdef": "CREATE INDEX tickets_created_at_idx ON public.tickets USING btree (created_at)"
+  },
+  {
+    "tablename": "tickets",
+    "indexname": "tickets_estado_idx",
+    "indexdef": "CREATE INDEX tickets_estado_idx ON public.tickets USING btree (estado)"
+  },
+  {
+    "tablename": "tickets",
+    "indexname": "tickets_folio_idx",
+    "indexdef": "CREATE INDEX tickets_folio_idx ON public.tickets USING btree (folio)"
+  },
+  {
+    "tablename": "tickets",
+    "indexname": "tickets_folio_unique",
+    "indexdef": "CREATE UNIQUE INDEX tickets_folio_unique ON public.tickets USING btree (folio)"
+  },
+  {
+    "tablename": "tickets",
+    "indexname": "tickets_pendientes_corte_ga_candidate",
+    "indexdef": "CREATE INDEX tickets_pendientes_corte_ga_candidate ON public.tickets USING btree (ubicacion_id, created_at, id) WHERE ((estado = 'VENDIDO'::estado_ticket) AND (((documento_tipo = 'TICKET'::text) AND (cobrado = false)) OR ((documento_tipo = 'NOTA'::text) AND (autorizacion_estado = 'PENDIENTE'::text))))"
+  },
+  {
+    "tablename": "tickets",
+    "indexname": "tickets_pkey",
+    "indexdef": "CREATE UNIQUE INDEX tickets_pkey ON public.tickets USING btree (id)"
+  },
+  {
+    "tablename": "tickets",
+    "indexname": "tickets_sesion_estado_idx",
+    "indexdef": "CREATE INDEX tickets_sesion_estado_idx ON public.tickets USING btree (sesion_caja_id, estado)"
+  },
+  {
+    "tablename": "tickets",
+    "indexname": "tickets_ubicacion_created_at_idx",
+    "indexdef": "CREATE INDEX tickets_ubicacion_created_at_idx ON public.tickets USING btree (ubicacion_id, created_at)"
+  },
+  {
+    "tablename": "tickets",
+    "indexname": "tickets_uuid_cliente_idx",
+    "indexdef": "CREATE INDEX tickets_uuid_cliente_idx ON public.tickets USING btree (uuid_cliente)"
+  },
+  {
+    "tablename": "tickets",
+    "indexname": "tickets_uuid_cliente_unique",
+    "indexdef": "CREATE UNIQUE INDEX tickets_uuid_cliente_unique ON public.tickets USING btree (uuid_cliente)"
+  }
+]

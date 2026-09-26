@@ -1,0 +1,106 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "native-fresh-six-roll-entry-at-open-synthetic-site",
+      "status": "PASS",
+      "evidence": {
+        "previouslyAcknowledgedEntryId": 6,
+        "noEntryReplay": true
+      }
+    },
+    {
+      "id": "native-fresh-ticket-0",
+      "status": "PASS",
+      "evidence": {
+        "id": 109513,
+        "folio": 13,
+        "nativeProvenance": true,
+        "ubicacionId": 840,
+        "readbackOnly": true
+      }
+    },
+    {
+      "id": "native-fresh-ticket-1",
+      "status": "PASS",
+      "evidence": {
+        "id": 109514,
+        "folio": 14,
+        "nativeProvenance": true,
+        "ubicacionId": 840,
+        "readbackOnly": true
+      }
+    },
+    {
+      "id": "native-fresh-ticket-2",
+      "status": "PASS",
+      "evidence": {
+        "id": 109515,
+        "folio": 15,
+        "nativeProvenance": true,
+        "ubicacionId": 840
+      }
+    },
+    {
+      "id": "native-fresh-ticket-3",
+      "status": "PASS",
+      "evidence": {
+        "id": 109516,
+        "folio": 16,
+        "nativeProvenance": true,
+        "ubicacionId": 840
+      }
+    },
+    {
+      "id": "native-fresh-ticket-4",
+      "status": "PASS",
+      "evidence": {
+        "id": 109517,
+        "folio": 17,
+        "nativeProvenance": true,
+        "ubicacionId": 840
+      }
+    },
+    {
+      "id": "native-fresh-ticket-5",
+      "status": "PASS",
+      "evidence": {
+        "id": 109518,
+        "folio": 18,
+        "nativeProvenance": true,
+        "ubicacionId": 840
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "tarea-2/fresh-six-native-payments-completion/native-fresh-six-roll-entry-at-open-synthetic-site-0.png",
+      "sha256": "5e29cfe37cfdbd2c4f7c1b26d76256bd3cf42df31b8d0150a540e147aed19af3"
+    },
+    {
+      "file": "tarea-2/fresh-six-native-payments-completion/native-fresh-ticket-0-0.png",
+      "sha256": "5e29cfe37cfdbd2c4f7c1b26d76256bd3cf42df31b8d0150a540e147aed19af3"
+    },
+    {
+      "file": "tarea-2/fresh-six-native-payments-completion/native-fresh-ticket-1-0.png",
+      "sha256": "5e29cfe37cfdbd2c4f7c1b26d76256bd3cf42df31b8d0150a540e147aed19af3"
+    },
+    {
+      "file": "tarea-2/fresh-six-native-payments-completion/native-fresh-ticket-2-0.png",
+      "sha256": "650e478282f623e9deebf4432b442942830356124289119ad3d929e8f9384be6"
+    },
+    {
+      "file": "tarea-2/fresh-six-native-payments-completion/native-fresh-ticket-3-0.png",
+      "sha256": "3e1d7c4a1a10b1360671dbbcc2f4cfac027ee433c3de84a859c70b8e74d5043d"
+    },
+    {
+      "file": "tarea-2/fresh-six-native-payments-completion/native-fresh-ticket-4-0.png",
+      "sha256": "69ce64573d1b07f59816628ded181d819d92caa0a35d0749586025290052a1bb"
+    },
+    {
+      "file": "tarea-2/fresh-six-native-payments-completion/native-fresh-ticket-5-0.png",
+      "sha256": "9f63e77dc0ff8802ee2c02ed9dd1e858d1c1f805cdf21b1d71fd694d754453ca"
+    }
+  ],
+  "startedAt": "2026-09-26T04:16:48.702Z"
+}

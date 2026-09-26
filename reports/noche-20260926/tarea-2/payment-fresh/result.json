@@ -1,0 +1,170 @@
+{
+  "status": "PASS",
+  "definition": "Six actual native cash confirmations under annual load; cohorts before/after are labels from fixture, NOT before/after index experiment. Same current inventory-only frontend for all6.",
+  "apiSha256": "e62a79333d0ee1433c114656af980e33ff420b728688a121ee586efdfab1b30d",
+  "frontendIndexSha256": "09e9fb57f7fc495b98107b86d796e5cbce980aa5755a62a6bb47a87bd98ad9c9",
+  "identity": {
+    "db": "noche_20260926"
+  },
+  "tickets": [
+    {
+      "id": 109513,
+      "folio": 13,
+      "ubicacion_id": 840,
+      "cobrado": true,
+      "total": "100.00",
+      "sesion_caja_id": 5,
+      "payment_count": 1,
+      "paid": "100.00",
+      "methods": [
+        "EFECTIVO"
+      ]
+    },
+    {
+      "id": 109514,
+      "folio": 14,
+      "ubicacion_id": 840,
+      "cobrado": true,
+      "total": "100.00",
+      "sesion_caja_id": 5,
+      "payment_count": 1,
+      "paid": "100.00",
+      "methods": [
+        "EFECTIVO"
+      ]
+    },
+    {
+      "id": 109515,
+      "folio": 15,
+      "ubicacion_id": 840,
+      "cobrado": true,
+      "total": "100.00",
+      "sesion_caja_id": 5,
+      "payment_count": 1,
+      "paid": "100.00",
+      "methods": [
+        "EFECTIVO"
+      ]
+    },
+    {
+      "id": 109516,
+      "folio": 16,
+      "ubicacion_id": 840,
+      "cobrado": true,
+      "total": "100.00",
+      "sesion_caja_id": 5,
+      "payment_count": 1,
+      "paid": "100.00",
+      "methods": [
+        "EFECTIVO"
+      ]
+    },
+    {
+      "id": 109517,
+      "folio": 17,
+      "ubicacion_id": 840,
+      "cobrado": true,
+      "total": "100.00",
+      "sesion_caja_id": 5,
+      "payment_count": 1,
+      "paid": "100.00",
+      "methods": [
+        "EFECTIVO"
+      ]
+    },
+    {
+      "id": 109518,
+      "folio": 18,
+      "ubicacion_id": 840,
+      "cobrado": true,
+      "total": "100.00",
+      "sesion_caja_id": 5,
+      "payment_count": 1,
+      "paid": "100.00",
+      "methods": [
+        "EFECTIVO"
+      ]
+    }
+  ],
+  "oldTickets": [
+    {
+      "id": 2,
+      "cobrado": false
+    },
+    {
+      "id": 3,
+      "cobrado": false
+    },
+    {
+      "id": 4,
+      "cobrado": false
+    },
+    {
+      "id": 5,
+      "cobrado": false
+    },
+    {
+      "id": 6,
+      "cobrado": false
+    },
+    {
+      "id": 7,
+      "cobrado": false
+    }
+  ],
+  "samples": [
+    {
+      "cohort": "before",
+      "sample": "1",
+      "ticketId": 109513,
+      "durationMs": 1601.840164000001,
+      "httpStatus": 200,
+      "status": "PASS"
+    },
+    {
+      "cohort": "before",
+      "sample": "2",
+      "ticketId": 109514,
+      "durationMs": 1504.793415,
+      "httpStatus": 200,
+      "status": "PASS"
+    },
+    {
+      "cohort": "before",
+      "sample": "3",
+      "ticketId": 109515,
+      "durationMs": 1517.622091000001,
+      "httpStatus": 200,
+      "status": "PASS"
+    },
+    {
+      "cohort": "after",
+      "sample": "1",
+      "ticketId": 109516,
+      "durationMs": 1372.170779,
+      "httpStatus": 200,
+      "status": "PASS"
+    },
+    {
+      "cohort": "after",
+      "sample": "2",
+      "ticketId": 109517,
+      "durationMs": 1508.3173270000007,
+      "httpStatus": 200,
+      "status": "PASS"
+    },
+    {
+      "cohort": "after",
+      "sample": "3",
+      "ticketId": 109518,
+      "durationMs": 1522.112183000001,
+      "httpStatus": 200,
+      "status": "PASS"
+    }
+  ],
+  "medianMs": 1512.9697090000009,
+  "maxMs": 1601.840164000001,
+  "thresholdMs": 2000,
+  "frontendChange": "PIEZA inventory candidate, no payment source changes per MAIN authorization",
+  "at": "2026-09-26T04:21:28.702Z"
+}

@@ -1,0 +1,7 @@
+{
+  "status": 409,
+  "body": {
+    "error": "Ya existe una sesión de caja para la fecha operativa de hoy, abierta o cerrada.",
+    "code": "SESSION_ALREADY_EXISTS_TODAY"
+  }
+}

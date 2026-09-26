@@ -1,0 +1,65 @@
+{
+  "status": "PARTIAL_OR_BLOCKED",
+  "checks": [
+    {
+      "id": "native-fresh-six-roll-entry-at-open-synthetic-site",
+      "status": "PASS",
+      "evidence": {
+        "entryId": 6,
+        "siteId": 840,
+        "siteName": "NOCHE PERF 1",
+        "newRolls": 6,
+        "untouchedOldTickets": true
+      }
+    },
+    {
+      "id": "native-fresh-ticket-0",
+      "status": "PASS",
+      "evidence": {
+        "id": 109513,
+        "folio": 13,
+        "nativeProvenance": true,
+        "ubicacionId": 840
+      }
+    },
+    {
+      "id": "native-fresh-ticket-1",
+      "status": "PASS",
+      "evidence": {
+        "id": 109514,
+        "folio": 14,
+        "nativeProvenance": true,
+        "ubicacionId": 840
+      }
+    },
+    {
+      "id": "native-fresh-ticket-2",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('button-select-client')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" role=\"combobox\" data-state=\"closed\" aria-expanded=\"false\" aria-haspopup=\"dialog\" data-testid=\"button-select-client\" aria-label=\"Seleccionar cliente requerido\" class=\"inline-flex items-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:bg-accent hover:text-accent-foreground p…>…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m    - element is not stable\u001b[22m\n\u001b[2m  - retrying click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m  - element was detached from the DOM, retrying\u001b[22m\n"
+    },
+    {
+      "id": "setup",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Stop after uncertain/failed ticket; no replay"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "tarea-2/fresh-six-native-payments/native-fresh-six-roll-entry-at-open-synthetic-site-0.png",
+      "sha256": "2f9a4ffe8b5387304c070b0046ef8529d8170628aa12a4b1c37f3376c52f322e"
+    },
+    {
+      "file": "tarea-2/fresh-six-native-payments/native-fresh-ticket-0-0.png",
+      "sha256": "428b8c8569e68c3af46f5e876401f2a9d58044340bbf81cc456255460e64c2ec"
+    },
+    {
+      "file": "tarea-2/fresh-six-native-payments/native-fresh-ticket-1-0.png",
+      "sha256": "7e155429584876f87ae67f3a99c577f8972b4a773b8c02e858e328f8bad405be"
+    },
+    {
+      "file": "tarea-2/fresh-six-native-payments/native-fresh-ticket-2-0.png",
+      "sha256": "1508f6f585ad35e54c49619b32d533044b60959ede7f44325ef9f2309b57df38"
+    }
+  ],
+  "startedAt": "2026-09-26T04:14:43.480Z"
+}

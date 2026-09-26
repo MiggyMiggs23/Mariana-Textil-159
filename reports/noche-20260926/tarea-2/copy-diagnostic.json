@@ -1,0 +1,16 @@
+{
+  "identity": [
+    {
+      "database": "noche_20260926",
+      "actor": "neondb_owner"
+    }
+  ],
+  "activity": [],
+  "counts": [
+    {
+      "tickets": "54762",
+      "movements": "13692",
+      "nonsystemclients": "2577"
+    }
+  ]
+}

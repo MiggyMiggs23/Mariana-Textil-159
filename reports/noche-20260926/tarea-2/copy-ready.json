@@ -1,0 +1,21 @@
+{
+  "status": "DATABASE_READY_NOT_STARTED",
+  "branch": "br-steep-field-axnpxgd0",
+  "project": "withered-block-09991755",
+  "identity": {
+    "database": "noche_20260926",
+    "actor": "neondb_owner"
+  },
+  "clients": {
+    "total": 2576,
+    "nonsystem": 2575
+  },
+  "sourceReadOnly": true,
+  "restoredFrom": "application pg_dump consistent snapshot",
+  "dumpSha256": "ba8413b6ae74ada9adb24e93d37042eca31146aa45934d9b4eae766d0a7d433a",
+  "admin": {
+    "id": 234,
+    "usuario": "e2e.noche.admin"
+  },
+  "createdAt": "2026-09-26T02:22:07.809Z"
+}

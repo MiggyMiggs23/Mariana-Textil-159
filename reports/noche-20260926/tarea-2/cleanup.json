@@ -1,0 +1,52 @@
+{
+  "status": "CLEANUP_CONFIRMED",
+  "at": "2026-09-26T04:23:23.757Z",
+  "authorizedBy": "MAIN, after stopping private launcher; only own branch and private directories",
+  "neon": {
+    "project": "withered-block-09991755",
+    "branch": "br-steep-field-axnpxgd0",
+    "deleteCall": "success, isError=false",
+    "subsequentIndependentDescribeBranch": "HTTP 404 branch not found",
+    "otherBranchesDeleted": 0
+  },
+  "listeners": [
+    {
+      "port": 18227,
+      "status": "ECONNREFUSED"
+    },
+    {
+      "port": 18228,
+      "status": "ECONNREFUSED"
+    }
+  ],
+  "applicationReadOnly": {
+    "database": "heliumdb",
+    "read_only": "on",
+    "checks": {
+      "inherited_customers": 2575,
+      "own_admin": 0,
+      "own_sites": 0,
+      "own_products": 0,
+      "own_rolls": 0,
+      "annual_tickets": 0,
+      "experimental_index": 0
+    },
+    "scope": "Own task fixture patterns and inherited client count, not a whole-database equality claim"
+  },
+  "privateRemoval": [
+    {
+      "path": "/tmp/noche-20260926",
+      "existed": true,
+      "files": 735,
+      "absentAfter": true
+    },
+    {
+      "path": "/home/runner/workspace/private.local/night-disposable",
+      "existed": true,
+      "files": 44,
+      "absentAfter": true
+    }
+  ],
+  "retained": "All reports, screenshots, scripts, timing results and sanitized fixture readbacks",
+  "managedWorkflowsModified": false
+}

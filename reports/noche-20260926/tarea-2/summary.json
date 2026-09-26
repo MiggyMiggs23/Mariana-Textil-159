@@ -1,0 +1,172 @@
+{
+  "at": "2026-09-26T04:10:43.989Z",
+  "groups": [
+    {
+      "phase": "before",
+      "operation": "list",
+      "attempted": 3,
+      "succeeded": 3,
+      "blocked": [],
+      "medianMs": 2688.6625840000006,
+      "maxMs": 3128.4447040000005,
+      "allWithinGoal": false
+    },
+    {
+      "phase": "before",
+      "operation": "search",
+      "attempted": 3,
+      "succeeded": 3,
+      "blocked": [],
+      "medianMs": 1333.124819999999,
+      "maxMs": 1390.2387290000006,
+      "allWithinGoal": true
+    },
+    {
+      "phase": "before",
+      "operation": "account",
+      "attempted": 3,
+      "succeeded": 0,
+      "blocked": [
+        {
+          "sample": "1",
+          "status": "ERROR"
+        },
+        {
+          "sample": "2",
+          "status": "ERROR"
+        },
+        {
+          "sample": "3",
+          "status": "ERROR"
+        }
+      ],
+      "medianMs": null,
+      "maxMs": null,
+      "allWithinGoal": false
+    },
+    {
+      "phase": "before",
+      "operation": "payment",
+      "attempted": 1,
+      "succeeded": 0,
+      "blocked": [
+        {
+          "sample": "1",
+          "status": "BLOCKED",
+          "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText('Ticket folio 2', { exact: true }).locator('../../..').getByRole('button', { name: 'Cobrar', exact: true })\u001b[22m\n"
+        }
+      ],
+      "medianMs": null,
+      "maxMs": null,
+      "allWithinGoal": false
+    },
+    {
+      "phase": "before",
+      "operation": "cut",
+      "attempted": 3,
+      "succeeded": 2,
+      "blocked": [
+        {
+          "sample": "1",
+          "status": "BLOCKED",
+          "error": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('heading', { name: 'Caja Operativa', exact: true }) to be visible\u001b[22m\n"
+        }
+      ],
+      "medianMs": 1969.5512059999992,
+      "maxMs": 1969.7170829999995,
+      "allWithinGoal": false
+    },
+    {
+      "phase": "before",
+      "operation": "credit",
+      "attempted": 3,
+      "succeeded": 3,
+      "blocked": [],
+      "medianMs": 11792.056926,
+      "maxMs": 12355.426099999999,
+      "allWithinGoal": false
+    },
+    {
+      "phase": "after",
+      "operation": "list",
+      "attempted": 3,
+      "succeeded": 3,
+      "blocked": [],
+      "medianMs": 2634.3294290000003,
+      "maxMs": 2678.4189450000013,
+      "allWithinGoal": false
+    },
+    {
+      "phase": "after",
+      "operation": "search",
+      "attempted": 3,
+      "succeeded": 3,
+      "blocked": [],
+      "medianMs": 1268.2135930000004,
+      "maxMs": 1330.2257630000004,
+      "allWithinGoal": true
+    },
+    {
+      "phase": "after",
+      "operation": "account",
+      "attempted": 3,
+      "succeeded": 0,
+      "blocked": [
+        {
+          "sample": "1",
+          "status": "ERROR"
+        },
+        {
+          "sample": "2",
+          "status": "ERROR"
+        },
+        {
+          "sample": "3",
+          "status": "ERROR"
+        }
+      ],
+      "medianMs": null,
+      "maxMs": null,
+      "allWithinGoal": false
+    },
+    {
+      "phase": "after",
+      "operation": "payment",
+      "attempted": 0,
+      "succeeded": 0,
+      "blocked": [],
+      "medianMs": null,
+      "maxMs": null,
+      "allWithinGoal": false
+    },
+    {
+      "phase": "after",
+      "operation": "cut",
+      "attempted": 3,
+      "succeeded": 3,
+      "blocked": [],
+      "medianMs": 1580.7948579999993,
+      "maxMs": 1933.6443229999986,
+      "allWithinGoal": true
+    },
+    {
+      "phase": "after",
+      "operation": "credit",
+      "attempted": 3,
+      "succeeded": 3,
+      "blocked": [],
+      "medianMs": 11496.150646,
+      "maxMs": 12024.020648,
+      "allWithinGoal": false
+    }
+  ],
+  "paymentSupplement": {
+    "file": "payment-fresh/result.json",
+    "status": "PASS",
+    "medianMs": 1512.9697090000009,
+    "maxMs": 1601.840164000001,
+    "samples": 6,
+    "notIndexComparison": true,
+    "frontendIndexSha256": "09e9fb57f7fc495b98107b86d796e5cbce980aa5755a62a6bb47a87bd98ad9c9"
+  }
+}

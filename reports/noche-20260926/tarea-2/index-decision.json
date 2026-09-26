@@ -1,0 +1,6 @@
+{
+  "decision": "REJECTED_AND_REMOVED_ON_COPY",
+  "reason": "Measured SQL151.382ms before184.663ms after; browser targets still exceeded. No demonstrated improvement, no liveDDL.",
+  "index": "noche_perf_ticket_lineas_cover",
+  "effectiveDatabase": "noche_20260926"
+}

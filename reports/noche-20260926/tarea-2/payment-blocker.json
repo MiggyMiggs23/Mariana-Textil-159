@@ -1,0 +1,74 @@
+{
+  "status": "BLOCKED",
+  "reason": "Native before/after tickets are at site1; its same-day session is closed; native reopen returned409. No ticket/site/history rewritten, no payment retry after unknown result.",
+  "tickets": [
+    {
+      "id": 2,
+      "folio": 2,
+      "ubicacion_id": 1,
+      "cobrado": false,
+      "sesion_caja_id": null
+    },
+    {
+      "id": 3,
+      "folio": 3,
+      "ubicacion_id": 1,
+      "cobrado": false,
+      "sesion_caja_id": null
+    },
+    {
+      "id": 4,
+      "folio": 4,
+      "ubicacion_id": 1,
+      "cobrado": false,
+      "sesion_caja_id": null
+    },
+    {
+      "id": 5,
+      "folio": 5,
+      "ubicacion_id": 1,
+      "cobrado": false,
+      "sesion_caja_id": null
+    },
+    {
+      "id": 6,
+      "folio": 6,
+      "ubicacion_id": 1,
+      "cobrado": false,
+      "sesion_caja_id": null
+    },
+    {
+      "id": 7,
+      "folio": 7,
+      "ubicacion_id": 1,
+      "cobrado": false,
+      "sesion_caja_id": null
+    }
+  ],
+  "sessions": [
+    {
+      "id": 1,
+      "ubicacion_id": 1,
+      "estado": "CERRADA",
+      "fecha_operativa": "2026-09-25T00:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "ubicacion_id": 840,
+      "estado": "ABIERTA",
+      "fecha_operativa": "2026-09-25T00:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "ubicacion_id": 841,
+      "estado": "ABIERTA",
+      "fecha_operativa": "2026-09-25T00:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "ubicacion_id": 842,
+      "estado": "ABIERTA",
+      "fecha_operativa": "2026-09-25T00:00:00.000Z"
+    }
+  ]
+}
