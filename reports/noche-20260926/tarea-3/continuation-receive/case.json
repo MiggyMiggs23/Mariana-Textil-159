@@ -1,0 +1,21 @@
+{
+  "id": "continuation-receive",
+  "task": 3,
+  "status": "PASS",
+  "exitCode": 0,
+  "resultFile": "tarea-3/continuation-receive/receive-result.json",
+  "observations": [
+    {
+      "item": "native-login",
+      "status": 200
+    },
+    {
+      "item": "site-control",
+      "status": "OBSERVED"
+    },
+    {
+      "item": "receive",
+      "status": 201
+    }
+  ]
+}

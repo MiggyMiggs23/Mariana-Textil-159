@@ -1,0 +1,13 @@
+{
+  "id": "flow-pay-transfer",
+  "task": 3,
+  "status": "PASS",
+  "exitCode": 0,
+  "resultFile": "tarea-3/flow-pay-transfer/pay-transfer-result.json",
+  "observations": [
+    {
+      "item": "pay-transfer",
+      "status": 200
+    }
+  ]
+}

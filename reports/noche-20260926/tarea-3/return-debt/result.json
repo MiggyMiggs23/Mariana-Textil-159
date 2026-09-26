@@ -1,0 +1,22 @@
+{
+  "status": "PARTIAL_OR_BLOCKED",
+  "checks": [
+    {
+      "id": "return-debt",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Frozen active UI offers no roll-return action here; business refund remains BLOCKED, not PASS. No gate changed."
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "tarea-3/return-debt/frozen-return-availability.png",
+      "sha256": "a893408b6dede8ff8bf0974e67406bd91c72fb2ab8b423b7f2a66c7979a5d324"
+    },
+    {
+      "file": "tarea-3/return-debt/return-debt-0.png",
+      "sha256": "a893408b6dede8ff8bf0974e67406bd91c72fb2ab8b423b7f2a66c7979a5d324"
+    }
+  ],
+  "startedAt": "2026-09-26T03:06:51.242Z",
+  "technicalErrors": []
+}

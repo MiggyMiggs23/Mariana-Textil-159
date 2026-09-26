@@ -1,0 +1,17 @@
+{
+  "id": "flow-receipt",
+  "task": 3,
+  "status": "PASS",
+  "exitCode": 0,
+  "resultFile": "tarea-3/flow-receipt/receipt-result.json",
+  "observations": [
+    {
+      "item": "print",
+      "status": 200
+    },
+    {
+      "item": "reprint",
+      "status": 200
+    }
+  ]
+}

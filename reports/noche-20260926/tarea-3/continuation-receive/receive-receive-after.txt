@@ -1,0 +1,97 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Mariana
+2
+N
+
+Noche disposable administrator
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Cobros pendientes de aplicación
+Dinero recibido pendiente de aplicación
+
+No disminuye deuda ni aumenta disponible o saldo a favor mientras espera autorización.
+
+Abrir bandeja de pendientesOcultar captura
+Buscar cliente autorizado
+Buscar cliente
+Selecciona cliente…
+NOCHE26 CREDIT 1790391440045
+Recepción real · NOCHE26 CREDIT 1790391440045 · Entrada CAJA
+
+No es recaptura. Recibido sin aplicar no constituye saldo a favor. Contexto: 25/9/2026, 9:05:01 p.m..
+
+Comprobando y registrando… No repitas la operación.
+
+Operación confirmada · PENDIENTE. Retenido: $900.00.
+
+Ver recepción y cronología
+Recibo inmediato
+Avisos ADMIN: desde tres días de recepción
+Actualizar lista
+
+No hay recepciones en este alcance/filtro.
+
+Primera página
+Siguiente
+Recepciones · importe y antigüedad
+Estado
+Todos
+PENDIENTE
+PARCIAL
+APLICADO
+DEVUELTO
+Actualizar lista
+NOCHE26 CREDIT 1790391440045 · PENDIENTE
+
+Recibido $900.00 · aplicado $0.00 · pendiente $900.00
+
+25/9/2026, 9:05:03 p.m. · 0 días desde recepción · Mariana
+
+Recibo inmediato
+Primera página
+Siguiente

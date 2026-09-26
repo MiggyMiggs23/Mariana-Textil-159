@@ -1,0 +1,21 @@
+{
+  "id": "flow-e4",
+  "task": 3,
+  "status": "PASS",
+  "exitCode": 0,
+  "resultFile": "tarea-3/flow-e4/e4-result.json",
+  "observations": [
+    {
+      "item": "missing-reason-native-submit",
+      "status": "PASS_HTML_VALIDATION"
+    },
+    {
+      "item": "insufficient-no-unlock",
+      "status": "PASS_REJECTED_UI"
+    },
+    {
+      "item": "admin-unlock-native",
+      "status": 201
+    }
+  ]
+}

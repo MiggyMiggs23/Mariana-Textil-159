@@ -1,0 +1,37 @@
+{
+  "id": "continuation-reject",
+  "task": 3,
+  "status": "PASS",
+  "exitCode": 0,
+  "resultFile": "tarea-3/continuation-reject/reject-result.json",
+  "observations": [
+    {
+      "item": "native-login",
+      "status": 200
+    },
+    {
+      "item": "site-control",
+      "status": "OBSERVED"
+    },
+    {
+      "item": "initial-proposal",
+      "status": 201
+    },
+    {
+      "item": "site-control",
+      "status": "OBSERVED"
+    },
+    {
+      "item": "reject-proposal",
+      "status": 200
+    },
+    {
+      "item": "site-control",
+      "status": "OBSERVED"
+    },
+    {
+      "item": "reproposal",
+      "status": 201
+    }
+  ]
+}

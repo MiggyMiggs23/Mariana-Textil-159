@@ -1,0 +1,21 @@
+{
+  "id": "continuation-fixtures",
+  "task": 3,
+  "status": "PARTIAL_OR_BLOCKED",
+  "exitCode": 1,
+  "resultFile": "tarea-3/continuation-fixtures/fixtures-result.json",
+  "observations": [
+    {
+      "item": "native-login",
+      "status": 200
+    },
+    {
+      "item": "supplier",
+      "status": 201
+    },
+    {
+      "item": "product",
+      "status": 201
+    }
+  ]
+}

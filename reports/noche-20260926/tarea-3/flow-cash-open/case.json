@@ -1,0 +1,13 @@
+{
+  "id": "flow-cash-open",
+  "task": 3,
+  "status": "PASS",
+  "exitCode": 0,
+  "resultFile": "tarea-3/flow-cash-open/cash-open-result.json",
+  "observations": [
+    {
+      "item": "open-cash",
+      "status": 201
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "flow-credit-sale",
+  "task": 3,
+  "status": "PASS",
+  "exitCode": 0,
+  "resultFile": "tarea-3/flow-credit-sale/credit-sale-result.json",
+  "observations": [
+    {
+      "item": "create-sale-native",
+      "status": 201
+    }
+  ]
+}

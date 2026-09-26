@@ -1,0 +1,105 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Vista Global
+2
+N
+
+Noche disposable administrator
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Recibo E3-1-00000001
+
+Dos copias A5. La solicitud se audita; cancelar la impresora no vuelve a cobrar.
+
+Ver detalle del movimiento #2
+
+Solicitar impresión / reimpresión
+Mariana Textil · Recibo de abono
+Copia Cliente · Página 1 / 1
+E3-1-00000001
+$100.00
+
+Cliente: NOCHE26 CREDIT 1790391440045
+
+Sitio receptor: Mariana · Recibió / registró: Noche disposable administrator
+
+Recepción: 25/9/2026, 9:04:35 p.m. · Registro: 25/9/2026, 9:04:35 p.m.
+
+Medio: Efectivo · Cuenta: CAJA FISICA
+
+Nota	Saldo anterior	Aplicado	Saldo posterior
+10	$1,000.00	$100.00	$900.00
+
+Remanente del abono: $0.00 · Saldo a favor total: $0.00 · Deuda total posterior: $900.00
+
+Firma de quien entrega
+Firma de quien recibe
+
+REIMPRESIÓN / copia de evidencia emitida · 25/9/2026, 9:04:40 p.m. · Movimiento 2
+
+Mariana Textil · Recibo de abono
+Copia Tienda · Página 1 / 1
+E3-1-00000001
+$100.00
+
+Cliente: NOCHE26 CREDIT 1790391440045
+
+Sitio receptor: Mariana · Recibió / registró: Noche disposable administrator
+
+Recepción: 25/9/2026, 9:04:35 p.m. · Registro: 25/9/2026, 9:04:35 p.m.
+
+Medio: Efectivo · Cuenta: CAJA FISICA
+
+Nota	Saldo anterior	Aplicado	Saldo posterior
+10	$1,000.00	$100.00	$900.00
+
+Remanente del abono: $0.00 · Saldo a favor total: $0.00 · Deuda total posterior: $900.00
+
+Firma de quien entrega
+Firma de quien recibe
+
+REIMPRESIÓN / copia de evidencia emitida · 25/9/2026, 9:04:40 p.m. · Movimiento 2

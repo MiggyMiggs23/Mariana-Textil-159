@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "prior-close-never-submitted-current-open",
+      "status": "PASS",
+      "evidence": {
+        "sessionId": 1,
+        "expected": "2548.00",
+        "independentNativeLedger": "0 opening +1000 cash ticket +100 ordinary +1450 settlement -1 insufficient authorized exit -1 ordinary exit =2548; transfer and retained transfer excluded."
+      }
+    }
+  ],
+  "screenshots": [],
+  "startedAt": "2026-09-26T03:20:29.396Z"
+}

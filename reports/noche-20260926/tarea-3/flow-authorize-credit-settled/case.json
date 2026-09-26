@@ -1,0 +1,13 @@
+{
+  "id": "flow-authorize-credit-settled",
+  "task": 3,
+  "status": "PASS",
+  "exitCode": 0,
+  "resultFile": "tarea-3/flow-authorize-credit-settled/authorize-credit-result.json",
+  "observations": [
+    {
+      "item": "step-0",
+      "status": 200
+    }
+  ]
+}

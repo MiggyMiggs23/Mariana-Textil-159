@@ -1,0 +1,9 @@
+Mariana Textil
+
+Sistema de Gestión Interna
+
+Usuario
+Contraseña
+Ingresar
+Error de acceso
+No se pudo iniciar sesión por un error del servidor. Intenta de nuevo.

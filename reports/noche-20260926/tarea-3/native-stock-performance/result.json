@@ -1,0 +1,127 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "new-entry-with-required-floor",
+      "status": "PASS",
+      "evidence": {
+        "entryId": 3,
+        "rolls": 20,
+        "floorName": "Planta Alta"
+      }
+    },
+    {
+      "id": "performance-ticket-0",
+      "status": "PASS",
+      "evidence": {
+        "id": 2,
+        "folio": 2,
+        "nativeProvenance": true
+      }
+    },
+    {
+      "id": "performance-ticket-1",
+      "status": "PASS",
+      "evidence": {
+        "id": 3,
+        "folio": 3,
+        "nativeProvenance": true
+      }
+    },
+    {
+      "id": "performance-ticket-2",
+      "status": "PASS",
+      "evidence": {
+        "id": 4,
+        "folio": 4,
+        "nativeProvenance": true
+      }
+    },
+    {
+      "id": "performance-ticket-3",
+      "status": "PASS",
+      "evidence": {
+        "id": 5,
+        "folio": 5,
+        "nativeProvenance": true
+      }
+    },
+    {
+      "id": "performance-ticket-4",
+      "status": "PASS",
+      "evidence": {
+        "id": 6,
+        "folio": 6,
+        "nativeProvenance": true
+      }
+    },
+    {
+      "id": "performance-ticket-5",
+      "status": "PASS",
+      "evidence": {
+        "id": 7,
+        "folio": 7,
+        "nativeProvenance": true
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "tarea-3/native-stock-performance/entry20-before.png",
+      "sha256": "2a3eda55894246d06baa1f9686506b0dc519d2576b691bd956000c4a9a19c228"
+    },
+    {
+      "file": "tarea-3/native-stock-performance/new-entry-with-required-floor-0.png",
+      "sha256": "b5e6a87bcf2729bbe2b2f605fde752eedda8f18cb0f45e03f0082dac6b9982f8"
+    },
+    {
+      "file": "tarea-3/native-stock-performance/ticket0-before.png",
+      "sha256": "c7785723e93fe2dd42eb865c66cc54d8a949e73330e0f96c329f8316d125f13f"
+    },
+    {
+      "file": "tarea-3/native-stock-performance/performance-ticket-0-0.png",
+      "sha256": "f716b1b123434bb5ec003766bdc37bea9f84d38c1f747e3a5af22f96feb481dc"
+    },
+    {
+      "file": "tarea-3/native-stock-performance/ticket1-before.png",
+      "sha256": "0a581fe5e75f1588554e0302a9a56506a779cb8df4c07f8aeab3d8e788455585"
+    },
+    {
+      "file": "tarea-3/native-stock-performance/performance-ticket-1-0.png",
+      "sha256": "f48914d4aaa8c285521a4379e458676370e6cadc0e850fa03d1d0815d8f98e65"
+    },
+    {
+      "file": "tarea-3/native-stock-performance/ticket2-before.png",
+      "sha256": "0a581fe5e75f1588554e0302a9a56506a779cb8df4c07f8aeab3d8e788455585"
+    },
+    {
+      "file": "tarea-3/native-stock-performance/performance-ticket-2-0.png",
+      "sha256": "3926f71f449c2b46828a8d1e55010a9fac8f24399220f5ece947662ebec88cd0"
+    },
+    {
+      "file": "tarea-3/native-stock-performance/ticket3-before.png",
+      "sha256": "0a581fe5e75f1588554e0302a9a56506a779cb8df4c07f8aeab3d8e788455585"
+    },
+    {
+      "file": "tarea-3/native-stock-performance/performance-ticket-3-0.png",
+      "sha256": "32bff4dfe1b9cbb0278db9b34d18529b57380afd3b0187485f44ced5f18c632c"
+    },
+    {
+      "file": "tarea-3/native-stock-performance/ticket4-before.png",
+      "sha256": "c7785723e93fe2dd42eb865c66cc54d8a949e73330e0f96c329f8316d125f13f"
+    },
+    {
+      "file": "tarea-3/native-stock-performance/performance-ticket-4-0.png",
+      "sha256": "05e2962b205c134837b9235c185d0128fa66d9af5f0e0637d95f0ee24936351f"
+    },
+    {
+      "file": "tarea-3/native-stock-performance/ticket5-before.png",
+      "sha256": "0a581fe5e75f1588554e0302a9a56506a779cb8df4c07f8aeab3d8e788455585"
+    },
+    {
+      "file": "tarea-3/native-stock-performance/performance-ticket-5-0.png",
+      "sha256": "42cca4a4c156d23bfe4a6ee6c8512038b9613abf57383d761d9430ce39cb670c"
+    }
+  ],
+  "startedAt": "2026-09-26T02:59:53.389Z"
+}

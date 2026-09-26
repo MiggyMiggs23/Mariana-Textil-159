@@ -1,0 +1,29 @@
+{
+  "id": "continuation-apply",
+  "task": 3,
+  "status": "PASS",
+  "exitCode": 0,
+  "resultFile": "tarea-3/continuation-apply/apply-result.json",
+  "observations": [
+    {
+      "item": "native-login",
+      "status": 200
+    },
+    {
+      "item": "site-control",
+      "status": "OBSERVED"
+    },
+    {
+      "item": "admin-partial-approval",
+      "status": 200
+    },
+    {
+      "item": "site-control",
+      "status": "OBSERVED"
+    },
+    {
+      "item": "forbidden-refund-read",
+      "status": 403
+    }
+  ]
+}

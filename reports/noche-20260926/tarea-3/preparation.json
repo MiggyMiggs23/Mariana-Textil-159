@@ -1,0 +1,8 @@
+{
+  "status": "PREPARED_AWAITING_MAIN_HANDOFF",
+  "harness": "../browser/run.mjs",
+  "coveragePlan": "../browser/plan.json",
+  "actualBrowserRuns": 0,
+  "actualScreenshots": 0,
+  "note": "POS/cash/credit/E3/E4/remate and E5 native adapters ready. Refund business block preserved. This is preparation, not evidence of success."
+}

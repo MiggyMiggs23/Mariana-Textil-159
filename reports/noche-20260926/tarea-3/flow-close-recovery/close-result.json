@@ -1,0 +1,1227 @@
+{
+  "stage": "close",
+  "status": "PASS",
+  "steps": [
+    {
+      "status": 200,
+      "body": {
+        "versionCorte": "e9:v1:4108cdb1d43651a0623059cd18d1e7c336a1f79cb95e57712795d66dabf80591",
+        "sesion": {
+          "id": 1,
+          "ubicacionId": 1,
+          "nombreUbicacion": "Mariana",
+          "usuarioId": 234,
+          "nombreUsuario": "Noche disposable administrator",
+          "abiertaAt": "2026-09-26T03:03:09.843Z",
+          "cerradaAt": "2026-09-26T03:20:45.608Z",
+          "fondoInicial": "0.00",
+          "efectivoContado": "2548.00",
+          "estado": "CERRADA"
+        },
+        "formasPago": [
+          {
+            "formaPago": "EFECTIVO",
+            "importe": "1000.00",
+            "pagosCount": 1,
+            "ticketsCount": 1
+          },
+          {
+            "formaPago": "TRANSFERENCIA",
+            "importe": "1000.00",
+            "pagosCount": 1,
+            "ticketsCount": 1
+          },
+          {
+            "formaPago": "FACTURADO",
+            "importe": "0.00",
+            "pagosCount": 0,
+            "ticketsCount": 0
+          },
+          {
+            "formaPago": "CREDITO",
+            "importe": "0.00",
+            "pagosCount": 0,
+            "ticketsCount": 0
+          }
+        ],
+        "cuentasDestino": [
+          {
+            "formaPago": "EFECTIVO",
+            "cuentaDestino": "CAJA_FISICA",
+            "importe": "998.00"
+          },
+          {
+            "formaPago": "TRANSFERENCIA",
+            "cuentaDestino": "CUENTA_NO_FISCAL",
+            "importe": "1000.00"
+          },
+          {
+            "formaPago": "TRANSFERENCIA",
+            "cuentaDestino": "CUENTA_FISCAL",
+            "importe": "0.00"
+          },
+          {
+            "formaPago": "CREDITO",
+            "cuentaDestino": "CUENTAS_POR_COBRAR",
+            "importe": "0.00"
+          }
+        ],
+        "salidas": [
+          {
+            "id": 1,
+            "monto": "1.00",
+            "motivo": "ENSAYO56 salida extraordinaria",
+            "proveedorId": null,
+            "cuentaOrigen": "CAJA_FISICA",
+            "createdAt": "2026-09-26T03:03:22.832Z",
+            "proveedor": null,
+            "e4": {
+              "tipo": "EXTRAORDINARIA",
+              "estado": "PENDIENTE",
+              "version": 0,
+              "claveOperacion": "b4cea75e-f7eb-464c-8def-6eb0aa0c5e2e",
+              "historial": [],
+              "desbloqueoCaja": {
+                "motivo": "ENSAYO56 ADMIN autoriza insuficiencia desechable",
+                "usuarioId": 234,
+                "createdAt": "2026-09-26T03:03:23.190Z",
+                "saldoAntes": "0.00",
+                "egreso": "1.00"
+              }
+            }
+          },
+          {
+            "id": 2,
+            "monto": "1.00",
+            "motivo": "ENSAYO56 gasto ordinario extraordinario con saldo suficiente",
+            "proveedorId": null,
+            "cuentaOrigen": "CAJA_FISICA",
+            "createdAt": "2026-09-26T03:06:48.837Z",
+            "proveedor": null,
+            "e4": {
+              "tipo": "EXTRAORDINARIA",
+              "estado": "PENDIENTE",
+              "version": 0,
+              "claveOperacion": "e11210e4-6d94-4be9-b9d2-fdbd3b8b6611",
+              "historial": [],
+              "desbloqueoCaja": null
+            }
+          }
+        ],
+        "salidasPorCuenta": {
+          "CAJA_FISICA": "2.00",
+          "CUENTA_NO_FISCAL": "0.00",
+          "CUENTA_FISCAL": "0.00"
+        },
+        "facturacion": [
+          {
+            "facturado": true,
+            "ticketsCount": 0,
+            "subtotal": "0.00",
+            "iva": "0.00",
+            "importe": "0.00",
+            "efectivo": "0.00",
+            "transferencia": "0.00",
+            "credito": "0.00"
+          },
+          {
+            "facturado": false,
+            "ticketsCount": 2,
+            "subtotal": "2000.00",
+            "iva": "0.00",
+            "importe": "2000.00",
+            "efectivo": "1000.00",
+            "transferencia": "1000.00",
+            "credito": "0.00"
+          }
+        ],
+        "metreado": [
+          {
+            "tipo": "NORMAL",
+            "unidad": "METRO",
+            "ticketsCount": 4,
+            "cantidad": "40.000",
+            "importe": "4000.00"
+          }
+        ],
+        "productos": [
+          {
+            "productoId": 2078,
+            "sku": "CON2D0ALG-AZU",
+            "tela": "CONTINUACION 2D0AA2 ALGODON",
+            "color": "AZUL",
+            "tipo": "NORMAL",
+            "unidad": "METRO",
+            "cantidad": "40.000",
+            "importe": "4000.00"
+          }
+        ],
+        "pendientes": [
+          {
+            "ticketId": 1,
+            "folio": 1,
+            "total": "1500.00",
+            "nombreCliente": "3Bh Creations SA DE CV",
+            "createdAt": "2026-09-26T02:27:53.873Z"
+          },
+          {
+            "ticketId": 2,
+            "folio": 2,
+            "total": "1000.00",
+            "nombreCliente": "NOCHE26 CASH 1790391435124",
+            "createdAt": "2026-09-26T03:00:32.842Z"
+          },
+          {
+            "ticketId": 3,
+            "folio": 3,
+            "total": "1000.00",
+            "nombreCliente": "NOCHE26 CASH 1790391435124",
+            "createdAt": "2026-09-26T03:01:00.572Z"
+          },
+          {
+            "ticketId": 4,
+            "folio": 4,
+            "total": "1000.00",
+            "nombreCliente": "NOCHE26 CASH 1790391435124",
+            "createdAt": "2026-09-26T03:01:30.341Z"
+          },
+          {
+            "ticketId": 5,
+            "folio": 5,
+            "total": "1000.00",
+            "nombreCliente": "NOCHE26 CASH 1790391435124",
+            "createdAt": "2026-09-26T03:01:58.339Z"
+          },
+          {
+            "ticketId": 6,
+            "folio": 6,
+            "total": "1000.00",
+            "nombreCliente": "NOCHE26 CASH 1790391435124",
+            "createdAt": "2026-09-26T03:02:26.458Z"
+          },
+          {
+            "ticketId": 7,
+            "folio": 7,
+            "total": "1000.00",
+            "nombreCliente": "NOCHE26 CASH 1790391435124",
+            "createdAt": "2026-09-26T03:02:56.689Z"
+          },
+          {
+            "ticketId": 11,
+            "folio": 11,
+            "total": "400.00",
+            "nombreCliente": "NOCHE26 CASH 1790391435124",
+            "createdAt": "2026-09-26T03:12:47.384Z"
+          }
+        ],
+        "ticketsCobradosDetalle": [
+          {
+            "ticketId": 8,
+            "folio": 8,
+            "importe": "1000.00",
+            "cobradoAt": "2026-09-26T03:03:43.348Z"
+          },
+          {
+            "ticketId": 9,
+            "folio": 9,
+            "importe": "1000.00",
+            "cobradoAt": "2026-09-26T03:04:04.773Z"
+          }
+        ],
+        "ticketsCobrados": 2,
+        "cancelaciones": [],
+        "fondoInicial": "0.00",
+        "totalCobrado": "2000.00",
+        "ivaCobrado": "0.00",
+        "efectivoEsperado": "2548.00",
+        "efectivoDesglose": {
+          "version": "E2",
+          "fondoInicial": "0.00",
+          "cobrosTickets": "1000.00",
+          "abonosFisicos": "1550.00",
+          "cobrosRetenidos": "0.00",
+          "salidasFisicas": "2.00",
+          "efectivoEsperado": "2548.00",
+          "documentos": [
+            {
+              "origen": "FONDO_INICIAL",
+              "id": "1",
+              "folio": null,
+              "importe": "0.00",
+              "href": null,
+              "evidencia": {
+                "referencia": "Sesión de caja #1",
+                "motivo": null,
+                "fecha": "2026-09-26T03:03:09.843Z",
+                "usuarioId": 234,
+                "proveedorId": null,
+                "usuarioNombre": "Noche disposable administrator",
+                "proveedorNombre": null
+              }
+            },
+            {
+              "origen": "TICKET",
+              "id": "1",
+              "folio": "8",
+              "importe": "1000.00",
+              "href": "/tickets/8"
+            },
+            {
+              "origen": "ABONO",
+              "id": "ABONO_ORDINARIO:59a396bc-7ecd-434c-befd-d0ec27244b89",
+              "folio": null,
+              "importe": "100.00",
+              "href": "/clientes/2584/movimientos/2",
+              "evidencia": {
+                "referencia": null,
+                "motivo": "Abono real recibido desde Caja",
+                "fecha": "2026-09-26T03:04:35.984Z",
+                "usuarioId": 234,
+                "proveedorId": null,
+                "usuarioNombre": "Noche disposable administrator",
+                "proveedorNombre": null
+              }
+            },
+            {
+              "origen": "ABONO",
+              "id": "ABONO_ORDINARIO:bebc3d37-bf54-459e-ad78-f590c58da3a7",
+              "folio": null,
+              "importe": "1450.00",
+              "href": "/clientes/2584/movimientos/5",
+              "evidencia": {
+                "referencia": null,
+                "motivo": "Abono real recibido desde Caja",
+                "fecha": "2026-09-26T03:14:59.631Z",
+                "usuarioId": 234,
+                "proveedorId": null,
+                "usuarioNombre": "Noche disposable administrator",
+                "proveedorNombre": null
+              }
+            },
+            {
+              "origen": "SALIDA",
+              "id": "1",
+              "folio": null,
+              "importe": "1.00",
+              "href": null,
+              "evidencia": {
+                "referencia": null,
+                "motivo": "ENSAYO56 salida extraordinaria",
+                "fecha": "2026-09-26T03:03:22.832Z",
+                "usuarioId": 234,
+                "proveedorId": null,
+                "usuarioNombre": "Noche disposable administrator",
+                "proveedorNombre": null
+              }
+            },
+            {
+              "origen": "SALIDA",
+              "id": "2",
+              "folio": null,
+              "importe": "1.00",
+              "href": null,
+              "evidencia": {
+                "referencia": null,
+                "motivo": "ENSAYO56 gasto ordinario extraordinario con saldo suficiente",
+                "fecha": "2026-09-26T03:06:48.837Z",
+                "usuarioId": 234,
+                "proveedorId": null,
+                "usuarioNombre": "Noche disposable administrator",
+                "proveedorNombre": null
+              }
+            }
+          ]
+        },
+        "efectivoContado": "2548.00",
+        "diferencia": "0.00",
+        "hojaVentasDia": {
+          "sitio": "Mariana",
+          "fechaOperativa": "2026-09-25",
+          "cerrada": true,
+          "quienCerro": "Noche disposable administrator",
+          "secciones": [
+            {
+              "modalidad": "ROLLOS",
+              "lineas": [
+                {
+                  "productoId": 2078,
+                  "sku": "CON2D0ALG-AZU",
+                  "tela": "CONTINUACION 2D0AA2 ALGODON",
+                  "color": "AZUL",
+                  "tipo": "NORMAL",
+                  "unidad": "ROLLOS",
+                  "cantidad": "2",
+                  "importe": "2000.00"
+                }
+              ],
+              "subtotal": "2000.00"
+            },
+            {
+              "modalidad": "METRAJE",
+              "lineas": [],
+              "subtotal": "0.00"
+            }
+          ],
+          "totalRollos": "2",
+          "totalMetros": "20",
+          "totalKilos": "0",
+          "totalBolsas": "0",
+          "totalPiezas": "0",
+          "subtotal": "2000.00",
+          "ivaFacturado": "0.00",
+          "totalGeneral": "2000.00"
+        }
+      }
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/caja/proveedores-activos",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/caja/tickets",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/1/salidas-dinero",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/actual",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/1/corte",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/sesiones-caja/1/cerrar",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/api/sesiones-caja/1/corte",
+      "status": 200,
+      "method": "GET"
+    }
+  ],
+  "cut": {
+    "sesion": {
+      "id": 1,
+      "ubicacionId": 1,
+      "nombreUbicacion": "Mariana",
+      "usuarioId": 234,
+      "nombreUsuario": "Noche disposable administrator",
+      "abiertaAt": "2026-09-26T03:03:09.843Z",
+      "cerradaAt": null,
+      "fondoInicial": "0.00",
+      "efectivoContado": null,
+      "estado": "ABIERTA"
+    },
+    "formasPago": [
+      {
+        "formaPago": "EFECTIVO",
+        "importe": "1000.00",
+        "pagosCount": 1,
+        "ticketsCount": 1
+      },
+      {
+        "formaPago": "TRANSFERENCIA",
+        "importe": "1000.00",
+        "pagosCount": 1,
+        "ticketsCount": 1
+      },
+      {
+        "formaPago": "FACTURADO",
+        "importe": "0.00",
+        "pagosCount": 0,
+        "ticketsCount": 0
+      },
+      {
+        "formaPago": "CREDITO",
+        "importe": "0.00",
+        "pagosCount": 0,
+        "ticketsCount": 0
+      }
+    ],
+    "cuentasDestino": [
+      {
+        "formaPago": "EFECTIVO",
+        "cuentaDestino": "CAJA_FISICA",
+        "importe": "998.00"
+      },
+      {
+        "formaPago": "TRANSFERENCIA",
+        "cuentaDestino": "CUENTA_NO_FISCAL",
+        "importe": "1000.00"
+      },
+      {
+        "formaPago": "TRANSFERENCIA",
+        "cuentaDestino": "CUENTA_FISCAL",
+        "importe": "0.00"
+      },
+      {
+        "formaPago": "CREDITO",
+        "cuentaDestino": "CUENTAS_POR_COBRAR",
+        "importe": "0.00"
+      }
+    ],
+    "salidas": [
+      {
+        "id": 1,
+        "monto": "1.00",
+        "motivo": "ENSAYO56 salida extraordinaria",
+        "proveedorId": null,
+        "cuentaOrigen": "CAJA_FISICA",
+        "createdAt": "2026-09-26T03:03:22.832Z",
+        "proveedor": null,
+        "e4": {
+          "tipo": "EXTRAORDINARIA",
+          "estado": "PENDIENTE",
+          "version": 0,
+          "claveOperacion": "b4cea75e-f7eb-464c-8def-6eb0aa0c5e2e",
+          "historial": [],
+          "desbloqueoCaja": {
+            "motivo": "ENSAYO56 ADMIN autoriza insuficiencia desechable",
+            "usuarioId": 234,
+            "createdAt": "2026-09-26T03:03:23.190Z",
+            "saldoAntes": "0.00",
+            "egreso": "1.00"
+          }
+        }
+      },
+      {
+        "id": 2,
+        "monto": "1.00",
+        "motivo": "ENSAYO56 gasto ordinario extraordinario con saldo suficiente",
+        "proveedorId": null,
+        "cuentaOrigen": "CAJA_FISICA",
+        "createdAt": "2026-09-26T03:06:48.837Z",
+        "proveedor": null,
+        "e4": {
+          "tipo": "EXTRAORDINARIA",
+          "estado": "PENDIENTE",
+          "version": 0,
+          "claveOperacion": "e11210e4-6d94-4be9-b9d2-fdbd3b8b6611",
+          "historial": [],
+          "desbloqueoCaja": null
+        }
+      }
+    ],
+    "salidasPorCuenta": {
+      "CAJA_FISICA": "2.00",
+      "CUENTA_NO_FISCAL": "0.00",
+      "CUENTA_FISCAL": "0.00"
+    },
+    "facturacion": [
+      {
+        "facturado": true,
+        "ticketsCount": 0,
+        "subtotal": "0.00",
+        "iva": "0.00",
+        "importe": "0.00",
+        "efectivo": "0.00",
+        "transferencia": "0.00",
+        "credito": "0.00"
+      },
+      {
+        "facturado": false,
+        "ticketsCount": 2,
+        "subtotal": "2000.00",
+        "iva": "0.00",
+        "importe": "2000.00",
+        "efectivo": "1000.00",
+        "transferencia": "1000.00",
+        "credito": "0.00"
+      }
+    ],
+    "metreado": [
+      {
+        "tipo": "NORMAL",
+        "unidad": "METRO",
+        "ticketsCount": 4,
+        "cantidad": "40.000",
+        "importe": "4000.00"
+      }
+    ],
+    "productos": [
+      {
+        "productoId": 2078,
+        "sku": "CON2D0ALG-AZU",
+        "tela": "CONTINUACION 2D0AA2 ALGODON",
+        "color": "AZUL",
+        "tipo": "NORMAL",
+        "unidad": "METRO",
+        "cantidad": "40.000",
+        "importe": "4000.00"
+      }
+    ],
+    "pendientes": [
+      {
+        "ticketId": 1,
+        "folio": 1,
+        "total": "1500.00",
+        "nombreCliente": "3Bh Creations SA DE CV",
+        "createdAt": "2026-09-26T02:27:53.873Z"
+      },
+      {
+        "ticketId": 2,
+        "folio": 2,
+        "total": "1000.00",
+        "nombreCliente": "NOCHE26 CASH 1790391435124",
+        "createdAt": "2026-09-26T03:00:32.842Z"
+      },
+      {
+        "ticketId": 3,
+        "folio": 3,
+        "total": "1000.00",
+        "nombreCliente": "NOCHE26 CASH 1790391435124",
+        "createdAt": "2026-09-26T03:01:00.572Z"
+      },
+      {
+        "ticketId": 4,
+        "folio": 4,
+        "total": "1000.00",
+        "nombreCliente": "NOCHE26 CASH 1790391435124",
+        "createdAt": "2026-09-26T03:01:30.341Z"
+      },
+      {
+        "ticketId": 5,
+        "folio": 5,
+        "total": "1000.00",
+        "nombreCliente": "NOCHE26 CASH 1790391435124",
+        "createdAt": "2026-09-26T03:01:58.339Z"
+      },
+      {
+        "ticketId": 6,
+        "folio": 6,
+        "total": "1000.00",
+        "nombreCliente": "NOCHE26 CASH 1790391435124",
+        "createdAt": "2026-09-26T03:02:26.458Z"
+      },
+      {
+        "ticketId": 7,
+        "folio": 7,
+        "total": "1000.00",
+        "nombreCliente": "NOCHE26 CASH 1790391435124",
+        "createdAt": "2026-09-26T03:02:56.689Z"
+      },
+      {
+        "ticketId": 11,
+        "folio": 11,
+        "total": "400.00",
+        "nombreCliente": "NOCHE26 CASH 1790391435124",
+        "createdAt": "2026-09-26T03:12:47.384Z"
+      }
+    ],
+    "ticketsCobradosDetalle": [
+      {
+        "ticketId": 8,
+        "folio": 8,
+        "importe": "1000.00",
+        "cobradoAt": "2026-09-26T03:03:43.348Z"
+      },
+      {
+        "ticketId": 9,
+        "folio": 9,
+        "importe": "1000.00",
+        "cobradoAt": "2026-09-26T03:04:04.773Z"
+      }
+    ],
+    "ticketsCobrados": 2,
+    "cancelaciones": [],
+    "fondoInicial": "0.00",
+    "totalCobrado": "2000.00",
+    "ivaCobrado": "0.00",
+    "efectivoEsperado": "2548.00",
+    "efectivoDesglose": {
+      "version": "E2",
+      "fondoInicial": "0.00",
+      "cobrosTickets": "1000.00",
+      "abonosFisicos": "1550.00",
+      "cobrosRetenidos": "0.00",
+      "salidasFisicas": "2.00",
+      "efectivoEsperado": "2548.00",
+      "documentos": [
+        {
+          "origen": "FONDO_INICIAL",
+          "id": "1",
+          "folio": null,
+          "importe": "0.00",
+          "href": null,
+          "evidencia": {
+            "referencia": "Sesión de caja #1",
+            "motivo": null,
+            "fecha": "2026-09-26T03:03:09.843Z",
+            "usuarioId": 234,
+            "proveedorId": null,
+            "usuarioNombre": "Noche disposable administrator",
+            "proveedorNombre": null
+          }
+        },
+        {
+          "origen": "TICKET",
+          "id": "1",
+          "folio": "8",
+          "importe": "1000.00",
+          "href": "/tickets/8"
+        },
+        {
+          "origen": "ABONO",
+          "id": "ABONO_ORDINARIO:59a396bc-7ecd-434c-befd-d0ec27244b89",
+          "folio": null,
+          "importe": "100.00",
+          "href": "/clientes/2584/movimientos/2",
+          "evidencia": {
+            "referencia": null,
+            "motivo": "Abono real recibido desde Caja",
+            "fecha": "2026-09-26T03:04:35.984Z",
+            "usuarioId": 234,
+            "proveedorId": null,
+            "usuarioNombre": "Noche disposable administrator",
+            "proveedorNombre": null
+          }
+        },
+        {
+          "origen": "ABONO",
+          "id": "ABONO_ORDINARIO:bebc3d37-bf54-459e-ad78-f590c58da3a7",
+          "folio": null,
+          "importe": "1450.00",
+          "href": "/clientes/2584/movimientos/5",
+          "evidencia": {
+            "referencia": null,
+            "motivo": "Abono real recibido desde Caja",
+            "fecha": "2026-09-26T03:14:59.631Z",
+            "usuarioId": 234,
+            "proveedorId": null,
+            "usuarioNombre": "Noche disposable administrator",
+            "proveedorNombre": null
+          }
+        },
+        {
+          "origen": "SALIDA",
+          "id": "1",
+          "folio": null,
+          "importe": "1.00",
+          "href": null,
+          "evidencia": {
+            "referencia": null,
+            "motivo": "ENSAYO56 salida extraordinaria",
+            "fecha": "2026-09-26T03:03:22.832Z",
+            "usuarioId": 234,
+            "proveedorId": null,
+            "usuarioNombre": "Noche disposable administrator",
+            "proveedorNombre": null
+          }
+        },
+        {
+          "origen": "SALIDA",
+          "id": "2",
+          "folio": null,
+          "importe": "1.00",
+          "href": null,
+          "evidencia": {
+            "referencia": null,
+            "motivo": "ENSAYO56 gasto ordinario extraordinario con saldo suficiente",
+            "fecha": "2026-09-26T03:06:48.837Z",
+            "usuarioId": 234,
+            "proveedorId": null,
+            "usuarioNombre": "Noche disposable administrator",
+            "proveedorNombre": null
+          }
+        }
+      ]
+    },
+    "efectivoContado": null,
+    "diferencia": null,
+    "hojaVentasDia": {
+      "sitio": "Mariana",
+      "fechaOperativa": "2026-09-25",
+      "cerrada": false,
+      "quienCerro": null,
+      "secciones": [
+        {
+          "modalidad": "ROLLOS",
+          "lineas": [
+            {
+              "productoId": 2078,
+              "sku": "CON2D0ALG-AZU",
+              "tela": "CONTINUACION 2D0AA2 ALGODON",
+              "color": "AZUL",
+              "tipo": "NORMAL",
+              "unidad": "ROLLOS",
+              "cantidad": "2",
+              "importe": "2000.00"
+            }
+          ],
+          "subtotal": "2000.00"
+        },
+        {
+          "modalidad": "METRAJE",
+          "lineas": [],
+          "subtotal": "0.00"
+        }
+      ],
+      "totalRollos": "2",
+      "totalMetros": "20",
+      "totalKilos": "0",
+      "totalBolsas": "0",
+      "totalPiezas": "0",
+      "subtotal": "2000.00",
+      "ivaFacturado": "0.00",
+      "totalGeneral": "2000.00"
+    }
+  },
+  "closeReadback": {
+    "status": 200,
+    "body": {
+      "versionCorte": "e9:v1:4108cdb1d43651a0623059cd18d1e7c336a1f79cb95e57712795d66dabf80591",
+      "sesion": {
+        "id": 1,
+        "ubicacionId": 1,
+        "nombreUbicacion": "Mariana",
+        "usuarioId": 234,
+        "nombreUsuario": "Noche disposable administrator",
+        "abiertaAt": "2026-09-26T03:03:09.843Z",
+        "cerradaAt": "2026-09-26T03:20:45.608Z",
+        "fondoInicial": "0.00",
+        "efectivoContado": "2548.00",
+        "estado": "CERRADA"
+      },
+      "formasPago": [
+        {
+          "formaPago": "EFECTIVO",
+          "importe": "1000.00",
+          "pagosCount": 1,
+          "ticketsCount": 1
+        },
+        {
+          "formaPago": "TRANSFERENCIA",
+          "importe": "1000.00",
+          "pagosCount": 1,
+          "ticketsCount": 1
+        },
+        {
+          "formaPago": "FACTURADO",
+          "importe": "0.00",
+          "pagosCount": 0,
+          "ticketsCount": 0
+        },
+        {
+          "formaPago": "CREDITO",
+          "importe": "0.00",
+          "pagosCount": 0,
+          "ticketsCount": 0
+        }
+      ],
+      "cuentasDestino": [
+        {
+          "formaPago": "EFECTIVO",
+          "cuentaDestino": "CAJA_FISICA",
+          "importe": "998.00"
+        },
+        {
+          "formaPago": "TRANSFERENCIA",
+          "cuentaDestino": "CUENTA_NO_FISCAL",
+          "importe": "1000.00"
+        },
+        {
+          "formaPago": "TRANSFERENCIA",
+          "cuentaDestino": "CUENTA_FISCAL",
+          "importe": "0.00"
+        },
+        {
+          "formaPago": "CREDITO",
+          "cuentaDestino": "CUENTAS_POR_COBRAR",
+          "importe": "0.00"
+        }
+      ],
+      "salidas": [
+        {
+          "id": 1,
+          "monto": "1.00",
+          "motivo": "ENSAYO56 salida extraordinaria",
+          "proveedorId": null,
+          "cuentaOrigen": "CAJA_FISICA",
+          "createdAt": "2026-09-26T03:03:22.832Z",
+          "proveedor": null,
+          "e4": {
+            "tipo": "EXTRAORDINARIA",
+            "estado": "PENDIENTE",
+            "version": 0,
+            "claveOperacion": "b4cea75e-f7eb-464c-8def-6eb0aa0c5e2e",
+            "historial": [],
+            "desbloqueoCaja": {
+              "motivo": "ENSAYO56 ADMIN autoriza insuficiencia desechable",
+              "usuarioId": 234,
+              "createdAt": "2026-09-26T03:03:23.190Z",
+              "saldoAntes": "0.00",
+              "egreso": "1.00"
+            }
+          }
+        },
+        {
+          "id": 2,
+          "monto": "1.00",
+          "motivo": "ENSAYO56 gasto ordinario extraordinario con saldo suficiente",
+          "proveedorId": null,
+          "cuentaOrigen": "CAJA_FISICA",
+          "createdAt": "2026-09-26T03:06:48.837Z",
+          "proveedor": null,
+          "e4": {
+            "tipo": "EXTRAORDINARIA",
+            "estado": "PENDIENTE",
+            "version": 0,
+            "claveOperacion": "e11210e4-6d94-4be9-b9d2-fdbd3b8b6611",
+            "historial": [],
+            "desbloqueoCaja": null
+          }
+        }
+      ],
+      "salidasPorCuenta": {
+        "CAJA_FISICA": "2.00",
+        "CUENTA_NO_FISCAL": "0.00",
+        "CUENTA_FISCAL": "0.00"
+      },
+      "facturacion": [
+        {
+          "facturado": true,
+          "ticketsCount": 0,
+          "subtotal": "0.00",
+          "iva": "0.00",
+          "importe": "0.00",
+          "efectivo": "0.00",
+          "transferencia": "0.00",
+          "credito": "0.00"
+        },
+        {
+          "facturado": false,
+          "ticketsCount": 2,
+          "subtotal": "2000.00",
+          "iva": "0.00",
+          "importe": "2000.00",
+          "efectivo": "1000.00",
+          "transferencia": "1000.00",
+          "credito": "0.00"
+        }
+      ],
+      "metreado": [
+        {
+          "tipo": "NORMAL",
+          "unidad": "METRO",
+          "ticketsCount": 4,
+          "cantidad": "40.000",
+          "importe": "4000.00"
+        }
+      ],
+      "productos": [
+        {
+          "productoId": 2078,
+          "sku": "CON2D0ALG-AZU",
+          "tela": "CONTINUACION 2D0AA2 ALGODON",
+          "color": "AZUL",
+          "tipo": "NORMAL",
+          "unidad": "METRO",
+          "cantidad": "40.000",
+          "importe": "4000.00"
+        }
+      ],
+      "pendientes": [
+        {
+          "ticketId": 1,
+          "folio": 1,
+          "total": "1500.00",
+          "nombreCliente": "3Bh Creations SA DE CV",
+          "createdAt": "2026-09-26T02:27:53.873Z"
+        },
+        {
+          "ticketId": 2,
+          "folio": 2,
+          "total": "1000.00",
+          "nombreCliente": "NOCHE26 CASH 1790391435124",
+          "createdAt": "2026-09-26T03:00:32.842Z"
+        },
+        {
+          "ticketId": 3,
+          "folio": 3,
+          "total": "1000.00",
+          "nombreCliente": "NOCHE26 CASH 1790391435124",
+          "createdAt": "2026-09-26T03:01:00.572Z"
+        },
+        {
+          "ticketId": 4,
+          "folio": 4,
+          "total": "1000.00",
+          "nombreCliente": "NOCHE26 CASH 1790391435124",
+          "createdAt": "2026-09-26T03:01:30.341Z"
+        },
+        {
+          "ticketId": 5,
+          "folio": 5,
+          "total": "1000.00",
+          "nombreCliente": "NOCHE26 CASH 1790391435124",
+          "createdAt": "2026-09-26T03:01:58.339Z"
+        },
+        {
+          "ticketId": 6,
+          "folio": 6,
+          "total": "1000.00",
+          "nombreCliente": "NOCHE26 CASH 1790391435124",
+          "createdAt": "2026-09-26T03:02:26.458Z"
+        },
+        {
+          "ticketId": 7,
+          "folio": 7,
+          "total": "1000.00",
+          "nombreCliente": "NOCHE26 CASH 1790391435124",
+          "createdAt": "2026-09-26T03:02:56.689Z"
+        },
+        {
+          "ticketId": 11,
+          "folio": 11,
+          "total": "400.00",
+          "nombreCliente": "NOCHE26 CASH 1790391435124",
+          "createdAt": "2026-09-26T03:12:47.384Z"
+        }
+      ],
+      "ticketsCobradosDetalle": [
+        {
+          "ticketId": 8,
+          "folio": 8,
+          "importe": "1000.00",
+          "cobradoAt": "2026-09-26T03:03:43.348Z"
+        },
+        {
+          "ticketId": 9,
+          "folio": 9,
+          "importe": "1000.00",
+          "cobradoAt": "2026-09-26T03:04:04.773Z"
+        }
+      ],
+      "ticketsCobrados": 2,
+      "cancelaciones": [],
+      "fondoInicial": "0.00",
+      "totalCobrado": "2000.00",
+      "ivaCobrado": "0.00",
+      "efectivoEsperado": "2548.00",
+      "efectivoDesglose": {
+        "version": "E2",
+        "fondoInicial": "0.00",
+        "cobrosTickets": "1000.00",
+        "abonosFisicos": "1550.00",
+        "cobrosRetenidos": "0.00",
+        "salidasFisicas": "2.00",
+        "efectivoEsperado": "2548.00",
+        "documentos": [
+          {
+            "origen": "FONDO_INICIAL",
+            "id": "1",
+            "folio": null,
+            "importe": "0.00",
+            "href": null,
+            "evidencia": {
+              "referencia": "Sesión de caja #1",
+              "motivo": null,
+              "fecha": "2026-09-26T03:03:09.843Z",
+              "usuarioId": 234,
+              "proveedorId": null,
+              "usuarioNombre": "Noche disposable administrator",
+              "proveedorNombre": null
+            }
+          },
+          {
+            "origen": "TICKET",
+            "id": "1",
+            "folio": "8",
+            "importe": "1000.00",
+            "href": "/tickets/8"
+          },
+          {
+            "origen": "ABONO",
+            "id": "ABONO_ORDINARIO:59a396bc-7ecd-434c-befd-d0ec27244b89",
+            "folio": null,
+            "importe": "100.00",
+            "href": "/clientes/2584/movimientos/2",
+            "evidencia": {
+              "referencia": null,
+              "motivo": "Abono real recibido desde Caja",
+              "fecha": "2026-09-26T03:04:35.984Z",
+              "usuarioId": 234,
+              "proveedorId": null,
+              "usuarioNombre": "Noche disposable administrator",
+              "proveedorNombre": null
+            }
+          },
+          {
+            "origen": "ABONO",
+            "id": "ABONO_ORDINARIO:bebc3d37-bf54-459e-ad78-f590c58da3a7",
+            "folio": null,
+            "importe": "1450.00",
+            "href": "/clientes/2584/movimientos/5",
+            "evidencia": {
+              "referencia": null,
+              "motivo": "Abono real recibido desde Caja",
+              "fecha": "2026-09-26T03:14:59.631Z",
+              "usuarioId": 234,
+              "proveedorId": null,
+              "usuarioNombre": "Noche disposable administrator",
+              "proveedorNombre": null
+            }
+          },
+          {
+            "origen": "SALIDA",
+            "id": "1",
+            "folio": null,
+            "importe": "1.00",
+            "href": null,
+            "evidencia": {
+              "referencia": null,
+              "motivo": "ENSAYO56 salida extraordinaria",
+              "fecha": "2026-09-26T03:03:22.832Z",
+              "usuarioId": 234,
+              "proveedorId": null,
+              "usuarioNombre": "Noche disposable administrator",
+              "proveedorNombre": null
+            }
+          },
+          {
+            "origen": "SALIDA",
+            "id": "2",
+            "folio": null,
+            "importe": "1.00",
+            "href": null,
+            "evidencia": {
+              "referencia": null,
+              "motivo": "ENSAYO56 gasto ordinario extraordinario con saldo suficiente",
+              "fecha": "2026-09-26T03:06:48.837Z",
+              "usuarioId": 234,
+              "proveedorId": null,
+              "usuarioNombre": "Noche disposable administrator",
+              "proveedorNombre": null
+            }
+          }
+        ]
+      },
+      "efectivoContado": "2548.00",
+      "diferencia": "0.00",
+      "hojaVentasDia": {
+        "sitio": "Mariana",
+        "fechaOperativa": "2026-09-25",
+        "cerrada": true,
+        "quienCerro": "Noche disposable administrator",
+        "secciones": [
+          {
+            "modalidad": "ROLLOS",
+            "lineas": [
+              {
+                "productoId": 2078,
+                "sku": "CON2D0ALG-AZU",
+                "tela": "CONTINUACION 2D0AA2 ALGODON",
+                "color": "AZUL",
+                "tipo": "NORMAL",
+                "unidad": "ROLLOS",
+                "cantidad": "2",
+                "importe": "2000.00"
+              }
+            ],
+            "subtotal": "2000.00"
+          },
+          {
+            "modalidad": "METRAJE",
+            "lineas": [],
+            "subtotal": "0.00"
+          }
+        ],
+        "totalRollos": "2",
+        "totalMetros": "20",
+        "totalKilos": "0",
+        "totalBolsas": "0",
+        "totalPiezas": "0",
+        "subtotal": "2000.00",
+        "ivaFacturado": "0.00",
+        "totalGeneral": "2000.00"
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "flow-remate-mark",
+  "task": 3,
+  "status": "PASS",
+  "exitCode": 0,
+  "resultFile": "tarea-3/flow-remate-mark/remate-mark-result.json",
+  "observations": [
+    {
+      "item": "step-0",
+      "status": 201
+    }
+  ]
+}

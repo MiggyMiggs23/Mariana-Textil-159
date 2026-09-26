@@ -1,0 +1,238 @@
+{
+  "stage": "apply",
+  "status": "PASS",
+  "steps": [
+    {
+      "action": "native-login",
+      "role": "ADMIN",
+      "status": 200
+    },
+    {
+      "action": "site-control",
+      "count": 1,
+      "combos": [
+        "Vista Global"
+      ]
+    },
+    {
+      "action": "admin-partial-approval",
+      "httpStatus": 200,
+      "response": {
+        "id": "da1a5fde-6de7-4c6d-939c-da8c5180596f",
+        "estado": "PARCIAL",
+        "receptor": {
+          "id": 234,
+          "nombre": "Noche disposable administrator"
+        },
+        "rechazos": [
+          {
+            "actor": {
+              "id": 234,
+              "nombre": "Noche disposable administrator"
+            },
+            "motivo": "ENSAYO continuación reject-proposal sobre copia descartable",
+            "createdAt": "2026-09-26T03:05:37.873Z",
+            "propuestaId": "c802c235-8b55-4b2f-be12-58aa0aba7783"
+          }
+        ],
+        "reciboId": "48c28fd3-2c8d-4c32-9cdd-dd1ada4b79fb",
+        "revision": 6,
+        "clienteId": 2584,
+        "formaPago": "TRANSFERENCIA",
+        "avisoAdmin": false,
+        "propuestas": [
+          {
+            "id": "c802c235-8b55-4b2f-be12-58aa0aba7783",
+            "actor": {
+              "id": 234,
+              "nombre": "Noche disposable administrator"
+            },
+            "notas": [
+              {
+                "fecha": "2026-09-26T03:04:24.929Z",
+                "folio": "10",
+                "notaId": 10,
+                "facturada": false,
+                "ubicacionId": 1,
+                "saldoPendiente": "900.00",
+                "movimientoVentaId": 1
+              }
+            ],
+            "version": 1,
+            "createdAt": "2026-09-26T03:05:22.506Z",
+            "evidencia": {
+              "descripcion": "ENSAYO continuación initial-proposal sobre copia descartable",
+              "referencias": []
+            },
+            "asignaciones": [
+              {
+                "notaId": 10,
+                "importe": "900.00",
+                "movimientoVentaId": 1
+              }
+            ],
+            "importeFavorPropuesto": "0.00"
+          },
+          {
+            "id": "a56b486e-9255-46bd-8ce3-24776e1fef27",
+            "actor": {
+              "id": 234,
+              "nombre": "Noche disposable administrator"
+            },
+            "notas": [
+              {
+                "fecha": "2026-09-26T03:04:24.929Z",
+                "folio": "10",
+                "notaId": 10,
+                "facturada": false,
+                "ubicacionId": 1,
+                "saldoPendiente": "900.00",
+                "movimientoVentaId": 1
+              }
+            ],
+            "version": 2,
+            "createdAt": "2026-09-26T03:05:54.526Z",
+            "evidencia": {
+              "descripcion": "ENSAYO continuación reproposal sobre copia descartable",
+              "referencias": []
+            },
+            "asignaciones": [
+              {
+                "notaId": 10,
+                "importe": "900.00",
+                "movimientoVentaId": 1
+              }
+            ],
+            "importeFavorPropuesto": "0.00"
+          },
+          {
+            "id": "bef94f2a-c636-4406-b477-36830a61cfd3",
+            "actor": {
+              "id": 242,
+              "nombre": "CONTINUACION CONTADOR A"
+            },
+            "notas": [
+              {
+                "fecha": "2026-09-26T03:04:24.929Z",
+                "folio": "10",
+                "notaId": 10,
+                "facturada": false,
+                "ubicacionId": 1,
+                "saldoPendiente": "900.00",
+                "movimientoVentaId": 1
+              }
+            ],
+            "version": 3,
+            "createdAt": "2026-09-26T03:06:05.626Z",
+            "evidencia": {
+              "descripcion": "Preparación E11 por perfil A explícito; no aplicación.",
+              "referencias": [
+                "E11:d71a7e9f-aec2-45fa-921e-4f60209f33a6:perfil:1"
+              ]
+            },
+            "asignaciones": [
+              {
+                "notaId": 10,
+                "importe": "900.00",
+                "movimientoVentaId": 1
+              }
+            ],
+            "importeFavorPropuesto": "0.00"
+          }
+        ],
+        "capacidades": {
+          "puedeRecibir": true,
+          "puedePreparar": true,
+          "puedeAutorizar": false,
+          "puedeRechazar": false,
+          "puedeDevolver": false,
+          "puedeVerAvisos": true,
+          "puedeImprimir": true,
+          "preparacionADisponible": false
+        },
+        "ubicacionId": 1,
+        "aplicaciones": [
+          {
+            "id": "d66d9682-9210-461e-b2c9-e091726930cc",
+            "propuestaId": "bef94f2a-c636-4406-b477-36830a61cfd3",
+            "importe": "450.00",
+            "importeFavorGenerado": "0.00",
+            "asignaciones": [
+              {
+                "notaId": 10,
+                "movimientoVentaId": 1,
+                "importe": "450.00"
+              }
+            ],
+            "fechaAplicacion": "2026-09-26T03:06:31.646Z",
+            "actor": {
+              "id": 234,
+              "nombre": "Noche disposable administrator"
+            },
+            "evidencia": {
+              "descripcion": "ENSAYO continuación admin-partial-approval sobre copia descartable",
+              "referencias": []
+            },
+            "constanciaId": "cb442fbe-58ae-4b10-9a51-cdf8df14359e"
+          }
+        ],
+        "clienteNombre": "NOCHE26 CREDIT 1790391440045",
+        "cuentaDestino": "CUENTA_NO_FISCAL",
+        "antiguedadDias": 0,
+        "fechaRecepcion": "2026-09-26T03:05:03.328Z",
+        "notasIndicadas": [
+          {
+            "fecha": "2026-09-26T03:04:24.929Z",
+            "folio": "10",
+            "notaId": 10,
+            "facturada": false,
+            "ubicacionId": 1,
+            "saldoPendiente": "900.00",
+            "movimientoVentaId": 1
+          }
+        ],
+        "importeAplicado": "450.00",
+        "importeDevuelto": "0.00",
+        "importeRecibido": "900.00",
+        "ubicacionNombre": "Mariana",
+        "importePendiente": "450.00",
+        "algunaVezAplicado": true,
+        "sesionOperativaId": 1,
+        "evidenciaRecepcion": {
+          "descripcion": "ENSAYO dirigido pendiente sin aplicación, copia desechable",
+          "referencias": []
+        }
+      },
+      "readback": {
+        "id": "da1a5fde-6de7-4c6d-939c-da8c5180596f",
+        "revision": 6,
+        "estado": "PARCIAL",
+        "recibido": "900.00",
+        "aplicado": "450.00",
+        "retenido": "450.00",
+        "propuestas": 3,
+        "rechazos": 1,
+        "refundEnabled": false
+      }
+    },
+    {
+      "action": "site-control",
+      "count": 1,
+      "combos": [
+        "Vista Global"
+      ]
+    },
+    {
+      "action": "forbidden-refund-read",
+      "status": 403,
+      "body": {
+        "error": {
+          "code": "E5_DISABLED",
+          "message": "La devolución de dinero E5 permanece cerrada."
+        }
+      }
+    }
+  ],
+  "startedAt": "2026-09-26T03:06:13.544Z",
+  "completedAt": "2026-09-26T03:06:40.395Z"
+}

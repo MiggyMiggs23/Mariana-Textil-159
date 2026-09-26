@@ -1,0 +1,22 @@
+{
+  "status": "PARTIAL_OR_BLOCKED",
+  "checks": [
+    {
+      "id": "return-settled",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Frozen active UI offers no roll-return action here; business refund remains BLOCKED, not PASS. No gate changed."
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "tarea-3/return-settled/frozen-return-availability.png",
+      "sha256": "527d6dd740329fafc657369ba2285074575c354fb13295d7934be4a47100b312"
+    },
+    {
+      "file": "tarea-3/return-settled/return-settled-0.png",
+      "sha256": "2341ffaf32621fac1bd056e23309b3bfc937ca0cf63bd8be6f6454dae7089535"
+    }
+  ],
+  "startedAt": "2026-09-26T03:17:55.822Z",
+  "technicalErrors": []
+}

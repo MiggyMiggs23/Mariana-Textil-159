@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "operational-site-readback",
+      "status": "PASS",
+      "evidence": {
+        "id": 1,
+        "name": "Mariana"
+      }
+    },
+    {
+      "id": "synthetic-client-cash",
+      "status": "PASS",
+      "evidence": {
+        "reusedAcknowledgedFixture": true,
+        "id": 2583
+      }
+    },
+    {
+      "id": "synthetic-client-credit",
+      "status": "PASS",
+      "evidence": {
+        "reusedAcknowledgedFixture": true,
+        "id": 2584
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "tarea-3/native-fixtures/synthetic-client-cash-0.png",
+      "sha256": "ebcf686a4004686e5a65ba78d477226cc547c5a6e0a81323f8f0001328e71328"
+    },
+    {
+      "file": "tarea-3/native-fixtures/synthetic-client-credit-0.png",
+      "sha256": "ebcf686a4004686e5a65ba78d477226cc547c5a6e0a81323f8f0001328e71328"
+    }
+  ],
+  "startedAt": "2026-09-26T02:57:40.013Z"
+}

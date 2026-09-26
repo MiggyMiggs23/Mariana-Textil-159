@@ -1,0 +1,13 @@
+{
+  "id": "flow-close-recovery",
+  "task": 3,
+  "status": "PASS",
+  "exitCode": 0,
+  "resultFile": "tarea-3/flow-close-recovery/close-result.json",
+  "observations": [
+    {
+      "item": "step-0",
+      "status": 200
+    }
+  ]
+}

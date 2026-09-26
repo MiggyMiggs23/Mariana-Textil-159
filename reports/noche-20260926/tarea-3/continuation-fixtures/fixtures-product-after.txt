@@ -1,0 +1,734 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Vista Global
+N
+
+Noche disposable administrator
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Catálogo de Productos
+
+Gestión de telas, colores, SKUs e inventario general.
+
+Importar
+Nuevo Producto
+Todos los prod.
+Todos los colores
+Todas las unid.
+Activos
+Columnas:
+Ancho
+Composición
+Gramaje
+1223 productos en 133 telas
+Expandir todoColapsar todo
+Alaska
+12 colores
+0.00 Kg.
+· 0 rollos
+Color
+Alemanisco
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Ambassador
+4 colores
+0.00 Mts.
+· 0 rollos
+Color
+Bombay
+43 colores
+0.00 Mts.
+· 0 rollos
+Color
+Borrega Delgada
+3 colores
+0.00 Mts.
+· 0 rollos
+Color
+Borrega Gruesa
+5 colores
+0.00 Mts.
+· 0 rollos
+Color
+Borreguin
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Bramante 2.80 Liso
+12 colores
+0.00 Mts.
+· 0 rollos
+Color
+Bramante Fantasia
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Cambaya Bordada
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Cambaya Rayada
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Campesina Flor Chica
+11 colores
+0.00 Mts.
+· 0 rollos
+Color
+Campesina Flor Grande
+10 colores
+0.00 Mts.
+· 0 rollos
+Color
+Campesina Flor Margarita
+10 colores
+0.00 Mts.
+· 0 rollos
+Color
+Campesina Flor Mediana
+12 colores
+0.00 Mts.
+· 0 rollos
+Color
+Capitonado
+4 colores
+0.00 Mts.
+· 0 rollos
+Color
+Cascabel 15 Mm
+1 colores
+0.00 Bolsas
+· 0 cajas
+Color
+Cascabel 22 Mm
+1 colores
+0.00 Bolsas
+· 0 cajas
+Color
+Chenille
+6 colores
+0.00 Kg.
+· 0 rollos
+Color
+CONTINUACION 2D0AA2 ALGODON
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Cuadrille 90
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Cuadrille Mariana
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Cuadrille San Miguel
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Diablo
+9 colores
+0.00 Mts.
+· 0 rollos
+Color
+Diamante Economico
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Diamante Quintado
+21 colores
+0.00 Mts.
+· 0 rollos
+Color
+Dubetina
+11 colores
+0.00 Mts.
+· 0 rollos
+Color
+Dublin
+17 colores
+0.00 Kg.
+· 0 rollos
+Color
+Encaje
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Etamina
+18 colores
+0.00 Mts.
+· 0 rollos
+Color
+Etamina Buena
+4 colores
+0.00 Mts.
+· 0 rollos
+Color
+Etamina Economica
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Fieltro
+37 colores
+0.00 Mts.
+· 0 rollos
+Color
+Flanel
+27 colores
+0.00 Kg.
+· 0 rollos
+Color
+Flannel Cascara
+1 colores
+0.00 Kg.
+· 0 rollos
+Color
+Flannel Estampado
+1 colores
+0.00 Kg.
+· 0 rollos
+Color
+Flannel Michelin
+12 colores
+0.00 Kg.
+· 0 rollos
+Color
+Forro Cartera 60
+13 colores
+0.00 Mts.
+· 0 rollos
+Color
+Forro Cartera 70
+28 colores
+0.00 Mts.
+· 0 rollos
+Color
+Franela 1.5
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Franela 2.40
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Franela 50
+5 colores
+0.00 Mts.
+· 0 rollos
+Color
+Franela 60
+5 colores
+0.00 Mts.
+· 0 rollos
+Color
+Franela Cilo Baby
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Franela Cuadros 1.50
+5 colores
+0.00 Mts.
+· 0 rollos
+Color
+Franela Cuadros 1.80
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Franela Festonada
+5 colores
+0.00 Mts.
+· 0 rollos
+Color
+Gabardina Camisera
+29 colores
+0.00 Mts.
+· 0 rollos
+Color
+Gabardina Ducatti
+25 colores
+0.00 Mts.
+· 0 rollos
+Color
+Gabardina Gap 1.70
+17 colores
+0.00 Mts.
+· 0 rollos
+Color
+Gabardina Metepec 1.50
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Gabardina Metepec 1.70
+33 colores
+0.00 Mts.
+· 0 rollos
+Color
+Guata 100
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Guata 150
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Guata 200
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Guata 70
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Indiolino 1.8
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Indiolino 2.0
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Jerga Cocina
+6 colores
+0.00 Pzas.
+· 0 piezas
+Color
+Jerga Piso
+2 colores
+0.00 Pzas.
+· 0 piezas
+Color
+Licra Metalica
+17 colores
+0.00 Mts.
+· 0 rollos
+Color
+Licra Metalica Foil
+6 colores
+0.00 Mts.
+· 0 rollos
+Color
+Loneta Asturcon
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Loneta Buena
+4 colores
+0.00 Mts.
+· 0 rollos
+Color
+Loneta Buena Cruda 82
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Loneta Economica
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Loneta Tripoli
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Macuco
+9 colores
+0.00 Mts.
+· 0 rollos
+Color
+Macuco Travis
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Mandilero
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Manta Chipre
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Manta Cresponada
+4 colores
+0.00 Mts.
+· 0 rollos
+Color
+Manta Libanito
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Manta Libano
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Manta Prelavada
+19 colores
+0.00 Mts.
+· 0 rollos
+Color
+Marquiset
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Mascota
+17 colores
+0.00 Mts.
+· 0 rollos
+Color
+Mascotin
+18 colores
+0.00 Mts.
+· 0 rollos
+Color
+Mascoton
+19 colores
+0.00 Mts.
+· 0 rollos
+Color
+Mezclilla 10 Oz
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Mezclilla 12 Oz
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Mezclilla 14 Oz
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Mezclilla 14 Oz Cruda
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Mezclilla 4 Oz
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Mezclilla 6 Oz
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Mezclilla 8 Oz
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Mezclilla Black Black
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Mezclilla Diamantina 10 Oz
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Mezclilla Stretch 12 Oz
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Microbonding
+1 colores
+0.00 Kg.
+· 0 rollos
+Color
+Microfibra
+26 colores
+0.00 Mts.
+· 0 rollos
+Color
+Microtoalla
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Microtrapo
+5 colores
+0.00 Mts.
+· 0 rollos
+Color
+Paliacate
+9 colores
+0.00 Mts.
+· 0 rollos
+Color
+Pellon Adherible
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Pellon Adherible Imp.
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Pellon Bordado 55
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Pellon Bordatec
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Pellon Escolar
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Pique Vera
+1 colores
+0.00 Kg.
+· 0 rollos
+Color
+Plastico Cristal
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Plastico Mantel
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Plastico Mantel Mascota
+13 colores
+0.00 Mts.
+· 0 rollos
+Color
+Polar
+38 colores
+0.00 Kg.
+· 0 rollos
+Color
+PomPon 25 Mm
+1 colores
+0.00 Bolsas
+· 0 cajas
+Color
+PomPon 38 Mm
+1 colores
+0.00 Bolsas
+· 0 cajas
+Color
+Pongee
+10 colores
+0.00 Mts.
+· 0 rollos
+Color
+Popelina
+59 colores
+0.00 Mts.
+· 0 rollos
+Color
+Poquetin Alpes
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Poquetin Doble Ancho
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Poquetin Rayado
+3 colores
+0.00 Mts.
+· 0 rollos
+Color
+Razo
+39 colores
+0.00 Mts.
+· 0 rollos
+Color
+Relleno
+1 colores
+0.00 Bolsas
+· 0 cajas
+Color
+Ripstop
+7 colores
+0.00 Mts.
+· 0 rollos
+Color
+Romance
+10 colores
+0.00 Mts.
+· 0 rollos
+Color
+Sarga
+14 colores
+0.00 Mts.
+· 0 rollos
+Color
+Soccer
+8 colores
+0.00 Kg.
+· 0 rollos
+Color
+Sportock
+18 colores
+0.00 Kg.
+· 0 rollos
+Color
+Tafeta
+43 colores
+60.00 Mts.
+· 6 rollos
+Color
+Tafetan
+66 colores
+0.00 Mts.
+· 0 rollos
+Color
+Tafetan Estampado Muertos
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Tafetan Estampado Navidad
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Tafetan Gota de Oro
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Tafetan Pixeleado
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Toalla
+20 colores
+0.00 Kg.
+· 0 rollos
+Color
+Tricot Adherible
+2 colores
+0.00 Mts.
+· 0 rollos
+Color
+Tricot de 3 Mts.
+35 colores
+0.00 Mts.
+· 0 rollos
+Color
+Tul 15
+28 colores
+0.00 Mts.
+· 0 rollos
+Color
+Tul 70
+26 colores
+0.00 Mts.
+· 0 rollos
+Color
+Tul Estrella
+27 colores
+0.00 Mts.
+· 0 rollos
+Color
+Tul Glitter
+26 colores
+0.00 Mts.
+· 0 rollos
+Color
+Tuzor
+1 colores
+0.00 Mts.
+· 0 rollos
+Color
+Yute
+33 colores
+0.00 Mts.
+· 0 rollos
+Color
+Producto creado exitosamente

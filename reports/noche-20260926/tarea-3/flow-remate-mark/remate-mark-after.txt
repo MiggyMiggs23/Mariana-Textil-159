@@ -1,0 +1,86 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Vista Global
+2
+N
+
+Noche disposable administrator
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Motivo obligatorio para rollo 11Retirar remate
+Volver a inventario
+CONTINUACION 2D0AA2 ALGODON
+/
+AZUL
+SKU: CON2D0ALG-AZU
+Mariana
+Planta Alta
+Cambiar
+DISPONIBLE
+Cantidad Actual
+10.00 Mts.
+Costo Total
+$500.00
+$50.00 / Mts.
+Fecha de Ingreso
+26 sep 2026
+Notas
+Sin notas
+10000011
+Reimprimir Etiqueta
+Estado Operativo
+
+El rollo está marcado como DISPONIBLE y está intacto.
+
+Historial de Movimientos
+
+Trazabilidad completa desde el alta hasta el estado actual.
+
+Fecha	Tipo	Sitio	Cantidad	Saldo Posterior	Referencia	
+26/09/2026 03:00	RECEPCION		+10.00	40.00	
+Entrada MA-000003
+	

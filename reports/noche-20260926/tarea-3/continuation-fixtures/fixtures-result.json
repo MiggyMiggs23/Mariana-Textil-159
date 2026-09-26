@@ -1,0 +1,61 @@
+{
+  "stage": "fixtures",
+  "status": "BLOCKED_OR_UNCERTAIN",
+  "steps": [
+    {
+      "action": "native-login",
+      "role": "ADMIN",
+      "status": 200
+    },
+    {
+      "action": "supplier",
+      "httpStatus": 201,
+      "response": {
+        "id": 226,
+        "nombre": "CONTINUACION 2D0AA2 PROVEEDOR",
+        "tipo": "NACIONAL",
+        "monedaDefault": "MXN",
+        "contactoNombre": null,
+        "telefono": null,
+        "correo": null,
+        "pais": null,
+        "notas": null,
+        "activo": true,
+        "createdAt": "2026-09-26T02:57:48.403Z"
+      },
+      "readback": {
+        "id": 226
+      }
+    },
+    {
+      "action": "product",
+      "httpStatus": 201,
+      "response": {
+        "id": 2078,
+        "sku": "CON2D0ALG-AZU",
+        "tela": "CONTINUACION 2D0AA2 ALGODON",
+        "color": "AZUL",
+        "colorHex": null,
+        "anchoCm": null,
+        "composicion": null,
+        "gramajeGm2": null,
+        "unidad": "METRO",
+        "seVendePorMetro": false,
+        "precioSugerido": "100.00",
+        "notas": null,
+        "activo": true,
+        "rollos": 0,
+        "cantidad": "0.000",
+        "sitiosConExistencia": 0,
+        "unidadBloqueada": false,
+        "createdAt": "2026-09-26T02:57:54.167Z",
+        "updatedAt": "2026-09-26T02:57:54.167Z"
+      },
+      "readback": {
+        "id": 2078
+      }
+    }
+  ],
+  "startedAt": "2026-09-26T02:57:43.627Z",
+  "error": "locator.click: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('btn-save-entrada')\u001b[22m\n\u001b[2m    - locator resolved to <button disabled data-testid=\"btn-save-entrada\" class=\"inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 flex-1 sm:flex-none bg-[#1e3a8a] hover:bg-[#1e3a8a]/90 text-white shadow-md\">Guardar entrada</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    29 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+}

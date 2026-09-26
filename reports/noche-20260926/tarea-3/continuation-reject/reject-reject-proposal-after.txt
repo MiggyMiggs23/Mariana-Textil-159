@@ -1,0 +1,95 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Mariana
+2
+N
+
+Noche disposable administrator
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Volver a pendientes
+NOCHE26 CREDIT 1790391440045 · PENDIENTE
+
+Recibió Noche disposable administrator · Mariana · 25/9/2026, 9:05:03 p.m.
+
+0 días desde recepción
+
+Recibido $900.00 · aplicado $0.00 · pendiente $900.00 · devuelto $0.00
+
+TRANSFERENCIA · CUENTA_NO_FISCAL · ENSAYO dirigido pendiente sin aplicación, copia desechable
+
+El retenido no baja deuda ni aumenta disponible/favor. Aplicar no registra otro cobro.
+
+Recibo inmediato
+Actualizar recepción y contexto
+
+Comprobando y registrando… No repitas la operación.
+
+Operación confirmada · PENDIENTE. Retenido: $900.00.
+
+Ver recepción y cronología
+Recibo inmediato
+Notas indicadas al recibir
+
+Nota 10 · cargo #1 · saldo al recibir $900.00
+
+Preparar / resolver
+Confirmar rechazar
+
+ENSAYO continuación reject-proposal sobre copia descartable · El dinero permanece retenido.
+
+VolverConfirmar rechazar
+Historial inmutable de propuestas y resoluciones
+Propuesta v1
+
+25/9/2026, 9:05:22 p.m. · Noche disposable administrator · ENSAYO continuación initial-proposal sobre copia descartable
+
+Nota 10, cargo #1: $900.00
+
+Favor propuesto: $0.00
+
+Rechazo · 25/9/2026, 9:05:37 p.m. · Noche disposable administrator · ENSAYO continuación reject-proposal sobre copia descartable

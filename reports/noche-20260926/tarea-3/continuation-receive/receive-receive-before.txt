@@ -1,0 +1,100 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Mariana
+2
+N
+
+Noche disposable administrator
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Cobros pendientes de aplicación
+Dinero recibido pendiente de aplicación
+
+No disminuye deuda ni aumenta disponible o saldo a favor mientras espera autorización.
+
+Abrir bandeja de pendientesOcultar captura
+Buscar cliente autorizado
+Buscar cliente
+Selecciona cliente…
+NOCHE26 CREDIT 1790391440045
+Recepción real · NOCHE26 CREDIT 1790391440045 · Entrada CAJA
+
+No es recaptura. Recibido sin aplicar no constituye saldo a favor. Contexto: 25/9/2026, 9:04:56 p.m..
+
+Confirmar recepción real
+
+Recibido, pendiente de aplicación; deuda y disponible no cambian.
+
+Recibir $900.00 · aplicar $0.00 · retenido $900.00
+
+TRANSFERENCIA · CUENTA_NO_FISCAL · ENSAYO dirigido pendiente sin aplicación, copia desechable
+
+Nota 10 · cargo #1 · saldo $900.00
+
+Sin otra cobranza al aplicar posteriormente. Una aplicación parcial hace no devolvible todo remanente.
+
+Volver y modificarConfirmar dinero recibido
+Avisos ADMIN: desde tres días de recepción
+Actualizar lista
+
+No hay recepciones en este alcance/filtro.
+
+Primera página
+Siguiente
+Recepciones · importe y antigüedad
+Estado
+Todos
+PENDIENTE
+PARCIAL
+APLICADO
+DEVUELTO
+Actualizar lista
+
+No hay recepciones en este alcance/filtro.
+
+Primera página
+Siguiente

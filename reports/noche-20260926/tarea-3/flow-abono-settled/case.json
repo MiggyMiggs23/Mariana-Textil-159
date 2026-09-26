@@ -1,0 +1,13 @@
+{
+  "id": "flow-abono-settled",
+  "task": 3,
+  "status": "PASS",
+  "exitCode": 0,
+  "resultFile": "tarea-3/flow-abono-settled/abono-result.json",
+  "observations": [
+    {
+      "item": "ordinary-abono-native",
+      "status": 201
+    }
+  ]
+}

@@ -1,0 +1,188 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Mariana
+1
+N
+
+Noche disposable administrator
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Caja operativa
+Cartera / Estado de cuenta
+Historial de cortes
+Caja Operativa
+
+Cobro de tickets pendientes y cortes de caja.
+
+Sesión Abierta
+Realizar Corte
+Salidas de dinero
+
+Pagos operativos y extraordinarios (E4).
+
+Tipo de Salida
+Extraordinaria
+Extraordinaria
+Proveedor
+Monto
+Cuenta de origen
+Efectivo
+Efectivo
+
+E4 opera exclusivamente con Caja Física; Fondo y mezcla E12 están desactivados.
+
+Proveedor
+Sin proveedor
+Sin proveedor
+Alan Hilu
+Alfredo Cojab
+Alfredo Lorenzo
+Alfredo Miguel
+BeeBags
+Bordatec
+CONTINUACION 2D0AA2 PROVEEDOR
+Carpe
+Cobitel
+David Ohanna
+Dona Hi
+Eduardo Hussni
+El Asturcon
+FisFiber
+Gerardo Gonzales
+Grupo Vision
+Insertex
+Jesus Poo
+Juan Carlos Priede
+Ling Si
+Notesa
+Olegario Alvarez
+Paulina
+Ping Li
+Ricardo Miguel
+Salomon Hilu
+Salomon Hilu Cojab
+SkyTex
+Motivo
+
+Saldo Caja (servidor): 999.00. Se revalida al confirmar; la API conserva la autoridad final.
+
+Motivo de desbloqueo extraordinario (solo si hay insuficiencia)
+Registrar salida extraordinaria
+Registro de Salidas
+ENSAYO56 salida extraordinaria
+Efectivo
+·
+03:03
+·
+EXTRAORDINARIA
+$1.00
+Pendiente
+
+Desbloqueo extraordinario de Caja
+
+ENSAYO56 ADMIN autoriza insuficiencia desechable
+
+Usuario #234 · saldo $0.00 · egreso $1.00 · 26 sep 2026, 03:03
+
+Aceptar
+Reclamar
+Tickets de Caja
+Ticket folio 1
+2:27 AM
+$1,500.00
+Cobrar
+Ticket folio 2
+3:00 AM
+$1,000.00
+Cobrar
+Ticket folio 3
+3:01 AM
+$1,000.00
+Cobrar
+Ticket folio 4
+3:01 AM
+$1,000.00
+Cobrar
+Ticket folio 5
+3:01 AM
+$1,000.00
+Cobrar
+Ticket folio 6
+3:02 AM
+$1,000.00
+Cobrar
+Ticket folio 7
+3:02 AM
+$1,000.00
+Cobrar
+Nota folio 10
+3:04 AM
+$1,000.00
+Autorizar
+Ticket folio 8
+3:03 AM
+•
+Cobrado a las 3:03 AM
+Efectivo
+$1,000.00
+Ticket folio 9
+3:03 AM
+•
+Cobrado a las 3:04 AM
+Transferencia
+$1,000.00
+Autorizar nota de crédito
+
+La autorización registra la venta a crédito en Caja.
+
+Sitio operativo de origen
+
+Operación de crédito sin movimiento de dinero
+
+Cancelar
+Autorizar
+Cerrar

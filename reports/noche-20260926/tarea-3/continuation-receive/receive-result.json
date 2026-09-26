@@ -1,0 +1,85 @@
+{
+  "stage": "receive",
+  "status": "PASS",
+  "steps": [
+    {
+      "action": "native-login",
+      "role": "ADMIN",
+      "status": 200
+    },
+    {
+      "action": "site-control",
+      "count": 1,
+      "combos": [
+        "Vista Global"
+      ]
+    },
+    {
+      "action": "receive",
+      "httpStatus": 201,
+      "response": {
+        "id": "da1a5fde-6de7-4c6d-939c-da8c5180596f",
+        "revision": 1,
+        "clienteId": 2584,
+        "clienteNombre": "NOCHE26 CREDIT 1790391440045",
+        "ubicacionId": 1,
+        "ubicacionNombre": "Mariana",
+        "importeRecibido": "900.00",
+        "importeAplicado": "0.00",
+        "importePendiente": "900.00",
+        "importeDevuelto": "0.00",
+        "fechaRecepcion": "2026-09-26T03:05:03.328Z",
+        "formaPago": "TRANSFERENCIA",
+        "cuentaDestino": "CUENTA_NO_FISCAL",
+        "sesionOperativaId": 1,
+        "estado": "PENDIENTE",
+        "algunaVezAplicado": false,
+        "receptor": {
+          "id": 234,
+          "nombre": "Noche disposable administrator"
+        },
+        "evidenciaRecepcion": {
+          "descripcion": "ENSAYO dirigido pendiente sin aplicación, copia desechable",
+          "referencias": []
+        },
+        "notasIndicadas": [
+          {
+            "notaId": 10,
+            "movimientoVentaId": 1,
+            "folio": "10",
+            "ubicacionId": 1,
+            "fecha": "2026-09-26T03:04:24.929Z",
+            "saldoPendiente": "900.00",
+            "facturada": false
+          }
+        ],
+        "propuestas": [],
+        "aplicaciones": [],
+        "rechazos": [],
+        "reciboId": "48c28fd3-2c8d-4c32-9cdd-dd1ada4b79fb",
+        "antiguedadDias": 0,
+        "avisoAdmin": false,
+        "capacidades": {
+          "puedeRecibir": true,
+          "puedePreparar": true,
+          "puedeAutorizar": false,
+          "puedeRechazar": false,
+          "puedeDevolver": false,
+          "puedeVerAvisos": true,
+          "puedeImprimir": true,
+          "preparacionADisponible": false
+        }
+      },
+      "readback": {
+        "id": "da1a5fde-6de7-4c6d-939c-da8c5180596f",
+        "estado": "PENDIENTE",
+        "recibido": "900.00",
+        "retenido": "900.00",
+        "aplicado": "0.00",
+        "revision": 1
+      }
+    }
+  ],
+  "startedAt": "2026-09-26T03:04:45.227Z",
+  "completedAt": "2026-09-26T03:05:05.357Z"
+}

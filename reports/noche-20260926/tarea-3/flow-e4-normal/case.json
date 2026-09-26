@@ -1,0 +1,13 @@
+{
+  "id": "flow-e4-normal",
+  "task": 3,
+  "status": "PASS",
+  "exitCode": 0,
+  "resultFile": "tarea-3/flow-e4-normal/e4-normal-result.json",
+  "observations": [
+    {
+      "item": "step-0",
+      "status": 201
+    }
+  ]
+}

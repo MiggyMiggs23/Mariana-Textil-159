@@ -1,0 +1,172 @@
+{
+  "stage": "abono",
+  "status": "PASS",
+  "steps": [
+    {
+      "action": "ordinary-abono-native",
+      "status": 201,
+      "body": {
+        "recibo": {
+          "clienteId": 2584,
+          "importeCentavos": 145000,
+          "asignaciones": [
+            {
+              "movimientoVentaId": 1,
+              "ticketId": 10,
+              "folio": 10,
+              "aplicadoCentavos": 45000,
+              "saldoAntesCentavos": 45000,
+              "saldoDespuesCentavos": 0
+            },
+            {
+              "movimientoVentaId": 4,
+              "ticketId": 12,
+              "folio": 12,
+              "aplicadoCentavos": 100000,
+              "saldoAntesCentavos": 100000,
+              "saldoDespuesCentavos": 0
+            }
+          ],
+          "remanenteCentavos": 0,
+          "saldoAFavorCentavos": 0,
+          "deudaCentavos": 0,
+          "origen": "CAJA",
+          "version": 1,
+          "folio": "E3-1-00000002",
+          "movimientoId": 5,
+          "clienteNombre": "NOCHE26 CREDIT 1790391440045",
+          "formaPago": "EFECTIVO",
+          "cuentaDestino": "CAJA_FISICA",
+          "clienteTelefono": null,
+          "clienteRfc": null,
+          "sitioNombre": "Mariana",
+          "actorNombre": "Noche disposable administrator",
+          "sitioId": 1,
+          "sesionCajaId": 1,
+          "recibidoEn": "2026-09-26T03:14:59.631Z",
+          "registradoEn": "2026-09-26T03:14:59.631Z",
+          "actorId": 234,
+          "motivo": null
+        },
+        "replay": false
+      }
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/login",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e11/identidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/admin/test-reset",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/etiquetas/alertas/count",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/inventario/ubicaciones",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/locations",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e5/disponibilidad",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/caja/abonos-e3/contexto",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/caja/abonos-e3/contexto",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/e5/avisos",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/caja/abonos-e3/contexto",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/caja/abonos-e3/vista-previa",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/api/caja/abonos-e3",
+      "status": 201,
+      "method": "POST"
+    }
+  ]
+}

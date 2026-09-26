@@ -1,0 +1,219 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "cash-session-independent-read",
+      "status": "PASS",
+      "evidence": {
+        "status": 200,
+        "body": {
+          "sesion": {
+            "id": 1,
+            "ubicacionId": 1,
+            "nombreUbicacion": "Mariana",
+            "usuarioId": 234,
+            "nombreUsuario": "Noche disposable administrator",
+            "abiertaAt": "2026-09-26T03:03:09.843Z",
+            "cerradaAt": null,
+            "fondoInicial": "0.00",
+            "efectivoContado": null,
+            "estado": "ABIERTA"
+          },
+          "resumen": {
+            "ticketsCobrados": 2,
+            "documentosPendientes": 7,
+            "totalCobrado": "2000.00",
+            "efectivoEsperado": "1098.00",
+            "efectivoDesglose": {
+              "version": "E2",
+              "fondoInicial": "0.00",
+              "cobrosTickets": "1000.00",
+              "abonosFisicos": "100.00",
+              "cobrosRetenidos": "0.00",
+              "salidasFisicas": "2.00",
+              "efectivoEsperado": "1098.00",
+              "documentos": [
+                {
+                  "origen": "FONDO_INICIAL",
+                  "id": "1",
+                  "folio": null,
+                  "importe": "0.00",
+                  "href": null,
+                  "evidencia": {
+                    "referencia": "Sesión de caja #1",
+                    "motivo": null,
+                    "fecha": "2026-09-26T03:03:09.843Z",
+                    "usuarioId": 234,
+                    "proveedorId": null,
+                    "usuarioNombre": "Noche disposable administrator",
+                    "proveedorNombre": null
+                  }
+                },
+                {
+                  "origen": "TICKET",
+                  "id": "1",
+                  "folio": "8",
+                  "importe": "1000.00",
+                  "href": "/tickets/8"
+                },
+                {
+                  "origen": "ABONO",
+                  "id": "ABONO_ORDINARIO:59a396bc-7ecd-434c-befd-d0ec27244b89",
+                  "folio": null,
+                  "importe": "100.00",
+                  "href": "/clientes/2584/movimientos/2",
+                  "evidencia": {
+                    "referencia": null,
+                    "motivo": "Abono real recibido desde Caja",
+                    "fecha": "2026-09-26T03:04:35.984Z",
+                    "usuarioId": 234,
+                    "proveedorId": null,
+                    "usuarioNombre": "Noche disposable administrator",
+                    "proveedorNombre": null
+                  }
+                },
+                {
+                  "origen": "SALIDA",
+                  "id": "1",
+                  "folio": null,
+                  "importe": "1.00",
+                  "href": null,
+                  "evidencia": {
+                    "referencia": null,
+                    "motivo": "ENSAYO56 salida extraordinaria",
+                    "fecha": "2026-09-26T03:03:22.832Z",
+                    "usuarioId": 234,
+                    "proveedorId": null,
+                    "usuarioNombre": "Noche disposable administrator",
+                    "proveedorNombre": null
+                  }
+                },
+                {
+                  "origen": "SALIDA",
+                  "id": "2",
+                  "folio": null,
+                  "importe": "1.00",
+                  "href": null,
+                  "evidencia": {
+                    "referencia": null,
+                    "motivo": "ENSAYO56 gasto ordinario extraordinario con saldo suficiente",
+                    "fecha": "2026-09-26T03:06:48.837Z",
+                    "usuarioId": 234,
+                    "proveedorId": null,
+                    "usuarioNombre": "Noche disposable administrator",
+                    "proveedorNombre": null
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "screenshots": [],
+  "startedAt": "2026-09-26T03:12:24.771Z",
+  "actual": {
+    "sesion": {
+      "id": 1,
+      "ubicacionId": 1,
+      "nombreUbicacion": "Mariana",
+      "usuarioId": 234,
+      "nombreUsuario": "Noche disposable administrator",
+      "abiertaAt": "2026-09-26T03:03:09.843Z",
+      "cerradaAt": null,
+      "fondoInicial": "0.00",
+      "efectivoContado": null,
+      "estado": "ABIERTA"
+    },
+    "resumen": {
+      "ticketsCobrados": 2,
+      "documentosPendientes": 7,
+      "totalCobrado": "2000.00",
+      "efectivoEsperado": "1098.00",
+      "efectivoDesglose": {
+        "version": "E2",
+        "fondoInicial": "0.00",
+        "cobrosTickets": "1000.00",
+        "abonosFisicos": "100.00",
+        "cobrosRetenidos": "0.00",
+        "salidasFisicas": "2.00",
+        "efectivoEsperado": "1098.00",
+        "documentos": [
+          {
+            "origen": "FONDO_INICIAL",
+            "id": "1",
+            "folio": null,
+            "importe": "0.00",
+            "href": null,
+            "evidencia": {
+              "referencia": "Sesión de caja #1",
+              "motivo": null,
+              "fecha": "2026-09-26T03:03:09.843Z",
+              "usuarioId": 234,
+              "proveedorId": null,
+              "usuarioNombre": "Noche disposable administrator",
+              "proveedorNombre": null
+            }
+          },
+          {
+            "origen": "TICKET",
+            "id": "1",
+            "folio": "8",
+            "importe": "1000.00",
+            "href": "/tickets/8"
+          },
+          {
+            "origen": "ABONO",
+            "id": "ABONO_ORDINARIO:59a396bc-7ecd-434c-befd-d0ec27244b89",
+            "folio": null,
+            "importe": "100.00",
+            "href": "/clientes/2584/movimientos/2",
+            "evidencia": {
+              "referencia": null,
+              "motivo": "Abono real recibido desde Caja",
+              "fecha": "2026-09-26T03:04:35.984Z",
+              "usuarioId": 234,
+              "proveedorId": null,
+              "usuarioNombre": "Noche disposable administrator",
+              "proveedorNombre": null
+            }
+          },
+          {
+            "origen": "SALIDA",
+            "id": "1",
+            "folio": null,
+            "importe": "1.00",
+            "href": null,
+            "evidencia": {
+              "referencia": null,
+              "motivo": "ENSAYO56 salida extraordinaria",
+              "fecha": "2026-09-26T03:03:22.832Z",
+              "usuarioId": 234,
+              "proveedorId": null,
+              "usuarioNombre": "Noche disposable administrator",
+              "proveedorNombre": null
+            }
+          },
+          {
+            "origen": "SALIDA",
+            "id": "2",
+            "folio": null,
+            "importe": "1.00",
+            "href": null,
+            "evidencia": {
+              "referencia": null,
+              "motivo": "ENSAYO56 gasto ordinario extraordinario con saldo suficiente",
+              "fecha": "2026-09-26T03:06:48.837Z",
+              "usuarioId": 234,
+              "proveedorId": null,
+              "usuarioNombre": "Noche disposable administrator",
+              "proveedorNombre": null
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rollLinks": []
+}

@@ -1,0 +1,18 @@
+{
+  "stage": "close",
+  "status": "BLOCKED",
+  "steps": [],
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 401,
+      "method": "GET"
+    },
+    {
+      "path": "/api/auth/login",
+      "status": 500,
+      "method": "POST"
+    }
+  ],
+  "error": "Native login 500"
+}
