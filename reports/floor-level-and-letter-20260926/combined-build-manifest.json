@@ -1,0 +1,77 @@
+{
+  "status": "BUILT_NOT_ACTIVATED",
+  "checks": [
+    {
+      "name": "combined-ui-build",
+      "status": 0,
+      "signal": null
+    },
+    {
+      "name": "combined-libs-typecheck",
+      "status": 0,
+      "signal": null
+    },
+    {
+      "name": "combined-api-typecheck",
+      "status": 0,
+      "signal": null
+    },
+    {
+      "name": "combined-ui-typecheck",
+      "status": 0,
+      "signal": null
+    }
+  ],
+  "apiFiles": {
+    "assets/fonts/DEJAVU-LICENSE.txt": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9",
+    "assets/fonts/DejaVuSans.ttf": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+    "index.mjs": "e3a10e34c6c65ddde494fb9a780e267c8364694c0bd3d67809d9ad10f3914a10",
+    "index.mjs.map": "0c5c77825157a4e88de52f537d047dc446d480439f917857c952889272fccec3",
+    "pino-file.mjs": "b6cd7226e291a1a5ab50df1de9da2d87d816f91cf70d86139a3ca444bce30b72",
+    "pino-file.mjs.map": "738196ea9cf9c8b58cf317763585b4da1c64113e2ee3d6f1547d2622c51fd56d",
+    "pino-pretty.mjs": "1a05aa85bf5ce035c5d1f19a32e0308d6dbab00c7194e1936c7f632d10994fac",
+    "pino-pretty.mjs.map": "a7d3c3a4613f9648f8cb7e69a6abeacdbe3934792fcc24cc0af74fd6fde3eb90",
+    "pino-worker.mjs": "8e627b9c75a9f468dbafebf43f3d99addfe84312473d0cfa8b38bbdb71cb5465",
+    "pino-worker.mjs.map": "4304c9a6729aefa90fd65a3d13f5dc3f3e3efeaf6dda6c7528a87d795a4c7ee4",
+    "thread-stream-worker.mjs": "b490228463d2d47a57932bcbe6bb307af9c54d1b4f3953191e1077e791bb188d",
+    "thread-stream-worker.mjs.map": "e5fd66fcec3ca622f449a275bd6b14d061ed62ce34faadce8716b363a4df878a"
+  },
+  "frontendFiles": {
+    "assets/index-CJ5sQYvB.js": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c",
+    "assets/index-DM4fp8qL.css": "7bdf6dd0e278a322da6f3d9f6c51c91a1b04ad92cc34ce5bca80adc53fe49e01",
+    "assets/index-DOJPhpRt.js": "9e1ea6444d476d03674148fa93dc7233803336fef7ecb5f2f35f3a7091e9b6dc",
+    "assets/mariana-textil-logo-FFOiXRd3.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "assets/mariana-textil-logo-monochrome-_7AVoW2A.png": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24",
+    "favicon.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "index.html": "67d8edc309bf05cd718d2f55c7f1a0966bb0927bf086d0111feef4f48b4852a9",
+    "robots.txt": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+    "sounds/alerta.ogg": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e",
+    "sounds/aviso.ogg": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4",
+    "sounds/solicitud.ogg": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+  },
+  "apiRuntimeSourceDeltas": [
+    "artifacts/api-server/src/lib/auditoria-inventario.ts",
+    "artifacts/api-server/src/lib/inventario.ts",
+    "artifacts/api-server/src/lib/salidas.ts",
+    "artifacts/api-server/src/routes/auditorias-inventario.ts",
+    "artifacts/api-server/src/routes/inventario.ts",
+    "artifacts/api-server/src/routes/locations.ts",
+    "lib/api-zod/src/generated/api.ts",
+    "lib/db/src/lib/pisos-schema.ts",
+    "lib/db/src/schema/locations.ts",
+    "lib/floor-order.mjs"
+  ],
+  "dependencyException": "Only esbuild-plugin-pino generated outputDir changes from retained dist-owner-cash-v10-20260926 to candidate directory; all other mapped dependency content equal.",
+  "patchSha256": "fe8fe2e01411f48614c1fa1c42ed95a806006696d44a966acec83cdb406e3a50",
+  "sourceAuditSha256": "6c3cb37aaed8b9f18799f660d7f93aa9665da18dd47ba87a4c70fb14393bab60",
+  "apiInventorySha256": "632e6c2d3f84fdc5c961542ac00be425ae7104124c79c819cf68f2679de4da7a",
+  "databaseAccess": false,
+  "runtimeChanges": false,
+  "validationGaps": [
+    "No runtime start or database access; parent agent owns integration/visual verification.",
+    "Typecheck covers retained runtime sources and floor patch tests, not all unrelated source-tree tests omitted from retained runtime."
+  ],
+  "repeatedBuildByteParity": true,
+  "recipeSha256": "92439fee0b6c5d979b87f3bd1a7f59b2befbb9af10614386cdb42a11a281d76a",
+  "inputHashguardsSha256": "05735fdfaef65cd3b7543c7349be0cb0f11983334ca0d9873defd4568315aa82"
+}

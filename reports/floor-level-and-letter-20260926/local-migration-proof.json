@@ -1,0 +1,354 @@
+{
+  "identity": {
+    "mode": "disposable-local-test"
+  },
+  "before": [
+    {
+      "id": 1,
+      "activo": true,
+      "nombre": "Planta Baja",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 2
+    },
+    {
+      "id": 2,
+      "activo": true,
+      "nombre": "Planta Alta",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 2
+    },
+    {
+      "id": 3,
+      "activo": true,
+      "nombre": "Planta Baja",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 1
+    },
+    {
+      "id": 4,
+      "activo": true,
+      "nombre": "Planta Alta",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 1
+    },
+    {
+      "id": 5,
+      "activo": true,
+      "nombre": "Planta Baja",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 3
+    },
+    {
+      "id": 6,
+      "activo": true,
+      "nombre": "Planta Alta",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 3
+    },
+    {
+      "id": 7,
+      "activo": true,
+      "nombre": "Primer Piso",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 4
+    },
+    {
+      "id": 8,
+      "activo": true,
+      "nombre": "Segundo Piso",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 4
+    },
+    {
+      "id": 9,
+      "activo": true,
+      "nombre": "Tercer Piso",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 4
+    },
+    {
+      "id": 10,
+      "activo": true,
+      "nombre": "Planta Baja",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 5
+    },
+    {
+      "id": 11,
+      "activo": true,
+      "nombre": "Primer Piso",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 5
+    },
+    {
+      "id": 12,
+      "activo": true,
+      "nombre": "Segundo Piso",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 5
+    },
+    {
+      "id": 13,
+      "activo": true,
+      "nombre": "Tercer Piso",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 5
+    }
+  ],
+  "after": [
+    {
+      "id": 1,
+      "nivel": 0,
+      "activo": true,
+      "nombre": "Planta Baja",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 2
+    },
+    {
+      "id": 2,
+      "nivel": 1,
+      "activo": true,
+      "nombre": "Planta Alta",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 2
+    },
+    {
+      "id": 3,
+      "nivel": 0,
+      "activo": true,
+      "nombre": "Planta Baja",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 1
+    },
+    {
+      "id": 4,
+      "nivel": 1,
+      "activo": true,
+      "nombre": "Planta Alta",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 1
+    },
+    {
+      "id": 5,
+      "nivel": 0,
+      "activo": true,
+      "nombre": "Planta Baja",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 3
+    },
+    {
+      "id": 6,
+      "nivel": 1,
+      "activo": true,
+      "nombre": "Planta Alta",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 3
+    },
+    {
+      "id": 7,
+      "nivel": 1,
+      "activo": true,
+      "nombre": "Primer Piso",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 4
+    },
+    {
+      "id": 8,
+      "nivel": 2,
+      "activo": true,
+      "nombre": "Segundo Piso",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 4
+    },
+    {
+      "id": 9,
+      "nivel": 3,
+      "activo": true,
+      "nombre": "Tercer Piso",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 4
+    },
+    {
+      "id": 10,
+      "nivel": 0,
+      "activo": true,
+      "nombre": "Planta Baja",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 5
+    },
+    {
+      "id": 11,
+      "nivel": 1,
+      "activo": true,
+      "nombre": "Primer Piso",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 5
+    },
+    {
+      "id": 12,
+      "nivel": 2,
+      "activo": true,
+      "nombre": "Segundo Piso",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 5
+    },
+    {
+      "id": 13,
+      "nivel": 3,
+      "activo": true,
+      "nombre": "Tercer Piso",
+      "created_at": "2026-09-26T22:20:55.093395+00:00",
+      "updated_at": "2026-09-26T22:20:55.093395+00:00",
+      "ubicacion_id": 5
+    }
+  ],
+  "unchangedFloorHash": "dd0d83da786aaca5c2eab0727ebad347c67e9441644246abc0d7b95e477cf549",
+  "afterWithoutNivelHash": "dd0d83da786aaca5c2eab0727ebad347c67e9441644246abc0d7b95e477cf549",
+  "writes": [
+    {
+      "relname": "pisos",
+      "n_tup_ins": "0",
+      "n_tup_upd": "13",
+      "n_tup_del": "0"
+    }
+  ],
+  "outputs": [
+    {
+      "id": 1,
+      "nombre": "Mariana",
+      "activa": true,
+      "piso_id": 3,
+      "piso": "Planta Baja",
+      "nivel": 0
+    },
+    {
+      "id": 2,
+      "nombre": "Cruces",
+      "activa": true,
+      "piso_id": 1,
+      "piso": "Planta Baja",
+      "nivel": 0
+    },
+    {
+      "id": 3,
+      "nombre": "Coco",
+      "activa": true,
+      "piso_id": 5,
+      "piso": "Planta Baja",
+      "nivel": 0
+    },
+    {
+      "id": 4,
+      "nombre": "Tomás",
+      "activa": true,
+      "piso_id": 7,
+      "piso": "Primer Piso",
+      "nivel": 1
+    },
+    {
+      "id": 5,
+      "nombre": "Don Nacho",
+      "activa": true,
+      "piso_id": 10,
+      "piso": "Planta Baja",
+      "nivel": 0
+    },
+    {
+      "id": 6,
+      "nombre": "Lucas Alamán",
+      "activa": false,
+      "piso_id": null,
+      "piso": null,
+      "nivel": null
+    },
+    {
+      "id": 7,
+      "nombre": "Bodega Cruces",
+      "activa": false,
+      "piso_id": null,
+      "piso": null,
+      "nivel": null
+    }
+  ],
+  "preservation": "Atomic SQL EXCEPT checks on every old floor value and every site value; transaction-local write counters reject non-floor public writes.",
+  "status": "committed",
+  "readback": [
+    {
+      "id": 1,
+      "nivel": 0
+    },
+    {
+      "id": 2,
+      "nivel": 1
+    },
+    {
+      "id": 3,
+      "nivel": 0
+    },
+    {
+      "id": 4,
+      "nivel": 1
+    },
+    {
+      "id": 5,
+      "nivel": 0
+    },
+    {
+      "id": 6,
+      "nivel": 1
+    },
+    {
+      "id": 7,
+      "nivel": 1
+    },
+    {
+      "id": 8,
+      "nivel": 2
+    },
+    {
+      "id": 9,
+      "nivel": 3
+    },
+    {
+      "id": 10,
+      "nivel": 0
+    },
+    {
+      "id": 11,
+      "nivel": 1
+    },
+    {
+      "id": 12,
+      "nivel": 2
+    },
+    {
+      "id": 13,
+      "nivel": 3
+    }
+  ]
+}

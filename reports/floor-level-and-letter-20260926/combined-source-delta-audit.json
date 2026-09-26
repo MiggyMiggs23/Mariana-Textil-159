@@ -1,0 +1,428 @@
+{
+  "patchSha256": "fe8fe2e01411f48614c1fa1c42ed95a806006696d44a966acec83cdb406e3a50",
+  "inputs": [
+    {
+      "file": "artifacts/api-server/src/lib/auditoria-colaborativa.pg.test.ts",
+      "source": "git-blob:e8f83840",
+      "sha256": "b573a1819c09f1256056e6ad8480a9653d6c069c23ea9361cfa1c0fb9b925f4f"
+    },
+    {
+      "file": "artifacts/api-server/src/salidas-api.test.ts",
+      "source": "git-blob:3fa94c09",
+      "sha256": "36cc535069845be8ec5a8da408d181216baa9a1ad073285860d43c4baed45171"
+    },
+    {
+      "file": "artifacts/api-server/src/task58.integration.test.ts",
+      "source": "git-blob:70020d99",
+      "sha256": "4e822cdfcc95254a8062338591a722a017d0f50c1ef2ff04b4401b59729ef679"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/components/auditoria/audit-floor-station.test.tsx",
+      "source": "git-blob:0961ad5f",
+      "sha256": "79cb4df4f504599842792a2dbe699a91ad11c579279b0a8a1b4159693a70545d"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/auditorias-inventario-site.test.tsx",
+      "source": "git-blob:d637b4ce",
+      "sha256": "6efb05dbcc0263ccdc8fb88c2dc0d6ba9356f28ce4e5bfa849424a1e7e406112"
+    },
+    {
+      "file": "lib/api-spec/openapi.yaml",
+      "source": "git-blob:1f83b7b5",
+      "sha256": "24d7f0af814e8f296595581506e3087931e168560ce8db444e7d059298ceeba9"
+    },
+    {
+      "file": "artifacts/api-server/package.json",
+      "source": "captured-build-metadata-or-elided-barrel",
+      "sha256": "317dd1314dafde7402b84ade8c66b650a5d92aec32a6a37905a7071168a3fb27"
+    },
+    {
+      "file": "artifacts/api-server/tsconfig.json",
+      "source": "captured-build-metadata-or-elided-barrel",
+      "sha256": "df3b591df856000ac227fc4ce0505f8044b5c636ba7ddb3db5b787e4db0e6de2"
+    },
+    {
+      "file": "artifacts/api-server/build.mjs",
+      "source": "captured-build-metadata-or-elided-barrel",
+      "sha256": "14fee1f8de4e06749fcc8e1d748176c26a8177b56cb03c3b659bb3521a4950ea"
+    },
+    {
+      "file": "lib/db/package.json",
+      "source": "captured-build-metadata-or-elided-barrel",
+      "sha256": "4af16424dfc13736419c5a565e3e45791f426909ef72644c9baa6f0d77e583fe"
+    },
+    {
+      "file": "lib/db/tsconfig.json",
+      "source": "captured-build-metadata-or-elided-barrel",
+      "sha256": "69c976d11de35f0ac391934625beeccdd1b2689ba5d0f14c54b5384d4c30a9c9"
+    },
+    {
+      "file": "lib/db/src/lib/advisory-locks.d.mts",
+      "source": "captured-build-metadata-or-elided-barrel",
+      "sha256": "42dd9021e32e9598e25d9ffac6c3c54d15e69689d01724e21fcab8032090718b"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/entrada-documento.tsx",
+      "source": "print/overlay",
+      "sha256": "a9e750a4186ef5a4950d63f9a78dcb4707bfbea645b86252d2b93a9620fe2d6d"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/index.css",
+      "source": "print/overlay",
+      "sha256": "4a6bed276c72d08f5089ea7d3e56cdb42f6c449374daee8d437a8241135c390a"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/auditoria-colaborativa.pg.test.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "b573a1819c09f1256056e6ad8480a9653d6c069c23ea9361cfa1c0fb9b925f4f",
+      "sha256": "1a644c163666dce721920c2f38165298739b0bed571a3717af2b36e12a4831d4"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/auditoria-inventario.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "c2fe536c4cb396780744f3e090017fd0e9a18b06651cd42249ea84d2566915a9",
+      "sha256": "19a8d514832cff7df1a76a0ddd1c08155d3fde46f97e49c72c883f1fc0dce910"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/inventario.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "4524087488ce0c4a9604df43506b38ec3d3bb0ca5220258b5db721a7c1d26455",
+      "sha256": "4cf25dbbf2a614f478e921993fc8697376acdbbd4025725a0a284759031c21c6"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/salidas.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "21278d6a66d8d659eab3c378f7156b5f3ff2bad78d6fdab85fe317dd3f673ba9",
+      "sha256": "744a27bae1e327bc28da95ed6b1957294d9803d27562150a5eaf25f04ee0fbee"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "8669e870d6da9f7a86619ef8150d8f5d01df017831ea0bab561bd5c130598c7a",
+      "sha256": "1b1d638f2aeb41d82837ed6f37162f4af0e34f05285b1b9f5fcc715a497aad0f"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/inventario.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "bc3c6839d1c83f48e29668c047b424ba512cabd75a07a836d840fd209134e1b6",
+      "sha256": "ce0998e7e51f7390352fba2efe88eb6d50ea377147ebd4937b658c0b6b3f0940"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/locations.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "dd33c85ec4733a78bde9fe332dc1730ee496cb4c18d424756dffd69619d8373e",
+      "sha256": "4322c85a721c864e6d984a3820127045ba321b748d477ee20b6ac18433f5139b"
+    },
+    {
+      "file": "artifacts/api-server/src/salidas-api.test.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "36cc535069845be8ec5a8da408d181216baa9a1ad073285860d43c4baed45171",
+      "sha256": "751e778017c441b5ca5db54e97d256e229b5f3baaedda1ab8d6c9e8601831262"
+    },
+    {
+      "file": "artifacts/api-server/src/task58.integration.test.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "4e822cdfcc95254a8062338591a722a017d0f50c1ef2ff04b4401b59729ef679",
+      "sha256": "68d893b8ec0fa17a98c07570dc1f8053585ecb863b8a64d0c3212bf4e21e0bc4"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/components/auditoria/audit-floor-station.test.tsx",
+      "source": "floor-source.patch",
+      "beforeSha256": "79cb4df4f504599842792a2dbe699a91ad11c579279b0a8a1b4159693a70545d",
+      "sha256": "73c4611090fb49eb5eec453a857178d1b3643e73ad5496d00e34ca250b976d9c"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/components/auditoria/audit-floor-station.tsx",
+      "source": "floor-source.patch",
+      "beforeSha256": "da4e0c51bf6bdcddbcedf5986e3d677242f99243fa32822f7a66d675b36d70da",
+      "sha256": "24ab159a6b365611638e5d9de7be26d5a3417537ab1fbd2df3d9f4a8a75946b4"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/components/auditoria/use-audit-floors.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "64d9ef01cb0209ba3e545120801c4ea9cc4b7cfdc86f7431b74b86f600ccb1c0",
+      "sha256": "d92d52282a77c0c8764772e4327f40edaeafb8ae6a8cb6866cc81391af52be3f"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/auditorias-inventario-site.test.tsx",
+      "source": "floor-source.patch",
+      "beforeSha256": "6efb05dbcc0263ccdc8fb88c2dc0d6ba9356f28ce4e5bfa849424a1e7e406112",
+      "sha256": "bd6b1f92ba5c6b26c21098427423c4219238b7736a3044585576cbd132fc740d"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/auditorias-inventario.tsx",
+      "source": "floor-source.patch",
+      "beforeSha256": "37c8738fbe0c47a1aef2ed5263b769fac4c8db5168f1d48dad4d1ff5584f4f23",
+      "sha256": "b2cc4d40948917b4a997058129e3043ac237104c0829139f783c835525b84858"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/ubicaciones.tsx",
+      "source": "floor-source.patch",
+      "beforeSha256": "078f4365b98dd9bcc010fda0de5f68f2ea45d77c71ac52756d4fa80fb2d1492b",
+      "sha256": "01bc704b219a5ace3fb874df0ce85537a80d5cb0813dec54e3c89ad37ba7ba95"
+    },
+    {
+      "file": "lib/api-client-react/src/generated/api.schemas.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "34a8f2e0093c2960f76578424981f36280a18d50cd2693a6a6897751b407baa8",
+      "sha256": "4ac4538969a90312172fcd5f6fae5322eed8f870cecbbeafb31c80aeba233544"
+    },
+    {
+      "file": "lib/api-client-react/src/generated/api.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "e5af44a3dcf3e0e43fd510711cab504358b4c5c30c8a810efe76a5410fd5f81c",
+      "sha256": "28f643f05f75cfd2f6f41274808df497ccddc2f4dc06c4de171a175fccc9867f"
+    },
+    {
+      "file": "lib/api-spec/openapi.yaml",
+      "source": "floor-source.patch",
+      "beforeSha256": "24d7f0af814e8f296595581506e3087931e168560ce8db444e7d059298ceeba9",
+      "sha256": "0c9fa0690980831e70a49498c472c0a1efe9e15db6569d2281749adbe03fe7a9"
+    },
+    {
+      "file": "lib/api-zod/src/generated/api.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "6e0a941181112f1752546a0e3565bcbfed10ca563ca9a9cd60375a2ed959e8e1",
+      "sha256": "0a1d1e0f1b53e80be20775723ac6351b034b9d5023f25fc9969dcf6b3e11abeb"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/auditoriaInventarioPiso.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "885ca96676993d3cfbcecfdf5a50de3d054bc11444b3f6290f8244ae0eb858c5",
+      "sha256": "6b7f8e87e771eb32ca9b4f17ab12a2c83eaa6ccbe5f646476cadc0ed9019131e"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/piso.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "a3fb9ed82ac2370cab0b49a23b13f43a6a019df550c114a845185030952c9fb5",
+      "sha256": "8a8153f164fad7d3b502ac41ca391734f6cde57978d1e15e08c445d9ab7fccd6"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/pisoInput.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "6d31a388f5645a74f0feaf583dc37273a091083d69f7ad4f68fc4b2c774e1bcb",
+      "sha256": "8f1b68c3c89372fcd7e2981b5bfaf1018806f6c21f0d51bb85b46fcccf78b608"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/pisoUpdate.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "1dec48198ab8fa60022e3fa16251b84886983b936218d0eeabcd728fee77a8f5",
+      "sha256": "4eb58cba3beb260484c6b3d91a426ec3471db0d6f889ba4325fc81df718d12bd"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/salidaDetailPisosRetornoItem.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "eb2de437894aa611a74c6cc9bb493d06d69298c256129f379b5fd76b61554ce5",
+      "sha256": "9a2c720a5fbb1eadb8db6745bb5efa1bd21f2297b221a0e4e3bed12076342190"
+    },
+    {
+      "file": "lib/db/src/lib/pisos-schema.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "7c896568845adcccc75ec383ed7a131e19cce40c7117f2bf36096e898f63b3d8",
+      "sha256": "1b5b83e11655ce165b3bee63fdec4cc88e239466f45963234fc360182ba9f1b7"
+    },
+    {
+      "file": "lib/db/src/schema/locations.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "5a2eeff1e5b72073dab885fae19169d4c4962442a8b8fae5ee5e3c75d1f02025",
+      "sha256": "5ea7e7eb61a9e60d97ca14f352cbe2a28b16e002c76946b40c7a6cf819f6af1e"
+    },
+    {
+      "file": "lib/floor-order.mjs",
+      "source": "floor-source.patch",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "27f39fdfccf365d7e29f669e2825c209c0a18a1af45d30d5c3da18c630a34705"
+    },
+    {
+      "file": "lib/floor-order.d.mts",
+      "source": "floor-source.patch",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "c7c14be922483a28383adef6e5e6844cf8ab9df09ae47954273758aed9ba38bc"
+    },
+    {
+      "file": "lib/floor-order.test.mjs",
+      "source": "floor-source.patch",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "a2c366434111ee3591f52c88cb79d2ecd7a1fc2752d92e126989aeff8f953cb8"
+    },
+    {
+      "file": "artifacts/api-server/src/floor-order.contract.test.ts",
+      "source": "floor-source.patch",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "e17fdcd6ebf0c877eb527d7297d299aa8ced1dc97606513200a364d159c7c05c"
+    },
+    {
+      "file": "reports/floor-level-and-letter-20260926/floor-level-migration.template.sql",
+      "source": "floor-source.patch",
+      "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "d114ffd50943e5ab523773e1ed1fac98f5be1d35cfbf738589de17e89ca45e7c"
+    }
+  ],
+  "deltas": [
+    {
+      "file": "artifacts/api-server/src/lib/auditoria-colaborativa.pg.test.ts",
+      "beforeSha256": "b573a1819c09f1256056e6ad8480a9653d6c069c23ea9361cfa1c0fb9b925f4f",
+      "sha256": "1a644c163666dce721920c2f38165298739b0bed571a3717af2b36e12a4831d4"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/auditoria-inventario.ts",
+      "beforeSha256": "c2fe536c4cb396780744f3e090017fd0e9a18b06651cd42249ea84d2566915a9",
+      "sha256": "19a8d514832cff7df1a76a0ddd1c08155d3fde46f97e49c72c883f1fc0dce910"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/inventario.ts",
+      "beforeSha256": "4524087488ce0c4a9604df43506b38ec3d3bb0ca5220258b5db721a7c1d26455",
+      "sha256": "4cf25dbbf2a614f478e921993fc8697376acdbbd4025725a0a284759031c21c6"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/salidas.ts",
+      "beforeSha256": "21278d6a66d8d659eab3c378f7156b5f3ff2bad78d6fdab85fe317dd3f673ba9",
+      "sha256": "744a27bae1e327bc28da95ed6b1957294d9803d27562150a5eaf25f04ee0fbee"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/auditorias-inventario.ts",
+      "beforeSha256": "8669e870d6da9f7a86619ef8150d8f5d01df017831ea0bab561bd5c130598c7a",
+      "sha256": "1b1d638f2aeb41d82837ed6f37162f4af0e34f05285b1b9f5fcc715a497aad0f"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/inventario.ts",
+      "beforeSha256": "bc3c6839d1c83f48e29668c047b424ba512cabd75a07a836d840fd209134e1b6",
+      "sha256": "ce0998e7e51f7390352fba2efe88eb6d50ea377147ebd4937b658c0b6b3f0940"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/locations.ts",
+      "beforeSha256": "dd33c85ec4733a78bde9fe332dc1730ee496cb4c18d424756dffd69619d8373e",
+      "sha256": "4322c85a721c864e6d984a3820127045ba321b748d477ee20b6ac18433f5139b"
+    },
+    {
+      "file": "artifacts/api-server/src/salidas-api.test.ts",
+      "beforeSha256": "36cc535069845be8ec5a8da408d181216baa9a1ad073285860d43c4baed45171",
+      "sha256": "751e778017c441b5ca5db54e97d256e229b5f3baaedda1ab8d6c9e8601831262"
+    },
+    {
+      "file": "artifacts/api-server/src/task58.integration.test.ts",
+      "beforeSha256": "4e822cdfcc95254a8062338591a722a017d0f50c1ef2ff04b4401b59729ef679",
+      "sha256": "68d893b8ec0fa17a98c07570dc1f8053585ecb863b8a64d0c3212bf4e21e0bc4"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/components/auditoria/audit-floor-station.test.tsx",
+      "beforeSha256": "79cb4df4f504599842792a2dbe699a91ad11c579279b0a8a1b4159693a70545d",
+      "sha256": "73c4611090fb49eb5eec453a857178d1b3643e73ad5496d00e34ca250b976d9c"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/components/auditoria/audit-floor-station.tsx",
+      "beforeSha256": "da4e0c51bf6bdcddbcedf5986e3d677242f99243fa32822f7a66d675b36d70da",
+      "sha256": "24ab159a6b365611638e5d9de7be26d5a3417537ab1fbd2df3d9f4a8a75946b4"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/components/auditoria/use-audit-floors.ts",
+      "beforeSha256": "64d9ef01cb0209ba3e545120801c4ea9cc4b7cfdc86f7431b74b86f600ccb1c0",
+      "sha256": "d92d52282a77c0c8764772e4327f40edaeafb8ae6a8cb6866cc81391af52be3f"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/index.css",
+      "beforeSha256": "0b0269d8cbf9f843d21c114803ba0356411af74aad1de79a1dc83f346e875357",
+      "sha256": "4a6bed276c72d08f5089ea7d3e56cdb42f6c449374daee8d437a8241135c390a"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/auditorias-inventario-site.test.tsx",
+      "beforeSha256": "6efb05dbcc0263ccdc8fb88c2dc0d6ba9356f28ce4e5bfa849424a1e7e406112",
+      "sha256": "bd6b1f92ba5c6b26c21098427423c4219238b7736a3044585576cbd132fc740d"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/auditorias-inventario.tsx",
+      "beforeSha256": "37c8738fbe0c47a1aef2ed5263b769fac4c8db5168f1d48dad4d1ff5584f4f23",
+      "sha256": "b2cc4d40948917b4a997058129e3043ac237104c0829139f783c835525b84858"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/entrada-documento.tsx",
+      "beforeSha256": "3485ffa1607b81eba90ef396a5ad533778e60b0b7572023d707379ecce9fa513",
+      "sha256": "a9e750a4186ef5a4950d63f9a78dcb4707bfbea645b86252d2b93a9620fe2d6d"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/ubicaciones.tsx",
+      "beforeSha256": "078f4365b98dd9bcc010fda0de5f68f2ea45d77c71ac52756d4fa80fb2d1492b",
+      "sha256": "01bc704b219a5ace3fb874df0ce85537a80d5cb0813dec54e3c89ad37ba7ba95"
+    },
+    {
+      "file": "lib/api-client-react/src/generated/api.schemas.ts",
+      "beforeSha256": "34a8f2e0093c2960f76578424981f36280a18d50cd2693a6a6897751b407baa8",
+      "sha256": "4ac4538969a90312172fcd5f6fae5322eed8f870cecbbeafb31c80aeba233544"
+    },
+    {
+      "file": "lib/api-client-react/src/generated/api.ts",
+      "beforeSha256": "e5af44a3dcf3e0e43fd510711cab504358b4c5c30c8a810efe76a5410fd5f81c",
+      "sha256": "28f643f05f75cfd2f6f41274808df497ccddc2f4dc06c4de171a175fccc9867f"
+    },
+    {
+      "file": "lib/api-spec/openapi.yaml",
+      "beforeSha256": "24d7f0af814e8f296595581506e3087931e168560ce8db444e7d059298ceeba9",
+      "sha256": "0c9fa0690980831e70a49498c472c0a1efe9e15db6569d2281749adbe03fe7a9"
+    },
+    {
+      "file": "lib/api-zod/src/generated/api.ts",
+      "beforeSha256": "6e0a941181112f1752546a0e3565bcbfed10ca563ca9a9cd60375a2ed959e8e1",
+      "sha256": "0a1d1e0f1b53e80be20775723ac6351b034b9d5023f25fc9969dcf6b3e11abeb"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/auditoriaInventarioPiso.ts",
+      "beforeSha256": "885ca96676993d3cfbcecfdf5a50de3d054bc11444b3f6290f8244ae0eb858c5",
+      "sha256": "6b7f8e87e771eb32ca9b4f17ab12a2c83eaa6ccbe5f646476cadc0ed9019131e"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/piso.ts",
+      "beforeSha256": "a3fb9ed82ac2370cab0b49a23b13f43a6a019df550c114a845185030952c9fb5",
+      "sha256": "8a8153f164fad7d3b502ac41ca391734f6cde57978d1e15e08c445d9ab7fccd6"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/pisoInput.ts",
+      "beforeSha256": "6d31a388f5645a74f0feaf583dc37273a091083d69f7ad4f68fc4b2c774e1bcb",
+      "sha256": "8f1b68c3c89372fcd7e2981b5bfaf1018806f6c21f0d51bb85b46fcccf78b608"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/pisoUpdate.ts",
+      "beforeSha256": "1dec48198ab8fa60022e3fa16251b84886983b936218d0eeabcd728fee77a8f5",
+      "sha256": "4eb58cba3beb260484c6b3d91a426ec3471db0d6f889ba4325fc81df718d12bd"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/salidaDetailPisosRetornoItem.ts",
+      "beforeSha256": "eb2de437894aa611a74c6cc9bb493d06d69298c256129f379b5fd76b61554ce5",
+      "sha256": "9a2c720a5fbb1eadb8db6745bb5efa1bd21f2297b221a0e4e3bed12076342190"
+    },
+    {
+      "file": "lib/db/src/lib/pisos-schema.ts",
+      "beforeSha256": "7c896568845adcccc75ec383ed7a131e19cce40c7117f2bf36096e898f63b3d8",
+      "sha256": "1b5b83e11655ce165b3bee63fdec4cc88e239466f45963234fc360182ba9f1b7"
+    },
+    {
+      "file": "lib/db/src/schema/locations.ts",
+      "beforeSha256": "5a2eeff1e5b72073dab885fae19169d4c4962442a8b8fae5ee5e3c75d1f02025",
+      "sha256": "5ea7e7eb61a9e60d97ca14f352cbe2a28b16e002c76946b40c7a6cf819f6af1e"
+    },
+    {
+      "file": "lib/floor-order.mjs",
+      "beforeSha256": null,
+      "sha256": "27f39fdfccf365d7e29f669e2825c209c0a18a1af45d30d5c3da18c630a34705"
+    },
+    {
+      "file": "lib/floor-order.d.mts",
+      "beforeSha256": null,
+      "sha256": "c7c14be922483a28383adef6e5e6844cf8ab9df09ae47954273758aed9ba38bc"
+    },
+    {
+      "file": "lib/floor-order.test.mjs",
+      "beforeSha256": null,
+      "sha256": "a2c366434111ee3591f52c88cb79d2ecd7a1fc2752d92e126989aeff8f953cb8"
+    },
+    {
+      "file": "artifacts/api-server/src/floor-order.contract.test.ts",
+      "beforeSha256": null,
+      "sha256": "e17fdcd6ebf0c877eb527d7297d299aa8ced1dc97606513200a364d159c7c05c"
+    },
+    {
+      "file": "reports/floor-level-and-letter-20260926/floor-level-migration.template.sql",
+      "beforeSha256": null,
+      "sha256": "d114ffd50943e5ab523773e1ed1fac98f5be1d35cfbf738589de17e89ca45e7c"
+    }
+  ]
+}

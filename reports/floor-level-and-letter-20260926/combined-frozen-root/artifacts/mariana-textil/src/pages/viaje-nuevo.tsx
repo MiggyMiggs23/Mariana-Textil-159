@@ -1,0 +1,26 @@
+import { useState } from "react";
+import { Link, useLocation } from "wouter";
+import { useCreateViaje, useGetViajesOperationalCatalog, useListViajesEligibleDocuments } from "@workspace/api-client-react";
+import { AppLayout } from "@/components/layout/app-layout";
+import { Button } from "@/components/ui/button"; import { Input } from "@/components/ui/input"; import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ArrowLeft, Loader2, Search } from "lucide-react"; import { getApiErrorMessage } from "@/lib/api-error"; import { useToast } from "@/hooks/use-toast";
+
+export default function ViajeNuevo() {
+  const [, go] = useLocation(); const { toast } = useToast(); const [origenId, setOrigen] = useState(""); const [camionetaId, setCamioneta] = useState(""); const [choferId, setChofer] = useState("");
+  const [salidaAt, setSalidaAt] = useState(new Date().toISOString().slice(0, 16)); const [observaciones, setObservaciones] = useState(""); const [search, setSearch] = useState("");
+  const [ticketIds, setTickets] = useState<number[]>([]); const [salidaIds, setSalidas] = useState<number[]>([]);
+  const { data: catalogo } = useGetViajesOperationalCatalog(); const { data: rawElegibles } = useListViajesEligibleDocuments({ origenId: origenId ? Number(origenId) : undefined, search: search || undefined }); const elegibles: any = rawElegibles; const create = useCreateViaje();
+  const selected = ticketIds.length + salidaIds.length;
+  const submit = () => create.mutate({ data: { origenId: Number(origenId), camionetaId: Number(camionetaId), choferId: Number(choferId), salidaAt: new Date(salidaAt).toISOString(), observaciones: observaciones || null, ticketIds, salidaIds } }, { onSuccess: (v) => go(`/viajes/${v.id}`), onError: e => toast({ title: "No se pudo crear el viaje", description: getApiErrorMessage(e), variant: "destructive" }) });
+  const toggle = (id: number, current: number[], setter: (v: number[]) => void) => setter(current.includes(id) ? current.filter(x => x !== id) : [...current, id]);
+  return <AppLayout><div className="mx-auto max-w-5xl space-y-6"><div className="flex items-center gap-3"><Link href="/viajes"><Button variant="ghost" size="icon"><ArrowLeft /></Button></Link><div><h1 className="text-3xl font-bold">Nuevo viaje</h1><p className="text-muted-foreground">Selecciona transporte y documentos a despachar.</p></div></div>
+    <div className="grid gap-4 md:grid-cols-2"><Select value={origenId} onValueChange={setOrigen}><SelectTrigger><SelectValue placeholder="Origen" /></SelectTrigger><SelectContent>{catalogo?.ubicaciones.map(x => <SelectItem key={x.id} value={String(x.id)}>{x.nombre}</SelectItem>)}</SelectContent></Select>
+      <Select value={camionetaId} onValueChange={setCamioneta}><SelectTrigger><SelectValue placeholder="Camioneta activa" /></SelectTrigger><SelectContent>{catalogo?.camionetas.map(x => <SelectItem key={x.id} value={String(x.id)}>{x.nombre} · {x.placas}</SelectItem>)}</SelectContent></Select>
+      <Select value={choferId} onValueChange={setChofer}><SelectTrigger><SelectValue placeholder="Chofer activo" /></SelectTrigger><SelectContent>{catalogo?.choferes.map(x => <SelectItem key={x.id} value={String(x.id)}>{x.nombreCompleto}</SelectItem>)}</SelectContent></Select>
+      <Input type="datetime-local" value={salidaAt} onChange={e => setSalidaAt(e.target.value)} /><Textarea className="md:col-span-2" value={observaciones} onChange={e => setObservaciones(e.target.value)} placeholder="Observaciones (opcional)" /></div>
+    <div className="space-y-3 rounded-lg border p-4"><div className="flex items-center justify-between gap-3"><h2 className="font-semibold">Documentos elegibles · {selected} seleccionados</h2><Button variant="ghost" size="sm" onClick={() => { setTickets([]); setSalidas([]); }}>Limpiar</Button></div><div className="relative"><Search className="absolute left-3 top-3 h-4 w-4" /><Input className="pl-9" value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar folio, cliente o destino" /></div>
+      <div className="grid gap-2 md:grid-cols-2">{elegibles?.tickets.map((x: any) => <label className="flex gap-2 rounded border p-3" key={`t${x.id}`}><input type="checkbox" checked={ticketIds.includes(x.id)} onChange={() => toggle(x.id, ticketIds, setTickets)} /><span>NOTA #{x.folio}<small className="block text-muted-foreground">{x.destinatario || x.cliente}</small></span></label>)}{elegibles?.salidas.map((x: any) => <label className="flex gap-2 rounded border p-3" key={`s${x.id}`}><input type="checkbox" checked={salidaIds.includes(x.id)} onChange={() => toggle(x.id, salidaIds, setSalidas)} /><span>SALIDA #{x.folio}<small className="block text-muted-foreground">{x.destino}</small></span></label>)}</div></div>
+    <Button className="w-full" disabled={!origenId || !camionetaId || !choferId || !selected || create.isPending} onClick={submit}>{create.isPending && <Loader2 className="mr-2 animate-spin" />}Crear viaje</Button>
+  </div></AppLayout>;
+}
