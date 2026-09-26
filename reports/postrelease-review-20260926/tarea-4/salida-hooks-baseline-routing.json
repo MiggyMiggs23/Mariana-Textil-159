@@ -1,0 +1,31 @@
+{
+  "source": "/home/runner/workspace/reports/priority-20260926/credit-presentation/frozen-root/artifacts/mariana-textil/src/pages/salida-nueva.tsx",
+  "method": "actual page with real wouter Route/useLocation/useSearch, controlled history and parent rerender; peripheral API/child mocked; no full App/browser/DB claim",
+  "observations": [
+    {
+      "search": "",
+      "branch": "transfer",
+      "scannerIntervals": 1,
+      "errors": []
+    },
+    {
+      "search": "?modalidad=VENTA_CLIENTE",
+      "branch": "sale",
+      "scannerIntervals": 1,
+      "errors": []
+    },
+    {
+      "search": "",
+      "branch": "transfer",
+      "scannerIntervals": 2,
+      "errors": []
+    },
+    {
+      "search": "?modalidad=VENTA_CLIENTE",
+      "branch": "sale",
+      "scannerIntervals": 2,
+      "errors": []
+    }
+  ],
+  "remainingAfterUnmount": 2
+}

@@ -1,0 +1,43 @@
+{
+  "source": "reports/postrelease-review-20260926/tarea-4/final-frozen-root/artifacts/mariana-textil/src/pages/salida-nueva.tsx",
+  "method": "actual page with real wouter Route/useLocation/useSearch, controlled history and parent rerender plus query-only navigation; peripheral API/child mocked; no full App/browser/DB claim",
+  "observations": [
+    {
+      "search": "",
+      "branch": "transfer",
+      "scannerIntervals": 1,
+      "errors": []
+    },
+    {
+      "search": "?modalidad=VENTA_CLIENTE",
+      "branch": "sale",
+      "scannerIntervals": 0,
+      "errors": []
+    },
+    {
+      "search": "",
+      "branch": "transfer",
+      "scannerIntervals": 1,
+      "errors": []
+    },
+    {
+      "search": "?modalidad=VENTA_CLIENTE",
+      "branch": "sale",
+      "scannerIntervals": 0,
+      "errors": []
+    }
+  ],
+  "queryOnlyTransitions": [
+    {
+      "search": "",
+      "branch": "transfer",
+      "scannerIntervals": 1
+    },
+    {
+      "search": "?modalidad=VENTA_CLIENTE",
+      "branch": "sale",
+      "scannerIntervals": 0
+    }
+  ],
+  "remainingAfterUnmount": 0
+}

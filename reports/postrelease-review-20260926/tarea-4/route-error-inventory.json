@@ -1,0 +1,3010 @@
+{
+  "baseline": {
+    "frontend": "credit-af0541",
+    "api": "owner-login-v9-20260926-map"
+  },
+  "uiRoutes": [
+    {
+      "path": "\"/login\"",
+      "line": 246,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/contabilidad/fiscal/facturas/:id\"",
+      "line": 247,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/contabilidad/fiscal\"",
+      "line": 248,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/contabilidad/finanzas/clientes/:id\"",
+      "line": 249,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/contabilidad/finanzas\"",
+      "line": 250,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/contabilidad/conciliaciones/:id\"",
+      "line": 251,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/contabilidad/conciliaciones\"",
+      "line": 252,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/contabilidad/preparaciones/:id\"",
+      "line": 253,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/contabilidad/preparaciones\"",
+      "line": 254,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/\"",
+      "line": 255,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/inventario/vista-global\"",
+      "line": 264,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/ubicaciones\"",
+      "line": 273,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/usuarios\"",
+      "line": 282,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/permisos\"",
+      "line": 291,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/entradas\"",
+      "line": 301,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/entradas/pendientes-costo\"",
+      "line": 310,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/entradas/:id/documento\"",
+      "line": 319,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/entradas/:id/etiquetas\"",
+      "line": 328,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/salidas\"",
+      "line": 338,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/viajes\"",
+      "line": 344,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/viajes/nuevo\"",
+      "line": 348,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/viajes/:id/documento\"",
+      "line": 349,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/viajes/:id\"",
+      "line": 350,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/salidas/nueva\"",
+      "line": 351,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/salidas/:id/documento/salida\"",
+      "line": 361,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/salidas/:id\"",
+      "line": 370,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/movimientos\"",
+      "line": 380,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/etiquetas\"",
+      "line": 389,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/inventario/auditorias\"",
+      "line": 399,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/inventario\"",
+      "line": 408,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/inventario/stock-minimos\"",
+      "line": 417,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/inventario/rollos/:id\"",
+      "line": 426,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/inventario/rollos/:id/etiqueta\"",
+      "line": 435,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/inventario/ajustes\"",
+      "line": 444,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/productos\"",
+      "line": 454,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/productos/:id\"",
+      "line": 463,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/precios\"",
+      "line": 473,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/precios/:id\"",
+      "line": 479,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/pos\"",
+      "line": 485,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/cobros\"",
+      "line": 494,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/caja/tiempo-real\"",
+      "line": 504,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/caja/tiendas/:ubicacionId/ventas\"",
+      "line": 513,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/caja/cortes\"",
+      "line": 522,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/fondo\"",
+      "line": 532,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/fondo/movimientos\"",
+      "line": 533,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/fondo/movimientos/:id\"",
+      "line": 534,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/fondo/arqueos\"",
+      "line": 535,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/fondo/arqueos/:id\"",
+      "line": 536,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/cobros/pendientes/:id/documentos/:documentoId\"",
+      "line": 538,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/cobros/pendientes/:id\"",
+      "line": 539,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/cobros/pendientes\"",
+      "line": 540,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/pagos-dirigidos\"",
+      "line": 541,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/caja/diferencias\"",
+      "line": 545,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/caja/cuentas-destino/:cuentaDestino\"",
+      "line": 554,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/caja/atribucion-e7\"",
+      "line": 565,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/caja/cuentas-destino\"",
+      "line": 576,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/recibos-e3/:folio\"",
+      "line": 587,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/caja/comparativo\"",
+      "line": 597,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/alertas\"",
+      "line": 606,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/notificaciones\"",
+      "line": 612,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/reportes\"",
+      "line": 618,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/reportes/:tab\"",
+      "line": 627,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/tickets/:id\"",
+      "line": 637,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/proveedores\"",
+      "line": 648,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/proveedores/:id\"",
+      "line": 657,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/clientes\"",
+      "line": 666,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/clientes/:id/movimientos/:movimientoId\"",
+      "line": 675,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/clientes/:id\"",
+      "line": 685,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/administracion/conciliacion\"",
+      "line": 695,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/auditoria\"",
+      "line": 704,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/directorio/camionetas\"",
+      "line": 713,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/directorio/choferes\"",
+      "line": 722,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/equipos\"",
+      "line": 731,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/contenedores\"",
+      "line": 741,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/contenedores/nuevo\"",
+      "line": 750,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "\"/contenedores/:id\"",
+      "line": 760,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    },
+    {
+      "path": "(fallback)",
+      "line": 770,
+      "coverage": "inventory-only unless explicitly listed in informe.md"
+    }
+  ],
+  "apiRoutes": [
+    {
+      "source": "../src/routes/test-reset.ts",
+      "line": 22,
+      "method": "GET",
+      "localPath": "/admin/test-reset",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/test-reset.ts",
+      "line": 33,
+      "method": "POST",
+      "localPath": "/admin/test-reset",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/health.ts",
+      "line": 6,
+      "method": "GET",
+      "localPath": "/healthz",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auth.ts",
+      "line": 34,
+      "method": "POST",
+      "localPath": "/auth/login",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auth.ts",
+      "line": 165,
+      "method": "GET",
+      "localPath": "/auth/me",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auth.ts",
+      "line": 174,
+      "method": "POST",
+      "localPath": "/auth/logout",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/dashboard.ts",
+      "line": 12,
+      "method": "GET",
+      "localPath": "/dashboard",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/locations.ts",
+      "line": 37,
+      "method": "GET",
+      "localPath": "/locations",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/locations.ts",
+      "line": 71,
+      "method": "POST",
+      "localPath": "/locations",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/locations.ts",
+      "line": 111,
+      "method": "PATCH",
+      "localPath": "/locations/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/locations.ts",
+      "line": 187,
+      "method": "GET",
+      "localPath": "/locations/:id/pisos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/locations.ts",
+      "line": 205,
+      "method": "POST",
+      "localPath": "/locations/:id/pisos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/locations.ts",
+      "line": 234,
+      "method": "PATCH",
+      "localPath": "/locations/:id/pisos/:pisoId",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/users.ts",
+      "line": 104,
+      "method": "GET",
+      "localPath": "/users",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/users.ts",
+      "line": 120,
+      "method": "POST",
+      "localPath": "/users",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/users.ts",
+      "line": 196,
+      "method": "PATCH",
+      "localPath": "/users/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/productos.ts",
+      "line": 304,
+      "method": "GET",
+      "localPath": "/productos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/productos.ts",
+      "line": 344,
+      "method": "POST",
+      "localPath": "/productos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/productos.ts",
+      "line": 473,
+      "method": "POST",
+      "localPath": "/productos/import/preview",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/productos.ts",
+      "line": 530,
+      "method": "POST",
+      "localPath": "/productos/import/confirm",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/productos.ts",
+      "line": 658,
+      "method": "GET",
+      "localPath": "/productos/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/productos.ts",
+      "line": 766,
+      "method": "PATCH",
+      "localPath": "/productos/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 142,
+      "method": "GET",
+      "localPath": "/rollos/:id/remate",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 212,
+      "method": "GET",
+      "localPath": "/fecha-servidor",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 535,
+      "method": "GET",
+      "localPath": "/salidas-extraordinarias",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 638,
+      "method": "POST",
+      "localPath": "/salidas-extraordinarias",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 677,
+      "method": "POST",
+      "localPath": "/salidas-extraordinarias/:movimientoId/revertir",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 767,
+      "method": "POST",
+      "localPath": "/entradas",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 969,
+      "method": "GET",
+      "localPath": "/entradas",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 1108,
+      "method": "GET",
+      "localPath": "/entradas/catalogos",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 1148,
+      "method": "GET",
+      "localPath": "/entradas/pendientes-costo/count",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 1169,
+      "method": "GET",
+      "localPath": "/entradas/pendientes-costo",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 1234,
+      "method": "POST",
+      "localPath": "/entradas/:id/costos",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 1274,
+      "method": "GET",
+      "localPath": "/entradas/:id",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 1328,
+      "method": "POST",
+      "localPath": "/rollos/:id/activar",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 1387,
+      "method": "POST",
+      "localPath": "/rollos/:id/vender",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 1452,
+      "method": "POST",
+      "localPath": "/rollos/:id/ajustar",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 1511,
+      "method": "POST",
+      "localPath": "/rollos/:id/revertir",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 1594,
+      "method": "GET",
+      "localPath": "/rollos/:id",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 1636,
+      "method": "GET",
+      "localPath": "/movimientos/:id",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 1667,
+      "method": "PATCH",
+      "localPath": "/rollos/:id/piso",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 1711,
+      "method": "GET",
+      "localPath": "/rollos",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 1838,
+      "method": "GET",
+      "localPath": "/ubicaciones",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 1873,
+      "method": "GET",
+      "localPath": "/existencias/agrupadas",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 1974,
+      "method": "GET",
+      "localPath": "/existencias",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 2111,
+      "method": "GET",
+      "localPath": "/kardex",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 2155,
+      "method": "GET",
+      "localPath": "/kardex/agrupado",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 2195,
+      "method": "GET",
+      "localPath": "/kardex/filtros",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 2227,
+      "method": "GET",
+      "localPath": "/kardex/exportar",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 2328,
+      "method": "GET",
+      "localPath": "/ajustes/pendientes",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 2367,
+      "method": "POST",
+      "localPath": "/ajustes/:id/revisar",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 2422,
+      "method": "GET",
+      "localPath": "/conciliacion",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/inventario.ts",
+      "line": 2453,
+      "method": "POST",
+      "localPath": "/conciliacion/recalcular",
+      "receiver": "inventarioRouter",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 130,
+      "method": "GET",
+      "localPath": "/proveedores/resumen",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 143,
+      "method": "POST",
+      "localPath": "/proveedores/:id/pagos/preview",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 169,
+      "method": "GET",
+      "localPath": "/proveedores/analitica-global",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 181,
+      "method": "GET",
+      "localPath": "/proveedores/historial-compras",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 230,
+      "method": "GET",
+      "localPath": "/proveedores/directorio",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 278,
+      "method": "GET",
+      "localPath": "/proveedores",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 340,
+      "method": "POST",
+      "localPath": "/proveedores",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 386,
+      "method": "GET",
+      "localPath": "/proveedores/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 417,
+      "method": "PATCH",
+      "localPath": "/proveedores/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 500,
+      "method": "GET",
+      "localPath": "/proveedores/:id/compras",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 564,
+      "method": "GET",
+      "localPath": "/proveedores/:id/pagos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 627,
+      "method": "GET",
+      "localPath": "/proveedores/:id/estado-cuenta",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 672,
+      "method": "GET",
+      "localPath": "/proveedores/:id/pagos/efectivo-opciones",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 679,
+      "method": "POST",
+      "localPath": "/proveedores/:id/pagos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 795,
+      "method": "POST",
+      "localPath": "/proveedores/:id/ajustes",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 866,
+      "method": "POST",
+      "localPath": "/proveedores/:id/pagos/:pagoId/reversar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 905,
+      "method": "GET",
+      "localPath": "/proveedores/:id/compras/:compraId",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 951,
+      "method": "GET",
+      "localPath": "/proveedores/:id/pagos/:pagoId",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 991,
+      "method": "GET",
+      "localPath": "/proveedores/:id/estadisticas",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 1050,
+      "method": "GET",
+      "localPath": "/proveedores/:id/utilidad",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/proveedores.ts",
+      "line": 1155,
+      "method": "GET",
+      "localPath": "/proveedores/:id/exportar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 128,
+      "method": "GET",
+      "localPath": "/clientes/analitica.xlsx",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 613,
+      "method": "GET",
+      "localPath": "/clientes/resumen",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 633,
+      "method": "GET",
+      "localPath": "/clientes",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 681,
+      "method": "POST",
+      "localPath": "/clientes",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 794,
+      "method": "GET",
+      "localPath": "/clientes/cartera",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 811,
+      "method": "GET",
+      "localPath": "/clientes/analitica",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 921,
+      "method": "GET",
+      "localPath": "/clientes/analitica.xlsx",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 961,
+      "method": "GET",
+      "localPath": "/clientes/cartera.xlsx",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 984,
+      "method": "GET",
+      "localPath": "/clientes/cartera.pdf",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 1005,
+      "method": "GET",
+      "localPath": "/clientes/comportamiento-pago",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 1015,
+      "method": "GET",
+      "localPath": "/clientes/:id/comportamiento-pago",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 1028,
+      "method": "GET",
+      "localPath": "/clientes/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 1077,
+      "method": "PATCH",
+      "localPath": "/clientes/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 1187,
+      "method": "GET",
+      "localPath": "/clientes/:id/credito",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 1257,
+      "method": "PATCH",
+      "localPath": "/clientes/:id/credito",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 1316,
+      "method": "GET",
+      "localPath": "/clientes/:id/precios",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 1397,
+      "method": "GET",
+      "localPath": "/clientes/:id/estado-cuenta",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 1541,
+      "method": "GET",
+      "localPath": "/clientes/:id/estado-cuenta/imprimir",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 1586,
+      "method": "GET",
+      "localPath": "/clientes/:id/estado-cuenta.xlsx",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 1634,
+      "method": "GET",
+      "localPath": "/clientes/:id/estado-cuenta.pdf",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 1685,
+      "method": "GET",
+      "localPath": "/clientes/:id/compras",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 1740,
+      "method": "GET",
+      "localPath": "/clientes/:id/analitica",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 1817,
+      "method": "GET",
+      "localPath": "/clientes/:id/estadisticas",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 1885,
+      "method": "GET",
+      "localPath": "/clientes/:id/pagos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 1932,
+      "method": "GET",
+      "localPath": "/clientes/:id/notas/:ticketId",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 2012,
+      "method": "GET",
+      "localPath": "/clientes/:id/pagos/:pagoId",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 2051,
+      "method": "POST",
+      "localPath": "/clientes/:id/notas/:ticketId/reimprimir",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 2106,
+      "method": "POST",
+      "localPath": "/clientes/:id/pagos/vista-previa",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 2163,
+      "method": "POST",
+      "localPath": "/clientes/:id/pagos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 2370,
+      "method": "POST",
+      "localPath": "/clientes/:id/pagos/:pagoId/reversar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes.ts",
+      "line": 2470,
+      "method": "POST",
+      "localPath": "/clientes/:id/ajustes",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e7.ts",
+      "line": 28,
+      "method": "GET",
+      "localPath": "/e7/disponibilidad",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e7.ts",
+      "line": 48,
+      "method": "GET",
+      "localPath": "/e7/atribucion",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e7.ts",
+      "line": 66,
+      "method": "GET",
+      "localPath": "/e7/clientes/:clienteId/exportacion",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes-listado.ts",
+      "line": 12,
+      "method": "GET",
+      "localPath": "/clientes/listado",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes-admin.ts",
+      "line": 29,
+      "method": "GET",
+      "localPath": "/clientes/incobrables",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes-admin.ts",
+      "line": 66,
+      "method": "POST",
+      "localPath": "/clientes/:id/baja",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/clientes-admin.ts",
+      "line": 293,
+      "method": "POST",
+      "localPath": "/clientes/:id/reactivar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/cliente-documentos.ts",
+      "line": 40,
+      "method": "GET",
+      "localPath": "/clientes/:id/documentos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/cliente-documentos.ts",
+      "line": 64,
+      "method": "POST",
+      "localPath": "/clientes/:id/documentos/:lado",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/cliente-documentos.ts",
+      "line": 155,
+      "method": "GET",
+      "localPath": "/cliente-documentos/:publicId/ver",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/cliente-documentos.ts",
+      "line": 156,
+      "method": "GET",
+      "localPath": "/cliente-documentos/:publicId/descargar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/credit-evidence.ts",
+      "line": 26,
+      "method": "GET",
+      "localPath": "/clientes/:clienteId/evidencia-credito",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/credit-evidence.ts",
+      "line": 71,
+      "method": "POST",
+      "localPath": "/clientes/:clienteId/atribuciones-credito",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/credit-refunds.ts",
+      "line": 11,
+      "method": "GET",
+      "localPath": "/clientes/:id/devoluciones-credito/opciones",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/credit-refunds.ts",
+      "line": 66,
+      "method": "POST",
+      "localPath": "/clientes/:id/devoluciones-credito",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/permisos.ts",
+      "line": 58,
+      "method": "GET",
+      "localPath": "/permisos/roles",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/permisos.ts",
+      "line": 74,
+      "method": "PUT",
+      "localPath": "/permisos/roles/:rol/:modulo",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/permisos.ts",
+      "line": 261,
+      "method": "GET",
+      "localPath": "/permisos/usuarios/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/permisos.ts",
+      "line": 307,
+      "method": "PUT",
+      "localPath": "/permisos/usuarios/:id/:modulo",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/permisos.ts",
+      "line": 484,
+      "method": "DELETE",
+      "localPath": "/permisos/usuarios/:id/:modulo",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/permisos.ts",
+      "line": 604,
+      "method": "GET",
+      "localPath": "/permisos/preview/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 307,
+      "method": "GET",
+      "localPath": "/pos/buscar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 322,
+      "method": "GET",
+      "localPath": "/pos/clientes/:clienteId/credito-disponible",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 366,
+      "method": "POST",
+      "localPath": "/pos/validar-precio",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 387,
+      "method": "POST",
+      "localPath": "/tickets",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 459,
+      "method": "GET",
+      "localPath": "/tickets",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 559,
+      "method": "GET",
+      "localPath": "/tickets/pendientes",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 595,
+      "method": "GET",
+      "localPath": "/caja/tickets",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 627,
+      "method": "GET",
+      "localPath": "/tickets/:id/documento-impresion",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 649,
+      "method": "GET",
+      "localPath": "/tickets/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 695,
+      "method": "POST",
+      "localPath": "/tickets/:id/cancelar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 750,
+      "method": "POST",
+      "localPath": "/tickets/:id/cobrar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 812,
+      "method": "POST",
+      "localPath": "/tickets/:id/autorizar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 833,
+      "method": "GET",
+      "localPath": "/tickets/:id/autorizar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 926,
+      "method": "GET",
+      "localPath": "/sesiones-caja/actual",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 973,
+      "method": "GET",
+      "localPath": "/sesiones-caja",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 992,
+      "method": "POST",
+      "localPath": "/sesiones-caja/abrir",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 1017,
+      "method": "GET",
+      "localPath": "/sesiones-caja/:id/corte",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 1036,
+      "method": "POST",
+      "localPath": "/sesiones-caja/:id/cerrar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 1065,
+      "method": "GET",
+      "localPath": "/sesiones-caja/:id/salidas-dinero",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 1079,
+      "method": "POST",
+      "localPath": "/sesiones-caja/:id/salidas-dinero",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 1106,
+      "method": "POST",
+      "localPath": "/sesiones-caja/:id/salidas-dinero/:salidaId/revision",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pos.ts",
+      "line": 1122,
+      "method": "GET",
+      "localPath": "/caja/proveedores-activos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 98,
+      "method": "POST",
+      "localPath": "/salidas/venta-cliente",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 107,
+      "method": "GET",
+      "localPath": "/salidas/venta-cliente/pendientes",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 130,
+      "method": "POST",
+      "localPath": "/salidas/venta-cliente/generar-venta",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 204,
+      "method": "GET",
+      "localPath": "/salidas/ubicaciones",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 232,
+      "method": "GET",
+      "localPath": "/salidas/venta-cliente/verificar-autorizacion",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 257,
+      "method": "POST",
+      "localPath": "/salidas/:id/entregar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 468,
+      "method": "GET",
+      "localPath": "/salidas",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 537,
+      "method": "GET",
+      "localPath": "/salidas/borrador",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 567,
+      "method": "POST",
+      "localPath": "/salidas/mostrador",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 609,
+      "method": "POST",
+      "localPath": "/salidas/borrador/rollos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 643,
+      "method": "GET",
+      "localPath": "/salidas/exportar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 707,
+      "method": "GET",
+      "localPath": "/salidas/recepcion",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 734,
+      "method": "GET",
+      "localPath": "/salidas/recepcion/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 768,
+      "method": "GET",
+      "localPath": "/salidas/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 794,
+      "method": "GET",
+      "localPath": "/salidas/:id/documento",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 816,
+      "method": "DELETE",
+      "localPath": "/salidas/:id/rollos/:rolloId",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 838,
+      "method": "POST",
+      "localPath": "/salidas/:id/enviar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 866,
+      "method": "POST",
+      "localPath": "/salidas/:id/recibir",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/salidas.ts",
+      "line": 899,
+      "method": "POST",
+      "localPath": "/salidas/:id/cancelar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 134,
+      "method": "GET",
+      "localPath": "/admin/dashboard/realtime",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 171,
+      "method": "GET",
+      "localPath": "/admin/dashboard/realtime/pendientes",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 191,
+      "method": "GET",
+      "localPath": "/admin/dashboard/realtime/desglose",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 222,
+      "method": "GET",
+      "localPath": "/admin/cortes",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 237,
+      "method": "GET",
+      "localPath": "/admin/diferencias",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 253,
+      "method": "GET",
+      "localPath": "/admin/cuentas-destino",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 265,
+      "method": "GET",
+      "localPath": "/admin/cuentas-destino/:cuentaDestino/movimientos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 340,
+      "method": "GET",
+      "localPath": "/admin/cuadre-fiscal",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 369,
+      "method": "POST",
+      "localPath": "/admin/cuadre-fiscal/confirmaciones",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 370,
+      "method": "POST",
+      "localPath": "/admin/cuadre-fiscal/diferencias",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 371,
+      "method": "POST",
+      "localPath": "/admin/cuadre-fiscal/diferencias/:id/resolver",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 390,
+      "method": "GET",
+      "localPath": "/admin/comparacion-tiendas",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 437,
+      "method": "GET",
+      "localPath": "/admin/cortes/export.xlsx",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 441,
+      "method": "GET",
+      "localPath": "/admin/cortes/export.pdf",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 466,
+      "method": "GET",
+      "localPath": "/admin/cuentas-destino/export.xlsx",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 470,
+      "method": "GET",
+      "localPath": "/admin/cuentas-destino/:cuentaDestino/movimientos/export.xlsx",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 514,
+      "method": "GET",
+      "localPath": "/admin/cuentas-destino/export.pdf",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 525,
+      "method": "GET",
+      "localPath": "/admin/cortes/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 542,
+      "method": "GET",
+      "localPath": "/admin/cortes/:id/export.xlsx",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-analytics.ts",
+      "line": 576,
+      "method": "GET",
+      "localPath": "/admin/cortes/:id/export.pdf",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/notificaciones.ts",
+      "line": 219,
+      "method": "GET",
+      "localPath": "/notificaciones/feed",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/notificaciones.ts",
+      "line": 488,
+      "method": "GET",
+      "localPath": "/notificaciones",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/notificaciones.ts",
+      "line": 664,
+      "method": "GET",
+      "localPath": "/notificaciones/no-leidas/count",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/notificaciones.ts",
+      "line": 674,
+      "method": "POST",
+      "localPath": "/notificaciones/leer-todas",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/notificaciones.ts",
+      "line": 700,
+      "method": "POST",
+      "localPath": "/notificaciones/:tipo/:id/leer",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/etiquetas.ts",
+      "line": 180,
+      "method": "GET",
+      "localPath": "/etiquetas/rollos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/etiquetas.ts",
+      "line": 265,
+      "method": "GET",
+      "localPath": "/etiquetas/rollos/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/etiquetas.ts",
+      "line": 322,
+      "method": "POST",
+      "localPath": "/etiquetas/rollos/:id/revisar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/etiquetas.ts",
+      "line": 506,
+      "method": "GET",
+      "localPath": "/etiquetas/rollos/:id/revisiones",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/etiquetas.ts",
+      "line": 558,
+      "method": "POST",
+      "localPath": "/etiquetas/reimpresiones",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/etiquetas.ts",
+      "line": 675,
+      "method": "GET",
+      "localPath": "/etiquetas/historial",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/etiquetas.ts",
+      "line": 704,
+      "method": "GET",
+      "localPath": "/etiquetas/historial/export.xlsx",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/etiquetas.ts",
+      "line": 734,
+      "method": "GET",
+      "localPath": "/etiquetas/alertas/count",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/admin-alertas.ts",
+      "line": 8,
+      "method": "GET",
+      "localPath": "/admin/alertas",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/reportes.ts",
+      "line": 73,
+      "method": "GET",
+      "localPath": "/reportes/catalogos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/reportes.ts",
+      "line": 90,
+      "method": "GET",
+      "localPath": "/reportes/que-comprar/evidencia",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/reportes.ts",
+      "line": 121,
+      "method": "GET",
+      "localPath": "/reportes/:seccion",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/reportes.ts",
+      "line": 130,
+      "method": "GET",
+      "localPath": "/reportes/:seccion/export.xlsx",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/reportes.ts",
+      "line": 160,
+      "method": "GET",
+      "localPath": "/reportes/:seccion/export.pdf",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/reportes.ts",
+      "line": 309,
+      "method": "GET",
+      "localPath": "/reportes/vistas/:vista/export.xlsx",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/reportes.ts",
+      "line": 356,
+      "method": "GET",
+      "localPath": "/reportes/vistas/:vista/export.pdf",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/contenedores.ts",
+      "line": 93,
+      "method": "GET",
+      "localPath": "/contenedores/catalogos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/contenedores.ts",
+      "line": 148,
+      "method": "GET",
+      "localPath": "/contenedores",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/contenedores.ts",
+      "line": 173,
+      "method": "POST",
+      "localPath": "/contenedores",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/contenedores.ts",
+      "line": 199,
+      "method": "GET",
+      "localPath": "/contenedores/resumen",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/contenedores.ts",
+      "line": 229,
+      "method": "GET",
+      "localPath": "/contenedores/disponibles-entrada",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/contenedores.ts",
+      "line": 257,
+      "method": "GET",
+      "localPath": "/contenedores/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/contenedores.ts",
+      "line": 281,
+      "method": "PATCH",
+      "localPath": "/contenedores/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/contenedores.ts",
+      "line": 305,
+      "method": "POST",
+      "localPath": "/contenedores/:id/cancelar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/contenedores.ts",
+      "line": 382,
+      "method": "GET",
+      "localPath": "/contenedores/export.xlsx",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/contenedores.ts",
+      "line": 425,
+      "method": "GET",
+      "localPath": "/contenedores/export.pdf",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/precios.ts",
+      "line": 182,
+      "method": "GET",
+      "localPath": "/precios",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/precios.ts",
+      "line": 207,
+      "method": "GET",
+      "localPath": "/precios/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/precios.ts",
+      "line": 225,
+      "method": "POST",
+      "localPath": "/precios/:id/cambiar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/precios.ts",
+      "line": 278,
+      "method": "POST",
+      "localPath": "/precios/cambiar-masivo",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/precios.ts",
+      "line": 374,
+      "method": "PATCH",
+      "localPath": "/precios/:id/venta-por-metro",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auditoria.ts",
+      "line": 26,
+      "method": "GET",
+      "localPath": "/auditoria",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auditoria.ts",
+      "line": 38,
+      "method": "GET",
+      "localPath": "/auditoria/export.xlsx",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auditoria.ts",
+      "line": 79,
+      "method": "GET",
+      "localPath": "/auditoria/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pagos-dirigidos.ts",
+      "line": 264,
+      "method": "GET",
+      "localPath": "/pagos-dirigidos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pagos-dirigidos.ts",
+      "line": 303,
+      "method": "POST",
+      "localPath": "/pagos-dirigidos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pagos-dirigidos.ts",
+      "line": 413,
+      "method": "POST",
+      "localPath": "/pagos-dirigidos/:id/aprobar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/pagos-dirigidos.ts",
+      "line": 493,
+      "method": "POST",
+      "localPath": "/pagos-dirigidos/:id/rechazar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/camionetas.ts",
+      "line": 51,
+      "method": "GET",
+      "localPath": "/camionetas",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/camionetas.ts",
+      "line": 65,
+      "method": "POST",
+      "localPath": "/camionetas",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/camionetas.ts",
+      "line": 101,
+      "method": "GET",
+      "localPath": "/camionetas/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/camionetas.ts",
+      "line": 111,
+      "method": "PATCH",
+      "localPath": "/camionetas/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/choferes.ts",
+      "line": 58,
+      "method": "GET",
+      "localPath": "/choferes",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/choferes.ts",
+      "line": 82,
+      "method": "POST",
+      "localPath": "/choferes",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/choferes.ts",
+      "line": 125,
+      "method": "GET",
+      "localPath": "/choferes/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/choferes.ts",
+      "line": 151,
+      "method": "PATCH",
+      "localPath": "/choferes/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/viajes.ts",
+      "line": 90,
+      "method": "GET",
+      "localPath": "/viajes/catalogo-operativo",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/viajes.ts",
+      "line": 101,
+      "method": "GET",
+      "localPath": "/viajes/elegibles",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/viajes.ts",
+      "line": 120,
+      "method": "POST",
+      "localPath": "/viajes",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/viajes.ts",
+      "line": 159,
+      "method": "GET",
+      "localPath": "/viajes",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/viajes.ts",
+      "line": 174,
+      "method": "GET",
+      "localPath": "/viajes/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auditorias-inventario.ts",
+      "line": 116,
+      "method": "GET",
+      "localPath": "/auditorias/sitios",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auditorias-inventario.ts",
+      "line": 144,
+      "method": "GET",
+      "localPath": "/auditorias",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auditorias-inventario.ts",
+      "line": 169,
+      "method": "POST",
+      "localPath": "/auditorias",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auditorias-inventario.ts",
+      "line": 197,
+      "method": "GET",
+      "localPath": "/auditorias/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auditorias-inventario.ts",
+      "line": 221,
+      "method": "GET",
+      "localPath": "/auditorias/:id/pisos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auditorias-inventario.ts",
+      "line": 249,
+      "method": "POST",
+      "localPath": "/auditorias/:id/participar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auditorias-inventario.ts",
+      "line": 273,
+      "method": "POST",
+      "localPath": "/auditorias/:id/escaneos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auditorias-inventario.ts",
+      "line": 356,
+      "method": "POST",
+      "localPath": "/auditorias/:id/confirmar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auditorias-inventario.ts",
+      "line": 390,
+      "method": "POST",
+      "localPath": "/auditorias/:id/sobrantes/resolver",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auditorias-inventario.ts",
+      "line": 407,
+      "method": "GET",
+      "localPath": "/rollos/:id/reactivacion-faltante",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/auditorias-inventario.ts",
+      "line": 418,
+      "method": "POST",
+      "localPath": "/rollos/:id/reactivacion-faltante",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/purga.ts",
+      "line": 22,
+      "method": "GET",
+      "localPath": "/purga/:entidad/:id/preflight",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/purga.ts",
+      "line": 40,
+      "method": "DELETE",
+      "localPath": "/purga/:entidad/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/caja-ventas.ts",
+      "line": 23,
+      "method": "GET",
+      "localPath": "/caja/tiendas/:ubicacionId/ventas/global",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/caja-ventas.ts",
+      "line": 62,
+      "method": "GET",
+      "localPath": "/caja/tiendas/:ubicacionId/ventas",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/equipos.ts",
+      "line": 206,
+      "method": "GET",
+      "localPath": "/equipos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/equipos.ts",
+      "line": 240,
+      "method": "GET",
+      "localPath": "/equipos/ubicaciones",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/equipos.ts",
+      "line": 274,
+      "method": "POST",
+      "localPath": "/equipos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/equipos.ts",
+      "line": 350,
+      "method": "PATCH",
+      "localPath": "/equipos/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/equipos.ts",
+      "line": 468,
+      "method": "PATCH",
+      "localPath": "/equipos/:id/checklist/:itemKey",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/stock-minimos.ts",
+      "line": 104,
+      "method": "GET",
+      "localPath": "/stock-minimos/config",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/stock-minimos.ts",
+      "line": 126,
+      "method": "PATCH",
+      "localPath": "/stock-minimos/config",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/stock-minimos.ts",
+      "line": 159,
+      "method": "GET",
+      "localPath": "/stock-minimos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/stock-minimos.ts",
+      "line": 185,
+      "method": "PUT",
+      "localPath": "/stock-minimos/:productoId",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/fondo.ts",
+      "line": 99,
+      "method": "GET",
+      "localPath": "/fondo",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/fondo.ts",
+      "line": 104,
+      "method": "GET",
+      "localPath": "/fondo/movimientos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/fondo.ts",
+      "line": 109,
+      "method": "GET",
+      "localPath": "/fondo/movimientos/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/fondo.ts",
+      "line": 117,
+      "method": "POST",
+      "localPath": "/fondo/movimientos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/fondo.ts",
+      "line": 123,
+      "method": "POST",
+      "localPath": "/fondo/movimientos/:id/inverso",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/fondo.ts",
+      "line": 134,
+      "method": "GET",
+      "localPath": "/fondo/arqueos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/fondo.ts",
+      "line": 138,
+      "method": "GET",
+      "localPath": "/fondo/arqueos/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/fondo.ts",
+      "line": 144,
+      "method": "POST",
+      "localPath": "/fondo/arqueos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/fondo.ts",
+      "line": 150,
+      "method": "GET",
+      "localPath": "/fondo/exportar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e3-collections.ts",
+      "line": 25,
+      "method": "GET",
+      "localPath": "/caja/abonos-e3/contexto",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e3-collections.ts",
+      "line": 52,
+      "method": "GET",
+      "localPath": "/recibos-e3/:folio",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e3-collections.ts",
+      "line": 70,
+      "method": "GET",
+      "localPath": "/clientes/:id/recibos-e3",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e3-collections.ts",
+      "line": 71,
+      "method": "GET",
+      "localPath": "/caja/recibos-e3",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e3-collections.ts",
+      "line": 72,
+      "method": "POST",
+      "localPath": "/recibos-e3/:folio/impresiones",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e9.ts",
+      "line": 26,
+      "method": "GET",
+      "localPath": "/e9/disponibilidad",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e9.ts",
+      "line": 33,
+      "method": "GET",
+      "localPath": "/e9/entregas",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e9.ts",
+      "line": 41,
+      "method": "GET",
+      "localPath": "/e9/entregas/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e9.ts",
+      "line": 53,
+      "method": "POST",
+      "localPath": "/e9/entregas",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e9.ts",
+      "line": 54,
+      "method": "POST",
+      "localPath": "/e9/entregas/:id/conteos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e9.ts",
+      "line": 55,
+      "method": "POST",
+      "localPath": "/e9/entregas/:id/autorizar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e9.ts",
+      "line": 56,
+      "method": "POST",
+      "localPath": "/e9/entregas/:id/investigacion/cierre",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e5.ts",
+      "line": 50,
+      "method": "GET",
+      "localPath": "/e5/disponibilidad",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e5.ts",
+      "line": 56,
+      "method": "GET",
+      "localPath": "/e5/contexto",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e5.ts",
+      "line": 67,
+      "method": "GET",
+      "localPath": "/e5/cobros",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e5.ts",
+      "line": 70,
+      "method": "GET",
+      "localPath": "/e5/avisos",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e5.ts",
+      "line": 76,
+      "method": "GET",
+      "localPath": "/e5/cobros/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e5.ts",
+      "line": 79,
+      "method": "POST",
+      "localPath": "/e5/cobros/vista-previa",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e5.ts",
+      "line": 93,
+      "method": "POST",
+      "localPath": "/e5/cobros",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e5.ts",
+      "line": 94,
+      "method": "POST",
+      "localPath": "/e5/cobros/:id/propuestas",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e5.ts",
+      "line": 95,
+      "method": "POST",
+      "localPath": "/e5/cobros/:id/autorizar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e5.ts",
+      "line": 96,
+      "method": "POST",
+      "localPath": "/e5/cobros/:id/rechazar",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e5.ts",
+      "line": 97,
+      "method": "POST",
+      "localPath": "/e5/cobros/:id/devolver",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e5.ts",
+      "line": 98,
+      "method": "GET",
+      "localPath": "/e5/cobros/:id/devolucion/opciones",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e5.ts",
+      "line": 105,
+      "method": "GET",
+      "localPath": "/e5/cobros/:id/documentos/:documentoId",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e5.ts",
+      "line": 108,
+      "method": "POST",
+      "localPath": "/e5/cobros/:id/documentos/:documentoId/impresiones",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 66,
+      "method": "GET",
+      "localPath": "/e11/identidad",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 67,
+      "method": "GET",
+      "localPath": "/e11/operaciones/:actorId/:accion/:uuidOriginal",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 71,
+      "method": "POST",
+      "localPath": "/e11/operaciones/:actorId/:accion/:uuidOriginal/resolucion",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 75,
+      "method": "GET",
+      "localPath": "/e11/usuarios/:usuarioId/perfil",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 80,
+      "method": "PUT",
+      "localPath": "/e11/usuarios/:usuarioId/perfil",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 82,
+      "method": "GET",
+      "localPath": "/e11/usuarios/:usuarioId/perfil/historial",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 87,
+      "method": "GET",
+      "localPath": "/e11/fiscal/clientes",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 91,
+      "method": "GET",
+      "localPath": "/e11/fiscal/ventas",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 97,
+      "method": "GET",
+      "localPath": "/e11/fiscal/facturas/:facturaId",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 104,
+      "method": "GET",
+      "localPath": "/e11/finanzas/clientes",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 108,
+      "method": "GET",
+      "localPath": "/e11/finanzas/clientes/:clienteId/notas",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 112,
+      "method": "GET",
+      "localPath": "/e11/finanzas/clientes/:clienteId/estado-cuenta",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 117,
+      "method": "GET",
+      "localPath": "/e11/conciliaciones",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 122,
+      "method": "POST",
+      "localPath": "/e11/conciliaciones",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 124,
+      "method": "GET",
+      "localPath": "/e11/conciliaciones/:id",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 126,
+      "method": "GET",
+      "localPath": "/e11/conciliaciones/:id/ventas",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 131,
+      "method": "POST",
+      "localPath": "/e11/conciliaciones/:id/decisiones",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 133,
+      "method": "GET",
+      "localPath": "/e11/a/preparaciones",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 137,
+      "method": "GET",
+      "localPath": "/e11/a/preparaciones/:cobroId",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    },
+    {
+      "source": "../src/routes/e11.ts",
+      "line": 139,
+      "method": "POST",
+      "localPath": "/e11/a/preparaciones/:cobroId",
+      "receiver": "router",
+      "coverage": "registration inventory only; router prefixes and runtime authorization not certified"
+    }
+  ],
+  "reviewedErrorSurfaces": [
+    [
+      "src/pages/conciliacion.tsx",
+      "Confirmed and fixed false healthy state; exact candidate mounted tests"
+    ],
+    [
+      "src/pages/stock-minimos.tsx",
+      "Error handlers and deep-link contract inspected; contract 3/3; no live writes"
+    ],
+    [
+      "src/pages/ubicaciones.tsx",
+      "Raw err.message toast paths at 52/64 inspected, no forced server failure"
+    ],
+    [
+      "src/pages/entradas-pendientes-costo.tsx",
+      "Mutation error handler inspected, no live writes"
+    ],
+    [
+      "src/pages/proveedores.tsx",
+      "Mutation error handler inspected, no live writes"
+    ],
+    [
+      "src/pages/productos.tsx",
+      "Import/create error paths inspected, no live writes"
+    ],
+    [
+      "src/pages/salida-nueva.tsx",
+      "Conditional-hook leak reproduced with actual page and real wouter Route; fixed by hook-stable branch subcomponent; timer cleanup and query-only navigation PASS. Full App/browser not exercised."
+    ],
+    [
+      "src/lib/api-error.ts",
+      "HTML/HTTP handling and structured inventory ownership links inspected; existing error contracts pass on actual tree"
+    ]
+  ],
+  "limitations": [
+    "Inventory is not a pass/fail audit of all routes.",
+    "No inferred authorization fixes.",
+    "No database, HTTP or workflow operations."
+  ]
+}

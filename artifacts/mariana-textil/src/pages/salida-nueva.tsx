@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useLocation, Link } from "wouter";
+import { useLocation, useSearch, Link } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
 import { CampoEscaneo } from "@/components/campo-escaneo";
 import {
@@ -49,9 +49,14 @@ import {
 } from "@workspace/scanned-code";
 
 export default function SalidaNueva() {
-  if (new URLSearchParams(window.location.search).get("modalidad") === "VENTA_CLIENTE") {
+  const search = useSearch();
+  if (new URLSearchParams(search).get("modalidad") === "VENTA_CLIENTE") {
     return <SalidaVentaClienteNueva />;
   }
+  return <SalidaTransferenciaNueva />;
+}
+
+function SalidaTransferenciaNueva() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();

@@ -37,7 +37,7 @@ export default function Conciliacion() {
   const { data: productos } = useListProductos();
   const { data: ubicaciones } = useListLocations();
 
-  const { data: conciliaciones, isLoading } = useGetConciliacion({
+  const { data: conciliaciones, isLoading, isError, refetch } = useGetConciliacion({
     productoId: productoId !== "all" ? Number(productoId) : undefined,
     ubicacionId: ubicacionId !== "all" ? Number(ubicacionId) : undefined
   });
@@ -116,6 +116,20 @@ export default function Conciliacion() {
             <CardContent className="h-64 flex flex-col items-center justify-center text-muted-foreground animate-pulse">
               <RefreshCw className="w-8 h-8 animate-spin mb-4 opacity-50" />
               <p>Analizando integridad de datos...</p>
+            </CardContent>
+          </Card>
+        ) : isError ? (
+          <Card className="border-destructive/50" role="alert">
+            <CardContent className="py-16 text-center space-y-4">
+              <h2 className="text-2xl font-bold text-destructive">
+                No se pudo consultar la conciliación
+              </h2>
+              <p className="text-muted-foreground">
+                No se ha podido verificar si las existencias coinciden con el kardex. Intenta consultar de nuevo.
+              </p>
+              <Button variant="outline" onClick={() => void refetch()}>
+                Reintentar
+              </Button>
             </CardContent>
           </Card>
         ) : discrepancias.length === 0 ? (

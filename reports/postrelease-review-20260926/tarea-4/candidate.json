@@ -1,0 +1,43 @@
+{
+  "kind": "frontend-only-conciliacion-overlay",
+  "status": "candidate-built-not-activated",
+  "parentCandidate": "reports/priority-20260926/credit-presentation/candidate.json",
+  "parentIndexSha256": "af0541fd749f49ffe917aaae51ba6adc8c1f99f1dd5ad1de419a57a2a0c578b5",
+  "frontendRoot": "/home/runner/workspace/artifacts/mariana-textil/dist-postreview-conciliacion",
+  "frontendFiles": {
+    "assets/index-C8hAKB28.js": "337dfaea31a3a1889bd6b4bbeb01f9fd00a450681b53a8432df51c8ce2808b6e",
+    "assets/index-CJ5sQYvB.js": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c",
+    "assets/index-CLZzAUyA.css": "16fe6c2c6d27201c37a58bf42afc68b893d00cec21cb87b6f99b689aa87d4770",
+    "assets/mariana-textil-logo-FFOiXRd3.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "assets/mariana-textil-logo-monochrome-_7AVoW2A.png": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24",
+    "favicon.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "index.html": "936376d13060f7f32d14c8bbe65c1fd0a22bedf0500eb7ed27bc0fff55426293",
+    "robots.txt": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+    "sounds/alerta.ogg": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e",
+    "sounds/aviso.ogg": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4",
+    "sounds/solicitud.ogg": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+  },
+  "sourceInventorySha256": "c226ca7f7bd29e29c3920c756c6bb2d17a0bd10b527a17b8f5e7877981444952",
+  "sourcePreservation": {
+    "frozenSource": "/home/runner/workspace/reports/priority-20260926/credit-presentation/frozen-root",
+    "source": "/home/runner/workspace/reports/postrelease-review-20260926/tarea-4/frozen-root",
+    "unchangedFiles": 1457,
+    "exactAllowedDelta": [
+      {
+        "name": "artifacts/mariana-textil/src/pages/conciliacion.tsx",
+        "before": "a3e335cdfd3dfdda319583ffae1a80bb8b8412b78f4c631159f231d876c5fe31",
+        "after": "dbea832020088b2e6ef3eaacfdf5387ad5a609e407516ac9fcb7c3f23324797f"
+      }
+    ],
+    "parentUnchanged": true
+  },
+  "verification": {
+    "componentTests": "4/4",
+    "mountedQueryTests": "passed",
+    "typecheck": "passed",
+    "build": "passed",
+    "browser": "not run",
+    "database": "not accessed"
+  },
+  "backend": "Retain API dist-owner-login-v9-20260926 unchanged; MAIN owns integration and activation"
+}
