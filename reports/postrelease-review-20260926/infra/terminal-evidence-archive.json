@@ -1,0 +1,1914 @@
+{
+  "at": "2026-09-26T10:51:49.522Z",
+  "journals": [
+    {
+      "campaign": "tarea-1",
+      "sourceJournalSha256": "652d929ec41a8cf6daf39c1df0952c9dda1fe31dae90ba46c0ab999c6bdf7d8b",
+      "operations": [
+        {
+          "operationKeySha256": "fbae041b02c41ed0fd8a4efb039bc780dd6af4a1f0c420f42561ae705dda43fe",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "636cdfeea673e730048402619232bd5604928305c1a6b8f6200452e2326affc3",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "fe2b7eeab88b8fd0831876e155d485018e563a39916400f79c48e70c74eacfb0",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "5587d3ced2466d6bbf031d73d532721008cf222a8f2fc93ae5bfd624759aad18",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "955ed10b73d6265b1adcf768b94f8dd5d91f33309db94b6b3af4efa822f1d9af",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "a8792157cb4f27fb949c035f45518c61e884bb86e6f420204379c2baa8beb66e",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "948fe603f61dc036b5c596dc09fe3ce3f3d30dc90f024c85f3c82db2ccab679d",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "923fe53966c6cd9343e11af776cd4b05be315ea4b200b02e4d5dfb0f929b73bf",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "dde4364cef936db88257b417a4453fa7440487e4741114be059ce215572a0d6c",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "17689b1ac8d434391f350b273c963dc598b21dbeeb71009ab380bf38cefad6b5",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "8b15f751525fcb9f2795e74beb8fd7a7f8d990a138e0ac484ff9b3e4c53b1e48",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "4d68cc6c6e850a0721b7b617f48d4e1b8529b13d7a2a709a25ad8800270ab779",
+          "status": "ACK",
+          "httpStatus": 200
+        },
+        {
+          "operationKeySha256": "eaca65f3777c424d3db124e8ae5595f0ce591c13549016aeab5cff33c47e3091",
+          "status": "ACK",
+          "httpStatus": 200
+        },
+        {
+          "operationKeySha256": "34b42831a55284e89f3393344017c8f8e7b6f7b9d11907bdce65deff87dd4edc",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "5c912c56446fe524b99304e95dfaff093bd989500f2f370bfd29eca01cdc67b9",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "97839ea94db5ad0b69397503a67ce5ab8a960a958a50ed500beafbca3604be1d",
+          "status": "ACK",
+          "httpStatus": 200
+        },
+        {
+          "operationKeySha256": "2c17485c73152ec50c804c560a3af969bf69db2ffadc5255cc41cec5224c1e1b",
+          "status": "ACK",
+          "httpStatus": 200
+        },
+        {
+          "operationKeySha256": "9495476ce75985c9385f9364ccedbebe3aa51dd41f6414ffcb0666dab3288db5",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "a04c89b055a53577d71753062932bbc2e22ebdc5777da45f788b666ac1c821b6",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "f921aef41de48d23719a20b82ece8f893e4b51cb4d94fac93100f422c7c5ad16",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "261fad060f92ee32d68ea8f56f7147881fb4a25f9b97c13772acabd68135744c",
+          "status": "ACK",
+          "httpStatus": 200
+        },
+        {
+          "operationKeySha256": "8dea40098dc85a3f7c6b5fddf972ad72900c5690600757791daea302beb04ca2",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "425150e28fb32ac0ecf0cc35c343c6283eebcc5d62e98eea38555674de29c10e",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "47a7292f1f0202fd3a158fd82b4559d0f1ed2ab1b4ea9b44e232d991bdff690f",
+          "status": "ACK",
+          "httpStatus": 200
+        },
+        {
+          "operationKeySha256": "b5c755aaab1038b3d5627bbde7f47ca80c5f5c0481c6d33f04139d07aa1530e7",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "a8e9fb5d488db782f353aa9b685e42d4f90f9106b756729904d653fadb6415c4",
+          "status": "ACK",
+          "httpStatus": 200
+        },
+        {
+          "operationKeySha256": "3ae5e97d58d6e39b669d09bf488ef23d738b9be573b72a6cee480c3f5650ecd3",
+          "status": "ACK",
+          "httpStatus": 200
+        },
+        {
+          "operationKeySha256": "6b8abbc87e206b56017900cd805960e00163a4de27f61c5dd663747bcd0bf048",
+          "status": "ACK",
+          "httpStatus": 200
+        },
+        {
+          "operationKeySha256": "310ff200149b44a32f124023d7caba19a1a890763a980606813d3a3d4a085d36",
+          "status": "ACK",
+          "httpStatus": 200
+        },
+        {
+          "operationKeySha256": "56e717fa27f0d79f608d559d7e3b5d94158bdeb7c145dd972e673d5fec81f0ae",
+          "status": "ACK",
+          "httpStatus": 200
+        },
+        {
+          "operationKeySha256": "1b1b7f76baac80ebf790d9bdcbb066233d39567e47738f6d9fd486ed751c483e",
+          "status": "ACK",
+          "httpStatus": 200
+        },
+        {
+          "operationKeySha256": "32109f7cae13de4bb2b42e348866b62c9909fbbe2a850420c93c1feae8f20d1f",
+          "status": "ACK",
+          "httpStatus": 200
+        },
+        {
+          "operationKeySha256": "516b5d75936fe72e32cf79dab24bda0ebe1a6733bb2078c3b82dec854830d167",
+          "status": "ACK",
+          "httpStatus": 200
+        }
+      ]
+    },
+    {
+      "campaign": "tarea-2-historical",
+      "sourceJournalSha256": "31d1a974955899556a9ac7af838c3eb4f024e060744ea75215f08189c3f38db4",
+      "operations": [
+        {
+          "operationKeySha256": "552c82e043d0a71243c6a0f460b1dc7abb10b29d3698553fcd564446f9295800",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "2209714ca9e33d945ffeb21535f2016df98a180822bc493cc646aa13bb490191",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "60961bbdd5af9fc2bfcdd359a9d9ff11bca842ec3455c2d51eec53696ab9cd0b",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "65a88cc3eb75f90086960b7330094eb018c13fcdc7db810d93366c68fa27d434",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "53b3ac62a88938f32d01982158c0814f3fc8aa50e75c9dde1c2ceb210b40a8f0",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "f1b8688a9bbc816840c10c649393777ed3dc40ea17184db6ced5c2244044eb6e",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "5193452dd44655efa15ce50ab0d376aa07285cf5ebee352d1731aa9a710943a0",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "a8d1efe07d1648da0474099cda118af625fcac9b29c635e9e040261ca0dd0a50",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "031b02b12e371213e96c344a536dacbc1d2df88d7448f5b53f63d335d14bca39",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "6514d4ca55f895c1660d06f4d9ba81140b3f2f29184813c6a03d2ad1ac396254",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "53ffac325c1b689bc53530a17371808a38e2c14bf2a4466bb7db85b437000284",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "e30b905c4ba74ee5a4696719b2153b86c17abe0c86d00d14ac646a18db82723a",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "734be95c1d5c3ad2278ea4e52dcbdc851eb9f6f5e5da2a2442dd5cc66cdcd855",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "79fc7b2c7fc80dbe2f66c11a455c42003a531e9b0e2ad2d32f0c56be3aec3421",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "f54226b6b97a83b4492a29e9017913881458758ed6013099d07fd48a69d1a4dd",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "8f4153c8725ccba50daf25bf5bcc6dbad198dd6248f7fa5712266d8b13af9035",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "4669c9e659bad71455bd2588d017dfae51b0d6c745e843e4ecd92387f7e94d4e",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "c4b8f64c163e49f37c689e8007f5a6a4b404719b0e461f8a69f5c3da5fa22961",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "e675f5c4f03542aa7453b44f8c66a905a6330e31a307452e8cbeee5560257e12",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "74c7affd06c12f5ff4c7ed0c3aec6c3227fec29e83aa20ac902bcf28e0b73d41",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "0a82d8ff572d951e590a2042da7f9cfb72afe7ae529714f3604ded330a16f694",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "07add3997c65b33014693803f55c6f12f87ef92d37b76217dfbea24777bdede5",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "b1127039b39bfcdde93817911ecf865c7c4960a5da4086c42ce0b094d8c81b61",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "fa6b998304b62edcaf6eec7d175d0bb002f4a54799af1b7676f8b37fecec4579",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "39b75452aee8e41d8332981bdbceb48db56fd7b2ef0694f265c8dedcce87212e",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "c2b7ffccee339bdf175846a42fa79b6b2cdec2c19f10a4ad714086169f5cae48",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "e94abd3f3e9eace6f6c8e29ee5a6d7166ed13daa3b520f7e09fc3452acad3ca5",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "d133f2d7c1fb09625389f30704ce075d2ebb3c14b91e8f49ae8fc504716d39f0",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "8c7b1e7d79dc1e128bcc9b961eed62dd3419f7191c3f1360ae3d7cdc7e16f6c8",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "de0f76783578233278738fc2a3441f405e611cda600f85b931b7ea4c5a8d33dc",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "5e8c49ce6c88cbffb150041461cdd0c9358ab8d3e2b5e65f59c2b9ed848bc8a8",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "b0e0eb83383e4dd8f15fdf653793c7fb5e3e49bcc7ce65d7f8c45b025e7a3c5c",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "e2ab41860415e78ebedd6b48a34e005eebf9cb58f8a812dcc200f5f967a0ff66",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "1e909eebfe6342d3ec7b96ee6b8aa854c629caf93b998bd33abead3a4a584a7c",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "3a83f6ce5fd814d4dd20a9dac7e31de0d4dbef0eba5c7b1ca7dcaf283275716b",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "6288b00d8dc06829c20bf2390981364dda321a3c96f49c313a62daf49db2d855",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "a8ebdce99596b9f9a0da3ecf56aa24fd920f6cb46bc958d6147fbfc006b8c1c5",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "f8a78df0c20f69ea482e32c97989beaf8d9971348206b9ecb46641c4fa05df0a",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "7b68f4fcdfbcf881a92218c66117beab6a95788943a7ffed180f83b404d2ebae",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:07:39.617Z"
+        },
+        {
+          "operationKeySha256": "4bcee8664b0a6870825626c1c12a56bb3fa5e5690394a31f2f68c7d183361eb4",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:07:39.746Z"
+        },
+        {
+          "operationKeySha256": "a4731ca262e90d526221787dd86e291480dc3c6712d968350afbf77a22f0234f",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:07:39.777Z"
+        },
+        {
+          "operationKeySha256": "a92cc344df5ead6c0844490cff7ae1f84881baa3e751ea2a2b7c31566f4ddee9",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:07:43.500Z"
+        },
+        {
+          "operationKeySha256": "a43a0940594048ba020cb1d3b5242bb35541085c51167c9b1c451b19a86b5c8e",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:07:43.505Z"
+        },
+        {
+          "operationKeySha256": "92c3cef8c8b530ee468704acfc774cfd177d1dc1efacc8032f35044934a0c21c",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:07:43.511Z"
+        },
+        {
+          "operationKeySha256": "027de10372458a31bee667f437e022c6f560c219b94ff3e3be8dfdbcd859b3fc",
+          "operation": "task2-collect-16",
+          "ticketId": 16,
+          "status": "UNCERTAIN",
+          "httpStatus": 500,
+          "syntheticActorId": 236,
+          "startedAt": "2026-09-26T10:07:44.930Z"
+        },
+        {
+          "operationKeySha256": "f42feab8d64f194bb87e3f3a328427f4ddadb7f0039d5ea250ba1a62dd0443e1",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:07:44.933Z"
+        },
+        {
+          "operationKeySha256": "87dbe99e0af0cbc407ee57bb7fb09d4ecbf63247f2a9e81b9370e40cf3b2c848",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:07:51.483Z"
+        },
+        {
+          "operationKeySha256": "aad546b09b84df23ff6179161df1cbbaa042c6fcdddcf280adb628f5a7295471",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:07:51.494Z"
+        },
+        {
+          "operationKeySha256": "9c485e6e336d9d42ef5df1743554654abec87ef14fc23bc0b6b49bf03c2f162d",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:07:51.497Z"
+        },
+        {
+          "operationKeySha256": "0945a2078836aa7cf35a319dbc4c01260e5c9b422bb002f7bd7dc8f64224605c",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:07:59.467Z"
+        },
+        {
+          "operationKeySha256": "4d4f25d0dd95f0e0ad5aac9cc8415e1d2e8e62e5248bd490625ca6c219d66186",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:07:59.469Z"
+        },
+        {
+          "operationKeySha256": "500b39c6f0baa805cdc1f3695424d6163b2825ea7915e983b0e766e888054abb",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:07:59.475Z"
+        },
+        {
+          "operationKeySha256": "3ca0956dac1c3568ae90f96850fa8c8e79f1428a65738171563526cca83fd964",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:08:00.842Z"
+        },
+        {
+          "operationKeySha256": "77d96512b9dd5c6b928c27626877e75ce7b977097446a2acd93f1f24ab20ca71",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:08:07.453Z"
+        },
+        {
+          "operationKeySha256": "1d17c5d734e701636e7c1d234456d034ba81da3ac071602b6fc4ca0bb9c42e63",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:08:07.456Z"
+        },
+        {
+          "operationKeySha256": "455e660d5a70fecf9b09d5465c5f92a372eebb9c67f1cec875a7b376d7c19d23",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:08:07.462Z"
+        },
+        {
+          "operationKeySha256": "a19483b0c29bfa3f88244f0c38533fa0e03d6c503a279a87be5ef24a43bc355f",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:08:15.500Z"
+        },
+        {
+          "operationKeySha256": "cbb836bc3adb8f31e3d6d41cc5935cb99790c4275c834815bfbdac735728e54a",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:08:15.506Z"
+        },
+        {
+          "operationKeySha256": "62f5a98286008848c8b4f6106dba904ee0455bf9a527b1ba12cc3d742a916cbf",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:08:15.579Z"
+        },
+        {
+          "operationKeySha256": "8aee314f30155a38046c07abf15ea0edaacee1adb6cc00870a96360bb2c03d6d",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:08:16.941Z"
+        },
+        {
+          "operationKeySha256": "bead92841656530e80aac2af30e67925ab6dc98fe1172a0644f958d9d3a7d87a",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:08:23.512Z"
+        },
+        {
+          "operationKeySha256": "925344537efa8e4d6153997a44214f9cd66e570bf09e406bd4d92feeb1f2bc47",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:08:23.516Z"
+        },
+        {
+          "operationKeySha256": "20283d67964d978d5cb73efa77259e9ea154ebd2b3c64ca4d8ba9b29d1fa015a",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:08:23.523Z"
+        },
+        {
+          "operationKeySha256": "efc72502333a6cd89d733898d30ff9c9ec2337911d977d244da147eec0ec8af8",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:08:31.453Z"
+        },
+        {
+          "operationKeySha256": "af848ef06236191cd6a63a7c75c55e1b217814d98e83a5e4d76b08114677420e",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:08:31.455Z"
+        },
+        {
+          "operationKeySha256": "26eefa67af2937004df1f22c7b8230f3ec1412abbfed421ca78a8c3e05cb4b6b",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:08:31.462Z"
+        },
+        {
+          "operationKeySha256": "16b3cd54a63de24c6befeaf24132ecf903bebf67fe7eb313ac325da329400fa5",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:08:32.857Z"
+        },
+        {
+          "operationKeySha256": "d7f27cbfef1518c8224f46bc96be6f3fca4c163a0e831ebd9411b20dee6c9662",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:08:39.458Z"
+        },
+        {
+          "operationKeySha256": "f539b3cda4dac9a8c7c3fdf644fad6793067d640fcf3b4ab57ab5978d8013239",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:08:39.460Z"
+        },
+        {
+          "operationKeySha256": "22291366396660b44a9a892a26e039be16dc6d0ea731e723c61fbe907388773d",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:08:39.543Z"
+        },
+        {
+          "operationKeySha256": "63752b1d599572ad2f6a2fa17b997b13503d901c446944c829809582eb811171",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:08:47.456Z"
+        },
+        {
+          "operationKeySha256": "c9e8fe6afcf50b3fdc151d99584c5352bd7b08fbd5c554e4d87f3cd7db32f849",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:08:47.459Z"
+        },
+        {
+          "operationKeySha256": "a1e481b0ce906ffbd80c87a80d22016b186b0e5daef6d5a7b79cd244af5561e7",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:08:47.465Z"
+        },
+        {
+          "operationKeySha256": "ff79c8c9e00e7846e3f7b608ea19745cf9d167e775f568c3ecbd919776e7d85c",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:08:48.841Z"
+        },
+        {
+          "operationKeySha256": "c3624eb98660b7065158e8a3705d4e921f79316c96c39504899c3fa044f0fe46",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:08:55.453Z"
+        },
+        {
+          "operationKeySha256": "12279d59dc772a391ed46e1355b921692eb29a383e19008473b1f29c11a3e546",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:08:55.457Z"
+        },
+        {
+          "operationKeySha256": "eb9ce71d2d142113c1356c558ab01d1a9e3713af32e691b94700b4d2bd0d5226",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:08:55.466Z"
+        },
+        {
+          "operationKeySha256": "7c751da4a66b8dbfe512797c29ad5fe5a572c1d2bba24021c777639eb660f392",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:09:03.520Z"
+        },
+        {
+          "operationKeySha256": "c31a622ddc87f3ba701623543043bd710fe0d27913ce3b05f82c3a1b0d8e2ade",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:09:03.524Z"
+        },
+        {
+          "operationKeySha256": "931adedc181bbab2bd4aaae0e1e4e855fa04da833149fc238105639deae1e0eb",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:09:03.530Z"
+        },
+        {
+          "operationKeySha256": "c71af9c5327a0d638d93330dcda771b03c245e9465b4693857316d769331e20b",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:09:04.939Z"
+        },
+        {
+          "operationKeySha256": "db3f39f743f9851920b72940c85d89a628ca48bb39703e2c0ef603ab1060d76b",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:09:11.456Z"
+        },
+        {
+          "operationKeySha256": "7455b186aa60afd22c041f35560cb4d8218f22ebeab3ccd4ddf89b9d00e3ea00",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:09:11.459Z"
+        },
+        {
+          "operationKeySha256": "f42c85e8864a4b54adaedda69e8cebfaa78ab01150255f0301dfc8f5734edeb4",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:09:11.465Z"
+        },
+        {
+          "operationKeySha256": "e96eea54162d38de148396e098f70d0cc833d4e2a2dcdf24d076bed16e4674bd",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:09:19.508Z"
+        },
+        {
+          "operationKeySha256": "84c27030eefc14af14f768f9b2e877a8961f5f2a7cf6d4a5fafa7b71a26b5fa9",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:09:19.510Z"
+        },
+        {
+          "operationKeySha256": "9449760c76fb9ec099662b7007216f5ff568e276e51b9dc6acca12b828f7b6e3",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:09:19.519Z"
+        },
+        {
+          "operationKeySha256": "513da56e379dfe34769d3b16d3804f1e54b728878b415ce4a842501f3a4031d5",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:09:21.058Z"
+        },
+        {
+          "operationKeySha256": "f536dd13134a8620fe2b0618c2766595fcf153ffd70532879f56026ce52aaa78",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:09:27.490Z"
+        },
+        {
+          "operationKeySha256": "a4abf26bfa9c83ceb363430453090f1e81fbccd936b286ee0fc63465dbf84ede",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:09:27.492Z"
+        },
+        {
+          "operationKeySha256": "b3c085034f5d340a60b7a18f93d106d22b3cc6851a4c3d5a8621b9b39d6e5cbb",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:09:27.499Z"
+        },
+        {
+          "operationKeySha256": "c6a29958af1a5500d3029cfdc6e50405f5d7f76937b29a5d684f709d0fe9a7e2",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:09:35.455Z"
+        },
+        {
+          "operationKeySha256": "5dad2f875a5e9cd0dc7c606024af2453e88991cb332f38f45edefa7a88b73337",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:09:35.458Z"
+        },
+        {
+          "operationKeySha256": "2070a4a204689cb04dca5c158d20c8680c3e7db54c6a94cc1c374635810044f5",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:09:35.465Z"
+        },
+        {
+          "operationKeySha256": "dff245352b9d007ed6f58ead72fb74e7e5777c42b2cfd59803a925538ef58d4e",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:09:36.858Z"
+        },
+        {
+          "operationKeySha256": "9405c3e1d524cb9da83964ccb3967bc468ae4a383d08e16114618b1ea9a66df3",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:09:43.454Z"
+        },
+        {
+          "operationKeySha256": "5eafa68f4fb6e7297f1bd0132908a3847e5dab0fbe9f9de66e95cd48e4622c93",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:09:43.457Z"
+        },
+        {
+          "operationKeySha256": "ff0fbeb12a19aefe3a93019e1a16b6148da48258055d7319c7e5bcea2fed1885",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:09:43.461Z"
+        },
+        {
+          "operationKeySha256": "bb70af43bb6a88a5d5f52b4697dcc65b4803d06a594fd2fdae7696bfdc235037",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:09:51.453Z"
+        },
+        {
+          "operationKeySha256": "fbc45f0c79f94e0e77309cbb8bfc1f52d7378531ccc7974ff33c3d850bf773c9",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:09:51.458Z"
+        },
+        {
+          "operationKeySha256": "7636f8bb1f095059b9293db70a597b1ee903dde7e4ce96ee28bd0836c968eb9a",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:09:51.462Z"
+        },
+        {
+          "operationKeySha256": "bdfb204efe072f6de1a13841115cb2f576896bcc2f91f669b9d2989b011dd685",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:09:52.839Z"
+        },
+        {
+          "operationKeySha256": "133f9ecd2a58e5266a68d766aa6c4634a8c805b341228fbe65d266c7002981ce",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:09:59.455Z"
+        },
+        {
+          "operationKeySha256": "e3b18bc6801643b7843686d7f8ffcf56736e30c43b0676ae994546ae46a8fe9d",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:09:59.458Z"
+        },
+        {
+          "operationKeySha256": "537281e97dedb2c5ead80a795b6e5aa0489536b92e5d092ed131be2ceb1f2a91",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:09:59.464Z"
+        },
+        {
+          "operationKeySha256": "9f24e2d1bd21f093dfd2bdc6796c94714cff32694e23c9a4bc8c45a86aee484e",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:10:07.455Z"
+        },
+        {
+          "operationKeySha256": "d9fc949e37dc3af6ee62ac2e337f5328f34d21fbd3ea3173b692dd1c9334b979",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:10:07.458Z"
+        },
+        {
+          "operationKeySha256": "ac4b0d43e920a70a8ddded8d348cc932f84b3a61a799d18ab4eb03fff70ef566",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:10:07.466Z"
+        },
+        {
+          "operationKeySha256": "07571461ea64e49882397b5f9e9fa6989ec8208abf4a4f6d872439f4993eba18",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:10:08.835Z"
+        },
+        {
+          "operationKeySha256": "6754e9c6c6dd425010f680a69653daa7bd55e56c06f002f51c6b23cfa97e5f6c",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:10:15.452Z"
+        },
+        {
+          "operationKeySha256": "3e391b4f1a8604ae124d13443b640b9454c0e82c7520ed4177427916ca135408",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:10:15.461Z"
+        },
+        {
+          "operationKeySha256": "713efd2ff704f9e2b0d7b6714e1cfd4bedb88d838bf46da01af01a4f0b555a06",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:10:15.465Z"
+        },
+        {
+          "operationKeySha256": "fc040e8b30a241432a2f84549f234abb664e93355783e0dcf7fc362ed6d7fa9d",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:10:23.452Z"
+        },
+        {
+          "operationKeySha256": "05752313be0a4f7ffc8c36005cb8a6d37efa27b892c7cf3e49b28a56053214e9",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:10:23.456Z"
+        },
+        {
+          "operationKeySha256": "bd977be35966157dcd43b2a3134232b1e00d09bbe818f64da2dd26adb13ffd12",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:10:23.461Z"
+        },
+        {
+          "operationKeySha256": "f4b77be962540311f2db979daed458d83e1e962132e2e42aa62142b0868d9bdc",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:10:25.018Z"
+        },
+        {
+          "operationKeySha256": "bbb3ecaffe346e8e81bbaff81c9caf44e1ad775795c1fbddcffe5b59e14fd949",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:10:31.457Z"
+        },
+        {
+          "operationKeySha256": "f2f8131661eeaba8627329c9bf4953f36d08aab04e3a82fc7237a40dfc049d93",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:10:31.460Z"
+        },
+        {
+          "operationKeySha256": "78ff56016221bf1fe7c6746db78b4835d1cf968d97322e6c34e2f1f758ca22e1",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:10:31.467Z"
+        },
+        {
+          "operationKeySha256": "5fe284e434d37d11166e116cd3fed0532dedef912d25f96dcca0dfbdcca4a082",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:10:39.518Z"
+        },
+        {
+          "operationKeySha256": "ccb31a3db8a6171f7daca9ff5ec71a2dbda8dabd9cda4c00f4c26255d28755f2",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:10:39.521Z"
+        },
+        {
+          "operationKeySha256": "e17a55542f7a5cde4ff6b0f8145084e4bfbb17eba0d08582c1b4093ce587437a",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:10:39.528Z"
+        },
+        {
+          "operationKeySha256": "865653a950e45d4a04968693f2171e72e57188a0f8fbadc8fb59445707c9fca7",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:10:40.985Z"
+        },
+        {
+          "operationKeySha256": "e8a5b9c8b349ff8c8d05ef1f2db41d6172cd197390faded2f063ca8c5b8a5c8c",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:10:47.452Z"
+        },
+        {
+          "operationKeySha256": "cb748b1a2c90cb2d8bddd28252a562ea7131bbfb8015d9a8397153a35e7192e1",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:10:47.456Z"
+        },
+        {
+          "operationKeySha256": "d948a4b9fdf294b3e97e376b9ae9f9d8be0827c98122ce15622b493dcabd57cb",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:10:47.464Z"
+        },
+        {
+          "operationKeySha256": "b2eb22f47105c14893526b12aa843d56a4f908bf19d2ee481564f08d0eac68d5",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:10:55.456Z"
+        },
+        {
+          "operationKeySha256": "fff1be14ef5e597b15ad135416187b32906ee8efc05c7ed75c78cca8589eea99",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:10:55.459Z"
+        },
+        {
+          "operationKeySha256": "8c8069ab42de4e4e3bde2ef039b8d0ddc7a6c13aa2bebf1e50f1b3b8995d2486",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:10:55.468Z"
+        }
+      ]
+    },
+    {
+      "campaign": "tarea-2-cashv10",
+      "sourceJournalSha256": "00ed848793bc3d390f11ac1cad74d11a0f26a47c3b84fce46806d98ac34c5736",
+      "operations": [
+        {
+          "operationKeySha256": "b7a6981f7f529b60eb4ceb863f3a030ddeeddec7cb8d41733fdda36f5e0f8779",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "0206e7ee4c38eb5793d0597b113cf06b56812c2389d558545d6c927c6153da0b",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "1af6fabd2a1e845399c0e059bc6885bb4d3a759c2813cf61a1e8592f44ff2cdb",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "b82d47075289b632cc4980d83e494a08711e047b5454242b7e14469727e298b7",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "d360ca7b404b2b9726be22dd612a01024d7f0c70c9abb503afde28964effaa04",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "ee7d8daab2e094d18383d1caad1dfabd093a2f0ba9be54512c1b994bc6db20bb",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "bee8f44dd2414f3094224d9351ce81ae046a572899af679fbb030a7ccec7ca7a",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "864e25995ef766187f7046fbef5e2a6f1e59d5a715bdfbb58b006df5948c09bb",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "24a929134421d7a1b010a0edf2525839953885578c0d97b1bd33e0dcb0d95414",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "fe81857a114b130fbd3dc707a1108bb79143ccf39ac972737ced1dbe5b48a990",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "dd4188eb4671dfefd656b7df28e23332dcb49a74c889f48a9c2ca999c0acd08e",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "657bd7ebeed2018059b5f1bfad033b38e710e19f6976aeca79ab189f2aa6e777",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "2b0775010f645c2256c2008497eb2e70120501b5e548907b1943bd4a8cab5c22",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "bed8b8beeec3b279bbfa023305b8295032ef8936359cf41f52398630195b0ef0",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "6936fa6285199a6aa54b3fe426b42ca6a2deae758a71204ef3bd961a935ed134",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "cf50d8e7c195e2d6f6752c7cf31db3b9c789a5d3232931f0ded3e8fec4ed12e1",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "443039f76f5d23ad6c863777ddc5a3d45f810043a6ab63f9a5a65924712809d3",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "9d9493daf7b4acdb9353036669266439e21e224966d68ec443cc07e0a337b001",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "8e6d33243c0be14d8928be6c5420f9486e10ace1980de11f825d664bfb6f699d",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "6d5dc0b17d11d828bae55c7cf622a2f4190e1844b7c5e689aab888a9eef013a9",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "639f80ec77c15cd8e1821cd4df6efdfde0b93011c613dddd8d807e8372115d18",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "0a78188b6adb3a8d0c22b6a7e182c75aaec5ae12da19d0edf159dd486dad9064",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "6b1ce92636d1f625620169dbccd335d15c9de3782931d744b98427b44188ec03",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "8836bfa7d79adf51fec101f7b9f2b71901ec82fc4dca7219d0f6e430763cc9b2",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "9bff1f02d5772e9764d664ef9a068f49054ee354769bfc7785e39b2d7af37025",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "29371b2666fb908b7cb00abbd083ee30016a444a51aea548519243e36f536866",
+          "status": "ACK",
+          "httpStatus": 201
+        },
+        {
+          "operationKeySha256": "c1b38612307c4e608208076cf9f633e765cf9a0721a46ceab53007423ea03a85",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:33:56.887Z"
+        },
+        {
+          "operationKeySha256": "4c8738e1037e364d7714419bfdb1367823acd0e9a462920d26be745be667802b",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:33:56.892Z"
+        },
+        {
+          "operationKeySha256": "094e0e61c31753ccd08087a86e14d5bbd60c29d6da47124fdb8c221b8b36c7fe",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:33:56.901Z"
+        },
+        {
+          "operationKeySha256": "a92cc344df5ead6c0844490cff7ae1f84881baa3e751ea2a2b7c31566f4ddee9",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:34:01.000Z"
+        },
+        {
+          "operationKeySha256": "92c3cef8c8b530ee468704acfc774cfd177d1dc1efacc8032f35044934a0c21c",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:34:01.004Z"
+        },
+        {
+          "operationKeySha256": "a43a0940594048ba020cb1d3b5242bb35541085c51167c9b1c451b19a86b5c8e",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:34:01.018Z"
+        },
+        {
+          "operationKeySha256": "3d33bc08e764146a0dcdf4608ea95d98429106a935a719426cdfe161226cfdab",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:34:02.481Z"
+        },
+        {
+          "operationKeySha256": "b02d81ab942429fa5224c9b1458eab69c5074b97edf8618237879084505f56f5",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 236,
+          "startedAt": "2026-09-26T10:34:02.499Z"
+        },
+        {
+          "operationKeySha256": "87dbe99e0af0cbc407ee57bb7fb09d4ecbf63247f2a9e81b9370e40cf3b2c848",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:34:09.023Z"
+        },
+        {
+          "operationKeySha256": "aad546b09b84df23ff6179161df1cbbaa042c6fcdddcf280adb628f5a7295471",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:34:09.033Z"
+        },
+        {
+          "operationKeySha256": "9c485e6e336d9d42ef5df1743554654abec87ef14fc23bc0b6b49bf03c2f162d",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:34:09.035Z"
+        },
+        {
+          "operationKeySha256": "4d4f25d0dd95f0e0ad5aac9cc8415e1d2e8e62e5248bd490625ca6c219d66186",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:34:16.986Z"
+        },
+        {
+          "operationKeySha256": "500b39c6f0baa805cdc1f3695424d6163b2825ea7915e983b0e766e888054abb",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:34:16.990Z"
+        },
+        {
+          "operationKeySha256": "0945a2078836aa7cf35a319dbc4c01260e5c9b422bb002f7bd7dc8f64224605c",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:34:16.998Z"
+        },
+        {
+          "operationKeySha256": "fac63396eaa20f681e3b1ff0802d5eb51169ac12e2526647af958f7eccdcb6bf",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 236,
+          "startedAt": "2026-09-26T10:34:18.499Z"
+        },
+        {
+          "operationKeySha256": "d01faa13c8b9d6e31c43e459c57ef79256581d0219390b8f29769138994dd63f",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:34:18.501Z"
+        },
+        {
+          "operationKeySha256": "1d17c5d734e701636e7c1d234456d034ba81da3ac071602b6fc4ca0bb9c42e63",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:34:24.866Z"
+        },
+        {
+          "operationKeySha256": "77d96512b9dd5c6b928c27626877e75ce7b977097446a2acd93f1f24ab20ca71",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:34:24.870Z"
+        },
+        {
+          "operationKeySha256": "455e660d5a70fecf9b09d5465c5f92a372eebb9c67f1cec875a7b376d7c19d23",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:34:24.925Z"
+        },
+        {
+          "operationKeySha256": "a19483b0c29bfa3f88244f0c38533fa0e03d6c503a279a87be5ef24a43bc355f",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:34:32.919Z"
+        },
+        {
+          "operationKeySha256": "62f5a98286008848c8b4f6106dba904ee0455bf9a527b1ba12cc3d742a916cbf",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:34:32.922Z"
+        },
+        {
+          "operationKeySha256": "cbb836bc3adb8f31e3d6d41cc5935cb99790c4275c834815bfbdac735728e54a",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:34:32.930Z"
+        },
+        {
+          "operationKeySha256": "6868bf156213317d247c93714419e97ebe3ba6dbc3d0a9e5ae43c72c5909dfbb",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 236,
+          "startedAt": "2026-09-26T10:34:34.846Z"
+        },
+        {
+          "operationKeySha256": "f5007bbdcc6411d73cda378a618979f7f15775861450d93edf57504d72198d25",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:34:34.868Z"
+        },
+        {
+          "operationKeySha256": "20283d67964d978d5cb73efa77259e9ea154ebd2b3c64ca4d8ba9b29d1fa015a",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:34:40.858Z"
+        },
+        {
+          "operationKeySha256": "925344537efa8e4d6153997a44214f9cd66e570bf09e406bd4d92feeb1f2bc47",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:34:40.864Z"
+        },
+        {
+          "operationKeySha256": "bead92841656530e80aac2af30e67925ab6dc98fe1172a0644f958d9d3a7d87a",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:34:40.867Z"
+        },
+        {
+          "operationKeySha256": "af848ef06236191cd6a63a7c75c55e1b217814d98e83a5e4d76b08114677420e",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:34:48.860Z"
+        },
+        {
+          "operationKeySha256": "efc72502333a6cd89d733898d30ff9c9ec2337911d977d244da147eec0ec8af8",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:34:48.863Z"
+        },
+        {
+          "operationKeySha256": "26eefa67af2937004df1f22c7b8230f3ec1412abbfed421ca78a8c3e05cb4b6b",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:34:48.869Z"
+        },
+        {
+          "operationKeySha256": "41f47c13590bb28a030428785d4aad9035d9aa55caf594a8e6243a2b487c8940",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:34:50.328Z"
+        },
+        {
+          "operationKeySha256": "e82fffe747dd6a4a8a8353908474239a657a4f4d9bd0413b75dd6cb7a622051c",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 236,
+          "startedAt": "2026-09-26T10:34:50.329Z"
+        },
+        {
+          "operationKeySha256": "d7f27cbfef1518c8224f46bc96be6f3fca4c163a0e831ebd9411b20dee6c9662",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:34:56.856Z"
+        },
+        {
+          "operationKeySha256": "f539b3cda4dac9a8c7c3fdf644fad6793067d640fcf3b4ab57ab5978d8013239",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:34:56.858Z"
+        },
+        {
+          "operationKeySha256": "22291366396660b44a9a892a26e039be16dc6d0ea731e723c61fbe907388773d",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:34:56.866Z"
+        },
+        {
+          "operationKeySha256": "a1e481b0ce906ffbd80c87a80d22016b186b0e5daef6d5a7b79cd244af5561e7",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:35:04.865Z"
+        },
+        {
+          "operationKeySha256": "c9e8fe6afcf50b3fdc151d99584c5352bd7b08fbd5c554e4d87f3cd7db32f849",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:35:04.868Z"
+        },
+        {
+          "operationKeySha256": "63752b1d599572ad2f6a2fa17b997b13503d901c446944c829809582eb811171",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:35:04.873Z"
+        },
+        {
+          "operationKeySha256": "6c903731277b44fb55a0bfe29dd6f59d5d94fb3e736ef4d98fe0334566e1212e",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:35:06.394Z"
+        },
+        {
+          "operationKeySha256": "55463990a199703dbd8965df0096983a4f8bcf0feb16d12456f822d6a09f712d",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 236,
+          "startedAt": "2026-09-26T10:35:06.397Z"
+        },
+        {
+          "operationKeySha256": "eb9ce71d2d142113c1356c558ab01d1a9e3713af32e691b94700b4d2bd0d5226",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:35:12.866Z"
+        },
+        {
+          "operationKeySha256": "c3624eb98660b7065158e8a3705d4e921f79316c96c39504899c3fa044f0fe46",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:35:12.870Z"
+        },
+        {
+          "operationKeySha256": "12279d59dc772a391ed46e1355b921692eb29a383e19008473b1f29c11a3e546",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:35:12.877Z"
+        },
+        {
+          "operationKeySha256": "c31a622ddc87f3ba701623543043bd710fe0d27913ce3b05f82c3a1b0d8e2ade",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:35:20.873Z"
+        },
+        {
+          "operationKeySha256": "7c751da4a66b8dbfe512797c29ad5fe5a572c1d2bba24021c777639eb660f392",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:35:20.875Z"
+        },
+        {
+          "operationKeySha256": "931adedc181bbab2bd4aaae0e1e4e855fa04da833149fc238105639deae1e0eb",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:35:20.885Z"
+        },
+        {
+          "operationKeySha256": "48d7b6ef412e6a9d789adee136267091087eb72f5dc431f02f5dd26877243507",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:35:22.361Z"
+        },
+        {
+          "operationKeySha256": "b275d4f8380616f732e6343aaf0287a1d02d96598b1da58188a32490aadeeedf",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 236,
+          "startedAt": "2026-09-26T10:35:22.368Z"
+        },
+        {
+          "operationKeySha256": "7455b186aa60afd22c041f35560cb4d8218f22ebeab3ccd4ddf89b9d00e3ea00",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:35:28.857Z"
+        },
+        {
+          "operationKeySha256": "db3f39f743f9851920b72940c85d89a628ca48bb39703e2c0ef603ab1060d76b",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:35:28.860Z"
+        },
+        {
+          "operationKeySha256": "f42c85e8864a4b54adaedda69e8cebfaa78ab01150255f0301dfc8f5734edeb4",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:35:28.925Z"
+        },
+        {
+          "operationKeySha256": "9449760c76fb9ec099662b7007216f5ff568e276e51b9dc6acca12b828f7b6e3",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:35:36.861Z"
+        },
+        {
+          "operationKeySha256": "84c27030eefc14af14f768f9b2e877a8961f5f2a7cf6d4a5fafa7b71a26b5fa9",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:35:36.863Z"
+        },
+        {
+          "operationKeySha256": "e96eea54162d38de148396e098f70d0cc833d4e2a2dcdf24d076bed16e4674bd",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:35:36.872Z"
+        },
+        {
+          "operationKeySha256": "bb56615869cff8b779dab978e45aef029a9d445b2a14c9b1cbbf7da1975c2800",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 236,
+          "startedAt": "2026-09-26T10:35:38.392Z"
+        },
+        {
+          "operationKeySha256": "8dac9ed91c325a03799cc4c07dca15e290c1fcbbc7daaa3a0c39fda2f7415f9d",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:35:38.395Z"
+        },
+        {
+          "operationKeySha256": "b3c085034f5d340a60b7a18f93d106d22b3cc6851a4c3d5a8621b9b39d6e5cbb",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:35:44.860Z"
+        },
+        {
+          "operationKeySha256": "a4abf26bfa9c83ceb363430453090f1e81fbccd936b286ee0fc63465dbf84ede",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:35:44.862Z"
+        },
+        {
+          "operationKeySha256": "f536dd13134a8620fe2b0618c2766595fcf153ffd70532879f56026ce52aaa78",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:35:44.867Z"
+        },
+        {
+          "operationKeySha256": "2070a4a204689cb04dca5c158d20c8680c3e7db54c6a94cc1c374635810044f5",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:35:52.862Z"
+        },
+        {
+          "operationKeySha256": "c6a29958af1a5500d3029cfdc6e50405f5d7f76937b29a5d684f709d0fe9a7e2",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:35:52.866Z"
+        },
+        {
+          "operationKeySha256": "5dad2f875a5e9cd0dc7c606024af2453e88991cb332f38f45edefa7a88b73337",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:35:52.911Z"
+        },
+        {
+          "operationKeySha256": "39c7ed888a7cdd05df6033f8c0be991b174354b20bff3d89334caa12e32b1b6a",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 236,
+          "startedAt": "2026-09-26T10:35:54.310Z"
+        },
+        {
+          "operationKeySha256": "78dab9e16b357b15d00ef12f6aad52ecb9a9b387307bd8799aa22dfc15d737fa",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:35:54.317Z"
+        },
+        {
+          "operationKeySha256": "9405c3e1d524cb9da83964ccb3967bc468ae4a383d08e16114618b1ea9a66df3",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:36:00.860Z"
+        },
+        {
+          "operationKeySha256": "ff0fbeb12a19aefe3a93019e1a16b6148da48258055d7319c7e5bcea2fed1885",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:36:00.862Z"
+        },
+        {
+          "operationKeySha256": "5eafa68f4fb6e7297f1bd0132908a3847e5dab0fbe9f9de66e95cd48e4622c93",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:36:00.869Z"
+        },
+        {
+          "operationKeySha256": "bb70af43bb6a88a5d5f52b4697dcc65b4803d06a594fd2fdae7696bfdc235037",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:36:08.858Z"
+        },
+        {
+          "operationKeySha256": "fbc45f0c79f94e0e77309cbb8bfc1f52d7378531ccc7974ff33c3d850bf773c9",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:36:08.861Z"
+        },
+        {
+          "operationKeySha256": "7636f8bb1f095059b9293db70a597b1ee903dde7e4ce96ee28bd0836c968eb9a",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:36:08.868Z"
+        },
+        {
+          "operationKeySha256": "7e77de0a04d5db9ede8282b7b285b449320f39bc609d294a218cc7af04572f46",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 236,
+          "startedAt": "2026-09-26T10:36:10.259Z"
+        },
+        {
+          "operationKeySha256": "552be3472e5bed58ea9d265eed04ada2380b42c77282586f47189cedab5ffd83",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:36:10.261Z"
+        },
+        {
+          "operationKeySha256": "537281e97dedb2c5ead80a795b6e5aa0489536b92e5d092ed131be2ceb1f2a91",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:36:16.864Z"
+        },
+        {
+          "operationKeySha256": "133f9ecd2a58e5266a68d766aa6c4634a8c805b341228fbe65d266c7002981ce",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:36:16.867Z"
+        },
+        {
+          "operationKeySha256": "e3b18bc6801643b7843686d7f8ffcf56736e30c43b0676ae994546ae46a8fe9d",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:36:16.877Z"
+        },
+        {
+          "operationKeySha256": "d9fc949e37dc3af6ee62ac2e337f5328f34d21fbd3ea3173b692dd1c9334b979",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:36:24.862Z"
+        },
+        {
+          "operationKeySha256": "ac4b0d43e920a70a8ddded8d348cc932f84b3a61a799d18ab4eb03fff70ef566",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:36:24.865Z"
+        },
+        {
+          "operationKeySha256": "9f24e2d1bd21f093dfd2bdc6796c94714cff32694e23c9a4bc8c45a86aee484e",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:36:24.872Z"
+        },
+        {
+          "operationKeySha256": "515cdbedadf95efb8876e510453892b71b11f0711708870f944fe231d20cea8d",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 236,
+          "startedAt": "2026-09-26T10:36:26.256Z"
+        },
+        {
+          "operationKeySha256": "96f69a0bfb2ad53ad2914a19270c30288383141e5f0075d6e85b0aad0d375301",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:36:26.259Z"
+        },
+        {
+          "operationKeySha256": "6754e9c6c6dd425010f680a69653daa7bd55e56c06f002f51c6b23cfa97e5f6c",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:36:32.857Z"
+        },
+        {
+          "operationKeySha256": "3e391b4f1a8604ae124d13443b640b9454c0e82c7520ed4177427916ca135408",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:36:32.861Z"
+        },
+        {
+          "operationKeySha256": "713efd2ff704f9e2b0d7b6714e1cfd4bedb88d838bf46da01af01a4f0b555a06",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:36:32.865Z"
+        },
+        {
+          "operationKeySha256": "05752313be0a4f7ffc8c36005cb8a6d37efa27b892c7cf3e49b28a56053214e9",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:36:40.908Z"
+        },
+        {
+          "operationKeySha256": "fc040e8b30a241432a2f84549f234abb664e93355783e0dcf7fc362ed6d7fa9d",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:36:40.919Z"
+        },
+        {
+          "operationKeySha256": "bd977be35966157dcd43b2a3134232b1e00d09bbe818f64da2dd26adb13ffd12",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:36:40.928Z"
+        },
+        {
+          "operationKeySha256": "f6f4558ac8e613fc0ab6099880b7d23376f0d938ac8480e54a9d1fed524b1559",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:36:42.503Z"
+        },
+        {
+          "operationKeySha256": "53003211556de3b1ed6db634603e73d62ce3b446d4cc45b4baedc4a779f72ae3",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 236,
+          "startedAt": "2026-09-26T10:36:42.514Z"
+        },
+        {
+          "operationKeySha256": "f2f8131661eeaba8627329c9bf4953f36d08aab04e3a82fc7237a40dfc049d93",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:36:48.945Z"
+        },
+        {
+          "operationKeySha256": "bbb3ecaffe346e8e81bbaff81c9caf44e1ad775795c1fbddcffe5b59e14fd949",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:36:48.954Z"
+        },
+        {
+          "operationKeySha256": "78ff56016221bf1fe7c6746db78b4835d1cf968d97322e6c34e2f1f758ca22e1",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:36:48.961Z"
+        },
+        {
+          "operationKeySha256": "ccb31a3db8a6171f7daca9ff5ec71a2dbda8dabd9cda4c00f4c26255d28755f2",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:36:56.856Z"
+        },
+        {
+          "operationKeySha256": "e17a55542f7a5cde4ff6b0f8145084e4bfbb17eba0d08582c1b4093ce587437a",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:36:56.860Z"
+        },
+        {
+          "operationKeySha256": "5fe284e434d37d11166e116cd3fed0532dedef912d25f96dcca0dfbdcca4a082",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:36:56.863Z"
+        },
+        {
+          "operationKeySha256": "f241a851c82ea666d47d04f7c0c8d76c3cb509f22c3ee2caf051f85ef950ce61",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 235,
+          "startedAt": "2026-09-26T10:36:58.292Z"
+        },
+        {
+          "operationKeySha256": "4339e461e0035e287bf828978813b04cf4fa651fedb01cd4bc0a33f3f8a40912",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 236,
+          "startedAt": "2026-09-26T10:36:58.295Z"
+        },
+        {
+          "operationKeySha256": "d948a4b9fdf294b3e97e376b9ae9f9d8be0827c98122ce15622b493dcabd57cb",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:37:04.910Z"
+        },
+        {
+          "operationKeySha256": "e8a5b9c8b349ff8c8d05ef1f2db41d6172cd197390faded2f063ca8c5b8a5c8c",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:37:04.913Z"
+        },
+        {
+          "operationKeySha256": "cb748b1a2c90cb2d8bddd28252a562ea7131bbfb8015d9a8397153a35e7192e1",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:37:04.925Z"
+        },
+        {
+          "operationKeySha256": "b2eb22f47105c14893526b12aa843d56a4f908bf19d2ee481564f08d0eac68d5",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 239,
+          "startedAt": "2026-09-26T10:37:12.859Z"
+        },
+        {
+          "operationKeySha256": "fff1be14ef5e597b15ad135416187b32906ee8efc05c7ed75c78cca8589eea99",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 237,
+          "startedAt": "2026-09-26T10:37:12.867Z"
+        },
+        {
+          "operationKeySha256": "8c8069ab42de4e4e3bde2ef039b8d0ddc7a6c13aa2bebf1e50f1b3b8995d2486",
+          "status": "ACK",
+          "httpStatus": 200,
+          "syntheticActorId": 238,
+          "startedAt": "2026-09-26T10:37:12.872Z"
+        }
+      ]
+    }
+  ],
+  "ports": [
+    {
+      "port": 18327,
+      "closed": true,
+      "result": "ECONNREFUSED"
+    },
+    {
+      "port": 18328,
+      "closed": true,
+      "result": "ECONNREFUSED"
+    },
+    {
+      "port": 18337,
+      "closed": true,
+      "result": "ECONNREFUSED"
+    },
+    {
+      "port": 18338,
+      "closed": true,
+      "result": "ECONNREFUSED"
+    },
+    {
+      "port": 18347,
+      "closed": true,
+      "result": "ECONNREFUSED"
+    },
+    {
+      "port": 18348,
+      "closed": true,
+      "result": "ECONNREFUSED"
+    }
+  ],
+  "reports": [
+    {
+      "file": "reports/postrelease-review-20260926/tarea-1/informe.md",
+      "sha256": "699dc5c97016754217af4a24234824bb79e336845d6bef0ab9634123b03d1418"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-2/informe.md",
+      "sha256": "c3f4609cc5cb1d7d73f387c358020b9ffe23f77389680b6af27e9e157f423f36"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-3/resultado.md",
+      "sha256": "4cbb0ec80aa3acd739c540e337bb7711b44dede9b658b934a78f7c6bfbd484fc"
+    },
+    {
+      "file": "reports/postrelease-review-20260926/tarea-4/informe.md",
+      "sha256": "4d5cd0725b2625b36f21a47948e41ff00dc489fa5dcfc7d0f02c77cc890f2a91"
+    }
+  ],
+  "uncertainTicketPolicy": "Historical ticket16 remains UNCERTAIN. No replay, resolution, or database mutation performed during cleanup.",
+  "privacy": "Terminal status/http/time/synthetic actor IDs and hashes only; no request/response bodies, routes, SQL, cookies, credentials, customer data, or raw logs.",
+  "ownerNightDirectoryExists": false
+}

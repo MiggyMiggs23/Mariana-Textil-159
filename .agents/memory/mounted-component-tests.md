@@ -84,3 +84,25 @@ Los primeros intentos fallaron antes de ejecutar casos.
 metafile contra imports productivos vivos y configurar únicamente variables
 públicas explícitas. Conservar los assets reales y no sustituir componentes
 productivos para resolver fallos del arnés.
+
+Una consulta fallida no equivale a un resultado vacío ni a cero discrepancias.
+
+**Why:** Convertir datos ausentes en una lista vacía puede presentar una
+conciliación saludable aunque la lectura haya fallado; un refetch fallido
+también puede conservar acciones sobre datos anteriores.
+
+**How to apply:** Probar carga, éxito vacío, error inicial y error con datos
+previos mediante el componente montado y QueryClient real. Mostrar el error
+antes de conclusiones o acciones dependientes de esa lectura; comprobar que
+Reintentar consulta de nuevo y no ejecuta una reparación.
+
+Los retornos condicionales antes de hooks pueden retener efectos sin que React
+lance una excepción.
+
+**Why:** Alternar una rama con hooks y otra sin ellos puede dejar intervalos
+activos y duplicarlos al regresar; ausencia de crash no demuestra limpieza.
+
+**How to apply:** Mantener hooks incondicionales y separar ramas en componentes
+montados mediante JSX. Probar con el router real cambios de query, también sin
+forzar render del padre, y contar efectos activos tras cada transición y el
+desmontaje final. Comparar con un control de montaje/desmontaje ordinario.
