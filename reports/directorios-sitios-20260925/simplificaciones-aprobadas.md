@@ -1,0 +1,13 @@
+# Simplificaciones aprobadas — fuentes candidatas
+
+Se aplicaron solamente las propuestas 1, 2, 6, 7 y 8 de `propuestas-sin-aplicar.md`. No se modificaron API, base de datos, contratos, selectores de crédito ni fichas de últimas ventas o estados de cuenta. Teléfono y RFC permanecen visibles en cada fila del directorio de Clientes.
+
+| Archivo cambiado | Cambio exacto |
+|---|---|
+| `artifacts/mariana-textil/src/components/client-directory.tsx` | El periodo aplicado de movimientos se muestra una sola vez en la explicación sobre la tabla; las filas muestran únicamente el conteo. El estado Con deuda/Sin deuda aparece junto al importe de deuda en una línea; el importe positivo A favor continúa aparte. Se conservaron teléfono, RFC, los cuatro periodos, última actividad histórica y purga administrativa de clientes inactivos no sistémicos. |
+| `artifacts/mariana-textil/src/pages/proveedores.tsx` | Se quitaron los iconos Building2/Globe2 del distintivo de tipo, manteniendo su texto. La columna Acciones y las celdas correspondientes aparecen solo para ADMIN cuando la lista filtrada contiene al menos un proveedor inactivo, sin alterar PurgaCatalogoButton ni sus permisos/confirmación. El análisis global se agrupó en una sección desplegable etiquetada; todas sus gráficas y tablas continúan dentro. |
+| `artifacts/mariana-textil/src/pages/clientes.tsx` | Se agrupó la pestaña de análisis de clientes en una sección desplegable etiquetada; conserva selector de meses, totales por unidad, tablas, avisos y exportación Excel. No se tocó Cartera, Comportamiento, Incobrables ni las fichas de ventas/cuenta. |
+| `artifacts/mariana-textil/src/components/client-directory.test.tsx` | Aserciones para periodo fuera de filas, deuda/estado en línea, saldo a favor separado y teléfono/RFC visibles. |
+| `artifacts/mariana-textil/src/proveedores-historial.contract.test.ts` | Prueba focalizada para distintivo textual, condición de columna/acción administrativa, sección analítica y conservación de Últimas compras. |
+
+Verificación: `pnpm exec vitest run --config vitest.client-directory.config.ts` (5/5); `node ../../scripts/src/frontend-test-runner.mjs src/proveedores-historial.contract.test.ts` (7/7); `pnpm typecheck` (correcto). Captura del preview actual `/clientes`: solo muestra «Comprobando sesión…» con respuesta 401 sin autenticación; no se activó ni reinició nada. La construcción/liberación segura queda a cargo del agente principal.

@@ -1,0 +1,13 @@
+{
+  "status": "candidate-only-not-activated",
+  "frontendPath": "artifacts/mariana-textil/dist-directorios-sitios-20260925-simplificados",
+  "frontendIndex": "artifacts/mariana-textil/dist-directorios-sitios-20260925-simplificados/index.html",
+  "frontendIndexSha256": "0bb3a9dc64bb3c6b9e650041b900956278f1f9b980812c3e0a10876ae56159c3",
+  "frontendProvenance": "reports/directorios-sitios-20260925/front-simplificaciones-provenance.json",
+  "frontendApproval": "reports/directorios-sitios-20260925/simplificaciones-approval.json",
+  "apiPath": "artifacts/api-server/dist-directorios-sitios-20260925",
+  "apiEntry": "artifacts/api-server/dist-directorios-sitios-20260925/index.mjs",
+  "apiEntrySha256": "b870909beced1957603ccbac785983d4c129c8438715d0e206c0e72fb1d90dbe",
+  "apiProvenance": "reports/directorios-sitios-20260925/api-candidate-provenance.json",
+  "activationBlockedOn": "Supplier RFC nullable DDL requires separate explicit authorization and deployment before activating API; no DDL was run."
+}

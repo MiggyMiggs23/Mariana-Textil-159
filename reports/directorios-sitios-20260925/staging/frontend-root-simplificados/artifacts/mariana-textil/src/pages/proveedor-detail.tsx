@@ -1,0 +1,1551 @@
+import { Fragment, useState, useRef, useEffect, useMemo } from "react";
+import { useParams, Link } from "wouter";
+import { AppBackLink } from "@/lib/internal-navigation";
+import { AppLayout } from "@/components/layout/app-layout";
+import {
+  useGetProveedor,
+  useUpdateProveedor,
+  getGetProveedorQueryKey,
+  useGetCurrentUser,
+  getGetCurrentUserQueryKey,
+  useGetProveedorUtilidad,
+  getGetProveedorUtilidadQueryKey,
+  type ProveedorUtilidadResult,
+  Role,
+  TipoProveedor,
+  Moneda,
+  useListComprasProveedor,
+  getListComprasProveedorQueryKey,
+  useEstadoCuentaProveedor,
+  getEstadoCuentaProveedorQueryKey,
+  useRegistrarPagoProveedor,
+  useRegistrarAjusteProveedor,
+  useEstadisticasProveedor,
+  getEstadisticasProveedorQueryKey,
+  getListProveedoresQueryKey,
+  exportarProveedorXlsx,
+  CompraConEstadoEstado,
+  FormaPagoProveedor,
+  TipoPagoProveedor
+} from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { toast } from "sonner";
+import { ArrowLeft, Save, Building2, MapPin, Mail, Phone, ShoppingBag, Globe2, Wallet, Download, Printer, Plus, ExternalLink, ShieldAlert, Search, Eye, EyeOff } from "lucide-react";
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { hasPermission, Modules } from "@/lib/permisos";
+import { formatNumber, formatUnit } from "@workspace/number-format";
+import {
+  getCategoricalChartColor,
+  REPORT_NEGATIVE_COLOR,
+} from "@/lib/report-chart-colors";
+import { ProveedorPagoDialog } from "@/components/proveedor-pago-dialog";
+import { E12Evidence } from "@/components/proveedor-efectivo-e12";
+import { E12_ENABLED } from "@/lib/e12-feature-flags";
+import { SolicitudPagoDirigidoDialog } from "@/components/solicitud-pago-dirigido-dialog";
+import { ProveedorCompraDetalle } from "@/components/proveedor-compra-detalle";
+import { DirectedPaymentHistory } from "@/components/directed-payment-history";
+
+// Helper for generic API errors
+function getErrorMessage(error: unknown): string {
+  if (typeof error !== "object" || error === null) return "Error desconocido";
+  const apiError = error as { data?: unknown; message?: unknown };
+  if (
+    typeof apiError.data === "object" &&
+    apiError.data !== null &&
+    "error" in apiError.data &&
+    typeof (apiError.data as { error?: unknown }).error === "string"
+  ) {
+    return (apiError.data as { error: string }).error;
+  }
+  return typeof apiError.message === "string" ? apiError.message : "Error desconocido";
+}
+
+function formatDate(dateStr: string | null | undefined): string {
+  if (!dateStr) return "-";
+  try {
+    return new Intl.DateTimeFormat("es-MX", {
+      timeZone: "America/Mexico_City",
+      year: "numeric",
+      month: "short",
+      day: "2-digit"
+    }).format(new Date(dateStr));
+  } catch (e) {
+    return "-";
+  }
+}
+
+export default function ProveedorDetail() {
+  const { id } = useParams();
+  const provId = Number(id);
+  const queryClient = useQueryClient();
+
+  const { data: user } = useGetCurrentUser({
+    query: { queryKey: getGetCurrentUserQueryKey() }
+  });
+
+  const { data: proveedor, isLoading: isProvLoading } = useGetProveedor(provId, {
+    query: { enabled: !!provId, queryKey: getGetProveedorQueryKey(provId) }
+  });
+
+  const updateProveedor = useUpdateProveedor();
+  const [isEditing, setIsEditing] = useState(false);
+  const initializedForId = useRef<number | null>(null);
+
+  const [formData, setFormData] = useState<{
+    nombre: string;
+    rfc: string;
+    tipo: TipoProveedor;
+    monedaDefault: Moneda;
+    contactoNombre: string;
+    telefono: string;
+    correo: string;
+    pais: string;
+    notas: string;
+    activo: boolean;
+  }>({
+    nombre: "",
+    rfc: "",
+    tipo: TipoProveedor.NACIONAL,
+    monedaDefault: Moneda.MXN,
+    contactoNombre: "",
+    telefono: "",
+    correo: "",
+    pais: "",
+    notas: "",
+    activo: true
+  });
+
+  useEffect(() => {
+    if (proveedor && initializedForId.current !== proveedor.id) {
+      initializedForId.current = proveedor.id;
+      setFormData({
+        nombre: proveedor.nombre,
+        rfc: proveedor.rfc || "",
+        tipo: proveedor.tipo,
+        monedaDefault: proveedor.monedaDefault,
+        contactoNombre: proveedor.contactoNombre || "",
+        telefono: proveedor.telefono || "",
+        correo: proveedor.correo || "",
+        pais: proveedor.pais || "",
+        notas: proveedor.notas || "",
+        activo: proveedor.activo
+      });
+    }
+  }, [proveedor]);
+
+  const canEdit = hasPermission(user, Modules.PROVEEDORES, 'editar');
+  const canToggleActive = user?.rol === Role.ADMIN; // Admins only for active status? Or keep based on rule
+  const canVerFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, "ver");
+  const canCrearFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, "crear");
+  const canViewFinanzas = hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'ver') && user?.rol !== "SUPERVISOR";
+
+  const handleSave = () => {
+    if (!proveedor) return;
+    if (!formData.nombre.trim()) {
+      toast.error("El nombre es obligatorio");
+      return;
+    }
+
+    updateProveedor.mutate({
+      id: proveedor.id,
+      data: {
+        nombre: formData.nombre.trim(),
+        rfc: formData.rfc.trim() || null,
+        tipo: formData.tipo,
+        monedaDefault: formData.monedaDefault,
+        contactoNombre: formData.contactoNombre.trim() || null,
+        telefono: formData.telefono.trim() || null,
+        correo: formData.correo.trim() || null,
+        pais: formData.pais.trim() || null,
+        notas: formData.notas.trim() || null,
+        ...(canToggleActive ? { activo: formData.activo } : {})
+      }
+    }, {
+      onSuccess: (updated) => {
+        toast.success("Proveedor actualizado exitosamente");
+        queryClient.setQueryData(getGetProveedorQueryKey(proveedor.id), updated);
+        queryClient.invalidateQueries({ queryKey: getListProveedoresQueryKey() });
+        setIsEditing(false);
+      },
+      onError: (err: any) => {
+        toast.error("Error al actualizar", { description: getErrorMessage(err) });
+      }
+    });
+  };
+
+  // ----- COMPRAS TAB -----
+  const [comprasFiltroEstado, setComprasFiltroEstado] = useState<string>("ALL");
+  const [comprasFiltroDesde, setComprasFiltroDesde] = useState<string>("");
+  const [comprasFiltroHasta, setComprasFiltroHasta] = useState<string>("");
+  const comprasQuery = useMemo(() => ({
+    estado: comprasFiltroEstado === "ALL" ? undefined : (comprasFiltroEstado as any),
+    desde: comprasFiltroDesde || undefined,
+    hasta: comprasFiltroHasta || undefined,
+    page: 1,
+    pageSize: 1000
+  }), [comprasFiltroEstado, comprasFiltroDesde, comprasFiltroHasta]);
+
+  const { data: comprasData, isLoading: isComprasLoading } = useListComprasProveedor(provId,
+    comprasQuery,
+    { query: { enabled: !!provId && canViewFinanzas, queryKey: getListComprasProveedorQueryKey(provId, comprasQuery) } }
+  );
+
+  // ----- PAGOS TAB -----
+  const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+  const initialImporte = searchParams.get("importe");
+
+  const { data: estadoCuenta, isLoading: isEstadoCuentaLoading } = useEstadoCuentaProveedor(provId, {}, {
+    query: { enabled: !!provId && canViewFinanzas, queryKey: E12_ENABLED ? [...getEstadoCuentaProveedorQueryKey(provId, {}), JSON.stringify(user)] : getEstadoCuentaProveedorQueryKey(provId, {}), ...(E12_ENABLED ? { staleTime: 0, refetchOnMount: "always" as const, refetchOnWindowFocus: true, refetchInterval: 15000 } : {}) }
+  });
+  const estadoCuentaConSaldos = estadoCuenta as (typeof estadoCuenta & {
+    saldoDeudor?: string;
+    saldoAFavor?: string;
+  }) | undefined;
+  const saldoActualProveedorRaw = Number(estadoCuentaConSaldos?.saldoActual ?? 0);
+  const saldoActualProveedor = Number.isFinite(saldoActualProveedorRaw) ? saldoActualProveedorRaw : 0;
+  const saldoDeudorRaw = Number(estadoCuentaConSaldos?.saldoDeudor ?? saldoActualProveedor);
+  const saldoDeudorProveedor = Number.isFinite(saldoDeudorRaw) ? Math.max(0, saldoDeudorRaw) : 0;
+  const saldoAFavorRaw = Number(
+    estadoCuentaConSaldos?.saldoAFavor ?? Math.max(0, -saldoActualProveedor),
+  );
+  const saldoAFavorProveedor = Number.isFinite(saldoAFavorRaw) ? Math.max(0, saldoAFavorRaw) : 0;
+  const tieneSaldoAFavorProveedor = Number.isFinite(saldoAFavorProveedor) && saldoAFavorProveedor > 0;
+
+  const [isPagoOpen, setIsPagoOpen] = useState(!!initialImporte);
+  const [detalleCompraId, setDetalleCompraId] = useState<number | null>(null);
+  const [detallePagoId, setDetallePagoId] = useState<number | null>(null);
+
+  const [dirigidoDialog, setDirigidoDialog] = useState<{ open: boolean; compra?: NonNullable<typeof comprasData>["items"][number] }>({ open: false });
+
+  const [isAjusteOpen, setIsAjusteOpen] = useState(false);
+
+  // ----- ESTADÍSTICAS TAB -----
+  const initDesde = new Date();
+  initDesde.setFullYear(initDesde.getFullYear() - 1);
+  const [estDesde, setEstDesde] = useState(initDesde.toISOString().split("T")[0]);
+  const [estHasta, setEstHasta] = useState(new Date().toISOString().split("T")[0]);
+  const [utilityVisible, setUtilityVisible] = useState(false);
+  const [utilityPage, setUtilityPage] = useState(1);
+  const utilityPageSize = 20;
+
+  useEffect(() => {
+    setUtilityPage(1);
+  }, [estDesde, estHasta]);
+
+  const utilityParams = useMemo(() => ({
+    desde: estDesde,
+    hasta: estHasta,
+    page: utilityPage,
+    pageSize: utilityPageSize,
+  }), [estDesde, estHasta, utilityPage]);
+
+  const utilityQuery = useGetProveedorUtilidad(provId, utilityParams, {
+    query: {
+      enabled: !!provId && canViewFinanzas && utilityVisible,
+      queryKey: getGetProveedorUtilidadQueryKey(provId, utilityParams),
+    },
+  });
+
+  const { data: estadisticas, isLoading: isEstadisticasLoading } = useEstadisticasProveedor(provId,
+    { desde: estDesde, hasta: estHasta },
+    { query: { enabled: !!provId && !!estDesde && !!estHasta && canViewFinanzas, queryKey: getEstadisticasProveedorQueryKey(provId, { desde: estDesde, hasta: estHasta }) } }
+  );
+
+  // EXPORT
+  const [isExporting, setIsExporting] = useState(false);
+  const handleExport = async () => {
+    setIsExporting(true);
+    try {
+      const blob = await exportarProveedorXlsx(provId);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const todayStr = new Date().toISOString().split("T")[0].replace(/-/g, "");
+      a.download = `Proveedor_${proveedor?.nombre}_${todayStr}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      toast.error("Error al exportar", { description: getErrorMessage(err) });
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  if (isProvLoading) {
+    return (
+      <AppLayout>
+        <div className="max-w-5xl mx-auto animate-pulse space-y-6">
+          <div className="h-8 bg-muted rounded w-32"></div>
+          <div className="h-48 bg-muted rounded-xl"></div>
+          <div className="h-64 bg-muted rounded-xl"></div>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  if (!proveedor) {
+    return (
+      <AppLayout>
+        <div className="max-w-5xl mx-auto p-12 text-center text-muted-foreground flex flex-col items-center">
+          <Building2 className="w-12 h-12 mb-4 opacity-20" />
+          <h2 className="text-xl font-bold mb-2">Proveedor no encontrado</h2>
+          <AppBackLink fallbackHref="/proveedores" className="text-primary hover:underline">Volver al listado</AppBackLink>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  return (
+    <AppLayout>
+      <div className="max-w-5xl mx-auto space-y-6 pb-24">
+        {/* HEADER */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
+          <AppBackLink fallbackHref="/proveedores" className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Volver a proveedores
+          </AppBackLink>
+          <div className="flex items-center gap-2">
+            {canViewFinanzas && (
+              <>
+                <Button variant="outline" onClick={handleExport} disabled={isExporting} data-testid="button-export-excel">
+                  <Download className="w-4 h-4 mr-2" />
+                  {isExporting ? "Exportando..." : "Exportar Excel"}
+                </Button>
+                <Button variant="outline" onClick={handlePrint} data-testid="button-print">
+                  <Printer className="w-4 h-4 mr-2" />
+                  Imprimir PDF
+                </Button>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* PROVEEDOR CARD */}
+        <Card className="shadow-sm border-sidebar-border/10 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-sidebar/5 rounded-bl-full pointer-events-none -z-10" />
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row justify-between gap-6">
+              <div className="flex items-start gap-4">
+                <div className="w-14 h-14 rounded-lg bg-sidebar flex items-center justify-center text-white shrink-0 shadow-sm">
+                  <Building2 className="w-7 h-7" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold text-sidebar" data-testid="display-supplier-nombre">{proveedor.nombre}</h1>
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    <Badge variant={proveedor.activo ? "default" : "secondary"}>
+                      {proveedor.activo ? "Activo" : "Inactivo"}
+                    </Badge>
+                    <Badge variant="outline" className={proveedor.tipo === TipoProveedor.NACIONAL ? "border-emerald-200 text-emerald-700 bg-emerald-50" : "border-blue-200 text-blue-700 bg-blue-50"}>
+                      {proveedor.tipo === TipoProveedor.NACIONAL ? <MapPin className="w-3 h-3 mr-1" /> : <Globe2 className="w-3 h-3 mr-1" />}
+                      {proveedor.tipo}
+                    </Badge>
+                    <Badge variant="secondary" className="font-mono text-xs bg-muted"><Wallet className="w-3 h-3 mr-1"/>{proveedor.monedaDefault}</Badge>
+                    {proveedor.pais && <span className="text-sm text-muted-foreground flex items-center gap-1"><MapPin className="w-3 h-3"/> {proveedor.pais}</span>}
+                  </div>
+                </div>
+              </div>
+
+              {canViewFinanzas && (
+                <div className={`grid gap-3 ${tieneSaldoAFavorProveedor ? "sm:grid-cols-2" : "sm:grid-cols-1"}`}>
+                  <div className="rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-900/50 dark:bg-red-950/20">
+                    <span className="text-sm font-semibold text-red-700 dark:text-red-300">Saldo deudor</span>
+                    <span className="mt-1 block text-3xl font-bold tracking-tight tabular-nums text-red-700 dark:text-red-300" data-testid="metric-supplier-saldo-deudor">
+                      {formatNumber(saldoDeudorProveedor, { kind: "money" })}
+                    </span>
+                    <span className="mt-1 block text-xs text-red-800/70 dark:text-red-200/70">Rojo significa dinero pendiente de pago al proveedor.</span>
+                    {saldoDeudorProveedor > 0 && hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && (
+                      <Button size="sm" className="mt-3 w-full" onClick={() => { setIsPagoOpen(true); }} data-testid="button-registrar-pago-header">
+                        Abonar a cuenta
+                      </Button>
+                    )}
+                  </div>
+                  {tieneSaldoAFavorProveedor && (
+                    <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900/50 dark:bg-emerald-950/20">
+                      <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">Saldo a favor</span>
+                      <span className="mt-1 block text-3xl font-bold tracking-tight tabular-nums text-emerald-700 dark:text-emerald-300" data-testid="metric-supplier-saldo-a-favor">
+                        {formatNumber(saldoAFavorProveedor, { kind: "money" })}
+                      </span>
+                      <span className="mt-1 block text-xs text-emerald-800/70 dark:text-emerald-200/70">Verde significa un anticipo disponible para aplicar a compras del proveedor.</span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6 pt-6 border-t print-only">
+               <div>
+                  <span className="text-xs text-muted-foreground uppercase font-semibold tracking-wider">Contacto</span>
+                  <div className="font-medium text-sm mt-1">{proveedor.contactoNombre || "Sin registrar"}</div>
+               </div>
+               <div>
+                  <span className="text-xs text-muted-foreground uppercase font-semibold tracking-wider">RFC</span>
+                  <div className="font-medium text-sm mt-1">{proveedor.rfc || "Sin registrar"}</div>
+               </div>
+               <div>
+                  <span className="text-xs text-muted-foreground uppercase font-semibold tracking-wider">Teléfono</span>
+                  <div className="font-medium text-sm mt-1 flex items-center"><Phone className="w-3 h-3 mr-2 text-muted-foreground"/> {proveedor.telefono || "Sin registrar"}</div>
+               </div>
+               <div>
+                  <span className="text-xs text-muted-foreground uppercase font-semibold tracking-wider">Correo</span>
+                  <div className="font-medium text-sm mt-1 flex items-center"><Mail className="w-3 h-3 mr-2 text-muted-foreground"/> {proveedor.correo || "Sin registrar"}</div>
+               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* TABS */}
+        <Tabs defaultValue="datos" className="no-print">
+          <TabsList className="flex flex-wrap w-full md:w-auto h-auto">
+            <TabsTrigger value="datos" data-testid="tab-datos" className="flex-1 min-w-[120px]">Datos Generales</TabsTrigger>
+            {canViewFinanzas && (
+              <>
+                <TabsTrigger value="compras" data-testid="tab-compras" className="flex-1 min-w-[120px]">Compras</TabsTrigger>
+                <TabsTrigger value="pagos" data-testid="tab-pagos" className="flex-1 min-w-[120px]">Estado de Cuenta</TabsTrigger>
+                <TabsTrigger value="estadisticas" data-testid="tab-estadisticas" className="flex-1 min-w-[120px]">Estadísticas</TabsTrigger>
+              </>
+            )}
+          </TabsList>
+
+          <TabsContent value="datos" className="mt-6">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <div>
+                  <CardTitle>Información del Proveedor</CardTitle>
+                  <CardDescription>Detalles de contacto y configuración</CardDescription>
+                </div>
+                {canEdit && !isEditing && (
+                  <Button variant="outline" size="sm" onClick={() => setIsEditing(true)} data-testid="button-edit-supplier">
+                    Editar Datos
+                  </Button>
+                )}
+                {canEdit && isEditing && (
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>Cancelar</Button>
+                    <Button size="sm" onClick={handleSave} disabled={updateProveedor.isPending} data-testid="button-save-supplier">
+                      <Save className="w-4 h-4 mr-2" /> Guardar
+                    </Button>
+                  </div>
+                )}
+              </CardHeader>
+              <CardContent className="py-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                  {isEditing ? (
+                    <>
+                      <div className="space-y-2 md:col-span-2">
+                         <Label>Razón Social / Nombre</Label>
+                         <Input value={formData.nombre} onChange={e => setFormData({...formData, nombre: e.target.value})} data-testid="input-edit-supplier-nombre" />
+                      </div>
+                      <div className="space-y-2 md:col-span-2">
+                        <Label htmlFor="edit-supplier-rfc">RFC (opcional)</Label>
+                        <Input id="edit-supplier-rfc" value={formData.rfc}
+                          onChange={e => setFormData({...formData, rfc: e.target.value})}
+                          data-testid="input-edit-supplier-rfc" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Tipo de Proveedor</Label>
+                        <Select value={formData.tipo} onValueChange={(v: TipoProveedor) => setFormData({...formData, tipo: v})}>
+                          <SelectTrigger data-testid="input-edit-supplier-tipo"><SelectValue/></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value={TipoProveedor.NACIONAL}>Nacional</SelectItem>
+                            <SelectItem value={TipoProveedor.IMPORTACION}>Importación</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Moneda de Pago</Label>
+                        <Select value={formData.monedaDefault} onValueChange={(v: Moneda) => setFormData({...formData, monedaDefault: v})}>
+                          <SelectTrigger data-testid="input-edit-supplier-moneda"><SelectValue/></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value={Moneda.MXN}>MXN (Pesos)</SelectItem>
+                            <SelectItem value={Moneda.USD}>USD (Dólares)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </>
+                  ) : null}
+
+                  {!isEditing && (
+                    <div className="space-y-1">
+                      <Label className="text-muted-foreground">RFC</Label>
+                      <div className="font-medium h-10 flex items-center" data-testid="display-supplier-rfc">{proveedor.rfc || "-"}</div>
+                    </div>
+                  )}
+
+                  <div className="space-y-1">
+                    <Label className="text-muted-foreground flex items-center gap-1"><MapPin className="w-3 h-3"/> País / Origen</Label>
+                    {isEditing ? (
+                      <Input value={formData.pais} onChange={e => setFormData({...formData, pais: e.target.value})} data-testid="input-edit-supplier-pais" />
+                    ) : (
+                      <div className="font-medium h-10 flex items-center" data-testid="display-supplier-pais">{proveedor.pais || "-"}</div>
+                    )}
+                  </div>
+
+                  <div className="space-y-1">
+                    <Label className="text-muted-foreground">Contacto Principal</Label>
+                    {isEditing ? (
+                      <Input value={formData.contactoNombre} onChange={e => setFormData({...formData, contactoNombre: e.target.value})} data-testid="input-edit-supplier-contacto" />
+                    ) : (
+                      <div className="font-medium h-10 flex items-center">{proveedor.contactoNombre || "-"}</div>
+                    )}
+                  </div>
+
+                  <div className="space-y-1">
+                    <Label className="text-muted-foreground flex items-center gap-1"><Phone className="w-3 h-3"/> Teléfono</Label>
+                    {isEditing ? (
+                      <Input value={formData.telefono} onChange={e => setFormData({...formData, telefono: e.target.value})} type="tel" data-testid="input-edit-supplier-telefono" />
+                    ) : (
+                      <div className="font-medium h-10 flex items-center">{proveedor.telefono || "-"}</div>
+                    )}
+                  </div>
+
+                  <div className="space-y-1">
+                    <Label className="text-muted-foreground flex items-center gap-1"><Mail className="w-3 h-3"/> Correo</Label>
+                    {isEditing ? (
+                      <Input value={formData.correo} onChange={e => setFormData({...formData, correo: e.target.value})} type="email" data-testid="input-edit-supplier-correo" />
+                    ) : (
+                      <div className="font-medium h-10 flex items-center">{proveedor.correo || "-"}</div>
+                    )}
+                  </div>
+
+                  <div className="md:col-span-2 space-y-1">
+                    <Label className="text-muted-foreground">Notas Adicionales</Label>
+                    {isEditing ? (
+                      <Input value={formData.notas} onChange={e => setFormData({...formData, notas: e.target.value})} data-testid="input-edit-supplier-notas" />
+                    ) : (
+                      <div className="text-sm bg-muted/20 p-4 rounded-md min-h-[60px] border border-dashed">
+                        {proveedor.notas || <span className="text-muted-foreground italic">Sin notas registradas.</span>}
+                      </div>
+                    )}
+                  </div>
+
+                  {isEditing && canToggleActive && (
+                    <div className="md:col-span-2 flex items-center space-x-2 p-4 border rounded-lg bg-background mt-2">
+                      <Checkbox id="edit-active" checked={formData.activo} onCheckedChange={c => setFormData({...formData, activo: c===true})} data-testid="input-edit-supplier-activo" />
+                      <Label htmlFor="edit-active" className="cursor-pointer font-medium text-destructive">Desactivar bloquea nuevas compras a este proveedor</Label>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="compras" className="mt-6 space-y-4">
+            <Card>
+              <div className="p-4 border-b flex flex-wrap items-center gap-4 bg-muted/20">
+                <div className="text-sm font-semibold flex-1 min-w-[200px]">Órdenes de Compra (Entradas)</div>
+                <div className="flex items-center gap-2">
+                  <Input type="date" value={comprasFiltroDesde} onChange={e => setComprasFiltroDesde(e.target.value)} className="w-[140px] bg-background" data-testid="input-compras-desde" />
+                  <span className="text-muted-foreground text-sm">-</span>
+                  <Input type="date" value={comprasFiltroHasta} onChange={e => setComprasFiltroHasta(e.target.value)} className="w-[140px] bg-background" data-testid="input-compras-hasta" />
+                </div>
+                <Select value={comprasFiltroEstado} onValueChange={setComprasFiltroEstado}>
+                  <SelectTrigger className="w-[160px] bg-background" data-testid="select-compras-estado">
+                    <SelectValue placeholder="Estado" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ALL">Todos los estados</SelectItem>
+                    <SelectItem value="Pendiente">Pendientes</SelectItem>
+                    <SelectItem value="Parcial">Parciales</SelectItem>
+                    <SelectItem value="Pagada">Pagadas</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/10">
+                      <TableHead>Folio</TableHead>
+                      <TableHead>Fecha de recepción</TableHead>
+                      <TableHead>Sitio</TableHead>
+                      <TableHead className="text-right">Rollos / Cantidad</TableHead>
+                      <TableHead className="text-right">Total</TableHead>
+                      <TableHead className="text-right">Abonado</TableHead>
+                      <TableHead className="text-right">Saldo</TableHead>
+                      <TableHead>Estado</TableHead>
+                      {hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && <TableHead className="w-[100px] text-right no-print">Acciones</TableHead>}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {isComprasLoading ? (
+                      <TableRow><TableCell colSpan={hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') ? 9 : 8} className="text-center h-24">Cargando compras...</TableCell></TableRow>
+                    ) : comprasData?.items.length === 0 ? (
+                      <TableRow><TableCell colSpan={hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') ? 9 : 8} className="text-center h-24 text-muted-foreground">No hay compras registradas para este estado.</TableCell></TableRow>
+                    ) : (
+                      comprasData?.items.map(compra => (
+                        <TableRow
+                          key={compra.entradaId}
+                          className="cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          onClick={() => setDetalleCompraId(compra.entradaId)}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter" || event.key === " ") {
+                              event.preventDefault();
+                              setDetalleCompraId(compra.entradaId);
+                            }
+                          }}
+                          tabIndex={0}
+                          role="link"
+                          aria-label={`Abrir documento de entrada ${compra.folio}`}
+                          data-testid={`row-compra-${compra.entradaId}`}
+                        >
+                          <TableCell className="font-mono font-medium text-primary">
+                            <span className="inline-flex items-center gap-1 underline underline-offset-4">
+                              #{formatNumber(compra.folio, { kind: "identifier" })}
+                              <ExternalLink className="h-3 w-3" />
+                            </span>
+                          </TableCell>
+                          <TableCell>{formatDate(compra.fecha)}</TableCell>
+                          <TableCell>{compra.nombreUbicacion}</TableCell>
+                          <TableCell className="text-right text-sm">
+                            <div>{formatNumber(compra.totalRollos, { kind: "count" })} rll</div>
+                            {parseFloat(compra.cantidadMetros) > 0 && (
+                              <div className="text-xs text-muted-foreground">
+                                {formatNumber(compra.cantidadMetros, { kind: "quantity" })} {formatUnit("METRO")} · {formatNumber(compra.costoPorMetro, { kind: "money" })} / {formatUnit("METRO")}
+                              </div>
+                            )}
+                            {parseFloat(compra.cantidadKilos) > 0 && (
+                              <div className="text-xs text-muted-foreground">
+                                {formatNumber(compra.cantidadKilos, { kind: "quantity" })} {formatUnit("KILO")} · {formatNumber(compra.costoPorKilo, { kind: "money" })} / {formatUnit("KILO")}
+                              </div>
+                            )}
+                          </TableCell>
+                          <TableCell className="text-right font-medium">{formatNumber(compra.totalCosto, { kind: "money" })}</TableCell>
+                          <TableCell className="text-right text-muted-foreground">{formatNumber(compra.abonado, { kind: "money" })}</TableCell>
+                          <TableCell className="text-right font-semibold">{formatNumber(compra.saldoPendiente, { kind: "money" })}</TableCell>
+                          <TableCell>
+                            <Badge variant={compra.estado === CompraConEstadoEstado.PAGADA ? "default" : compra.estado === CompraConEstadoEstado.PARCIAL ? "secondary" : "destructive"}>
+                              {compra.estado}
+                            </Badge>
+                          </TableCell>
+                          {hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && (
+                            <TableCell className="text-right no-print">
+                              {parseFloat(compra.saldoPendiente) > 0 && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-8 text-[10px] uppercase font-bold"
+                                  onClick={(e) => { e.stopPropagation(); setDirigidoDialog({ open: true, compra }); }}
+                                >
+                                  Dirigido
+                                </Button>
+                              )}
+                            </TableCell>
+                          )}
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                  <TableFooter>
+                    <TableRow data-testid="row-compras-totales">
+                      <TableCell colSpan={4} className="font-semibold">
+                        Compras del periodo: {formatNumber(comprasData?.total ?? 0, { kind: "count" })}
+                      </TableCell>
+                      <TableCell className="text-right font-bold">
+                        {formatNumber(comprasData?.totalCostoPeriodo ?? "0", { kind: "money" })}
+                      </TableCell>
+                      <TableCell colSpan={hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') ? 4 : 3} className="text-right text-xs text-muted-foreground">
+                        Total antes de paginar
+                      </TableCell>
+                    </TableRow>
+                  </TableFooter>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="pagos" className="mt-6 space-y-4">
+            <div className="flex justify-end gap-2 mb-4">
+              {hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && (
+                <>
+                  <Button variant="outline" onClick={() => setIsAjusteOpen(true)} className="text-muted-foreground" data-testid="button-registrar-ajuste">
+                    Registrar Ajuste
+                  </Button>
+                  <Button onClick={() => { setIsPagoOpen(true); }} data-testid="button-registrar-pago">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Registrar Pago
+                  </Button>
+                </>
+              )}
+            </div>
+            <Card>
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/10">
+                      <TableHead>Fecha</TableHead>
+                      <TableHead>Tipo</TableHead>
+                      <TableHead>Ref / Folio / Notas</TableHead>
+                      <TableHead className="text-right">Cargo (Deuda)</TableHead>
+                      <TableHead className="text-right">Abono (Pago)</TableHead>
+                      <TableHead className="text-right">Saldo Corrido</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {isEstadoCuentaLoading ? (
+                      <TableRow><TableCell colSpan={6} className="text-center h-24">Cargando movimientos...</TableCell></TableRow>
+                    ) : estadoCuenta?.movimientos.length === 0 ? (
+                      <TableRow><TableCell colSpan={6} className="text-center h-24 text-muted-foreground">No hay movimientos registrados.</TableCell></TableRow>
+                    ) : (
+                      estadoCuenta?.movimientos.map(mov => {
+                        const importeNum = parseFloat(mov.importe);
+                        const isCargo = importeNum > 0;
+                        const isAbono = importeNum < 0;
+                        return (
+                          <TableRow key={mov.id} data-testid={`row-movimiento-${mov.id}`}>
+                            <TableCell className="text-sm">{formatDate(mov.fecha)}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline" className={
+                                mov.tipo === TipoPagoProveedor.COMPRA ? "bg-red-50 text-red-700 border-red-200" :
+                                mov.tipo === TipoPagoProveedor.PAGO ? "bg-green-50 text-green-700 border-green-200" :
+                                "bg-orange-50 text-orange-700 border-orange-200"
+                              }>
+                                {mov.tipo}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="max-w-[200px]">
+                              {mov.folio ? <span className="block font-mono text-xs">Entrada #{formatNumber(mov.folio, { kind: "identifier" })}</span> : null}
+                              {mov.formaPago ? <span className="block text-xs text-muted-foreground">{mov.formaPago}</span> : null}
+                              <E12Evidence detail={mov.efectivoE12} admin={user?.rol === "ADMIN"} />
+                              {E12_ENABLED && mov.tipo === TipoPagoProveedor.PAGO && <Button variant="link" size="sm" data-testid={`button-detalle-pago-${mov.id}`} onClick={() => setDetallePagoId(mov.id)}>Detalle del pago</Button>}
+                              {mov.desgloseIva ? <span className="block text-xs text-muted-foreground">Subtotal {formatNumber(mov.desgloseIva.subtotal, { kind: "money" })} · IVA {formatNumber(mov.desgloseIva.iva, { kind: "money" })}</span> : null}
+                              {mov.referencia ? <span className="block text-xs truncate">Ref: {mov.referencia}</span> : null}
+                              {mov.notas ? <span className="block text-xs text-muted-foreground truncate">{mov.notas}</span> : null}
+                            </TableCell>
+                            <TableCell className="text-right font-medium text-destructive">{isCargo ? formatNumber(Math.abs(importeNum), { kind: "money" }) : ""}</TableCell>
+                            <TableCell className="text-right font-medium text-emerald-600">{isAbono ? formatNumber(Math.abs(importeNum), { kind: "money" }) : ""}</TableCell>
+                            <TableCell className="text-right font-semibold border-l bg-muted/5">{formatNumber(mov.saldoAcumulado, { kind: "money" })}</TableCell>
+                          </TableRow>
+                        )
+                      })
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="estadisticas" className="mt-6 space-y-6">
+             <div className="flex items-center gap-4 bg-muted/20 p-4 rounded-lg border">
+                <div className="space-y-1">
+                   <Label>Desde</Label>
+                   <Input type="date" value={estDesde} onChange={e => setEstDesde(e.target.value)} className="w-[160px]" />
+                </div>
+                <div className="space-y-1">
+                   <Label>Hasta</Label>
+                   <Input type="date" value={estHasta} onChange={e => setEstHasta(e.target.value)} className="w-[160px]" />
+                </div>
+             </div>
+
+             {isEstadisticasLoading ? (
+               <div className="h-64 flex items-center justify-center animate-pulse text-muted-foreground">Calculando estadísticas...</div>
+             ) : estadisticas ? (
+               <>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <Card>
+                       <CardContent className="p-4 flex flex-col gap-1">
+                          <span className="text-sm font-medium text-muted-foreground">Total Comprado</span>
+                          <span className="text-2xl font-bold">{formatNumber(estadisticas.totalCompras, { kind: "money" })}</span>
+                       </CardContent>
+                    </Card>
+                    <Card>
+                       <CardContent className="p-4 flex flex-col gap-1">
+                          <span className="text-sm font-medium text-muted-foreground">Compras</span>
+                          <span className="text-2xl font-bold">{formatNumber(estadisticas.comprasCount, { kind: "count" })}</span>
+                       </CardContent>
+                    </Card>
+                    <Card>
+                       <CardContent className="p-4 flex flex-col gap-1">
+                          <span className="text-sm font-medium text-muted-foreground">Ticket promedio por compra</span>
+                          <span className="text-2xl font-bold">{formatNumber(estadisticas.ticketPromedio, { kind: "money" })}</span>
+                       </CardContent>
+                    </Card>
+                    <Card>
+                       <CardContent className="p-4 flex flex-col gap-1">
+                           <span className="text-sm font-medium text-muted-foreground">Costo por metro</span>
+                          <span className="text-2xl font-bold">
+                              {estadisticas.costoPorMetro == null ? "-" : formatNumber(estadisticas.costoPorMetro, { kind: "money" })}
+                          </span>
+                          <span className="text-xs text-muted-foreground">Ponderado por cantidad</span>
+                       </CardContent>
+                    </Card>
+                    <Card>
+                       <CardContent className="p-4 flex flex-col gap-1">
+                           <span className="text-sm font-medium text-muted-foreground">Costo por kilo</span>
+                          <span className="text-2xl font-bold">
+                              {estadisticas.costoPorKilo == null ? "-" : formatNumber(estadisticas.costoPorKilo, { kind: "money" })}
+                          </span>
+                          <span className="text-xs text-muted-foreground">Ponderado por cantidad</span>
+                       </CardContent>
+                    </Card>
+                    <Card>
+                       <CardContent className="p-4 flex flex-col gap-1">
+                          <span className="text-sm font-medium text-muted-foreground">Última compra</span>
+                          <span className="text-xl font-bold">{estadisticas.ultimaCompra ? formatDate(estadisticas.ultimaCompra) : "-"}</span>
+                          {estadisticas.diasDesdeUltimaCompra != null && (
+                             <span className="text-xs text-muted-foreground">Hace {formatNumber(estadisticas.diasDesdeUltimaCompra, { kind: "count" })} días</span>
+                          )}
+                       </CardContent>
+                    </Card>
+                 </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Frecuencia promedio</div><div className="text-xl font-bold">{formatNumber(estadisticas.frecuencia.promedioDiasEntreCompras, { kind: "count" })} días</div><div className="text-xs">Última: {formatDate(estadisticas.frecuencia.ultimaCompra)}</div></CardContent></Card>
+                    <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Días promedio para pagar</div><div className="text-xl font-bold">{formatNumber(estadisticas.diasPromedioPago, { kind: "count" })}</div></CardContent></Card>
+                    <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Concentración producto principal</div><div className="text-xl font-bold">{formatNumber(estadisticas.concentracion.productoPrincipalPct, { kind: "percentage", percentageInput: "percent" })}</div><div className="text-xs">Top 3: {formatNumber(estadisticas.concentracion.tresPrincipalesPct, { kind: "percentage", percentageInput: "percent" })}</div></CardContent></Card>
+                     <SupplierUtilityCard
+                       query={utilityQuery}
+                       visible={utilityVisible}
+                       onToggle={() => setUtilityVisible((current) => !current)}
+                       page={utilityPage}
+                       pageSize={utilityPageSize}
+                       onPageChange={setUtilityPage}
+                     />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card><CardHeader><CardTitle className="text-lg">Estacionalidad alta / baja</CardTitle></CardHeader><CardContent className="h-48">
+                      <ResponsiveContainer width="100%" height="100%"><BarChart data={[
+                        { periodo: `Alto · ${estadisticas.estacionalidad.mesMayor?.mes ?? "—"}`, total: Number(estadisticas.estacionalidad.mesMayor?.total ?? 0) },
+                        { periodo: `Bajo · ${estadisticas.estacionalidad.mesMenor?.mes ?? "—"}`, total: Number(estadisticas.estacionalidad.mesMenor?.total ?? 0) },
+                      ]}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5}/><XAxis dataKey="periodo" tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }}/><YAxis tickFormatter={(v) => `$${v/1000}k`} tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }}/><Tooltip formatter={(value) => formatNumber(Number(value), { kind: "money" })} cursor={{ fill: 'hsl(var(--report-stripe))', opacity: 0.6 }} contentStyle={{ borderRadius: '6px', fontSize: '13px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}/><Bar dataKey="total" fill={getCategoricalChartColor(0)} radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer>
+                    </CardContent><p className="px-6 pb-4 text-sm text-muted-foreground">Compara el monto monetario comprado al proveedor en su mes con mayor y menor compra dentro del rango seleccionado.</p></Card>
+                    <Card><CardHeader><CardTitle className="text-lg">Antigüedad de deuda</CardTitle></CardHeader><CardContent className="h-48">
+                      <ResponsiveContainer width="100%" height="100%"><BarChart data={[
+                        { rango:"0–30", saldo:Number(estadisticas.antiguedadDeuda.hasta30) },
+                        { rango:"31–60", saldo:Number(estadisticas.antiguedadDeuda.de31a60) },
+                        { rango:"61–90", saldo:Number(estadisticas.antiguedadDeuda.de61a90) },
+                        { rango:"90+", saldo:Number(estadisticas.antiguedadDeuda.mas90) },
+                      ]}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5}/><XAxis dataKey="rango" tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }}/><YAxis tickFormatter={(v) => `$${v/1000}k`} tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }}/><Tooltip formatter={(value) => formatNumber(Number(value), { kind: "money" })} cursor={{ fill: 'hsl(var(--report-stripe))', opacity: 0.6 }} contentStyle={{ borderRadius: '6px', fontSize: '13px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}/><Bar dataKey="saldo" fill={REPORT_NEGATIVE_COLOR} radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer>
+                    </CardContent><p className="px-6 pb-4 text-sm text-muted-foreground">Agrupa el saldo monetario pendiente del proveedor por días de antigüedad al corte actual.</p></Card>
+                  </div>
+
+                 <Card>
+                   <CardHeader>
+                     <CardTitle className="text-lg">Compras por Mes</CardTitle>
+                   </CardHeader>
+                   <CardContent>
+                     <div className="h-[300px] w-full">
+                       {estadisticas.porMes.length > 0 ? (
+                         <ResponsiveContainer width="100%" height="100%">
+                           <BarChart data={estadisticas.porMes}>
+                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5} />
+                             <XAxis dataKey="mes" tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }} />
+                              <YAxis tickFormatter={(v) => `$${v / 1000}k`} tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }} />
+                              <Tooltip formatter={(value: any) => formatNumber(value, { kind: "money" })} cursor={{ fill: 'hsl(var(--report-stripe))', opacity: 0.6 }} contentStyle={{ borderRadius: '6px', fontSize: '13px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }} />
+                             <Bar dataKey="total" fill={getCategoricalChartColor(1)} radius={[4, 4, 0, 0]} />
+                           </BarChart>
+                         </ResponsiveContainer>
+                       ) : (
+                         <div className="h-full flex items-center justify-center text-muted-foreground">No hay datos en el periodo</div>
+                       )}
+                     </div>
+                    </CardContent>
+                    <p className="px-6 pb-4 text-sm text-muted-foreground">Suma el costo monetario de compras de este proveedor por mes dentro del rango seleccionado.</p>
+                 </Card>
+
+                 <Card>
+                   <CardHeader>
+                     <CardTitle className="text-lg">Productos Comprados</CardTitle>
+                   </CardHeader>
+                   <CardContent className="p-0">
+                     <Table>
+                       <TableHeader>
+                         <TableRow className="bg-muted/10">
+                           <TableHead>Producto (SKU)</TableHead>
+                           <TableHead>Tela / Color</TableHead>
+                           <TableHead className="text-right">Rollos / Cantidad</TableHead>
+                             <TableHead className="text-right">Costo unitario</TableHead>
+                           <TableHead className="text-right">Total</TableHead>
+                         </TableRow>
+                       </TableHeader>
+                       <TableBody>
+                          {estadisticas.porProducto.length === 0 ? (
+                             <TableRow><TableCell colSpan={5} className="text-center h-24 text-muted-foreground">No hay productos en el periodo</TableCell></TableRow>
+                         ) : (
+                           estadisticas.porProducto.map(prod => (
+                             <Fragment key={prod.productoId}>
+                             <TableRow>
+                               <TableCell className="font-medium font-mono text-sm">{prod.sku}</TableCell>
+                               <TableCell>{prod.tela} <Badge variant="secondary" className="ml-2 font-normal text-[10px]">{prod.color}</Badge></TableCell>
+                               <TableCell className="text-right text-sm">
+                                  <div>{formatNumber(prod.totalRollos, { kind: "count" })} rll</div>
+                                  <div className="text-xs text-muted-foreground">{formatNumber(prod.cantidadTotal, { kind: "quantity" })} {formatUnit(prod.unidad)}</div>
+                               </TableCell>
+                                <TableCell className="text-right">
+                                   <div className="font-medium">{formatNumber(prod.costoPorUnidad, { kind: "money" })} / {formatUnit(prod.unidad)}</div>
+                               </TableCell>
+                                <TableCell className="text-right font-semibold">{formatNumber(prod.totalCosto, { kind: "money" })}</TableCell>
+                             </TableRow>
+                             <TableRow key={`${prod.productoId}-analytics`} className="bg-muted/10">
+                                <TableCell colSpan={5}>
+                                 <div className="grid md:grid-cols-2 gap-4 py-2 text-xs">
+                                   <div><b>Historial real por compra</b>
+                                       {prod.historialCostos.length ? <><div className="h-36 mt-2"><ResponsiveContainer width="100%" height="100%"><LineChart data={prod.historialCostos.map(h => ({ fecha:formatDate(h.fecha), costo:Number(h.costoUnitario), entrada:h.entradaId }))}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--report-stripe))"/><XAxis dataKey="fecha" tick={{fontSize:9}}/><YAxis domain={["auto","auto"]}/><Tooltip formatter={(value) => [`${formatNumber(Number(value), { kind: "money" })}/${formatUnit(prod.unidad)}`, "Costo"]}/><Line type="monotone" dataKey="costo" stroke={getCategoricalChartColor(0)} strokeWidth={2} dot/></LineChart></ResponsiveContainer></div><p className="mt-2 text-muted-foreground">Traza el costo unitario monetario por {formatUnit(prod.unidad)} de cada compra histórica de este producto.</p></> : <span className="ml-2">Sin compras</span>}
+                                   </div>
+                                    <div><b>Comparación:</b> {prod.comparacionProveedores.map(c => `${c.proveedor}: ${formatNumber(c.costoUnitario, { kind: "money" })}`).join(" · ") || "Sin comparación"}<br/>Más barato: <b>{prod.proveedorMasBarato ?? "—"}</b> · Ahorro potencial: <b>{formatNumber(prod.ahorroPotencial, { kind: "money" })}</b></div>
+                                 </div>
+                               </TableCell>
+                             </TableRow>
+                             </Fragment>
+                           ))
+                         )}
+                       </TableBody>
+                     </Table>
+                    </CardContent>
+                    <p className="px-6 pb-4 text-sm text-muted-foreground">Agrupa rollos, cantidad por unidad y costo monetario de compras de este proveedor dentro del rango seleccionado.</p>
+                 </Card>
+
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                   <Card>
+                     <CardHeader><CardTitle className="text-lg">Productos exclusivos</CardTitle></CardHeader>
+                     <CardContent className="text-sm">{estadisticas.productosExclusivos.length ? estadisticas.productosExclusivos.map(p => <Badge key={p.productoId} variant="secondary" className="mr-2 mb-2">{p.sku} · {p.tela} {p.color}</Badge>) : <span className="text-muted-foreground">No hay productos comprados exclusivamente a este proveedor.</span>}</CardContent>
+                   </Card>
+                   <Card>
+                     <CardHeader>
+                       <CardTitle className="text-lg">Por Tela</CardTitle>
+                     </CardHeader>
+                     <CardContent className="p-0">
+                       <Table>
+                         <TableHeader>
+                           <TableRow className="bg-muted/10">
+                             <TableHead>Tela</TableHead>
+                             <TableHead className="text-right">Rollos</TableHead>
+                             <TableHead className="text-right">Total</TableHead>
+                           </TableRow>
+                         </TableHeader>
+                         <TableBody>
+                           {estadisticas.porTela.map(tela => (
+                             <TableRow key={tela.tela}>
+                               <TableCell className="font-medium">{tela.tela}</TableCell>
+                                <TableCell className="text-right">{formatNumber(tela.rollosCount, { kind: "count" })}</TableCell>
+                                <TableCell className="text-right font-semibold">{formatNumber(tela.totalCosto, { kind: "money" })}</TableCell>
+                             </TableRow>
+                           ))}
+                         </TableBody>
+                       </Table>
+                      </CardContent>
+                      <p className="px-6 pb-4 text-sm text-muted-foreground">Agrupa los rollos y el costo monetario comprado a este proveedor por tela dentro del rango seleccionado.</p>
+                   </Card>
+
+                   <Card>
+                     <CardHeader>
+                       <CardTitle className="text-lg">Por Color</CardTitle>
+                     </CardHeader>
+                     <CardContent className="p-0">
+                       <Table>
+                         <TableHeader>
+                           <TableRow className="bg-muted/10">
+                             <TableHead>Color</TableHead>
+                             <TableHead className="text-right">Rollos</TableHead>
+                             <TableHead className="text-right">Total</TableHead>
+                           </TableRow>
+                         </TableHeader>
+                         <TableBody>
+                           {estadisticas.porColor.map(color => (
+                             <TableRow key={color.color}>
+                               <TableCell className="font-medium flex items-center gap-2">
+                                 <div className="w-3 h-3 rounded-full border shadow-sm" style={{ backgroundColor: color.color }}></div>
+                                 {color.color}
+                               </TableCell>
+                                <TableCell className="text-right">{formatNumber(color.rollosCount, { kind: "count" })}</TableCell>
+                                <TableCell className="text-right font-semibold">{formatNumber(color.totalCosto, { kind: "money" })}</TableCell>
+                             </TableRow>
+                           ))}
+                         </TableBody>
+                       </Table>
+                      </CardContent>
+                      <p className="px-6 pb-4 text-sm text-muted-foreground">Agrupa los rollos y el costo monetario comprado a este proveedor por color dentro del rango seleccionado.</p>
+                   </Card>
+                 </div>
+               </>
+             ) : null}
+          </TabsContent>
+        </Tabs>
+
+        <section
+          className="print-only print-account-statement"
+          aria-label="Estado de cuenta imprimible"
+          data-testid="print-account-statement"
+        >
+          <div className="flex items-start justify-between border-b border-slate-300 pb-3">
+            <div>
+              <h2>Estado de cuenta del proveedor</h2>
+              <p className="font-semibold">{proveedor.nombre}</p>
+              <p>
+                Generado:{" "}
+                {new Intl.DateTimeFormat("es-MX", {
+                  timeZone: "America/Mexico_City",
+                  dateStyle: "long",
+                  timeStyle: "short",
+                }).format(new Date())}
+              </p>
+            </div>
+            <div className="text-right">
+              <p>Saldo actual</p>
+               <p className="text-xl font-bold" data-testid="print-supplier-saldo-deudor">
+                 {formatNumber(saldoDeudorProveedor, { kind: "money" })}
+               </p>
+               {tieneSaldoAFavorProveedor && (
+                 <p data-testid="print-supplier-saldo-a-favor">
+                   Saldo a favor: {formatNumber(saldoAFavorProveedor, { kind: "money" })}
+                 </p>
+               )}
+            </div>
+          </div>
+
+          <h3>Compras</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Folio</th>
+                <th>Fecha de recepción</th>
+                <th>Sitio</th>
+                <th className="amount">Rollos</th>
+                <th className="amount">Cantidad</th>
+                <th className="amount">Total</th>
+                <th className="amount">Abonado</th>
+                <th className="amount">Saldo</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {comprasData?.items.length ? (
+                comprasData.items.map((compra) => (
+                  <tr key={`print-compra-${compra.entradaId}`}>
+                    <td>#{formatNumber(compra.folio, { kind: "identifier" })}</td>
+                    <td>{formatDate(compra.fecha)}</td>
+                    <td>{compra.nombreUbicacion}</td>
+                    <td className="amount">{formatNumber(compra.totalRollos, { kind: "count" })}</td>
+                    <td className="amount">{formatNumber(compra.cantidadTotal, { kind: "quantity" })}</td>
+                    <td className="amount">{formatNumber(compra.totalCosto, { kind: "money" })}</td>
+                    <td className="amount">{formatNumber(compra.abonado, { kind: "money" })}</td>
+                    <td className="amount">{formatNumber(compra.saldoPendiente, { kind: "money" })}</td>
+                    <td>{compra.estado}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={9}>No hay compras para los filtros seleccionados.</td>
+                </tr>
+              )}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan={5}>
+                  <strong>Compras del periodo: {formatNumber(comprasData?.total ?? 0, { kind: "count" })}</strong>
+                </td>
+                <td className="amount">
+                  <strong>{formatNumber(comprasData?.totalCostoPeriodo ?? "0", { kind: "money" })}</strong>
+                </td>
+                <td colSpan={3}></td>
+              </tr>
+            </tfoot>
+          </table>
+
+          <h3>Movimientos y pagos</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Referencia</th>
+                <th className="amount">Cargo</th>
+                <th className="amount">Abono</th>
+                <th className="amount">Saldo corrido</th>
+              </tr>
+            </thead>
+            <tbody>
+              {estadoCuenta?.movimientos.length ? (
+                estadoCuenta.movimientos.map((movimiento) => {
+                  const importe = parseFloat(movimiento.importe);
+                  return (
+                    <tr key={`print-movimiento-${movimiento.id}`}>
+                      <td>{formatDate(movimiento.fecha)}</td>
+                      <td>{movimiento.tipo}</td>
+                      <td>
+                        {movimiento.folio ? `Entrada #${formatNumber(movimiento.folio, { kind: "identifier" })}` : ""}
+                        {movimiento.referencia ? ` · ${movimiento.referencia}` : ""}
+                        {movimiento.notas ? ` · ${movimiento.notas}` : ""}
+                      </td>
+                      <td className="amount">
+                        {importe > 0 ? formatNumber(importe, { kind: "money" }) : ""}
+                      </td>
+                      <td className="amount">
+                        {importe < 0 ? formatNumber(Math.abs(importe), { kind: "money" }) : ""}
+                      </td>
+                      <td className="amount">
+                        {formatNumber(movimiento.saldoAcumulado, { kind: "money" })}
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={6}>No hay movimientos registrados.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </section>
+      </div>
+
+      {canVerFinanzas && (
+        <>
+          {canViewFinanzas && <DirectedPaymentHistory tipo="PROVEEDOR" entidadId={provId} />}
+          <ProveedorPagoDialog
+          open={isPagoOpen}
+          onOpenChange={setIsPagoOpen}
+          proveedorId={provId}
+          saldoActual={estadoCuenta?.saldoActual}
+          defaultAmount={initialImporte || ""}
+          onSuccess={() => {
+            queryClient.invalidateQueries({ queryKey: getListComprasProveedorQueryKey(provId) });
+            queryClient.invalidateQueries({ queryKey: getEstadoCuentaProveedorQueryKey(provId) });
+          }}
+        />
+
+        {dirigidoDialog.compra && (
+          <SolicitudPagoDirigidoDialog
+            open={dirigidoDialog.open}
+            onOpenChange={(val) => !val && setDirigidoDialog({ open: false })}
+            tipo="PROVEEDOR"
+            entidadId={provId}
+            documentoMovimientoId={dirigidoDialog.compra.movimientoId}
+            folio={dirigidoDialog.compra.folio || "—"}
+            saldoPendiente={dirigidoDialog.compra.saldoPendiente}
+            onSuccess={() => {
+               queryClient.invalidateQueries({ queryKey: getListComprasProveedorQueryKey(provId) });
+               queryClient.invalidateQueries({ queryKey: getEstadoCuentaProveedorQueryKey(provId) });
+            }}
+          />
+        )}
+        <ProveedorCompraDetalle
+          open={!!detalleCompraId}
+          onOpenChange={(val) => !val && setDetalleCompraId(null)}
+          proveedorId={provId}
+          compraId={detalleCompraId || 0}
+        />
+        {E12_ENABLED && <ProveedorCompraDetalle open={!!detallePagoId} onOpenChange={value => !value && setDetallePagoId(null)} proveedorId={provId} compraId={0} pagoId={detallePagoId ?? undefined} />}
+        </>
+      )}
+
+      {canVerFinanzas && (
+        <AjusteDialog
+          open={isAjusteOpen}
+          onClose={() => setIsAjusteOpen(false)}
+          proveedorId={provId}
+        />
+      )}
+    </AppLayout>
+  );
+}
+
+function utilityMoney(value: string | null | undefined): string {
+  return value == null ? "—" : formatNumber(value, { kind: "money" });
+}
+
+type SupplierUtilityQuery = {
+  data?: ProveedorUtilidadResult;
+  isLoading: boolean;
+  isError: boolean;
+  error: unknown;
+};
+
+function SupplierUtilityCard({
+  query,
+  visible,
+  onToggle,
+  page,
+  pageSize,
+  onPageChange,
+}: {
+  query: SupplierUtilityQuery;
+  visible: boolean;
+  onToggle: () => void;
+  page: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+}) {
+  const total = query.data?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const summary = query.data?.summary;
+  const utilityIsZero = summary ? Number(summary.utilidad) === 0 : false;
+  const zeroUtilityExplanation = summary
+    ? summary.lineasIncluidas > 0
+      ? "La utilidad neta es $0.00: hay ventas contabilizadas con costo válido, pero sus ingresos y costos se compensan."
+      : summary.rollosExcluidosSinCosto > 0
+        ? `La utilidad es $0.00 porque se excluyeron ${formatNumber(summary.rollosExcluidosSinCosto, { kind: "count" })} rollo(s) vendido(s) sin costo válido.`
+        : Number(summary.ventas) === 0 && summary.lineasExcluidasSinRollo === 0
+          ? "No hubo ventas contabilizadas en el periodo; la utilidad es $0.00."
+          : "La utilidad es $0.00 porque no hubo líneas con costo válido para calcularla."
+    : "";
+
+  return (
+    <Card className="col-span-2 md:col-span-4" data-testid="card-supplier-utility">
+      <CardHeader className="flex flex-row items-start justify-between gap-4">
+        <div>
+          <CardTitle className="text-lg">Utilidad generada por ventas</CardTitle>
+          <CardDescription>
+            Solo ventas contabilizadas por Caja en el periodo seleccionado.
+          </CardDescription>
+        </div>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="h-11 w-11 shrink-0"
+          aria-label={visible ? "Ocultar utilidad del proveedor" : "Mostrar utilidad del proveedor"}
+          aria-pressed={visible}
+          onClick={onToggle}
+          data-testid="button-toggle-supplier-utility"
+        >
+          {visible ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+        </Button>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {!visible ? (
+          <>
+            <p className="text-2xl font-bold" data-testid="metric-supplier-utility">
+              <span aria-label="Utilidad del proveedor oculta">••••••</span>
+            </p>
+            <p className="text-sm text-muted-foreground">
+              La utilidad y el detalle por rollo están ocultos. Usa el ojito para revelarlos.
+            </p>
+          </>
+        ) : query.isLoading ? (
+          <p className="py-6 text-center text-muted-foreground" role="status" data-testid="status-supplier-utility-loading">
+            Calculando utilidad...
+          </p>
+        ) : query.isError ? (
+          <p className="py-6 text-destructive" role="alert" data-testid="error-supplier-utility">
+            {getErrorMessage(query.error)}
+          </p>
+        ) : !summary ? (
+          <p className="py-6 text-center text-muted-foreground" data-testid="empty-supplier-utility">
+            No hay utilidad contabilizada en el periodo.
+          </p>
+        ) : (
+          <>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-live="polite">
+              <div className="rounded-lg border bg-muted/20 p-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Utilidad</p>
+                <p className="mt-1 text-2xl font-bold tabular-nums" data-testid="metric-supplier-utility">
+                  {utilityMoney(summary.utilidad)}
+                </p>
+              </div>
+              <div className="rounded-lg border bg-muted/20 p-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Ventas contabilizadas</p>
+                <p className="mt-1 text-xl font-bold tabular-nums" data-testid="metric-supplier-utility-sales">
+                  {utilityMoney(summary.ventas)}
+                </p>
+              </div>
+              <div className="rounded-lg border bg-muted/20 p-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Costo identificado</p>
+                <p className="mt-1 text-xl font-bold tabular-nums" data-testid="metric-supplier-utility-cost">
+                  {utilityMoney(summary.costo)}
+                </p>
+              </div>
+              <div className="rounded-lg border bg-muted/20 p-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Margen</p>
+                <p className="mt-1 text-xl font-bold tabular-nums" data-testid="metric-supplier-utility-margin">
+                  {summary.margenPct == null ? "—" : formatNumber(summary.margenPct, { kind: "percentage", percentageInput: "percent" })}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-2 text-sm">
+              <p data-testid="metric-supplier-utility-excluded-no-cost">
+                Rollos vendidos excluidos por falta de costo:{" "}
+                <strong>{formatNumber(summary.rollosExcluidosSinCosto, { kind: "count" })}</strong>
+              </p>
+              <p className="text-muted-foreground" data-testid="metric-supplier-utility-excluded-no-roll">
+                Líneas de venta sin evidencia física — globales del sitio y periodo seleccionado (no atribuibles a un proveedor):{" "}
+                {formatNumber(summary.lineasExcluidasSinRollo, { kind: "count" })}
+              </p>
+              {utilityIsZero && (
+                <p className="rounded-md border border-amber-200 bg-amber-50 p-3 text-amber-900" data-testid="status-supplier-utility-zero">
+                  {zeroUtilityExplanation}
+                </p>
+              )}
+              <p className="text-xs text-muted-foreground">
+                La atribución usa el proveedor de la ENTRADA asociada al rollo, aunque el proveedor capturado en otra referencia no coincida.
+                Las ventas parciales por metraje aportan solo la cantidad consumida.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <h3 className="font-semibold">Detalle por rollo vendido</h3>
+                <p className="text-sm text-muted-foreground">
+                  Folio de nota, cantidades/unidades y valores monetarios de cada línea contabilizada.
+                </p>
+              </div>
+              <div className="space-y-3 md:hidden">
+                {query.data?.items.length ? query.data.items.map((item) => (
+                  <article
+                    key={`mobile-${item.lineaId}-${item.rolloId}`}
+                    className="rounded-md border p-4"
+                    data-testid={`card-supplier-utility-${item.lineaId}-${item.rolloId}`}
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <p className="font-medium">{item.sku}</p>
+                        <p className="text-sm text-muted-foreground">{item.tela} · {item.color} · {item.tipo}</p>
+                      </div>
+                      <Badge variant={item.costoStatus === "COMPLETO" ? "secondary" : "outline"} className={item.costoStatus === "SIN_COSTO" ? "border-amber-300 text-amber-800" : ""}>
+                        {item.costoStatus === "COMPLETO" ? "Completo" : "Sin costo"}
+                      </Badge>
+                    </div>
+                    <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                      <div>
+                        <dt className="text-muted-foreground">Folio de nota</dt>
+                        <dd className="font-mono">
+                          <Link className="text-primary underline-offset-2 hover:underline" href={`/tickets/${item.ticketId}`}>
+                            #{formatNumber(item.ticketFolio, { kind: "identifier" })}
+                          </Link>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Fecha</dt>
+                        <dd>{formatDate(item.fecha)}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Entrada</dt>
+                        <dd className="font-mono">
+                          <Link className="text-primary underline-offset-2 hover:underline" href={`/entradas/${item.entradaId}/documento`}>
+                            #{formatNumber(item.entradaFolio, { kind: "identifier" })}
+                          </Link>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Rollo / serie</dt>
+                        <dd className="font-mono">{item.serie} <span className="text-xs text-muted-foreground">(#{formatNumber(item.rolloId, { kind: "identifier" })})</span></dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Cantidad</dt>
+                        <dd className="tabular-nums">{formatNumber(item.cantidad, { kind: "quantity" })} {formatUnit(item.unidad)}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Ventas</dt>
+                        <dd className="tabular-nums">{utilityMoney(item.ventas)}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Costo</dt>
+                        <dd className="tabular-nums">{utilityMoney(item.costo)}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Utilidad</dt>
+                        <dd className="font-semibold tabular-nums">{utilityMoney(item.utilidad)}</dd>
+                      </div>
+                    </dl>
+                  </article>
+                )) : (
+                  <p className="rounded-md border p-6 text-center text-muted-foreground">
+                    No hay rollos vendidos en el periodo.
+                  </p>
+                )}
+              </div>
+              <div className="hidden overflow-x-auto rounded-md border md:block">
+                <Table className="min-w-[1120px]">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Folio de nota</TableHead>
+                      <TableHead>Fecha</TableHead>
+                      <TableHead>Rollo / serie</TableHead>
+                      <TableHead>Entrada</TableHead>
+                      <TableHead>Producto</TableHead>
+                      <TableHead className="text-right">Cantidad</TableHead>
+                      <TableHead className="text-right">Ventas</TableHead>
+                      <TableHead className="text-right">Costo</TableHead>
+                      <TableHead className="text-right">Utilidad</TableHead>
+                      <TableHead>Costo</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {query.data?.items.length ? query.data.items.map((item) => (
+                      <TableRow key={`${item.lineaId}-${item.rolloId}`} data-testid={`row-supplier-utility-${item.lineaId}-${item.rolloId}`}>
+                        <TableCell className="font-mono">
+                          <Link className="text-primary underline-offset-2 hover:underline" href={`/tickets/${item.ticketId}`}>
+                            #{formatNumber(item.ticketFolio, { kind: "identifier" })}
+                          </Link>
+                        </TableCell>
+                        <TableCell>{formatDate(item.fecha)}</TableCell>
+                        <TableCell>
+                          <div className="font-mono">{item.serie}</div>
+                          <div className="text-xs text-muted-foreground">Rollo #{formatNumber(item.rolloId, { kind: "identifier" })}</div>
+                        </TableCell>
+                        <TableCell className="font-mono">
+                          <Link className="text-primary underline-offset-2 hover:underline" href={`/entradas/${item.entradaId}/documento`}>
+                            #{formatNumber(item.entradaFolio, { kind: "identifier" })}
+                          </Link>
+                        </TableCell>
+                        <TableCell>
+                          <div className="font-medium">{item.sku}</div>
+                          <div className="text-xs text-muted-foreground">{item.tela} · {item.color} · {item.tipo}</div>
+                        </TableCell>
+                        <TableCell className="text-right tabular-nums">
+                          {formatNumber(item.cantidad, { kind: "quantity" })} {formatUnit(item.unidad)}
+                        </TableCell>
+                        <TableCell className="text-right tabular-nums">{utilityMoney(item.ventas)}</TableCell>
+                        <TableCell className="text-right tabular-nums">{utilityMoney(item.costo)}</TableCell>
+                        <TableCell className="text-right font-semibold tabular-nums">{utilityMoney(item.utilidad)}</TableCell>
+                        <TableCell>
+                          <Badge variant={item.costoStatus === "COMPLETO" ? "secondary" : "outline"} className={item.costoStatus === "SIN_COSTO" ? "border-amber-300 text-amber-800" : ""}>
+                            {item.costoStatus === "COMPLETO" ? "Completo" : "Sin costo"}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    )) : (
+                      <TableRow>
+                        <TableCell colSpan={10} className="h-20 text-center text-muted-foreground">
+                          No hay rollos vendidos en el periodo.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm text-muted-foreground" aria-live="polite" data-testid="text-supplier-utility-pagination">
+                  Página {formatNumber(page, { kind: "count" })} de {formatNumber(totalPages, { kind: "count" })} · {formatNumber(total, { kind: "count" })} línea(s)
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="min-h-11"
+                    disabled={page <= 1 || query.isLoading}
+                    onClick={() => onPageChange(Math.max(1, page - 1))}
+                    data-testid="button-supplier-utility-previous"
+                  >
+                    Anterior
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="min-h-11"
+                    disabled={page >= totalPages || query.isLoading}
+                    onClick={() => onPageChange(Math.min(totalPages, page + 1))}
+                    data-testid="button-supplier-utility-next"
+                  >
+                    Siguiente
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+
+function AjusteDialog({ open, onClose, proveedorId }: { open: boolean, onClose: () => void, proveedorId: number }) {
+  const registrarAjuste = useRegistrarAjusteProveedor();
+  const queryClient = useQueryClient();
+
+  const [formData, setFormData] = useState<{
+    importe: string;
+    notas: string;
+  }>({
+    importe: "",
+    notas: ""
+  });
+
+  useEffect(() => {
+    if (open) {
+      setFormData({ importe: "", notas: "" });
+    }
+  }, [open]);
+
+  const handleSubmit = () => {
+    const importe = parseFloat(formData.importe);
+    if (isNaN(importe)) {
+      toast.error("Importe inválido", { description: "Debe ingresar una cantidad." });
+      return;
+    }
+    if (formData.notas.trim().length < 10) {
+      toast.error("Notas insuficientes", { description: "La justificación debe tener al menos 10 caracteres." });
+      return;
+    }
+
+    registrarAjuste.mutate({
+      id: proveedorId,
+      data: {
+        importe: importe,
+        notas: formData.notas.trim()
+      }
+    }, {
+      onSuccess: () => {
+        toast.success("Ajuste registrado exitosamente");
+        queryClient.invalidateQueries({ queryKey: getListProveedoresQueryKey() });
+        queryClient.invalidateQueries({ queryKey: getEstadoCuentaProveedorQueryKey(proveedorId) });
+        queryClient.invalidateQueries({ queryKey: getEstadisticasProveedorQueryKey(proveedorId) });
+        onClose();
+      },
+      onError: (err: any) => {
+        toast.error("Error al registrar ajuste", { description: getErrorMessage(err) });
+      }
+    });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={(val) => !val && onClose()}>
+      <DialogContent className="sm:max-w-[450px]">
+        <DialogHeader>
+          <DialogTitle>Registrar Ajuste de Saldo</DialogTitle>
+          <DialogDescription>
+            Un ajuste positivo (+) aumenta la deuda. Un ajuste negativo (-) reduce la deuda.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="grid gap-4 py-4">
+          <div className="space-y-2">
+            <Label>Importe del Ajuste *</Label>
+            <Input
+              type="number" step="0.01"
+              value={formData.importe}
+              onChange={e => setFormData({...formData, importe: e.target.value})}
+              placeholder="Ej. -500.00 para reducir deuda"
+              data-testid="input-ajuste-importe"
+            />
+            <p className="text-[10px] text-muted-foreground">Use signo menos (-) para un saldo a favor de Mariana Textil.</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Justificación (obligatorio) *</Label>
+            <Input
+              value={formData.notas}
+              onChange={e => setFormData({...formData, notas: e.target.value})}
+              placeholder="Motivo detallado del ajuste"
+              data-testid="input-ajuste-notas"
+            />
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancelar</Button>
+          <Button onClick={handleSubmit} disabled={registrarAjuste.isPending} data-testid="button-confirm-ajuste">
+            {registrarAjuste.isPending ? "Procesando..." : "Confirmar Ajuste"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}

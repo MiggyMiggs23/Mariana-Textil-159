@@ -25,6 +25,17 @@ test("directorio y formularios de proveedor incluyen RFC sin reemplazar el histo
   assert.doesNotMatch(migration, /\b(?:UPDATE|DELETE|INSERT|DROP|TRUNCATE)\b/i);
 });
 
+test("simplificación aprobada conserva tipo textual y purga solo con acciones aplicables", async () => {
+  const source = await readFile(new URL("./pages/proveedores.tsx", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /Building2|Globe2/);
+  assert.match(source, /<Badge variant="outline" className=\{p\.tipo[\s\S]*?\{p\.tipo\}\s*<\/Badge>/);
+  assert.match(source, /const showActions = user\?\.rol === "ADMIN" && sortedProveedores\.some\(p => !p\.activo\)/);
+  assert.match(source, /\{showActions && <TableHead className="text-right">Acciones<\/TableHead>\}/);
+  assert.match(source, /\{showActions && \(\s*<TableCell[\s\S]*?!p\.activo && <PurgaCatalogoButton/);
+  assert.match(source, /<details[^>]*data-testid="supplier-analytics-details">[\s\S]*?<summary[^>]*>Gráficos y desgloses/);
+  assert.match(source, /<TabsTrigger value="historial">Últimas compras<\/TabsTrigger>/);
+});
+
 test("conteos exigen ambos permisos y siguen limitados al sitio autorizado", async () => {
   const route = await readFile(new URL("../../api-server/src/routes/proveedores.ts", import.meta.url), "utf8");
   const directory = route.match(/router\.get\(\s*"\/proveedores\/directorio",([\s\S]*?)\n\);/)?.[1];

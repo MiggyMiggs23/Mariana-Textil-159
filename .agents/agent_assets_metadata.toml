@@ -2579,3 +2579,31 @@ mtime_ms = 1790375249525
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/bec82a89-996b-4e51-9e91-e89b96ba46f6/98401b6a-ce55-48f2-909a-41d9e74fdeef"
 storage_version_token = "1790375323643751"
 content_type = "image/png"
+
+[[outputs]]
+id = "cChlxcp18avOEz5JSKY6W"
+uri = "file://reports/directorios-sitios-20260925/capturas-antes-despues.html"
+type = "html"
+title = "Clientes y Proveedores — antes y después"
+description = "Galería con imágenes reales de las versiones comparadas, análisis plegado y desplegado e historiales conservados. Datos de prueba; versión candidata sin activar."
+logical_id = "4e9993f3-cd59-4d9c-838d-1497a088f9bd"
+content_hash = "sha256:2592358085d2c28b9e52590b96ce1cf32f66bada5838193350761f5dd4fed357"
+size = 14390545
+mtime_ms = 1790381434703
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/4e9993f3-cd59-4d9c-838d-1497a088f9bd/7c2e6bc3-0a59-446c-aaff-df5428e8b8cb"
+storage_version_token = "1790381497941455"
+content_type = "text/html"
+
+[[outputs]]
+id = "3rMNrKucopgY55kK3Z9mE"
+uri = "file://reports/directorios-sitios-20260925/capturas-resumen-operativo.html"
+type = "html"
+title = "Comprobación de bodegas y Cartera"
+description = "Las cuatro bodegas siguen disponibles en Inventario, Entradas, Salidas, Viajes y Movimientos. Cartera filtra por tipo; incluye la prueba de reclasificación de Bodega Cruces."
+logical_id = "ca8c2ded-54be-4c71-a76b-9d6d9355212a"
+content_hash = "sha256:01c160c46eebd3172110effa0097bd390b9371de6260b8b1432e1472598858a2"
+size = 1105816
+mtime_ms = 1790381434723
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/ca8c2ded-54be-4c71-a76b-9d6d9355212a/c7909f99-52b2-48a6-bceb-d320aa36d440"
+storage_version_token = "1790381498489265"
+content_type = "text/html"

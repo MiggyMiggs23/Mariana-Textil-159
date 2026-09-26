@@ -1,0 +1,28 @@
+{
+  "status": "frontend-only-approved-proposals-1-2-6-7-8",
+  "parentFrontendIndexSha256": "6d3c648fa1946641f58b513dd383318bc48576dc91688826be05a1d83e8ee423",
+  "unchangedApiEntrySha256": "b870909beced1957603ccbac785983d4c129c8438715d0e206c0e72fb1d90dbe",
+  "overlays": [
+    {
+      "path": "artifacts/mariana-textil/src/components/client-directory.tsx",
+      "baseSha256": "2f319fb3b19f94a4d0d70661ba278a37a756bf5054b0e794da1649ae6d8137c2",
+      "sha256": "b1aed316651ba0858cc763b28596ce1ef3bcf227b877245c57b6cc42be6a4ffc",
+      "headDiffSha256": "bf3e975ae25b2839b10755f6c36eba169324d9512ccabd5ad30a76e96c9506a0",
+      "proposals": [1, 2]
+    },
+    {
+      "path": "artifacts/mariana-textil/src/pages/clientes.tsx",
+      "baseSha256": "1a33820e0213860f54a9e0b75c6f92d2ca313f2d9da1523deb3d655e15c55a3a",
+      "sha256": "8420ed67489d82acf73fbf75215be974b4fbb36c468d0b37a2552c1d0833e4c6",
+      "headDiffSha256": "97409f7056649177e4348a5fe6a21c88212cd5ca454c23202fcd3fa2e6338993",
+      "proposals": [8]
+    },
+    {
+      "path": "artifacts/mariana-textil/src/pages/proveedores.tsx",
+      "baseSha256": "9930beb1a320bec8f98cd6fe82e727688fa068609bc79adb220da1ce711fe042",
+      "sha256": "83ca435eebffcc6a807c36c7c56ff2b9c37efffd357a4e12debf9081f6bcd0bd",
+      "headDiffSha256": "7fb42081106388e9492001c6ac43091a57f94f524a33a17fdbdc6fef1fd40b7d",
+      "proposals": [6, 7, 8]
+    }
+  ]
+}

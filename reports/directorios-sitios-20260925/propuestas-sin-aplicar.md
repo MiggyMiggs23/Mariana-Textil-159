@@ -1,6 +1,8 @@
-# Propuestas para revisar — no aplicadas
+# Propuestas originales — decisión posterior registrada
 
-No se afirma que un dato “nadie lo use”: no hay medición de uso que permita concluirlo. Estas propuestas buscan reducir repeticiones y desplazamiento horizontal. Necesitan aprobación.
+**Decisión del propietario:** aprobadas 1, 2, 6, 7 y 8 (orden de las filas). Rechazadas 3, 4 y 5. Las aprobadas se incorporaron al candidato simplificado; teléfono/RFC se mantienen visibles y no se pliegan Últimas ventas ni Estado de cuenta. La siguiente tabla conserva la propuesta original, no una autorización para cambios adicionales.
+
+No se afirma que un dato “nadie lo use”: no hay medición de uso que permita concluirlo. Estas propuestas buscaban reducir repeticiones y desplazamiento horizontal.
 
 | Pantalla | Propuesta | Motivo y qué se conservaría |
 |---|---|---|

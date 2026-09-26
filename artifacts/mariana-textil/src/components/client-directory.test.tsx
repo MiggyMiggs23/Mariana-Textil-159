@@ -37,6 +37,13 @@ it("uses name A–Z by default, one paged query and no per-row credit requests",
   expect(screen.getByText("Con deuda")).toBeTruthy();
   expect(screen.getByText("Sin deuda")).toBeTruthy();
   expect(screen.getByText("A favor: $100.00")).toBeTruthy();
+  expect(screen.getByTestId("row-client-200").textContent).toContain("5551234567");
+  expect(screen.getByTestId("row-client-200").textContent).toContain("XAXX010101000");
+  expect(screen.getByTestId("row-client-200").querySelector("td:nth-child(5)")?.textContent).toContain("$250.00Con deuda");
+  expect(screen.getByTestId("row-client-201").querySelector("td:nth-child(5)")?.textContent).toContain("$0.00Sin deuda");
+  expect(screen.getByTestId("row-client-201").querySelector("td:nth-child(5)")?.textContent).toContain("A favor: $100.00");
+  expect(screen.getByTestId("row-client-200").textContent).not.toContain("Todo el tiempo");
+  expect(screen.getByText(/Movimientos \(Todo el tiempo\):/)).toBeTruthy();
 });
 it("inverts sortable columns and exposes the active direction", async () => {
   mount();
@@ -86,6 +93,8 @@ it("quick filters and period changes reset page and transmit exact criteria", as
   expect(requests.at(-1)?.get("period")).toBe("all");
   fireEvent.change(screen.getByTestId("select-movement-period"), { target: { value: "3m" } });
   expect((screen.getByTestId("select-movement-period") as HTMLSelectElement).value).toBe("3m");
+  await waitFor(() => expect(screen.getByText(/Movimientos \(Últimos tres meses\):/)).toBeTruthy());
+  expect(screen.getByTestId("row-client-200").textContent).not.toContain("Últimos tres meses");
   expect(screen.getByText("Página 1 de 52")).toBeTruthy();
   fireEvent.click(screen.getByTestId("quick-order-saldoActual"));
   await waitFor(() => expect(requests.at(-1)?.get("sort")).toBe("saldoActual"));
