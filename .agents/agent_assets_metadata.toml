@@ -2649,3 +2649,17 @@ mtime_ms = 1790405998236
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e7e3a0b0-0198-42e7-8500-d6a32134a733/17e8b2f7-7706-4c5c-886b-d7b659683c75"
 storage_version_token = "1790405999255721"
 content_type = "text/html"
+
+[[outputs]]
+id = "PmHoMQpyPiww16uzMjHY3"
+uri = "file://reports/postrelease-review-20260926/informe-unico.html"
+type = "html"
+title = "Informe único — revisión y liberación"
+description = "Resultados, capturas incorporadas, commits separados, pendientes, limpieza y lista de pruebas del propietario."
+logical_id = "044fa56b-1be6-4b27-bf18-40c5fec2585e"
+content_hash = "sha256:3d649886564a4a3704a5a4e81ca125e0ea05a336e594a9717243ca54ce9df877"
+size = 2340060
+mtime_ms = 1790420017830
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/044fa56b-1be6-4b27-bf18-40c5fec2585e/38ebcc89-f551-43af-8c73-eb31cd6bc8cf"
+storage_version_token = "1790420020060075"
+content_type = "text/html"
