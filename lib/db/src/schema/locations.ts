@@ -42,6 +42,9 @@ export const pisosTable = pgTable(
       .notNull()
       .references(() => ubicacionesTable.id),
     nombre: text("nombre").notNull(),
+    // Explicit ascending physical rank (not inferred from a name or story number).
+    // Nullable during the reviewed backfill. Equal ranks deliberately tie by id.
+    nivel: integer("nivel"),
     activo: boolean("activo").notNull().default(true),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true })

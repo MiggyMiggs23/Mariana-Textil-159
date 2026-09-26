@@ -195,6 +195,7 @@ test("Task 58: pisos funcionan de extremo a extremo sin contaminar el kardex", a
 
       const createdA = await api("POST", `/locations/${sourceId}/pisos`, admin, {
         nombre: "  Planta   Baja  ",
+        nivel: 0,
         activo: true,
       });
       assert.equal(createdA.status, 201);
@@ -202,16 +203,19 @@ test("Task 58: pisos funcionan de extremo a extremo sin contaminar el kardex", a
       assert.equal((createdA.body as Json).nombre, "Planta Baja");
       const createdB = await api("POST", `/locations/${sourceId}/pisos`, admin, {
         nombre: "Mezanine",
+        nivel: 1,
         activo: true,
       });
       floorB = Number((createdB.body as Json).id);
       const inactive = await api("POST", `/locations/${sourceId}/pisos`, admin, {
         nombre: "Archivo",
+        nivel: 2,
         activo: true,
       });
       inactiveFloor = Number((inactive.body as Json).id);
       const destinationCreated = await api("POST", `/locations/${destinationId}/pisos`, admin, {
         nombre: "Recepción",
+        nivel: 0,
         activo: true,
       });
       destinationFloor = Number((destinationCreated.body as Json).id);

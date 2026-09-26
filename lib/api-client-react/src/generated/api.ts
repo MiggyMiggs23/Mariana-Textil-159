@@ -11317,7 +11317,7 @@ export const getScanAuditoriaInventarioUrl = (id: number,) => {
 }
 
 /**
- * Exige piso activo del sitio. Sin pisos activos devuelve 400 FLOOR_CONFIGURATION_REQUIRED; piso ausente o inválido devuelve 400 INVALID_FLOOR. Computadora (heurística User-Agent del servidor, no autorización) solo admite el primer piso activo ordenado por nombre ASC, de lo contrario 400 DESKTOP_ACCESS_FLOOR_REQUIRED. Móvil admite cualquier piso válido. Sexto usuario activo devuelve 409 AUDIT_PARTICIPANT_LIMIT. Un duplicado conserva autor, hora y piso del primer escaneo; nunca sustituye su atribución.
+ * Exige piso activo del sitio. Sin pisos activos devuelve 400 FLOOR_CONFIGURATION_REQUIRED; piso ausente o inválido devuelve 400 INVALID_FLOOR. Computadora (heurística User-Agent del servidor, no autorización) solo admite el piso activo de menor nivel numérico, con id ASC como desempate. Si algún piso activo tiene nivel sin configurar, computadora devuelve 400 FLOOR_CONFIGURATION_REQUIRED; de lo contrario 400 DESKTOP_ACCESS_FLOOR_REQUIRED. Móvil admite cualquier piso válido. Sexto usuario activo devuelve 409 AUDIT_PARTICIPANT_LIMIT. Un duplicado conserva autor, hora y piso del primer escaneo; nunca sustituye su atribución.
  * @summary Registra una serie por presencia de forma idempotente
  */
 export const scanAuditoriaInventario = async (id: number,

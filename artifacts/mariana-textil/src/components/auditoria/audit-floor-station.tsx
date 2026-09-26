@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { compareFloorLevels, lowestActiveFloor } from "../../../../../lib/floor-order.mjs";
 import type { AuditFloor } from "./use-audit-floors";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -25,7 +26,8 @@ export function AuditFloorStation({
   const [draft, setDraft] = useState("");
   const [confirming, setConfirming] = useState(false);
   const prompted = useRef(false);
-  const current = mobile ? floors.find((floor) => floor.id === selectedId) : floors[0];
+  floors = floors.filter((floor) => floor.activo).sort(compareFloorLevels);
+  const current = mobile ? floors.find((floor) => floor.id === selectedId) : lowestActiveFloor(floors);
   const candidate = floors.find((floor) => String(floor.id) === draft);
 
   useEffect(() => {
@@ -51,13 +53,14 @@ export function AuditFloorStation({
           <p className="text-2xl sm:text-3xl font-black text-foreground break-words" data-testid="audit-floor-name">
             {error ? "No se pudieron cargar los pisos" : !ready ? "Cargando pisos..." :
               floors.length === 0 ? "Faltan pisos configurados" :
+                !mobile && !current ? "Falta configurar el nivel numérico de los pisos" :
                 current?.nombre ?? "Selecciona un piso"}
           </p>
           {ready && floors.length === 0 && (
             <p className="text-sm text-destructive">Configura al menos un piso activo del sitio antes de escanear.</p>
           )}
           {ready && floors.length > 0 && !mobile && (
-            <p className="text-xs text-muted-foreground">Computadora: piso de acceso fijo según el orden configurado del sitio.</p>
+            <p className="text-xs text-muted-foreground">Computadora: piso activo de menor nivel numérico. Todos los pisos activos deben tener nivel configurado.</p>
           )}
         </div>
         {joined && mobile && ready && floors.length > 0 && (

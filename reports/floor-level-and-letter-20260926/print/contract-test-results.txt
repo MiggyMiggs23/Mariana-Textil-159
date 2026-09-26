@@ -1,0 +1,17 @@
+[frontend-test-runner] 1 file(s); tsconfig=/home/runner/workspace/artifacts/mariana-textil/tsconfig.render-tests.json
+✔ la entrada conserva su formato global y firma solo la última hoja global (1.056742ms)
+✔ la entrada agrega un listado compacto de todas las series por producto (0.591018ms)
+✔ los globales conservan cada producto y unidad por separado (0.130322ms)
+✔ la celda global conserva tela y color completos sin duplicar el SKU (0.732732ms)
+✔ la entrada se aísla para impresión sin ocultar su contenido (0.239533ms)
+✔ la entrada conserva una caja de página segura y traslada fondo y borde al frame interior (0.30256ms)
+✔ la lista conserva enlaces permanentes y visibles al documento (0.183245ms)
+✔ el documento muestra el sitio y nunca expone el id interno del proveedor (0.177838ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 344.13994

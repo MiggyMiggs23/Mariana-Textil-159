@@ -10,6 +10,11 @@ export interface Piso {
   id: number;
   ubicacionId: number;
   nombre: string;
+  /**
+     * Orden físico ascendente configurado explícitamente; null indica configuración pendiente.
+     * @nullable
+     */
+  nivel: number | null;
   activo: boolean;
   createdAt: Date;
   updatedAt: Date;

@@ -9,6 +9,8 @@
 export interface AuditoriaInventarioPiso {
   id: number;
   nombre: string;
+  /** @nullable */
+  nivel: number | null;
   ubicacionId: number;
   activo: boolean;
 }

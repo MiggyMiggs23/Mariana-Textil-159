@@ -1,0 +1,4728 @@
+{
+  "status": "PASSED",
+  "fixtureOnly": true,
+  "databaseAccess": false,
+  "browser": {
+    "Browser": "Chrome/152.0.7977.64",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "V8-Version": "15.2.124.18",
+    "WebKit-Version": "537.36 (@506c834ecceaa943c5f41e6cfe7f68acb5c45346)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:36751/devtools/browser/163f184c-33fe-4723-98b2-ea5508e67e78"
+  },
+  "scenarios": [
+    {
+      "name": "before-88",
+      "counts": [
+        88
+      ],
+      "cap": 22,
+      "geometry": [
+        {
+          "kind": "global",
+          "page": {
+            "x": 0,
+            "y": 0,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 1052.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 19.828125,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 1032.765625
+          },
+          "table": null,
+          "header": null,
+          "rows": [],
+          "font": null,
+          "interLoaded": true,
+          "signatures": 1
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 1052.59375,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 2105.1875
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 1072.421875,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 2085.359375
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 1121.421875,
+            "width": 708.828125,
+            "height": 559,
+            "bottom": 1680.421875
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 1121.921875,
+            "width": 707.828125,
+            "height": 30,
+            "bottom": 1151.921875
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 1151.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1175.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1175.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1199.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1199.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1223.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1223.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1247.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1247.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1271.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1271.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1295.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1295.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1319.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1319.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1343.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1343.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1367.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1367.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1391.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1391.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1415.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1415.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1439.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1439.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1463.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1463.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1487.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1487.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1511.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1511.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1535.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1535.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1559.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1559.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1583.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1583.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1607.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1607.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1631.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1631.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1655.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1655.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1679.921875
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        }
+      ],
+      "pageCount": 2,
+      "nativeSizes": "Title:           entrada-fixture.invalid\nCreator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36\nProducer:        Skia/PDF m152\nCreationDate:    Sat Sep 26 22:07:04 2026 UTC\nModDate:         Sat Sep 26 22:07:04 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           2\nEncrypted:       no\nPage    1 size:  612 x 791.04 pts (letter)\nPage    1 rot:   0\nPage    2 size:  612 x 791.04 pts (letter)\nPage    2 rot:   0\nFile size:       1039580 bytes\nOptimized:       no\nPDF version:     1.4\n",
+      "inkBounds": [
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-88-1.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-88-2.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        }
+      ],
+      "pdfPath": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-88.pdf"
+    },
+    {
+      "name": "before-89",
+      "counts": [
+        89
+      ],
+      "cap": 22,
+      "geometry": [
+        {
+          "kind": "global",
+          "page": {
+            "x": 0,
+            "y": 0,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 1052.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 19.828125,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 1032.765625
+          },
+          "table": null,
+          "header": null,
+          "rows": [],
+          "font": null,
+          "interLoaded": true,
+          "signatures": 1
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 1052.59375,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 2105.1875
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 1072.421875,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 2085.359375
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 1121.421875,
+            "width": 708.828125,
+            "height": 559,
+            "bottom": 1680.421875
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 1121.921875,
+            "width": 707.828125,
+            "height": 30,
+            "bottom": 1151.921875
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 1151.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1175.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1175.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1199.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1199.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1223.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1223.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1247.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1247.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1271.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1271.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1295.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1295.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1319.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1319.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1343.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1343.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1367.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1367.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1391.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1391.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1415.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1415.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1439.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1439.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1463.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1463.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1487.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1487.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1511.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1511.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1535.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1535.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1559.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1559.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1583.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1583.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1607.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1607.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1631.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1631.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1655.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1655.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1679.921875
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 2105.1875,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 3157.78125
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 2125.015625,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 3137.953125
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 2174.015625,
+            "width": 708.828125,
+            "height": 54,
+            "bottom": 2228.015625
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 2174.515625,
+            "width": 707.828125,
+            "height": 29,
+            "bottom": 2203.515625
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 2203.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2227.515625
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        }
+      ],
+      "pageCount": 3,
+      "nativeSizes": "Title:           entrada-fixture.invalid\nCreator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36\nProducer:        Skia/PDF m152\nCreationDate:    Sat Sep 26 22:07:06 2026 UTC\nModDate:         Sat Sep 26 22:07:06 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           3\nEncrypted:       no\nPage    1 size:  612 x 791.04 pts (letter)\nPage    1 rot:   0\nPage    2 size:  612 x 791.04 pts (letter)\nPage    2 rot:   0\nPage    3 size:  612 x 791.04 pts (letter)\nPage    3 rot:   0\nFile size:       1046391 bytes\nOptimized:       no\nPDF version:     1.4\n",
+      "inkBounds": [
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-89-1.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-89-2.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-89-3.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        }
+      ],
+      "pdfPath": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-89.pdf"
+    },
+    {
+      "name": "before-152",
+      "counts": [
+        152
+      ],
+      "cap": 22,
+      "geometry": [
+        {
+          "kind": "global",
+          "page": {
+            "x": 0,
+            "y": 0,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 1052.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 19.828125,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 1032.765625
+          },
+          "table": null,
+          "header": null,
+          "rows": [],
+          "font": null,
+          "interLoaded": true,
+          "signatures": 1
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 1052.59375,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 2105.1875
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 1072.421875,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 2085.359375
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 1121.421875,
+            "width": 708.828125,
+            "height": 559,
+            "bottom": 1680.421875
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 1121.921875,
+            "width": 707.828125,
+            "height": 30,
+            "bottom": 1151.921875
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 1151.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1175.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1175.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1199.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1199.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1223.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1223.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1247.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1247.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1271.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1271.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1295.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1295.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1319.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1319.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1343.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1343.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1367.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1367.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1391.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1391.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1415.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1415.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1439.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1439.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1463.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1463.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1487.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1487.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1511.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1511.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1535.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1535.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1559.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1559.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1583.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1583.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1607.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1607.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1631.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1631.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1655.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1655.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1679.921875
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 2105.1875,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 3157.78125
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 2125.015625,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 3137.953125
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 2174.015625,
+            "width": 708.828125,
+            "height": 414,
+            "bottom": 2588.015625
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 2174.515625,
+            "width": 707.828125,
+            "height": 29,
+            "bottom": 2203.515625
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 2203.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2227.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2227.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2251.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2251.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2275.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2275.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2299.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2299.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2323.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2323.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2347.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2347.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2371.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2371.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2395.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2395.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2419.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2419.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2443.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2443.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2467.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2467.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2491.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2491.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2515.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2515.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2539.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2539.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2563.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2563.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2587.515625
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        }
+      ],
+      "pageCount": 3,
+      "nativeSizes": "Title:           entrada-fixture.invalid\nCreator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36\nProducer:        Skia/PDF m152\nCreationDate:    Sat Sep 26 22:07:08 2026 UTC\nModDate:         Sat Sep 26 22:07:08 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           3\nEncrypted:       no\nPage    1 size:  612 x 791.04 pts (letter)\nPage    1 rot:   0\nPage    2 size:  612 x 791.04 pts (letter)\nPage    2 rot:   0\nPage    3 size:  612 x 791.04 pts (letter)\nPage    3 rot:   0\nFile size:       1077523 bytes\nOptimized:       no\nPDF version:     1.4\n",
+      "inkBounds": [
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-152-1.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-152-2.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-152-3.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        }
+      ],
+      "pdfPath": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-152.pdf"
+    },
+    {
+      "name": "before-153",
+      "counts": [
+        153
+      ],
+      "cap": 22,
+      "geometry": [
+        {
+          "kind": "global",
+          "page": {
+            "x": 0,
+            "y": 0,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 1052.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 19.828125,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 1032.765625
+          },
+          "table": null,
+          "header": null,
+          "rows": [],
+          "font": null,
+          "interLoaded": true,
+          "signatures": 1
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 1052.59375,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 2105.1875
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 1072.421875,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 2085.359375
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 1121.421875,
+            "width": 708.828125,
+            "height": 559,
+            "bottom": 1680.421875
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 1121.921875,
+            "width": 707.828125,
+            "height": 30,
+            "bottom": 1151.921875
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 1151.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1175.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1175.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1199.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1199.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1223.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1223.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1247.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1247.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1271.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1271.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1295.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1295.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1319.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1319.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1343.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1343.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1367.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1367.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1391.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1391.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1415.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1415.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1439.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1439.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1463.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1463.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1487.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1487.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1511.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1511.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1535.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1535.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1559.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1559.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1583.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1583.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1607.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1607.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1631.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1631.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1655.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1655.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1679.921875
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 2105.1875,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 3157.78125
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 2125.015625,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 3137.953125
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 2174.015625,
+            "width": 708.828125,
+            "height": 438,
+            "bottom": 2612.015625
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 2174.515625,
+            "width": 707.828125,
+            "height": 29,
+            "bottom": 2203.515625
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 2203.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2227.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2227.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2251.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2251.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2275.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2275.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2299.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2299.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2323.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2323.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2347.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2347.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2371.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2371.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2395.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2395.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2419.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2419.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2443.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2443.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2467.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2467.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2491.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2491.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2515.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2515.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2539.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2539.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2563.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2563.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2587.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2587.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2611.515625
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        }
+      ],
+      "pageCount": 3,
+      "nativeSizes": "Title:           entrada-fixture.invalid\nCreator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36\nProducer:        Skia/PDF m152\nCreationDate:    Sat Sep 26 22:07:10 2026 UTC\nModDate:         Sat Sep 26 22:07:10 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           3\nEncrypted:       no\nPage    1 size:  612 x 791.04 pts (letter)\nPage    1 rot:   0\nPage    2 size:  612 x 791.04 pts (letter)\nPage    2 rot:   0\nPage    3 size:  612 x 791.04 pts (letter)\nPage    3 rot:   0\nFile size:       1078717 bytes\nOptimized:       no\nPDF version:     1.4\n",
+      "inkBounds": [
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-153-1.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-153-2.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-153-3.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        }
+      ],
+      "pdfPath": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-153.pdf"
+    },
+    {
+      "name": "before-1-148",
+      "counts": [
+        1,
+        148
+      ],
+      "cap": 22,
+      "geometry": [
+        {
+          "kind": "global",
+          "page": {
+            "x": 0,
+            "y": 0,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 1052.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 19.828125,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 1032.765625
+          },
+          "table": null,
+          "header": null,
+          "rows": [],
+          "font": null,
+          "interLoaded": true,
+          "signatures": 1
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 1052.59375,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 2105.1875
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 1072.421875,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 2085.359375
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 1121.421875,
+            "width": 708.828125,
+            "height": 559,
+            "bottom": 1680.421875
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 1121.921875,
+            "width": 707.828125,
+            "height": 30,
+            "bottom": 1151.921875
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 1151.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1175.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1175.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1199.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1199.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1223.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1223.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1247.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1247.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1271.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1271.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1295.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1295.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1319.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1319.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1343.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1343.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1367.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1367.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1391.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1391.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1415.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1415.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1439.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1439.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1463.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1463.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1487.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1487.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1511.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1511.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1535.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1535.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1559.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1559.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1583.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1583.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1607.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1607.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1631.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1631.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1655.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1655.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1679.921875
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 2105.1875,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 3157.78125
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 2125.015625,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 3137.953125
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 2174.015625,
+            "width": 708.828125,
+            "height": 414,
+            "bottom": 2588.015625
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 2174.515625,
+            "width": 707.828125,
+            "height": 29,
+            "bottom": 2203.515625
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 2203.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2227.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2227.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2251.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2251.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2275.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2275.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2299.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2299.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2323.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2323.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2347.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2347.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2371.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2371.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2395.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2395.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2419.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2419.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2443.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2443.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2467.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2467.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2491.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2491.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2515.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2515.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2539.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2539.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2563.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2563.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2587.515625
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        }
+      ],
+      "pageCount": 3,
+      "nativeSizes": "Title:           entrada-fixture.invalid\nCreator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36\nProducer:        Skia/PDF m152\nCreationDate:    Sat Sep 26 22:07:12 2026 UTC\nModDate:         Sat Sep 26 22:07:12 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           3\nEncrypted:       no\nPage    1 size:  612 x 791.04 pts (letter)\nPage    1 rot:   0\nPage    2 size:  612 x 791.04 pts (letter)\nPage    2 rot:   0\nPage    3 size:  612 x 791.04 pts (letter)\nPage    3 rot:   0\nFile size:       1079482 bytes\nOptimized:       no\nPDF version:     1.4\n",
+      "inkBounds": [
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-1-148-1.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-1-148-2.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-1-148-3.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        }
+      ],
+      "pdfPath": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-1-148.pdf"
+    },
+    {
+      "name": "before-1-149",
+      "counts": [
+        1,
+        149
+      ],
+      "cap": 22,
+      "geometry": [
+        {
+          "kind": "global",
+          "page": {
+            "x": 0,
+            "y": 0,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 1052.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 19.828125,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 1032.765625
+          },
+          "table": null,
+          "header": null,
+          "rows": [],
+          "font": null,
+          "interLoaded": true,
+          "signatures": 1
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 1052.59375,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 2105.1875
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 1072.421875,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 2085.359375
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 1121.421875,
+            "width": 708.828125,
+            "height": 559,
+            "bottom": 1680.421875
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 1121.921875,
+            "width": 707.828125,
+            "height": 30,
+            "bottom": 1151.921875
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 1151.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1175.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1175.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1199.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1199.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1223.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1223.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1247.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1247.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1271.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1271.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1295.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1295.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1319.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1319.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1343.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1343.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1367.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1367.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1391.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1391.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1415.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1415.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1439.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1439.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1463.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1463.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1487.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1487.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1511.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1511.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1535.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1535.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1559.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1559.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1583.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1583.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1607.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1607.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1631.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1631.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1655.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1655.921875,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 1679.921875
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 2105.1875,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 3157.78125
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 2125.015625,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 3137.953125
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 2174.015625,
+            "width": 708.828125,
+            "height": 438,
+            "bottom": 2612.015625
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 2174.515625,
+            "width": 707.828125,
+            "height": 29,
+            "bottom": 2203.515625
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 2203.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2227.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2227.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2251.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2251.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2275.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2275.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2299.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2299.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2323.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2323.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2347.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2347.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2371.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2371.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2395.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2395.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2419.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2419.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2443.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2443.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2467.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2467.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2491.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2491.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2515.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2515.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2539.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2539.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2563.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2563.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2587.515625
+            },
+            {
+              "x": 53.328125,
+              "y": 2587.515625,
+              "width": 707.828125,
+              "height": 24,
+              "bottom": 2611.515625
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        }
+      ],
+      "pageCount": 3,
+      "nativeSizes": "Title:           entrada-fixture.invalid\nCreator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36\nProducer:        Skia/PDF m152\nCreationDate:    Sat Sep 26 22:07:15 2026 UTC\nModDate:         Sat Sep 26 22:07:15 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           3\nEncrypted:       no\nPage    1 size:  612 x 791.04 pts (letter)\nPage    1 rot:   0\nPage    2 size:  612 x 791.04 pts (letter)\nPage    2 rot:   0\nPage    3 size:  612 x 791.04 pts (letter)\nPage    3 rot:   0\nFile size:       1080359 bytes\nOptimized:       no\nPDF version:     1.4\n",
+      "inkBounds": [
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-1-149-1.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-1-149-2.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-1-149-3.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        }
+      ],
+      "pdfPath": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-1-149.pdf"
+    },
+    {
+      "name": "before-4",
+      "counts": [
+        4
+      ],
+      "cap": 22,
+      "geometry": [
+        {
+          "kind": "global",
+          "page": {
+            "x": 0,
+            "y": 0,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 1052.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 19.828125,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 1032.765625
+          },
+          "table": null,
+          "header": null,
+          "rows": [],
+          "font": null,
+          "interLoaded": true,
+          "signatures": 1
+        }
+      ],
+      "pageCount": 1,
+      "nativeSizes": "Title:           entrada-fixture.invalid\nCreator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36\nProducer:        Skia/PDF m152\nCreationDate:    Sat Sep 26 22:07:17 2026 UTC\nModDate:         Sat Sep 26 22:07:17 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           1\nEncrypted:       no\nPage    1 size:  612 x 791.04 pts (letter)\nPage    1 rot:   0\nFile size:       993215 bytes\nOptimized:       no\nPDF version:     1.4\n",
+      "inkBounds": [
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-4-1.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        }
+      ],
+      "pdfPath": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/before-4.pdf"
+    },
+    {
+      "name": "after-88",
+      "counts": [
+        88
+      ],
+      "cap": 38,
+      "geometry": [
+        {
+          "kind": "global",
+          "page": {
+            "x": 0,
+            "y": 0,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 1052.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 19.828125,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 1032.765625
+          },
+          "table": null,
+          "header": null,
+          "rows": [],
+          "font": null,
+          "interLoaded": true,
+          "signatures": 1
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 1052.59375,
+            "width": 816,
+            "height": 1056,
+            "bottom": 2108.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 1072.421875,
+            "width": 776.34375,
+            "height": 1016.34375,
+            "bottom": 2088.765625
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 1121.421875,
+            "width": 710.34375,
+            "height": 559,
+            "bottom": 1680.421875
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 1121.921875,
+            "width": 709.34375,
+            "height": 30,
+            "bottom": 1151.921875
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 1151.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1175.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1175.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1199.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1199.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1223.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1223.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1247.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1247.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1271.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1271.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1295.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1295.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1319.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1319.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1343.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1343.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1367.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1367.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1391.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1391.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1415.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1415.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1439.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1439.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1463.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1463.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1487.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1487.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1511.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1511.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1535.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1535.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1559.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1559.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1583.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1583.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1607.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1607.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1631.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1631.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1655.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1655.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1679.921875
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        }
+      ],
+      "pageCount": 2,
+      "nativeSizes": "Title:           entrada-fixture.invalid\nCreator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36\nProducer:        Skia/PDF m152\nCreationDate:    Sat Sep 26 22:07:19 2026 UTC\nModDate:         Sat Sep 26 22:07:19 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           2\nEncrypted:       no\nPage    1 size:  612 x 791.04 pts (letter)\nPage    1 rot:   0\nPage    2 size:  612 x 792 pts (letter)\nPage    2 rot:   0\nFile size:       1039585 bytes\nOptimized:       no\nPDF version:     1.4\n",
+      "inkBounds": [
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-88-1.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-88-2.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.291666666666657,
+            "bottom": 5.291666666666686
+          }
+        }
+      ],
+      "pdfPath": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-88.pdf"
+    },
+    {
+      "name": "after-89",
+      "counts": [
+        89
+      ],
+      "cap": 38,
+      "geometry": [
+        {
+          "kind": "global",
+          "page": {
+            "x": 0,
+            "y": 0,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 1052.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 19.828125,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 1032.765625
+          },
+          "table": null,
+          "header": null,
+          "rows": [],
+          "font": null,
+          "interLoaded": true,
+          "signatures": 1
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 1052.59375,
+            "width": 816,
+            "height": 1056,
+            "bottom": 2108.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 1072.421875,
+            "width": 776.34375,
+            "height": 1016.34375,
+            "bottom": 2088.765625
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 1121.421875,
+            "width": 710.34375,
+            "height": 583,
+            "bottom": 1704.421875
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 1121.921875,
+            "width": 709.34375,
+            "height": 30,
+            "bottom": 1151.921875
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 1151.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1175.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1175.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1199.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1199.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1223.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1223.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1247.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1247.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1271.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1271.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1295.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1295.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1319.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1319.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1343.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1343.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1367.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1367.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1391.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1391.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1415.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1415.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1439.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1439.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1463.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1463.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1487.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1487.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1511.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1511.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1535.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1535.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1559.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1559.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1583.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1583.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1607.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1607.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1631.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1631.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1655.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1655.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1679.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1679.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1703.921875
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        }
+      ],
+      "pageCount": 2,
+      "nativeSizes": "Title:           entrada-fixture.invalid\nCreator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36\nProducer:        Skia/PDF m152\nCreationDate:    Sat Sep 26 22:07:21 2026 UTC\nModDate:         Sat Sep 26 22:07:21 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           2\nEncrypted:       no\nPage    1 size:  612 x 791.04 pts (letter)\nPage    1 rot:   0\nPage    2 size:  612 x 792 pts (letter)\nPage    2 rot:   0\nFile size:       1040782 bytes\nOptimized:       no\nPDF version:     1.4\n",
+      "inkBounds": [
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-89-1.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-89-2.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.291666666666657,
+            "bottom": 5.291666666666686
+          }
+        }
+      ],
+      "pdfPath": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-89.pdf"
+    },
+    {
+      "name": "after-152",
+      "counts": [
+        152
+      ],
+      "cap": 38,
+      "geometry": [
+        {
+          "kind": "global",
+          "page": {
+            "x": 0,
+            "y": 0,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 1052.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 19.828125,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 1032.765625
+          },
+          "table": null,
+          "header": null,
+          "rows": [],
+          "font": null,
+          "interLoaded": true,
+          "signatures": 1
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 1052.59375,
+            "width": 816,
+            "height": 1056,
+            "bottom": 2108.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 1072.421875,
+            "width": 776.34375,
+            "height": 1016.34375,
+            "bottom": 2088.765625
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 1121.421875,
+            "width": 710.34375,
+            "height": 943,
+            "bottom": 2064.421875
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 1121.921875,
+            "width": 709.34375,
+            "height": 30,
+            "bottom": 1151.921875
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 1151.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1175.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1175.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1199.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1199.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1223.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1223.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1247.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1247.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1271.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1271.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1295.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1295.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1319.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1319.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1343.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1343.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1367.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1367.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1391.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1391.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1415.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1415.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1439.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1439.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1463.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1463.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1487.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1487.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1511.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1511.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1535.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1535.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1559.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1559.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1583.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1583.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1607.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1607.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1631.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1631.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1655.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1655.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1679.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1679.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1703.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1703.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1727.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1727.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1751.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1751.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1775.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1775.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1799.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1799.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1823.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1823.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1847.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1847.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1871.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1871.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1895.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1895.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1919.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1919.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1943.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1943.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1967.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1967.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1991.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1991.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2015.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 2015.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2039.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 2039.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2063.921875
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        }
+      ],
+      "pageCount": 2,
+      "nativeSizes": "Title:           entrada-fixture.invalid\nCreator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36\nProducer:        Skia/PDF m152\nCreationDate:    Sat Sep 26 22:07:23 2026 UTC\nModDate:         Sat Sep 26 22:07:23 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           2\nEncrypted:       no\nPage    1 size:  612 x 791.04 pts (letter)\nPage    1 rot:   0\nPage    2 size:  612 x 792 pts (letter)\nPage    2 rot:   0\nFile size:       1071734 bytes\nOptimized:       no\nPDF version:     1.4\n",
+      "inkBounds": [
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-152-1.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-152-2.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.291666666666657,
+            "bottom": 5.291666666666686
+          }
+        }
+      ],
+      "pdfPath": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-152.pdf"
+    },
+    {
+      "name": "after-153",
+      "counts": [
+        153
+      ],
+      "cap": 38,
+      "geometry": [
+        {
+          "kind": "global",
+          "page": {
+            "x": 0,
+            "y": 0,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 1052.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 19.828125,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 1032.765625
+          },
+          "table": null,
+          "header": null,
+          "rows": [],
+          "font": null,
+          "interLoaded": true,
+          "signatures": 1
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 1052.59375,
+            "width": 816,
+            "height": 1056,
+            "bottom": 2108.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 1072.421875,
+            "width": 776.34375,
+            "height": 1016.34375,
+            "bottom": 2088.765625
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 1121.421875,
+            "width": 710.34375,
+            "height": 943,
+            "bottom": 2064.421875
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 1121.921875,
+            "width": 709.34375,
+            "height": 30,
+            "bottom": 1151.921875
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 1151.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1175.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1175.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1199.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1199.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1223.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1223.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1247.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1247.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1271.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1271.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1295.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1295.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1319.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1319.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1343.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1343.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1367.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1367.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1391.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1391.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1415.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1415.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1439.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1439.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1463.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1463.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1487.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1487.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1511.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1511.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1535.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1535.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1559.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1559.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1583.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1583.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1607.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1607.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1631.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1631.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1655.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1655.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1679.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1679.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1703.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1703.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1727.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1727.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1751.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1751.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1775.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1775.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1799.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1799.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1823.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1823.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1847.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1847.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1871.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1871.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1895.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1895.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1919.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1919.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1943.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1943.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1967.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1967.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1991.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1991.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2015.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 2015.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2039.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 2039.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2063.921875
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 2108.59375,
+            "width": 816,
+            "height": 1056,
+            "bottom": 3164.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 2128.421875,
+            "width": 776.34375,
+            "height": 1016.34375,
+            "bottom": 3144.765625
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 2177.421875,
+            "width": 710.34375,
+            "height": 54,
+            "bottom": 2231.421875
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 2177.921875,
+            "width": 709.34375,
+            "height": 29,
+            "bottom": 2206.921875
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 2206.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2230.921875
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        }
+      ],
+      "pageCount": 3,
+      "nativeSizes": "Title:           entrada-fixture.invalid\nCreator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36\nProducer:        Skia/PDF m152\nCreationDate:    Sat Sep 26 22:07:25 2026 UTC\nModDate:         Sat Sep 26 22:07:25 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           3\nEncrypted:       no\nPage    1 size:  612 x 791.04 pts (letter)\nPage    1 rot:   0\nPage    2 size:  612 x 792 pts (letter)\nPage    2 rot:   0\nPage    3 size:  612 x 792 pts (letter)\nPage    3 rot:   0\nFile size:       1078536 bytes\nOptimized:       no\nPDF version:     1.4\n",
+      "inkBounds": [
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-153-1.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-153-2.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.291666666666657,
+            "bottom": 5.291666666666686
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-153-3.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.291666666666657,
+            "bottom": 5.291666666666686
+          }
+        }
+      ],
+      "pdfPath": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-153.pdf"
+    },
+    {
+      "name": "after-1-148",
+      "counts": [
+        1,
+        148
+      ],
+      "cap": 38,
+      "geometry": [
+        {
+          "kind": "global",
+          "page": {
+            "x": 0,
+            "y": 0,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 1052.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 19.828125,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 1032.765625
+          },
+          "table": null,
+          "header": null,
+          "rows": [],
+          "font": null,
+          "interLoaded": true,
+          "signatures": 1
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 1052.59375,
+            "width": 816,
+            "height": 1056,
+            "bottom": 2108.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 1072.421875,
+            "width": 776.34375,
+            "height": 1016.34375,
+            "bottom": 2088.765625
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 1121.421875,
+            "width": 710.34375,
+            "height": 943,
+            "bottom": 2064.421875
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 1121.921875,
+            "width": 709.34375,
+            "height": 30,
+            "bottom": 1151.921875
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 1151.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1175.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1175.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1199.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1199.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1223.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1223.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1247.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1247.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1271.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1271.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1295.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1295.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1319.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1319.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1343.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1343.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1367.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1367.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1391.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1391.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1415.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1415.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1439.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1439.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1463.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1463.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1487.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1487.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1511.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1511.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1535.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1535.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1559.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1559.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1583.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1583.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1607.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1607.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1631.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1631.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1655.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1655.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1679.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1679.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1703.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1703.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1727.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1727.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1751.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1751.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1775.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1775.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1799.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1799.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1823.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1823.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1847.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1847.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1871.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1871.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1895.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1895.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1919.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1919.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1943.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1943.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1967.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1967.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1991.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1991.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2015.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 2015.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2039.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 2039.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2063.921875
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        }
+      ],
+      "pageCount": 2,
+      "nativeSizes": "Title:           entrada-fixture.invalid\nCreator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36\nProducer:        Skia/PDF m152\nCreationDate:    Sat Sep 26 22:07:27 2026 UTC\nModDate:         Sat Sep 26 22:07:27 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           2\nEncrypted:       no\nPage    1 size:  612 x 791.04 pts (letter)\nPage    1 rot:   0\nPage    2 size:  612 x 792 pts (letter)\nPage    2 rot:   0\nFile size:       1073686 bytes\nOptimized:       no\nPDF version:     1.4\n",
+      "inkBounds": [
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-1-148-1.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-1-148-2.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.291666666666657,
+            "bottom": 5.291666666666686
+          }
+        }
+      ],
+      "pdfPath": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-1-148.pdf"
+    },
+    {
+      "name": "after-1-149",
+      "counts": [
+        1,
+        149
+      ],
+      "cap": 38,
+      "geometry": [
+        {
+          "kind": "global",
+          "page": {
+            "x": 0,
+            "y": 0,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 1052.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 19.828125,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 1032.765625
+          },
+          "table": null,
+          "header": null,
+          "rows": [],
+          "font": null,
+          "interLoaded": true,
+          "signatures": 1
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 1052.59375,
+            "width": 816,
+            "height": 1056,
+            "bottom": 2108.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 1072.421875,
+            "width": 776.34375,
+            "height": 1016.34375,
+            "bottom": 2088.765625
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 1121.421875,
+            "width": 710.34375,
+            "height": 943,
+            "bottom": 2064.421875
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 1121.921875,
+            "width": 709.34375,
+            "height": 30,
+            "bottom": 1151.921875
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 1151.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1175.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1175.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1199.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1199.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1223.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1223.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1247.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1247.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1271.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1271.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1295.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1295.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1319.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1319.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1343.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1343.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1367.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1367.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1391.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1391.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1415.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1415.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1439.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1439.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1463.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1463.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1487.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1487.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1511.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1511.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1535.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1535.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1559.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1559.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1583.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1583.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1607.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1607.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1631.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1631.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1655.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1655.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1679.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1679.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1703.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1703.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1727.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1727.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1751.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1751.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1775.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1775.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1799.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1799.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1823.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1823.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1847.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1847.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1871.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1871.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1895.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1895.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1919.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1919.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1943.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1943.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1967.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1967.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1991.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1991.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2015.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 2015.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2039.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 2039.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2063.921875
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 2108.59375,
+            "width": 816,
+            "height": 1056,
+            "bottom": 3164.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 2128.421875,
+            "width": 776.34375,
+            "height": 1016.34375,
+            "bottom": 3144.765625
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 2177.421875,
+            "width": 710.34375,
+            "height": 54,
+            "bottom": 2231.421875
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 2177.921875,
+            "width": 709.34375,
+            "height": 29,
+            "bottom": 2206.921875
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 2206.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2230.921875
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        }
+      ],
+      "pageCount": 3,
+      "nativeSizes": "Title:           entrada-fixture.invalid\nCreator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36\nProducer:        Skia/PDF m152\nCreationDate:    Sat Sep 26 22:07:29 2026 UTC\nModDate:         Sat Sep 26 22:07:29 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           3\nEncrypted:       no\nPage    1 size:  612 x 791.04 pts (letter)\nPage    1 rot:   0\nPage    2 size:  612 x 792 pts (letter)\nPage    2 rot:   0\nPage    3 size:  612 x 792 pts (letter)\nPage    3 rot:   0\nFile size:       1080167 bytes\nOptimized:       no\nPDF version:     1.4\n",
+      "inkBounds": [
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-1-149-1.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-1-149-2.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.291666666666657,
+            "bottom": 5.291666666666686
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-1-149-3.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.291666666666657,
+            "bottom": 5.291666666666686
+          }
+        }
+      ],
+      "pdfPath": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-1-149.pdf"
+    },
+    {
+      "name": "after-4",
+      "counts": [
+        4
+      ],
+      "cap": 38,
+      "geometry": [
+        {
+          "kind": "global",
+          "page": {
+            "x": 0,
+            "y": 0,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 1052.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 19.828125,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 1032.765625
+          },
+          "table": null,
+          "header": null,
+          "rows": [],
+          "font": null,
+          "interLoaded": true,
+          "signatures": 1
+        }
+      ],
+      "pageCount": 1,
+      "nativeSizes": "Title:           entrada-fixture.invalid\nCreator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36\nProducer:        Skia/PDF m152\nCreationDate:    Sat Sep 26 22:07:31 2026 UTC\nModDate:         Sat Sep 26 22:07:31 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           1\nEncrypted:       no\nPage    1 size:  612 x 791.04 pts (letter)\nPage    1 rot:   0\nFile size:       993215 bytes\nOptimized:       no\nPDF version:     1.4\n",
+      "inkBounds": [
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-4-1.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        }
+      ],
+      "pdfPath": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/after-4.pdf"
+    },
+    {
+      "name": "probe39-156",
+      "counts": [
+        156
+      ],
+      "cap": 39,
+      "geometry": [
+        {
+          "kind": "global",
+          "page": {
+            "x": 0,
+            "y": 0,
+            "width": 814.484375,
+            "height": 1052.59375,
+            "bottom": 1052.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 19.828125,
+            "width": 774.828125,
+            "height": 1012.9375,
+            "bottom": 1032.765625
+          },
+          "table": null,
+          "header": null,
+          "rows": [],
+          "font": null,
+          "interLoaded": true,
+          "signatures": 1
+        },
+        {
+          "kind": "series",
+          "page": {
+            "x": 0,
+            "y": 1052.59375,
+            "width": 816,
+            "height": 1056,
+            "bottom": 2108.59375
+          },
+          "frame": {
+            "x": 19.828125,
+            "y": 1072.421875,
+            "width": 776.34375,
+            "height": 1016.34375,
+            "bottom": 2088.765625
+          },
+          "table": {
+            "x": 52.828125,
+            "y": 1121.421875,
+            "width": 710.34375,
+            "height": 967,
+            "bottom": 2088.421875
+          },
+          "header": {
+            "x": 53.328125,
+            "y": 1121.921875,
+            "width": 709.34375,
+            "height": 30,
+            "bottom": 1151.921875
+          },
+          "rows": [
+            {
+              "x": 53.328125,
+              "y": 1151.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1175.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1175.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1199.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1199.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1223.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1223.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1247.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1247.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1271.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1271.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1295.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1295.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1319.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1319.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1343.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1343.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1367.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1367.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1391.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1391.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1415.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1415.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1439.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1439.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1463.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1463.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1487.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1487.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1511.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1511.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1535.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1535.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1559.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1559.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1583.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1583.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1607.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1607.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1631.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1631.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1655.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1655.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1679.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1679.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1703.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1703.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1727.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1727.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1751.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1751.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1775.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1775.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1799.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1799.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1823.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1823.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1847.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1847.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1871.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1871.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1895.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1895.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1919.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1919.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1943.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1943.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1967.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1967.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 1991.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 1991.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2015.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 2015.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2039.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 2039.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2063.921875
+            },
+            {
+              "x": 53.328125,
+              "y": 2063.921875,
+              "width": 709.34375,
+              "height": 24,
+              "bottom": 2087.921875
+            }
+          ],
+          "font": {
+            "size": "11px",
+            "family": "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+          },
+          "interLoaded": true,
+          "signatures": 0
+        }
+      ],
+      "pageCount": 2,
+      "nativeSizes": "Title:           entrada-fixture.invalid\nCreator:         Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36\nProducer:        Skia/PDF m152\nCreationDate:    Sat Sep 26 22:07:33 2026 UTC\nModDate:         Sat Sep 26 22:07:33 2026 UTC\nCustom Metadata: no\nMetadata Stream: no\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            none\nJavaScript:      no\nPages:           2\nEncrypted:       no\nPage    1 size:  612 x 791.04 pts (letter)\nPage    1 rot:   0\nPage    2 size:  612 x 792 pts (letter)\nPage    2 rot:   0\nFile size:       1073870 bytes\nOptimized:       no\nPDF version:     1.4\n",
+      "inkBounds": [
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/probe39-156-1.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.556249999999977,
+            "bottom": 5.74675000000002
+          }
+        },
+        {
+          "image": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/probe39-156-2.png",
+          "clearanceMm": {
+            "left": 5.291666666666667,
+            "top": 5.291666666666667,
+            "right": 5.291666666666657,
+            "bottom": 5.291666666666686
+          }
+        }
+      ],
+      "pdfPath": "/home/runner/workspace/reports/floor-level-and-letter-20260926/print/probe39-156.pdf"
+    }
+  ]
+}

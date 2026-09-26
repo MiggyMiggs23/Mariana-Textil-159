@@ -1679,7 +1679,8 @@ inventarioRouter.patch(
         const scopeError = checkOperationalScope(req.auth!, [rollo.ubicacionId]);
         if (scopeError) throw new InventarioError(scopeError, "SCOPE_DENIED");
         const active = await tx.select({ id: pisosTable.id, nombre: pisosTable.nombre }).from(pisosTable)
-          .where(and(eq(pisosTable.ubicacionId, rollo.ubicacionId), eq(pisosTable.activo, true)));
+          .where(and(eq(pisosTable.ubicacionId, rollo.ubicacionId), eq(pisosTable.activo, true)))
+          .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
         const floor = body.pisoId == null ? null : active.find((item) => item.id === body.pisoId);
         if ((active.length && !floor) || (!active.length && body.pisoId != null)) {
           throw new InventarioError("El piso debe ser activo y pertenecer a la ubicación actual.", "INVALID_FLOOR");

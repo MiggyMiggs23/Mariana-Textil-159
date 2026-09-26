@@ -4419,6 +4419,11 @@ export interface Piso {
   id: number;
   ubicacionId: number;
   nombre: string;
+  /**
+     * Orden físico ascendente configurado explícitamente; null indica configuración pendiente.
+     * @nullable
+     */
+  nivel: number | null;
   activo: boolean;
   createdAt: string;
   updatedAt: string;
@@ -4430,6 +4435,11 @@ export interface PisoInput {
      * @maxLength 120
      */
   nombre: string;
+  /**
+     * @minimum -2147483648
+     * @maximum 2147483647
+     */
+  nivel: number;
   activo?: boolean;
 }
 
@@ -4439,6 +4449,11 @@ export interface PisoUpdate {
      * @maxLength 120
      */
   nombre?: string;
+  /**
+     * @minimum -2147483648
+     * @maximum 2147483647
+     */
+  nivel?: number;
   activo?: boolean;
 }
 
@@ -7634,6 +7649,8 @@ export interface SalidaRollo {
 export type SalidaDetailPisosRetornoItem = {
   id: number;
   nombre: string;
+  /** @nullable */
+  nivel: number | null;
 };
 
 export type SalidaDetail = SalidaResumen & ({
@@ -9654,6 +9671,8 @@ export type AuditoriaInventarioDetail = AuditoriaInventarioResumen & ({
 export interface AuditoriaInventarioPiso {
   id: number;
   nombre: string;
+  /** @nullable */
+  nivel: number | null;
   ubicacionId: number;
   activo: boolean;
 }

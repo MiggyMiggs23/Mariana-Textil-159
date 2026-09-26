@@ -5674,6 +5674,7 @@ export const ListPisosLocationResponseItem = zod.object({
   "id": zod.number(),
   "ubicacionId": zod.number(),
   "nombre": zod.string(),
+  "nivel": zod.number().int().nullable().describe('Orden físico ascendente configurado explícitamente; null indica configuración pendiente.'),
   "activo": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -5690,10 +5691,14 @@ export const CreatePisoLocationParams = zod.object({
 
 export const createPisoLocationBodyNombreMax = 120;
 
+export const createPisoLocationBodyNivelMin = -2147483648;
+export const createPisoLocationBodyNivelMax = 2147483647;
+
 export const createPisoLocationBodyActivoDefault = true;
 
 export const CreatePisoLocationBody = zod.object({
   "nombre": zod.string().min(1).max(createPisoLocationBodyNombreMax),
+  "nivel": zod.number().int().min(createPisoLocationBodyNivelMin).max(createPisoLocationBodyNivelMax),
   "activo": zod.boolean().default(createPisoLocationBodyActivoDefault)
 })
 
@@ -5701,6 +5706,7 @@ export const CreatePisoLocationResponse = zod.object({
   "id": zod.number(),
   "ubicacionId": zod.number(),
   "nombre": zod.string(),
+  "nivel": zod.number().int().nullable().describe('Orden físico ascendente configurado explícitamente; null indica configuración pendiente.'),
   "activo": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -5720,10 +5726,14 @@ export const UpdatePisoLocationParams = zod.object({
 
 export const updatePisoLocationBodyNombreMax = 120;
 
+export const updatePisoLocationBodyNivelMin = -2147483648;
+export const updatePisoLocationBodyNivelMax = 2147483647;
+
 
 
 export const UpdatePisoLocationBody = zod.object({
   "nombre": zod.string().min(1).max(updatePisoLocationBodyNombreMax).optional(),
+  "nivel": zod.number().int().min(updatePisoLocationBodyNivelMin).max(updatePisoLocationBodyNivelMax).optional(),
   "activo": zod.boolean().optional()
 })
 
@@ -5731,6 +5741,7 @@ export const UpdatePisoLocationResponse = zod.object({
   "id": zod.number(),
   "ubicacionId": zod.number(),
   "nombre": zod.string(),
+  "nivel": zod.number().int().nullable().describe('Orden físico ascendente configurado explícitamente; null indica configuración pendiente.'),
   "activo": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -8472,6 +8483,7 @@ export const ListPisosAuditoriaInventarioParams = zod.object({
 export const ListPisosAuditoriaInventarioResponseItem = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
+  "nivel": zod.number().int().nullable(),
   "ubicacionId": zod.number(),
   "activo": zod.boolean()
 })
@@ -8491,7 +8503,7 @@ export const ParticiparAuditoriaInventarioResponse = zod.object({
 
 
 /**
- * Exige piso activo del sitio. Sin pisos activos devuelve 400 FLOOR_CONFIGURATION_REQUIRED; piso ausente o inválido devuelve 400 INVALID_FLOOR. Computadora (heurística User-Agent del servidor, no autorización) solo admite el primer piso activo ordenado por nombre ASC, de lo contrario 400 DESKTOP_ACCESS_FLOOR_REQUIRED. Móvil admite cualquier piso válido. Sexto usuario activo devuelve 409 AUDIT_PARTICIPANT_LIMIT. Un duplicado conserva autor, hora y piso del primer escaneo; nunca sustituye su atribución.
+ * Exige piso activo del sitio. Sin pisos activos devuelve 400 FLOOR_CONFIGURATION_REQUIRED; piso ausente o inválido devuelve 400 INVALID_FLOOR. Computadora (heurística User-Agent del servidor, no autorización) solo admite el piso activo de menor nivel numérico, con id ASC como desempate. Si algún piso activo tiene nivel sin configurar, computadora devuelve 400 FLOOR_CONFIGURATION_REQUIRED; de lo contrario 400 DESKTOP_ACCESS_FLOOR_REQUIRED. Móvil admite cualquier piso válido. Sexto usuario activo devuelve 409 AUDIT_PARTICIPANT_LIMIT. Un duplicado conserva autor, hora y piso del primer escaneo; nunca sustituye su atribución.
  * @summary Registra una serie por presencia de forma idempotente
  */
 
@@ -13914,7 +13926,8 @@ export const GetBorradorSalidaResponse = zod.object({
   "motivoCancelacion": zod.string().nullable(),
   "pisosRetorno": zod.array(zod.object({
   "id": zod.number(),
-  "nombre": zod.string()
+  "nombre": zod.string(),
+  "nivel": zod.number().int().nullable()
 })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
@@ -14034,7 +14047,8 @@ export const AgregarRolloBorradorSalidaResponse = zod.object({
   "motivoCancelacion": zod.string().nullable(),
   "pisosRetorno": zod.array(zod.object({
   "id": zod.number(),
-  "nombre": zod.string()
+  "nombre": zod.string(),
+  "nivel": zod.number().int().nullable()
 })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
@@ -14157,7 +14171,8 @@ export const CrearSalidaMostradorResponse = zod.object({
   "motivoCancelacion": zod.string().nullable(),
   "pisosRetorno": zod.array(zod.object({
   "id": zod.number(),
-  "nombre": zod.string()
+  "nombre": zod.string(),
+  "nivel": zod.number().int().nullable()
 })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
@@ -14283,7 +14298,8 @@ export const CrearEnviarSalidaVentaClienteResponse = zod.object({
   "motivoCancelacion": zod.string().nullable(),
   "pisosRetorno": zod.array(zod.object({
   "id": zod.number(),
-  "nombre": zod.string()
+  "nombre": zod.string(),
+  "nivel": zod.number().int().nullable()
 })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
@@ -14686,7 +14702,8 @@ export const GetSalidaRecepcionResponse = zod.object({
   "motivoCancelacion": zod.string().nullable(),
   "pisosRetorno": zod.array(zod.object({
   "id": zod.number(),
-  "nombre": zod.string()
+  "nombre": zod.string(),
+  "nivel": zod.number().int().nullable()
 })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
@@ -14798,7 +14815,8 @@ export const GetSalidaResponse = zod.object({
   "motivoCancelacion": zod.string().nullable(),
   "pisosRetorno": zod.array(zod.object({
   "id": zod.number(),
-  "nombre": zod.string()
+  "nombre": zod.string(),
+  "nivel": zod.number().int().nullable()
 })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
@@ -14910,7 +14928,8 @@ export const GetDocumentoSalidaResponse = zod.object({
   "motivoCancelacion": zod.string().nullable(),
   "pisosRetorno": zod.array(zod.object({
   "id": zod.number(),
-  "nombre": zod.string()
+  "nombre": zod.string(),
+  "nivel": zod.number().int().nullable()
 })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
@@ -15023,7 +15042,8 @@ export const QuitarRolloBorradorSalidaResponse = zod.object({
   "motivoCancelacion": zod.string().nullable(),
   "pisosRetorno": zod.array(zod.object({
   "id": zod.number(),
-  "nombre": zod.string()
+  "nombre": zod.string(),
+  "nivel": zod.number().int().nullable()
 })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
@@ -15160,7 +15180,8 @@ export const CancelarSalidaResponse = zod.object({
   "motivoCancelacion": zod.string().nullable(),
   "pisosRetorno": zod.array(zod.object({
   "id": zod.number(),
-  "nombre": zod.string()
+  "nombre": zod.string(),
+  "nivel": zod.number().int().nullable()
 })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
@@ -15280,7 +15301,8 @@ export const EnviarSalidaResponse = zod.object({
   "motivoCancelacion": zod.string().nullable(),
   "pisosRetorno": zod.array(zod.object({
   "id": zod.number(),
-  "nombre": zod.string()
+  "nombre": zod.string(),
+  "nivel": zod.number().int().nullable()
 })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
@@ -15406,7 +15428,8 @@ export const RecibirSalidaResponse = zod.object({
   "motivoCancelacion": zod.string().nullable(),
   "pisosRetorno": zod.array(zod.object({
   "id": zod.number(),
-  "nombre": zod.string()
+  "nombre": zod.string(),
+  "nivel": zod.number().int().nullable()
 })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
@@ -15530,7 +15553,8 @@ export const EntregarSalidaVentaClienteResponse = zod.object({
   "motivoCancelacion": zod.string().nullable(),
   "pisosRetorno": zod.array(zod.object({
   "id": zod.number(),
-  "nombre": zod.string()
+  "nombre": zod.string(),
+  "nivel": zod.number().int().nullable()
 })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),

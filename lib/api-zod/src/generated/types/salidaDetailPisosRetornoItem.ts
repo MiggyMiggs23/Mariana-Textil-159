@@ -9,4 +9,6 @@
 export type SalidaDetailPisosRetornoItem = {
   id: number;
   nombre: string;
+  /** @nullable */
+  nivel: number | null;
 };

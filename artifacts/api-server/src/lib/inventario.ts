@@ -22,7 +22,7 @@
 import { createHash } from "node:crypto";
 import { entradaFloorLabel, type EntradaFloorSnapshot } from "./entrada-floor-evidence";
 import { getReactivacionContexto } from "./reactivacion-faltante-evidencia";
-import { and, eq, sql, desc, count, gt, gte, inArray, lte } from "drizzle-orm";
+import { and, asc, eq, sql, desc, count, gt, gte, inArray, lte } from "drizzle-orm";
 import {
   auditoriaTable,
   contenedoresTable,
@@ -861,7 +861,8 @@ export async function crearEntrada(
     }
   }
   const pisosActivos = await tx.select({ id: pisosTable.id, nombre: pisosTable.nombre }).from(pisosTable)
-    .where(and(eq(pisosTable.ubicacionId, input.ubicacionId), eq(pisosTable.activo, true)));
+    .where(and(eq(pisosTable.ubicacionId, input.ubicacionId), eq(pisosTable.activo, true)))
+    .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
   const pisoIds = new Set(pisosActivos.map((p) => p.id));
   for (const linea of input.lineas) {
     if (linea.pisosPorCantidad && linea.pisosPorCantidad.length !== linea.cantidades.length) {
@@ -1559,7 +1560,8 @@ export async function transferirRolloInmediato(
     throw new InventarioError("El rollo no está DISPONIBLE.", "ROLLO_UNAVAILABLE");
   }
   const pisosDestino = await tx.select({ id: pisosTable.id }).from(pisosTable)
-    .where(and(eq(pisosTable.ubicacionId, input.ubicacionDestinoId), eq(pisosTable.activo, true)));
+    .where(and(eq(pisosTable.ubicacionId, input.ubicacionDestinoId), eq(pisosTable.activo, true)))
+    .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
   if (pisosDestino.length && (input.pisoDestinoId == null || !pisosDestino.some((p) => p.id === input.pisoDestinoId))) {
     throw new InventarioError("El piso destino es obligatorio, activo y debe pertenecer al sitio.", "INVALID_FLOOR");
   }
@@ -1765,7 +1767,8 @@ export async function recibirTransferencia(
 
   const transitoId = rollo.ubicacionId;
   const pisosDestino = await tx.select({ id: pisosTable.id }).from(pisosTable)
-    .where(and(eq(pisosTable.ubicacionId, input.ubicacionDestinoId), eq(pisosTable.activo, true)));
+    .where(and(eq(pisosTable.ubicacionId, input.ubicacionDestinoId), eq(pisosTable.activo, true)))
+    .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
   if (pisosDestino.length && (input.pisoDestinoId == null || !pisosDestino.some((p) => p.id === input.pisoDestinoId))) {
     throw new InventarioError("El piso destino es obligatorio, activo y debe pertenecer al sitio.", "INVALID_FLOOR");
   }
@@ -2709,7 +2712,8 @@ export async function reactivarFaltanteAuditoria(tx: Tx, input: {
   if (commitments.rows.length) throw new InventarioError("El rollo tiene una salida comprometida; resuelve primero el documento.", "ROLLO_RESERVED");
   const [site] = await tx.select().from(ubicacionesTable).where(and(eq(ubicacionesTable.id, input.ubicacionId), eq(ubicacionesTable.activa, true))).limit(1);
   if (!site || !["TIENDA", "BODEGA"].includes(site.tipo)) throw new InventarioError("Selecciona un sitio operativo activo.", "INVALID_LOCATION");
-  const floors = await tx.select().from(pisosTable).where(and(eq(pisosTable.ubicacionId, input.ubicacionId), eq(pisosTable.activo, true)));
+  const floors = await tx.select().from(pisosTable).where(and(eq(pisosTable.ubicacionId, input.ubicacionId), eq(pisosTable.activo, true)))
+    .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
   if (floors.length ? !floors.some((p) => p.id === input.pisoId) : input.pisoId != null) throw new InventarioError("El piso debe estar activo y pertenecer al sitio donde apareció.", "INVALID_FLOOR");
   await tx.update(rollosTable).set({
     estado: "DISPONIBLE", cantidadActual: evidence.cantidadAnterior,

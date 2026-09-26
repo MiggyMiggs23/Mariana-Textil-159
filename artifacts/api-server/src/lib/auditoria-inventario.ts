@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { lowestActiveFloor } from "../../../../lib/floor-order.mjs";
 import { and, asc, eq, inArray, sql } from "drizzle-orm";
 import {
   auditoriaInventarioEscaneosTable,
@@ -231,12 +232,19 @@ export async function scanAuditoria(
   if (header.estado !== "ABIERTA") {
     throw new AuditoriaInventarioError("El conteo está cerrado y no admite escaneos.", "NOT_OPEN");
   }
-  const activeFloors = await tx.select({ id: pisosTable.id, nombre: pisosTable.nombre }).from(pisosTable)
+  const activeFloors = await tx.select({ id: pisosTable.id, nombre: pisosTable.nombre, nivel: pisosTable.nivel }).from(pisosTable)
     .where(and(eq(pisosTable.ubicacionId, header.ubicacionId), eq(pisosTable.activo, true)))
-    .orderBy(asc(pisosTable.nombre));
+    .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
   if (!activeFloors.length) {
     throw new AuditoriaInventarioError(
       "Configura al menos un piso activo del sitio antes de escanear.",
+      "FLOOR_CONFIGURATION_REQUIRED",
+    );
+  }
+  const accessFloor = lowestActiveFloor(activeFloors);
+  if ((input.desktop ?? true) && !accessFloor) {
+    throw new AuditoriaInventarioError(
+      "Configura el nivel numérico de todos los pisos activos del sitio antes de escanear en computadora.",
       "FLOOR_CONFIGURATION_REQUIRED",
     );
   }
@@ -244,9 +252,9 @@ export async function scanAuditoria(
   if (!realFloor) {
     throw new AuditoriaInventarioError("El piso real debe ser activo y pertenecer al sitio auditado.", "INVALID_FLOOR");
   }
-  if ((input.desktop ?? true) && realFloor.id !== activeFloors[0]!.id) {
+  if ((input.desktop ?? true) && realFloor.id !== accessFloor!.id) {
     throw new AuditoriaInventarioError(
-      `La computadora solo puede escanear en el piso de acceso: ${activeFloors[0]!.nombre}.`,
+      `La computadora solo puede escanear en el piso de acceso: ${accessFloor!.nombre}.`,
       "DESKTOP_ACCESS_FLOOR_REQUIRED",
     );
   }

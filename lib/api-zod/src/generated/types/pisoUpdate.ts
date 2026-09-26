@@ -12,5 +12,10 @@ export interface PisoUpdate {
      * @maxLength 120
      */
   nombre?: string;
+  /**
+     * @minimum -2147483648
+     * @maximum 2147483647
+     */
+  nivel?: number;
   activo?: boolean;
 }

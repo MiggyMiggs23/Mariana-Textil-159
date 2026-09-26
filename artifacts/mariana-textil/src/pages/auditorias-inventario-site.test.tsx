@@ -54,12 +54,12 @@ const details = new Map(audits.map((audit) => [audit.id, GetAuditoriaInventarioR
 })]));
 const configuredFloors = new Map([
   [1, [
-    { id: 11, ubicacionId: 1, nombre: "Primer piso", activo: true },
-    { id: 12, ubicacionId: 1, nombre: "Segundo piso", activo: true },
-    { id: 13, ubicacionId: 1, nombre: "Tercer piso", activo: true },
+    { id: 11, ubicacionId: 1, nombre: "Primer piso", nivel: 1, activo: true },
+    { id: 12, ubicacionId: 1, nombre: "Segundo piso", nivel: 2, activo: true },
+    { id: 13, ubicacionId: 1, nombre: "Tercer piso", nivel: 3, activo: true },
   ]],
-  [2, [{ id: 21, ubicacionId: 2, nombre: "Piso 3", activo: true }]],
-  [3, [{ id: 31, ubicacionId: 3, nombre: "Piso sur", activo: true }]],
+  [2, [{ id: 21, ubicacionId: 2, nombre: "Piso 3", nivel: 3, activo: true }]],
+  [3, [{ id: 31, ubicacionId: 3, nombre: "Piso sur", nivel: 1, activo: true }]],
 ]);
 
 function setup({ url = "/inventario/auditorias?auditoriaId=41", delayed = false, joined = false, joinError = false, canCreate = true, canEdit = true, mobile = false, noFloors = false, loadingFloors = false } = {}) {

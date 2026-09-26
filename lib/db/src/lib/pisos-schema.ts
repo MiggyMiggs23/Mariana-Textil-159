@@ -1,7 +1,12 @@
 import type { Pool } from "pg";
 import { ADVISORY_LOCK_NAMESPACES, transactionAdvisoryLock } from "./advisory-locks.mjs";
 
-/** Repeatable, data-preserving installation of the optional floor catalog. */
+/**
+ * Repeatable, data-preserving installation of the optional floor catalog.
+ * nivel is deliberately additive/nullable: an independently reviewed migration
+ * must backfill verified floor IDs before a later SET NOT NULL. Never infer it
+ * from names or assign a default here. Inspection boot still skips initializers.
+ */
 export async function ensurePisosSchema(pool: Pick<Pool, "connect">): Promise<void> {
   const client = await pool.connect();
   try {
@@ -19,6 +24,7 @@ export async function ensurePisosSchema(pool: Pick<Pool, "connect">): Promise<vo
       );
       CREATE UNIQUE INDEX IF NOT EXISTS pisos_ubicacion_nombre_ci_unique
         ON pisos (ubicacion_id, lower(nombre));
+      ALTER TABLE pisos ADD COLUMN IF NOT EXISTS nivel integer;
       ALTER TABLE rollos ADD COLUMN IF NOT EXISTS piso_id integer REFERENCES pisos(id);
       CREATE INDEX IF NOT EXISTS rollos_piso_idx ON rollos(piso_id);
       ALTER TABLE auditoria_inventario_snapshot

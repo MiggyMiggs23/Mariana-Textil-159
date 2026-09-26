@@ -532,7 +532,7 @@ export async function buildSalidaDetail(
     salida.ticketId == null ? Promise.resolve(null) : database.select({ id: ticketsTable.id, folio: ticketsTable.folio, documentoTipo: ticketsTable.documentoTipo, cobrado: ticketsTable.cobrado, autorizacionEstado: ticketsTable.autorizacionEstado, autorizadoAt: ticketsTable.autorizadoAt }).from(ticketsTable).where(eq(ticketsTable.id, salida.ticketId)).limit(1).then(rows => rows[0] ?? null),
     salida.modalidad === "TRASLADO" && salida.estado === "EN_TRANSITO"
       ? database
-          .select({ id: pisosTable.id, nombre: pisosTable.nombre })
+          .select({ id: pisosTable.id, nombre: pisosTable.nombre, nivel: pisosTable.nivel })
           .from(pisosTable)
           .where(
             and(
@@ -540,7 +540,7 @@ export async function buildSalidaDetail(
               eq(pisosTable.activo, true),
             ),
           )
-          .orderBy(asc(pisosTable.id))
+          .orderBy(asc(pisosTable.nivel), asc(pisosTable.id))
       : Promise.resolve([]),
   ]);
   const [viaje] = await database.select({
@@ -1754,7 +1754,8 @@ export async function cancelarSalida(
           eq(pisosTable.ubicacionId, salida.origenId),
           eq(pisosTable.activo, true),
         ),
-      );
+      )
+      .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
     if (pisosOrigen.length && pisoRetornoId == null) {
       throw new InventarioError(
         "Selecciona el piso de retorno activo en el origen antes de cancelar el traslado.",

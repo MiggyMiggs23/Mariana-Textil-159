@@ -708,6 +708,18 @@ body.measure-thermal-ticket .tabular-strip-page {
     overflow: visible !important;
   }
 
+  /* Standalone Entrada series: Letter geometry; globals stay unchanged. */
+  @page entrada-series-page {
+    size: 215.9mm 279.4mm;
+    margin: 0;
+  }
+  .entrada-page-print[data-page-kind="series"] {
+    page: entrada-series-page;
+    width: 215.9mm !important;
+    height: 279.4mm !important;
+  }
+  /* End standalone Entrada series */
+
   .entrada-page-print .series-table,
   .entrada-page-print .series-table table,
   .entrada-page-print .embedded-series,

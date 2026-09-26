@@ -1,0 +1,148 @@
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+before-88 2 [
+  { rows: 22, frameHeight: 1012.9375, tableHeight: 559, gap: 404.9375 }
+]
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+before-89 3 [
+  { rows: 22, frameHeight: 1012.9375, tableHeight: 559, gap: 404.9375 },
+  { rows: 1, frameHeight: 1012.9375, tableHeight: 54, gap: 909.9375 }
+]
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+before-152 3 [
+  { rows: 22, frameHeight: 1012.9375, tableHeight: 559, gap: 404.9375 },
+  { rows: 16, frameHeight: 1012.9375, tableHeight: 414, gap: 549.9375 }
+]
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+before-153 3 [
+  { rows: 22, frameHeight: 1012.9375, tableHeight: 559, gap: 404.9375 },
+  { rows: 17, frameHeight: 1012.9375, tableHeight: 438, gap: 525.9375 }
+]
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+before-1-148 3 [
+  { rows: 22, frameHeight: 1012.9375, tableHeight: 559, gap: 404.9375 },
+  { rows: 16, frameHeight: 1012.9375, tableHeight: 414, gap: 549.9375 }
+]
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+before-1-149 3 [
+  { rows: 22, frameHeight: 1012.9375, tableHeight: 559, gap: 404.9375 },
+  { rows: 17, frameHeight: 1012.9375, tableHeight: 438, gap: 525.9375 }
+]
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+before-4 1 []
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+after-88 2 [
+  {
+    rows: 22,
+    frameHeight: 1016.34375,
+    tableHeight: 559,
+    gap: 408.34375
+  }
+]
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+after-89 2 [
+  {
+    rows: 23,
+    frameHeight: 1016.34375,
+    tableHeight: 583,
+    gap: 384.34375
+  }
+]
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+after-152 2 [
+  {
+    rows: 38,
+    frameHeight: 1016.34375,
+    tableHeight: 943,
+    gap: 24.34375
+  }
+]
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+after-153 3 [
+  {
+    rows: 38,
+    frameHeight: 1016.34375,
+    tableHeight: 943,
+    gap: 24.34375
+  },
+  { rows: 1, frameHeight: 1016.34375, tableHeight: 54, gap: 913.34375 }
+]
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+after-1-148 2 [
+  {
+    rows: 38,
+    frameHeight: 1016.34375,
+    tableHeight: 943,
+    gap: 24.34375
+  }
+]
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+after-1-149 3 [
+  {
+    rows: 38,
+    frameHeight: 1016.34375,
+    tableHeight: 943,
+    gap: 24.34375
+  },
+  { rows: 1, frameHeight: 1016.34375, tableHeight: 54, gap: 913.34375 }
+]
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+after-4 1 []
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+probe39-156 2 [
+  { rows: 39, frameHeight: 1016.34375, tableHeight: 967, gap: 0.34375 }
+]

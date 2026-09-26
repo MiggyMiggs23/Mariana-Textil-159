@@ -234,11 +234,11 @@ router.get(
         res.status(403).json({ error: visible.error }); return;
       }
       const floors = await db.select({
-        id: pisosTable.id, nombre: pisosTable.nombre,
+        id: pisosTable.id, nombre: pisosTable.nombre, nivel: pisosTable.nivel,
         ubicacionId: pisosTable.ubicacionId, activo: pisosTable.activo,
       }).from(pisosTable)
         .where(and(eq(pisosTable.ubicacionId, visible.header.ubicacionId), eq(pisosTable.activo, true)))
-        .orderBy(asc(pisosTable.nombre));
+        .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
       res.json(ListPisosAuditoriaInventarioResponse.parse(floors));
     } catch (error) {
       handleError(error, res, next);

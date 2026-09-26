@@ -155,11 +155,11 @@ test("authorized salida detail supplies scoped transit return floors without ubi
   assert.doesNotMatch(detailRoute, /ubicaciones/);
   assert.doesNotMatch(detailRoute, /requierePermiso\("ubicaciones", "ver"\)/);
   assert.match(detailSchema, /pisosRetorno/);
-  assert.match(detailSchema, /required: \[id, nombre\]/);
+  assert.match(detailSchema, /required: \[id, nombre, nivel\]/);
   assert.match(detailBuilder, /salida\.modalidad === "TRASLADO" && salida\.estado === "EN_TRANSITO"/);
   assert.match(detailBuilder, /eq\(pisosTable\.ubicacionId, salida\.origenId\)/);
   assert.match(detailBuilder, /eq\(pisosTable\.activo, true\)/);
-  assert.match(detailBuilder, /orderBy\(asc\(pisosTable\.id\)\)/);
+  assert.match(detailBuilder, /orderBy\(asc\(pisosTable\.nivel\), asc\(pisosTable\.id\)\)/);
 });
 
 test("Block 1 counter exit is one-step, site-scoped, persisted and printable", async () => {

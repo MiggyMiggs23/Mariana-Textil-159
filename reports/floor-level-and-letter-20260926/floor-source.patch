@@ -1,0 +1,1140 @@
+diff --git a/artifacts/api-server/src/lib/auditoria-colaborativa.pg.test.ts b/artifacts/api-server/src/lib/auditoria-colaborativa.pg.test.ts
+index e8f83840..c4bb933c 100644
+--- a/artifacts/api-server/src/lib/auditoria-colaborativa.pg.test.ts
++++ b/artifacts/api-server/src/lib/auditoria-colaborativa.pg.test.ts
+@@ -41,8 +41,8 @@ function rejectedLimit(result: PromiseSettledResult<unknown>) {
+ test("three parallel unique scans, original author collision, counts and historical detail", async () => {
+   const id = await audit();
+   await assert.rejects(scan(id, 0, "NO-FLOORS"), { code: "FLOOR_CONFIGURATION_REQUIRED" });
+-  const floors = (await pool.query(`INSERT INTO pisos(ubicacion_id,nombre,activo)
+-    VALUES($1,'A mezzanine',true),($1,'B rooftop',true),($1,'C cellar',true) RETURNING id`, [site])).rows;
++  const floors = (await pool.query(`INSERT INTO pisos(ubicacion_id,nombre,nivel,activo)
++    VALUES($1,'Z mezzanine',1,true),($1,'B rooftop',10,true),($1,'A cellar',2,true) RETURNING id`, [site])).rows;
+   await assert.rejects(db.transaction(tx => scanAuditoria(tx, {
+     auditoriaId: id, usuarioId: users[0]!, serie: "WRONG-DESKTOP", ip: "test", desktop: true, pisoId: floors[1].id,
+   })), { code: "DESKTOP_ACCESS_FLOOR_REQUIRED" });
+@@ -132,7 +132,7 @@ test("participation reuses scan edit/session/role/site guards, never autorizar",
+   assert.equal(isDesktopAuditScanner("Mozilla/5.0 (iPhone; CPU iPhone OS 17_0) Mobile"), false);
+   assert.equal(isDesktopAuditScanner("Mozilla/5.0 (Linux; Android 14)"), false);
+   const floorRoute = route.slice(route.indexOf('"/auditorias/:id/pisos"'), route.indexOf('"/auditorias/:id/participar"'));
+-  for (const required of ["requireSession", 'requierePermiso("auditoria_inventario", "ver")', "requireOperationalRole", "getVisibleHeader", "visible.error", "eq(pisosTable.activo, true)", "asc(pisosTable.nombre)"]) assert.ok(floorRoute.includes(required));
++  for (const required of ["requireSession", 'requierePermiso("auditoria_inventario", "ver")', "requireOperationalRole", "getVisibleHeader", "visible.error", "eq(pisosTable.activo, true)", "asc(pisosTable.nivel), asc(pisosTable.id)"]) assert.ok(floorRoute.includes(required));
+   assert.ok(!floorRoute.includes('requierePermiso("ubicaciones"'));
+ });
+ 
+diff --git a/artifacts/api-server/src/lib/auditoria-inventario.ts b/artifacts/api-server/src/lib/auditoria-inventario.ts
+index 5494944d..41c5abaf 100644
+--- a/artifacts/api-server/src/lib/auditoria-inventario.ts
++++ b/artifacts/api-server/src/lib/auditoria-inventario.ts
+@@ -1,4 +1,5 @@
+ import { createHash } from "node:crypto";
++import { lowestActiveFloor } from "../../../../lib/floor-order.mjs";
+ import { and, asc, eq, inArray, sql } from "drizzle-orm";
+ import {
+   auditoriaInventarioEscaneosTable,
+@@ -231,22 +232,29 @@ export async function scanAuditoria(
+   if (header.estado !== "ABIERTA") {
+     throw new AuditoriaInventarioError("El conteo está cerrado y no admite escaneos.", "NOT_OPEN");
+   }
+-  const activeFloors = await tx.select({ id: pisosTable.id, nombre: pisosTable.nombre }).from(pisosTable)
++  const activeFloors = await tx.select({ id: pisosTable.id, nombre: pisosTable.nombre, nivel: pisosTable.nivel }).from(pisosTable)
+     .where(and(eq(pisosTable.ubicacionId, header.ubicacionId), eq(pisosTable.activo, true)))
+-    .orderBy(asc(pisosTable.nombre));
++    .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
+   if (!activeFloors.length) {
+     throw new AuditoriaInventarioError(
+       "Configura al menos un piso activo del sitio antes de escanear.",
+       "FLOOR_CONFIGURATION_REQUIRED",
+     );
+   }
++  const accessFloor = lowestActiveFloor(activeFloors);
++  if ((input.desktop ?? true) && !accessFloor) {
++    throw new AuditoriaInventarioError(
++      "Configura el nivel numérico de todos los pisos activos del sitio antes de escanear en computadora.",
++      "FLOOR_CONFIGURATION_REQUIRED",
++    );
++  }
+   const realFloor = input.pisoId == null ? null : activeFloors.find((floor) => floor.id === input.pisoId);
+   if (!realFloor) {
+     throw new AuditoriaInventarioError("El piso real debe ser activo y pertenecer al sitio auditado.", "INVALID_FLOOR");
+   }
+-  if ((input.desktop ?? true) && realFloor.id !== activeFloors[0]!.id) {
++  if ((input.desktop ?? true) && realFloor.id !== accessFloor!.id) {
+     throw new AuditoriaInventarioError(
+-      `La computadora solo puede escanear en el piso de acceso: ${activeFloors[0]!.nombre}.`,
++      `La computadora solo puede escanear en el piso de acceso: ${accessFloor!.nombre}.`,
+       "DESKTOP_ACCESS_FLOOR_REQUIRED",
+     );
+   }
+diff --git a/artifacts/api-server/src/lib/inventario.ts b/artifacts/api-server/src/lib/inventario.ts
+index ae3fdadc..ace4876c 100644
+--- a/artifacts/api-server/src/lib/inventario.ts
++++ b/artifacts/api-server/src/lib/inventario.ts
+@@ -22,7 +22,7 @@
+ import { createHash } from "node:crypto";
+ import { entradaFloorLabel, type EntradaFloorSnapshot } from "./entrada-floor-evidence";
+ import { getReactivacionContexto } from "./reactivacion-faltante-evidencia";
+-import { and, eq, sql, desc, count, gt, gte, inArray, lte } from "drizzle-orm";
++import { and, asc, eq, sql, desc, count, gt, gte, inArray, lte } from "drizzle-orm";
+ import {
+   auditoriaTable,
+   contenedoresTable,
+@@ -861,7 +861,8 @@ export async function crearEntrada(
+     }
+   }
+   const pisosActivos = await tx.select({ id: pisosTable.id, nombre: pisosTable.nombre }).from(pisosTable)
+-    .where(and(eq(pisosTable.ubicacionId, input.ubicacionId), eq(pisosTable.activo, true)));
++    .where(and(eq(pisosTable.ubicacionId, input.ubicacionId), eq(pisosTable.activo, true)))
++    .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
+   const pisoIds = new Set(pisosActivos.map((p) => p.id));
+   for (const linea of input.lineas) {
+     if (linea.pisosPorCantidad && linea.pisosPorCantidad.length !== linea.cantidades.length) {
+@@ -1559,7 +1560,8 @@ export async function transferirRolloInmediato(
+     throw new InventarioError("El rollo no está DISPONIBLE.", "ROLLO_UNAVAILABLE");
+   }
+   const pisosDestino = await tx.select({ id: pisosTable.id }).from(pisosTable)
+-    .where(and(eq(pisosTable.ubicacionId, input.ubicacionDestinoId), eq(pisosTable.activo, true)));
++    .where(and(eq(pisosTable.ubicacionId, input.ubicacionDestinoId), eq(pisosTable.activo, true)))
++    .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
+   if (pisosDestino.length && (input.pisoDestinoId == null || !pisosDestino.some((p) => p.id === input.pisoDestinoId))) {
+     throw new InventarioError("El piso destino es obligatorio, activo y debe pertenecer al sitio.", "INVALID_FLOOR");
+   }
+@@ -1765,7 +1767,8 @@ export async function recibirTransferencia(
+ 
+   const transitoId = rollo.ubicacionId;
+   const pisosDestino = await tx.select({ id: pisosTable.id }).from(pisosTable)
+-    .where(and(eq(pisosTable.ubicacionId, input.ubicacionDestinoId), eq(pisosTable.activo, true)));
++    .where(and(eq(pisosTable.ubicacionId, input.ubicacionDestinoId), eq(pisosTable.activo, true)))
++    .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
+   if (pisosDestino.length && (input.pisoDestinoId == null || !pisosDestino.some((p) => p.id === input.pisoDestinoId))) {
+     throw new InventarioError("El piso destino es obligatorio, activo y debe pertenecer al sitio.", "INVALID_FLOOR");
+   }
+@@ -2709,7 +2712,8 @@ export async function reactivarFaltanteAuditoria(tx: Tx, input: {
+   if (commitments.rows.length) throw new InventarioError("El rollo tiene una salida comprometida; resuelve primero el documento.", "ROLLO_RESERVED");
+   const [site] = await tx.select().from(ubicacionesTable).where(and(eq(ubicacionesTable.id, input.ubicacionId), eq(ubicacionesTable.activa, true))).limit(1);
+   if (!site || !["TIENDA", "BODEGA"].includes(site.tipo)) throw new InventarioError("Selecciona un sitio operativo activo.", "INVALID_LOCATION");
+-  const floors = await tx.select().from(pisosTable).where(and(eq(pisosTable.ubicacionId, input.ubicacionId), eq(pisosTable.activo, true)));
++  const floors = await tx.select().from(pisosTable).where(and(eq(pisosTable.ubicacionId, input.ubicacionId), eq(pisosTable.activo, true)))
++    .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
+   if (floors.length ? !floors.some((p) => p.id === input.pisoId) : input.pisoId != null) throw new InventarioError("El piso debe estar activo y pertenecer al sitio donde apareció.", "INVALID_FLOOR");
+   await tx.update(rollosTable).set({
+     estado: "DISPONIBLE", cantidadActual: evidence.cantidadAnterior,
+diff --git a/artifacts/api-server/src/lib/salidas.ts b/artifacts/api-server/src/lib/salidas.ts
+index c78527bb..2f667a1e 100644
+--- a/artifacts/api-server/src/lib/salidas.ts
++++ b/artifacts/api-server/src/lib/salidas.ts
+@@ -532,7 +532,7 @@ export async function buildSalidaDetail(
+     salida.ticketId == null ? Promise.resolve(null) : database.select({ id: ticketsTable.id, folio: ticketsTable.folio, documentoTipo: ticketsTable.documentoTipo, cobrado: ticketsTable.cobrado, autorizacionEstado: ticketsTable.autorizacionEstado, autorizadoAt: ticketsTable.autorizadoAt }).from(ticketsTable).where(eq(ticketsTable.id, salida.ticketId)).limit(1).then(rows => rows[0] ?? null),
+     salida.modalidad === "TRASLADO" && salida.estado === "EN_TRANSITO"
+       ? database
+-          .select({ id: pisosTable.id, nombre: pisosTable.nombre })
++          .select({ id: pisosTable.id, nombre: pisosTable.nombre, nivel: pisosTable.nivel })
+           .from(pisosTable)
+           .where(
+             and(
+@@ -540,7 +540,7 @@ export async function buildSalidaDetail(
+               eq(pisosTable.activo, true),
+             ),
+           )
+-          .orderBy(asc(pisosTable.id))
++          .orderBy(asc(pisosTable.nivel), asc(pisosTable.id))
+       : Promise.resolve([]),
+   ]);
+   const [viaje] = await database.select({
+@@ -1754,7 +1754,8 @@ export async function cancelarSalida(
+           eq(pisosTable.ubicacionId, salida.origenId),
+           eq(pisosTable.activo, true),
+         ),
+-      );
++      )
++      .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
+     if (pisosOrigen.length && pisoRetornoId == null) {
+       throw new InventarioError(
+         "Selecciona el piso de retorno activo en el origen antes de cancelar el traslado.",
+diff --git a/artifacts/api-server/src/routes/auditorias-inventario.ts b/artifacts/api-server/src/routes/auditorias-inventario.ts
+index d59465d4..525f4413 100644
+--- a/artifacts/api-server/src/routes/auditorias-inventario.ts
++++ b/artifacts/api-server/src/routes/auditorias-inventario.ts
+@@ -234,11 +234,11 @@ router.get(
+         res.status(403).json({ error: visible.error }); return;
+       }
+       const floors = await db.select({
+-        id: pisosTable.id, nombre: pisosTable.nombre,
++        id: pisosTable.id, nombre: pisosTable.nombre, nivel: pisosTable.nivel,
+         ubicacionId: pisosTable.ubicacionId, activo: pisosTable.activo,
+       }).from(pisosTable)
+         .where(and(eq(pisosTable.ubicacionId, visible.header.ubicacionId), eq(pisosTable.activo, true)))
+-        .orderBy(asc(pisosTable.nombre));
++        .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
+       res.json(ListPisosAuditoriaInventarioResponse.parse(floors));
+     } catch (error) {
+       handleError(error, res, next);
+diff --git a/artifacts/api-server/src/routes/inventario.ts b/artifacts/api-server/src/routes/inventario.ts
+index 8b1cf7e2..9cda5956 100644
+--- a/artifacts/api-server/src/routes/inventario.ts
++++ b/artifacts/api-server/src/routes/inventario.ts
+@@ -1679,7 +1679,8 @@ inventarioRouter.patch(
+         const scopeError = checkOperationalScope(req.auth!, [rollo.ubicacionId]);
+         if (scopeError) throw new InventarioError(scopeError, "SCOPE_DENIED");
+         const active = await tx.select({ id: pisosTable.id, nombre: pisosTable.nombre }).from(pisosTable)
+-          .where(and(eq(pisosTable.ubicacionId, rollo.ubicacionId), eq(pisosTable.activo, true)));
++          .where(and(eq(pisosTable.ubicacionId, rollo.ubicacionId), eq(pisosTable.activo, true)))
++          .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
+         const floor = body.pisoId == null ? null : active.find((item) => item.id === body.pisoId);
+         if ((active.length && !floor) || (!active.length && body.pisoId != null)) {
+           throw new InventarioError("El piso debe ser activo y pertenecer a la ubicación actual.", "INVALID_FLOOR");
+diff --git a/artifacts/api-server/src/routes/locations.ts b/artifacts/api-server/src/routes/locations.ts
+index 22d21d87..637b3910 100644
+--- a/artifacts/api-server/src/routes/locations.ts
++++ b/artifacts/api-server/src/routes/locations.ts
+@@ -178,6 +178,7 @@ function presentPiso(row: typeof pisosTable.$inferSelect) {
+     id: row.id,
+     ubicacionId: row.ubicacionId,
+     nombre: row.nombre,
++    nivel: row.nivel,
+     activo: row.activo,
+     createdAt: row.createdAt,
+     updatedAt: row.updatedAt,
+@@ -198,7 +199,7 @@ router.get("/locations/:id/pisos", requierePermiso("ubicaciones", "ver"), async
+   }
+   const rows = await db.select().from(pisosTable)
+     .where(and(eq(pisosTable.ubicacionId, site.id), req.auth!.user.rol === "ADMIN" ? undefined : eq(pisosTable.activo, true)))
+-    .orderBy(asc(pisosTable.nombre));
++    .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
+   res.json(ListPisosLocationResponse.parse(rows.map(presentPiso)));
+ });
+ 
+@@ -219,7 +220,7 @@ router.post("/locations/:id/pisos", requierePermiso("ubicaciones", "crear"), asy
+       const [site] = await tx.select({ id: ubicacionesTable.id }).from(ubicacionesTable)
+         .where(and(eq(ubicacionesTable.id, params.data.id), inArray(ubicacionesTable.tipo, ["TIENDA", "BODEGA"]))).limit(1);
+       if (!site) return null;
+-      const [created] = await tx.insert(pisosTable).values({ ubicacionId: site.id, nombre, activo: body.data.activo }).returning();
++      const [created] = await tx.insert(pisosTable).values({ ubicacionId: site.id, nombre, nivel: body.data.nivel, activo: body.data.activo }).returning();
+       await tx.insert(auditoriaTable).values({ usuarioId: req.auth!.user.id, accion: "CREAR", entidad: "pisos", entidadId: String(created!.id), datosDespues: presentPiso(created!), ip: getRequestIp(req) });
+       return created!;
+     });
+diff --git a/artifacts/api-server/src/salidas-api.test.ts b/artifacts/api-server/src/salidas-api.test.ts
+index 3fa94c09..866cc44a 100644
+--- a/artifacts/api-server/src/salidas-api.test.ts
++++ b/artifacts/api-server/src/salidas-api.test.ts
+@@ -155,11 +155,11 @@ test("authorized salida detail supplies scoped transit return floors without ubi
+   assert.doesNotMatch(detailRoute, /ubicaciones/);
+   assert.doesNotMatch(detailRoute, /requierePermiso\("ubicaciones", "ver"\)/);
+   assert.match(detailSchema, /pisosRetorno/);
+-  assert.match(detailSchema, /required: \[id, nombre\]/);
++  assert.match(detailSchema, /required: \[id, nombre, nivel\]/);
+   assert.match(detailBuilder, /salida\.modalidad === "TRASLADO" && salida\.estado === "EN_TRANSITO"/);
+   assert.match(detailBuilder, /eq\(pisosTable\.ubicacionId, salida\.origenId\)/);
+   assert.match(detailBuilder, /eq\(pisosTable\.activo, true\)/);
+-  assert.match(detailBuilder, /orderBy\(asc\(pisosTable\.id\)\)/);
++  assert.match(detailBuilder, /orderBy\(asc\(pisosTable\.nivel\), asc\(pisosTable\.id\)\)/);
+ });
+ 
+ test("Block 1 counter exit is one-step, site-scoped, persisted and printable", async () => {
+diff --git a/artifacts/api-server/src/task58.integration.test.ts b/artifacts/api-server/src/task58.integration.test.ts
+index 70020d99..10f58696 100644
+--- a/artifacts/api-server/src/task58.integration.test.ts
++++ b/artifacts/api-server/src/task58.integration.test.ts
+@@ -195,6 +195,7 @@ test("Task 58: pisos funcionan de extremo a extremo sin contaminar el kardex", a
+ 
+       const createdA = await api("POST", `/locations/${sourceId}/pisos`, admin, {
+         nombre: "  Planta   Baja  ",
++        nivel: 0,
+         activo: true,
+       });
+       assert.equal(createdA.status, 201);
+@@ -202,16 +203,19 @@ test("Task 58: pisos funcionan de extremo a extremo sin contaminar el kardex", a
+       assert.equal((createdA.body as Json).nombre, "Planta Baja");
+       const createdB = await api("POST", `/locations/${sourceId}/pisos`, admin, {
+         nombre: "Mezanine",
++        nivel: 1,
+         activo: true,
+       });
+       floorB = Number((createdB.body as Json).id);
+       const inactive = await api("POST", `/locations/${sourceId}/pisos`, admin, {
+         nombre: "Archivo",
++        nivel: 2,
+         activo: true,
+       });
+       inactiveFloor = Number((inactive.body as Json).id);
+       const destinationCreated = await api("POST", `/locations/${destinationId}/pisos`, admin, {
+         nombre: "Recepción",
++        nivel: 0,
+         activo: true,
+       });
+       destinationFloor = Number((destinationCreated.body as Json).id);
+diff --git a/artifacts/mariana-textil/src/components/auditoria/audit-floor-station.test.tsx b/artifacts/mariana-textil/src/components/auditoria/audit-floor-station.test.tsx
+index 0961ad5f..3e2495d4 100644
+--- a/artifacts/mariana-textil/src/components/auditoria/audit-floor-station.test.tsx
++++ b/artifacts/mariana-textil/src/components/auditoria/audit-floor-station.test.tsx
+@@ -20,9 +20,9 @@ vi.mock("@/components/ui/select", () => ({
+ }));
+ 
+ const floors = [
+-  { id: 11, ubicacionId: 1, nombre: "Primer piso", activo: true },
+-  { id: 12, ubicacionId: 1, nombre: "Segundo piso", activo: true },
+-  { id: 13, ubicacionId: 1, nombre: "Tercer piso", activo: true },
++  { id: 11, ubicacionId: 1, nombre: "Primer piso", nivel: 1, activo: true },
++  { id: 12, ubicacionId: 1, nombre: "Segundo piso", nivel: 2, activo: true },
++  { id: 13, ubicacionId: 1, nombre: "Tercer piso", nivel: 3, activo: true },
+ ] as AuditFloor[];
+ 
+ function Participant({ userId, initialFloor, onScan }: {
+@@ -42,6 +42,23 @@ function Participant({ userId, initialFloor, onScan }: {
+ 
+ afterEach(() => cleanup());
+ 
++test("desktop uses lowest active numeric level even when the array and names disagree", () => {
++  render(<AuditFloorStation floors={[
++    { id: 5, ubicacionId: 1, nombre: "A", nivel: 10, activo: true },
++    { id: 6, ubicacionId: 1, nombre: "Z", nivel: 1, activo: true },
++    { id: 7, ubicacionId: 1, nombre: "B", nivel: 0, activo: false },
++  ]} ready error={false} mobile={false} joined selectedId={5} onSelect={vi.fn()} />);
++  expect(screen.getByTestId("audit-floor-name").textContent).toBe("Z");
++});
++
++test("desktop visibly blocks an unconfigured active level", () => {
++  render(<AuditFloorStation floors={[
++    { id: 5, ubicacionId: 1, nombre: "A", nivel: 10, activo: true },
++    { id: 6, ubicacionId: 1, nombre: "Z", nivel: null, activo: true },
++  ]} ready error={false} mobile={false} joined selectedId={5} onSelect={vi.fn()} />);
++  expect(screen.getByTestId("audit-floor-name").textContent).toContain("Falta configurar el nivel numérico");
++});
++
+ test("three mounted participants keep their own independently confirmed real floors", () => {
+   const onScan = vi.fn();
+   render(<>
+diff --git a/artifacts/mariana-textil/src/components/auditoria/audit-floor-station.tsx b/artifacts/mariana-textil/src/components/auditoria/audit-floor-station.tsx
+index 71a4e007..cd553669 100644
+--- a/artifacts/mariana-textil/src/components/auditoria/audit-floor-station.tsx
++++ b/artifacts/mariana-textil/src/components/auditoria/audit-floor-station.tsx
+@@ -1,4 +1,5 @@
+ import { useEffect, useRef, useState } from "react";
++import { compareFloorLevels, lowestActiveFloor } from "../../../../../lib/floor-order.mjs";
+ import type { AuditFloor } from "./use-audit-floors";
+ import { Button } from "@/components/ui/button";
+ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+@@ -25,7 +26,8 @@ export function AuditFloorStation({
+   const [draft, setDraft] = useState("");
+   const [confirming, setConfirming] = useState(false);
+   const prompted = useRef(false);
+-  const current = mobile ? floors.find((floor) => floor.id === selectedId) : floors[0];
++  floors = floors.filter((floor) => floor.activo).sort(compareFloorLevels);
++  const current = mobile ? floors.find((floor) => floor.id === selectedId) : lowestActiveFloor(floors);
+   const candidate = floors.find((floor) => String(floor.id) === draft);
+ 
+   useEffect(() => {
+@@ -51,13 +53,14 @@ export function AuditFloorStation({
+           <p className="text-2xl sm:text-3xl font-black text-foreground break-words" data-testid="audit-floor-name">
+             {error ? "No se pudieron cargar los pisos" : !ready ? "Cargando pisos..." :
+               floors.length === 0 ? "Faltan pisos configurados" :
++                !mobile && !current ? "Falta configurar el nivel numérico de los pisos" :
+                 current?.nombre ?? "Selecciona un piso"}
+           </p>
+           {ready && floors.length === 0 && (
+             <p className="text-sm text-destructive">Configura al menos un piso activo del sitio antes de escanear.</p>
+           )}
+           {ready && floors.length > 0 && !mobile && (
+-            <p className="text-xs text-muted-foreground">Computadora: piso de acceso fijo según el orden configurado del sitio.</p>
++            <p className="text-xs text-muted-foreground">Computadora: piso activo de menor nivel numérico. Todos los pisos activos deben tener nivel configurado.</p>
+           )}
+         </div>
+         {joined && mobile && ready && floors.length > 0 && (
+diff --git a/artifacts/mariana-textil/src/components/auditoria/use-audit-floors.ts b/artifacts/mariana-textil/src/components/auditoria/use-audit-floors.ts
+index bb5c1374..183eefa2 100644
+--- a/artifacts/mariana-textil/src/components/auditoria/use-audit-floors.ts
++++ b/artifacts/mariana-textil/src/components/auditoria/use-audit-floors.ts
+@@ -4,6 +4,7 @@ import { customFetch } from "@workspace/api-client-react";
+ export type AuditFloor = {
+   id: number;
+   nombre: string;
++  nivel: number | null;
+   ubicacionId: number;
+   activo: boolean;
+ };
+diff --git a/artifacts/mariana-textil/src/pages/auditorias-inventario-site.test.tsx b/artifacts/mariana-textil/src/pages/auditorias-inventario-site.test.tsx
+index d637b4ce..d62fabc7 100644
+--- a/artifacts/mariana-textil/src/pages/auditorias-inventario-site.test.tsx
++++ b/artifacts/mariana-textil/src/pages/auditorias-inventario-site.test.tsx
+@@ -54,12 +54,12 @@ const details = new Map(audits.map((audit) => [audit.id, GetAuditoriaInventarioR
+ })]));
+ const configuredFloors = new Map([
+   [1, [
+-    { id: 11, ubicacionId: 1, nombre: "Primer piso", activo: true },
+-    { id: 12, ubicacionId: 1, nombre: "Segundo piso", activo: true },
+-    { id: 13, ubicacionId: 1, nombre: "Tercer piso", activo: true },
++    { id: 11, ubicacionId: 1, nombre: "Primer piso", nivel: 1, activo: true },
++    { id: 12, ubicacionId: 1, nombre: "Segundo piso", nivel: 2, activo: true },
++    { id: 13, ubicacionId: 1, nombre: "Tercer piso", nivel: 3, activo: true },
+   ]],
+-  [2, [{ id: 21, ubicacionId: 2, nombre: "Piso 3", activo: true }]],
+-  [3, [{ id: 31, ubicacionId: 3, nombre: "Piso sur", activo: true }]],
++  [2, [{ id: 21, ubicacionId: 2, nombre: "Piso 3", nivel: 3, activo: true }]],
++  [3, [{ id: 31, ubicacionId: 3, nombre: "Piso sur", nivel: 1, activo: true }]],
+ ]);
+ 
+ function setup({ url = "/inventario/auditorias?auditoriaId=41", delayed = false, joined = false, joinError = false, canCreate = true, canEdit = true, mobile = false, noFloors = false, loadingFloors = false } = {}) {
+diff --git a/artifacts/mariana-textil/src/pages/auditorias-inventario.tsx b/artifacts/mariana-textil/src/pages/auditorias-inventario.tsx
+index 279b9bec..3d24965f 100644
+--- a/artifacts/mariana-textil/src/pages/auditorias-inventario.tsx
++++ b/artifacts/mariana-textil/src/pages/auditorias-inventario.tsx
+@@ -60,6 +60,7 @@ import { AuditCollaboration, AuditScannerAttribution } from "@/components/audito
+ import { auditParticipantLimit, useAuditParticipation } from "@/components/auditoria/use-audit-participation";
+ import { AuditFloorStation, isMobileAuditDevice } from "@/components/auditoria/audit-floor-station";
+ import { useAuditFloors } from "@/components/auditoria/use-audit-floors";
++import { compareFloorLevels, lowestActiveFloor } from "../../../../lib/floor-order.mjs";
+ 
+ function message(error: unknown): string {
+   if (error && typeof error === "object" && "data" in error) {
+@@ -255,10 +256,10 @@ export default function AuditoriasInventario() {
+   };
+ 
+   const floorsQuery = useAuditFloors(currentDetail?.id ?? null, user?.id ?? null, currentDetail?.estado === "ABIERTA");
+-  const pisosActivos = useMemo(() => floorsQuery.data?.filter((floor) => floor.activo) ?? [], [floorsQuery.data]);
++  const pisosActivos = useMemo(() => floorsQuery.data?.filter((floor) => floor.activo).sort(compareFloorLevels) ?? [], [floorsQuery.data]);
+   const floorsReady = !!currentDetail && !floorsQuery.isLoading && !floorsQuery.isError && !!floorsQuery.data;
+   const floorForScan = floorsReady
+-    ? mobileScanner ? pisosActivos.find((floor) => floor.id === selectedPiso) : pisosActivos[0]
++    ? mobileScanner ? pisosActivos.find((floor) => floor.id === selectedPiso) : lowestActiveFloor(pisosActivos)
+     : undefined;
+ 
+   useEffect(() => {
+diff --git a/artifacts/mariana-textil/src/pages/ubicaciones.tsx b/artifacts/mariana-textil/src/pages/ubicaciones.tsx
+index 46ddbbdd..3f16032e 100644
+--- a/artifacts/mariana-textil/src/pages/ubicaciones.tsx
++++ b/artifacts/mariana-textil/src/pages/ubicaciones.tsx
+@@ -30,23 +30,27 @@ import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto"
+ 
+ function PisosSitio({ locationId, active }: { locationId: number, active: boolean }) {
+   const queryClient = useQueryClient();
+-  const { data: pisos, isLoading } = useListPisosLocation(locationId);
++  const { data: pisos, isLoading, isError } = useListPisosLocation(locationId);
+   const createPiso = useCreatePisoLocation();
+   const updatePiso = useUpdatePisoLocation();
+   const [editingId, setEditingId] = useState<number | null>(null);
+   const [editNombre, setEditNombre] = useState("");
+   const [editActivo, setEditActivo] = useState(true);
++  const [editNivel, setEditNivel] = useState("");
++  const validNivel = (value: string) => value.trim() !== "" && Number.isInteger(Number(value)) && Number(value) >= -2147483648 && Number(value) <= 2147483647;
+ 
+   const [creating, setCreating] = useState(false);
+   const [createNombre, setCreateNombre] = useState("");
++  const [createNivel, setCreateNivel] = useState("");
+ 
+   const handleCreate = () => {
+-    if (!createNombre.trim()) return;
+-    createPiso.mutate({ id: locationId, data: { nombre: createNombre.trim() } }, {
++    if (!createNombre.trim() || !validNivel(createNivel)) return;
++    createPiso.mutate({ id: locationId, data: { nombre: createNombre.trim(), nivel: Number(createNivel) } }, {
+       onSuccess: () => {
+         toast.success("Piso creado");
+         setCreating(false);
+         setCreateNombre("");
++        setCreateNivel("");
+         queryClient.invalidateQueries({ queryKey: getListPisosLocationQueryKey(locationId) });
+       },
+       onError: (err: any) => toast.error("Error al crear piso", { description: err.data?.error || err.message })
+@@ -54,8 +58,8 @@ function PisosSitio({ locationId, active }: { locationId: number, active: boolea
+   };
+ 
+   const handleUpdate = (pisoId: number) => {
+-    if (!editNombre.trim()) return;
+-    updatePiso.mutate({ id: locationId, pisoId, data: { nombre: editNombre.trim(), activo: editActivo } }, {
++    if (!editNombre.trim() || !validNivel(editNivel)) return;
++    updatePiso.mutate({ id: locationId, pisoId, data: { nombre: editNombre.trim(), nivel: Number(editNivel), activo: editActivo } }, {
+       onSuccess: () => {
+         toast.success("Piso actualizado");
+         setEditingId(null);
+@@ -66,18 +70,20 @@ function PisosSitio({ locationId, active }: { locationId: number, active: boolea
+   };
+ 
+   if (isLoading) return <div className="p-4 flex justify-center"><Loader2 className="animate-spin w-5 h-5 text-muted-foreground" /></div>;
++  if (isError) return <p role="alert" className="p-4 text-destructive">No se pudieron cargar los pisos. Revisa la configuración del catálogo antes de continuar.</p>;
+ 
+   return (
+     <div className="space-y-4 border-t pt-4 mt-6">
+       <div className="flex items-center justify-between">
+         <h4 className="font-semibold">Pisos / Divisiones</h4>
+         {active && (
+-          <Button variant="outline" size="sm" onClick={() => { setCreating(true); setCreateNombre(""); }} disabled={creating}>
++          <Button variant="outline" size="sm" onClick={() => { setCreating(true); setCreateNombre(""); setCreateNivel(""); }} disabled={creating}>
+             <Plus className="w-3 h-3 mr-1" /> Agregar
+           </Button>
+         )}
+       </div>
+ 
++      <p className="text-xs text-muted-foreground">Nivel numérico: menor valor = piso más bajo. El nombre no determina el orden. La computadora usa el piso activo de menor nivel.</p>
+       {creating && (
+         <div className="flex items-center gap-2 p-2 border rounded bg-muted/30">
+           <Input
+@@ -88,7 +94,8 @@ function PisosSitio({ locationId, active }: { locationId: number, active: boolea
+             onChange={e => setCreateNombre(e.target.value)}
+             autoFocus
+           />
+-          <Button size="sm" className="h-8" onClick={handleCreate} disabled={!createNombre.trim() || createPiso.isPending}>Guardar</Button>
++          <Input type="number" step="1" aria-label="Nivel numérico del nuevo piso" placeholder="Nivel" className="h-8 w-28" value={createNivel} onChange={e => setCreateNivel(e.target.value)} />
++          <Button size="sm" className="h-8" onClick={handleCreate} disabled={!createNombre.trim() || !validNivel(createNivel) || createPiso.isPending}>Guardar</Button>
+           <Button size="sm" variant="ghost" className="h-8" onClick={() => setCreating(false)}>Cancelar</Button>
+         </div>
+       )}
+@@ -100,20 +107,22 @@ function PisosSitio({ locationId, active }: { locationId: number, active: boolea
+               {editingId === piso.id ? (
+                 <div className="flex items-center gap-2 flex-1">
+                   <Input size={1} className="h-8 flex-1" value={editNombre} onChange={e => setEditNombre(e.target.value)} />
++                  <Input type="number" step="1" aria-label="Nivel numérico del piso" placeholder="Nivel" className="h-8 w-28" value={editNivel} onChange={e => setEditNivel(e.target.value)} />
+                   <label className="flex items-center gap-1 text-xs whitespace-nowrap">
+                     <input type="checkbox" checked={editActivo} onChange={e => setEditActivo(e.target.checked)} className="rounded" /> Activo
+                   </label>
+-                  <Button size="sm" className="h-8" onClick={() => handleUpdate(piso.id)} disabled={!editNombre.trim() || updatePiso.isPending}>Guardar</Button>
++                  <Button size="sm" className="h-8" onClick={() => handleUpdate(piso.id)} disabled={!editNombre.trim() || !validNivel(editNivel) || updatePiso.isPending}>Guardar</Button>
+                   <Button size="sm" variant="ghost" className="h-8" onClick={() => setEditingId(null)}>Cancelar</Button>
+                 </div>
+               ) : (
+                 <>
+                   <div className="flex items-center gap-2">
+                     <span className={`font-medium ${!piso.activo ? 'text-muted-foreground line-through' : ''}`}>{piso.nombre}</span>
++                    <Badge variant={piso.nivel == null ? "destructive" : "secondary"}>{piso.nivel == null ? "Nivel sin configurar" : `Nivel ${piso.nivel}`}</Badge>
+                     {!piso.activo && <Badge variant="secondary" className="text-[10px]">Inactivo</Badge>}
+                   </div>
+                   {active && (
+-                    <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => { setEditingId(piso.id); setEditNombre(piso.nombre); setEditActivo(piso.activo); }}>
++                    <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => { setEditingId(piso.id); setEditNombre(piso.nombre); setEditActivo(piso.activo); setEditNivel(piso.nivel == null ? "" : String(piso.nivel)); }}>
+                       <Pencil className="w-3.5 h-3.5" />
+                     </Button>
+                   )}
+diff --git a/lib/api-client-react/src/generated/api.schemas.ts b/lib/api-client-react/src/generated/api.schemas.ts
+index ae76d0d8..426ebc31 100644
+--- a/lib/api-client-react/src/generated/api.schemas.ts
++++ b/lib/api-client-react/src/generated/api.schemas.ts
+@@ -4419,6 +4419,11 @@ export interface Piso {
+   id: number;
+   ubicacionId: number;
+   nombre: string;
++  /**
++     * Orden físico ascendente configurado explícitamente; null indica configuración pendiente.
++     * @nullable
++     */
++  nivel: number | null;
+   activo: boolean;
+   createdAt: string;
+   updatedAt: string;
+@@ -4430,6 +4435,11 @@ export interface PisoInput {
+      * @maxLength 120
+      */
+   nombre: string;
++  /**
++     * @minimum -2147483648
++     * @maximum 2147483647
++     */
++  nivel: number;
+   activo?: boolean;
+ }
+ 
+@@ -4439,6 +4449,11 @@ export interface PisoUpdate {
+      * @maxLength 120
+      */
+   nombre?: string;
++  /**
++     * @minimum -2147483648
++     * @maximum 2147483647
++     */
++  nivel?: number;
+   activo?: boolean;
+ }
+ 
+@@ -7634,6 +7649,8 @@ export interface SalidaRollo {
+ export type SalidaDetailPisosRetornoItem = {
+   id: number;
+   nombre: string;
++  /** @nullable */
++  nivel: number | null;
+ };
+ 
+ export type SalidaDetail = SalidaResumen & ({
+@@ -9654,6 +9671,8 @@ export type AuditoriaInventarioDetail = AuditoriaInventarioResumen & ({
+ export interface AuditoriaInventarioPiso {
+   id: number;
+   nombre: string;
++  /** @nullable */
++  nivel: number | null;
+   ubicacionId: number;
+   activo: boolean;
+ }
+diff --git a/lib/api-client-react/src/generated/api.ts b/lib/api-client-react/src/generated/api.ts
+index 8d9cf46e..68a1a500 100644
+--- a/lib/api-client-react/src/generated/api.ts
++++ b/lib/api-client-react/src/generated/api.ts
+@@ -11317,7 +11317,7 @@ export const getScanAuditoriaInventarioUrl = (id: number,) => {
+ }
+ 
+ /**
+- * Exige piso activo del sitio. Sin pisos activos devuelve 400 FLOOR_CONFIGURATION_REQUIRED; piso ausente o inválido devuelve 400 INVALID_FLOOR. Computadora (heurística User-Agent del servidor, no autorización) solo admite el primer piso activo ordenado por nombre ASC, de lo contrario 400 DESKTOP_ACCESS_FLOOR_REQUIRED. Móvil admite cualquier piso válido. Sexto usuario activo devuelve 409 AUDIT_PARTICIPANT_LIMIT. Un duplicado conserva autor, hora y piso del primer escaneo; nunca sustituye su atribución.
++ * Exige piso activo del sitio. Sin pisos activos devuelve 400 FLOOR_CONFIGURATION_REQUIRED; piso ausente o inválido devuelve 400 INVALID_FLOOR. Computadora (heurística User-Agent del servidor, no autorización) solo admite el piso activo de menor nivel numérico, con id ASC como desempate. Si algún piso activo tiene nivel sin configurar, computadora devuelve 400 FLOOR_CONFIGURATION_REQUIRED; de lo contrario 400 DESKTOP_ACCESS_FLOOR_REQUIRED. Móvil admite cualquier piso válido. Sexto usuario activo devuelve 409 AUDIT_PARTICIPANT_LIMIT. Un duplicado conserva autor, hora y piso del primer escaneo; nunca sustituye su atribución.
+  * @summary Registra una serie por presencia de forma idempotente
+  */
+ export const scanAuditoriaInventario = async (id: number,
+diff --git a/lib/api-spec/openapi.yaml b/lib/api-spec/openapi.yaml
+index 1f83b7b5..443289eb 100644
+--- a/lib/api-spec/openapi.yaml
++++ b/lib/api-spec/openapi.yaml
+@@ -2919,7 +2919,9 @@ paths:
+       description: >-
+         Exige piso activo del sitio. Sin pisos activos devuelve 400 FLOOR_CONFIGURATION_REQUIRED;
+         piso ausente o inválido devuelve 400 INVALID_FLOOR. Computadora (heurística User-Agent
+-        del servidor, no autorización) solo admite el primer piso activo ordenado por nombre ASC,
++        del servidor, no autorización) solo admite el piso activo de menor nivel numérico,
++        con id ASC como desempate. Si algún piso activo tiene nivel sin configurar,
++        computadora devuelve 400 FLOOR_CONFIGURATION_REQUIRED;
+         de lo contrario 400 DESKTOP_ACCESS_FLOOR_REQUIRED. Móvil admite cualquier piso válido.
+         Sexto usuario activo devuelve 409 AUDIT_PARTICIPANT_LIMIT. Un duplicado conserva autor,
+         hora y piso del primer escaneo; nunca sustituye su atribución.
+@@ -11493,24 +11495,27 @@ components:
+         activa: { type: boolean }
+     Piso:
+       type: object
+-      required: [id, ubicacionId, nombre, activo, createdAt, updatedAt]
++      required: [id, ubicacionId, nombre, nivel, activo, createdAt, updatedAt]
+       properties:
+         id: { type: number }
+         ubicacionId: { type: number }
+         nombre: { type: string }
++        nivel: { type: [integer, "null"], description: "Orden físico ascendente configurado explícitamente; null indica configuración pendiente." }
+         activo: { type: boolean }
+         createdAt: { type: string, format: date-time }
+         updatedAt: { type: string, format: date-time }
+     PisoInput:
+       type: object
+-      required: [nombre]
++      required: [nombre, nivel]
+       properties:
+         nombre: { type: string, minLength: 1, maxLength: 120 }
++        nivel: { type: integer, minimum: -2147483648, maximum: 2147483647 }
+         activo: { type: boolean, default: true }
+     PisoUpdate:
+       type: object
+       properties:
+         nombre: { type: string, minLength: 1, maxLength: 120 }
++        nivel: { type: integer, minimum: -2147483648, maximum: 2147483647 }
+         activo: { type: boolean }
+     RolloPisoUpdate:
+       type: object
+@@ -14629,10 +14634,11 @@ components:
+               description: Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.
+               items:
+                 type: object
+-                required: [id, nombre]
++                required: [id, nombre, nivel]
+                 properties:
+                   id: { type: number }
+                   nombre: { type: string }
++                  nivel: { type: [integer, "null"] }
+             entregadoPorId: { type: ["number", "null"] }
+             nombreEntregadoPor: { type: ["string", "null"] }
+             fechaEntrega: { type: ["string", "null"], format: date-time }
+@@ -16960,10 +16966,11 @@ components:
+               items: { $ref: "#/components/schemas/AuditoriaInventarioParticipante" }
+     AuditoriaInventarioPiso:
+       type: object
+-      required: [id, nombre, ubicacionId, activo]
++      required: [id, nombre, nivel, ubicacionId, activo]
+       properties:
+         id: { type: number }
+         nombre: { type: string }
++        nivel: { type: [integer, "null"] }
+         ubicacionId: { type: number }
+         activo: { type: boolean }
+     AuditoriaInventarioParticipacion:
+diff --git a/lib/api-zod/src/generated/api.ts b/lib/api-zod/src/generated/api.ts
+index 55673d29..0e4fbb87 100644
+--- a/lib/api-zod/src/generated/api.ts
++++ b/lib/api-zod/src/generated/api.ts
+@@ -5674,6 +5674,7 @@ export const ListPisosLocationResponseItem = zod.object({
+   "id": zod.number(),
+   "ubicacionId": zod.number(),
+   "nombre": zod.string(),
++  "nivel": zod.number().int().nullable().describe('Orden físico ascendente configurado explícitamente; null indica configuración pendiente.'),
+   "activo": zod.boolean(),
+   "createdAt": zod.coerce.date(),
+   "updatedAt": zod.coerce.date()
+@@ -5690,10 +5691,14 @@ export const CreatePisoLocationParams = zod.object({
+ 
+ export const createPisoLocationBodyNombreMax = 120;
+ 
++export const createPisoLocationBodyNivelMin = -2147483648;
++export const createPisoLocationBodyNivelMax = 2147483647;
++
+ export const createPisoLocationBodyActivoDefault = true;
+ 
+ export const CreatePisoLocationBody = zod.object({
+   "nombre": zod.string().min(1).max(createPisoLocationBodyNombreMax),
++  "nivel": zod.number().int().min(createPisoLocationBodyNivelMin).max(createPisoLocationBodyNivelMax),
+   "activo": zod.boolean().default(createPisoLocationBodyActivoDefault)
+ })
+ 
+@@ -5701,6 +5706,7 @@ export const CreatePisoLocationResponse = zod.object({
+   "id": zod.number(),
+   "ubicacionId": zod.number(),
+   "nombre": zod.string(),
++  "nivel": zod.number().int().nullable().describe('Orden físico ascendente configurado explícitamente; null indica configuración pendiente.'),
+   "activo": zod.boolean(),
+   "createdAt": zod.coerce.date(),
+   "updatedAt": zod.coerce.date()
+@@ -5720,10 +5726,14 @@ export const UpdatePisoLocationParams = zod.object({
+ 
+ export const updatePisoLocationBodyNombreMax = 120;
+ 
++export const updatePisoLocationBodyNivelMin = -2147483648;
++export const updatePisoLocationBodyNivelMax = 2147483647;
++
+ 
+ 
+ export const UpdatePisoLocationBody = zod.object({
+   "nombre": zod.string().min(1).max(updatePisoLocationBodyNombreMax).optional(),
++  "nivel": zod.number().int().min(updatePisoLocationBodyNivelMin).max(updatePisoLocationBodyNivelMax).optional(),
+   "activo": zod.boolean().optional()
+ })
+ 
+@@ -5731,6 +5741,7 @@ export const UpdatePisoLocationResponse = zod.object({
+   "id": zod.number(),
+   "ubicacionId": zod.number(),
+   "nombre": zod.string(),
++  "nivel": zod.number().int().nullable().describe('Orden físico ascendente configurado explícitamente; null indica configuración pendiente.'),
+   "activo": zod.boolean(),
+   "createdAt": zod.coerce.date(),
+   "updatedAt": zod.coerce.date()
+@@ -8472,6 +8483,7 @@ export const ListPisosAuditoriaInventarioParams = zod.object({
+ export const ListPisosAuditoriaInventarioResponseItem = zod.object({
+   "id": zod.number(),
+   "nombre": zod.string(),
++  "nivel": zod.number().int().nullable(),
+   "ubicacionId": zod.number(),
+   "activo": zod.boolean()
+ })
+@@ -8491,7 +8503,7 @@ export const ParticiparAuditoriaInventarioResponse = zod.object({
+ 
+ 
+ /**
+- * Exige piso activo del sitio. Sin pisos activos devuelve 400 FLOOR_CONFIGURATION_REQUIRED; piso ausente o inválido devuelve 400 INVALID_FLOOR. Computadora (heurística User-Agent del servidor, no autorización) solo admite el primer piso activo ordenado por nombre ASC, de lo contrario 400 DESKTOP_ACCESS_FLOOR_REQUIRED. Móvil admite cualquier piso válido. Sexto usuario activo devuelve 409 AUDIT_PARTICIPANT_LIMIT. Un duplicado conserva autor, hora y piso del primer escaneo; nunca sustituye su atribución.
++ * Exige piso activo del sitio. Sin pisos activos devuelve 400 FLOOR_CONFIGURATION_REQUIRED; piso ausente o inválido devuelve 400 INVALID_FLOOR. Computadora (heurística User-Agent del servidor, no autorización) solo admite el piso activo de menor nivel numérico, con id ASC como desempate. Si algún piso activo tiene nivel sin configurar, computadora devuelve 400 FLOOR_CONFIGURATION_REQUIRED; de lo contrario 400 DESKTOP_ACCESS_FLOOR_REQUIRED. Móvil admite cualquier piso válido. Sexto usuario activo devuelve 409 AUDIT_PARTICIPANT_LIMIT. Un duplicado conserva autor, hora y piso del primer escaneo; nunca sustituye su atribución.
+  * @summary Registra una serie por presencia de forma idempotente
+  */
+ 
+@@ -13914,7 +13926,8 @@ export const GetBorradorSalidaResponse = zod.object({
+   "motivoCancelacion": zod.string().nullable(),
+   "pisosRetorno": zod.array(zod.object({
+   "id": zod.number(),
+-  "nombre": zod.string()
++  "nombre": zod.string(),
++  "nivel": zod.number().int().nullable()
+ })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
+   "entregadoPorId": zod.number().nullish(),
+   "nombreEntregadoPor": zod.string().nullish(),
+@@ -14034,7 +14047,8 @@ export const AgregarRolloBorradorSalidaResponse = zod.object({
+   "motivoCancelacion": zod.string().nullable(),
+   "pisosRetorno": zod.array(zod.object({
+   "id": zod.number(),
+-  "nombre": zod.string()
++  "nombre": zod.string(),
++  "nivel": zod.number().int().nullable()
+ })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
+   "entregadoPorId": zod.number().nullish(),
+   "nombreEntregadoPor": zod.string().nullish(),
+@@ -14157,7 +14171,8 @@ export const CrearSalidaMostradorResponse = zod.object({
+   "motivoCancelacion": zod.string().nullable(),
+   "pisosRetorno": zod.array(zod.object({
+   "id": zod.number(),
+-  "nombre": zod.string()
++  "nombre": zod.string(),
++  "nivel": zod.number().int().nullable()
+ })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
+   "entregadoPorId": zod.number().nullish(),
+   "nombreEntregadoPor": zod.string().nullish(),
+@@ -14283,7 +14298,8 @@ export const CrearEnviarSalidaVentaClienteResponse = zod.object({
+   "motivoCancelacion": zod.string().nullable(),
+   "pisosRetorno": zod.array(zod.object({
+   "id": zod.number(),
+-  "nombre": zod.string()
++  "nombre": zod.string(),
++  "nivel": zod.number().int().nullable()
+ })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
+   "entregadoPorId": zod.number().nullish(),
+   "nombreEntregadoPor": zod.string().nullish(),
+@@ -14686,7 +14702,8 @@ export const GetSalidaRecepcionResponse = zod.object({
+   "motivoCancelacion": zod.string().nullable(),
+   "pisosRetorno": zod.array(zod.object({
+   "id": zod.number(),
+-  "nombre": zod.string()
++  "nombre": zod.string(),
++  "nivel": zod.number().int().nullable()
+ })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
+   "entregadoPorId": zod.number().nullish(),
+   "nombreEntregadoPor": zod.string().nullish(),
+@@ -14798,7 +14815,8 @@ export const GetSalidaResponse = zod.object({
+   "motivoCancelacion": zod.string().nullable(),
+   "pisosRetorno": zod.array(zod.object({
+   "id": zod.number(),
+-  "nombre": zod.string()
++  "nombre": zod.string(),
++  "nivel": zod.number().int().nullable()
+ })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
+   "entregadoPorId": zod.number().nullish(),
+   "nombreEntregadoPor": zod.string().nullish(),
+@@ -14910,7 +14928,8 @@ export const GetDocumentoSalidaResponse = zod.object({
+   "motivoCancelacion": zod.string().nullable(),
+   "pisosRetorno": zod.array(zod.object({
+   "id": zod.number(),
+-  "nombre": zod.string()
++  "nombre": zod.string(),
++  "nivel": zod.number().int().nullable()
+ })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
+   "entregadoPorId": zod.number().nullish(),
+   "nombreEntregadoPor": zod.string().nullish(),
+@@ -15023,7 +15042,8 @@ export const QuitarRolloBorradorSalidaResponse = zod.object({
+   "motivoCancelacion": zod.string().nullable(),
+   "pisosRetorno": zod.array(zod.object({
+   "id": zod.number(),
+-  "nombre": zod.string()
++  "nombre": zod.string(),
++  "nivel": zod.number().int().nullable()
+ })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
+   "entregadoPorId": zod.number().nullish(),
+   "nombreEntregadoPor": zod.string().nullish(),
+@@ -15160,7 +15180,8 @@ export const CancelarSalidaResponse = zod.object({
+   "motivoCancelacion": zod.string().nullable(),
+   "pisosRetorno": zod.array(zod.object({
+   "id": zod.number(),
+-  "nombre": zod.string()
++  "nombre": zod.string(),
++  "nivel": zod.number().int().nullable()
+ })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
+   "entregadoPorId": zod.number().nullish(),
+   "nombreEntregadoPor": zod.string().nullish(),
+@@ -15280,7 +15301,8 @@ export const EnviarSalidaResponse = zod.object({
+   "motivoCancelacion": zod.string().nullable(),
+   "pisosRetorno": zod.array(zod.object({
+   "id": zod.number(),
+-  "nombre": zod.string()
++  "nombre": zod.string(),
++  "nivel": zod.number().int().nullable()
+ })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
+   "entregadoPorId": zod.number().nullish(),
+   "nombreEntregadoPor": zod.string().nullish(),
+@@ -15406,7 +15428,8 @@ export const RecibirSalidaResponse = zod.object({
+   "motivoCancelacion": zod.string().nullable(),
+   "pisosRetorno": zod.array(zod.object({
+   "id": zod.number(),
+-  "nombre": zod.string()
++  "nombre": zod.string(),
++  "nivel": zod.number().int().nullable()
+ })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
+   "entregadoPorId": zod.number().nullish(),
+   "nombreEntregadoPor": zod.string().nullish(),
+@@ -15530,7 +15553,8 @@ export const EntregarSalidaVentaClienteResponse = zod.object({
+   "motivoCancelacion": zod.string().nullable(),
+   "pisosRetorno": zod.array(zod.object({
+   "id": zod.number(),
+-  "nombre": zod.string()
++  "nombre": zod.string(),
++  "nivel": zod.number().int().nullable()
+ })).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
+   "entregadoPorId": zod.number().nullish(),
+   "nombreEntregadoPor": zod.string().nullish(),
+diff --git a/lib/api-zod/src/generated/types/auditoriaInventarioPiso.ts b/lib/api-zod/src/generated/types/auditoriaInventarioPiso.ts
+index 6cb7fc55..35752f13 100644
+--- a/lib/api-zod/src/generated/types/auditoriaInventarioPiso.ts
++++ b/lib/api-zod/src/generated/types/auditoriaInventarioPiso.ts
+@@ -9,6 +9,8 @@
+ export interface AuditoriaInventarioPiso {
+   id: number;
+   nombre: string;
++  /** @nullable */
++  nivel: number | null;
+   ubicacionId: number;
+   activo: boolean;
+ }
+diff --git a/lib/api-zod/src/generated/types/piso.ts b/lib/api-zod/src/generated/types/piso.ts
+index 735e3afc..9b2f0ed0 100644
+--- a/lib/api-zod/src/generated/types/piso.ts
++++ b/lib/api-zod/src/generated/types/piso.ts
+@@ -10,6 +10,11 @@ export interface Piso {
+   id: number;
+   ubicacionId: number;
+   nombre: string;
++  /**
++     * Orden físico ascendente configurado explícitamente; null indica configuración pendiente.
++     * @nullable
++     */
++  nivel: number | null;
+   activo: boolean;
+   createdAt: Date;
+   updatedAt: Date;
+diff --git a/lib/api-zod/src/generated/types/pisoInput.ts b/lib/api-zod/src/generated/types/pisoInput.ts
+index d3e832a5..6cdaed5c 100644
+--- a/lib/api-zod/src/generated/types/pisoInput.ts
++++ b/lib/api-zod/src/generated/types/pisoInput.ts
+@@ -12,5 +12,10 @@ export interface PisoInput {
+      * @maxLength 120
+      */
+   nombre: string;
++  /**
++     * @minimum -2147483648
++     * @maximum 2147483647
++     */
++  nivel: number;
+   activo?: boolean;
+ }
+diff --git a/lib/api-zod/src/generated/types/pisoUpdate.ts b/lib/api-zod/src/generated/types/pisoUpdate.ts
+index da929c14..2a139fbb 100644
+--- a/lib/api-zod/src/generated/types/pisoUpdate.ts
++++ b/lib/api-zod/src/generated/types/pisoUpdate.ts
+@@ -12,5 +12,10 @@ export interface PisoUpdate {
+      * @maxLength 120
+      */
+   nombre?: string;
++  /**
++     * @minimum -2147483648
++     * @maximum 2147483647
++     */
++  nivel?: number;
+   activo?: boolean;
+ }
+diff --git a/lib/api-zod/src/generated/types/salidaDetailPisosRetornoItem.ts b/lib/api-zod/src/generated/types/salidaDetailPisosRetornoItem.ts
+index 5b5a6ec4..42b1604c 100644
+--- a/lib/api-zod/src/generated/types/salidaDetailPisosRetornoItem.ts
++++ b/lib/api-zod/src/generated/types/salidaDetailPisosRetornoItem.ts
+@@ -9,4 +9,6 @@
+ export type SalidaDetailPisosRetornoItem = {
+   id: number;
+   nombre: string;
++  /** @nullable */
++  nivel: number | null;
+ };
+diff --git a/lib/db/src/lib/pisos-schema.ts b/lib/db/src/lib/pisos-schema.ts
+index 4cbd59c2..ece43fb3 100644
+--- a/lib/db/src/lib/pisos-schema.ts
++++ b/lib/db/src/lib/pisos-schema.ts
+@@ -1,7 +1,12 @@
+ import type { Pool } from "pg";
+ import { ADVISORY_LOCK_NAMESPACES, transactionAdvisoryLock } from "./advisory-locks.mjs";
+ 
+-/** Repeatable, data-preserving installation of the optional floor catalog. */
++/**
++ * Repeatable, data-preserving installation of the optional floor catalog.
++ * nivel is deliberately additive/nullable: an independently reviewed migration
++ * must backfill verified floor IDs before a later SET NOT NULL. Never infer it
++ * from names or assign a default here. Inspection boot still skips initializers.
++ */
+ export async function ensurePisosSchema(pool: Pick<Pool, "connect">): Promise<void> {
+   const client = await pool.connect();
+   try {
+@@ -19,6 +24,7 @@ export async function ensurePisosSchema(pool: Pick<Pool, "connect">): Promise<vo
+       );
+       CREATE UNIQUE INDEX IF NOT EXISTS pisos_ubicacion_nombre_ci_unique
+         ON pisos (ubicacion_id, lower(nombre));
++      ALTER TABLE pisos ADD COLUMN IF NOT EXISTS nivel integer;
+       ALTER TABLE rollos ADD COLUMN IF NOT EXISTS piso_id integer REFERENCES pisos(id);
+       CREATE INDEX IF NOT EXISTS rollos_piso_idx ON rollos(piso_id);
+       ALTER TABLE auditoria_inventario_snapshot
+diff --git a/lib/db/src/schema/locations.ts b/lib/db/src/schema/locations.ts
+index c7aab540..ec65e9f4 100644
+--- a/lib/db/src/schema/locations.ts
++++ b/lib/db/src/schema/locations.ts
+@@ -42,6 +42,9 @@ export const pisosTable = pgTable(
+       .notNull()
+       .references(() => ubicacionesTable.id),
+     nombre: text("nombre").notNull(),
++    // Explicit ascending physical rank (not inferred from a name or story number).
++    // Nullable during the reviewed backfill. Equal ranks deliberately tie by id.
++    nivel: integer("nivel"),
+     activo: boolean("activo").notNull().default(true),
+     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+     updatedAt: timestamp("updated_at", { withTimezone: true })
+diff --git a/lib/floor-order.mjs b/lib/floor-order.mjs
+new file mode 100644
+index 00000000..fca97e9e
+--- /dev/null
++++ b/lib/floor-order.mjs
+@@ -0,0 +1,14 @@
++/** Persisted ordering only: names are presentation, never physical position. */
++export function compareFloorLevels(a, b) {
++  const aValid = Number.isInteger(a.nivel);
++  const bValid = Number.isInteger(b.nivel);
++  if (aValid !== bValid) return aValid ? -1 : 1;
++  return (aValid ? a.nivel - b.nivel : 0) || a.id - b.id;
++}
++
++/** An unknown active level could be lower: never silently choose around it. */
++export function lowestActiveFloor(floors) {
++  const active = floors.filter((floor) => floor.activo !== false);
++  if (!active.length || active.some((floor) => !Number.isInteger(floor.nivel))) return null;
++  return [...active].sort(compareFloorLevels)[0];
++}
+\ No newline at end of file
+diff --git a/lib/floor-order.d.mts b/lib/floor-order.d.mts
+new file mode 100644
+index 00000000..5527ab61
+--- /dev/null
++++ b/lib/floor-order.d.mts
+@@ -0,0 +1,3 @@
++export type OrderedFloor = { id: number; nivel: number | null; activo?: boolean };
++export function compareFloorLevels(a: OrderedFloor, b: OrderedFloor): number;
++export function lowestActiveFloor<T extends OrderedFloor>(floors: readonly T[]): T | null;
+\ No newline at end of file
+diff --git a/lib/floor-order.test.mjs b/lib/floor-order.test.mjs
+new file mode 100644
+index 00000000..74c2fd64
+--- /dev/null
++++ b/lib/floor-order.test.mjs
+@@ -0,0 +1,37 @@
++import assert from "node:assert/strict";
++import test from "node:test";
++import { compareFloorLevels, lowestActiveFloor } from "./floor-order.mjs";
++
++test("numeric order handles unsorted arrays and levels above nine without name coupling", () => {
++  const floors = [
++    { id: 1, nivel: 10, nombre: "AAA" },
++    { id: 2, nivel: 2, nombre: "ZZZ" },
++    { id: 3, nivel: 1, nombre: "Piso arbitrario" },
++  ];
++  assert.deepEqual([...floors].sort(compareFloorLevels).map(f => f.id), [3, 2, 1]);
++  assert.equal(lowestActiveFloor(floors)?.id, 3);
++  assert.deepEqual(floors.map(f => f.id), [1, 2, 3], "does not mutate input");
++  assert.equal(lowestActiveFloor(floors.map(f => ({ ...f, nombre: "renamed" })))?.id, 3);
++});
++
++test("lowest active includes negative levels, excludes inactive and does not require zero", () => {
++  assert.equal(lowestActiveFloor([
++    { id: 1, nivel: 0, activo: false },
++    { id: 4, nivel: 10, activo: true },
++    { id: 3, nivel: 1, activo: true },
++    { id: 9, nivel: null, activo: false },
++  ])?.id, 3);
++  assert.equal(lowestActiveFloor([{ id: 1, nivel: 0 }, { id: 2, nivel: -2 }])?.id, 2);
++});
++
++test("ties use id; null/invalid active levels block fixed selection, never fallback", () => {
++  assert.equal(lowestActiveFloor([{ id: 9, nivel: 2 }, { id: 4, nivel: 2 }])?.id, 4);
++  for (const nivel of [null, undefined, "0", NaN, 1.5]) {
++    assert.equal(lowestActiveFloor([{ id: 9, nivel: 1 }, { id: 4, nivel }]), null);
++  }
++  assert.equal(lowestActiveFloor([]), null);
++  assert.equal(lowestActiveFloor([{ id: 1, nivel: 0, activo: false }]), null);
++  assert.deepEqual([
++    { id: 9, nivel: null }, { id: 3, nivel: 10 }, { id: 4, nivel: 1 }, { id: 2, nivel: null },
++  ].sort(compareFloorLevels).map(f => f.id), [4, 3, 2, 9]);
++});
+\ No newline at end of file
+diff --git a/artifacts/api-server/src/floor-order.contract.test.ts b/artifacts/api-server/src/floor-order.contract.test.ts
+new file mode 100644
+index 00000000..cb2c458d
+--- /dev/null
++++ b/artifacts/api-server/src/floor-order.contract.test.ts
+@@ -0,0 +1,18 @@
++import assert from "node:assert/strict";
++import { readFileSync } from "node:fs";
++import test from "node:test";
++
++const read = (path: string) => readFileSync(new URL(path, import.meta.url), "utf8");
++test("floor catalogs and inventory helpers consistently use numeric level then id", () => {
++  for (const path of ["./routes/locations.ts", "./routes/auditorias-inventario.ts", "./routes/inventario.ts", "./lib/inventario.ts", "./lib/salidas.ts", "./lib/auditoria-inventario.ts"]) {
++    const source = read(path);
++    assert.ok(source.includes(".orderBy(asc(pisosTable.nivel), asc(pisosTable.id))"), path);
++    assert.ok(!source.includes(".orderBy(asc(pisosTable.nombre))"), path);
++    assert.ok(!source.includes(".orderBy(asc(pisosTable.id))"), path);
++  }
++});
++test("additive schema never assigns levels inferred from floor names", () => {
++  const source = read("../../../lib/db/src/lib/pisos-schema.ts");
++  assert.ok(source.includes("ALTER TABLE pisos ADD COLUMN IF NOT EXISTS nivel integer;"));
++  assert.doesNotMatch(source, /UPDATE\s+pisos|nivel\s+integer\s+(?:NOT NULL|DEFAULT)/i);
++});
+\ No newline at end of file
+diff --git a/reports/floor-level-and-letter-20260926/floor-level-migration.template.sql b/reports/floor-level-and-letter-20260926/floor-level-migration.template.sql
+new file mode 100644
+index 00000000..1b684225
+--- /dev/null
++++ b/reports/floor-level-and-letter-20260926/floor-level-migration.template.sql
+@@ -0,0 +1,82 @@
++-- REVIEW TEMPLATE ONLY. NOT APPLIED. Do not run against an unconfirmed connection.
++-- First confirm endpoint/database/schema with the owner and capture an immutable
++-- read-only snapshot of every site/floor (including inactive rows and empty sites).
++-- Database name alone is NOT sufficient proof of endpoint identity.
++-- This script intentionally fails until both review tables are populated.
++-- Keep the API stopped/inspection-only until the reviewed migration is committed.
++\set ON_ERROR_STOP on
++BEGIN;
++SET LOCAL lock_timeout = '5s';
++SET LOCAL statement_timeout = '30s';
++
++CREATE TEMP TABLE reviewed_target (
++  database_name text NOT NULL,
++  schema_name text NOT NULL CHECK (schema_name = 'public')
++) ON COMMIT DROP;
++-- INSERT INTO reviewed_target VALUES ('OWNER_CONFIRMED_DATABASE', 'public');
++
++CREATE TEMP TABLE reviewed_floor_levels (
++  id integer PRIMARY KEY,
++  ubicacion_id integer NOT NULL,
++  nombre text NOT NULL,
++  activo boolean NOT NULL,
++  nivel integer NOT NULL
++) ON COMMIT DROP;
++-- Insert the FULL freshly verified catalog here, by exact ID/site/name/active
++-- snapshot and reviewed numeric rank. Names verify identity, NEVER derive rank.
++-- INSERT INTO reviewed_floor_levels VALUES (...);
++-- OBSERVATION ONLY, NOT AUTHORIZATION OR EXECUTABLE BACKFILL:
++-- heliumdb snapshot ID=rank: 1=0,2=1,3=0,4=1,5=0,6=1,7=1,8=2,9=3,
++-- 10=0,11=1,12=2,13=3. This is NOT the confirmed prior application DB.
++-- Two inactive sites in that snapshot have no floors; do not fabricate floors.
++
++DO $review$
++BEGIN
++  IF (SELECT count(*) FROM reviewed_target) <> 1
++     OR NOT EXISTS (SELECT 1 FROM reviewed_target WHERE database_name = current_database()) THEN
++    RAISE EXCEPTION 'Missing or mismatched independently confirmed target';
++  END IF;
++  IF to_regclass('public.pisos') IS NULL THEN
++    RAISE EXCEPTION 'Expected floor catalog missing: stop, do not create/seed a replacement';
++  END IF;
++  IF NOT EXISTS (SELECT 1 FROM reviewed_floor_levels) THEN
++    RAISE EXCEPTION 'Explicit reviewed floor mapping required';
++  END IF;
++END $review$;
++
++LOCK TABLE public.pisos IN ACCESS EXCLUSIVE MODE;
++DO $review$
++BEGIN
++  IF EXISTS (
++    SELECT 1 FROM public.pisos p FULL JOIN reviewed_floor_levels r USING (id)
++    WHERE p.id IS NULL OR r.id IS NULL
++       OR p.ubicacion_id IS DISTINCT FROM r.ubicacion_id
++       OR p.nombre IS DISTINCT FROM r.nombre
++       OR p.activo IS DISTINCT FROM r.activo
++  ) THEN
++    RAISE EXCEPTION 'Catalog differs from reviewed full snapshot; re-review';
++  END IF;
++END $review$;
++
++ALTER TABLE public.pisos ADD COLUMN IF NOT EXISTS nivel integer;
++DO $review$
++BEGIN
++  IF EXISTS (
++    SELECT 1 FROM public.pisos p JOIN reviewed_floor_levels r USING (id)
++    WHERE p.nivel IS NOT NULL AND p.nivel <> r.nivel
++  ) THEN
++    RAISE EXCEPTION 'Previously configured level differs; explicit re-review required';
++  END IF;
++END $review$;
++UPDATE public.pisos p SET nivel = r.nivel
++FROM reviewed_floor_levels r WHERE p.id = r.id AND p.nivel IS NULL;
++SELECT id, ubicacion_id, nombre, activo, nivel
++FROM public.pisos ORDER BY ubicacion_id, nivel, id;
++
++-- Later, only after complete catalog backfill AND every writer/initializer/test
++-- fixture supplies an explicit nivel, approve this separate constraint change:
++-- ALTER TABLE public.pisos ALTER COLUMN nivel SET NOT NULL;
++-- Equal levels remain permitted with id ASC tie-break. No per-site UNIQUE added.
++-- No runtime default/backfill/name matching. Empty sites remain visibly blocked.
++ROLLBACK;
++-- Replace ROLLBACK with COMMIT only in the separately authorized reviewed copy.
+\ No newline at end of file

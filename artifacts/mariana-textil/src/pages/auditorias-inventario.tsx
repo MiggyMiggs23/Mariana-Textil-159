@@ -60,6 +60,7 @@ import { AuditCollaboration, AuditScannerAttribution } from "@/components/audito
 import { auditParticipantLimit, useAuditParticipation } from "@/components/auditoria/use-audit-participation";
 import { AuditFloorStation, isMobileAuditDevice } from "@/components/auditoria/audit-floor-station";
 import { useAuditFloors } from "@/components/auditoria/use-audit-floors";
+import { compareFloorLevels, lowestActiveFloor } from "../../../../lib/floor-order.mjs";
 
 function message(error: unknown): string {
   if (error && typeof error === "object" && "data" in error) {
@@ -255,10 +256,10 @@ export default function AuditoriasInventario() {
   };
 
   const floorsQuery = useAuditFloors(currentDetail?.id ?? null, user?.id ?? null, currentDetail?.estado === "ABIERTA");
-  const pisosActivos = useMemo(() => floorsQuery.data?.filter((floor) => floor.activo) ?? [], [floorsQuery.data]);
+  const pisosActivos = useMemo(() => floorsQuery.data?.filter((floor) => floor.activo).sort(compareFloorLevels) ?? [], [floorsQuery.data]);
   const floorsReady = !!currentDetail && !floorsQuery.isLoading && !floorsQuery.isError && !!floorsQuery.data;
   const floorForScan = floorsReady
-    ? mobileScanner ? pisosActivos.find((floor) => floor.id === selectedPiso) : pisosActivos[0]
+    ? mobileScanner ? pisosActivos.find((floor) => floor.id === selectedPiso) : lowestActiveFloor(pisosActivos)
     : undefined;
 
   useEffect(() => {

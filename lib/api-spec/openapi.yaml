@@ -2919,7 +2919,9 @@ paths:
       description: >-
         Exige piso activo del sitio. Sin pisos activos devuelve 400 FLOOR_CONFIGURATION_REQUIRED;
         piso ausente o inválido devuelve 400 INVALID_FLOOR. Computadora (heurística User-Agent
-        del servidor, no autorización) solo admite el primer piso activo ordenado por nombre ASC,
+        del servidor, no autorización) solo admite el piso activo de menor nivel numérico,
+        con id ASC como desempate. Si algún piso activo tiene nivel sin configurar,
+        computadora devuelve 400 FLOOR_CONFIGURATION_REQUIRED;
         de lo contrario 400 DESKTOP_ACCESS_FLOOR_REQUIRED. Móvil admite cualquier piso válido.
         Sexto usuario activo devuelve 409 AUDIT_PARTICIPANT_LIMIT. Un duplicado conserva autor,
         hora y piso del primer escaneo; nunca sustituye su atribución.
@@ -11493,24 +11495,27 @@ components:
         activa: { type: boolean }
     Piso:
       type: object
-      required: [id, ubicacionId, nombre, activo, createdAt, updatedAt]
+      required: [id, ubicacionId, nombre, nivel, activo, createdAt, updatedAt]
       properties:
         id: { type: number }
         ubicacionId: { type: number }
         nombre: { type: string }
+        nivel: { type: [integer, "null"], description: "Orden físico ascendente configurado explícitamente; null indica configuración pendiente." }
         activo: { type: boolean }
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
     PisoInput:
       type: object
-      required: [nombre]
+      required: [nombre, nivel]
       properties:
         nombre: { type: string, minLength: 1, maxLength: 120 }
+        nivel: { type: integer, minimum: -2147483648, maximum: 2147483647 }
         activo: { type: boolean, default: true }
     PisoUpdate:
       type: object
       properties:
         nombre: { type: string, minLength: 1, maxLength: 120 }
+        nivel: { type: integer, minimum: -2147483648, maximum: 2147483647 }
         activo: { type: boolean }
     RolloPisoUpdate:
       type: object
@@ -14629,10 +14634,11 @@ components:
               description: Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.
               items:
                 type: object
-                required: [id, nombre]
+                required: [id, nombre, nivel]
                 properties:
                   id: { type: number }
                   nombre: { type: string }
+                  nivel: { type: [integer, "null"] }
             entregadoPorId: { type: ["number", "null"] }
             nombreEntregadoPor: { type: ["string", "null"] }
             fechaEntrega: { type: ["string", "null"], format: date-time }
@@ -16960,10 +16966,11 @@ components:
               items: { $ref: "#/components/schemas/AuditoriaInventarioParticipante" }
     AuditoriaInventarioPiso:
       type: object
-      required: [id, nombre, ubicacionId, activo]
+      required: [id, nombre, nivel, ubicacionId, activo]
       properties:
         id: { type: number }
         nombre: { type: string }
+        nivel: { type: [integer, "null"] }
         ubicacionId: { type: number }
         activo: { type: boolean }
     AuditoriaInventarioParticipacion:

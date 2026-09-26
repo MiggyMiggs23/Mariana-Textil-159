@@ -20,9 +20,9 @@ vi.mock("@/components/ui/select", () => ({
 }));
 
 const floors = [
-  { id: 11, ubicacionId: 1, nombre: "Primer piso", activo: true },
-  { id: 12, ubicacionId: 1, nombre: "Segundo piso", activo: true },
-  { id: 13, ubicacionId: 1, nombre: "Tercer piso", activo: true },
+  { id: 11, ubicacionId: 1, nombre: "Primer piso", nivel: 1, activo: true },
+  { id: 12, ubicacionId: 1, nombre: "Segundo piso", nivel: 2, activo: true },
+  { id: 13, ubicacionId: 1, nombre: "Tercer piso", nivel: 3, activo: true },
 ] as AuditFloor[];
 
 function Participant({ userId, initialFloor, onScan }: {
@@ -41,6 +41,23 @@ function Participant({ userId, initialFloor, onScan }: {
 }
 
 afterEach(() => cleanup());
+
+test("desktop uses lowest active numeric level even when the array and names disagree", () => {
+  render(<AuditFloorStation floors={[
+    { id: 5, ubicacionId: 1, nombre: "A", nivel: 10, activo: true },
+    { id: 6, ubicacionId: 1, nombre: "Z", nivel: 1, activo: true },
+    { id: 7, ubicacionId: 1, nombre: "B", nivel: 0, activo: false },
+  ]} ready error={false} mobile={false} joined selectedId={5} onSelect={vi.fn()} />);
+  expect(screen.getByTestId("audit-floor-name").textContent).toBe("Z");
+});
+
+test("desktop visibly blocks an unconfigured active level", () => {
+  render(<AuditFloorStation floors={[
+    { id: 5, ubicacionId: 1, nombre: "A", nivel: 10, activo: true },
+    { id: 6, ubicacionId: 1, nombre: "Z", nivel: null, activo: true },
+  ]} ready error={false} mobile={false} joined selectedId={5} onSelect={vi.fn()} />);
+  expect(screen.getByTestId("audit-floor-name").textContent).toContain("Falta configurar el nivel numérico");
+});
 
 test("three mounted participants keep their own independently confirmed real floors", () => {
   const onScan = vi.fn();

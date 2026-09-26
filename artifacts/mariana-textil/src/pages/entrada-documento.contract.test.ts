@@ -28,8 +28,10 @@ test("la entrada conserva su formato global y firma solo la última hoja global"
 
 test("la entrada agrega un listado compacto de todas las series por producto", () => {
   assert.match(documentPage, /const seriesPerRow = 4/);
-  assert.match(documentPage, /const seriesRowsPerPage = 22/);
-  assert.match(documentPage, /Laser PDF validation: 22 compact series rows/);
+  assert.match(documentPage, /const seriesRowsPerPage = 38/);
+  assert.match(documentPage, /Native Chromium \/ real Inter fixture/);
+  assert.match(styles, /@page entrada-series-page\s*\{\s*size:\s*215\.9mm 279\.4mm;\s*margin:\s*0;/);
+  assert.match(styles, /\.entrada-page-print\[data-page-kind="series"\]\s*\{\s*page:\s*entrada-series-page;\s*width:\s*215\.9mm !important;\s*height:\s*279\.4mm !important;/);
   assert.match(documentPage, /const embeddedSeriesRowsCapacity/);
   assert.match(documentPage, /seriesRows\.length <= embeddedSeriesRowsCapacity/);
   assert.match(documentPage, /const standaloneSeriesRows = embedsAllSeries \? \[\] : seriesRows/);

@@ -30,23 +30,27 @@ import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto"
 
 function PisosSitio({ locationId, active }: { locationId: number, active: boolean }) {
   const queryClient = useQueryClient();
-  const { data: pisos, isLoading } = useListPisosLocation(locationId);
+  const { data: pisos, isLoading, isError } = useListPisosLocation(locationId);
   const createPiso = useCreatePisoLocation();
   const updatePiso = useUpdatePisoLocation();
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editNombre, setEditNombre] = useState("");
   const [editActivo, setEditActivo] = useState(true);
+  const [editNivel, setEditNivel] = useState("");
+  const validNivel = (value: string) => value.trim() !== "" && Number.isInteger(Number(value)) && Number(value) >= -2147483648 && Number(value) <= 2147483647;
 
   const [creating, setCreating] = useState(false);
   const [createNombre, setCreateNombre] = useState("");
+  const [createNivel, setCreateNivel] = useState("");
 
   const handleCreate = () => {
-    if (!createNombre.trim()) return;
-    createPiso.mutate({ id: locationId, data: { nombre: createNombre.trim() } }, {
+    if (!createNombre.trim() || !validNivel(createNivel)) return;
+    createPiso.mutate({ id: locationId, data: { nombre: createNombre.trim(), nivel: Number(createNivel) } }, {
       onSuccess: () => {
         toast.success("Piso creado");
         setCreating(false);
         setCreateNombre("");
+        setCreateNivel("");
         queryClient.invalidateQueries({ queryKey: getListPisosLocationQueryKey(locationId) });
       },
       onError: (err: any) => toast.error("Error al crear piso", { description: err.data?.error || err.message })
@@ -54,8 +58,8 @@ function PisosSitio({ locationId, active }: { locationId: number, active: boolea
   };
 
   const handleUpdate = (pisoId: number) => {
-    if (!editNombre.trim()) return;
-    updatePiso.mutate({ id: locationId, pisoId, data: { nombre: editNombre.trim(), activo: editActivo } }, {
+    if (!editNombre.trim() || !validNivel(editNivel)) return;
+    updatePiso.mutate({ id: locationId, pisoId, data: { nombre: editNombre.trim(), nivel: Number(editNivel), activo: editActivo } }, {
       onSuccess: () => {
         toast.success("Piso actualizado");
         setEditingId(null);
@@ -66,18 +70,20 @@ function PisosSitio({ locationId, active }: { locationId: number, active: boolea
   };
 
   if (isLoading) return <div className="p-4 flex justify-center"><Loader2 className="animate-spin w-5 h-5 text-muted-foreground" /></div>;
+  if (isError) return <p role="alert" className="p-4 text-destructive">No se pudieron cargar los pisos. Revisa la configuración del catálogo antes de continuar.</p>;
 
   return (
     <div className="space-y-4 border-t pt-4 mt-6">
       <div className="flex items-center justify-between">
         <h4 className="font-semibold">Pisos / Divisiones</h4>
         {active && (
-          <Button variant="outline" size="sm" onClick={() => { setCreating(true); setCreateNombre(""); }} disabled={creating}>
+          <Button variant="outline" size="sm" onClick={() => { setCreating(true); setCreateNombre(""); setCreateNivel(""); }} disabled={creating}>
             <Plus className="w-3 h-3 mr-1" /> Agregar
           </Button>
         )}
       </div>
 
+      <p className="text-xs text-muted-foreground">Nivel numérico: menor valor = piso más bajo. El nombre no determina el orden. La computadora usa el piso activo de menor nivel.</p>
       {creating && (
         <div className="flex items-center gap-2 p-2 border rounded bg-muted/30">
           <Input
@@ -88,7 +94,8 @@ function PisosSitio({ locationId, active }: { locationId: number, active: boolea
             onChange={e => setCreateNombre(e.target.value)}
             autoFocus
           />
-          <Button size="sm" className="h-8" onClick={handleCreate} disabled={!createNombre.trim() || createPiso.isPending}>Guardar</Button>
+          <Input type="number" step="1" aria-label="Nivel numérico del nuevo piso" placeholder="Nivel" className="h-8 w-28" value={createNivel} onChange={e => setCreateNivel(e.target.value)} />
+          <Button size="sm" className="h-8" onClick={handleCreate} disabled={!createNombre.trim() || !validNivel(createNivel) || createPiso.isPending}>Guardar</Button>
           <Button size="sm" variant="ghost" className="h-8" onClick={() => setCreating(false)}>Cancelar</Button>
         </div>
       )}
@@ -100,20 +107,22 @@ function PisosSitio({ locationId, active }: { locationId: number, active: boolea
               {editingId === piso.id ? (
                 <div className="flex items-center gap-2 flex-1">
                   <Input size={1} className="h-8 flex-1" value={editNombre} onChange={e => setEditNombre(e.target.value)} />
+                  <Input type="number" step="1" aria-label="Nivel numérico del piso" placeholder="Nivel" className="h-8 w-28" value={editNivel} onChange={e => setEditNivel(e.target.value)} />
                   <label className="flex items-center gap-1 text-xs whitespace-nowrap">
                     <input type="checkbox" checked={editActivo} onChange={e => setEditActivo(e.target.checked)} className="rounded" /> Activo
                   </label>
-                  <Button size="sm" className="h-8" onClick={() => handleUpdate(piso.id)} disabled={!editNombre.trim() || updatePiso.isPending}>Guardar</Button>
+                  <Button size="sm" className="h-8" onClick={() => handleUpdate(piso.id)} disabled={!editNombre.trim() || !validNivel(editNivel) || updatePiso.isPending}>Guardar</Button>
                   <Button size="sm" variant="ghost" className="h-8" onClick={() => setEditingId(null)}>Cancelar</Button>
                 </div>
               ) : (
                 <>
                   <div className="flex items-center gap-2">
                     <span className={`font-medium ${!piso.activo ? 'text-muted-foreground line-through' : ''}`}>{piso.nombre}</span>
+                    <Badge variant={piso.nivel == null ? "destructive" : "secondary"}>{piso.nivel == null ? "Nivel sin configurar" : `Nivel ${piso.nivel}`}</Badge>
                     {!piso.activo && <Badge variant="secondary" className="text-[10px]">Inactivo</Badge>}
                   </div>
                   {active && (
-                    <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => { setEditingId(piso.id); setEditNombre(piso.nombre); setEditActivo(piso.activo); }}>
+                    <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => { setEditingId(piso.id); setEditNombre(piso.nombre); setEditActivo(piso.activo); setEditNivel(piso.nivel == null ? "" : String(piso.nivel)); }}>
                       <Pencil className="w-3.5 h-3.5" />
                     </Button>
                   )}

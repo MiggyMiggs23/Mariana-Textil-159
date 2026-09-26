@@ -178,6 +178,7 @@ function presentPiso(row: typeof pisosTable.$inferSelect) {
     id: row.id,
     ubicacionId: row.ubicacionId,
     nombre: row.nombre,
+    nivel: row.nivel,
     activo: row.activo,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
@@ -198,7 +199,7 @@ router.get("/locations/:id/pisos", requierePermiso("ubicaciones", "ver"), async 
   }
   const rows = await db.select().from(pisosTable)
     .where(and(eq(pisosTable.ubicacionId, site.id), req.auth!.user.rol === "ADMIN" ? undefined : eq(pisosTable.activo, true)))
-    .orderBy(asc(pisosTable.nombre));
+    .orderBy(asc(pisosTable.nivel), asc(pisosTable.id));
   res.json(ListPisosLocationResponse.parse(rows.map(presentPiso)));
 });
 
@@ -219,7 +220,7 @@ router.post("/locations/:id/pisos", requierePermiso("ubicaciones", "crear"), asy
       const [site] = await tx.select({ id: ubicacionesTable.id }).from(ubicacionesTable)
         .where(and(eq(ubicacionesTable.id, params.data.id), inArray(ubicacionesTable.tipo, ["TIENDA", "BODEGA"]))).limit(1);
       if (!site) return null;
-      const [created] = await tx.insert(pisosTable).values({ ubicacionId: site.id, nombre, activo: body.data.activo }).returning();
+      const [created] = await tx.insert(pisosTable).values({ ubicacionId: site.id, nombre, nivel: body.data.nivel, activo: body.data.activo }).returning();
       await tx.insert(auditoriaTable).values({ usuarioId: req.auth!.user.id, accion: "CREAR", entidad: "pisos", entidadId: String(created!.id), datosDespues: presentPiso(created!), ip: getRequestIp(req) });
       return created!;
     });

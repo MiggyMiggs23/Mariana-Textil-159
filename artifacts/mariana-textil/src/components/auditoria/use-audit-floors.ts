@@ -4,6 +4,7 @@ import { customFetch } from "@workspace/api-client-react";
 export type AuditFloor = {
   id: number;
   nombre: string;
+  nivel: number | null;
   ubicacionId: number;
   activo: boolean;
 };

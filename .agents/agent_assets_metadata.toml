@@ -2747,3 +2747,17 @@ mtime_ms = 1790455272817
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/ae1b36b4-3c57-4dfc-a613-63e8d83b47b5/193fcdc6-6cda-4378-8124-aee764654ac4"
 storage_version_token = "1790455409488829"
 content_type = "image/png"
+
+[[outputs]]
+id = "fuknZSLRlwPVN_Bgj2hMB"
+uri = "file://reports/floor-level-and-letter-20260926/print/after-152.pdf"
+type = "pdf"
+title = "Entrada — prueba de 152 folios por hoja"
+description = "PDF de prueba con letra y diseño conservados. La segunda página contiene 152 folios. Cambio preparado, aún no activado; no es una prueba de impresora física."
+logical_id = "6ed850db-d678-4282-814f-003dda8aa1fb"
+content_hash = "sha256:ad98b430805549b37fa87a221d24365b408b544cac10681f008cf943358dfb22"
+size = 1071734
+mtime_ms = 1790460443705
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/6ed850db-d678-4282-814f-003dda8aa1fb/16f3793c-7b0c-43c8-aa74-164ddd6c9592"
+storage_version_token = "1790460759808014"
+content_type = "application/pdf"

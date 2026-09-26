@@ -70,11 +70,15 @@ export default function EntradaDocumento() {
     }));
   });
 
-  // Laser PDF validation: 22 compact series rows fit on one standalone sheet.
-  // With the 5.25 mm inset, its frame is 1012.9375 CSS px high at 96 px/in.
-  // The 40/41-row PDFs contain 22 + 18/19 complete rows on their series sheets,
-  // with all serials present and ink clearance >=5.2917 mm on every edge.
-  const seriesRowsPerPage = 22;
+  // Native Chromium / real Inter fixture: a Letter standalone frame is
+  // 1016.34375 CSS px high with the unchanged 5.25 mm inset. Its slim
+  // header is 40 px; table starts 49 px below frame top. The measured
+  // 38-row table is 943 px high (24 px per row + 31 px collapsed header/
+  // borders), leaving 24.34375 px below it. A 39th row leaves only
+  // 0.34375 px, violating the existing 8 px table padding + 1 px frame.
+  // Maximum: 38 rows × 4 = 152 folios; partial product rows reduce that.
+  // See entrada-series-letter.offline.test.mjs; not a printer-driver claim.
+  const seriesRowsPerPage = 38;
   // Cada fila global medida libera 54 px. La sección incrustada necesita 68 px
   // fijos (separación, título y cabecera) más 24 px por fila.
   const measuredGlobalRowHeightPx = 54;

@@ -41,8 +41,8 @@ function rejectedLimit(result: PromiseSettledResult<unknown>) {
 test("three parallel unique scans, original author collision, counts and historical detail", async () => {
   const id = await audit();
   await assert.rejects(scan(id, 0, "NO-FLOORS"), { code: "FLOOR_CONFIGURATION_REQUIRED" });
-  const floors = (await pool.query(`INSERT INTO pisos(ubicacion_id,nombre,activo)
-    VALUES($1,'A mezzanine',true),($1,'B rooftop',true),($1,'C cellar',true) RETURNING id`, [site])).rows;
+  const floors = (await pool.query(`INSERT INTO pisos(ubicacion_id,nombre,nivel,activo)
+    VALUES($1,'Z mezzanine',1,true),($1,'B rooftop',10,true),($1,'A cellar',2,true) RETURNING id`, [site])).rows;
   await assert.rejects(db.transaction(tx => scanAuditoria(tx, {
     auditoriaId: id, usuarioId: users[0]!, serie: "WRONG-DESKTOP", ip: "test", desktop: true, pisoId: floors[1].id,
   })), { code: "DESKTOP_ACCESS_FLOOR_REQUIRED" });
@@ -132,7 +132,7 @@ test("participation reuses scan edit/session/role/site guards, never autorizar",
   assert.equal(isDesktopAuditScanner("Mozilla/5.0 (iPhone; CPU iPhone OS 17_0) Mobile"), false);
   assert.equal(isDesktopAuditScanner("Mozilla/5.0 (Linux; Android 14)"), false);
   const floorRoute = route.slice(route.indexOf('"/auditorias/:id/pisos"'), route.indexOf('"/auditorias/:id/participar"'));
-  for (const required of ["requireSession", 'requierePermiso("auditoria_inventario", "ver")', "requireOperationalRole", "getVisibleHeader", "visible.error", "eq(pisosTable.activo, true)", "asc(pisosTable.nombre)"]) assert.ok(floorRoute.includes(required));
+  for (const required of ["requireSession", 'requierePermiso("auditoria_inventario", "ver")', "requireOperationalRole", "getVisibleHeader", "visible.error", "eq(pisosTable.activo, true)", "asc(pisosTable.nivel), asc(pisosTable.id)"]) assert.ok(floorRoute.includes(required));
   assert.ok(!floorRoute.includes('requierePermiso("ubicaciones"'));
 });
 
