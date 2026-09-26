@@ -2663,3 +2663,59 @@ mtime_ms = 1790420017830
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/044fa56b-1be6-4b27-bf18-40c5fec2585e/38ebcc89-f551-43af-8c73-eb31cd6bc8cf"
 storage_version_token = "1790420020060075"
 content_type = "text/html"
+
+[[outputs]]
+id = "MeYt5rDtOUFBwWg9ra75b"
+uri = "file://reports/print-corrections-20260926/labels/GABARDINA-METEPEC-1.50-MARINO.pdf"
+type = "pdf"
+title = "Etiqueta — GABARDINA METEPEC 1.50 - MARINO"
+description = "PDF del botón de impresión real, generado en copia desechable. Serie de prueba; no usar como etiqueta de inventario real."
+logical_id = "0d6c4dfa-3415-4a4a-81e3-bf09f0478ab7"
+content_hash = "sha256:e1bde37ff8de68f04bdeb27b44a64d5e7576d720b313d4fe74671f893736a8a5"
+size = 338932
+mtime_ms = 1790451573107
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/0d6c4dfa-3415-4a4a-81e3-bf09f0478ab7/d99a71c8-327c-49c8-a2de-68cc004e0390"
+storage_version_token = "1790451995696075"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "d-hRLJiOf3PvVqiC6JD_S"
+uri = "file://reports/print-corrections-20260926/labels/MEZCLILLA-DIAMANTINA-10-OZ-INDIGO-RAYADA.pdf"
+type = "pdf"
+title = "Etiqueta — nombre más largo del catálogo"
+description = "MEZCLILLA DIAMANTINA 10 OZ - INDIGO RAYADA, en dos líneas sin cortar palabras. Serie de prueba."
+logical_id = "bf99e555-2840-4353-9e64-cef25576314a"
+content_hash = "sha256:dfa3d4c5804344900e275accc445f7b4c1d1a0c15b8190e5964ac0b5b5267b7d"
+size = 336164
+mtime_ms = 1790451577478
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/bf99e555-2840-4353-9e64-cef25576314a/e219e69e-475d-49bc-ad6c-47b7cf9ed4c8"
+storage_version_token = "1790451996280190"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "0cvCKtdy0GP16fOgeCwBg"
+uri = "file://reports/print-corrections-20260926/labels/etiquetas-top25-y-gabardina.pdf"
+type = "pdf"
+title = "Prueba de impresión — 26 etiquetas"
+description = "Los 25 nombres más largos y el ejemplo solicitado. Textos y 26 códigos QR verificados; rollos de prueba."
+logical_id = "a4c83cda-b9fa-469c-907a-714c917f3a0d"
+content_hash = "sha256:61829638d843e8ba1498bc34cb747e908822458bc3e4daaa0ec4586795d28560"
+size = 524832
+mtime_ms = 1790451568519
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/a4c83cda-b9fa-469c-907a-714c917f3a0d/77e88f1a-f482-4a8c-9e5f-8ed36851e182"
+storage_version_token = "1790451996799340"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "AbP2TRLJy8UAC-0IpSESX"
+uri = "file://reports/print-corrections-20260926/labels/ENTRADA-MA000001-PISOS-ORIGINALES.pdf"
+type = "pdf"
+title = "Entrada — columna PISO"
+description = "Documento de prueba con Planta Alta y Planta Baja; conserva el piso de recepción aunque el rollo cambie de ubicación."
+logical_id = "4a2eb901-529f-4856-9514-c5cd0e3b0a5b"
+content_hash = "sha256:ce6dbc52df583317edc5499a5b987642d70a4b834b48df4d23ef184e25ff5de3"
+size = 1112644
+mtime_ms = 1790451615842
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/4a2eb901-529f-4856-9514-c5cd0e3b0a5b/c7e68b1b-d446-4904-80d3-6cff8b50da0d"
+storage_version_token = "1790451997509830"
+content_type = "application/pdf"
