@@ -1,0 +1,7 @@
+{
+  "status": "PREPARED_AWAITING_MAIN_HANDOFF",
+  "harness": "../browser/audit.mjs",
+  "actualBrowserRuns": 0,
+  "actualScreenshots": 0,
+  "note": "Six synthetic sessions; three simultaneous mobile-UA floor scans, duplicate, misplaced roll, desktop first configured floor and sixth-user rejection. Requires actual synthetic audit fixtures. Physical access floor ambiguous: first active configured name order is documented."
+}

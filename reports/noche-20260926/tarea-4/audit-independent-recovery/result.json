@@ -1,0 +1,175 @@
+{
+  "status": "PARTIAL_OR_BLOCKED",
+  "checks": [
+    {
+      "id": "duplicate-readback-after-concurrency-error",
+      "status": "PASS",
+      "evidence": {
+        "totalEscaneados": 4,
+        "uniqueDuplicateRow": 1,
+        "author": "NOCHE26 Auditor 1",
+        "floor": "01 Acceso configurado",
+        "limitation": "Original simultaneous browser operation displayed REVISION_OBSOLETA full-page technical error; readback proves one persisted row, not successful UI handling."
+      }
+    },
+    {
+      "id": "fresh-login-0",
+      "status": "PASS",
+      "evidence": {
+        "actor": 0
+      }
+    },
+    {
+      "id": "fresh-join-0",
+      "status": "PASS",
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "id": "fresh-login-1",
+      "status": "PASS",
+      "evidence": {
+        "actor": 1
+      }
+    },
+    {
+      "id": "fresh-join-1",
+      "status": "PASS",
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "id": "fresh-login-2",
+      "status": "PASS",
+      "evidence": {
+        "actor": 2
+      }
+    },
+    {
+      "id": "fresh-join-2",
+      "status": "PASS",
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "id": "fresh-login-3",
+      "status": "PASS",
+      "evidence": {
+        "actor": 3
+      }
+    },
+    {
+      "id": "fresh-join-3",
+      "status": "PASS",
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "id": "fresh-login-4",
+      "status": "PASS",
+      "evidence": {
+        "actor": 4
+      }
+    },
+    {
+      "id": "fresh-join-4",
+      "status": "PASS",
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "id": "fresh-login-5",
+      "status": "PASS",
+      "evidence": {
+        "actor": 5
+      }
+    },
+    {
+      "id": "desktop-actual-first-floor-keyboard-scan",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ null\n- '01 Acceso configurado'\n"
+    },
+    {
+      "id": "sixth-full-capacity-response",
+      "status": "PASS",
+      "evidence": {
+        "status": 409,
+        "body": {
+          "error": "Ya hay 5 usuarios activos en esta auditoría. Espera a que se libere un lugar.",
+          "code": "AUDIT_PARTICIPANT_LIMIT"
+        }
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "tarea-4/audit-independent-recovery/duplicate-readback-after-concurrency-error-0.png",
+      "sha256": "fa50a92a5228803d4073f4faea16aad69374473c80d85644b0de926ea74c43f9"
+    },
+    {
+      "file": "tarea-4/audit-independent-recovery/fresh-join-0-0.png",
+      "sha256": "2254b9fea5d7e5d9d6e208bd048773e69e5046675f24594d31995763d8da15d7"
+    },
+    {
+      "file": "tarea-4/audit-independent-recovery/fresh-join-1-0.png",
+      "sha256": "672b8ffdde741c8dda6a0964a9bbfc47db3e0d6c94c12f5ba73145541e92ee56"
+    },
+    {
+      "file": "tarea-4/audit-independent-recovery/fresh-join-2-0.png",
+      "sha256": "1e7a9e4140c54f8b571966efd765dc9679b5e07513ef0c65f32b02db7f2a4b7e"
+    },
+    {
+      "file": "tarea-4/audit-independent-recovery/fresh-join-3-0.png",
+      "sha256": "c0d2b502e131666f31a05903db2b2f6f631575e093bcad3f88da33ee553fc914"
+    },
+    {
+      "file": "tarea-4/audit-independent-recovery/fresh-join-4-0.png",
+      "sha256": "cf548924f9d1b6fe66e9dbdc30a29c7d39731c577175d1d658e85c998eeb2290"
+    },
+    {
+      "file": "tarea-4/audit-independent-recovery/desktop-actual-first-floor-keyboard-scan-0.png",
+      "sha256": "a60585abd32a309dfd01b12fd23fd70cee5bf6eefcdfef5e5e4d3657b897705b"
+    },
+    {
+      "file": "tarea-4/audit-independent-recovery/sixth-full-capacity-response-0.png",
+      "sha256": "abdc574a8e922cb2f6c492ea7af8163df812604614e68978973f237a4ab94ee1"
+    }
+  ],
+  "startedAt": "2026-09-26T03:16:35.449Z",
+  "originalDuplicate": {
+    "usuarioId": 244,
+    "usuarioNombre": "NOCHE26 Auditor 1",
+    "serie": "10000031",
+    "clasificacion": "CUADRO",
+    "rolloId": 31,
+    "producto": "CON2D0ALG-AZU · CONTINUACION 2D0AA2 ALGODON · AZUL",
+    "cantidad": "10.000",
+    "unidad": "METRO",
+    "ubicacionActualId": 835,
+    "ubicacionActual": "NOCHE26 AUDIT NATIVO",
+    "pisoEsperadoId": 14,
+    "pisoEsperado": "01 Acceso configurado",
+    "pisoRealId": 14,
+    "pisoReal": "01 Acceso configurado",
+    "estadoActual": "DISPONIBLE",
+    "resolucion": "PENDIENTE",
+    "escaneadoAt": "2026-09-26T03:13:25.245Z",
+    "sobrante": null
+  },
+  "apiErrors": [
+    {
+      "actor": 5,
+      "status": 409,
+      "path": "/api/inventario/auditorias/2/participar",
+      "body": {
+        "error": "Ya hay 5 usuarios activos en esta auditoría. Espera a que se libere un lugar.",
+        "code": "AUDIT_PARTICIPANT_LIMIT"
+      }
+    }
+  ]
+}

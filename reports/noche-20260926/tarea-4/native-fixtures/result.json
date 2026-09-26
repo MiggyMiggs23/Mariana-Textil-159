@@ -1,0 +1,122 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "synthetic-site-floor-fixtures-authenticated-api",
+      "status": "PASS",
+      "evidence": {
+        "siteId": 835,
+        "floors": [
+          {
+            "id": 14,
+            "name": "01 Acceso configurado"
+          },
+          {
+            "id": 15,
+            "name": "02 Segundo"
+          },
+          {
+            "id": 16,
+            "name": "03 Tercero"
+          }
+        ],
+        "setup": "Authenticated fixture API only; actual audit journey remains native UI"
+      }
+    },
+    {
+      "id": "native-synthetic-audit-user-0",
+      "status": "PASS",
+      "evidence": {
+        "id": 243
+      }
+    },
+    {
+      "id": "native-synthetic-audit-user-1",
+      "status": "PASS",
+      "evidence": {
+        "id": 244
+      }
+    },
+    {
+      "id": "native-synthetic-audit-user-2",
+      "status": "PASS",
+      "evidence": {
+        "id": 245
+      }
+    },
+    {
+      "id": "native-synthetic-audit-user-3",
+      "status": "PASS",
+      "evidence": {
+        "id": 246
+      }
+    },
+    {
+      "id": "native-synthetic-audit-user-4",
+      "status": "PASS",
+      "evidence": {
+        "id": 247
+      }
+    },
+    {
+      "id": "native-synthetic-audit-user-5",
+      "status": "PASS",
+      "evidence": {
+        "id": 248
+      }
+    },
+    {
+      "id": "native-five-rolls-on-first-floor",
+      "status": "PASS",
+      "evidence": {
+        "entryId": 4
+      }
+    },
+    {
+      "id": "native-open-audit",
+      "status": "PASS",
+      "evidence": {
+        "auditId": 2
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "tarea-4/native-fixtures/synthetic-site-floor-fixtures-authenticated-api-0.png",
+      "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+    },
+    {
+      "file": "tarea-4/native-fixtures/native-synthetic-audit-user-0-0.png",
+      "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+    },
+    {
+      "file": "tarea-4/native-fixtures/native-synthetic-audit-user-1-0.png",
+      "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+    },
+    {
+      "file": "tarea-4/native-fixtures/native-synthetic-audit-user-2-0.png",
+      "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+    },
+    {
+      "file": "tarea-4/native-fixtures/native-synthetic-audit-user-3-0.png",
+      "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+    },
+    {
+      "file": "tarea-4/native-fixtures/native-synthetic-audit-user-4-0.png",
+      "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+    },
+    {
+      "file": "tarea-4/native-fixtures/native-synthetic-audit-user-5-0.png",
+      "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+    },
+    {
+      "file": "tarea-4/native-fixtures/native-five-rolls-on-first-floor-0.png",
+      "sha256": "9ccd052a2a18cbccf375c8b78a1e1e738a44c6c0f57b137784363f4034c78a7e"
+    },
+    {
+      "file": "tarea-4/native-fixtures/native-open-audit-0.png",
+      "sha256": "b4cd3d7db08e28016ae2394c214e7f720ddd9bcc6c302f30b4b963bf80eb4dbf"
+    }
+  ],
+  "startedAt": "2026-09-26T03:11:33.638Z"
+}

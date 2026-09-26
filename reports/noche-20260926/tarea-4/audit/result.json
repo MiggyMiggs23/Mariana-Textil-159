@@ -1,0 +1,80 @@
+{
+  "status": "PARTIAL_OR_BLOCKED",
+  "checks": [
+    {
+      "id": "six-synthetic-native-sessions",
+      "status": "PASS",
+      "evidence": {
+        "actors": 6,
+        "auditId": 2
+      }
+    },
+    {
+      "id": "three-concurrent-distinct-floors",
+      "status": "PASS",
+      "evidence": {
+        "totalEscaneados": 3
+      }
+    },
+    {
+      "id": "roll-on-another-floor",
+      "status": "PASS",
+      "evidence": {
+        "series": "10000028",
+        "expected": "01 Acceso configurado",
+        "actual": "02 Segundo",
+        "author": "NOCHE26 Auditor 0"
+      }
+    },
+    {
+      "id": "same-roll-two-users",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('shared-escaneados').filter({ hasText: /^4$/ }) to be visible\u001b[22m\n"
+    },
+    {
+      "id": "desktop-fixed-first-configured-floor",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "Expected values to be strictly equal:\n\nfalse !== true\n"
+    },
+    {
+      "id": "sixth-user-rejected",
+      "status": "BLOCKED_OR_DEFECT",
+      "error": "locator.isDisabled: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('input-audit-scan')\u001b[22m\n"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "tarea-4/audit/three-concurrent-distinct-floors-0.png",
+      "sha256": "4a5c1ccc0578f30e1d3995c2e5c26f8f32aff533d26344827d22b178de7a9128"
+    },
+    {
+      "file": "tarea-4/audit/three-concurrent-distinct-floors-1.png",
+      "sha256": "6715a8f4b4802acf8407a041d30a9b747a8b9d620901a4529a728f31d5cfcc79"
+    },
+    {
+      "file": "tarea-4/audit/three-concurrent-distinct-floors-2.png",
+      "sha256": "7ccf764330d490a836bf6a36fba2bc0c3192e42de2417b7269fb9af487a42133"
+    },
+    {
+      "file": "tarea-4/audit/roll-on-another-floor-0.png",
+      "sha256": "11611277c4308137fe72c5afb436397d9a5f22fbcb38ddd88d1ee57049064898"
+    },
+    {
+      "file": "tarea-4/audit/same-roll-two-users-0.png",
+      "sha256": "2fa411894d00cbcc3d78d3624438db55bdb60ddbfce81203432b25e2c6495fab"
+    },
+    {
+      "file": "tarea-4/audit/same-roll-two-users-1.png",
+      "sha256": "b01b99b05248f686f899217b27268ceaaceb0c98fdafc65d0b1a5bb5c6dcebfe"
+    },
+    {
+      "file": "tarea-4/audit/desktop-fixed-first-configured-floor-0.png",
+      "sha256": "34c75c247a6a2ae0d5d523fcd7b0046e90bf882249ece155cd9995223e2a53f8"
+    },
+    {
+      "file": "tarea-4/audit/sixth-user-rejected-0.png",
+      "sha256": "311226cddd8111aeef67e6fd49d298f77b6bde5037efdfafca95502666cf8165"
+    }
+  ],
+  "startedAt": "2026-09-26T03:12:59.724Z"
+}

@@ -1,0 +1,7 @@
+{
+  "id": "audit",
+  "task": 4,
+  "status": "PARTIAL_OR_BLOCKED",
+  "exitCode": 0,
+  "resultFile": "tarea-4/audit/result.json"
+}

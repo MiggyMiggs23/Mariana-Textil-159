@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "configured-first-floor-real-keyboard-scan",
+      "status": "PASS",
+      "evidence": {
+        "series": "10000032",
+        "actor": "NOCHE26 Auditor 3",
+        "pisoReal": "01 Acceso configurado",
+        "firstConfiguredFloor": "01 Acceso configurado",
+        "physicalScanner": false
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "tarea-4/desktop-keyboard-scan/configured-first-floor-real-keyboard-scan-0.png",
+      "sha256": "9724be02985b454577e13a60d21f73f61e02236a6033e7e794a226760b8264ee"
+    }
+  ],
+  "startedAt": "2026-09-26T03:37:05.257Z",
+  "scanStatus": 200
+}
