@@ -1,0 +1,71 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+1
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+1
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Mariana
+1
+I
+
+Isolated postreview permissions admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Salidas pendientes a cobro
+
+Agrupa salidas por cliente en un solo documento de venta.
+
+3Bh Creations SA DE CV
+Mariana-000001
+· Origen: Mariana
+10000003 · Tafeta Rojo · 10.00 Mts.
+Mariana-000002
+· Origen: Mariana
+10000004 · Tafeta Rojo · 10.00 Mts.
+Tienda emisora
+Mariana
+Tipo de documento
+TICKET (Contado)
+Recibir y generar venta

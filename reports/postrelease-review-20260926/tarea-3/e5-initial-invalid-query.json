@@ -1,0 +1,78 @@
+[
+  {
+    "role": "ADMIN",
+    "status": 400,
+    "response": {
+      "error": {
+        "code": "E5_VALIDATION",
+        "message": "Datos E5 inválidos."
+      }
+    },
+    "classification": "COMPOSITE_OR_PROFILE_BOUNDARY_NOT_SINGLE_PERMISSION_CLOSURE"
+  },
+  {
+    "role": "TERMINAL",
+    "status": 403,
+    "response": {
+      "error": {
+        "code": "E5_FORBIDDEN",
+        "message": "Sin permiso efectivo de consulta."
+      }
+    },
+    "classification": "COMPOSITE_OR_PROFILE_BOUNDARY_NOT_SINGLE_PERMISSION_CLOSURE"
+  },
+  {
+    "role": "CAJA",
+    "status": 403,
+    "response": {
+      "error": {
+        "code": "E5_FORBIDDEN",
+        "message": "Sin permiso efectivo de consulta."
+      }
+    },
+    "classification": "COMPOSITE_OR_PROFILE_BOUNDARY_NOT_SINGLE_PERMISSION_CLOSURE"
+  },
+  {
+    "role": "SUPERVISOR",
+    "status": 403,
+    "response": {
+      "error": {
+        "code": "E5_FORBIDDEN",
+        "message": "Sin permiso efectivo de consulta."
+      }
+    },
+    "classification": "COMPOSITE_OR_PROFILE_BOUNDARY_NOT_SINGLE_PERMISSION_CLOSURE"
+  },
+  {
+    "role": "BODEGA",
+    "status": 403,
+    "response": {
+      "error": {
+        "code": "E5_FORBIDDEN",
+        "message": "Sin permiso efectivo de consulta."
+      }
+    },
+    "classification": "COMPOSITE_OR_PROFILE_BOUNDARY_NOT_SINGLE_PERMISSION_CLOSURE"
+  },
+  {
+    "role": "SISTEMAS",
+    "status": 403,
+    "response": {
+      "error": {
+        "code": "E5_FORBIDDEN",
+        "message": "Este perfil no tiene acceso E5."
+      }
+    },
+    "classification": "COMPOSITE_OR_PROFILE_BOUNDARY_NOT_SINGLE_PERMISSION_CLOSURE"
+  },
+  {
+    "role": "CONTADOR",
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "f272e3d8-f373-448b-9c88-d450a5a5a349"
+    },
+    "classification": "COMPOSITE_OR_PROFILE_BOUNDARY_NOT_SINGLE_PERMISSION_CLOSURE"
+  }
+]

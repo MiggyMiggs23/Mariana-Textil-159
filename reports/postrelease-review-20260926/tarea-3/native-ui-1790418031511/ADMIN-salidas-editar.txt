@@ -1,0 +1,99 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+1
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+1
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Mariana
+1
+I
+
+Isolated postreview permissions admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Salidas
+
+Historial completo de salidas y movimientos entre almacenes.
+
+Excel
+Nueva Salida
+Nueva salida para venta a cliente
+Historial
+Recepción
+A mostrador
+Extraordinarias
+Nueva Salida Extraordinaria (Ajuste Negativo Total)
+
+Utiliza esta herramienta únicamente para dar de baja inventario por merma, robo o muestra. El rollo completo será removido del inventario DISPONIBLE permanentemente.
+
+ESCANEAR ROLLO
+
+Escanea un rollo para continuar
+
+Solo se pueden ajustar rollos que estén actualmente DISPONIBLES en el sistema.
+
+Historial de Salidas Extraordinarias
+Filtros
+FECHA
+ROLLO
+PRODUCTO
+SITIO
+JUSTIFICACIÓN
+CANTIDAD
+USUARIO
+26/09/2026 03:35
+10000002
+
+Tafeta
+
+Rojo
+
+Mariana
+MUESTRA
+
+PR26 valid permissions fixture
+
+-10.00Mts.
+Isolated postreview permissions admin

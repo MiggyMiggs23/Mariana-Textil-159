@@ -1,0 +1,27 @@
+Sitio (Sólo lectura)
+Mariana
+P
+
+PR26 permisos TERMINAL
+
+TERMINAL
+
+Mariana
+
+Cerrar sesión
+Salidas pendientes a cobro
+
+Agrupa salidas por cliente en un solo documento de venta.
+
+3Bh Creations SA DE CV
+Mariana-000001
+· Origen: Mariana
+10000003 · Tafeta Rojo · 10.00 Mts.
+Mariana-000002
+· Origen: Mariana
+10000004 · Tafeta Rojo · 10.00 Mts.
+Tienda emisora
+Mariana
+Tipo de documento
+TICKET (Contado)
+Recibir y generar venta

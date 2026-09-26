@@ -1,0 +1,102 @@
+{
+  "status": "OBSERVATIONS_WITH_BLOCKER",
+  "origin": "http://127.0.0.1:18338",
+  "policy": "Business mutations blocked; only login and audit1 participation/heartbeat allowed",
+  "actors": [],
+  "cells": [
+    {
+      "role": "ADMIN",
+      "error": "page.waitForURL: Timeout 12000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================"
+    },
+    {
+      "role": "CAJA",
+      "error": "page.waitForURL: Timeout 12000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================"
+    },
+    {
+      "role": "TERMINAL",
+      "error": "page.waitForURL: Timeout 12000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================"
+    },
+    {
+      "role": "SUPERVISOR",
+      "error": "page.waitForURL: Timeout 12000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================"
+    },
+    {
+      "role": "BODEGA",
+      "error": "page.waitForURL: Timeout 12000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================"
+    },
+    {
+      "role": "SISTEMAS",
+      "error": "page.waitForURL: Timeout 12000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================"
+    }
+  ],
+  "requests": [
+    {
+      "role": "ADMIN",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401
+    },
+    {
+      "role": "CAJA",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401
+    },
+    {
+      "role": "TERMINAL",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401
+    }
+  ],
+  "preventedMutations": [
+    {
+      "role": "ADMIN",
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "role": "CAJA",
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "role": "TERMINAL",
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/auth/login",
+      "method": "POST"
+    }
+  ]
+}

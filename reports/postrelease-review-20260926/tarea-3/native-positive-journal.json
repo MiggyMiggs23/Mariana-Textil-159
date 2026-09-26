@@ -1,0 +1,869 @@
+[
+  {
+    "key": "participate-ADMIN",
+    "phase": "setup",
+    "role": "ADMIN",
+    "method": "POST",
+    "path": "/inventario/auditorias/1/participar",
+    "body": {},
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "participantesActivos": 1,
+      "maxParticipantes": 5,
+      "expiracionSegundos": 90,
+      "expiraAt": "2026-09-26T10:39:50.363Z"
+    }
+  },
+  {
+    "key": "participate-SUPERVISOR",
+    "phase": "setup",
+    "role": "SUPERVISOR",
+    "method": "POST",
+    "path": "/inventario/auditorias/1/participar",
+    "body": {},
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "participantesActivos": 2,
+      "maxParticipantes": 5,
+      "expiracionSegundos": 90,
+      "expiraAt": "2026-09-26T10:39:52.773Z"
+    }
+  },
+  {
+    "key": "participate-BODEGA",
+    "phase": "setup",
+    "role": "BODEGA",
+    "method": "POST",
+    "path": "/inventario/auditorias/1/participar",
+    "body": {},
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "participantesActivos": 3,
+      "maxParticipantes": 5,
+      "expiracionSegundos": 90,
+      "expiraAt": "2026-09-26T10:39:55.186Z"
+    }
+  },
+  {
+    "key": "participate-SISTEMAS",
+    "phase": "setup",
+    "role": "SISTEMAS",
+    "method": "POST",
+    "path": "/inventario/auditorias/1/participar",
+    "body": {},
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "participantesActivos": 4,
+      "maxParticipantes": 5,
+      "expiracionSegundos": 90,
+      "expiraAt": "2026-09-26T10:39:57.609Z"
+    }
+  },
+  {
+    "key": "open-native-caja",
+    "phase": "setup",
+    "role": "ADMIN",
+    "method": "POST",
+    "path": "/sesiones-caja/abrir",
+    "body": {
+      "ubicacionId": 1,
+      "fondoInicial": 0
+    },
+    "state": "RESPONSE_RECEIVED",
+    "status": 201,
+    "response": {
+      "id": 1,
+      "ubicacionId": 1,
+      "nombreUbicacion": "Mariana",
+      "usuarioId": 234,
+      "nombreUsuario": "Isolated postreview permissions admin",
+      "abiertaAt": "2026-09-26T10:38:28.303Z",
+      "cerradaAt": null,
+      "fondoInicial": "0.00",
+      "efectivoContado": null,
+      "estado": "ABIERTA"
+    }
+  },
+  {
+    "key": "positive-camionetas:editar",
+    "phase": "positives",
+    "role": "ADMIN",
+    "method": "PATCH",
+    "path": "/camionetas/1",
+    "body": {
+      "nombre": "PR26 PERM VAN"
+    },
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "id": 1,
+      "nombre": "PR26 PERM VAN",
+      "placas": "PR26PERM",
+      "marca": null,
+      "modelo": null,
+      "tipo": "PROPIA",
+      "activa": true,
+      "createdAt": "2026-09-26T09:35:29.895Z",
+      "updatedAt": "2026-09-26T10:47:11.100Z"
+    }
+  },
+  {
+    "key": "positive-choferes:editar",
+    "phase": "positives",
+    "role": "ADMIN",
+    "method": "PATCH",
+    "path": "/choferes/1",
+    "body": {
+      "nombreCompleto": "PR26 PERM DRIVER"
+    },
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "id": 1,
+      "nombreCompleto": "PR26 PERM DRIVER",
+      "telefono": "5550001234",
+      "activo": true,
+      "createdAt": "2026-09-26T09:35:30.651Z",
+      "updatedAt": "2026-09-26T10:47:11.768Z"
+    }
+  },
+  {
+    "key": "positive-equipos:editar",
+    "phase": "positives",
+    "role": "ADMIN",
+    "method": "PATCH",
+    "path": "/equipos/1",
+    "body": {
+      "marca": "PR26"
+    },
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "id": 1,
+      "ubicacionId": 1,
+      "ubicacionNombre": "Mariana",
+      "tipo": "PISTOLA_ESCANER",
+      "tipoLabel": "Pistola Escáner",
+      "identificador": "PR26-PERM",
+      "marca": "PR26",
+      "modelo": "TEST",
+      "numeroSerie": null,
+      "notas": null,
+      "activo": false,
+      "faltantes": 2,
+      "checklist": [
+        {
+          "key": "TECLADO_ESPANOL",
+          "label": "Configurada a teclado español",
+          "checked": false,
+          "actorId": null,
+          "actorNombre": null,
+          "checkedAt": null
+        },
+        {
+          "key": "QR_ROLLO",
+          "label": "Probada leyendo un QR de rollo del sistema",
+          "checked": false,
+          "actorId": null,
+          "actorNombre": null,
+          "checkedAt": null
+        }
+      ],
+      "creadoPor": 234,
+      "actualizadoPor": 234,
+      "createdAt": "2026-09-26T09:35:31.363Z",
+      "updatedAt": "2026-09-26T10:47:12.534Z"
+    }
+  },
+  {
+    "key": "positive-contenedores:editar",
+    "phase": "positives",
+    "role": "ADMIN",
+    "method": "PATCH",
+    "path": "/contenedores/1",
+    "body": {
+      "proveedorId": 1,
+      "referencia": "PR26 PERM CONTAINER",
+      "fechaEstimadaLlegada": "2026-10-01",
+      "sitioDestinoId": 1,
+      "lineas": [
+        {
+          "productoId": 1,
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1
+        }
+      ]
+    },
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "id": 1,
+      "folio": 1,
+      "proveedorId": 1,
+      "proveedor": "SkyTex",
+      "referencia": "PR26 PERM CONTAINER",
+      "fechaPedido": null,
+      "fechaEstimadaLlegada": "2026-10-01",
+      "fechaRealLlegada": null,
+      "sitioDestinoId": 1,
+      "sitioDestino": "Mariana",
+      "entradaId": null,
+      "estado": "EN_TRANSITO",
+      "notas": null,
+      "motivoCancelacion": null,
+      "usuarioId": 234,
+      "createdAt": "2026-09-26T09:35:32.185Z",
+      "updatedAt": "2026-09-26T10:47:13.427Z",
+      "diasTransito": null,
+      "diferenciaFechaEstimada": null,
+      "totalesEsperados": {
+        "lineas": 1,
+        "rollos": 1,
+        "metros": "10.000",
+        "kilos": "0.000",
+        "bolsas": "0.000",
+        "piezas": "0.000"
+      },
+      "totalesRecibidos": {
+        "lineas": 0,
+        "rollos": 0,
+        "metros": "0.000",
+        "kilos": "0.000",
+        "bolsas": "0.000",
+        "piezas": "0.000"
+      },
+      "lineas": [
+        {
+          "id": 2,
+          "productoId": 1,
+          "sku": "TAF-ROJ",
+          "tela": "Tafeta",
+          "color": "Rojo",
+          "unidad": "METRO",
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1,
+          "nota": null,
+          "cantidadRecibida": "0.000",
+          "rollosRecibidos": 0,
+          "diferencia": "-10.000",
+          "costoTotal": null,
+          "costoUnitarioReal": null
+        }
+      ],
+      "costoTotal": null
+    }
+  },
+  {
+    "key": "positive-contenedores:autorizar",
+    "phase": "positives",
+    "role": "ADMIN",
+    "method": "POST",
+    "path": "/contenedores/1/cancelar",
+    "body": {
+      "motivo": "PR26 permissions cancellation"
+    },
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "id": 1,
+      "folio": 1,
+      "proveedorId": 1,
+      "proveedor": "SkyTex",
+      "referencia": "PR26 PERM CONTAINER",
+      "fechaPedido": null,
+      "fechaEstimadaLlegada": "2026-10-01",
+      "fechaRealLlegada": null,
+      "sitioDestinoId": 1,
+      "sitioDestino": "Mariana",
+      "entradaId": null,
+      "estado": "CANCELADO",
+      "notas": null,
+      "motivoCancelacion": "PR26 permissions cancellation",
+      "usuarioId": 234,
+      "createdAt": "2026-09-26T09:35:32.185Z",
+      "updatedAt": "2026-09-26T10:47:14.221Z",
+      "diasTransito": null,
+      "diferenciaFechaEstimada": null,
+      "totalesEsperados": {
+        "lineas": 1,
+        "rollos": 1,
+        "metros": "10.000",
+        "kilos": "0.000",
+        "bolsas": "0.000",
+        "piezas": "0.000"
+      },
+      "totalesRecibidos": {
+        "lineas": 0,
+        "rollos": 0,
+        "metros": "0.000",
+        "kilos": "0.000",
+        "bolsas": "0.000",
+        "piezas": "0.000"
+      },
+      "lineas": [
+        {
+          "id": 2,
+          "productoId": 1,
+          "sku": "TAF-ROJ",
+          "tela": "Tafeta",
+          "color": "Rojo",
+          "unidad": "METRO",
+          "cantidadEsperada": "10.000",
+          "rollosEsperados": 1,
+          "nota": null,
+          "cantidadRecibida": "0.000",
+          "rollosRecibidos": 0,
+          "diferencia": "-10.000",
+          "costoTotal": null,
+          "costoUnitarioReal": null
+        }
+      ],
+      "costoTotal": null
+    }
+  },
+  {
+    "key": "positive-etiquetas:editar",
+    "phase": "positives",
+    "role": "ADMIN",
+    "method": "POST",
+    "path": "/etiquetas/rollos/1/revisar",
+    "body": {
+      "ultimaReimpresionId": 3
+    },
+    "state": "RESPONSE_RECEIVED",
+    "status": 201,
+    "response": {
+      "id": 1,
+      "rolloId": 1,
+      "reimpresionId": 3,
+      "revisadoPorId": 234,
+      "revisadoPor": "Isolated postreview permissions admin",
+      "revisadoPorUsuario": "e2e.postreview.permissions.admin",
+      "revisadoEn": "2026-09-26T10:47:15.096Z",
+      "idempotente": false
+    }
+  },
+  {
+    "key": "positive-entradas:editar",
+    "phase": "positives",
+    "role": "ADMIN",
+    "method": "POST",
+    "path": "/inventario/entradas/2/costos",
+    "body": {
+      "costosProductos": [
+        {
+          "productoId": 1,
+          "costoUnitario": "100.00"
+        }
+      ],
+      "costosRollos": []
+    },
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "id": 2,
+      "folio": 2,
+      "inicialesSitio": "MA",
+      "folioFormateado": "MA-000002",
+      "ubicacionId": 1,
+      "nombreUbicacion": "Mariana",
+      "proveedorId": 1,
+      "nombreProveedor": "SkyTex",
+      "usuarioId": 238,
+      "nombreUsuario": "PR26 permisos BODEGA",
+      "fecha": "2026-09-26T09:35:36.933Z",
+      "observaciones": "PR26 pending",
+      "totalRollos": 1,
+      "totalCosto": "1000.00",
+      "uuidCliente": "0a80d158-b0b0-4b16-8138-1fff132fd797",
+      "createdAt": "2026-09-26T09:35:36.741Z",
+      "lineas": [
+        {
+          "productoId": 1,
+          "skuProducto": "TAF-ROJ",
+          "telaProducto": "Tafeta",
+          "colorProducto": "Rojo",
+          "unidadProducto": "METRO",
+          "costoUnitario": "100.00",
+          "rollosCount": 1,
+          "cantidadTotal": "10.000",
+          "costoTotal": "1000.00"
+        }
+      ],
+      "rollos": [
+        {
+          "id": 7,
+          "serie": "10000007",
+          "productoId": 1,
+          "cantidadInicial": "10.000",
+          "pisoId": 3,
+          "nombrePiso": "Planta Baja",
+          "costoUnitario": "100.00",
+          "costoTotal": "1000.00"
+        }
+      ]
+    }
+  },
+  {
+    "key": "positive-salidas:editar",
+    "phase": "positives",
+    "role": "ADMIN",
+    "method": "POST",
+    "path": "/inventario/salidas-extraordinarias/8/revertir",
+    "body": {
+      "justificacion": "PR26 permissions valid reversal",
+      "uuidCliente": "a2ffd486-fcc3-4552-aeac-b7897f4c76e3"
+    },
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "id": 2,
+      "serie": "10000002",
+      "productoId": 1,
+      "skuProducto": "TAF-ROJ",
+      "telaProducto": "Tafeta",
+      "colorProducto": "Rojo",
+      "unidadProducto": "METRO",
+      "ubicacionId": 1,
+      "nombreUbicacion": "Mariana",
+      "pisoId": 3,
+      "nombrePiso": "Planta Baja",
+      "proveedorId": 1,
+      "estado": "DISPONIBLE",
+      "cantidadInicial": "10.000",
+      "cantidadActual": "10.000",
+      "costoUnitario": "100.00",
+      "costoTotal": "1000.00",
+      "notas": null,
+      "historial": [
+        {
+          "id": 10,
+          "rolloId": 2,
+          "productoId": 1,
+          "ubicacionId": 1,
+          "tipo": "CANCELACION",
+          "cantidad": "10.000",
+          "saldoPosterior": "60.000",
+          "documentoTipo": null,
+          "documentoId": null,
+          "documentoEtiqueta": null,
+          "documentoRuta": null,
+          "documentoClienteId": null,
+          "movimientoOrigenId": 8,
+          "usuarioId": 234,
+          "motivoSalidaExtraordinaria": null,
+          "justificacion": "PR26 permissions valid reversal",
+          "revisado": true,
+          "revisadoPor": null,
+          "revisadoAt": null,
+          "uuidCliente": "a2ffd486-fcc3-4552-aeac-b7897f4c76e3",
+          "createdAt": "2026-09-26T10:47:16.669Z"
+        },
+        {
+          "id": 8,
+          "rolloId": 2,
+          "productoId": 1,
+          "ubicacionId": 1,
+          "tipo": "AJUSTE_NEGATIVO",
+          "cantidad": "-10.000",
+          "saldoPosterior": "60.000",
+          "documentoTipo": null,
+          "documentoId": null,
+          "documentoEtiqueta": null,
+          "documentoRuta": null,
+          "documentoClienteId": null,
+          "movimientoOrigenId": null,
+          "usuarioId": 234,
+          "motivoSalidaExtraordinaria": "MUESTRA",
+          "justificacion": "PR26 valid permissions fixture",
+          "revisado": true,
+          "revisadoPor": null,
+          "revisadoAt": null,
+          "uuidCliente": "89beeee4-82a5-43a2-9b41-c4249ba66e24",
+          "createdAt": "2026-09-26T09:35:38.251Z"
+        },
+        {
+          "id": 2,
+          "rolloId": 2,
+          "productoId": 1,
+          "ubicacionId": 1,
+          "tipo": "RECEPCION",
+          "cantidad": "10.000",
+          "saldoPosterior": "20.000",
+          "documentoTipo": "ENTRADA",
+          "documentoId": "1",
+          "documentoEtiqueta": "Entrada MA-000001",
+          "documentoRuta": "/entradas/1/documento",
+          "documentoClienteId": null,
+          "movimientoOrigenId": null,
+          "usuarioId": 234,
+          "motivoSalidaExtraordinaria": null,
+          "justificacion": null,
+          "revisado": true,
+          "revisadoPor": null,
+          "revisadoAt": null,
+          "uuidCliente": null,
+          "createdAt": "2026-09-26T09:35:27.552Z"
+        }
+      ],
+      "createdAt": "2026-09-26T09:35:27.552Z",
+      "updatedAt": "2026-09-26T10:47:17.005Z"
+    }
+  },
+  {
+    "key": "positive-salidas:autorizar",
+    "phase": "positives",
+    "role": "ADMIN",
+    "method": "POST",
+    "path": "/salidas/1/cancelar",
+    "body": {
+      "motivo": "PR26 permissions cancellation"
+    },
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "id": 1,
+      "folio": 1,
+      "folioFormateado": "MA-000001",
+      "modalidad": "VENTA_CLIENTE",
+      "estado": "CANCELADA",
+      "origenId": 1,
+      "nombreOrigen": "Mariana",
+      "destinoId": null,
+      "nombreDestino": "3Bh Creations SA DE CV",
+      "clienteId": 8,
+      "nombreCliente": "3Bh Creations SA DE CV",
+      "documentoVenta": null,
+      "autorizada": null,
+      "armadoPorId": 234,
+      "nombreArmadoPor": "Isolated postreview permissions admin",
+      "fechaArmado": "2026-09-26T09:35:40.403Z",
+      "totalProductos": 1,
+      "totalCantidadSolicitada": "10.000",
+      "totalCantidadEnviada": "10.000",
+      "totalCantidadRecibida": "0.000",
+      "totalRollos": 1,
+      "totalMetros": "10.000",
+      "totalKilos": "0.000",
+      "totalBolsas": "0.000",
+      "totalPiezas": "0.000",
+      "usuarioId": 234,
+      "nombreUsuario": "Isolated postreview permissions admin",
+      "transportista": null,
+      "observaciones": "PR26 permission fixture",
+      "diferenciasPendientes": false,
+      "createdAt": "2026-09-26T09:35:39.987Z",
+      "updatedAt": "2026-09-26T10:47:18.329Z",
+      "uuidCliente": "0d078088-676a-45ed-b743-69cdf4d89db8",
+      "enviadoPorId": 234,
+      "nombreEnviadoPor": "Isolated postreview permissions admin",
+      "fechaEnvio": "2026-09-26T09:35:40.403Z",
+      "transporteEfectivo": null,
+      "viaje": null,
+      "notaEnvio": null,
+      "recibidoPorId": null,
+      "nombreRecibidoPor": null,
+      "fechaRecepcion": null,
+      "notaRecepcion": null,
+      "canceladoPorId": 234,
+      "nombreCanceladoPor": "Isolated postreview permissions admin",
+      "fechaCancelacion": "2026-09-26T10:47:18.329Z",
+      "motivoCancelacion": "PR26 permissions cancellation",
+      "pisosRetorno": [],
+      "entregadoPorId": null,
+      "fechaEntrega": null,
+      "lineas": [
+        {
+          "id": 1,
+          "productoId": 1,
+          "skuProducto": "TAF-ROJ",
+          "telaProducto": "Tafeta",
+          "colorProducto": "Rojo",
+          "unidadProducto": "METRO",
+          "cantidadSolicitada": "10.000",
+          "cantidadEnviada": "10.000",
+          "cantidadRecibida": "0.000",
+          "rollosSolicitados": 1,
+          "rollosEnviados": 1,
+          "rollosRecibidos": 0,
+          "nota": null
+        }
+      ],
+      "rollos": [
+        {
+          "id": 1,
+          "lineaId": 1,
+          "rolloId": 3,
+          "serie": "10000003",
+          "estado": "DISPONIBLE",
+          "cantidadEnviada": "10.000",
+          "cantidadRecibida": null,
+          "recibido": false,
+          "diferencia": null,
+          "notaDiferencia": null,
+          "cantidadActual": "10.000",
+          "productoId": 1,
+          "sku": "TAF-ROJ",
+          "tela": "Tafeta",
+          "color": "Rojo",
+          "unidad": "METRO"
+        }
+      ]
+    }
+  },
+  {
+    "key": "positive-auditoria_inventario:editar",
+    "phase": "positives",
+    "role": "ADMIN",
+    "method": "POST",
+    "path": "/inventario/auditorias/1/escaneos",
+    "body": {
+      "serie": "10000001",
+      "pisoId": 3
+    },
+    "state": "RESPONSE_RECEIVED",
+    "status": 400,
+    "response": {
+      "error": "La computadora solo puede escanear en el piso de acceso: Planta Alta.",
+      "code": "DESKTOP_ACCESS_FLOOR_REQUIRED"
+    }
+  },
+  {
+    "key": "positive-auditoria_inventario:editar-access-floor",
+    "phase": "positives",
+    "role": "ADMIN",
+    "method": "POST",
+    "path": "/inventario/auditorias/1/escaneos",
+    "body": {
+      "serie": "10000001",
+      "pisoId": 4
+    },
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "participantesActivos": 1,
+      "maxParticipantes": 5,
+      "expiracionSegundos": 90,
+      "expiraAt": "2026-09-26T10:49:44.822Z",
+      "usuarioId": 234,
+      "usuarioNombre": "Isolated postreview permissions admin",
+      "escaneadoAt": "2026-09-26T10:48:14.759Z",
+      "serie": "10000001",
+      "duplicado": false,
+      "clasificacion": "CUADRO",
+      "estadoActual": "DISPONIBLE"
+    }
+  },
+  {
+    "key": "positive-salidas_venta:crear",
+    "phase": "positives",
+    "role": "TERMINAL",
+    "method": "POST",
+    "path": "/salidas/venta-cliente/generar-venta",
+    "body": {
+      "uuidCliente": "0fbe180a-5ee6-4cb8-b848-a606e9d25452",
+      "documentoTipo": "TICKET",
+      "ubicacionId": 1,
+      "clienteId": 8,
+      "salidaIds": [
+        2
+      ],
+      "precios": [
+        {
+          "salidaRolloId": 2,
+          "precioUnitario": 150
+        }
+      ]
+    },
+    "state": "RESPONSE_RECEIVED",
+    "status": 201,
+    "response": {
+      "id": 2,
+      "folio": 2,
+      "ubicacionId": 1,
+      "nombreUbicacion": "Mariana",
+      "usuarioTerminalId": 235,
+      "nombreUsuarioTerminal": "PR26 permisos TERMINAL",
+      "clienteId": 8,
+      "nombreCliente": "3Bh Creations SA DE CV",
+      "notaSinPrecios": false,
+      "direccionEntregaEfectiva": "NEZAHUALCOYOTL, CDMX",
+      "subtotal": "1500.00",
+      "iva": "0.00",
+      "tasaIva": "0.1600",
+      "total": "1500.00",
+      "estado": "VENDIDO",
+      "cobrado": false,
+      "cobradoAt": null,
+      "usuarioCajaId": null,
+      "nombreUsuarioCaja": null,
+      "facturado": false,
+      "sesionCajaId": null,
+      "uuidCliente": "0fbe180a-5ee6-4cb8-b848-a606e9d25452",
+      "createdAt": "2026-09-26T10:48:16.293Z",
+      "canceladoAt": null,
+      "canceladoPor": null,
+      "nombreUsuarioCancelacion": null,
+      "motivoCancelacion": null,
+      "autorizadoPor": null,
+      "nombreUsuarioAutorizacion": null,
+      "esCredito": false,
+      "importeCredito": "0.00",
+      "diasPlazo": null,
+      "fechaVencimiento": null,
+      "saldoPendiente": "0.00",
+      "estadoNota": null,
+      "telefonoCliente": null,
+      "correoCliente": null,
+      "direccionCliente": "NEZAHUALCOYOTL, CDMX",
+      "remate": false,
+      "rollosRemate": [],
+      "documentoTipo": "TICKET",
+      "autorizacionEstado": "NO_APLICA",
+      "nombreDestinatario": null,
+      "direccionEntregaSnapshot": null,
+      "convertidoANotaPorCobro": false,
+      "diasCreditoCliente": null,
+      "viaje": null,
+      "salidas": [
+        {
+          "id": 2,
+          "folioFormateado": "MA-000002",
+          "origenId": 1,
+          "nombreOrigen": "Mariana",
+          "href": "/salidas/2"
+        }
+      ],
+      "lineas": [
+        {
+          "id": 2,
+          "ticketId": 2,
+          "rolloId": 4,
+          "productoId": 1,
+          "tipo": "NORMAL",
+          "cantidad": "10.000",
+          "precioUnitario": "150.00",
+          "precioSugerido": "5.50",
+          "importe": "1500.00",
+          "skuProducto": "TAF-ROJ",
+          "telaProducto": "Tafeta",
+          "colorProducto": "Rojo",
+          "unidadProducto": "METRO",
+          "serieRollo": "10000004",
+          "nombreUbicacion": "Mariana",
+          "costoUnitarioCongelado": "100.00",
+          "costoTotalCongelado": "1000.00",
+          "costoFuente": "EXACT_ROLL",
+          "margen": "500.00"
+        }
+      ],
+      "pagos": []
+    }
+  },
+  {
+    "key": "positive-cobros_pagos:crear",
+    "phase": "positives",
+    "role": "ADMIN",
+    "method": "POST",
+    "path": "/tickets/1/cobrar",
+    "body": {
+      "pagos": [
+        {
+          "formaPago": "EFECTIVO",
+          "importe": 1500
+        }
+      ]
+    },
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "id": 1,
+      "folio": 1,
+      "ubicacionId": 1,
+      "nombreUbicacion": "Mariana",
+      "usuarioTerminalId": 234,
+      "nombreUsuarioTerminal": "Isolated postreview permissions admin",
+      "clienteId": 8,
+      "nombreCliente": "3Bh Creations SA DE CV",
+      "notaSinPrecios": false,
+      "direccionEntregaEfectiva": "NEZAHUALCOYOTL, CDMX",
+      "subtotal": "1500.00",
+      "iva": "0.00",
+      "tasaIva": "0.1600",
+      "total": "1500.00",
+      "estado": "VENDIDO",
+      "cobrado": true,
+      "cobradoAt": "2026-09-26T10:48:17.759Z",
+      "usuarioCajaId": 234,
+      "nombreUsuarioCaja": null,
+      "facturado": false,
+      "sesionCajaId": 1,
+      "uuidCliente": "8ed841de-3578-44d7-979b-2da7309e4f45",
+      "createdAt": "2026-09-26T09:35:43.059Z",
+      "canceladoAt": null,
+      "canceladoPor": null,
+      "nombreUsuarioCancelacion": null,
+      "motivoCancelacion": null,
+      "autorizadoPor": null,
+      "nombreUsuarioAutorizacion": null,
+      "esCredito": false,
+      "importeCredito": "0.00",
+      "diasPlazo": null,
+      "fechaVencimiento": null,
+      "saldoPendiente": "0.00",
+      "estadoNota": null,
+      "telefonoCliente": null,
+      "correoCliente": null,
+      "direccionCliente": "NEZAHUALCOYOTL, CDMX",
+      "remate": false,
+      "rollosRemate": [],
+      "documentoTipo": "TICKET",
+      "autorizacionEstado": "NO_APLICA",
+      "nombreDestinatario": null,
+      "direccionEntregaSnapshot": null,
+      "convertidoANotaPorCobro": false,
+      "diasCreditoCliente": null,
+      "viaje": null,
+      "salidas": [],
+      "lineas": [
+        {
+          "id": 1,
+          "ticketId": 1,
+          "rolloId": 5,
+          "productoId": 1,
+          "tipo": "NORMAL",
+          "cantidad": "10.000",
+          "precioUnitario": "150.00",
+          "precioSugerido": "5.50",
+          "importe": "1500.00",
+          "skuProducto": "TAF-ROJ",
+          "telaProducto": "Tafeta",
+          "colorProducto": "Rojo",
+          "unidadProducto": "METRO",
+          "serieRollo": "10000005",
+          "nombreUbicacion": "Mariana",
+          "costoUnitarioCongelado": "100.00",
+          "costoTotalCongelado": "1000.00",
+          "costoFuente": "EXACT_ROLL",
+          "margen": "500.00"
+        }
+      ],
+      "pagos": [
+        {
+          "id": 1,
+          "ticketId": 1,
+          "formaPago": "EFECTIVO",
+          "importe": "1500.00",
+          "referencia": null,
+          "createdAt": "2026-09-26T10:48:17.610Z",
+          "usuarioId": 234,
+          "nombreUsuario": "Isolated postreview permissions admin"
+        }
+      ]
+    }
+  }
+]

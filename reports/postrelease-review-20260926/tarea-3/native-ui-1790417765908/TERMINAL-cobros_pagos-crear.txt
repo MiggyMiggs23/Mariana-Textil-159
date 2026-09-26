@@ -1,0 +1,17 @@
+Sitio (Sólo lectura)
+Mariana
+P
+
+PR26 permisos TERMINAL
+
+TERMINAL
+
+Mariana
+
+Cerrar sesión
+Caja operativa
+No se pudo consultar la caja
+
+No tienes permiso para 'ver' en el módulo 'cobros_pagos'.
+
+Intentar de nuevo

@@ -1,0 +1,212 @@
+[
+  {
+    "key": "actor-TARGET",
+    "method": "POST",
+    "path": "/users",
+    "state": "RESPONSE_RECEIVED",
+    "status": 201,
+    "response": {
+      "id": 241,
+      "nombre": "PR26 prerequisite TARGET",
+      "usuario": "pr26.variant.target",
+      "rol": "TERMINAL",
+      "ubicacion": {
+        "id": 1,
+        "nombre": "Mariana",
+        "iniciales": "MA",
+        "tipo": "TIENDA",
+        "activa": true,
+        "esSistema": false
+      },
+      "alcanceConsulta": "PROPIA",
+      "activo": true,
+      "ultimoAcceso": null
+    }
+  },
+  {
+    "key": "actor-TERMINAL",
+    "method": "POST",
+    "path": "/users",
+    "state": "RESPONSE_RECEIVED",
+    "status": 201,
+    "response": {
+      "id": 242,
+      "nombre": "PR26 prerequisite TERMINAL",
+      "usuario": "pr26.variant.terminal",
+      "rol": "TERMINAL",
+      "ubicacion": {
+        "id": 1,
+        "nombre": "Mariana",
+        "iniciales": "MA",
+        "tipo": "TIENDA",
+        "activa": true,
+        "esSistema": false
+      },
+      "alcanceConsulta": "PROPIA",
+      "activo": true,
+      "ultimoAcceso": null
+    }
+  },
+  {
+    "key": "prerequisite-TERMINAL",
+    "method": "PUT",
+    "path": "/permisos/usuarios/242/permisos",
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "id": 126,
+      "usuarioId": 242,
+      "modulo": "permisos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false,
+      "updatedAt": "2026-09-26T10:39:33.435Z",
+      "updatedPor": 234
+    }
+  },
+  {
+    "key": "actor-CAJA",
+    "method": "POST",
+    "path": "/users",
+    "state": "RESPONSE_RECEIVED",
+    "status": 201,
+    "response": {
+      "id": 243,
+      "nombre": "PR26 prerequisite CAJA",
+      "usuario": "pr26.variant.caja",
+      "rol": "CAJA",
+      "ubicacion": {
+        "id": 1,
+        "nombre": "Mariana",
+        "iniciales": "MA",
+        "tipo": "TIENDA",
+        "activa": true,
+        "esSistema": false
+      },
+      "alcanceConsulta": "TODAS",
+      "activo": true,
+      "ultimoAcceso": null
+    }
+  },
+  {
+    "key": "prerequisite-CAJA",
+    "method": "PUT",
+    "path": "/permisos/usuarios/243/permisos",
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "id": 127,
+      "usuarioId": 243,
+      "modulo": "permisos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false,
+      "updatedAt": "2026-09-26T10:39:35.143Z",
+      "updatedPor": 234
+    }
+  },
+  {
+    "key": "actor-SUPERVISOR",
+    "method": "POST",
+    "path": "/users",
+    "state": "RESPONSE_RECEIVED",
+    "status": 201,
+    "response": {
+      "id": 244,
+      "nombre": "PR26 prerequisite SUPERVISOR",
+      "usuario": "pr26.variant.supervisor",
+      "rol": "SUPERVISOR",
+      "ubicacion": {
+        "id": 1,
+        "nombre": "Mariana",
+        "iniciales": "MA",
+        "tipo": "TIENDA",
+        "activa": true,
+        "esSistema": false
+      },
+      "alcanceConsulta": "TODAS",
+      "activo": true,
+      "ultimoAcceso": null
+    }
+  },
+  {
+    "key": "prerequisite-SUPERVISOR",
+    "method": "PUT",
+    "path": "/permisos/usuarios/244/permisos",
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "id": 128,
+      "usuarioId": 244,
+      "modulo": "permisos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false,
+      "updatedAt": "2026-09-26T10:39:36.857Z",
+      "updatedPor": 234
+    }
+  },
+  {
+    "key": "actor-BODEGA",
+    "method": "POST",
+    "path": "/users",
+    "state": "RESPONSE_RECEIVED",
+    "status": 201,
+    "response": {
+      "id": 245,
+      "nombre": "PR26 prerequisite BODEGA",
+      "usuario": "pr26.variant.bodega",
+      "rol": "BODEGA",
+      "ubicacion": {
+        "id": 1,
+        "nombre": "Mariana",
+        "iniciales": "MA",
+        "tipo": "TIENDA",
+        "activa": true,
+        "esSistema": false
+      },
+      "alcanceConsulta": "PROPIA",
+      "activo": true,
+      "ultimoAcceso": null
+    }
+  },
+  {
+    "key": "prerequisite-BODEGA",
+    "method": "PUT",
+    "path": "/permisos/usuarios/245/permisos",
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "id": 129,
+      "usuarioId": 245,
+      "modulo": "permisos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false,
+      "updatedAt": "2026-09-26T10:39:38.552Z",
+      "updatedPor": 234
+    }
+  },
+  {
+    "key": "positive-same-target",
+    "method": "PUT",
+    "path": "/permisos/usuarios/241/dashboard",
+    "state": "RESPONSE_RECEIVED",
+    "status": 200,
+    "response": {
+      "id": 130,
+      "usuarioId": 241,
+      "modulo": "dashboard",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false,
+      "updatedAt": "2026-09-26T10:39:48.744Z",
+      "updatedPor": 234
+    }
+  }
+]

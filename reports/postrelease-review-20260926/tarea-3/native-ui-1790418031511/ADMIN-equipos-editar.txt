@@ -1,0 +1,79 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+1
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+1
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Mariana
+1
+I
+
+Isolated postreview permissions admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Equipos
+
+Gestión de hardware de sistema en sucursales y almacenes.
+
+Nuevo Equipo
+Mariana
+0 de 1 activos
+PR26-PERM
+
+Pistola Escáner
+
+2 faltantes
+MARCA
+PR26
+MODELO
+TEST
+
+FALTA COMPROBAR
+
+—
+Configurada a teclado español
+—
+Probada leyendo un QR de rollo del sistema
+Checklist

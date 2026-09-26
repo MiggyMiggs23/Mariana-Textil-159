@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { hasPermission, Modules } from "@/lib/permisos";
 import { E11AdminNotices } from "@/pages/e11";
 import { Link } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
 import { ProductCombobox } from "@/components/product-combobox";
 import {
+  useGetCurrentUser,
+  getGetCurrentUserQueryKey,
   useGetConciliacion,
   useRecalcularExistencias,
   getGetConciliacionQueryKey,
@@ -31,6 +34,8 @@ function quantityDifference(
 
 export default function Conciliacion() {
   const queryClient = useQueryClient();
+  const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
+  const canRecalculate = hasPermission(user, Modules.CONCILIACION, "autorizar");
   const [productoId, setProductoId] = useState<string>("all");
   const [ubicacionId, setUbicacionId] = useState<string>("all");
 
@@ -48,6 +53,7 @@ export default function Conciliacion() {
     conciliaciones?.filter((row) => row.discrepancia) ?? [];
 
   const handleRecalcular = (pId: number, uId: number) => {
+    if (!canRecalculate || recalcular.isPending) return;
     recalcular.mutate({
       data: {
         productoId: pId,
@@ -222,7 +228,7 @@ export default function Conciliacion() {
                             size="sm"
                             className="bg-primary"
                             onClick={() => handleRecalcular(row.productoId, row.ubicacionId)}
-                            disabled={recalcular.isPending}
+                            disabled={!canRecalculate || recalcular.isPending}
                           >
                             <RefreshCw className={`w-4 h-4 mr-2 ${recalcular.isPending ? 'animate-spin' : ''}`} />
                             Recalcular

@@ -1,0 +1,83 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+1
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+1
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Mariana
+1
+I
+
+Isolated postreview permissions admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+Salidas
+
+Historial completo de salidas y movimientos entre almacenes.
+
+Excel
+Nueva Salida
+Nueva salida para venta a cliente
+Historial
+Recepción
+A mostrador
+Extraordinarias
+Filtros
+MA-000002
+26 sep 2026
+Mariana
+3Bh Creations SA DE CV
+10.00
+En curso
+Entregar
+Cancelar
+MA-000001
+26 sep 2026
+Mariana
+3Bh Creations SA DE CV
+10.00
+En curso
+Entregar
+Cancelar

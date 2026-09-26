@@ -1,0 +1,28 @@
+✖ mounted released component permission contract with authentic role permissions and controlled eligible discrepancy (35.492842ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1488.891996
+
+✖ failing tests:
+
+test at reports/postrelease-review-20260926/tarea-3/permission-mounted.test.mjs:64:1
+✖ mounted released component permission contract with authentic role permissions and controlled eligible discrepancy (35.492842ms)
+  AssertionError [ERR_ASSERTION]: SISTEMAS has no effective conciliacion/autorizar
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///home/runner/workspace/reports/postrelease-review-20260926/tarea-3/permission-mounted.test.mjs:70:12)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

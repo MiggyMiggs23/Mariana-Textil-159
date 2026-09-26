@@ -1,0 +1,105 @@
+[
+  {
+    "role": "ADMIN",
+    "path": "/e5/contexto?clienteId=8&ubicacionId=1",
+    "status": 200,
+    "response": {
+      "clienteId": 8,
+      "clienteNombre": "3Bh Creations SA DE CV",
+      "ubicacionId": 1,
+      "versionContexto": "e5:v1:5e234d14b2a51195311db9b83a2adb89db42e714f890745f380170c1cedeb231",
+      "consultadoAt": "2026-09-26T10:40:19.645Z",
+      "notas": [],
+      "sesiones": [
+        {
+          "id": 1,
+          "ubicacionId": 1,
+          "ubicacionNombre": "Mariana",
+          "fechaOperativa": "2026-09-26"
+        }
+      ],
+      "capacidades": {
+        "puedeRecibir": true,
+        "puedePreparar": true,
+        "puedeAutorizar": true,
+        "puedeRechazar": false,
+        "puedeDevolver": false,
+        "puedeVerAvisos": true,
+        "puedeImprimir": true,
+        "preparacionADisponible": false
+      }
+    },
+    "classification": "COMPOSITE_OR_PROFILE_BOUNDARY_NOT_SINGLE_PERMISSION_CLOSURE"
+  },
+  {
+    "role": "TERMINAL",
+    "path": "/e5/contexto?clienteId=8&ubicacionId=1",
+    "status": 403,
+    "response": {
+      "error": {
+        "code": "E5_FORBIDDEN",
+        "message": "Sin permiso efectivo de consulta."
+      }
+    },
+    "classification": "COMPOSITE_OR_PROFILE_BOUNDARY_NOT_SINGLE_PERMISSION_CLOSURE"
+  },
+  {
+    "role": "CAJA",
+    "path": "/e5/contexto?clienteId=8&ubicacionId=1",
+    "status": 403,
+    "response": {
+      "error": {
+        "code": "E5_FORBIDDEN",
+        "message": "Sin permiso efectivo de consulta."
+      }
+    },
+    "classification": "COMPOSITE_OR_PROFILE_BOUNDARY_NOT_SINGLE_PERMISSION_CLOSURE"
+  },
+  {
+    "role": "SUPERVISOR",
+    "path": "/e5/contexto?clienteId=8&ubicacionId=1",
+    "status": 403,
+    "response": {
+      "error": {
+        "code": "E5_FORBIDDEN",
+        "message": "Sin permiso efectivo de consulta."
+      }
+    },
+    "classification": "COMPOSITE_OR_PROFILE_BOUNDARY_NOT_SINGLE_PERMISSION_CLOSURE"
+  },
+  {
+    "role": "BODEGA",
+    "path": "/e5/contexto?clienteId=8&ubicacionId=1",
+    "status": 403,
+    "response": {
+      "error": {
+        "code": "E5_FORBIDDEN",
+        "message": "Sin permiso efectivo de consulta."
+      }
+    },
+    "classification": "COMPOSITE_OR_PROFILE_BOUNDARY_NOT_SINGLE_PERMISSION_CLOSURE"
+  },
+  {
+    "role": "SISTEMAS",
+    "path": "/e5/contexto?clienteId=8&ubicacionId=1",
+    "status": 403,
+    "response": {
+      "error": {
+        "code": "E5_FORBIDDEN",
+        "message": "Este perfil no tiene acceso E5."
+      }
+    },
+    "classification": "COMPOSITE_OR_PROFILE_BOUNDARY_NOT_SINGLE_PERMISSION_CLOSURE"
+  },
+  {
+    "role": "CONTADOR",
+    "path": "/e5/contexto?clienteId=8&ubicacionId=1",
+    "status": 403,
+    "response": {
+      "code": "PERFIL_DENEGADO",
+      "message": "Utiliza la proyección E11 autorizada.",
+      "requestId": "68e1ca4a-f4c4-4e0e-8569-04d70ed55ef9"
+    },
+    "classification": "COMPOSITE_OR_PROFILE_BOUNDARY_NOT_SINGLE_PERMISSION_CLOSURE"
+  }
+]

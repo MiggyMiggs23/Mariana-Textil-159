@@ -1,0 +1,57 @@
+Mariana Textil
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Stock mínimo
+OPERACIÓN
+Entradas
+Salidas
+Viajes
+Movimientos
+DIRECTORIO
+Clientes
+Proveedores
+Reportes
+Próximos Contenedores
+Sitio
+Mariana
+P
+
+PR26 permisos SUPERVISOR
+
+SUPERVISOR
+
+Mariana
+
+Cerrar sesión
+
+OPERACIÓN DE ALMACÉN
+
+Auditoría de Inventario
+
+Control físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.
+
+MA · Mariana
+Auditorías abiertas en el sitio
+
+MA-AI-000001
+
+Mariana · Iniciada por Isolated postreview permissions admin
+
+0/6 escaneados
+
+Unirme a la auditoría
+HISTORIAL DEL SITIO
+MA-AI-000001
+ABIERTA
+Mariana
+0/6
+CO · Coco
+CR · Cruces
+DN · Don Nacho
+MA · Mariana
+TO · Tomás

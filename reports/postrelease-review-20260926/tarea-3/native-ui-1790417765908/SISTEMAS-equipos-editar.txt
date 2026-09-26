@@ -1,0 +1,49 @@
+Mariana Textil
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Mariana
+P
+
+PR26 permisos SISTEMAS
+
+SISTEMAS
+
+Sin sitio asignado
+
+Cerrar sesión
+Equipos
+
+Gestión de hardware de sistema en sucursales y almacenes.
+
+Nuevo Equipo
+Cargando equipos...

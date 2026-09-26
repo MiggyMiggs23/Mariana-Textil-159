@@ -1,0 +1,147 @@
+Mariana Textil
+Tiempo Real
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+1
+Precios
+Stock mínimo
+OPERACIÓN
+Ventas / POS
+Entradas
+1
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Cobros
+Cortes
+Atribución E7
+Alertas
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+ADMINISTRACIÓN CONTABLE
+Conciliaciones documentales
+Administrar perfiles A/F
+Borrar datos de prueba
+Sitio
+Vista Global
+1
+I
+
+Isolated postreview permissions admin
+
+ADMIN
+
+Global
+
+Cerrar sesión
+
+OPERACIÓN DE ALMACÉN
+
+Auditoría de Inventario
+
+Control físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.
+
+MA · Mariana
+Auditorías abiertas en el sitio
+
+MA-AI-000001
+
+Mariana · Iniciada por Isolated postreview permissions admin
+
+0/6 escaneados
+
+Participando
+HISTORIAL DEL SITIO
+MA-AI-000001
+ABIERTA
+Mariana
+0/6
+MA-AI-000001
+EN CURSO
+
+Mariana · Iniciada por Isolated postreview permissions admin
+
+Imprimir
+Cancelar
+Cerrar Conteo
+AVANCE DEL CONTEO
+0/ 6
+
+INICIO: 26/9/2026, 3:35:33 a.m.
+DURACIÓN: En curso
+
+CUADRO
+0
+FALTANTES
+6
+SOBRANTES
+0
+MAL ACOMODADO
+0
+Participantes activos: 1 / 5
+
+Isolated postreview permissions admin
+
+Historial: 4 usuarios · 0 escaneos
+
+Estás participando. Puedes escanear.
+
+PISO REAL DE ESCANEO
+
+Planta Alta
+
+Computadora: piso de acceso fijo según el orden configurado del sitio.
+
+Escaneados · todos
+
+0
+
+Faltantes · todos
+
+6
+
+ESCANEAR SERIE O QR
+Alta de color
+FALTANTE
+6
+Serie	Producto	Cantidad	Ubicación actual	Estado	Resolución	
+
+10000001
+	TAF-ROJ · Tafeta · Rojo	10.00 Mts.	Mariana	DISPONIBLE	PENDIENTE	
+
+10000002
+	TAF-ROJ · Tafeta · Rojo	10.00 Mts.	Mariana	DISPONIBLE	PENDIENTE	
+
+10000003
+	TAF-ROJ · Tafeta · Rojo	10.00 Mts.	Mariana	DISPONIBLE	PENDIENTE	
+
+10000004
+	TAF-ROJ · Tafeta · Rojo	10.00 Mts.	Mariana	DISPONIBLE	PENDIENTE	
+
+10000005
+	TAF-ROJ · Tafeta · Rojo	10.00 Mts.	Mariana	DISPONIBLE	PENDIENTE	
+
+10000006
+	TAF-ROJ · Tafeta · Rojo	10.00 Mts.	Mariana	DISPONIBLE	PENDIENTE	
+SOBRANTE
+0
+No hay registros en esta categoría.

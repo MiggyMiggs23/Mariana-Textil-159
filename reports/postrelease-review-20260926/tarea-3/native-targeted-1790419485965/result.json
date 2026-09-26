@@ -1,0 +1,1935 @@
+{
+  "status": "TARGETED_OBSERVATIONS_COMPLETE",
+  "origin": "http://127.0.0.1:18338",
+  "policy": "Business mutations blocked; only login and audit1 participation/heartbeat allowed",
+  "actors": [
+    {
+      "role": "ADMIN",
+      "id": 234,
+      "permissions": [
+        {
+          "modulo": "marcar_remate",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "dashboard",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "pos",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "entradas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "salidas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "movimientos",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "etiquetas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "inventario",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "auditoria_inventario",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "productos",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "precios",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "ajustes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "clientes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "clientes_credito",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "clientes_precios",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "clientes_finanzas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "caja_abonos",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "clientes_recapturas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "proveedores",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "proveedores_finanzas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "contenedores",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "ubicaciones",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "usuarios",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "permisos",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "resumen_caja",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "cortes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "cobros_pagos",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "reportes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "conciliacion",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "auditoria",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "camionetas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "choferes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "viajes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "salidas_venta",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        },
+        {
+          "modulo": "equipos",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": true
+        }
+      ]
+    },
+    {
+      "role": "SUPERVISOR",
+      "id": 237,
+      "site": 1,
+      "permissions": [
+        {
+          "modulo": "marcar_remate",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "dashboard",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "pos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "entradas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "salidas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "movimientos",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "etiquetas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "inventario",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "auditoria_inventario",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "productos",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "precios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "ajustes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_credito",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_precios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_finanzas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "caja_abonos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_recapturas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "proveedores",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "proveedores_finanzas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "contenedores",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "ubicaciones",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "usuarios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "permisos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "resumen_caja",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "cortes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "cobros_pagos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "reportes",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "conciliacion",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "auditoria",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "camionetas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "choferes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "viajes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "salidas_venta",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "equipos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        }
+      ]
+    },
+    {
+      "role": "BODEGA",
+      "id": 238,
+      "site": 1,
+      "permissions": [
+        {
+          "modulo": "marcar_remate",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "dashboard",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "pos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "entradas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "salidas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "movimientos",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "etiquetas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "inventario",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "auditoria_inventario",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "productos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "precios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "ajustes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_credito",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_precios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_finanzas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "caja_abonos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_recapturas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "proveedores",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "proveedores_finanzas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "contenedores",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "ubicaciones",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "usuarios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "permisos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "resumen_caja",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "cortes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "cobros_pagos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "reportes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "conciliacion",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "auditoria",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "camionetas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "choferes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "viajes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "salidas_venta",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "equipos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        }
+      ]
+    },
+    {
+      "role": "SISTEMAS",
+      "id": 239,
+      "permissions": [
+        {
+          "modulo": "marcar_remate",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "dashboard",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "pos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "entradas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "salidas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "movimientos",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "etiquetas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "inventario",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "auditoria_inventario",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "productos",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "precios",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "ajustes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_credito",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_precios",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_finanzas",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "caja_abonos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_recapturas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "proveedores",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "proveedores_finanzas",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "contenedores",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "ubicaciones",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "usuarios",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "permisos",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "resumen_caja",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "cortes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "cobros_pagos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "reportes",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "conciliacion",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "auditoria",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "camionetas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "choferes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "viajes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "salidas_venta",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "equipos",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        }
+      ]
+    }
+  ],
+  "cells": [
+    {
+      "role": "ADMIN",
+      "operation": "audit-scan",
+      "control": {
+        "count": 1,
+        "visible": true,
+        "enabled": true
+      },
+      "file": "reports/postrelease-review-20260926/tarea-3/native-targeted-1790419485965/ADMIN-audit-scan.png",
+      "fixture": 1,
+      "floor": "Planta Alta",
+      "boundary": [
+        "Auditorías abiertas en el sitio",
+        "ABIERTA",
+        "Participantes activos: 1 / 5",
+        "PISO REAL DE ESCANEO"
+      ]
+    },
+    {
+      "role": "ADMIN",
+      "operation": "audit-confirm",
+      "control": {
+        "count": 0,
+        "visible": false,
+        "enabled": false
+      },
+      "file": "reports/postrelease-review-20260926/tarea-3/native-targeted-1790419485965/ADMIN-audit-confirm.png",
+      "fixture": 1,
+      "eligibility": "No close/count/confirm performed; if audit is open, confirmation absence is not action-permission evidence.",
+      "boundary": [
+        "Auditorías abiertas en el sitio",
+        "ABIERTA",
+        "Participantes activos: 1 / 5",
+        "PISO REAL DE ESCANEO"
+      ]
+    },
+    {
+      "role": "ADMIN",
+      "operation": "ticket1-collect",
+      "control": {
+        "count": 1,
+        "visible": true,
+        "enabled": true
+      },
+      "file": "reports/postrelease-review-20260926/tarea-3/native-targeted-1790419485965/ADMIN-ticket1-collect.png",
+      "fixture": 1,
+      "fixtureVisible": false,
+      "boundary": [
+        "Sesión Abierta"
+      ]
+    },
+    {
+      "role": "ADMIN",
+      "operation": "salida1-cancel",
+      "control": {
+        "count": 1,
+        "visible": true,
+        "enabled": true
+      },
+      "file": "reports/postrelease-review-20260926/tarea-3/native-targeted-1790419485965/ADMIN-salida1-cancel.png",
+      "fixture": 1,
+      "folio": "MA-000001",
+      "fixtureVisible": true,
+      "boundary": []
+    },
+    {
+      "role": "SUPERVISOR",
+      "operation": "audit-scan",
+      "control": {
+        "count": 1,
+        "visible": true,
+        "enabled": true
+      },
+      "file": "reports/postrelease-review-20260926/tarea-3/native-targeted-1790419485965/SUPERVISOR-audit-scan.png",
+      "fixture": 1,
+      "floor": "Planta Alta",
+      "boundary": [
+        "Auditorías abiertas en el sitio",
+        "ABIERTA",
+        "Participantes activos: 1 / 5",
+        "PISO REAL DE ESCANEO"
+      ]
+    },
+    {
+      "role": "SUPERVISOR",
+      "operation": "audit-confirm",
+      "control": {
+        "count": 0,
+        "visible": false,
+        "enabled": false
+      },
+      "file": "reports/postrelease-review-20260926/tarea-3/native-targeted-1790419485965/SUPERVISOR-audit-confirm.png",
+      "fixture": 1,
+      "eligibility": "No close/count/confirm performed; if audit is open, confirmation absence is not action-permission evidence.",
+      "boundary": [
+        "Auditorías abiertas en el sitio",
+        "ABIERTA",
+        "Participantes activos: 2 / 5",
+        "PISO REAL DE ESCANEO"
+      ]
+    },
+    {
+      "role": "SUPERVISOR",
+      "operation": "ticket1-collect",
+      "control": {
+        "count": 0,
+        "visible": false,
+        "enabled": false
+      },
+      "file": "reports/postrelease-review-20260926/tarea-3/native-targeted-1790419485965/SUPERVISOR-ticket1-collect.png",
+      "fixture": 1,
+      "fixtureVisible": false,
+      "boundary": [
+        "Sin acceso",
+        "No tienes permisos para ver este módulo ()."
+      ]
+    },
+    {
+      "role": "BODEGA",
+      "operation": "audit-scan",
+      "control": {
+        "count": 1,
+        "visible": true,
+        "enabled": true
+      },
+      "file": "reports/postrelease-review-20260926/tarea-3/native-targeted-1790419485965/BODEGA-audit-scan.png",
+      "fixture": 1,
+      "floor": "Planta Alta",
+      "boundary": [
+        "Auditorías abiertas en el sitio",
+        "ABIERTA",
+        "Participantes activos: 3 / 5",
+        "PISO REAL DE ESCANEO"
+      ]
+    },
+    {
+      "role": "BODEGA",
+      "operation": "audit-confirm",
+      "control": {
+        "count": 0,
+        "visible": false,
+        "enabled": false
+      },
+      "file": "reports/postrelease-review-20260926/tarea-3/native-targeted-1790419485965/BODEGA-audit-confirm.png",
+      "fixture": 1,
+      "eligibility": "No close/count/confirm performed; if audit is open, confirmation absence is not action-permission evidence.",
+      "boundary": [
+        "Auditorías abiertas en el sitio",
+        "ABIERTA",
+        "Participantes activos: 3 / 5",
+        "PISO REAL DE ESCANEO"
+      ]
+    },
+    {
+      "role": "BODEGA",
+      "operation": "ticket1-collect",
+      "control": {
+        "count": 0,
+        "visible": false,
+        "enabled": false
+      },
+      "file": "reports/postrelease-review-20260926/tarea-3/native-targeted-1790419485965/BODEGA-ticket1-collect.png",
+      "fixture": 1,
+      "fixtureVisible": false,
+      "boundary": [
+        "Sin acceso",
+        "No tienes permisos para ver este módulo ()."
+      ]
+    },
+    {
+      "role": "SISTEMAS",
+      "operation": "audit-scan",
+      "control": {
+        "count": 1,
+        "visible": true,
+        "enabled": true
+      },
+      "file": "reports/postrelease-review-20260926/tarea-3/native-targeted-1790419485965/SISTEMAS-audit-scan.png",
+      "fixture": 1,
+      "floor": "Planta Alta",
+      "boundary": [
+        "Auditorías abiertas en el sitio",
+        "ABIERTA",
+        "Participantes activos: 4 / 5",
+        "PISO REAL DE ESCANEO"
+      ]
+    },
+    {
+      "role": "SISTEMAS",
+      "operation": "audit-confirm",
+      "control": {
+        "count": 0,
+        "visible": false,
+        "enabled": false
+      },
+      "file": "reports/postrelease-review-20260926/tarea-3/native-targeted-1790419485965/SISTEMAS-audit-confirm.png",
+      "fixture": 1,
+      "eligibility": "No close/count/confirm performed; if audit is open, confirmation absence is not action-permission evidence.",
+      "boundary": [
+        "Auditorías abiertas en el sitio",
+        "ABIERTA",
+        "Participantes activos: 4 / 5",
+        "PISO REAL DE ESCANEO"
+      ]
+    },
+    {
+      "role": "SISTEMAS",
+      "operation": "ticket1-collect",
+      "control": {
+        "count": 0,
+        "visible": false,
+        "enabled": false
+      },
+      "file": "reports/postrelease-review-20260926/tarea-3/native-targeted-1790419485965/SISTEMAS-ticket1-collect.png",
+      "fixture": 1,
+      "fixtureVisible": false,
+      "boundary": [
+        "Sin acceso",
+        "No tienes permisos para ver este módulo ()."
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "role": "ADMIN",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/auditorias/sitios",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/productos",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/auditorias/1",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/auditorias/1/participar",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/auditorias/1",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/sesiones-caja/actual",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/caja/proveedores-activos",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/caja/tickets",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/e11/disponibilidad",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/e11/identidad",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/admin/test-reset",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/entradas/pendientes-costo/count",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/ajustes/pendientes",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/etiquetas/alertas/count",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/salidas/ubicaciones",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/users",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/salidas",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/productos",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "ADMIN",
+      "path": "/api/salidas",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/inventario/auditorias/sitios",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/inventario/auditorias/1",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/inventario/auditorias/1/participar",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/inventario/auditorias/1",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SUPERVISOR",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/inventario/auditorias/sitios",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/inventario/auditorias/1",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/inventario/auditorias/1",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/inventario/auditorias/1/participar",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/inventario/auditorias/1",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "BODEGA",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 401
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/auth/login",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/notificaciones",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/inventario/ubicaciones",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/inventario/auditorias/sitios",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/productos",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/inventario/auditorias/1",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/inventario/auditorias/1/pisos",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/inventario/auditorias/1/participar",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/inventario/auditorias",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/inventario/auditorias/1",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/notificaciones/feed",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "role": "SISTEMAS",
+      "path": "/api/auth/me",
+      "method": "GET",
+      "status": 200
+    }
+  ],
+  "preventedMutations": []
+}

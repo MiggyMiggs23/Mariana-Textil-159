@@ -1,0 +1,2148 @@
+{
+  "sourceMap": "artifacts/api-server/dist-owner-login-v9-20260926/index.mjs.map",
+  "sha256": "cf6a38a71096b0a6e5b1ddb86061908c38ce3be8b69380e4006d3376cd069bb8",
+  "rows": [
+    {
+      "id": "TERMINAL:marcar_remate:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:marcar_remate:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:marcar_remate:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:dashboard:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:dashboard:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:dashboard:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:pos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:pos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:entradas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:movimientos:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:movimientos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:movimientos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:etiquetas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:inventario:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:inventario:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:productos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:precios:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:precios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:ajustes:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:ajustes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:clientes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:clientes_credito:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:clientes_credito:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:clientes_precios:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:clientes_precios:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:clientes_precios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:clientes_finanzas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:caja_abonos:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:caja_abonos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:caja_abonos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:clientes_recapturas:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:clientes_recapturas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:clientes_recapturas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:proveedores:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:proveedores_finanzas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:ubicaciones:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:usuarios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:permisos:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:permisos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:resumen_caja:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:resumen_caja:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:resumen_caja:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:cortes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:cortes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:cobros_pagos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:cobros_pagos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:reportes:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:reportes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:reportes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:conciliacion:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:conciliacion:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:auditoria:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:auditoria:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:auditoria:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:camionetas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:choferes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:viajes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:viajes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:salidas_venta:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:salidas_venta:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "TERMINAL:equipos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:marcar_remate:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:marcar_remate:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:marcar_remate:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:dashboard:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:dashboard:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:dashboard:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:pos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:pos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:entradas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:movimientos:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:movimientos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:movimientos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:etiquetas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:inventario:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:inventario:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:productos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:precios:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:precios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:ajustes:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:ajustes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:clientes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:clientes_credito:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:clientes_credito:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:clientes_precios:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:clientes_precios:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:clientes_precios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:clientes_finanzas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:caja_abonos:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:caja_abonos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:caja_abonos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:clientes_recapturas:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:clientes_recapturas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:clientes_recapturas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:proveedores:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:proveedores_finanzas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:ubicaciones:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:usuarios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:permisos:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:permisos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:resumen_caja:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:resumen_caja:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:resumen_caja:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:cortes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:cortes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:cobros_pagos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:cobros_pagos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:reportes:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:reportes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:reportes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:conciliacion:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:conciliacion:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:auditoria:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:auditoria:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:auditoria:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:camionetas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:choferes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:viajes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:viajes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:salidas_venta:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:salidas_venta:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CAJA:equipos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:marcar_remate:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:marcar_remate:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:marcar_remate:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:dashboard:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:dashboard:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:dashboard:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:pos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:pos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:entradas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:movimientos:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:movimientos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:movimientos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:etiquetas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:inventario:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:inventario:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:productos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:precios:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:precios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:ajustes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:clientes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:clientes_credito:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:clientes_credito:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:clientes_precios:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:clientes_precios:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:clientes_precios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:clientes_finanzas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:caja_abonos:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:caja_abonos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:caja_abonos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:clientes_recapturas:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:clientes_recapturas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:clientes_recapturas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:proveedores:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:proveedores_finanzas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:ubicaciones:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:usuarios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:permisos:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:permisos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:resumen_caja:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:resumen_caja:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:resumen_caja:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:cortes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:cortes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:cobros_pagos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:cobros_pagos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:reportes:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:reportes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:reportes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:conciliacion:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:conciliacion:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:auditoria:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:auditoria:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:auditoria:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:camionetas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:choferes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:viajes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:viajes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:salidas_venta:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:salidas_venta:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SUPERVISOR:equipos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:marcar_remate:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:marcar_remate:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:marcar_remate:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:dashboard:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:dashboard:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:dashboard:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:pos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:pos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:entradas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:movimientos:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:movimientos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:movimientos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:etiquetas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:inventario:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:inventario:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:productos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:precios:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:precios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:clientes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:clientes_credito:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:clientes_credito:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:clientes_precios:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:clientes_precios:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:clientes_precios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:clientes_finanzas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:caja_abonos:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:caja_abonos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:caja_abonos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:clientes_recapturas:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:clientes_recapturas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:clientes_recapturas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:proveedores:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:proveedores_finanzas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:ubicaciones:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:usuarios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:permisos:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:permisos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:resumen_caja:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:resumen_caja:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:resumen_caja:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:cortes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:cortes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:cobros_pagos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:cobros_pagos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:reportes:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:reportes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:reportes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:conciliacion:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:conciliacion:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:auditoria:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:auditoria:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:auditoria:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:camionetas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:choferes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:viajes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:viajes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:salidas_venta:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:salidas_venta:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "BODEGA:equipos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:marcar_remate:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:marcar_remate:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:marcar_remate:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:dashboard:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:dashboard:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:dashboard:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:pos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:pos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:entradas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:movimientos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:etiquetas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:inventario:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:inventario:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:productos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:precios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:ajustes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:clientes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:clientes_credito:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:clientes_credito:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:clientes_precios:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:clientes_precios:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:clientes_precios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:clientes_finanzas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:caja_abonos:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:caja_abonos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:caja_abonos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:clientes_recapturas:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:clientes_recapturas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:clientes_recapturas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:proveedores:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:proveedores_finanzas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:ubicaciones:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:usuarios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:permisos:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:permisos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:resumen_caja:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:resumen_caja:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:resumen_caja:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:cortes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:cortes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:cobros_pagos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:cobros_pagos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:reportes:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:reportes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:reportes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:conciliacion:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:auditoria:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:auditoria:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:auditoria:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:camionetas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:choferes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:viajes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:salidas_venta:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:salidas_venta:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "SISTEMAS:equipos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:marcar_remate:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:marcar_remate:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:marcar_remate:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:dashboard:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:dashboard:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:dashboard:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:pos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:pos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:entradas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:movimientos:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:movimientos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:movimientos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:etiquetas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:inventario:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:inventario:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:productos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:precios:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:precios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:ajustes:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:ajustes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:clientes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:clientes_credito:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:clientes_credito:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:clientes_precios:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:clientes_precios:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:clientes_precios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:clientes_finanzas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:caja_abonos:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:caja_abonos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:caja_abonos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:clientes_recapturas:ver",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:clientes_recapturas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:clientes_recapturas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:proveedores:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:proveedores_finanzas:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:ubicaciones:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:usuarios:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:permisos:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:permisos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:resumen_caja:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:resumen_caja:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:resumen_caja:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:cortes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:cortes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:cobros_pagos:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:cobros_pagos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:reportes:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:reportes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:reportes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:conciliacion:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:conciliacion:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:auditoria:crear",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:auditoria:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:auditoria:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:camionetas:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:choferes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:viajes:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:viajes:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:salidas_venta:editar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:salidas_venta:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    },
+    {
+      "id": "CONTADOR:equipos:autorizar",
+      "literalConsumers": [],
+      "status": "NO_LITERAL_ACTION_CONSUMER_FOUND_NOT_A_PASS",
+      "caveat": "Static literal scan cannot exclude dynamic consumers and does not define business semantics."
+    }
+  ]
+}

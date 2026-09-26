@@ -1,0 +1,21 @@
+{
+  "status": "SETUP_SUCCEEDED_NATIVE_FIXTURES_ELIGIBLE",
+  "owner": "postrelease-browser-finish via MAIN",
+  "origin": "http://127.0.0.1:18338",
+  "api": "http://127.0.0.1:18337",
+  "baselineUi": "af0541",
+  "privateCredentials": "/tmp/postrelease-review-20260926/postreview_permissions_20260926/permissions-credentials.json",
+  "setupEvidence": "reports/postrelease-review-20260926/tarea-3/native-positive-journal.json",
+  "existingEvidence": "reports/postrelease-review-20260926/tarea-3/native-ui-informe.md",
+  "oneTargetedPass": [
+    "ADMIN /inventario/auditorias: open audit1 from history; ADMIN now participant (also SUPERVISOR/BODEGA/SISTEMAS joined). Show real scan input enabled, fixture siteMariana1/piso3. Compare TERMINAL/CAJA denial on same route.",
+    "ADMIN /cobros: siteMariana1 now has native open caja with fondo0; ticket1 pending must appear with enabled Cobrar. Compare TERMINAL/SUPERVISOR/BODEGA/SISTEMAS access/control denial. Do not collect payment.",
+    "ADMIN /salidas: salida1 still eligible; capture enabled Cancelar and CAJA same-resource action absence. Do not cancel.",
+    "Audit1 Confirmar y aplicar: record ADMIN positive and SUPERVISOR/BODEGA/SISTEMAS denied authorization only if real eligible state; do not force state or confirm. If unavailable leave blocked."
+  ],
+  "alreadyCapturedDoNotRepeat": [
+    "sale2 ADMIN/TERMINAL enabled Recibir y generar venta (native-ui-1790418525549)",
+    "equipo1 ADMIN/SISTEMAS enabled Editar (native-ui-1790418031511)"
+  ],
+  "mutations": "No destructive positives until screenshot complete; actor owner will execute native API positives afterward."
+}

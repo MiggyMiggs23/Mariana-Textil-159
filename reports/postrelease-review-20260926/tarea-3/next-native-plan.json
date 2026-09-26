@@ -1,0 +1,28 @@
+{
+  "status": "PREPARED_DURING_TASK2_HOLD_NOT_EXECUTED",
+  "mutationAuthorization": "MAIN user message explicitly authorizes own-copy native fixtures, audit participation, own caja and API synthetic grants; no production writes or SQL fixture tampering.",
+  "phaseOrder": [
+    "After MAIN window-end notification: native-positive.mjs setup joins existing audit with four allowed actors and opens ADMIN caja in fixture site1.",
+    "One targeted browser pass after setup, preserving eligible resources until screenshots: ADMIN scan enabled vs TERMINAL/CAJA denied; ADMIN ticket1 Cobrar enabled vs TERMINAL/SUPERVISOR/BODEGA/SISTEMAS; ADMIN cancellation salida1 vs CAJA; audit confirmation only if naturally eligible.",
+    "Use already captured native sale2 generation ADMIN/TERMINAL and equipo1 ADMIN/SISTEMAS; no demand for a contradictory TERMINAL permission.",
+    "After screenshot completion: native-positive.mjs positives consumes native fixtures with real API successes and records each terminal response; refusal to replay uncertain writes.",
+    "Prepare separate native synthetic actors for four permisos:editar outer-ver blocks (TERMINAL,CAJA,SUPERVISOR,BODEGA), grant only per-user permisos/ver prerequisite while keeping editar=false; authenticate exact state, deny a valid own-copy per-user override PUT at exact selected guard, compare read-only snapshots, and positive ADMIN same endpoint/fixture. Never alter original actors, role matrix or E11 gate. Report configured-prerequisite variant separately from unmodified baseline.",
+    "Run e5-read classification of dynamic caja_abonos/ver OR clientes_finanzas/ver; composite/profile denials do not close selected independent guard.",
+    "Reconcile cell-by-cell with exact API denial or genuine effective-allowed success, same fixture/site UI evidence, positive eligibility, and prior counts."
+  ],
+  "noNewGrantsNeededInitially": true,
+  "positivePersonas": {
+    "salidas_venta:crear": "TERMINAL effective allowed; use sale2; API positive to follow existing enabled-button proof",
+    "cobros_pagos:crear": "ADMIN existing permission with native open caja",
+    "equipos:editar": "ADMIN or SISTEMAS already allowed, not denied TERMINAL",
+    "auditoria_inventario:editar": "ADMIN plus native participation"
+  },
+  "blocks": {
+    "salidas:editar": "Released page has no Revertir for ADMIN either. No fabricated UI counterpart.",
+    "auditoria_inventario:autorizar": "Inspect actual eligibility before confirmation; never force status via SQL.",
+    "undefinedActions": "BUSINESS_DEFINITION_BLOCKED_NOT_PASS",
+    "E11LegacyOuterGuards": "BOUNDARY_BLOCKED_NOT_SELECTED_GUARD"
+  },
+  "currentPendingDirect": 381,
+  "currentPendingCombined": 401
+}

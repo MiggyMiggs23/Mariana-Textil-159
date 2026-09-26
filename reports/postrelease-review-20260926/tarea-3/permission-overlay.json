@@ -1,0 +1,9 @@
+{
+  "status": "CANDIDATE_ONLY_NOT_BUILT_OR_ACTIVATED",
+  "parent": "reports/postrelease-review-20260926/tarea-4/frozen-root/artifacts/mariana-textil/src/pages/conciliacion.tsx",
+  "parentSha256": "dbea832020088b2e6ef3eaacfdf5387ad5a609e407516ac9fcb7c3f23324797f",
+  "file": "artifacts/mariana-textil/src/pages/conciliacion.tsx",
+  "overlay": "reports/postrelease-review-20260926/tarea-3/permission-overlay/artifacts/mariana-textil/src/pages/conciliacion.tsx",
+  "sha256": "2112cba3eae6965a14a82ca3b5a0a70a1d4e6c6ff73155810328ad1098a72448",
+  "changes": "Permission conciliacion/autorizar on Recalcular button and handler, ADMIN bypass via existing helper. Task4 error state preserved. No permission matrix, API or site semantics changes."
+}

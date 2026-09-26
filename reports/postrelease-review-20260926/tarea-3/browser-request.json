@@ -1,0 +1,24 @@
+{
+  "owner": "MAIN -> night-browser-prepare",
+  "origin": "http://127.0.0.1:18338",
+  "apiOrigin": "http://127.0.0.1:18337",
+  "privateCredentials": "/tmp/postrelease-review-20260926/postreview_permissions_20260926/permissions-credentials.json",
+  "fixtures": "reports/postrelease-review-20260926/tarea-3/fixtures.json",
+  "cases": "reports/postrelease-review-20260926/tarea-3/cases.json",
+  "nativeFixturesReady": true,
+  "positiveMutationsHeldForUiEligibility": true,
+  "requests": [
+    {"module":"salidas","action":"editar","control":"Revertir","fixture":"extra","page":"/salidas","roles":["ADMIN","TERMINAL","CAJA","SUPERVISOR","BODEGA","SISTEMAS"]},
+    {"module":"auditoria_inventario","action":"editar","control":"escanear","fixture":"audit","page":"/inventario/auditorias","roles":["ADMIN","TERMINAL","CAJA","SUPERVISOR","BODEGA","SISTEMAS"]},
+    {"module":"salidas_venta","action":"crear","control":"generar venta de salida (not generic POS create)","fixture":"sale","page":"/pos","roles":["ADMIN","TERMINAL","CAJA","SUPERVISOR","BODEGA","SISTEMAS"]},
+    {"module":"cobros_pagos","action":"crear","control":"Cobrar","fixture":"ticket","page":"/cobros","roles":["ADMIN","TERMINAL","SUPERVISOR","BODEGA","SISTEMAS"]},
+    {"module":"equipos","action":"editar","control":"Editar","fixture":"equipment","page":"/equipos","roles":["ADMIN","TERMINAL","CAJA","SUPERVISOR","BODEGA","SISTEMAS"]}
+  ],
+  "requiredEvidence": [
+    "Match exact cell against inventory and effective auth permissions; not all listed roles necessarily have pending cells.",
+    "Record assigned site, selected operational site and fixture site; global ADMIN must select eligible site.",
+    "Same eligible native resource; allowed ADMIN real action enabled; denied actor action hidden/disabled; screenshot and selected exact API guard.",
+    "Keep boundary-blocked E11/legacy/outer guards distinct; cannot close selected action.",
+    "No new business rule or forced gate/matrix change."
+  ]
+}

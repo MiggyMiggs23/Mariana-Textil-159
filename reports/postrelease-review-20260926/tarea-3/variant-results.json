@@ -1,0 +1,4562 @@
+[
+  {
+    "cellId": "TERMINAL:permisos:editar",
+    "stateVariant": "DEDICATED_ACTOR_VER_TRUE_EDITAR_FALSE",
+    "auth": {
+      "id": 242,
+      "nombre": "PR26 prerequisite TERMINAL",
+      "usuario": "pr26.variant.terminal",
+      "rol": "TERMINAL",
+      "ubicacion": {
+        "id": 1,
+        "nombre": "Mariana",
+        "iniciales": "MA",
+        "tipo": "TIENDA",
+        "activa": true,
+        "esSistema": false
+      },
+      "alcanceConsulta": "PROPIA",
+      "permisos": [
+        {
+          "modulo": "marcar_remate",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "dashboard",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "pos",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "entradas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "salidas",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "movimientos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "etiquetas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "inventario",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "auditoria_inventario",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "productos",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "precios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "ajustes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_credito",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_precios",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_finanzas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "caja_abonos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_recapturas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "proveedores",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "proveedores_finanzas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "contenedores",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "ubicaciones",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "usuarios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "permisos",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "resumen_caja",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "cortes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "cobros_pagos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "reportes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "conciliacion",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "auditoria",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "camionetas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "choferes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "viajes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "salidas_venta",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "equipos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        }
+      ]
+    },
+    "method": "PUT",
+    "path": "/permisos/usuarios/241/dashboard",
+    "body": {
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'permisos'."
+    },
+    "selectedGuard": true,
+    "changedTables": [],
+    "before": {
+      "ticket_folio": {
+        "n": 1,
+        "digest": "b1a252c6dccbfee71a1e2f2a3e4e2a80"
+      },
+      "test_reset_history": {
+        "n": 1,
+        "digest": "de0b56ac86322502e50b3a7e87113f84"
+      },
+      "stock_minimo_sitios": {
+        "n": 1,
+        "digest": "ea18e5b74c5e023a1f0c5f4801d16e07"
+      },
+      "series_consecutivo": {
+        "n": 1,
+        "digest": "25363fcdd6ae131016a70e775d8cc910"
+      },
+      "fondo_mariana": {
+        "n": 1,
+        "digest": "85910e5ceea00e3314e30323a5e38920"
+      },
+      "stock_minimos": {
+        "n": 3,
+        "digest": "d89b9998d2d70c5d55e749252e2c62c8"
+      },
+      "e5_ddl_originales": {
+        "n": 4,
+        "digest": "ec007f6c6fd5072337935017762f06ed"
+      },
+      "e11_e5_definiciones": {
+        "n": 5,
+        "digest": "88a2ced80abdd4d2b8daf910f3b490d0"
+      },
+      "viaje_folio": {
+        "n": 11,
+        "digest": "ecb29fedd3b7215bbc7e48d38c261334"
+      },
+      "ubicaciones": {
+        "n": 11,
+        "digest": "2482a3ed5244f5f6df891ea7db1c6afe"
+      },
+      "salida_folio": {
+        "n": 11,
+        "digest": "5b5b9af3deb855aa89fd0d2aa930b548"
+      },
+      "recibo_folio_e3": {
+        "n": 11,
+        "digest": "189bbeda078566ee2b340fd26a76522a"
+      },
+      "entrada_folio": {
+        "n": 11,
+        "digest": "5b5b9af3deb855aa89fd0d2aa930b548"
+      },
+      "auditoria_inventario_folio": {
+        "n": 11,
+        "digest": "aef08d6adb2c7b04993c54ca77a4ee58"
+      },
+      "pisos": {
+        "n": 13,
+        "digest": "fbf97d30eecccd0ce554d9e801d5de32"
+      },
+      "proveedores": {
+        "n": 27,
+        "digest": "457c081e26a9bfc1ee7e84e422976cab"
+      },
+      "usuarios": {
+        "n": 43,
+        "digest": "4eb3e8cc9066d0ed4bb257c96b60f3aa"
+      },
+      "permisos_ubicacion": {
+        "n": 54,
+        "digest": "ae0e8d996e5d3270e91681f436681858"
+      },
+      "auditoria": {
+        "n": 73,
+        "digest": "b352abd23e4e14c1f319f384e6626c97"
+      },
+      "permisos_rol": {
+        "n": 204,
+        "digest": "153f81ddf73fa196c12c9f0e2db63917"
+      },
+      "solicitudes_pago_dirigido": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salidas": {
+        "n": 2,
+        "digest": "2f06c420a9acae4be3e4d5483fc89f6a"
+      },
+      "reimpresiones_etiqueta": {
+        "n": 3,
+        "digest": "7ce45ccaafed334ee0df28988f13dc8f"
+      },
+      "movimientos_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_inventario_escaneos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "tickets": {
+        "n": 1,
+        "digest": "ae6c77a82afc156611b3e9daff0c9950"
+      },
+      "auditoria_inventario_snapshot": {
+        "n": 6,
+        "digest": "3568c96eff42bc9c64f4850b9ed597c2"
+      },
+      "e11_resoluciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "fondo_movimientos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "cuadre_fiscal_registros": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "equipos": {
+        "n": 1,
+        "digest": "6a2eff2c3fbeb942af12deee344733c6"
+      },
+      "notificaciones_sistema": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "cobros_credito_pendientes_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "movimientos": {
+        "n": 9,
+        "digest": "f32852b9098be2196bdd1c20149c9c19"
+      },
+      "cliente_documentos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "fondo_arqueos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "finalizaciones_abono_e2": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "contenedores": {
+        "n": 1,
+        "digest": "068da040ab3792185642e5cd7f35ca27"
+      },
+      "camionetas": {
+        "n": 1,
+        "digest": "960fd7200d495b03ec8563afe8ba05f6"
+      },
+      "rollos": {
+        "n": 7,
+        "digest": "bf3ca7e9a014f2e4a45124cfc78e865b"
+      },
+      "evidencia_no_aplicada_e2": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_devoluciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_sobrante_decisiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_faltante_reactivaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "notificaciones_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_recepciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "recibos_abono_e3": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "atribuciones_credito_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_lineas": {
+        "n": 1,
+        "digest": "69c9647858b2562b14bb5e49c5dd48ba"
+      },
+      "e9_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_linea_consumos": {
+        "n": 1,
+        "digest": "590202ff2d2861f817e131c8201bc635"
+      },
+      "e5_salidas_bancarias": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_aplicaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "precio_historial": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "stock_minimo_episodios": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "pagos_proveedor": {
+        "n": 1,
+        "digest": "2a933e7f191bea96e5eafbc9d9e9ab8a"
+      },
+      "auditorias_inventario": {
+        "n": 1,
+        "digest": "068603cd0df9f9b28bec061931f9213d"
+      },
+      "e11_conciliaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "proveedor_efectivo_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_impresiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salidas_dinero_caja": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "entradas": {
+        "n": 2,
+        "digest": "cd94a917fac34bd7c90e39262ce76bc0"
+      },
+      "e5_documentos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_decisiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_retornos_proveedor_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salida_lineas": {
+        "n": 2,
+        "digest": "2e70ea0ad0cbe5cb3a0a036dbe91b50c"
+      },
+      "proveedor_solicitudes_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "operaciones_credito_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_salidas_e4_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "vistas_abono_e3": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "proveedor_operaciones_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "revisiones_etiqueta": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e9_entregas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_perfil_eventos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "choferes": {
+        "n": 1,
+        "digest": "c3a3e8c7361c99e4a3b78bf8d39d076c"
+      },
+      "salida_rollos": {
+        "n": 2,
+        "digest": "f33df1c5bc6a5105e2f1c808fc51d7b8"
+      },
+      "viajes": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_cambios_usuario": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_sobrante_contextos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_pagos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "sesiones_caja": {
+        "n": 1,
+        "digest": "927413caa5f0a751aaed68966dadc4af"
+      },
+      "e5_nacimientos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "contenedor_lineas": {
+        "n": 1,
+        "digest": "73fb799ab1aa0a051b611da9cad98463"
+      },
+      "e5_cobros": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_perfiles": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_conciliacion_ventas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "permisos_usuario": {
+        "n": 4,
+        "digest": "b6d20f1178b222360b1dfce9b5928338"
+      },
+      "e11_avisos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "tarea4_rollo_remate": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "equipos_checklist": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_e5_preparaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "aplicaciones_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "existencias": {
+        "n": 1,
+        "digest": "638ddeab7166879737262365e4eb4ca6"
+      },
+      "caja_salidas_e4": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_desbloqueos_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "aplicaciones_pago_proveedor": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "productos": {
+        "n": 1234,
+        "digest": "a4d25937288d84015b71e14bf3bf057c"
+      },
+      "viaje_salidas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "viaje_tickets": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_notificacion_origen": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "sesiones_caja_dias": {
+        "n": 1,
+        "digest": "f8dfb448c9067e040691368c9a6356d2"
+      },
+      "auditoria_inventario_participantes": {
+        "n": 4,
+        "digest": "b362abdcad6ecb63a2067d91b6fbe23c"
+      },
+      "autorizaciones_nota": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_vinculos_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "clientes": {
+        "n": 2576,
+        "digest": "43f4e6a37fd5822ceba6ec4a503e9494"
+      }
+    },
+    "after": {
+      "ticket_folio": {
+        "n": 1,
+        "digest": "b1a252c6dccbfee71a1e2f2a3e4e2a80"
+      },
+      "test_reset_history": {
+        "n": 1,
+        "digest": "de0b56ac86322502e50b3a7e87113f84"
+      },
+      "stock_minimo_sitios": {
+        "n": 1,
+        "digest": "ea18e5b74c5e023a1f0c5f4801d16e07"
+      },
+      "series_consecutivo": {
+        "n": 1,
+        "digest": "25363fcdd6ae131016a70e775d8cc910"
+      },
+      "fondo_mariana": {
+        "n": 1,
+        "digest": "85910e5ceea00e3314e30323a5e38920"
+      },
+      "stock_minimos": {
+        "n": 3,
+        "digest": "d89b9998d2d70c5d55e749252e2c62c8"
+      },
+      "e5_ddl_originales": {
+        "n": 4,
+        "digest": "ec007f6c6fd5072337935017762f06ed"
+      },
+      "e11_e5_definiciones": {
+        "n": 5,
+        "digest": "88a2ced80abdd4d2b8daf910f3b490d0"
+      },
+      "viaje_folio": {
+        "n": 11,
+        "digest": "ecb29fedd3b7215bbc7e48d38c261334"
+      },
+      "ubicaciones": {
+        "n": 11,
+        "digest": "2482a3ed5244f5f6df891ea7db1c6afe"
+      },
+      "salida_folio": {
+        "n": 11,
+        "digest": "5b5b9af3deb855aa89fd0d2aa930b548"
+      },
+      "recibo_folio_e3": {
+        "n": 11,
+        "digest": "189bbeda078566ee2b340fd26a76522a"
+      },
+      "entrada_folio": {
+        "n": 11,
+        "digest": "5b5b9af3deb855aa89fd0d2aa930b548"
+      },
+      "auditoria_inventario_folio": {
+        "n": 11,
+        "digest": "aef08d6adb2c7b04993c54ca77a4ee58"
+      },
+      "pisos": {
+        "n": 13,
+        "digest": "fbf97d30eecccd0ce554d9e801d5de32"
+      },
+      "proveedores": {
+        "n": 27,
+        "digest": "457c081e26a9bfc1ee7e84e422976cab"
+      },
+      "usuarios": {
+        "n": 43,
+        "digest": "4eb3e8cc9066d0ed4bb257c96b60f3aa"
+      },
+      "permisos_ubicacion": {
+        "n": 54,
+        "digest": "ae0e8d996e5d3270e91681f436681858"
+      },
+      "auditoria": {
+        "n": 73,
+        "digest": "b352abd23e4e14c1f319f384e6626c97"
+      },
+      "permisos_rol": {
+        "n": 204,
+        "digest": "153f81ddf73fa196c12c9f0e2db63917"
+      },
+      "solicitudes_pago_dirigido": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salidas": {
+        "n": 2,
+        "digest": "2f06c420a9acae4be3e4d5483fc89f6a"
+      },
+      "reimpresiones_etiqueta": {
+        "n": 3,
+        "digest": "7ce45ccaafed334ee0df28988f13dc8f"
+      },
+      "movimientos_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_inventario_escaneos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "tickets": {
+        "n": 1,
+        "digest": "ae6c77a82afc156611b3e9daff0c9950"
+      },
+      "auditoria_inventario_snapshot": {
+        "n": 6,
+        "digest": "3568c96eff42bc9c64f4850b9ed597c2"
+      },
+      "e11_resoluciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "fondo_movimientos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "cuadre_fiscal_registros": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "equipos": {
+        "n": 1,
+        "digest": "6a2eff2c3fbeb942af12deee344733c6"
+      },
+      "notificaciones_sistema": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "cobros_credito_pendientes_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "movimientos": {
+        "n": 9,
+        "digest": "f32852b9098be2196bdd1c20149c9c19"
+      },
+      "cliente_documentos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "fondo_arqueos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "finalizaciones_abono_e2": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "contenedores": {
+        "n": 1,
+        "digest": "068da040ab3792185642e5cd7f35ca27"
+      },
+      "camionetas": {
+        "n": 1,
+        "digest": "960fd7200d495b03ec8563afe8ba05f6"
+      },
+      "rollos": {
+        "n": 7,
+        "digest": "bf3ca7e9a014f2e4a45124cfc78e865b"
+      },
+      "evidencia_no_aplicada_e2": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_devoluciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_sobrante_decisiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_faltante_reactivaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "notificaciones_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_recepciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "recibos_abono_e3": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "atribuciones_credito_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_lineas": {
+        "n": 1,
+        "digest": "69c9647858b2562b14bb5e49c5dd48ba"
+      },
+      "e9_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_linea_consumos": {
+        "n": 1,
+        "digest": "590202ff2d2861f817e131c8201bc635"
+      },
+      "e5_salidas_bancarias": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_aplicaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "precio_historial": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "stock_minimo_episodios": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "pagos_proveedor": {
+        "n": 1,
+        "digest": "2a933e7f191bea96e5eafbc9d9e9ab8a"
+      },
+      "auditorias_inventario": {
+        "n": 1,
+        "digest": "068603cd0df9f9b28bec061931f9213d"
+      },
+      "e11_conciliaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "proveedor_efectivo_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_impresiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salidas_dinero_caja": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "entradas": {
+        "n": 2,
+        "digest": "cd94a917fac34bd7c90e39262ce76bc0"
+      },
+      "e5_documentos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_decisiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_retornos_proveedor_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salida_lineas": {
+        "n": 2,
+        "digest": "2e70ea0ad0cbe5cb3a0a036dbe91b50c"
+      },
+      "proveedor_solicitudes_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "operaciones_credito_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_salidas_e4_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "vistas_abono_e3": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "proveedor_operaciones_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "revisiones_etiqueta": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e9_entregas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_perfil_eventos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "choferes": {
+        "n": 1,
+        "digest": "c3a3e8c7361c99e4a3b78bf8d39d076c"
+      },
+      "salida_rollos": {
+        "n": 2,
+        "digest": "f33df1c5bc6a5105e2f1c808fc51d7b8"
+      },
+      "viajes": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_cambios_usuario": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_sobrante_contextos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_pagos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "sesiones_caja": {
+        "n": 1,
+        "digest": "927413caa5f0a751aaed68966dadc4af"
+      },
+      "e5_nacimientos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "contenedor_lineas": {
+        "n": 1,
+        "digest": "73fb799ab1aa0a051b611da9cad98463"
+      },
+      "e5_cobros": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_perfiles": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_conciliacion_ventas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "permisos_usuario": {
+        "n": 4,
+        "digest": "b6d20f1178b222360b1dfce9b5928338"
+      },
+      "e11_avisos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "tarea4_rollo_remate": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "equipos_checklist": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_e5_preparaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "aplicaciones_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "existencias": {
+        "n": 1,
+        "digest": "638ddeab7166879737262365e4eb4ca6"
+      },
+      "caja_salidas_e4": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_desbloqueos_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "aplicaciones_pago_proveedor": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "productos": {
+        "n": 1234,
+        "digest": "a4d25937288d84015b71e14bf3bf057c"
+      },
+      "e5_vinculos_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "autorizaciones_nota": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_inventario_participantes": {
+        "n": 4,
+        "digest": "b362abdcad6ecb63a2067d91b6fbe23c"
+      },
+      "sesiones_caja_dias": {
+        "n": 1,
+        "digest": "f8dfb448c9067e040691368c9a6356d2"
+      },
+      "e11_notificacion_origen": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "viaje_tickets": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "viaje_salidas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "clientes": {
+        "n": 2576,
+        "digest": "43f4e6a37fd5822ceba6ec4a503e9494"
+      }
+    }
+  },
+  {
+    "cellId": "CAJA:permisos:editar",
+    "stateVariant": "DEDICATED_ACTOR_VER_TRUE_EDITAR_FALSE",
+    "auth": {
+      "id": 243,
+      "nombre": "PR26 prerequisite CAJA",
+      "usuario": "pr26.variant.caja",
+      "rol": "CAJA",
+      "ubicacion": {
+        "id": 1,
+        "nombre": "Mariana",
+        "iniciales": "MA",
+        "tipo": "TIENDA",
+        "activa": true,
+        "esSistema": false
+      },
+      "alcanceConsulta": "TODAS",
+      "permisos": [
+        {
+          "modulo": "marcar_remate",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "dashboard",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "pos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "entradas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "salidas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "movimientos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "etiquetas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "inventario",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "auditoria_inventario",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "productos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "precios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "ajustes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_credito",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_precios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_finanzas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "caja_abonos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_recapturas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "proveedores",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "proveedores_finanzas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "contenedores",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "ubicaciones",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "usuarios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "permisos",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "resumen_caja",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "cortes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "cobros_pagos",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "reportes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "conciliacion",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "auditoria",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "camionetas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "choferes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "viajes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "salidas_venta",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "equipos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        }
+      ]
+    },
+    "method": "PUT",
+    "path": "/permisos/usuarios/241/dashboard",
+    "body": {
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'permisos'."
+    },
+    "selectedGuard": true,
+    "changedTables": [],
+    "before": {
+      "ticket_folio": {
+        "n": 1,
+        "digest": "b1a252c6dccbfee71a1e2f2a3e4e2a80"
+      },
+      "test_reset_history": {
+        "n": 1,
+        "digest": "de0b56ac86322502e50b3a7e87113f84"
+      },
+      "stock_minimo_sitios": {
+        "n": 1,
+        "digest": "ea18e5b74c5e023a1f0c5f4801d16e07"
+      },
+      "series_consecutivo": {
+        "n": 1,
+        "digest": "25363fcdd6ae131016a70e775d8cc910"
+      },
+      "fondo_mariana": {
+        "n": 1,
+        "digest": "85910e5ceea00e3314e30323a5e38920"
+      },
+      "stock_minimos": {
+        "n": 3,
+        "digest": "d89b9998d2d70c5d55e749252e2c62c8"
+      },
+      "e5_ddl_originales": {
+        "n": 4,
+        "digest": "ec007f6c6fd5072337935017762f06ed"
+      },
+      "e11_e5_definiciones": {
+        "n": 5,
+        "digest": "88a2ced80abdd4d2b8daf910f3b490d0"
+      },
+      "viaje_folio": {
+        "n": 11,
+        "digest": "ecb29fedd3b7215bbc7e48d38c261334"
+      },
+      "ubicaciones": {
+        "n": 11,
+        "digest": "2482a3ed5244f5f6df891ea7db1c6afe"
+      },
+      "salida_folio": {
+        "n": 11,
+        "digest": "5b5b9af3deb855aa89fd0d2aa930b548"
+      },
+      "recibo_folio_e3": {
+        "n": 11,
+        "digest": "189bbeda078566ee2b340fd26a76522a"
+      },
+      "entrada_folio": {
+        "n": 11,
+        "digest": "5b5b9af3deb855aa89fd0d2aa930b548"
+      },
+      "auditoria_inventario_folio": {
+        "n": 11,
+        "digest": "aef08d6adb2c7b04993c54ca77a4ee58"
+      },
+      "pisos": {
+        "n": 13,
+        "digest": "fbf97d30eecccd0ce554d9e801d5de32"
+      },
+      "proveedores": {
+        "n": 27,
+        "digest": "457c081e26a9bfc1ee7e84e422976cab"
+      },
+      "usuarios": {
+        "n": 43,
+        "digest": "da18397ec846dd23d4715afc43dbdd6c"
+      },
+      "permisos_ubicacion": {
+        "n": 54,
+        "digest": "ae0e8d996e5d3270e91681f436681858"
+      },
+      "auditoria": {
+        "n": 74,
+        "digest": "952319c5569d2d64aaca730fda15e7ea"
+      },
+      "permisos_rol": {
+        "n": 204,
+        "digest": "153f81ddf73fa196c12c9f0e2db63917"
+      },
+      "solicitudes_pago_dirigido": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salidas": {
+        "n": 2,
+        "digest": "2f06c420a9acae4be3e4d5483fc89f6a"
+      },
+      "reimpresiones_etiqueta": {
+        "n": 3,
+        "digest": "7ce45ccaafed334ee0df28988f13dc8f"
+      },
+      "movimientos_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_inventario_escaneos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "tickets": {
+        "n": 1,
+        "digest": "ae6c77a82afc156611b3e9daff0c9950"
+      },
+      "auditoria_inventario_snapshot": {
+        "n": 6,
+        "digest": "3568c96eff42bc9c64f4850b9ed597c2"
+      },
+      "e11_resoluciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "fondo_movimientos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "cuadre_fiscal_registros": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "equipos": {
+        "n": 1,
+        "digest": "6a2eff2c3fbeb942af12deee344733c6"
+      },
+      "notificaciones_sistema": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "cobros_credito_pendientes_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "movimientos": {
+        "n": 9,
+        "digest": "f32852b9098be2196bdd1c20149c9c19"
+      },
+      "cliente_documentos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "fondo_arqueos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "finalizaciones_abono_e2": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "contenedores": {
+        "n": 1,
+        "digest": "068da040ab3792185642e5cd7f35ca27"
+      },
+      "camionetas": {
+        "n": 1,
+        "digest": "960fd7200d495b03ec8563afe8ba05f6"
+      },
+      "rollos": {
+        "n": 7,
+        "digest": "bf3ca7e9a014f2e4a45124cfc78e865b"
+      },
+      "evidencia_no_aplicada_e2": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_devoluciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_sobrante_decisiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_faltante_reactivaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "notificaciones_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_recepciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "recibos_abono_e3": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "atribuciones_credito_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_lineas": {
+        "n": 1,
+        "digest": "69c9647858b2562b14bb5e49c5dd48ba"
+      },
+      "e9_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_linea_consumos": {
+        "n": 1,
+        "digest": "590202ff2d2861f817e131c8201bc635"
+      },
+      "e5_salidas_bancarias": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_aplicaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "precio_historial": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "stock_minimo_episodios": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "pagos_proveedor": {
+        "n": 1,
+        "digest": "2a933e7f191bea96e5eafbc9d9e9ab8a"
+      },
+      "auditorias_inventario": {
+        "n": 1,
+        "digest": "068603cd0df9f9b28bec061931f9213d"
+      },
+      "e11_conciliaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "proveedor_efectivo_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_impresiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salidas_dinero_caja": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "entradas": {
+        "n": 2,
+        "digest": "cd94a917fac34bd7c90e39262ce76bc0"
+      },
+      "e5_documentos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_decisiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_retornos_proveedor_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salida_lineas": {
+        "n": 2,
+        "digest": "2e70ea0ad0cbe5cb3a0a036dbe91b50c"
+      },
+      "proveedor_solicitudes_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "operaciones_credito_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_salidas_e4_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "vistas_abono_e3": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "proveedor_operaciones_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "revisiones_etiqueta": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e9_entregas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_perfil_eventos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "choferes": {
+        "n": 1,
+        "digest": "c3a3e8c7361c99e4a3b78bf8d39d076c"
+      },
+      "salida_rollos": {
+        "n": 2,
+        "digest": "f33df1c5bc6a5105e2f1c808fc51d7b8"
+      },
+      "viajes": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_cambios_usuario": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_sobrante_contextos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_pagos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "sesiones_caja": {
+        "n": 1,
+        "digest": "927413caa5f0a751aaed68966dadc4af"
+      },
+      "e5_nacimientos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "contenedor_lineas": {
+        "n": 1,
+        "digest": "73fb799ab1aa0a051b611da9cad98463"
+      },
+      "e5_cobros": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_perfiles": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_conciliacion_ventas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "permisos_usuario": {
+        "n": 4,
+        "digest": "b6d20f1178b222360b1dfce9b5928338"
+      },
+      "e11_avisos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "tarea4_rollo_remate": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "equipos_checklist": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_e5_preparaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "aplicaciones_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "existencias": {
+        "n": 1,
+        "digest": "638ddeab7166879737262365e4eb4ca6"
+      },
+      "caja_salidas_e4": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_desbloqueos_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "aplicaciones_pago_proveedor": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "productos": {
+        "n": 1234,
+        "digest": "a4d25937288d84015b71e14bf3bf057c"
+      },
+      "e5_vinculos_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "autorizaciones_nota": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_inventario_participantes": {
+        "n": 4,
+        "digest": "b362abdcad6ecb63a2067d91b6fbe23c"
+      },
+      "sesiones_caja_dias": {
+        "n": 1,
+        "digest": "f8dfb448c9067e040691368c9a6356d2"
+      },
+      "e11_notificacion_origen": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "viaje_tickets": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "viaje_salidas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "clientes": {
+        "n": 2576,
+        "digest": "43f4e6a37fd5822ceba6ec4a503e9494"
+      }
+    },
+    "after": {
+      "ticket_folio": {
+        "n": 1,
+        "digest": "b1a252c6dccbfee71a1e2f2a3e4e2a80"
+      },
+      "test_reset_history": {
+        "n": 1,
+        "digest": "de0b56ac86322502e50b3a7e87113f84"
+      },
+      "stock_minimo_sitios": {
+        "n": 1,
+        "digest": "ea18e5b74c5e023a1f0c5f4801d16e07"
+      },
+      "series_consecutivo": {
+        "n": 1,
+        "digest": "25363fcdd6ae131016a70e775d8cc910"
+      },
+      "fondo_mariana": {
+        "n": 1,
+        "digest": "85910e5ceea00e3314e30323a5e38920"
+      },
+      "stock_minimos": {
+        "n": 3,
+        "digest": "d89b9998d2d70c5d55e749252e2c62c8"
+      },
+      "e5_ddl_originales": {
+        "n": 4,
+        "digest": "ec007f6c6fd5072337935017762f06ed"
+      },
+      "e11_e5_definiciones": {
+        "n": 5,
+        "digest": "88a2ced80abdd4d2b8daf910f3b490d0"
+      },
+      "viaje_folio": {
+        "n": 11,
+        "digest": "ecb29fedd3b7215bbc7e48d38c261334"
+      },
+      "ubicaciones": {
+        "n": 11,
+        "digest": "2482a3ed5244f5f6df891ea7db1c6afe"
+      },
+      "salida_folio": {
+        "n": 11,
+        "digest": "5b5b9af3deb855aa89fd0d2aa930b548"
+      },
+      "recibo_folio_e3": {
+        "n": 11,
+        "digest": "189bbeda078566ee2b340fd26a76522a"
+      },
+      "entrada_folio": {
+        "n": 11,
+        "digest": "5b5b9af3deb855aa89fd0d2aa930b548"
+      },
+      "auditoria_inventario_folio": {
+        "n": 11,
+        "digest": "aef08d6adb2c7b04993c54ca77a4ee58"
+      },
+      "pisos": {
+        "n": 13,
+        "digest": "fbf97d30eecccd0ce554d9e801d5de32"
+      },
+      "proveedores": {
+        "n": 27,
+        "digest": "457c081e26a9bfc1ee7e84e422976cab"
+      },
+      "usuarios": {
+        "n": 43,
+        "digest": "da18397ec846dd23d4715afc43dbdd6c"
+      },
+      "permisos_ubicacion": {
+        "n": 54,
+        "digest": "ae0e8d996e5d3270e91681f436681858"
+      },
+      "auditoria": {
+        "n": 74,
+        "digest": "952319c5569d2d64aaca730fda15e7ea"
+      },
+      "permisos_rol": {
+        "n": 204,
+        "digest": "153f81ddf73fa196c12c9f0e2db63917"
+      },
+      "solicitudes_pago_dirigido": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salidas": {
+        "n": 2,
+        "digest": "2f06c420a9acae4be3e4d5483fc89f6a"
+      },
+      "reimpresiones_etiqueta": {
+        "n": 3,
+        "digest": "7ce45ccaafed334ee0df28988f13dc8f"
+      },
+      "movimientos_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_inventario_escaneos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "tickets": {
+        "n": 1,
+        "digest": "ae6c77a82afc156611b3e9daff0c9950"
+      },
+      "auditoria_inventario_snapshot": {
+        "n": 6,
+        "digest": "3568c96eff42bc9c64f4850b9ed597c2"
+      },
+      "e11_resoluciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "fondo_movimientos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "cuadre_fiscal_registros": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "equipos": {
+        "n": 1,
+        "digest": "6a2eff2c3fbeb942af12deee344733c6"
+      },
+      "notificaciones_sistema": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "cobros_credito_pendientes_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "movimientos": {
+        "n": 9,
+        "digest": "f32852b9098be2196bdd1c20149c9c19"
+      },
+      "cliente_documentos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "fondo_arqueos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "finalizaciones_abono_e2": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "contenedores": {
+        "n": 1,
+        "digest": "068da040ab3792185642e5cd7f35ca27"
+      },
+      "camionetas": {
+        "n": 1,
+        "digest": "960fd7200d495b03ec8563afe8ba05f6"
+      },
+      "rollos": {
+        "n": 7,
+        "digest": "bf3ca7e9a014f2e4a45124cfc78e865b"
+      },
+      "evidencia_no_aplicada_e2": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_devoluciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_sobrante_decisiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_faltante_reactivaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "notificaciones_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_recepciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "recibos_abono_e3": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "atribuciones_credito_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_lineas": {
+        "n": 1,
+        "digest": "69c9647858b2562b14bb5e49c5dd48ba"
+      },
+      "e9_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_linea_consumos": {
+        "n": 1,
+        "digest": "590202ff2d2861f817e131c8201bc635"
+      },
+      "e5_salidas_bancarias": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_aplicaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "precio_historial": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "stock_minimo_episodios": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "pagos_proveedor": {
+        "n": 1,
+        "digest": "2a933e7f191bea96e5eafbc9d9e9ab8a"
+      },
+      "auditorias_inventario": {
+        "n": 1,
+        "digest": "068603cd0df9f9b28bec061931f9213d"
+      },
+      "e11_conciliaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "proveedor_efectivo_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_impresiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salidas_dinero_caja": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "entradas": {
+        "n": 2,
+        "digest": "cd94a917fac34bd7c90e39262ce76bc0"
+      },
+      "e5_documentos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_decisiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_retornos_proveedor_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salida_lineas": {
+        "n": 2,
+        "digest": "2e70ea0ad0cbe5cb3a0a036dbe91b50c"
+      },
+      "proveedor_solicitudes_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "operaciones_credito_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_salidas_e4_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "vistas_abono_e3": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "proveedor_operaciones_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "revisiones_etiqueta": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e9_entregas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_perfil_eventos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "choferes": {
+        "n": 1,
+        "digest": "c3a3e8c7361c99e4a3b78bf8d39d076c"
+      },
+      "salida_rollos": {
+        "n": 2,
+        "digest": "f33df1c5bc6a5105e2f1c808fc51d7b8"
+      },
+      "viajes": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_cambios_usuario": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_sobrante_contextos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_pagos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "sesiones_caja": {
+        "n": 1,
+        "digest": "927413caa5f0a751aaed68966dadc4af"
+      },
+      "e5_nacimientos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "contenedor_lineas": {
+        "n": 1,
+        "digest": "73fb799ab1aa0a051b611da9cad98463"
+      },
+      "e5_cobros": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_perfiles": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_conciliacion_ventas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "permisos_usuario": {
+        "n": 4,
+        "digest": "b6d20f1178b222360b1dfce9b5928338"
+      },
+      "e11_avisos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "tarea4_rollo_remate": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "equipos_checklist": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_e5_preparaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "aplicaciones_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "existencias": {
+        "n": 1,
+        "digest": "638ddeab7166879737262365e4eb4ca6"
+      },
+      "caja_salidas_e4": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_desbloqueos_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "aplicaciones_pago_proveedor": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "productos": {
+        "n": 1234,
+        "digest": "a4d25937288d84015b71e14bf3bf057c"
+      },
+      "e5_vinculos_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "autorizaciones_nota": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_inventario_participantes": {
+        "n": 4,
+        "digest": "b362abdcad6ecb63a2067d91b6fbe23c"
+      },
+      "sesiones_caja_dias": {
+        "n": 1,
+        "digest": "f8dfb448c9067e040691368c9a6356d2"
+      },
+      "e11_notificacion_origen": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "viaje_tickets": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "viaje_salidas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "clientes": {
+        "n": 2576,
+        "digest": "43f4e6a37fd5822ceba6ec4a503e9494"
+      }
+    }
+  },
+  {
+    "cellId": "SUPERVISOR:permisos:editar",
+    "stateVariant": "DEDICATED_ACTOR_VER_TRUE_EDITAR_FALSE",
+    "auth": {
+      "id": 244,
+      "nombre": "PR26 prerequisite SUPERVISOR",
+      "usuario": "pr26.variant.supervisor",
+      "rol": "SUPERVISOR",
+      "ubicacion": {
+        "id": 1,
+        "nombre": "Mariana",
+        "iniciales": "MA",
+        "tipo": "TIENDA",
+        "activa": true,
+        "esSistema": false
+      },
+      "alcanceConsulta": "TODAS",
+      "permisos": [
+        {
+          "modulo": "marcar_remate",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "dashboard",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "pos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "entradas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "salidas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "movimientos",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "etiquetas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "inventario",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "auditoria_inventario",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "productos",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "precios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "ajustes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_credito",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_precios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_finanzas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "caja_abonos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_recapturas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "proveedores",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "proveedores_finanzas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "contenedores",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "ubicaciones",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "usuarios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "permisos",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "resumen_caja",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "cortes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "cobros_pagos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "reportes",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "conciliacion",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "auditoria",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "camionetas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "choferes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "viajes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "salidas_venta",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "equipos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        }
+      ]
+    },
+    "method": "PUT",
+    "path": "/permisos/usuarios/241/dashboard",
+    "body": {
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'permisos'."
+    },
+    "selectedGuard": true,
+    "changedTables": [],
+    "before": {
+      "ticket_folio": {
+        "n": 1,
+        "digest": "b1a252c6dccbfee71a1e2f2a3e4e2a80"
+      },
+      "test_reset_history": {
+        "n": 1,
+        "digest": "de0b56ac86322502e50b3a7e87113f84"
+      },
+      "stock_minimo_sitios": {
+        "n": 1,
+        "digest": "ea18e5b74c5e023a1f0c5f4801d16e07"
+      },
+      "series_consecutivo": {
+        "n": 1,
+        "digest": "25363fcdd6ae131016a70e775d8cc910"
+      },
+      "fondo_mariana": {
+        "n": 1,
+        "digest": "85910e5ceea00e3314e30323a5e38920"
+      },
+      "stock_minimos": {
+        "n": 3,
+        "digest": "d89b9998d2d70c5d55e749252e2c62c8"
+      },
+      "e5_ddl_originales": {
+        "n": 4,
+        "digest": "ec007f6c6fd5072337935017762f06ed"
+      },
+      "e11_e5_definiciones": {
+        "n": 5,
+        "digest": "88a2ced80abdd4d2b8daf910f3b490d0"
+      },
+      "viaje_folio": {
+        "n": 11,
+        "digest": "ecb29fedd3b7215bbc7e48d38c261334"
+      },
+      "ubicaciones": {
+        "n": 11,
+        "digest": "2482a3ed5244f5f6df891ea7db1c6afe"
+      },
+      "salida_folio": {
+        "n": 11,
+        "digest": "5b5b9af3deb855aa89fd0d2aa930b548"
+      },
+      "recibo_folio_e3": {
+        "n": 11,
+        "digest": "189bbeda078566ee2b340fd26a76522a"
+      },
+      "entrada_folio": {
+        "n": 11,
+        "digest": "5b5b9af3deb855aa89fd0d2aa930b548"
+      },
+      "auditoria_inventario_folio": {
+        "n": 11,
+        "digest": "aef08d6adb2c7b04993c54ca77a4ee58"
+      },
+      "pisos": {
+        "n": 13,
+        "digest": "fbf97d30eecccd0ce554d9e801d5de32"
+      },
+      "proveedores": {
+        "n": 27,
+        "digest": "457c081e26a9bfc1ee7e84e422976cab"
+      },
+      "usuarios": {
+        "n": 43,
+        "digest": "1f813d95fc16bebcda4e456785259e3c"
+      },
+      "permisos_ubicacion": {
+        "n": 54,
+        "digest": "ae0e8d996e5d3270e91681f436681858"
+      },
+      "auditoria": {
+        "n": 75,
+        "digest": "c46dd69ca9ae8ef55cb4ce7724c7a037"
+      },
+      "permisos_rol": {
+        "n": 204,
+        "digest": "153f81ddf73fa196c12c9f0e2db63917"
+      },
+      "solicitudes_pago_dirigido": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salidas": {
+        "n": 2,
+        "digest": "2f06c420a9acae4be3e4d5483fc89f6a"
+      },
+      "reimpresiones_etiqueta": {
+        "n": 3,
+        "digest": "7ce45ccaafed334ee0df28988f13dc8f"
+      },
+      "movimientos_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_inventario_escaneos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "tickets": {
+        "n": 1,
+        "digest": "ae6c77a82afc156611b3e9daff0c9950"
+      },
+      "auditoria_inventario_snapshot": {
+        "n": 6,
+        "digest": "3568c96eff42bc9c64f4850b9ed597c2"
+      },
+      "e11_resoluciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "fondo_movimientos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "cuadre_fiscal_registros": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "equipos": {
+        "n": 1,
+        "digest": "6a2eff2c3fbeb942af12deee344733c6"
+      },
+      "notificaciones_sistema": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "cobros_credito_pendientes_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "movimientos": {
+        "n": 9,
+        "digest": "f32852b9098be2196bdd1c20149c9c19"
+      },
+      "cliente_documentos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "fondo_arqueos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "finalizaciones_abono_e2": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "contenedores": {
+        "n": 1,
+        "digest": "068da040ab3792185642e5cd7f35ca27"
+      },
+      "camionetas": {
+        "n": 1,
+        "digest": "960fd7200d495b03ec8563afe8ba05f6"
+      },
+      "rollos": {
+        "n": 7,
+        "digest": "bf3ca7e9a014f2e4a45124cfc78e865b"
+      },
+      "evidencia_no_aplicada_e2": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_devoluciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_sobrante_decisiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_faltante_reactivaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "notificaciones_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_recepciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "recibos_abono_e3": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "atribuciones_credito_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_lineas": {
+        "n": 1,
+        "digest": "69c9647858b2562b14bb5e49c5dd48ba"
+      },
+      "e9_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_linea_consumos": {
+        "n": 1,
+        "digest": "590202ff2d2861f817e131c8201bc635"
+      },
+      "e5_salidas_bancarias": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_aplicaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "precio_historial": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "stock_minimo_episodios": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "pagos_proveedor": {
+        "n": 1,
+        "digest": "2a933e7f191bea96e5eafbc9d9e9ab8a"
+      },
+      "auditorias_inventario": {
+        "n": 1,
+        "digest": "068603cd0df9f9b28bec061931f9213d"
+      },
+      "e11_conciliaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "proveedor_efectivo_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_impresiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salidas_dinero_caja": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "entradas": {
+        "n": 2,
+        "digest": "cd94a917fac34bd7c90e39262ce76bc0"
+      },
+      "e5_documentos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_decisiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_retornos_proveedor_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salida_lineas": {
+        "n": 2,
+        "digest": "2e70ea0ad0cbe5cb3a0a036dbe91b50c"
+      },
+      "proveedor_solicitudes_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "operaciones_credito_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_salidas_e4_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "vistas_abono_e3": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "proveedor_operaciones_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "revisiones_etiqueta": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e9_entregas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_perfil_eventos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "choferes": {
+        "n": 1,
+        "digest": "c3a3e8c7361c99e4a3b78bf8d39d076c"
+      },
+      "salida_rollos": {
+        "n": 2,
+        "digest": "f33df1c5bc6a5105e2f1c808fc51d7b8"
+      },
+      "viajes": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_cambios_usuario": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_sobrante_contextos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_pagos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "sesiones_caja": {
+        "n": 1,
+        "digest": "927413caa5f0a751aaed68966dadc4af"
+      },
+      "e5_nacimientos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "contenedor_lineas": {
+        "n": 1,
+        "digest": "73fb799ab1aa0a051b611da9cad98463"
+      },
+      "e5_cobros": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_perfiles": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_conciliacion_ventas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "permisos_usuario": {
+        "n": 4,
+        "digest": "b6d20f1178b222360b1dfce9b5928338"
+      },
+      "e11_avisos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "tarea4_rollo_remate": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "equipos_checklist": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_e5_preparaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "aplicaciones_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "existencias": {
+        "n": 1,
+        "digest": "638ddeab7166879737262365e4eb4ca6"
+      },
+      "caja_salidas_e4": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_desbloqueos_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "aplicaciones_pago_proveedor": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "productos": {
+        "n": 1234,
+        "digest": "a4d25937288d84015b71e14bf3bf057c"
+      },
+      "e5_vinculos_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "autorizaciones_nota": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_inventario_participantes": {
+        "n": 4,
+        "digest": "b362abdcad6ecb63a2067d91b6fbe23c"
+      },
+      "sesiones_caja_dias": {
+        "n": 1,
+        "digest": "f8dfb448c9067e040691368c9a6356d2"
+      },
+      "e11_notificacion_origen": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "viaje_tickets": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "viaje_salidas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "clientes": {
+        "n": 2576,
+        "digest": "43f4e6a37fd5822ceba6ec4a503e9494"
+      }
+    },
+    "after": {
+      "ticket_folio": {
+        "n": 1,
+        "digest": "b1a252c6dccbfee71a1e2f2a3e4e2a80"
+      },
+      "test_reset_history": {
+        "n": 1,
+        "digest": "de0b56ac86322502e50b3a7e87113f84"
+      },
+      "stock_minimo_sitios": {
+        "n": 1,
+        "digest": "ea18e5b74c5e023a1f0c5f4801d16e07"
+      },
+      "series_consecutivo": {
+        "n": 1,
+        "digest": "25363fcdd6ae131016a70e775d8cc910"
+      },
+      "fondo_mariana": {
+        "n": 1,
+        "digest": "85910e5ceea00e3314e30323a5e38920"
+      },
+      "stock_minimos": {
+        "n": 3,
+        "digest": "d89b9998d2d70c5d55e749252e2c62c8"
+      },
+      "e5_ddl_originales": {
+        "n": 4,
+        "digest": "ec007f6c6fd5072337935017762f06ed"
+      },
+      "e11_e5_definiciones": {
+        "n": 5,
+        "digest": "88a2ced80abdd4d2b8daf910f3b490d0"
+      },
+      "viaje_folio": {
+        "n": 11,
+        "digest": "ecb29fedd3b7215bbc7e48d38c261334"
+      },
+      "ubicaciones": {
+        "n": 11,
+        "digest": "2482a3ed5244f5f6df891ea7db1c6afe"
+      },
+      "salida_folio": {
+        "n": 11,
+        "digest": "5b5b9af3deb855aa89fd0d2aa930b548"
+      },
+      "recibo_folio_e3": {
+        "n": 11,
+        "digest": "189bbeda078566ee2b340fd26a76522a"
+      },
+      "entrada_folio": {
+        "n": 11,
+        "digest": "5b5b9af3deb855aa89fd0d2aa930b548"
+      },
+      "auditoria_inventario_folio": {
+        "n": 11,
+        "digest": "aef08d6adb2c7b04993c54ca77a4ee58"
+      },
+      "pisos": {
+        "n": 13,
+        "digest": "fbf97d30eecccd0ce554d9e801d5de32"
+      },
+      "proveedores": {
+        "n": 27,
+        "digest": "457c081e26a9bfc1ee7e84e422976cab"
+      },
+      "usuarios": {
+        "n": 43,
+        "digest": "1f813d95fc16bebcda4e456785259e3c"
+      },
+      "permisos_ubicacion": {
+        "n": 54,
+        "digest": "ae0e8d996e5d3270e91681f436681858"
+      },
+      "auditoria": {
+        "n": 75,
+        "digest": "c46dd69ca9ae8ef55cb4ce7724c7a037"
+      },
+      "permisos_rol": {
+        "n": 204,
+        "digest": "153f81ddf73fa196c12c9f0e2db63917"
+      },
+      "solicitudes_pago_dirigido": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salidas": {
+        "n": 2,
+        "digest": "2f06c420a9acae4be3e4d5483fc89f6a"
+      },
+      "reimpresiones_etiqueta": {
+        "n": 3,
+        "digest": "7ce45ccaafed334ee0df28988f13dc8f"
+      },
+      "movimientos_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_inventario_escaneos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "tickets": {
+        "n": 1,
+        "digest": "ae6c77a82afc156611b3e9daff0c9950"
+      },
+      "auditoria_inventario_snapshot": {
+        "n": 6,
+        "digest": "3568c96eff42bc9c64f4850b9ed597c2"
+      },
+      "e11_resoluciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "fondo_movimientos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "cuadre_fiscal_registros": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "equipos": {
+        "n": 1,
+        "digest": "6a2eff2c3fbeb942af12deee344733c6"
+      },
+      "notificaciones_sistema": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "cobros_credito_pendientes_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "movimientos": {
+        "n": 9,
+        "digest": "f32852b9098be2196bdd1c20149c9c19"
+      },
+      "cliente_documentos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "fondo_arqueos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "finalizaciones_abono_e2": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "contenedores": {
+        "n": 1,
+        "digest": "068da040ab3792185642e5cd7f35ca27"
+      },
+      "camionetas": {
+        "n": 1,
+        "digest": "960fd7200d495b03ec8563afe8ba05f6"
+      },
+      "rollos": {
+        "n": 7,
+        "digest": "bf3ca7e9a014f2e4a45124cfc78e865b"
+      },
+      "evidencia_no_aplicada_e2": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_devoluciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_sobrante_decisiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_faltante_reactivaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "notificaciones_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_recepciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "recibos_abono_e3": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "atribuciones_credito_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_lineas": {
+        "n": 1,
+        "digest": "69c9647858b2562b14bb5e49c5dd48ba"
+      },
+      "e9_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_linea_consumos": {
+        "n": 1,
+        "digest": "590202ff2d2861f817e131c8201bc635"
+      },
+      "e5_salidas_bancarias": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_aplicaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "precio_historial": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "stock_minimo_episodios": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "pagos_proveedor": {
+        "n": 1,
+        "digest": "2a933e7f191bea96e5eafbc9d9e9ab8a"
+      },
+      "auditorias_inventario": {
+        "n": 1,
+        "digest": "068603cd0df9f9b28bec061931f9213d"
+      },
+      "e11_conciliaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "proveedor_efectivo_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_impresiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salidas_dinero_caja": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "entradas": {
+        "n": 2,
+        "digest": "cd94a917fac34bd7c90e39262ce76bc0"
+      },
+      "e5_documentos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_decisiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_retornos_proveedor_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salida_lineas": {
+        "n": 2,
+        "digest": "2e70ea0ad0cbe5cb3a0a036dbe91b50c"
+      },
+      "proveedor_solicitudes_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "operaciones_credito_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_salidas_e4_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "vistas_abono_e3": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "proveedor_operaciones_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "revisiones_etiqueta": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e9_entregas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_perfil_eventos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "choferes": {
+        "n": 1,
+        "digest": "c3a3e8c7361c99e4a3b78bf8d39d076c"
+      },
+      "salida_rollos": {
+        "n": 2,
+        "digest": "f33df1c5bc6a5105e2f1c808fc51d7b8"
+      },
+      "viajes": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_cambios_usuario": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_sobrante_contextos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_pagos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "sesiones_caja": {
+        "n": 1,
+        "digest": "927413caa5f0a751aaed68966dadc4af"
+      },
+      "e5_nacimientos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "contenedor_lineas": {
+        "n": 1,
+        "digest": "73fb799ab1aa0a051b611da9cad98463"
+      },
+      "e5_cobros": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_perfiles": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_conciliacion_ventas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "permisos_usuario": {
+        "n": 4,
+        "digest": "b6d20f1178b222360b1dfce9b5928338"
+      },
+      "e11_avisos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "tarea4_rollo_remate": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "equipos_checklist": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_e5_preparaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "aplicaciones_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "existencias": {
+        "n": 1,
+        "digest": "638ddeab7166879737262365e4eb4ca6"
+      },
+      "caja_salidas_e4": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_desbloqueos_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "aplicaciones_pago_proveedor": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "productos": {
+        "n": 1234,
+        "digest": "a4d25937288d84015b71e14bf3bf057c"
+      },
+      "e5_vinculos_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "autorizaciones_nota": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_inventario_participantes": {
+        "n": 4,
+        "digest": "b362abdcad6ecb63a2067d91b6fbe23c"
+      },
+      "sesiones_caja_dias": {
+        "n": 1,
+        "digest": "f8dfb448c9067e040691368c9a6356d2"
+      },
+      "e11_notificacion_origen": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "viaje_tickets": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "viaje_salidas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "clientes": {
+        "n": 2576,
+        "digest": "43f4e6a37fd5822ceba6ec4a503e9494"
+      }
+    }
+  },
+  {
+    "cellId": "BODEGA:permisos:editar",
+    "stateVariant": "DEDICATED_ACTOR_VER_TRUE_EDITAR_FALSE",
+    "auth": {
+      "id": 245,
+      "nombre": "PR26 prerequisite BODEGA",
+      "usuario": "pr26.variant.bodega",
+      "rol": "BODEGA",
+      "ubicacion": {
+        "id": 1,
+        "nombre": "Mariana",
+        "iniciales": "MA",
+        "tipo": "TIENDA",
+        "activa": true,
+        "esSistema": false
+      },
+      "alcanceConsulta": "PROPIA",
+      "permisos": [
+        {
+          "modulo": "marcar_remate",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "dashboard",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "pos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "entradas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "salidas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "movimientos",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "etiquetas",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "inventario",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "auditoria_inventario",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "productos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "precios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "ajustes",
+          "puedeVer": true,
+          "puedeCrear": true,
+          "puedeEditar": true,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_credito",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_precios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_finanzas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "caja_abonos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "clientes_recapturas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "proveedores",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "proveedores_finanzas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "contenedores",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "ubicaciones",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "usuarios",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "permisos",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "resumen_caja",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "cortes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "cobros_pagos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "reportes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "conciliacion",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "auditoria",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "camionetas",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "choferes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "viajes",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "salidas_venta",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "equipos",
+          "puedeVer": false,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        }
+      ]
+    },
+    "method": "PUT",
+    "path": "/permisos/usuarios/241/dashboard",
+    "body": {
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    "status": 403,
+    "response": {
+      "error": "No tienes permiso para 'editar' en el módulo 'permisos'."
+    },
+    "selectedGuard": true,
+    "changedTables": [],
+    "before": {
+      "ticket_folio": {
+        "n": 1,
+        "digest": "b1a252c6dccbfee71a1e2f2a3e4e2a80"
+      },
+      "test_reset_history": {
+        "n": 1,
+        "digest": "de0b56ac86322502e50b3a7e87113f84"
+      },
+      "stock_minimo_sitios": {
+        "n": 1,
+        "digest": "ea18e5b74c5e023a1f0c5f4801d16e07"
+      },
+      "series_consecutivo": {
+        "n": 1,
+        "digest": "25363fcdd6ae131016a70e775d8cc910"
+      },
+      "fondo_mariana": {
+        "n": 1,
+        "digest": "85910e5ceea00e3314e30323a5e38920"
+      },
+      "stock_minimos": {
+        "n": 3,
+        "digest": "d89b9998d2d70c5d55e749252e2c62c8"
+      },
+      "e5_ddl_originales": {
+        "n": 4,
+        "digest": "ec007f6c6fd5072337935017762f06ed"
+      },
+      "e11_e5_definiciones": {
+        "n": 5,
+        "digest": "88a2ced80abdd4d2b8daf910f3b490d0"
+      },
+      "viaje_folio": {
+        "n": 11,
+        "digest": "ecb29fedd3b7215bbc7e48d38c261334"
+      },
+      "ubicaciones": {
+        "n": 11,
+        "digest": "2482a3ed5244f5f6df891ea7db1c6afe"
+      },
+      "salida_folio": {
+        "n": 11,
+        "digest": "5b5b9af3deb855aa89fd0d2aa930b548"
+      },
+      "recibo_folio_e3": {
+        "n": 11,
+        "digest": "189bbeda078566ee2b340fd26a76522a"
+      },
+      "entrada_folio": {
+        "n": 11,
+        "digest": "5b5b9af3deb855aa89fd0d2aa930b548"
+      },
+      "auditoria_inventario_folio": {
+        "n": 11,
+        "digest": "aef08d6adb2c7b04993c54ca77a4ee58"
+      },
+      "pisos": {
+        "n": 13,
+        "digest": "fbf97d30eecccd0ce554d9e801d5de32"
+      },
+      "proveedores": {
+        "n": 27,
+        "digest": "457c081e26a9bfc1ee7e84e422976cab"
+      },
+      "usuarios": {
+        "n": 43,
+        "digest": "28c7bfff3343e57a1af63c9567de68e9"
+      },
+      "permisos_ubicacion": {
+        "n": 54,
+        "digest": "ae0e8d996e5d3270e91681f436681858"
+      },
+      "auditoria": {
+        "n": 76,
+        "digest": "0d94f5bba921f3a257be379924a3d392"
+      },
+      "permisos_rol": {
+        "n": 204,
+        "digest": "153f81ddf73fa196c12c9f0e2db63917"
+      },
+      "solicitudes_pago_dirigido": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salidas": {
+        "n": 2,
+        "digest": "2f06c420a9acae4be3e4d5483fc89f6a"
+      },
+      "reimpresiones_etiqueta": {
+        "n": 3,
+        "digest": "7ce45ccaafed334ee0df28988f13dc8f"
+      },
+      "movimientos_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_inventario_escaneos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "tickets": {
+        "n": 1,
+        "digest": "ae6c77a82afc156611b3e9daff0c9950"
+      },
+      "auditoria_inventario_snapshot": {
+        "n": 6,
+        "digest": "3568c96eff42bc9c64f4850b9ed597c2"
+      },
+      "e11_resoluciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "fondo_movimientos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "cuadre_fiscal_registros": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "equipos": {
+        "n": 1,
+        "digest": "6a2eff2c3fbeb942af12deee344733c6"
+      },
+      "notificaciones_sistema": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "cobros_credito_pendientes_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "movimientos": {
+        "n": 9,
+        "digest": "f32852b9098be2196bdd1c20149c9c19"
+      },
+      "cliente_documentos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "fondo_arqueos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "finalizaciones_abono_e2": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "contenedores": {
+        "n": 1,
+        "digest": "068da040ab3792185642e5cd7f35ca27"
+      },
+      "camionetas": {
+        "n": 1,
+        "digest": "960fd7200d495b03ec8563afe8ba05f6"
+      },
+      "rollos": {
+        "n": 7,
+        "digest": "bf3ca7e9a014f2e4a45124cfc78e865b"
+      },
+      "evidencia_no_aplicada_e2": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_devoluciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_sobrante_decisiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_faltante_reactivaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "notificaciones_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_recepciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "recibos_abono_e3": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "atribuciones_credito_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_lineas": {
+        "n": 1,
+        "digest": "69c9647858b2562b14bb5e49c5dd48ba"
+      },
+      "e9_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_linea_consumos": {
+        "n": 1,
+        "digest": "590202ff2d2861f817e131c8201bc635"
+      },
+      "e5_salidas_bancarias": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_aplicaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "precio_historial": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "stock_minimo_episodios": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "pagos_proveedor": {
+        "n": 1,
+        "digest": "2a933e7f191bea96e5eafbc9d9e9ab8a"
+      },
+      "auditorias_inventario": {
+        "n": 1,
+        "digest": "068603cd0df9f9b28bec061931f9213d"
+      },
+      "e11_conciliaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "proveedor_efectivo_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_impresiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salidas_dinero_caja": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "entradas": {
+        "n": 2,
+        "digest": "cd94a917fac34bd7c90e39262ce76bc0"
+      },
+      "e5_documentos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_decisiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_retornos_proveedor_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salida_lineas": {
+        "n": 2,
+        "digest": "2e70ea0ad0cbe5cb3a0a036dbe91b50c"
+      },
+      "proveedor_solicitudes_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "operaciones_credito_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_salidas_e4_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "vistas_abono_e3": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "proveedor_operaciones_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "revisiones_etiqueta": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e9_entregas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_perfil_eventos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "choferes": {
+        "n": 1,
+        "digest": "c3a3e8c7361c99e4a3b78bf8d39d076c"
+      },
+      "salida_rollos": {
+        "n": 2,
+        "digest": "f33df1c5bc6a5105e2f1c808fc51d7b8"
+      },
+      "viajes": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_cambios_usuario": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_sobrante_contextos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_pagos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "sesiones_caja": {
+        "n": 1,
+        "digest": "927413caa5f0a751aaed68966dadc4af"
+      },
+      "e5_nacimientos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "contenedor_lineas": {
+        "n": 1,
+        "digest": "73fb799ab1aa0a051b611da9cad98463"
+      },
+      "e5_cobros": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_perfiles": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_conciliacion_ventas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "permisos_usuario": {
+        "n": 4,
+        "digest": "b6d20f1178b222360b1dfce9b5928338"
+      },
+      "e11_avisos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "tarea4_rollo_remate": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "equipos_checklist": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_e5_preparaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "aplicaciones_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "existencias": {
+        "n": 1,
+        "digest": "638ddeab7166879737262365e4eb4ca6"
+      },
+      "caja_salidas_e4": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_desbloqueos_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "aplicaciones_pago_proveedor": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "productos": {
+        "n": 1234,
+        "digest": "a4d25937288d84015b71e14bf3bf057c"
+      },
+      "e5_vinculos_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "autorizaciones_nota": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_inventario_participantes": {
+        "n": 4,
+        "digest": "b362abdcad6ecb63a2067d91b6fbe23c"
+      },
+      "sesiones_caja_dias": {
+        "n": 1,
+        "digest": "f8dfb448c9067e040691368c9a6356d2"
+      },
+      "e11_notificacion_origen": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "viaje_tickets": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "viaje_salidas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "clientes": {
+        "n": 2576,
+        "digest": "43f4e6a37fd5822ceba6ec4a503e9494"
+      }
+    },
+    "after": {
+      "ticket_folio": {
+        "n": 1,
+        "digest": "b1a252c6dccbfee71a1e2f2a3e4e2a80"
+      },
+      "test_reset_history": {
+        "n": 1,
+        "digest": "de0b56ac86322502e50b3a7e87113f84"
+      },
+      "stock_minimo_sitios": {
+        "n": 1,
+        "digest": "ea18e5b74c5e023a1f0c5f4801d16e07"
+      },
+      "series_consecutivo": {
+        "n": 1,
+        "digest": "25363fcdd6ae131016a70e775d8cc910"
+      },
+      "fondo_mariana": {
+        "n": 1,
+        "digest": "85910e5ceea00e3314e30323a5e38920"
+      },
+      "stock_minimos": {
+        "n": 3,
+        "digest": "d89b9998d2d70c5d55e749252e2c62c8"
+      },
+      "e5_ddl_originales": {
+        "n": 4,
+        "digest": "ec007f6c6fd5072337935017762f06ed"
+      },
+      "e11_e5_definiciones": {
+        "n": 5,
+        "digest": "88a2ced80abdd4d2b8daf910f3b490d0"
+      },
+      "viaje_folio": {
+        "n": 11,
+        "digest": "ecb29fedd3b7215bbc7e48d38c261334"
+      },
+      "ubicaciones": {
+        "n": 11,
+        "digest": "2482a3ed5244f5f6df891ea7db1c6afe"
+      },
+      "salida_folio": {
+        "n": 11,
+        "digest": "5b5b9af3deb855aa89fd0d2aa930b548"
+      },
+      "recibo_folio_e3": {
+        "n": 11,
+        "digest": "189bbeda078566ee2b340fd26a76522a"
+      },
+      "entrada_folio": {
+        "n": 11,
+        "digest": "5b5b9af3deb855aa89fd0d2aa930b548"
+      },
+      "auditoria_inventario_folio": {
+        "n": 11,
+        "digest": "aef08d6adb2c7b04993c54ca77a4ee58"
+      },
+      "pisos": {
+        "n": 13,
+        "digest": "fbf97d30eecccd0ce554d9e801d5de32"
+      },
+      "proveedores": {
+        "n": 27,
+        "digest": "457c081e26a9bfc1ee7e84e422976cab"
+      },
+      "usuarios": {
+        "n": 43,
+        "digest": "28c7bfff3343e57a1af63c9567de68e9"
+      },
+      "permisos_ubicacion": {
+        "n": 54,
+        "digest": "ae0e8d996e5d3270e91681f436681858"
+      },
+      "auditoria": {
+        "n": 76,
+        "digest": "0d94f5bba921f3a257be379924a3d392"
+      },
+      "permisos_rol": {
+        "n": 204,
+        "digest": "153f81ddf73fa196c12c9f0e2db63917"
+      },
+      "solicitudes_pago_dirigido": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salidas": {
+        "n": 2,
+        "digest": "2f06c420a9acae4be3e4d5483fc89f6a"
+      },
+      "reimpresiones_etiqueta": {
+        "n": 3,
+        "digest": "7ce45ccaafed334ee0df28988f13dc8f"
+      },
+      "movimientos_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_inventario_escaneos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "tickets": {
+        "n": 1,
+        "digest": "ae6c77a82afc156611b3e9daff0c9950"
+      },
+      "auditoria_inventario_snapshot": {
+        "n": 6,
+        "digest": "3568c96eff42bc9c64f4850b9ed597c2"
+      },
+      "e11_resoluciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "fondo_movimientos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "cuadre_fiscal_registros": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "equipos": {
+        "n": 1,
+        "digest": "6a2eff2c3fbeb942af12deee344733c6"
+      },
+      "notificaciones_sistema": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "cobros_credito_pendientes_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "movimientos": {
+        "n": 9,
+        "digest": "f32852b9098be2196bdd1c20149c9c19"
+      },
+      "cliente_documentos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "fondo_arqueos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "finalizaciones_abono_e2": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "contenedores": {
+        "n": 1,
+        "digest": "068da040ab3792185642e5cd7f35ca27"
+      },
+      "camionetas": {
+        "n": 1,
+        "digest": "960fd7200d495b03ec8563afe8ba05f6"
+      },
+      "rollos": {
+        "n": 7,
+        "digest": "bf3ca7e9a014f2e4a45124cfc78e865b"
+      },
+      "evidencia_no_aplicada_e2": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_devoluciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_sobrante_decisiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_faltante_reactivaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "notificaciones_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_recepciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "recibos_abono_e3": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "atribuciones_credito_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_lineas": {
+        "n": 1,
+        "digest": "69c9647858b2562b14bb5e49c5dd48ba"
+      },
+      "e9_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_linea_consumos": {
+        "n": 1,
+        "digest": "590202ff2d2861f817e131c8201bc635"
+      },
+      "e5_salidas_bancarias": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_aplicaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "precio_historial": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "stock_minimo_episodios": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "pagos_proveedor": {
+        "n": 1,
+        "digest": "2a933e7f191bea96e5eafbc9d9e9ab8a"
+      },
+      "auditorias_inventario": {
+        "n": 1,
+        "digest": "068603cd0df9f9b28bec061931f9213d"
+      },
+      "e11_conciliaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "proveedor_efectivo_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e5_impresiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salidas_dinero_caja": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "entradas": {
+        "n": 2,
+        "digest": "cd94a917fac34bd7c90e39262ce76bc0"
+      },
+      "e5_documentos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_decisiones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_retornos_proveedor_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "salida_lineas": {
+        "n": 2,
+        "digest": "2e70ea0ad0cbe5cb3a0a036dbe91b50c"
+      },
+      "proveedor_solicitudes_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "operaciones_credito_e1": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_salidas_e4_operaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "vistas_abono_e3": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "proveedor_operaciones_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "revisiones_etiqueta": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e9_entregas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_perfil_eventos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "choferes": {
+        "n": 1,
+        "digest": "c3a3e8c7361c99e4a3b78bf8d39d076c"
+      },
+      "salida_rollos": {
+        "n": 2,
+        "digest": "f33df1c5bc6a5105e2f1c808fc51d7b8"
+      },
+      "viajes": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_cambios_usuario": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_sobrante_contextos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "ticket_pagos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "sesiones_caja": {
+        "n": 1,
+        "digest": "927413caa5f0a751aaed68966dadc4af"
+      },
+      "e5_nacimientos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "contenedor_lineas": {
+        "n": 1,
+        "digest": "73fb799ab1aa0a051b611da9cad98463"
+      },
+      "e5_cobros": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_perfiles": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_conciliacion_ventas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "permisos_usuario": {
+        "n": 4,
+        "digest": "b6d20f1178b222360b1dfce9b5928338"
+      },
+      "e11_avisos": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "tarea4_rollo_remate": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "equipos_checklist": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "e11_e5_preparaciones": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "aplicaciones_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "existencias": {
+        "n": 1,
+        "digest": "638ddeab7166879737262365e4eb4ca6"
+      },
+      "caja_salidas_e4": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "caja_desbloqueos_e12": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "aplicaciones_pago_proveedor": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "productos": {
+        "n": 1234,
+        "digest": "a4d25937288d84015b71e14bf3bf057c"
+      },
+      "e5_vinculos_credito": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "autorizaciones_nota": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "auditoria_inventario_participantes": {
+        "n": 4,
+        "digest": "b362abdcad6ecb63a2067d91b6fbe23c"
+      },
+      "sesiones_caja_dias": {
+        "n": 1,
+        "digest": "f8dfb448c9067e040691368c9a6356d2"
+      },
+      "e11_notificacion_origen": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "viaje_tickets": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "viaje_salidas": {
+        "n": 0,
+        "digest": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "clientes": {
+        "n": 2576,
+        "digest": "43f4e6a37fd5822ceba6ec4a503e9494"
+      }
+    }
+  }
+]

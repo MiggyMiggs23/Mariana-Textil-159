@@ -1,0 +1,65 @@
+Mariana Textil
+INVENTARIO
+Productos
+Inventario
+Vista Global
+Ajustes
+Auditorías
+Etiquetas
+Precios
+Stock mínimo
+OPERACIÓN
+Entradas
+Salidas
+Viajes
+Movimientos
+CAJA
+Cuentas
+Atribución E7
+DIRECTORIO
+Clientes
+Proveedores
+Camionetas
+Choferes
+Equipos
+Reportes
+Próximos Contenedores
+CONFIGURACIÓN
+Sitios
+Usuarios
+Permisos
+Conciliación de Kardex
+Bitácora
+Sitio
+Mariana
+P
+
+PR26 permisos SISTEMAS
+
+SISTEMAS
+
+Sin sitio asignado
+
+Cerrar sesión
+
+OPERACIÓN DE ALMACÉN
+
+Auditoría de Inventario
+
+Control físico concurrente por presencia. Escanea series para conciliar contra el snapshot. El inventario no se afecta hasta la confirmación de un administrador.
+
+MA · Mariana
+Auditorías abiertas en el sitio
+
+MA-AI-000001
+
+Mariana · Iniciada por Isolated postreview permissions admin
+
+0/6 escaneados
+
+Unirme a la auditoría
+HISTORIAL DEL SITIO
+MA-AI-000001
+ABIERTA
+Mariana
+0/6

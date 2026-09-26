@@ -1,0 +1,2336 @@
+[
+  {
+    "id": "TERMINAL:marcar_remate:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:marcar_remate:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:marcar_remate:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:dashboard:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:dashboard:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:dashboard:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:pos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:pos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:entradas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:salidas:editar",
+    "pendingDirect": false,
+    "pendingCombined": true,
+    "blocker": "NO_RELEASED_ADMIN_REVERTIR_UI_COUNTERPART"
+  },
+  {
+    "id": "TERMINAL:movimientos:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:movimientos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:movimientos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:etiquetas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:inventario:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:inventario:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:auditoria_inventario:autorizar",
+    "pendingDirect": false,
+    "pendingCombined": true,
+    "blocker": "AUDIT_ABIERTA_NOT_CONFIRM_ELIGIBLE"
+  },
+  {
+    "id": "TERMINAL:productos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:precios:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:precios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:ajustes:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:ajustes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:clientes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:clientes_credito:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:clientes_credito:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:clientes_precios:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:clientes_precios:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:clientes_precios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:clientes_finanzas:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "LEGACY_OR_OUTER_BOUNDARY_OR_MISSING_MATCHED_UI"
+  },
+  {
+    "id": "TERMINAL:clientes_finanzas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:caja_abonos:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "DYNAMIC_OR_PROFILE_BOUNDARY_NOT_EXCLUSIVE_ACTION"
+  },
+  {
+    "id": "TERMINAL:caja_abonos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:caja_abonos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:clientes_recapturas:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:clientes_recapturas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:clientes_recapturas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:proveedores:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:proveedores_finanzas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:ubicaciones:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:usuarios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:permisos:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:permisos:editar",
+    "pendingDirect": false,
+    "pendingCombined": true,
+    "blocker": "CONFIGURED_VARIANT_DIRECT_CLOSED_UI_NOT_PROVEN"
+  },
+  {
+    "id": "TERMINAL:permisos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:resumen_caja:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:resumen_caja:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:resumen_caja:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:cortes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:cortes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:cobros_pagos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:cobros_pagos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:reportes:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:reportes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:reportes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:conciliacion:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:conciliacion:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:auditoria:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:auditoria:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:auditoria:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:camionetas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:choferes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:viajes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:viajes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:salidas_venta:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:salidas_venta:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "TERMINAL:equipos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:marcar_remate:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:marcar_remate:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:marcar_remate:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:dashboard:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:dashboard:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:dashboard:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:pos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:pos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:entradas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:salidas:editar",
+    "pendingDirect": false,
+    "pendingCombined": true,
+    "blocker": "NO_RELEASED_ADMIN_REVERTIR_UI_COUNTERPART"
+  },
+  {
+    "id": "CAJA:movimientos:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:movimientos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:movimientos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:etiquetas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:inventario:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:inventario:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:auditoria_inventario:autorizar",
+    "pendingDirect": false,
+    "pendingCombined": true,
+    "blocker": "AUDIT_ABIERTA_NOT_CONFIRM_ELIGIBLE"
+  },
+  {
+    "id": "CAJA:productos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:precios:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:precios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:ajustes:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:ajustes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:clientes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:clientes_credito:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:clientes_credito:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:clientes_precios:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:clientes_precios:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:clientes_precios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:clientes_finanzas:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "LEGACY_OR_OUTER_BOUNDARY_OR_MISSING_MATCHED_UI"
+  },
+  {
+    "id": "CAJA:clientes_finanzas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:caja_abonos:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "DYNAMIC_OR_PROFILE_BOUNDARY_NOT_EXCLUSIVE_ACTION"
+  },
+  {
+    "id": "CAJA:caja_abonos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:caja_abonos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:clientes_recapturas:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:clientes_recapturas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:clientes_recapturas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:proveedores:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:proveedores_finanzas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:ubicaciones:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:usuarios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:permisos:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:permisos:editar",
+    "pendingDirect": false,
+    "pendingCombined": true,
+    "blocker": "CONFIGURED_VARIANT_DIRECT_CLOSED_UI_NOT_PROVEN"
+  },
+  {
+    "id": "CAJA:permisos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:resumen_caja:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:resumen_caja:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:resumen_caja:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:cortes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:cortes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:cobros_pagos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:cobros_pagos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:reportes:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:reportes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:reportes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:conciliacion:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:conciliacion:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:auditoria:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:auditoria:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:auditoria:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:camionetas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:choferes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:viajes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:viajes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:salidas_venta:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:salidas_venta:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CAJA:equipos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:marcar_remate:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:marcar_remate:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:marcar_remate:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:dashboard:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:dashboard:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:dashboard:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:pos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:pos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:entradas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:movimientos:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:movimientos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:movimientos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:etiquetas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:inventario:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:inventario:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:auditoria_inventario:autorizar",
+    "pendingDirect": false,
+    "pendingCombined": true,
+    "blocker": "AUDIT_ABIERTA_NOT_CONFIRM_ELIGIBLE"
+  },
+  {
+    "id": "SUPERVISOR:productos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:precios:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:precios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:ajustes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:clientes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:clientes_credito:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:clientes_credito:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:clientes_precios:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:clientes_precios:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:clientes_precios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:clientes_finanzas:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "LEGACY_OR_OUTER_BOUNDARY_OR_MISSING_MATCHED_UI"
+  },
+  {
+    "id": "SUPERVISOR:clientes_finanzas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:caja_abonos:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "DYNAMIC_OR_PROFILE_BOUNDARY_NOT_EXCLUSIVE_ACTION"
+  },
+  {
+    "id": "SUPERVISOR:caja_abonos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:caja_abonos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:clientes_recapturas:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:clientes_recapturas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:clientes_recapturas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:proveedores:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:proveedores_finanzas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:ubicaciones:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:usuarios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:permisos:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:permisos:editar",
+    "pendingDirect": false,
+    "pendingCombined": true,
+    "blocker": "CONFIGURED_VARIANT_DIRECT_CLOSED_UI_NOT_PROVEN"
+  },
+  {
+    "id": "SUPERVISOR:permisos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:resumen_caja:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:resumen_caja:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:resumen_caja:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:cortes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:cortes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:cobros_pagos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:cobros_pagos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:reportes:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:reportes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:reportes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:conciliacion:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:conciliacion:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:auditoria:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:auditoria:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:auditoria:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:camionetas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:choferes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:viajes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:viajes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:salidas_venta:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:salidas_venta:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SUPERVISOR:equipos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:marcar_remate:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:marcar_remate:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:marcar_remate:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:dashboard:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:dashboard:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:dashboard:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:pos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:pos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:entradas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:salidas:editar",
+    "pendingDirect": false,
+    "pendingCombined": true,
+    "blocker": "NO_RELEASED_ADMIN_REVERTIR_UI_COUNTERPART"
+  },
+  {
+    "id": "BODEGA:movimientos:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:movimientos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:movimientos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:etiquetas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:inventario:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:inventario:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:auditoria_inventario:autorizar",
+    "pendingDirect": false,
+    "pendingCombined": true,
+    "blocker": "AUDIT_ABIERTA_NOT_CONFIRM_ELIGIBLE"
+  },
+  {
+    "id": "BODEGA:productos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:precios:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:precios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:clientes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:clientes_credito:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:clientes_credito:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:clientes_precios:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:clientes_precios:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:clientes_precios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:clientes_finanzas:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "LEGACY_OR_OUTER_BOUNDARY_OR_MISSING_MATCHED_UI"
+  },
+  {
+    "id": "BODEGA:clientes_finanzas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:caja_abonos:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "DYNAMIC_OR_PROFILE_BOUNDARY_NOT_EXCLUSIVE_ACTION"
+  },
+  {
+    "id": "BODEGA:caja_abonos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:caja_abonos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:clientes_recapturas:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:clientes_recapturas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:clientes_recapturas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:proveedores:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:proveedores_finanzas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:ubicaciones:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:usuarios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:permisos:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:permisos:editar",
+    "pendingDirect": false,
+    "pendingCombined": true,
+    "blocker": "CONFIGURED_VARIANT_DIRECT_CLOSED_UI_NOT_PROVEN"
+  },
+  {
+    "id": "BODEGA:permisos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:resumen_caja:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:resumen_caja:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:resumen_caja:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:cortes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:cortes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:cobros_pagos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:cobros_pagos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:reportes:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:reportes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:reportes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:conciliacion:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:conciliacion:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:auditoria:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:auditoria:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:auditoria:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:camionetas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:choferes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:viajes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:viajes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:salidas_venta:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:salidas_venta:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "BODEGA:equipos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:marcar_remate:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:marcar_remate:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:marcar_remate:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:dashboard:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:dashboard:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:dashboard:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:pos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:pos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:entradas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:movimientos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:etiquetas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:inventario:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:inventario:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:auditoria_inventario:autorizar",
+    "pendingDirect": false,
+    "pendingCombined": true,
+    "blocker": "AUDIT_ABIERTA_NOT_CONFIRM_ELIGIBLE"
+  },
+  {
+    "id": "SISTEMAS:productos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:precios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:ajustes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:clientes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:clientes_credito:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:clientes_credito:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:clientes_precios:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:clientes_precios:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:clientes_precios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:clientes_finanzas:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "LEGACY_OR_OUTER_BOUNDARY_OR_MISSING_MATCHED_UI"
+  },
+  {
+    "id": "SISTEMAS:clientes_finanzas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:caja_abonos:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "DYNAMIC_OR_PROFILE_BOUNDARY_NOT_EXCLUSIVE_ACTION"
+  },
+  {
+    "id": "SISTEMAS:caja_abonos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:caja_abonos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:clientes_recapturas:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:clientes_recapturas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:clientes_recapturas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:proveedores:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:proveedores_finanzas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:ubicaciones:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:usuarios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:permisos:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:permisos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:resumen_caja:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:resumen_caja:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:resumen_caja:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:cortes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:cortes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:cobros_pagos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:cobros_pagos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:reportes:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:reportes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:reportes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:conciliacion:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:auditoria:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:auditoria:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:auditoria:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:camionetas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:choferes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:viajes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:salidas_venta:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:salidas_venta:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "SISTEMAS:equipos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:marcar_remate:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:marcar_remate:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:marcar_remate:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:dashboard:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:dashboard:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:dashboard:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:pos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:pos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:entradas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD"
+  },
+  {
+    "id": "CONTADOR:entradas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:salidas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD"
+  },
+  {
+    "id": "CONTADOR:salidas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD"
+  },
+  {
+    "id": "CONTADOR:movimientos:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:movimientos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:movimientos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:etiquetas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD"
+  },
+  {
+    "id": "CONTADOR:etiquetas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:inventario:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:inventario:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:auditoria_inventario:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD"
+  },
+  {
+    "id": "CONTADOR:auditoria_inventario:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD"
+  },
+  {
+    "id": "CONTADOR:productos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:precios:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:precios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:ajustes:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:ajustes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:clientes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:clientes_credito:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:clientes_credito:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:clientes_precios:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:clientes_precios:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:clientes_precios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:clientes_finanzas:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD"
+  },
+  {
+    "id": "CONTADOR:clientes_finanzas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:caja_abonos:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "DYNAMIC_OR_PROFILE_BOUNDARY_NOT_EXCLUSIVE_ACTION"
+  },
+  {
+    "id": "CONTADOR:caja_abonos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:caja_abonos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:clientes_recapturas:ver",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:clientes_recapturas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:clientes_recapturas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:proveedores:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:proveedores_finanzas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:contenedores:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD"
+  },
+  {
+    "id": "CONTADOR:contenedores:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD"
+  },
+  {
+    "id": "CONTADOR:ubicaciones:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:usuarios:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:permisos:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:permisos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD"
+  },
+  {
+    "id": "CONTADOR:permisos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:resumen_caja:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:resumen_caja:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:resumen_caja:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:cortes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:cortes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:cobros_pagos:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD"
+  },
+  {
+    "id": "CONTADOR:cobros_pagos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:cobros_pagos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:reportes:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:reportes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:reportes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:conciliacion:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:conciliacion:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:auditoria:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:auditoria:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:auditoria:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:camionetas:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD"
+  },
+  {
+    "id": "CONTADOR:camionetas:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:choferes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD"
+  },
+  {
+    "id": "CONTADOR:choferes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:viajes:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:viajes:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:salidas_venta:crear",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD"
+  },
+  {
+    "id": "CONTADOR:salidas_venta:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:salidas_venta:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  },
+  {
+    "id": "CONTADOR:equipos:editar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD"
+  },
+  {
+    "id": "CONTADOR:equipos:autorizar",
+    "pendingDirect": true,
+    "pendingCombined": true,
+    "blocker": "BUSINESS_OPERATION_DEFINITION_UNRESOLVED_NOT_PASS"
+  }
+]

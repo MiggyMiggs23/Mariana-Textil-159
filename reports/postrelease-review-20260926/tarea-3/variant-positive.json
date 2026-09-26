@@ -1,0 +1,23 @@
+{
+  "role": "ADMIN",
+  "method": "PUT",
+  "path": "/permisos/usuarios/241/dashboard",
+  "body": {
+    "puedeVer": true,
+    "puedeCrear": false,
+    "puedeEditar": false,
+    "puedeAutorizar": false
+  },
+  "response": {
+    "id": 130,
+    "usuarioId": 241,
+    "modulo": "dashboard",
+    "puedeVer": true,
+    "puedeCrear": false,
+    "puedeEditar": false,
+    "puedeAutorizar": false,
+    "updatedAt": "2026-09-26T10:39:48.744Z",
+    "updatedPor": 234
+  },
+  "status": 200
+}
