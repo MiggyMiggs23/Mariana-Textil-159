@@ -199,13 +199,24 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   };
 
   const navGroups = getVisibleNavGroups(user);
+  // E11 links retain their own gates; Kardex retains its legacy module/role gate.
+  const accountingLinks = [
+    ...e11AdminLinks.map((item) => ({
+      ...item,
+      testId: `nav-item-${item.path.replace(/[^a-z0-9]+/g, "-")}`,
+    })),
+    ...(navGroups.find((group) => group.title === "ADMINISTRACIÓN CONTABLE")?.items ?? []).map((item) => ({
+      ...item,
+      testId: `nav-item-${item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+    })),
+  ];
   const homeRoute = getHomeRoute(user);
   const homeLogoClass =
     "flex cursor-pointer items-center gap-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80";
 
   const renderNavContent = (onItemClick?: () => void) => (
     <div className="py-4 flex flex-col gap-6">
-      {navGroups.map((group) => {
+      {navGroups.filter((group) => group.title !== "ADMINISTRACIÓN CONTABLE").map((group) => {
         return (
           <div
             key={group.title ?? group.items[0].path}
@@ -289,19 +300,19 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         );
       })}
-      {e11AdminLinks.length > 0 && (
+      {accountingLinks.length > 0 && (
         <div className="px-3 space-y-1" data-testid="nav-group-administracion-contable">
           <h4 className="px-3 text-xs font-semibold text-sidebar-foreground/50 tracking-wider mb-2">
             ADMINISTRACIÓN CONTABLE
           </h4>
-          {e11AdminLinks.map((item) => {
+          {accountingLinks.map((item) => {
             const isActive = location === item.path || location.startsWith(`${item.path}/`);
             return (
               <Link
                 key={item.path}
                 href={item.path}
                 onClick={onItemClick}
-                data-testid={`nav-item-${item.path.replace(/[^a-z0-9]+/g, "-")}`}
+                data-testid={item.testId}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative",
                   isActive

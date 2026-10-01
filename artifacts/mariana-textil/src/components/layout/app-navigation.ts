@@ -35,6 +35,7 @@ export type NavItem = {
   module: Module;
   anyModules?: Module[];
   allowedRoles?: CurrentUser["rol"][];
+  hiddenForRoles?: CurrentUser["rol"][];
   isClickable: boolean;
 };
 
@@ -101,30 +102,27 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { name: "Clientes", path: "/clientes", icon: UserSquare2, module: Modules.CLIENTES, isClickable: true },
       { name: "Proveedores", path: "/proveedores", icon: Truck, module: Modules.PROVEEDORES, isClickable: true },
-      { name: "Camionetas", path: "/directorio/camionetas", icon: Truck, module: Modules.CAMIONETAS, isClickable: true },
-      { name: "Choferes", path: "/directorio/choferes", icon: UserSquare2, module: Modules.CHOFERES, isClickable: true },
-      { name: "Equipos", path: "/equipos", icon: LayoutDashboard, module: Modules.EQUIPOS, isClickable: true },
-    ],
-  },
-  {
-    items: [
       { name: "Reportes", path: "/reportes", icon: BarChart3, module: Modules.REPORTES, isClickable: true },
-    ],
-  },
-  {
-    items: [
       { name: "Próximos Contenedores", path: "/contenedores", icon: Ship, module: Modules.CONTENEDORES, isClickable: true },
     ],
   },
   {
     title: "CONFIGURACIÓN",
-    hiddenForRoles: ["CONTADOR"],
     items: [
-      { name: "Sitios", path: "/ubicaciones", icon: MapPin, module: Modules.UBICACIONES, isClickable: true },
-      { name: "Usuarios", path: "/usuarios", icon: Users, module: Modules.USUARIOS, isClickable: true },
-      { name: "Permisos", path: "/permisos", icon: Shield, module: Modules.PERMISOS, isClickable: true },
-      { name: "Conciliación de Kardex", path: "/administracion/conciliacion", icon: Settings, module: Modules.CONCILIACION, isClickable: true },
-      { name: "Bitácora", path: "/auditoria", icon: Activity, module: Modules.AUDITORIA, isClickable: true },
+      // Keep the former group restriction only on its original entries.
+      { name: "Sitios", path: "/ubicaciones", icon: MapPin, module: Modules.UBICACIONES, hiddenForRoles: ["CONTADOR"], isClickable: true },
+      { name: "Usuarios", path: "/usuarios", icon: Users, module: Modules.USUARIOS, hiddenForRoles: ["CONTADOR"], isClickable: true },
+      { name: "Permisos", path: "/permisos", icon: Shield, module: Modules.PERMISOS, hiddenForRoles: ["CONTADOR"], isClickable: true },
+      { name: "Camionetas", path: "/directorio/camionetas", icon: Truck, module: Modules.CAMIONETAS, isClickable: true },
+      { name: "Choferes", path: "/directorio/choferes", icon: UserSquare2, module: Modules.CHOFERES, isClickable: true },
+      { name: "Equipos", path: "/equipos", icon: LayoutDashboard, module: Modules.EQUIPOS, isClickable: true },
+      { name: "Bitácora", path: "/auditoria", icon: Activity, module: Modules.AUDITORIA, hiddenForRoles: ["CONTADOR"], isClickable: true },
+    ],
+  },
+  {
+    title: "ADMINISTRACIÓN CONTABLE",
+    items: [
+      { name: "Conciliación de Kardex", path: "/administracion/conciliacion", icon: Settings, module: Modules.CONCILIACION, hiddenForRoles: ["CONTADOR"], isClickable: true },
     ],
   },
 ];
@@ -134,7 +132,7 @@ export function getVisibleNavGroups(user: CurrentUser): NavGroup[] {
     if (group.hiddenForRoles?.includes(user.rol)) return [];
 
     const items = group.items.filter((item) =>
-      item.allowedRoles
+      !item.hiddenForRoles?.includes(user.rol) && (item.allowedRoles
         ? item.allowedRoles.includes(user.rol)
         : (item.anyModules
         ? item.anyModules.some(
@@ -142,7 +140,7 @@ export function getVisibleNavGroups(user: CurrentUser): NavGroup[] {
               hasPermission(user, module, "ver") ||
               hasPermission(user, module, "crear"),
           )
-        : hasPermission(user, item.module, "ver")),
+        : hasPermission(user, item.module, "ver"))),
     );
 
     return items.length > 0 ? [{ ...group, items }] : [];

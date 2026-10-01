@@ -1,4 +1,8 @@
-### Versión activa: varios teléfonos por chofer (01/10/2026)
+### Versión activa: orden del menú lateral (01/10/2026)
+
+Frontend activo: `dist-sidebar-order-20261001`, guardas/evidencia en `reports/sidebar-order-20261001/`. Solo se reubicaron entradas de Directorio/Configuración/Administración Contable; se conservaron rutas, páginas, nombres, íconos y visibilidad efectiva por rol/permiso. Las restricciones heredadas del grupo original permanecen por entrada, para que moverlas no cambie acceso. API sigue `dist-driver-phones-20261001`, sin reinicio ni cambios de datos. Build/typecheck aprobados y prueba exhaustiva de equivalencia de navegación 7/7. Sin publicación externa.
+
+### Versión anterior: varios teléfonos por chofer (01/10/2026)
 
 API y frontend activos: `dist-driver-phones-20261001`, con guardas y evidencia en `reports/driver-multiple-phones-20261001/`. Lista ordenada de teléfonos con etiqueta opcional; primero principal compatible con consumidores anteriores, búsqueda por cualquiera. Los teléfonos heredados se conservan sin backfill. Migración aditiva nullable comprobada sin cambiar filas existentes. Otros directorios no modificados. Builds congelados conservan cambios anteriores; typechecks y pruebas de UI/HTTP/PostgreSQL pasaron. Captura de ficha con datos sintéticos explícitos; no se afirma recorrido autenticado contra datos reales. Sin publicación externa.
 

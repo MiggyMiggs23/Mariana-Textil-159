@@ -82,7 +82,9 @@ test("SISTEMAS navigation follows its matrix without POS and with its account-de
       "Sitios",
       "Usuarios",
       "Permisos",
-      "Conciliación de Kardex",
+      "Camionetas",
+      "Choferes",
+      "Equipos",
       "Bitácora",
     ],
   );
@@ -90,7 +92,7 @@ test("SISTEMAS navigation follows its matrix without POS and with its account-de
     groups
       .find((group) => group.title === "DIRECTORIO")
       ?.items.map((item) => item.name),
-    ["Clientes", "Proveedores", "Camionetas", "Choferes", "Equipos"],
+    ["Clientes", "Proveedores", "Reportes", "Próximos Contenedores"],
   );
 });
 

@@ -1,0 +1,17 @@
+{
+  "headBeforePatch": "7bf9e788906968d51e11642317dc00ccea936f79",
+  "activeFrozenRoot": "reports/driver-multiple-phones-20261001/frozen-root",
+  "comparisonBeforePatch": {
+    "app-navigation.ts": "working = HEAD = active frozen source",
+    "app-layout.tsx": "working = HEAD = active frozen source",
+    "App.tsx": "working = active frozen source"
+  },
+  "originalSha256": {
+    "app-layout.tsx": "f64b9afcb0c3ab521d07273c6b73798377c01af5f1eea8431af8174b532b13c6",
+    "app-navigation.ts": "39550b5913e6ea1e9aa25ac56c121d326a97488734e655f9188f24345092c564",
+    "App.tsx": "cafbcb8d9bc4a6bf30a443c4639f7c73decc66977f5feba83337977b5cc2cc8e",
+    "e11.tsx": "ceaa26f20f988297ead84d2da83e50b293e71296f287613a6c1962cd476fd68c",
+    "permisos.ts": "fe114a81529e8c6b45d08f581cc8dcde837938a6a78f2e02de06a8bc52b80e4e"
+  },
+  "scope": "Sidebar source relocation only. No workflows, API, database, builds or active runtime changes."
+}

@@ -1,0 +1,7 @@
+{
+  "status": "BUILT_TYPECHECKED_KNOWN_BASELINE_TEST_FAILURE_NOT_ACTIVATED",
+  "frontend": "artifacts/mariana-textil/dist-sidebar-order-20261001",
+  "frozen": "reports/sidebar-order-20261001/frozen-root",
+  "manifestSha256": "fd7129d20459e44f7ae83e853f5063744fb23ae82ba08eb646a00821ad48fb09",
+  "frontendSha256FileHash": "46d7fdca0cedc1e7b9d5fa4aaabf997f220c9cb9a6a4ba82cb0eb3aa6a739588"
+}

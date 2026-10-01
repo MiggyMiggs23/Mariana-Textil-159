@@ -1,0 +1,19 @@
+{
+  "sidebarProofCommand": "node --test reports/sidebar-order-20261001/sidebar-order.test.mjs",
+  "sidebarProof": {
+    "passed": 7,
+    "failed": 0,
+    "allRoles": ["ADMIN", "TERMINAL", "CAJA", "SUPERVISOR", "BODEGA", "SISTEMAS", "CONTADOR"],
+    "permissionCoverage": "Every entry's full dependency projection: absent grants plus all 16 ver/crear/editar/autorizar combinations, all roles, E7 and Fondo flags. Also every simultaneous combination of the 12 affected modules' read grants (28672 cases).",
+    "e11Coverage": "56 before/after rendered sidebar comparisons across all four E11 link subsets, all roles, denied/granted permissions; 672 actual E11 role/profile/capability/session/backend/frontend flag combinations, each compared with Kardex denied and granted.",
+    "preservation": "Original source hashes and active frozen-source equality, route/component maps byte-identical, E11/permission sources byte-identical, identical navigation item metadata/multisets/test IDs, unchanged reset controls and desktop/mobile shells."
+  },
+  "existingContractCommand": "node scripts/src/frontend-test-runner.mjs src/components/app-navigation.contract.test.ts",
+  "existingContract": {
+    "passed": 6,
+    "failed": 1,
+    "failure": "Existing route contract expects two requiredRoles matches for CajaCuentasDestino/CuentaDestinoDetalle; captured original App.tsx already has zero. The same expectation exists in HEAD before this patch. Unrelated route/test behavior was not altered."
+  },
+  "diffCheck": "passed",
+  "runtimeVerification": "Not performed. No workflows, API, database, build, app startup, or active frozen-source changes."
+}
