@@ -1,0 +1,180 @@
+{
+  "descripcion": "Aplicación real compilada candidata; datos íntegramente sintéticos servidos por HTTP loopback. Sin login real, secretos ni acceso a base de datos. Banner añadido únicamente al DOM de captura.",
+  "dist": "/home/runner/workspace/artifacts/mariana-textil/dist-inventory-varias-20260926",
+  "viewport": {
+    "width": 1600,
+    "height": 1050
+  },
+  "groups": [
+    {
+      "productoKey": "fixture-licra-metalica",
+      "telaProducto": "Licra Metálica",
+      "coloresCount": 2,
+      "rollosCount": 3,
+      "totalMetros": "32.5",
+      "totalKilos": "0",
+      "totalBolsas": "0",
+      "totalPiezas": "0",
+      "colores": [
+        {
+          "productoId": 990,
+          "color": "Plata",
+          "sku": "FIX-LM-PLATA",
+          "unidad": "METRO",
+          "cantidadTotal": "25",
+          "rollosCount": 2,
+          "ubicaciones": [
+            {
+              "ubicacionId": 901,
+              "nombreUbicacion": "Bodega Cruces",
+              "pisoId": 9011,
+              "nombrePiso": "Alta",
+              "rollosCount": 1,
+              "cantidadTotal": "12.5",
+              "unidad": "METRO"
+            },
+            {
+              "ubicacionId": 901,
+              "nombreUbicacion": "Bodega Cruces",
+              "pisoId": 9012,
+              "nombrePiso": "Baja",
+              "rollosCount": 1,
+              "cantidadTotal": "12.5",
+              "unidad": "METRO"
+            }
+          ]
+        },
+        {
+          "productoId": 991,
+          "color": "Dorado",
+          "sku": "FIX-LM-DORADO",
+          "unidad": "METRO",
+          "cantidadTotal": "7.5",
+          "rollosCount": 1,
+          "ubicaciones": [
+            {
+              "ubicacionId": 901,
+              "nombreUbicacion": "Bodega Cruces",
+              "pisoId": 9012,
+              "nombrePiso": "Baja",
+              "rollosCount": 1,
+              "cantidadTotal": "7.5",
+              "unidad": "METRO"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "rollos": [
+    {
+      "id": 9901,
+      "serie": "FIX-9901",
+      "productoId": 990,
+      "telaProducto": "Licra Metálica",
+      "colorProducto": "Plata",
+      "sku": "FIX-LM-PLATA",
+      "unidad": "METRO",
+      "estado": "DISPONIBLE",
+      "ubicacionId": 901,
+      "nombreUbicacion": "Bodega Cruces",
+      "pisoId": 9011,
+      "nombrePiso": "Alta",
+      "cantidadActual": "12.5",
+      "cantidadInicial": "12.5"
+    },
+    {
+      "id": 9902,
+      "serie": "FIX-9902",
+      "productoId": 990,
+      "telaProducto": "Licra Metálica",
+      "colorProducto": "Plata",
+      "sku": "FIX-LM-PLATA",
+      "unidad": "METRO",
+      "estado": "DISPONIBLE",
+      "ubicacionId": 901,
+      "nombreUbicacion": "Bodega Cruces",
+      "pisoId": 9012,
+      "nombrePiso": "Baja",
+      "cantidadActual": "12.5",
+      "cantidadInicial": "12.5"
+    },
+    {
+      "id": 9903,
+      "serie": "FIX-9903",
+      "productoId": 991,
+      "telaProducto": "Licra Metálica",
+      "colorProducto": "Dorado",
+      "sku": "FIX-LM-DORADO",
+      "unidad": "METRO",
+      "estado": "DISPONIBLE",
+      "ubicacionId": 901,
+      "nombreUbicacion": "Bodega Cruces",
+      "pisoId": 9012,
+      "nombrePiso": "Baja",
+      "cantidadActual": "7.5",
+      "cantidadInicial": "7.5"
+    }
+  ],
+  "assertions": [
+    "Producto contraído: Ubicación exactamente Varias, sin lista ni contador",
+    "Producto expandido: Plata exactamente Varias, incluido title; ningún desglose hasta pulsar el color",
+    "Dorado conserva exactamente Bodega Cruces · Baja y no tiene botón de expansión",
+    "Plata expandido: Alta y Baja, 1 rollo y 12.5 METRO cada piso; cantidades consistentes con fixtures",
+    "Resúmenes, total padre de 3 rollos/32.5 METRO y pie no cambian al expandir",
+    "Color se puede contraer y vuelve a ocultar ambos pisos manteniendo Varias",
+    "Ninguna solicitud API inesperada; solo GET; tráfico externo bloqueado"
+  ],
+  "collapsedText": "Control de Inventario\n\nVista Consolidada (Todos los sitios)\n\nAgrupado por Producto\nDetalle de Rollos\nExpandir todos\nMostrar sin existencias\n\tTela / Producto\tSitio\tUbicación\tRollos\tTotal Mts.\tTotal Kg.\tTotal Bolsas\tTotal Pzas.\n\n\tLicra Metálica2 colores\t\tVarias\t3\t32.50\t-\t-\t-\n\tTOTALESfiltro actual\t\t\t3\t32.50\t0.00\t0.00\t0.00",
+  "expandedText": "Control de Inventario\n\nVista Consolidada (Todos los sitios)\n\nAgrupado por Producto\nDetalle de Rollos\nContraer todos\nMostrar sin existencias\n\tTela / Producto\tSitio\tUbicación\tRollos\tTotal Mts.\tTotal Kg.\tTotal Bolsas\tTotal Pzas.\n\n\tLicra Metálica2 colores\t\tVarias\t3\t32.50\t-\t-\t-\n\n\t\nPlata\nFIX-LM-PLATA\n\t\tVarias\t2\t\n25.00\nMts.\n\n\t\nDorado\nFIX-LM-DORADO\n\t\tBodega Cruces · Baja\t1\t\n7.50\nMts.\n\n\tTOTALESfiltro actual\t\t\t3\t32.50\t0.00\t0.00\t0.00",
+  "detailText": "Control de Inventario\n\nVista Consolidada (Todos los sitios)\n\nAgrupado por Producto\nDetalle de Rollos\nContraer todos\nMostrar sin existencias\n\tTela / Producto\tSitio\tUbicación\tRollos\tTotal Mts.\tTotal Kg.\tTotal Bolsas\tTotal Pzas.\n\n\tLicra Metálica2 colores\t\tVarias\t3\t32.50\t-\t-\t-\n\n\t\nPlata\nFIX-LM-PLATA\n\t\tVarias\t2\t\n25.00\nMts.\n\n\tPor ubicación\tBodega Cruces\tBodega Cruces · Alta\t1\t12.50\t-\t-\t-\n\tPor ubicación\tBodega Cruces\tBodega Cruces · Baja\t1\t12.50\t-\t-\t-\n\t\nDorado\nFIX-LM-DORADO\n\t\tBodega Cruces · Baja\t1\t\n7.50\nMts.\n\n\tTOTALESfiltro actual\t\t\t3\t32.50\t0.00\t0.00\t0.00",
+  "detailCells": [
+    [
+      "",
+      "Por ubicación",
+      "Bodega Cruces",
+      "Bodega Cruces · Alta",
+      "1",
+      "12.50",
+      "-",
+      "-",
+      "-"
+    ],
+    [
+      "",
+      "Por ubicación",
+      "Bodega Cruces",
+      "Bodega Cruces · Baja",
+      "1",
+      "12.50",
+      "-",
+      "-",
+      "-"
+    ]
+  ],
+  "footerBefore": "\tTOTALESfiltro actual\t\t\t3\t32.50\t0.00\t0.00\t0.00",
+  "requests": [
+    "GET /api/auth/me",
+    "GET /api/e11/disponibilidad",
+    "GET /api/e11/identidad",
+    "GET /api/admin/test-reset",
+    "GET /api/notificaciones/feed",
+    "GET /api/notificaciones",
+    "GET /api/auth/me",
+    "GET /api/inventario/ajustes/pendientes",
+    "GET /api/inventario/entradas/pendientes-costo/count",
+    "GET /api/etiquetas/alertas/count",
+    "GET /api/inventario/ubicaciones",
+    "GET /api/inventario/existencias/agrupadas",
+    "GET /api/inventario/rollos"
+  ],
+  "unexpected": [],
+  "forbidden": [],
+  "servedAssets": {
+    "index.html": "4ad45e789706ae6026c338d80c22e73ba50369402de19309d29b40e732d8ab2e",
+    "assets/index-DM4fp8qL.css": "7bdf6dd0e278a322da6f3d9f6c51c91a1b04ad92cc34ce5bca80adc53fe49e01",
+    "assets/index-yKc_sQAd.js": "2a32f4c6b83dfb9c6c941747f4543c417c9f7a7067f4eeda85058ee86486c369",
+    "favicon.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "assets/mariana-textil-logo-FFOiXRd3.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6"
+  }
+}

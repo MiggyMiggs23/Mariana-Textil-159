@@ -20,9 +20,10 @@ test("single floor uses its label locally and site + floor globally", () => {
 
 test("same floor name across sites counts separately; product summary deduplicates IDs", () => {
   const other = { ...location, ubicacionId: 2, nombreUbicacion: "Norte" };
-  assert.equal(locationSummary([location, other], 4, true, true), "2 pisos");
-  assert.equal(locationSummary([location, location, other], 6, true), "Centro · Planta baja, Norte · Planta baja");
-  assert.equal(locationSummary([location, { ...location, pisoId: 11 }], 4, false, true), "2 pisos");
+  assert.equal(locationSummary([location, other], 4, true, true), "Varias");
+  assert.equal(locationSummary([location, location, other], 6, true), "Varias");
+  assert.equal(locationSummary([location, { ...location, pisoId: 11 }], 4, false, true), "Varias");
+  assert.equal(locationSummary([location, location], 4, true), "Centro · Planta baja");
 });
 
 test("missing floor is explicit, zero stock never creates an apparent floor", () => {

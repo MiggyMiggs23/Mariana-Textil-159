@@ -2775,3 +2775,31 @@ mtime_ms = 1790460428937
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/8fba1ce3-d828-44fc-a348-b4089d3a4262/523affeb-65f8-40fb-8321-32fa186a7ecb"
 storage_version_token = "1790461534095113"
 content_type = "application/pdf"
+
+[[outputs]]
+id = "iaEFd5uv8vImVklldZbXn"
+uri = "file://reports/inventory-varias-20260926/capturas/01-contraido.png"
+type = "image"
+title = "Ubicación — fila contraída"
+description = "Licra Metálica muestra «Varias». Captura de la interfaz real con datos de prueba identificados."
+logical_id = "c15bfdf8-7782-4c33-88d8-0db26d3ee08c"
+content_hash = "sha256:be894c7e155b98d43e915acbf1335e7fbef371a39b84821a2799256571a80628"
+size = 104487
+mtime_ms = 1790878363330
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c15bfdf8-7782-4c33-88d8-0db26d3ee08c/94fc9f17-2abd-47d4-87ce-775b7f3bd768"
+storage_version_token = "1790878427038965"
+content_type = "image/png"
+
+[[outputs]]
+id = "hInaMHSFdo-GNakiHAyvT"
+uri = "file://reports/inventory-varias-20260926/capturas/02-desplegado.png"
+type = "image"
+title = "Ubicación — fila desplegada"
+description = "Cada color muestra «Varias» o su única ubicación; el desglose por piso permanece disponible. Datos de prueba."
+logical_id = "e273614f-3f17-4699-8f2d-57238c73b0c3"
+content_hash = "sha256:ab223dfaf3995394a86dc38670d96aabe22b6a9a6bb2dae1ff673da25f775bb7"
+size = 116011
+mtime_ms = 1790878363602
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e273614f-3f17-4699-8f2d-57238c73b0c3/8493f463-e934-4ffb-b5b9-7904df3589d1"
+storage_version_token = "1790878427797048"
+content_type = "image/png"

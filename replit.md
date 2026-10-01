@@ -1,4 +1,8 @@
-### Versión activa: niveles numéricos y folios de Entrada en carta (26/09/2026)
+### Versión activa: resumen «Varias» en Inventario (01/10/2026)
+
+Frontend activo: `dist-inventory-varias-20260926`, guardas en `reports/inventory-varias-20260926/frontend.sha256`. Único cambio de producción frente a la versión anterior: el resumen de más de una ubicación dice «Varias», tanto en producto como en color. Una ubicación y los desgloses conservan su comportamiento. API sin cambios: `dist-floor-level-letter-20260926`. Ocho pruebas enfocadas y capturas del componente real con fixtures identificados aprobadas; sin cambios de datos ni publicación externa.
+
+### Versión anterior: niveles numéricos y folios de Entrada en carta (26/09/2026)
 
 API y frontend: `dist-floor-level-letter-20260926`, guardas en `reports/floor-level-and-letter-20260926/`. Orden de pisos por nivel numérico ascendente, no nombres ni inserción; computadora usa el menor nivel activo y bloquea si falta configurar algún nivel activo. El propietario confirmó Lucas Alamán/Bodega Cruces inactivos sin pisos. Migración aplicada solo a niveles; sin modificar inventario. Folios en hoja exclusiva: hasta 152 (38 filas de cuatro), antes 88; letra/diseño conservados, carta con 5.25 mm interiores. Capacidad menor con filas parciales por producto. Sin certificación de margen mínimo físico. Ambos workflows activos, builds congelados conservan cambios anteriores, sin publicación externa. Evidencia: `reports/floor-level-and-letter-20260926/ESTADO.md`.
 

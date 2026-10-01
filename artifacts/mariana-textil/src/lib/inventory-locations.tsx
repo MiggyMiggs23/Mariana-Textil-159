@@ -28,11 +28,11 @@ export function existingLocations(locations: readonly InventoryLocation[] = []) 
   return locations.filter((location) => location.rollosCount > 0);
 }
 
-export function locationSummary(locations: readonly InventoryLocation[], rollosCount: number, consolidado: boolean, compact = false) {
+export function locationSummary(locations: readonly InventoryLocation[], rollosCount: number, consolidado: boolean, _compact = false) {
   if (rollosCount === 0) return "Sin existencias";
   const unique = [...new Map(existingLocations(locations).map((location) => [locationKey(location), location])).values()];
   if (!unique.length) return "Ubicación no disponible";
-  if (compact && unique.length > 1) return `${unique.length} pisos`;
+  if (unique.length > 1) return "Varias";
   return unique.map((location) => locationLabel(location, consolidado)).join(", ");
 }
 
