@@ -9,6 +9,7 @@ import {
 import { requireSession, type AuthContext } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
+import { presentChofer } from "./choferes";
 
 const router = Router();
 const createBody = z.object({
@@ -95,7 +96,7 @@ router.get("/viajes/catalogo-operativo", requireSession, requierePermiso("viajes
       db.select().from(choferesTable).where(eq(choferesTable.activo, true)).orderBy(asc(choferesTable.nombreCompleto)),
       db.select().from(ubicacionesTable).where(and(eq(ubicacionesTable.activa, true), inArray(ubicacionesTable.tipo, ["TIENDA", "BODEGA"]), ...(siteId ? [eq(ubicacionesTable.id, siteId)] : []))).orderBy(asc(ubicacionesTable.nombre)),
     ]);
-    res.json({ camionetas, choferes, ubicaciones });
+    res.json({ camionetas, choferes: choferes.map(presentChofer), ubicaciones });
   } catch (error) { next(error); }
 });
 router.get("/viajes/elegibles", requireSession, requierePermiso("viajes", "crear"), async (req, res, next) => {

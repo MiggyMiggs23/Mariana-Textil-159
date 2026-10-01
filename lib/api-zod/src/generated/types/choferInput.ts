@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { ChoferTelefono } from './choferTelefono';
 
 export interface ChoferInput {
   /**
@@ -17,5 +18,10 @@ export interface ChoferInput {
      * @maxLength 32
      */
   telefono: string;
+  /**
+     * Opcional para clientes anteriores; si se envía, el primer numero debe coincidir con telefono tras recortar espacios.
+     * @minItems 1
+     */
+  telefonos?: ChoferTelefono[];
   activo?: boolean;
 }

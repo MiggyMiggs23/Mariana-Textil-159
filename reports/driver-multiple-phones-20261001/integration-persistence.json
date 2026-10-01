@@ -1,0 +1,330 @@
+{
+  "disposableOnly": true,
+  "columns": [
+    {
+      "column_name": "telefono",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "column_name": "telefonos",
+      "data_type": "jsonb",
+      "is_nullable": "YES",
+      "column_default": null
+    }
+  ],
+  "rows": [
+    {
+      "id": 1,
+      "nombre_completo": "Renombrado",
+      "telefono": "001 55 ext. 2",
+      "telefonos": null,
+      "activo": false
+    },
+    {
+      "id": 2,
+      "nombre_completo": "Multiple 7299f06c15da44cdaf06a50a242995a8",
+      "telefono": "new legacy primary",
+      "telefonos": [
+        {
+          "numero": "new legacy primary",
+          "etiqueta": "Fresh label"
+        },
+        {
+          "numero": "fresh extra"
+        }
+      ],
+      "activo": false
+    },
+    {
+      "id": 3,
+      "nombre_completo": "Legacy client 7299f06c15da44cdaf06a50a242995a8",
+      "telefono": "00011",
+      "telefonos": [
+        {
+          "numero": "00011"
+        }
+      ],
+      "activo": true
+    }
+  ],
+  "audits": [
+    {
+      "accion": "ACTUALIZAR",
+      "entidad_id": "1",
+      "datos_antes": {
+        "id": 1,
+        "activo": true,
+        "telefono": "001 55 ext. 2",
+        "createdAt": "2026-10-01T19:14:22.501Z",
+        "telefonos": [
+          {
+            "numero": "001 55 ext. 2"
+          }
+        ],
+        "updatedAt": "2026-10-01T19:14:22.501Z",
+        "nombreCompleto": "Histórico 7299f06c15da44cdaf06a50a242995a8"
+      },
+      "datos_despues": {
+        "id": 1,
+        "activo": false,
+        "telefono": "001 55 ext. 2",
+        "createdAt": "2026-10-01T19:14:22.501Z",
+        "telefonos": [
+          {
+            "numero": "001 55 ext. 2"
+          }
+        ],
+        "updatedAt": "2026-10-01T19:14:22.639Z",
+        "nombreCompleto": "Renombrado"
+      }
+    },
+    {
+      "accion": "CREAR",
+      "entidad_id": "2",
+      "datos_antes": null,
+      "datos_despues": {
+        "id": 2,
+        "activo": true,
+        "telefono": "+52 (55) 000-001",
+        "createdAt": "2026-10-01T19:14:22.667Z",
+        "telefonos": [
+          {
+            "numero": "+52 (55) 000-001",
+            "etiqueta": "Móvil"
+          },
+          {
+            "numero": "001 555 ext. 9",
+            "etiqueta": "Oficina"
+          },
+          {
+            "numero": "00007"
+          }
+        ],
+        "updatedAt": "2026-10-01T19:14:22.667Z",
+        "nombreCompleto": "Multiple 7299f06c15da44cdaf06a50a242995a8"
+      }
+    },
+    {
+      "accion": "ACTUALIZAR",
+      "entidad_id": "2",
+      "datos_antes": {
+        "id": 2,
+        "activo": true,
+        "telefono": "+52 (55) 000-001",
+        "createdAt": "2026-10-01T19:14:22.667Z",
+        "telefonos": [
+          {
+            "numero": "+52 (55) 000-001",
+            "etiqueta": "Móvil"
+          },
+          {
+            "numero": "001 555 ext. 9",
+            "etiqueta": "Oficina"
+          },
+          {
+            "numero": "00007"
+          }
+        ],
+        "updatedAt": "2026-10-01T19:14:22.667Z",
+        "nombreCompleto": "Multiple 7299f06c15da44cdaf06a50a242995a8"
+      },
+      "datos_despues": {
+        "id": 2,
+        "activo": true,
+        "telefono": "0008",
+        "createdAt": "2026-10-01T19:14:22.667Z",
+        "telefonos": [
+          {
+            "numero": "0008",
+            "etiqueta": "Nuevo principal"
+          },
+          {
+            "numero": "001 555 ext. 9",
+            "etiqueta": "Oficina"
+          },
+          {
+            "numero": "00007"
+          }
+        ],
+        "updatedAt": "2026-10-01T19:14:22.688Z",
+        "nombreCompleto": "Multiple 7299f06c15da44cdaf06a50a242995a8"
+      }
+    },
+    {
+      "accion": "ACTUALIZAR",
+      "entidad_id": "2",
+      "datos_antes": {
+        "id": 2,
+        "activo": true,
+        "telefono": "0008",
+        "createdAt": "2026-10-01T19:14:22.667Z",
+        "telefonos": [
+          {
+            "numero": "0008",
+            "etiqueta": "Nuevo principal"
+          },
+          {
+            "numero": "001 555 ext. 9",
+            "etiqueta": "Oficina"
+          },
+          {
+            "numero": "00007"
+          }
+        ],
+        "updatedAt": "2026-10-01T19:14:22.688Z",
+        "nombreCompleto": "Multiple 7299f06c15da44cdaf06a50a242995a8"
+      },
+      "datos_despues": {
+        "id": 2,
+        "activo": true,
+        "telefono": "001 555 ext. 9",
+        "createdAt": "2026-10-01T19:14:22.667Z",
+        "telefonos": [
+          {
+            "numero": "001 555 ext. 9",
+            "etiqueta": "Oficina"
+          },
+          {
+            "numero": "00007"
+          }
+        ],
+        "updatedAt": "2026-10-01T19:14:22.705Z",
+        "nombreCompleto": "Multiple 7299f06c15da44cdaf06a50a242995a8"
+      }
+    },
+    {
+      "accion": "ACTUALIZAR",
+      "entidad_id": "2",
+      "datos_antes": {
+        "id": 2,
+        "activo": true,
+        "telefono": "001 555 ext. 9",
+        "createdAt": "2026-10-01T19:14:22.667Z",
+        "telefonos": [
+          {
+            "numero": "001 555 ext. 9",
+            "etiqueta": "Oficina"
+          },
+          {
+            "numero": "00007"
+          }
+        ],
+        "updatedAt": "2026-10-01T19:14:22.705Z",
+        "nombreCompleto": "Multiple 7299f06c15da44cdaf06a50a242995a8"
+      },
+      "datos_despues": {
+        "id": 2,
+        "activo": true,
+        "telefono": "00999",
+        "createdAt": "2026-10-01T19:14:22.667Z",
+        "telefonos": [
+          {
+            "numero": "00999",
+            "etiqueta": "Oficina"
+          },
+          {
+            "numero": "00007"
+          }
+        ],
+        "updatedAt": "2026-10-01T19:14:22.748Z",
+        "nombreCompleto": "Multiple 7299f06c15da44cdaf06a50a242995a8"
+      }
+    },
+    {
+      "accion": "ACTUALIZAR",
+      "entidad_id": "2",
+      "datos_antes": {
+        "id": 2,
+        "activo": true,
+        "telefono": "00999",
+        "createdAt": "2026-10-01T19:14:22.667Z",
+        "telefonos": [
+          {
+            "numero": "00999",
+            "etiqueta": "Oficina"
+          },
+          {
+            "numero": "00007"
+          }
+        ],
+        "updatedAt": "2026-10-01T19:14:22.748Z",
+        "nombreCompleto": "Multiple 7299f06c15da44cdaf06a50a242995a8"
+      },
+      "datos_despues": {
+        "id": 2,
+        "activo": false,
+        "telefono": "00999",
+        "createdAt": "2026-10-01T19:14:22.667Z",
+        "telefonos": [
+          {
+            "numero": "00999",
+            "etiqueta": "Oficina"
+          },
+          {
+            "numero": "00007"
+          }
+        ],
+        "updatedAt": "2026-10-01T19:14:22.768Z",
+        "nombreCompleto": "Multiple 7299f06c15da44cdaf06a50a242995a8"
+      }
+    },
+    {
+      "accion": "CREAR",
+      "entidad_id": "3",
+      "datos_antes": null,
+      "datos_despues": {
+        "id": 3,
+        "activo": true,
+        "telefono": "00011",
+        "createdAt": "2026-10-01T19:14:22.798Z",
+        "telefonos": [
+          {
+            "numero": "00011"
+          }
+        ],
+        "updatedAt": "2026-10-01T19:14:22.798Z",
+        "nombreCompleto": "Legacy client 7299f06c15da44cdaf06a50a242995a8"
+      }
+    },
+    {
+      "accion": "ACTUALIZAR",
+      "entidad_id": "2",
+      "datos_antes": {
+        "id": 2,
+        "activo": false,
+        "telefono": "concurrent",
+        "createdAt": "2026-10-01T19:14:22.667Z",
+        "telefonos": [
+          {
+            "numero": "concurrent",
+            "etiqueta": "Fresh label"
+          },
+          {
+            "numero": "fresh extra"
+          }
+        ],
+        "updatedAt": "2026-10-01T19:14:22.768Z",
+        "nombreCompleto": "Multiple 7299f06c15da44cdaf06a50a242995a8"
+      },
+      "datos_despues": {
+        "id": 2,
+        "activo": false,
+        "telefono": "new legacy primary",
+        "createdAt": "2026-10-01T19:14:22.667Z",
+        "telefonos": [
+          {
+            "numero": "new legacy primary",
+            "etiqueta": "Fresh label"
+          },
+          {
+            "numero": "fresh extra"
+          }
+        ],
+        "updatedAt": "2026-10-01T19:14:23.209Z",
+        "nombreCompleto": "Multiple 7299f06c15da44cdaf06a50a242995a8"
+      }
+    }
+  ]
+}

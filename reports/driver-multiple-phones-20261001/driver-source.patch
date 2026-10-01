@@ -1,0 +1,654 @@
+diff --git a/artifacts/api-server/src/routes/choferes.ts b/artifacts/api-server/src/routes/choferes.ts
+index b4110bfb894303fbfa1519f0040d257eb8a3f1bc..be4e77c6deba23c686ffbba20d755c5804b08ae4 100644
+--- a/artifacts/api-server/src/routes/choferes.ts
++++ b/artifacts/api-server/src/routes/choferes.ts
+@@ -6,6 +6,7 @@ import {
+   type Response,
+ } from "express";
+ import { eq } from "drizzle-orm";
++import { z } from "zod";
+ import {
+   CreateChoferBody,
+   GetChoferParams,
+@@ -24,11 +25,37 @@ export function normalizeChoferText(value: string): string {
+   return value.trim();
+ }
+ 
+-function presentChofer(row: typeof choferesTable.$inferSelect) {
++const phoneNumber = z.string().trim().min(1).max(32);
++const phoneList = z.array(z.object({
++  numero: phoneNumber,
++  etiqueta: z.string().trim().min(1).max(40).optional(),
++})).min(1);
++// Trim before validating length. Never coerce numbers (leading zeros matter).
++const phoneFields = {
++  telefono: phoneNumber,
++  telefonos: phoneList.optional(),
++};
++const consistentPhones = (data: {
++  telefono?: string;
++  telefonos?: { numero: string; etiqueta?: string }[];
++}) => data.telefono === undefined || data.telefonos === undefined ||
++  data.telefono === data.telefonos[0]?.numero;
++const createBody = CreateChoferBody.extend(phoneFields).refine(consistentPhones, {
++  message: "telefono debe coincidir con el primer numero de telefonos.",
++});
++const updateBody = UpdateChoferBody.extend({
++  ...phoneFields,
++  telefono: phoneNumber.optional(),
++}).refine(consistentPhones, {
++  message: "telefono debe coincidir con el primer numero de telefonos.",
++});
++
++export function presentChofer(row: typeof choferesTable.$inferSelect) {
+   return {
+     id: row.id,
+     nombreCompleto: row.nombreCompleto,
+     telefono: row.telefono,
++    telefonos: row.telefonos ?? [{ numero: row.telefono }],
+     activo: row.activo,
+     createdAt: row.createdAt,
+     updatedAt: row.updatedAt,
+@@ -84,7 +111,7 @@ router.post(
+   ...requiereGestorChoferes("crear"),
+   async (req, res, next): Promise<void> => {
+     try {
+-      const parsed = CreateChoferBody.safeParse(req.body);
++      const parsed = createBody.safeParse(req.body);
+       const nombreCompleto = parsed.success
+         ? normalizeChoferText(parsed.data.nombreCompleto)
+         : "";
+@@ -102,6 +129,7 @@ router.post(
+             ...parsed.data,
+             nombreCompleto,
+             telefono,
++            telefonos: parsed.data.telefonos ?? [{ numero: telefono }],
+           })
+           .returning();
+         await tx.insert(auditoriaTable).values({
+@@ -154,7 +182,7 @@ router.patch(
+   async (req, res, next): Promise<void> => {
+     try {
+       const id = UpdateChoferParams.safeParse(req.params);
+-      const parsed = UpdateChoferBody.safeParse(req.body);
++      const parsed = updateBody.safeParse(req.body);
+       const nombreCompleto =
+         parsed.success && parsed.data.nombreCompleto !== undefined
+           ? normalizeChoferText(parsed.data.nombreCompleto)
+@@ -178,14 +206,24 @@ router.patch(
+           .select()
+           .from(choferesTable)
+           .where(eq(choferesTable.id, id.data.id))
+-          .limit(1);
++          .limit(1)
++          .for("update");
+         if (!before) throw new Error("NOT_FOUND");
++        // Resolve legacy writes only after acquiring the row lock, so another
++        // writer's extra phones/label cannot be lost to a stale read.
++        const telefonos = parsed.data.telefonos ?? (
++          telefono === undefined ? undefined : [
++            { ...presentChofer(before).telefonos[0]!, numero: telefono },
++            ...presentChofer(before).telefonos.slice(1),
++          ]
++        );
+         const [row] = await tx
+           .update(choferesTable)
+           .set({
+             ...parsed.data,
+             nombreCompleto,
+-            telefono,
++            telefono: telefonos?.[0]?.numero,
++            telefonos,
+             updatedAt: new Date(),
+           })
+           .where(eq(choferesTable.id, id.data.id))
+diff --git a/artifacts/api-server/src/routes/viajes.ts b/artifacts/api-server/src/routes/viajes.ts
+index 0bb57592598ff6dccff5e51e69934e010be8cbdb..e03df12d408f0c2b6c88d318bb5fe45a86a0bebc 100644
+--- a/artifacts/api-server/src/routes/viajes.ts
++++ b/artifacts/api-server/src/routes/viajes.ts
+@@ -9,6 +9,7 @@ import {
+ import { requireSession, type AuthContext } from "../middlewares/auth";
+ import { requierePermiso } from "../lib/permisos";
+ import { getRequestIp } from "../lib/request";
++import { presentChofer } from "./choferes";
+ 
+ const router = Router();
+ const createBody = z.object({
+@@ -95,7 +96,7 @@ router.get("/viajes/catalogo-operativo", requireSession, requierePermiso("viajes
+       db.select().from(choferesTable).where(eq(choferesTable.activo, true)).orderBy(asc(choferesTable.nombreCompleto)),
+       db.select().from(ubicacionesTable).where(and(eq(ubicacionesTable.activa, true), inArray(ubicacionesTable.tipo, ["TIENDA", "BODEGA"]), ...(siteId ? [eq(ubicacionesTable.id, siteId)] : []))).orderBy(asc(ubicacionesTable.nombre)),
+     ]);
+-    res.json({ camionetas, choferes, ubicaciones });
++    res.json({ camionetas, choferes: choferes.map(presentChofer), ubicaciones });
+   } catch (error) { next(error); }
+ });
+ router.get("/viajes/elegibles", requireSession, requierePermiso("viajes", "crear"), async (req, res, next) => {
+diff --git a/artifacts/mariana-textil/src/pages/configuracion/choferes.tsx b/artifacts/mariana-textil/src/pages/configuracion/choferes.tsx
+index e720f11f28a7ebcda425efab6889f9dc250d4ab2..ed01df0de8cb120dc4caee12543fb720c228750e 100644
+--- a/artifacts/mariana-textil/src/pages/configuracion/choferes.tsx
++++ b/artifacts/mariana-textil/src/pages/configuracion/choferes.tsx
+@@ -36,6 +36,10 @@ import { toast } from "sonner";
+ import { Edit, Plus, Search, UserRound } from "lucide-react";
+ import { hasPermission, Modules } from "@/lib/permisos";
+ import { PurgaCatalogoButton } from "@/components/purga-catalogo-button";
++import { ChoferTelefonosEditor, getTelefonosChofer, type TelefonoChofer } from "./chofer-telefonos";
++
++type ChoferConTelefonos = Omit<Chofer, "telefonos"> & { telefonos?: TelefonoChofer[] };
++type ChoferForm = Omit<ChoferInput, "telefono"> & { telefonos: TelefonoChofer[] };
+ 
+ function getErrorMessage(error: unknown): string {
+   if (typeof error !== "object" || error === null) return "Error desconocido";
+@@ -61,7 +65,7 @@ export default function Choferes() {
+   });
+   const [search, setSearch] = useState("");
+   const [estado, setEstado] = useState<"ALL" | "ACTIVE" | "INACTIVE">("ACTIVE");
+-  const [editing, setEditing] = useState<Chofer | null>(null);
++  const [editing, setEditing] = useState<ChoferConTelefonos | null>(null);
+   const [dialogOpen, setDialogOpen] = useState(false);
+   const [statusTarget, setStatusTarget] = useState<Chofer | null>(null);
+   const isCatalogManager = user?.rol === "ADMIN" || user?.rol === "SISTEMAS";
+@@ -76,7 +80,7 @@ export default function Choferes() {
+           (chofer) =>
+             (estado === "ALL" ||
+               (estado === "ACTIVE" ? chofer.activo : !chofer.activo)) &&
+-            `${chofer.nombreCompleto} ${chofer.telefono}`
++            `${chofer.nombreCompleto} ${getTelefonosChofer(chofer).map(({ numero }) => numero).join(" ")}`
+               .toLowerCase()
+               .includes(search.toLowerCase()),
+         )
+@@ -92,7 +96,7 @@ export default function Choferes() {
+     setEditing(null);
+     setDialogOpen(true);
+   };
+-  const openEdit = (chofer: Chofer) => {
++  const openEdit = (chofer: ChoferConTelefonos) => {
+     setEditing(chofer);
+     setDialogOpen(true);
+   };
+@@ -191,7 +195,7 @@ export default function Choferes() {
+                             <TableCell className="font-bold">
+                               {chofer.nombreCompleto}
+                             </TableCell>
+-                            <TableCell>{chofer.telefono}</TableCell>
++                            <TableCell>{getTelefonosChofer(chofer)[0].numero}</TableCell>
+                             <TableCell className="text-right">
+                               <Badge
+                                 variant={
+@@ -243,7 +247,7 @@ export default function Choferes() {
+                           <div>
+                             <p className="font-bold">{chofer.nombreCompleto}</p>
+                             <p className="text-sm text-muted-foreground">
+-                              {chofer.telefono}
++                              {getTelefonosChofer(chofer)[0].numero}
+                             </p>
+                           </div>
+                           <Badge
+@@ -302,15 +306,15 @@ function ChoferDialog({
+   onClose,
+ }: {
+   open: boolean;
+-  chofer: Chofer | null;
++  chofer: ChoferConTelefonos | null;
+   onClose: () => void;
+ }) {
+   const queryClient = useQueryClient();
+   const create = useCreateChofer();
+   const update = useUpdateChofer();
+-  const [form, setForm] = useState<ChoferInput>({
++  const [form, setForm] = useState<ChoferForm>({
+     nombreCompleto: "",
+-    telefono: "",
++    telefonos: [{ numero: "" }],
+     activo: true,
+   });
+   useEffect(() => {
+@@ -319,21 +323,26 @@ function ChoferDialog({
+         chofer
+           ? {
+               nombreCompleto: chofer.nombreCompleto,
+-              telefono: chofer.telefono,
++              telefonos: getTelefonosChofer(chofer),
+               activo: chofer.activo,
+             }
+-          : { nombreCompleto: "", telefono: "", activo: true },
++          : { nombreCompleto: "", telefonos: [{ numero: "" }], activo: true },
+       );
+   }, [open, chofer]);
+   const submit = () => {
++    const telefonos = form.telefonos.map(({ numero, etiqueta }) => ({
++      numero: numero.trim(),
++      ...(etiqueta?.trim() ? { etiqueta: etiqueta.trim() } : {}),
++    }));
+     const data = {
+       ...form,
+       nombreCompleto: form.nombreCompleto.trim(),
+-      telefono: form.telefono.trim(),
++      telefono: telefonos[0]?.numero ?? "",
++      telefonos,
+     };
+-    if (!data.nombreCompleto || !data.telefono) {
++    if (!data.nombreCompleto || !data.telefono || telefonos.some(({ numero }) => !numero)) {
+       toast.error("Datos incompletos", {
+-        description: "El nombre completo y teléfono son obligatorios.",
++        description: "El nombre completo y todos los teléfonos son obligatorios. Completa o quita las filas vacías.",
+       });
+       return;
+     }
+@@ -358,7 +367,7 @@ function ChoferDialog({
+   const pending = create.isPending || update.isPending;
+   return (
+     <Dialog open={open} onOpenChange={(value) => !value && onClose()}>
+-      <DialogContent>
++      <DialogContent className="max-h-[90dvh] overflow-y-auto">
+         <DialogHeader>
+           <DialogTitle>{chofer ? "Editar chofer" : "Nuevo chofer"}</DialogTitle>
+           <DialogDescription>
+@@ -369,24 +378,21 @@ function ChoferDialog({
+         </DialogHeader>
+         <div className="grid gap-4 py-4">
+           <div className="space-y-2">
+-            <Label>Nombre completo *</Label>
++            <Label htmlFor="chofer-nombre">Nombre completo *</Label>
+             <Input
++              id="chofer-nombre"
++              data-testid="input-chofer-nombre"
+               value={form.nombreCompleto}
+               onChange={(event) =>
+                 setForm({ ...form, nombreCompleto: event.target.value })
+               }
+             />
+           </div>
+-          <div className="space-y-2">
+-            <Label>Teléfono *</Label>
+-            <Input
+-              type="tel"
+-              value={form.telefono}
+-              onChange={(event) =>
+-                setForm({ ...form, telefono: event.target.value })
+-              }
+-            />
+-          </div>
++          <ChoferTelefonosEditor
++            telefonos={form.telefonos}
++            onChange={(telefonos) => setForm({ ...form, telefonos })}
++            disabled={pending}
++          />
+         </div>
+         <DialogFooter>
+           <Button variant="outline" onClick={onClose} disabled={pending}>
+diff --git a/lib/api-client-react/src/generated/api.schemas.ts b/lib/api-client-react/src/generated/api.schemas.ts
+index 426ebc310a4b1f1ecb326d5096cee0b9abcfd7a8..b2412fb6a5ff29f3444e3338ac6d2d36dbe0710d 100644
+--- a/lib/api-client-react/src/generated/api.schemas.ts
++++ b/lib/api-client-react/src/generated/api.schemas.ts
+@@ -4315,10 +4315,30 @@ export interface CamionetaUpdate {
+   activa?: boolean;
+ }
+ 
++export interface ChoferTelefono {
++  /**
++     * Texto recortado; conserva prefijos, ceros y formato.
++     * @minLength 1
++     * @maxLength 32
++     */
++  numero: string;
++  /**
++     * Etiqueta opcional recortada; omitir si está vacía.
++     * @minLength 1
++     * @maxLength 40
++     */
++  etiqueta?: string;
++}
++
+ export interface Chofer {
+   id: number;
+   nombreCompleto: string;
+   telefono: string;
++  /**
++     * Teléfonos ordenados; el primero es telefono. Los registros históricos sin colección se presentan con su telefono.
++     * @minItems 1
++     */
++  telefonos: ChoferTelefono[];
+   activo: boolean;
+   createdAt: string;
+   updatedAt: string;
+@@ -4335,6 +4355,11 @@ export interface ChoferInput {
+      * @maxLength 32
+      */
+   telefono: string;
++  /**
++     * Opcional para clientes anteriores; si se envía, el primer numero debe coincidir con telefono tras recortar espacios.
++     * @minItems 1
++     */
++  telefonos?: ChoferTelefono[];
+   activo?: boolean;
+ }
+ 
+@@ -4349,6 +4374,11 @@ export interface ChoferUpdate {
+      * @maxLength 32
+      */
+   telefono?: string;
++  /**
++     * Reemplaza la colección y su principal. Si también se envía telefono, debe coincidir con el primer numero. Solo telefono actualiza el principal conservando etiqueta y adicionales; omitir ambos conserva todo.
++     * @minItems 1
++     */
++  telefonos?: ChoferTelefono[];
+   activo?: boolean;
+ }
+ 
+diff --git a/lib/api-spec/openapi.yaml b/lib/api-spec/openapi.yaml
+index 443289eb58fb99211a8c6a438958974d9b6329fe..7426fa880da8dc4b8a1c667424b8b4e67e16fed0 100644
+--- a/lib/api-spec/openapi.yaml
++++ b/lib/api-spec/openapi.yaml
+@@ -11431,13 +11431,24 @@ components:
+         modelo: { type: ["string", "null"], maxLength: 80 }
+         tipo: { type: string, enum: [PROPIA, CONTRATADA] }
+         activa: { type: boolean }
++    ChoferTelefono:
++      type: object
++      required: [numero]
++      properties:
++        numero: { type: string, minLength: 1, maxLength: 32, description: "Texto recortado; conserva prefijos, ceros y formato." }
++        etiqueta: { type: string, minLength: 1, maxLength: 40, description: "Etiqueta opcional recortada; omitir si está vacía." }
+     Chofer:
+       type: object
+-      required: [id, nombreCompleto, telefono, activo, createdAt, updatedAt]
++      required: [id, nombreCompleto, telefono, telefonos, activo, createdAt, updatedAt]
+       properties:
+         id: { type: number }
+         nombreCompleto: { type: string }
+         telefono: { type: string }
++        telefonos:
++          type: array
++          minItems: 1
++          description: "Teléfonos ordenados; el primero es telefono. Los registros históricos sin colección se presentan con su telefono."
++          items: { $ref: "#/components/schemas/ChoferTelefono" }
+         activo: { type: boolean }
+         createdAt: { type: string, format: date-time }
+         updatedAt: { type: string, format: date-time }
+@@ -11447,6 +11458,11 @@ components:
+       properties:
+         nombreCompleto: { type: string, minLength: 1, maxLength: 160 }
+         telefono: { type: string, minLength: 1, maxLength: 32 }
++        telefonos:
++          type: array
++          minItems: 1
++          description: "Opcional para clientes anteriores; si se envía, el primer numero debe coincidir con telefono tras recortar espacios."
++          items: { $ref: "#/components/schemas/ChoferTelefono" }
+         activo: { type: boolean, default: true }
+     ChoferUpdate:
+       type: object
+@@ -11454,6 +11470,11 @@ components:
+       properties:
+         nombreCompleto: { type: string, minLength: 1, maxLength: 160 }
+         telefono: { type: string, minLength: 1, maxLength: 32 }
++        telefonos:
++          type: array
++          minItems: 1
++          description: "Reemplaza la colección y su principal. Si también se envía telefono, debe coincidir con el primer numero. Solo telefono actualiza el principal conservando etiqueta y adicionales; omitir ambos conserva todo."
++          items: { $ref: "#/components/schemas/ChoferTelefono" }
+         activo: { type: boolean }
+     Role:
+       type: string
+diff --git a/lib/api-zod/src/generated/api.ts b/lib/api-zod/src/generated/api.ts
+index 0e4fbb87f25ede414e94090c436c8d2a72cc1674..becb3e9a43f4aaae0ea6cd6594a598de051bc5db 100644
+--- a/lib/api-zod/src/generated/api.ts
++++ b/lib/api-zod/src/generated/api.ts
+@@ -5159,10 +5159,21 @@ export const ListChoferesQueryParams = zod.object({
+   "activo": zod.enum(['true', 'false', 'all']).default(listChoferesQueryActivoDefault).describe('all incluye registros activos e inactivos.')
+ })
+ 
++export const listChoferesResponseTelefonosItemNumeroMax = 32;
++
++export const listChoferesResponseTelefonosItemEtiquetaMax = 40;
++
++
++
++
+ export const ListChoferesResponseItem = zod.object({
+   "id": zod.number(),
+   "nombreCompleto": zod.string(),
+   "telefono": zod.string(),
++  "telefonos": zod.array(zod.object({
++  "numero": zod.string().min(1).max(listChoferesResponseTelefonosItemNumeroMax).describe('Texto recortado; conserva prefijos, ceros y formato.'),
++  "etiqueta": zod.string().min(1).max(listChoferesResponseTelefonosItemEtiquetaMax).optional().describe('Etiqueta opcional recortada; omitir si está vacía.')
++})).min(1).describe('Teléfonos ordenados; el primero es telefono. Los registros históricos sin colección se presentan con su telefono.'),
+   "activo": zod.boolean(),
+   "createdAt": zod.coerce.date(),
+   "updatedAt": zod.coerce.date()
+@@ -5177,18 +5188,38 @@ export const createChoferBodyNombreCompletoMax = 160;
+ 
+ export const createChoferBodyTelefonoMax = 32;
+ 
++export const createChoferBodyTelefonosItemNumeroMax = 32;
++
++export const createChoferBodyTelefonosItemEtiquetaMax = 40;
++
++
+ export const createChoferBodyActivoDefault = true;
+ 
+ export const CreateChoferBody = zod.object({
+   "nombreCompleto": zod.string().min(1).max(createChoferBodyNombreCompletoMax),
+   "telefono": zod.string().min(1).max(createChoferBodyTelefonoMax),
++  "telefonos": zod.array(zod.object({
++  "numero": zod.string().min(1).max(createChoferBodyTelefonosItemNumeroMax).describe('Texto recortado; conserva prefijos, ceros y formato.'),
++  "etiqueta": zod.string().min(1).max(createChoferBodyTelefonosItemEtiquetaMax).optional().describe('Etiqueta opcional recortada; omitir si está vacía.')
++})).min(1).optional().describe('Opcional para clientes anteriores; si se envía, el primer numero debe coincidir con telefono tras recortar espacios.'),
+   "activo": zod.boolean().default(createChoferBodyActivoDefault)
+ })
+ 
++export const createChoferResponseTelefonosItemNumeroMax = 32;
++
++export const createChoferResponseTelefonosItemEtiquetaMax = 40;
++
++
++
++
+ export const CreateChoferResponse = zod.object({
+   "id": zod.number(),
+   "nombreCompleto": zod.string(),
+   "telefono": zod.string(),
++  "telefonos": zod.array(zod.object({
++  "numero": zod.string().min(1).max(createChoferResponseTelefonosItemNumeroMax).describe('Texto recortado; conserva prefijos, ceros y formato.'),
++  "etiqueta": zod.string().min(1).max(createChoferResponseTelefonosItemEtiquetaMax).optional().describe('Etiqueta opcional recortada; omitir si está vacía.')
++})).min(1).describe('Teléfonos ordenados; el primero es telefono. Los registros históricos sin colección se presentan con su telefono.'),
+   "activo": zod.boolean(),
+   "createdAt": zod.coerce.date(),
+   "updatedAt": zod.coerce.date()
+@@ -5205,10 +5236,21 @@ export const GetChoferParams = zod.object({
+   "id": zod.coerce.number().min(1)
+ })
+ 
++export const getChoferResponseTelefonosItemNumeroMax = 32;
++
++export const getChoferResponseTelefonosItemEtiquetaMax = 40;
++
++
++
++
+ export const GetChoferResponse = zod.object({
+   "id": zod.number(),
+   "nombreCompleto": zod.string(),
+   "telefono": zod.string(),
++  "telefonos": zod.array(zod.object({
++  "numero": zod.string().min(1).max(getChoferResponseTelefonosItemNumeroMax).describe('Texto recortado; conserva prefijos, ceros y formato.'),
++  "etiqueta": zod.string().min(1).max(getChoferResponseTelefonosItemEtiquetaMax).optional().describe('Etiqueta opcional recortada; omitir si está vacía.')
++})).min(1).describe('Teléfonos ordenados; el primero es telefono. Los registros históricos sin colección se presentan con su telefono.'),
+   "activo": zod.boolean(),
+   "createdAt": zod.coerce.date(),
+   "updatedAt": zod.coerce.date()
+@@ -5229,18 +5271,38 @@ export const updateChoferBodyNombreCompletoMax = 160;
+ 
+ export const updateChoferBodyTelefonoMax = 32;
+ 
++export const updateChoferBodyTelefonosItemNumeroMax = 32;
++
++export const updateChoferBodyTelefonosItemEtiquetaMax = 40;
++
++
+ 
+ 
+ export const UpdateChoferBody = zod.object({
+   "nombreCompleto": zod.string().min(1).max(updateChoferBodyNombreCompletoMax).optional(),
+   "telefono": zod.string().min(1).max(updateChoferBodyTelefonoMax).optional(),
++  "telefonos": zod.array(zod.object({
++  "numero": zod.string().min(1).max(updateChoferBodyTelefonosItemNumeroMax).describe('Texto recortado; conserva prefijos, ceros y formato.'),
++  "etiqueta": zod.string().min(1).max(updateChoferBodyTelefonosItemEtiquetaMax).optional().describe('Etiqueta opcional recortada; omitir si está vacía.')
++})).min(1).optional().describe('Reemplaza la colección y su principal. Si también se envía telefono, debe coincidir con el primer numero. Solo telefono actualiza el principal conservando etiqueta y adicionales; omitir ambos conserva todo.'),
+   "activo": zod.boolean().optional()
+ })
+ 
++export const updateChoferResponseTelefonosItemNumeroMax = 32;
++
++export const updateChoferResponseTelefonosItemEtiquetaMax = 40;
++
++
++
++
+ export const UpdateChoferResponse = zod.object({
+   "id": zod.number(),
+   "nombreCompleto": zod.string(),
+   "telefono": zod.string(),
++  "telefonos": zod.array(zod.object({
++  "numero": zod.string().min(1).max(updateChoferResponseTelefonosItemNumeroMax).describe('Texto recortado; conserva prefijos, ceros y formato.'),
++  "etiqueta": zod.string().min(1).max(updateChoferResponseTelefonosItemEtiquetaMax).optional().describe('Etiqueta opcional recortada; omitir si está vacía.')
++})).min(1).describe('Teléfonos ordenados; el primero es telefono. Los registros históricos sin colección se presentan con su telefono.'),
+   "activo": zod.boolean(),
+   "createdAt": zod.coerce.date(),
+   "updatedAt": zod.coerce.date()
+@@ -17658,6 +17720,11 @@ export const GetAuditoriaResponse = zod.object({
+ /**
+  * @summary Catálogo activo de transporte para crear viajes
+  */
++export const getViajesOperationalCatalogResponseChoferesItemTelefonosItemNumeroMax = 32;
++
++export const getViajesOperationalCatalogResponseChoferesItemTelefonosItemEtiquetaMax = 40;
++
++
+ export const getViajesOperationalCatalogResponseUbicacionesItemInicialesRegExp = new RegExp('^[A-Z]{2,3}$');
+ 
+ 
+@@ -17677,6 +17744,10 @@ export const GetViajesOperationalCatalogResponse = zod.object({
+   "id": zod.number(),
+   "nombreCompleto": zod.string(),
+   "telefono": zod.string(),
++  "telefonos": zod.array(zod.object({
++  "numero": zod.string().min(1).max(getViajesOperationalCatalogResponseChoferesItemTelefonosItemNumeroMax).describe('Texto recortado; conserva prefijos, ceros y formato.'),
++  "etiqueta": zod.string().min(1).max(getViajesOperationalCatalogResponseChoferesItemTelefonosItemEtiquetaMax).optional().describe('Etiqueta opcional recortada; omitir si está vacía.')
++})).min(1).describe('Teléfonos ordenados; el primero es telefono. Los registros históricos sin colección se presentan con su telefono.'),
+   "activo": zod.boolean(),
+   "createdAt": zod.coerce.date(),
+   "updatedAt": zod.coerce.date()
+diff --git a/lib/api-zod/src/generated/types/chofer.ts b/lib/api-zod/src/generated/types/chofer.ts
+index 1ce97e321d45860bfd735fe10792bab60a2aab66..249b0cbd218aa36b3db6e3729e66e13931bad26a 100644
+--- a/lib/api-zod/src/generated/types/chofer.ts
++++ b/lib/api-zod/src/generated/types/chofer.ts
+@@ -5,11 +5,17 @@
+  * API para el sistema interno de Mariana Textil.
+  * OpenAPI spec version: 0.1.0
+  */
++import type { ChoferTelefono } from './choferTelefono';
+ 
+ export interface Chofer {
+   id: number;
+   nombreCompleto: string;
+   telefono: string;
++  /**
++     * Teléfonos ordenados; el primero es telefono. Los registros históricos sin colección se presentan con su telefono.
++     * @minItems 1
++     */
++  telefonos: ChoferTelefono[];
+   activo: boolean;
+   createdAt: Date;
+   updatedAt: Date;
+diff --git a/lib/api-zod/src/generated/types/choferInput.ts b/lib/api-zod/src/generated/types/choferInput.ts
+index afefba6b2ab3ea9016d36d9ce4567abbcef5f745..672c61e927762e3d02bdec7d95886542dcff3f4a 100644
+--- a/lib/api-zod/src/generated/types/choferInput.ts
++++ b/lib/api-zod/src/generated/types/choferInput.ts
+@@ -5,6 +5,7 @@
+  * API para el sistema interno de Mariana Textil.
+  * OpenAPI spec version: 0.1.0
+  */
++import type { ChoferTelefono } from './choferTelefono';
+ 
+ export interface ChoferInput {
+   /**
+@@ -17,5 +18,10 @@ export interface ChoferInput {
+      * @maxLength 32
+      */
+   telefono: string;
++  /**
++     * Opcional para clientes anteriores; si se envía, el primer numero debe coincidir con telefono tras recortar espacios.
++     * @minItems 1
++     */
++  telefonos?: ChoferTelefono[];
+   activo?: boolean;
+ }
+diff --git a/lib/api-zod/src/generated/types/choferUpdate.ts b/lib/api-zod/src/generated/types/choferUpdate.ts
+index 140ee6ada30bfd3aab2850c49168ba4daa68d43c..f9289e26867e20e7091ac200093b7b8840604075 100644
+--- a/lib/api-zod/src/generated/types/choferUpdate.ts
++++ b/lib/api-zod/src/generated/types/choferUpdate.ts
+@@ -5,6 +5,7 @@
+  * API para el sistema interno de Mariana Textil.
+  * OpenAPI spec version: 0.1.0
+  */
++import type { ChoferTelefono } from './choferTelefono';
+ 
+ export interface ChoferUpdate {
+   /**
+@@ -17,5 +18,10 @@ export interface ChoferUpdate {
+      * @maxLength 32
+      */
+   telefono?: string;
++  /**
++     * Reemplaza la colección y su principal. Si también se envía telefono, debe coincidir con el primer numero. Solo telefono actualiza el principal conservando etiqueta y adicionales; omitir ambos conserva todo.
++     * @minItems 1
++     */
++  telefonos?: ChoferTelefono[];
+   activo?: boolean;
+ }
+diff --git a/lib/api-zod/src/generated/types/index.ts b/lib/api-zod/src/generated/types/index.ts
+index 0db7644c7b44c135b38e3d0a2f8b3dcdcda95846..eae721800f998cd7b633c574700ae976cbf0192f 100644
+--- a/lib/api-zod/src/generated/types/index.ts
++++ b/lib/api-zod/src/generated/types/index.ts
+@@ -168,6 +168,7 @@ export * from './catalogosEntrada';
+ export * from './chofer';
+ export * from './choferInput';
+ export * from './choferUpdate';
++export * from './choferTelefono';
+ export * from './cliente';
+ export * from './clienteAjusteInput';
+ export * from './clienteAnalitica';
+diff --git a/lib/db/src/lib/choferes-schema.ts b/lib/db/src/lib/choferes-schema.ts
+index f842cbcac9e027bb09d17fa996eb0569cdc51e80..6fbe0e025fb5f15275b8542e234962718f56c821 100644
+--- a/lib/db/src/lib/choferes-schema.ts
++++ b/lib/db/src/lib/choferes-schema.ts
+@@ -14,10 +14,12 @@ export async function ensureChoferesSchema(
+         id serial PRIMARY KEY,
+         nombre_completo text NOT NULL,
+         telefono text NOT NULL,
++        telefonos jsonb,
+         activo boolean NOT NULL DEFAULT true,
+         created_at timestamptz NOT NULL DEFAULT now(),
+         updated_at timestamptz NOT NULL DEFAULT now()
+       );
++      ALTER TABLE choferes ADD COLUMN IF NOT EXISTS telefonos jsonb;
+       CREATE INDEX IF NOT EXISTS choferes_activo_idx ON choferes (activo);
+       CREATE INDEX IF NOT EXISTS choferes_nombre_completo_idx ON choferes (nombre_completo);
+     `);
+diff --git a/lib/db/src/schema/choferes.ts b/lib/db/src/schema/choferes.ts
+index ce8cd3e68cf82506969bfc2c152066bcdd746ac2..634c0c6e352bfd492b2c4830b7345d2d9e13c934 100644
+--- a/lib/db/src/schema/choferes.ts
++++ b/lib/db/src/schema/choferes.ts
+@@ -1,10 +1,11 @@
+-import { boolean, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
++import { boolean, jsonb, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+ 
+ /** Historical transport-driver catalog. Records are never deleted. */
+ export const choferesTable = pgTable("choferes", {
+   id: serial("id").primaryKey(),
+   nombreCompleto: text("nombre_completo").notNull(),
+   telefono: text("telefono").notNull(),
++  telefonos: jsonb("telefonos").$type<{ numero: string; etiqueta?: string }[]>(),
+   activo: boolean("activo").notNull().default(true),
+   createdAt: timestamp("created_at", { withTimezone: true })
+     .notNull()

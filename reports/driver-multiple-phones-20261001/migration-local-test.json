@@ -1,0 +1,77 @@
+{
+  "status": "COMMITTED",
+  "identity": {
+    "database": "driver_phones_disposable",
+    "schema": "public",
+    "recovery": false
+  },
+  "action": "ALTER TABLE public.choferes ADD COLUMN telefonos jsonb",
+  "beforeColumn": [],
+  "afterColumn": [
+    {
+      "name": "telefonos",
+      "type": "jsonb",
+      "not_null": false,
+      "has_default": false,
+      "identity": "",
+      "generated": ""
+    }
+  ],
+  "persistedColumn": [
+    {
+      "name": "telefonos",
+      "type": "jsonb",
+      "not_null": false,
+      "has_default": false,
+      "identity": "",
+      "generated": ""
+    }
+  ],
+  "before": [
+    {
+      "schema": "public",
+      "name": "choferes",
+      "rows": "3",
+      "sha256": "869b8981523d737bb3e213f5a088c0c8397af41e3b7ed77ed34568e51a849c26"
+    }
+  ],
+  "after": [
+    {
+      "schema": "public",
+      "name": "choferes",
+      "rows": "3",
+      "sha256": "869b8981523d737bb3e213f5a088c0c8397af41e3b7ed77ed34568e51a849c26"
+    }
+  ],
+  "legacyBefore": {
+    "rows": "3",
+    "legacy_phone_and_timestamps_sha256": "7e983b5e31c4aa8642d4908735b364dbf142f6c6051fd68fcc9eccd40e24b098",
+    "tuple_identity_sha256": "876dfd10833a1e6ef5405ab1c4336a9e7a0b37c7ea5b2e4c797acb94fc39f4b8",
+    "relation_filenode": "16386"
+  },
+  "legacyAfter": {
+    "rows": "3",
+    "legacy_phone_and_timestamps_sha256": "7e983b5e31c4aa8642d4908735b364dbf142f6c6051fd68fcc9eccd40e24b098",
+    "tuple_identity_sha256": "876dfd10833a1e6ef5405ab1c4336a9e7a0b37c7ea5b2e4c797acb94fc39f4b8",
+    "relation_filenode": "16386"
+  },
+  "schemaBefore": "6ddedbbb68cdcb725c2e3bda463f4b6709b360b8dc6e314df6e081cda3f66e5b",
+  "schemaAfter": "6ddedbbb68cdcb725c2e3bda463f4b6709b360b8dc6e314df6e081cda3f66e5b",
+  "allExistingRowsAndValuesUnchanged": true,
+  "legacyPhonesAndTimestampsUnchanged": true,
+  "targetTupleIdentitiesUnchanged": true,
+  "targetTableNotRewritten": true,
+  "otherTablesUnchangedInTransactionSnapshot": true,
+  "populatedTelefonosRows": "0",
+  "backfill": false,
+  "dml": false,
+  "lockTimeout": "5s",
+  "legacyColumnReadCompatible": true,
+  "comparisonScope": "One repeatable-read transaction; choferes access-exclusive locked. Other-table concurrent application writes outside this snapshot are not excluded.",
+  "mode": "unix-socket-only-disposable-postgresql",
+  "scriptSha256": "1eeab67acb73b95a9375374ea9443d8639cda951a4df83223ce748aa45cc504f",
+  "idempotencePassed": true,
+  "legacyInsertUpdateCompatible": true,
+  "mismatchedDefaultRejected": true,
+  "disposableRemoved": true
+}

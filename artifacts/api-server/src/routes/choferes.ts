@@ -6,6 +6,7 @@ import {
   type Response,
 } from "express";
 import { eq } from "drizzle-orm";
+import { z } from "zod";
 import {
   CreateChoferBody,
   GetChoferParams,
@@ -24,11 +25,37 @@ export function normalizeChoferText(value: string): string {
   return value.trim();
 }
 
-function presentChofer(row: typeof choferesTable.$inferSelect) {
+const phoneNumber = z.string().trim().min(1).max(32);
+const phoneList = z.array(z.object({
+  numero: phoneNumber,
+  etiqueta: z.string().trim().min(1).max(40).optional(),
+})).min(1);
+// Trim before validating length. Never coerce numbers (leading zeros matter).
+const phoneFields = {
+  telefono: phoneNumber,
+  telefonos: phoneList.optional(),
+};
+const consistentPhones = (data: {
+  telefono?: string;
+  telefonos?: { numero: string; etiqueta?: string }[];
+}) => data.telefono === undefined || data.telefonos === undefined ||
+  data.telefono === data.telefonos[0]?.numero;
+const createBody = CreateChoferBody.extend(phoneFields).refine(consistentPhones, {
+  message: "telefono debe coincidir con el primer numero de telefonos.",
+});
+const updateBody = UpdateChoferBody.extend({
+  ...phoneFields,
+  telefono: phoneNumber.optional(),
+}).refine(consistentPhones, {
+  message: "telefono debe coincidir con el primer numero de telefonos.",
+});
+
+export function presentChofer(row: typeof choferesTable.$inferSelect) {
   return {
     id: row.id,
     nombreCompleto: row.nombreCompleto,
     telefono: row.telefono,
+    telefonos: row.telefonos ?? [{ numero: row.telefono }],
     activo: row.activo,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
@@ -84,7 +111,7 @@ router.post(
   ...requiereGestorChoferes("crear"),
   async (req, res, next): Promise<void> => {
     try {
-      const parsed = CreateChoferBody.safeParse(req.body);
+      const parsed = createBody.safeParse(req.body);
       const nombreCompleto = parsed.success
         ? normalizeChoferText(parsed.data.nombreCompleto)
         : "";
@@ -102,6 +129,7 @@ router.post(
             ...parsed.data,
             nombreCompleto,
             telefono,
+            telefonos: parsed.data.telefonos ?? [{ numero: telefono }],
           })
           .returning();
         await tx.insert(auditoriaTable).values({
@@ -154,7 +182,7 @@ router.patch(
   async (req, res, next): Promise<void> => {
     try {
       const id = UpdateChoferParams.safeParse(req.params);
-      const parsed = UpdateChoferBody.safeParse(req.body);
+      const parsed = updateBody.safeParse(req.body);
       const nombreCompleto =
         parsed.success && parsed.data.nombreCompleto !== undefined
           ? normalizeChoferText(parsed.data.nombreCompleto)
@@ -178,14 +206,24 @@ router.patch(
           .select()
           .from(choferesTable)
           .where(eq(choferesTable.id, id.data.id))
-          .limit(1);
+          .limit(1)
+          .for("update");
         if (!before) throw new Error("NOT_FOUND");
+        // Resolve legacy writes only after acquiring the row lock, so another
+        // writer's extra phones/label cannot be lost to a stale read.
+        const telefonos = parsed.data.telefonos ?? (
+          telefono === undefined ? undefined : [
+            { ...presentChofer(before).telefonos[0]!, numero: telefono },
+            ...presentChofer(before).telefonos.slice(1),
+          ]
+        );
         const [row] = await tx
           .update(choferesTable)
           .set({
             ...parsed.data,
             nombreCompleto,
-            telefono,
+            telefono: telefonos?.[0]?.numero,
+            telefonos,
             updatedAt: new Date(),
           })
           .where(eq(choferesTable.id, id.data.id))

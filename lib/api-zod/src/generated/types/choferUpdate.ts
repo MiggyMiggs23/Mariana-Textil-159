@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { ChoferTelefono } from './choferTelefono';
 
 export interface ChoferUpdate {
   /**
@@ -17,5 +18,10 @@ export interface ChoferUpdate {
      * @maxLength 32
      */
   telefono?: string;
+  /**
+     * Reemplaza la colección y su principal. Si también se envía telefono, debe coincidir con el primer numero. Solo telefono actualiza el principal conservando etiqueta y adicionales; omitir ambos conserva todo.
+     * @minItems 1
+     */
+  telefonos?: ChoferTelefono[];
   activo?: boolean;
 }

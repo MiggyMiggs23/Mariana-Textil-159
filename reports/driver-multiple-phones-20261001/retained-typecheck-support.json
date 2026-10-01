@@ -1,0 +1,14 @@
+[
+  {
+    "file": "reports/e7/frontend-document-bytes.json",
+    "source": "reports/floor-level-and-letter-20260926/combined-frozen-root/reports/e7/frontend-document-bytes.json",
+    "sha256": "39390b2bd4a6a5e6b85cdcad41743588e7618a66312123422aa5cd2dfef7d0d0",
+    "runtime": false
+  },
+  {
+    "file": "reports/e7/frontend-fixtures.ts",
+    "source": "reports/floor-level-and-letter-20260926/combined-frozen-root/reports/e7/frontend-fixtures.ts",
+    "sha256": "7aee6e4beb52c49e447fa98ee6a0c2798342f24a6f00e3ec2cae1fd3d6fb52f8",
+    "runtime": false
+  }
+]

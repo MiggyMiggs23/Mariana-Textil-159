@@ -1,0 +1,6 @@
+{
+  "status": "BUILT_TYPECHECKED_NOT_ACTIVATED",
+  "api": "artifacts/api-server/dist-driver-phones-20261001",
+  "frontend": "artifacts/mariana-textil/dist-driver-phones-20261001",
+  "frozen": "reports/driver-multiple-phones-20261001/frozen-root"
+}

@@ -10,7 +10,7 @@ name = "API Server"
 paths = ["/api"]
 
 [services.development]
-run = "cd /home/runner/workspace && sha256sum -c reports/floor-level-and-letter-20260926/api.sha256 && API_STARTUP_MODE=NORMAL API_INSPECTION_BOOT=1 NODE_ENV=development exec node artifacts/api-server/dist-floor-level-letter-20260926/index.mjs"
+run = "cd /home/runner/workspace && sha256sum -c reports/driver-multiple-phones-20261001/api.sha256 && API_STARTUP_MODE=NORMAL API_INSPECTION_BOOT=1 NODE_ENV=development exec node artifacts/api-server/dist-driver-phones-20261001/index.mjs"
 
 [services.development.env]
 API_STARTUP_MODE = "NORMAL"

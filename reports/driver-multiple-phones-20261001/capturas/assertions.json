@@ -1,0 +1,169 @@
+{
+  "description": "Frozen candidate UI against a synthetic stateful loopback API; no real database or authentication.",
+  "dist": "/home/runner/workspace/artifacts/mariana-textil/dist-driver-phones-20261001",
+  "screenshot": "capturas/ficha-varios-telefonos.png",
+  "fixture": {
+    "id": 1,
+    "nombreCompleto": "Chofer de prueba",
+    "telefono": "5550100001",
+    "activo": true,
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-01-01T00:00:00Z"
+  },
+  "writes": [
+    {
+      "method": "PATCH",
+      "path": "/api/choferes/1",
+      "data": {
+        "nombreCompleto": "Chofer de prueba",
+        "telefonos": [
+          {
+            "numero": "5550100001"
+          },
+          {
+            "numero": "5550100002",
+            "etiqueta": "Personal"
+          },
+          {
+            "numero": "5550100003",
+            "etiqueta": "Trabajo"
+          },
+          {
+            "numero": "5550100004",
+            "etiqueta": "Casa"
+          },
+          {
+            "numero": "5550100005",
+            "etiqueta": "Emergencia"
+          }
+        ],
+        "activo": true,
+        "telefono": "5550100001"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/choferes/1",
+      "data": {
+        "nombreCompleto": "Chofer de prueba",
+        "telefonos": [
+          {
+            "numero": "5550100002",
+            "etiqueta": "Personal"
+          },
+          {
+            "numero": "5550100003",
+            "etiqueta": "Trabajo"
+          },
+          {
+            "numero": "5550100004",
+            "etiqueta": "Casa"
+          },
+          {
+            "numero": "5550100005",
+            "etiqueta": "Emergencia"
+          }
+        ],
+        "activo": true,
+        "telefono": "5550100002"
+      }
+    }
+  ],
+  "persistedFinalState": {
+    "id": 1,
+    "nombreCompleto": "Chofer de prueba",
+    "telefono": "5550100002",
+    "activo": true,
+    "createdAt": "2026-01-01T00:00:00Z",
+    "updatedAt": "2026-10-01T00:00:00Z",
+    "telefonos": [
+      {
+        "numero": "5550100002",
+        "etiqueta": "Personal"
+      },
+      {
+        "numero": "5550100003",
+        "etiqueta": "Trabajo"
+      },
+      {
+        "numero": "5550100004",
+        "etiqueta": "Casa"
+      },
+      {
+        "numero": "5550100005",
+        "etiqueta": "Emergencia"
+      }
+    ]
+  },
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/api/auth/me"
+    },
+    {
+      "method": "GET",
+      "path": "/api/e11/disponibilidad"
+    },
+    {
+      "method": "GET",
+      "path": "/api/e11/identidad"
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/test-reset"
+    },
+    {
+      "method": "GET",
+      "path": "/api/notificaciones/feed"
+    },
+    {
+      "method": "GET",
+      "path": "/api/notificaciones"
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me"
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes"
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventario/entradas/pendientes-costo/count"
+    },
+    {
+      "method": "GET",
+      "path": "/api/etiquetas/alertas/count"
+    },
+    {
+      "method": "GET",
+      "path": "/api/choferes"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/choferes/1"
+    },
+    {
+      "method": "GET",
+      "path": "/api/choferes"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/choferes/1"
+    },
+    {
+      "method": "GET",
+      "path": "/api/choferes"
+    }
+  ],
+  "unexpected": [],
+  "assertions": [
+    "Legacy one-phone fixture opened in edit; four labeled phones added for five total.",
+    "PATCH used 5550100001 as telefono and sent the ordered complete telefonos array.",
+    "Mock API persisted PATCH response; reopening displayed all five numbers.",
+    "Searching secondary number 5550100005 retained the driver result; directory showed primary number only.",
+    "Removing primary promoted 5550100002 with Personal label; PATCH contained all four remaining entries and exact new telefono.",
+    "Reopened ficha retained promoted principal and all remaining labels."
+  ]
+}

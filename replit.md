@@ -1,4 +1,8 @@
-### Versión activa: resumen «Varias» en Inventario (01/10/2026)
+### Versión activa: varios teléfonos por chofer (01/10/2026)
+
+API y frontend activos: `dist-driver-phones-20261001`, con guardas y evidencia en `reports/driver-multiple-phones-20261001/`. Lista ordenada de teléfonos con etiqueta opcional; primero principal compatible con consumidores anteriores, búsqueda por cualquiera. Los teléfonos heredados se conservan sin backfill. Migración aditiva nullable comprobada sin cambiar filas existentes. Otros directorios no modificados. Builds congelados conservan cambios anteriores; typechecks y pruebas de UI/HTTP/PostgreSQL pasaron. Captura de ficha con datos sintéticos explícitos; no se afirma recorrido autenticado contra datos reales. Sin publicación externa.
+
+### Versión anterior: resumen «Varias» en Inventario (01/10/2026)
 
 Frontend activo: `dist-inventory-varias-20260926`, guardas en `reports/inventory-varias-20260926/frontend.sha256`. Único cambio de producción frente a la versión anterior: el resumen de más de una ubicación dice «Varias», tanto en producto como en color. Una ubicación y los desgloses conservan su comportamiento. API sin cambios: `dist-floor-level-letter-20260926`. Ocho pruebas enfocadas y capturas del componente real con fixtures identificados aprobadas; sin cambios de datos ni publicación externa.
 

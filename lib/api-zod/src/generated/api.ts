@@ -5159,10 +5159,21 @@ export const ListChoferesQueryParams = zod.object({
   "activo": zod.enum(['true', 'false', 'all']).default(listChoferesQueryActivoDefault).describe('all incluye registros activos e inactivos.')
 })
 
+export const listChoferesResponseTelefonosItemNumeroMax = 32;
+
+export const listChoferesResponseTelefonosItemEtiquetaMax = 40;
+
+
+
+
 export const ListChoferesResponseItem = zod.object({
   "id": zod.number(),
   "nombreCompleto": zod.string(),
   "telefono": zod.string(),
+  "telefonos": zod.array(zod.object({
+  "numero": zod.string().min(1).max(listChoferesResponseTelefonosItemNumeroMax).describe('Texto recortado; conserva prefijos, ceros y formato.'),
+  "etiqueta": zod.string().min(1).max(listChoferesResponseTelefonosItemEtiquetaMax).optional().describe('Etiqueta opcional recortada; omitir si está vacía.')
+})).min(1).describe('Teléfonos ordenados; el primero es telefono. Los registros históricos sin colección se presentan con su telefono.'),
   "activo": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -5177,18 +5188,38 @@ export const createChoferBodyNombreCompletoMax = 160;
 
 export const createChoferBodyTelefonoMax = 32;
 
+export const createChoferBodyTelefonosItemNumeroMax = 32;
+
+export const createChoferBodyTelefonosItemEtiquetaMax = 40;
+
+
 export const createChoferBodyActivoDefault = true;
 
 export const CreateChoferBody = zod.object({
   "nombreCompleto": zod.string().min(1).max(createChoferBodyNombreCompletoMax),
   "telefono": zod.string().min(1).max(createChoferBodyTelefonoMax),
+  "telefonos": zod.array(zod.object({
+  "numero": zod.string().min(1).max(createChoferBodyTelefonosItemNumeroMax).describe('Texto recortado; conserva prefijos, ceros y formato.'),
+  "etiqueta": zod.string().min(1).max(createChoferBodyTelefonosItemEtiquetaMax).optional().describe('Etiqueta opcional recortada; omitir si está vacía.')
+})).min(1).optional().describe('Opcional para clientes anteriores; si se envía, el primer numero debe coincidir con telefono tras recortar espacios.'),
   "activo": zod.boolean().default(createChoferBodyActivoDefault)
 })
+
+export const createChoferResponseTelefonosItemNumeroMax = 32;
+
+export const createChoferResponseTelefonosItemEtiquetaMax = 40;
+
+
+
 
 export const CreateChoferResponse = zod.object({
   "id": zod.number(),
   "nombreCompleto": zod.string(),
   "telefono": zod.string(),
+  "telefonos": zod.array(zod.object({
+  "numero": zod.string().min(1).max(createChoferResponseTelefonosItemNumeroMax).describe('Texto recortado; conserva prefijos, ceros y formato.'),
+  "etiqueta": zod.string().min(1).max(createChoferResponseTelefonosItemEtiquetaMax).optional().describe('Etiqueta opcional recortada; omitir si está vacía.')
+})).min(1).describe('Teléfonos ordenados; el primero es telefono. Los registros históricos sin colección se presentan con su telefono.'),
   "activo": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -5205,10 +5236,21 @@ export const GetChoferParams = zod.object({
   "id": zod.coerce.number().min(1)
 })
 
+export const getChoferResponseTelefonosItemNumeroMax = 32;
+
+export const getChoferResponseTelefonosItemEtiquetaMax = 40;
+
+
+
+
 export const GetChoferResponse = zod.object({
   "id": zod.number(),
   "nombreCompleto": zod.string(),
   "telefono": zod.string(),
+  "telefonos": zod.array(zod.object({
+  "numero": zod.string().min(1).max(getChoferResponseTelefonosItemNumeroMax).describe('Texto recortado; conserva prefijos, ceros y formato.'),
+  "etiqueta": zod.string().min(1).max(getChoferResponseTelefonosItemEtiquetaMax).optional().describe('Etiqueta opcional recortada; omitir si está vacía.')
+})).min(1).describe('Teléfonos ordenados; el primero es telefono. Los registros históricos sin colección se presentan con su telefono.'),
   "activo": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -5229,18 +5271,38 @@ export const updateChoferBodyNombreCompletoMax = 160;
 
 export const updateChoferBodyTelefonoMax = 32;
 
+export const updateChoferBodyTelefonosItemNumeroMax = 32;
+
+export const updateChoferBodyTelefonosItemEtiquetaMax = 40;
+
+
 
 
 export const UpdateChoferBody = zod.object({
   "nombreCompleto": zod.string().min(1).max(updateChoferBodyNombreCompletoMax).optional(),
   "telefono": zod.string().min(1).max(updateChoferBodyTelefonoMax).optional(),
+  "telefonos": zod.array(zod.object({
+  "numero": zod.string().min(1).max(updateChoferBodyTelefonosItemNumeroMax).describe('Texto recortado; conserva prefijos, ceros y formato.'),
+  "etiqueta": zod.string().min(1).max(updateChoferBodyTelefonosItemEtiquetaMax).optional().describe('Etiqueta opcional recortada; omitir si está vacía.')
+})).min(1).optional().describe('Reemplaza la colección y su principal. Si también se envía telefono, debe coincidir con el primer numero. Solo telefono actualiza el principal conservando etiqueta y adicionales; omitir ambos conserva todo.'),
   "activo": zod.boolean().optional()
 })
+
+export const updateChoferResponseTelefonosItemNumeroMax = 32;
+
+export const updateChoferResponseTelefonosItemEtiquetaMax = 40;
+
+
+
 
 export const UpdateChoferResponse = zod.object({
   "id": zod.number(),
   "nombreCompleto": zod.string(),
   "telefono": zod.string(),
+  "telefonos": zod.array(zod.object({
+  "numero": zod.string().min(1).max(updateChoferResponseTelefonosItemNumeroMax).describe('Texto recortado; conserva prefijos, ceros y formato.'),
+  "etiqueta": zod.string().min(1).max(updateChoferResponseTelefonosItemEtiquetaMax).optional().describe('Etiqueta opcional recortada; omitir si está vacía.')
+})).min(1).describe('Teléfonos ordenados; el primero es telefono. Los registros históricos sin colección se presentan con su telefono.'),
   "activo": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -17658,6 +17720,11 @@ export const GetAuditoriaResponse = zod.object({
 /**
  * @summary Catálogo activo de transporte para crear viajes
  */
+export const getViajesOperationalCatalogResponseChoferesItemTelefonosItemNumeroMax = 32;
+
+export const getViajesOperationalCatalogResponseChoferesItemTelefonosItemEtiquetaMax = 40;
+
+
 export const getViajesOperationalCatalogResponseUbicacionesItemInicialesRegExp = new RegExp('^[A-Z]{2,3}$');
 
 
@@ -17677,6 +17744,10 @@ export const GetViajesOperationalCatalogResponse = zod.object({
   "id": zod.number(),
   "nombreCompleto": zod.string(),
   "telefono": zod.string(),
+  "telefonos": zod.array(zod.object({
+  "numero": zod.string().min(1).max(getViajesOperationalCatalogResponseChoferesItemTelefonosItemNumeroMax).describe('Texto recortado; conserva prefijos, ceros y formato.'),
+  "etiqueta": zod.string().min(1).max(getViajesOperationalCatalogResponseChoferesItemTelefonosItemEtiquetaMax).optional().describe('Etiqueta opcional recortada; omitir si está vacía.')
+})).min(1).describe('Teléfonos ordenados; el primero es telefono. Los registros históricos sin colección se presentan con su telefono.'),
   "activo": zod.boolean(),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()

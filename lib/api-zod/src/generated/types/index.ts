@@ -168,6 +168,7 @@ export * from './catalogosEntrada';
 export * from './chofer';
 export * from './choferInput';
 export * from './choferUpdate';
+export * from './choferTelefono';
 export * from './cliente';
 export * from './clienteAjusteInput';
 export * from './clienteAnalitica';

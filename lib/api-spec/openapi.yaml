@@ -11431,13 +11431,24 @@ components:
         modelo: { type: ["string", "null"], maxLength: 80 }
         tipo: { type: string, enum: [PROPIA, CONTRATADA] }
         activa: { type: boolean }
+    ChoferTelefono:
+      type: object
+      required: [numero]
+      properties:
+        numero: { type: string, minLength: 1, maxLength: 32, description: "Texto recortado; conserva prefijos, ceros y formato." }
+        etiqueta: { type: string, minLength: 1, maxLength: 40, description: "Etiqueta opcional recortada; omitir si está vacía." }
     Chofer:
       type: object
-      required: [id, nombreCompleto, telefono, activo, createdAt, updatedAt]
+      required: [id, nombreCompleto, telefono, telefonos, activo, createdAt, updatedAt]
       properties:
         id: { type: number }
         nombreCompleto: { type: string }
         telefono: { type: string }
+        telefonos:
+          type: array
+          minItems: 1
+          description: "Teléfonos ordenados; el primero es telefono. Los registros históricos sin colección se presentan con su telefono."
+          items: { $ref: "#/components/schemas/ChoferTelefono" }
         activo: { type: boolean }
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
@@ -11447,6 +11458,11 @@ components:
       properties:
         nombreCompleto: { type: string, minLength: 1, maxLength: 160 }
         telefono: { type: string, minLength: 1, maxLength: 32 }
+        telefonos:
+          type: array
+          minItems: 1
+          description: "Opcional para clientes anteriores; si se envía, el primer numero debe coincidir con telefono tras recortar espacios."
+          items: { $ref: "#/components/schemas/ChoferTelefono" }
         activo: { type: boolean, default: true }
     ChoferUpdate:
       type: object
@@ -11454,6 +11470,11 @@ components:
       properties:
         nombreCompleto: { type: string, minLength: 1, maxLength: 160 }
         telefono: { type: string, minLength: 1, maxLength: 32 }
+        telefonos:
+          type: array
+          minItems: 1
+          description: "Reemplaza la colección y su principal. Si también se envía telefono, debe coincidir con el primer numero. Solo telefono actualiza el principal conservando etiqueta y adicionales; omitir ambos conserva todo."
+          items: { $ref: "#/components/schemas/ChoferTelefono" }
         activo: { type: boolean }
     Role:
       type: string

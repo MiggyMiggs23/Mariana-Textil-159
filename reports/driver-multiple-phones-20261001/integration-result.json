@@ -1,0 +1,14 @@
+{
+  "suite": "artifacts/api-server/src/routes/choferes.integration.test.ts",
+  "sourceSha256": "b3e89a1f396fb4fa43d0a8560acfef02f216db59ecbf3f13b55415e3f296aecc",
+  "liveDatabaseAccess": false,
+  "passed": true,
+  "cleanupPassed": true,
+  "targetControlIdentitySha256": "e1dc4677d60e349530f695238b2fc2501d5c66a56cc59674dafa27328139273b",
+  "localUnixSocketOnly": true,
+  "emptyAuthSidecarSource": "reports/e11/01-preparado.sql:e11_perfiles",
+  "emptyAuthSidecarDefinitionSha256": "128dc64b683f5d0bd384747cc226c0067852735e3c9b8ca8b8939f70ae3dfb1d",
+  "exitCode": 0,
+  "persistedChoferCount": 3,
+  "persistedAuditCount": 8
+}

@@ -36,6 +36,10 @@ import { toast } from "sonner";
 import { Edit, Plus, Search, UserRound } from "lucide-react";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { PurgaCatalogoButton } from "@/components/purga-catalogo-button";
+import { ChoferTelefonosEditor, getTelefonosChofer, type TelefonoChofer } from "./chofer-telefonos";
+
+type ChoferConTelefonos = Omit<Chofer, "telefonos"> & { telefonos?: TelefonoChofer[] };
+type ChoferForm = Omit<ChoferInput, "telefono"> & { telefonos: TelefonoChofer[] };
 
 function getErrorMessage(error: unknown): string {
   if (typeof error !== "object" || error === null) return "Error desconocido";
@@ -61,7 +65,7 @@ export default function Choferes() {
   });
   const [search, setSearch] = useState("");
   const [estado, setEstado] = useState<"ALL" | "ACTIVE" | "INACTIVE">("ACTIVE");
-  const [editing, setEditing] = useState<Chofer | null>(null);
+  const [editing, setEditing] = useState<ChoferConTelefonos | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [statusTarget, setStatusTarget] = useState<Chofer | null>(null);
   const isCatalogManager = user?.rol === "ADMIN" || user?.rol === "SISTEMAS";
@@ -76,7 +80,7 @@ export default function Choferes() {
           (chofer) =>
             (estado === "ALL" ||
               (estado === "ACTIVE" ? chofer.activo : !chofer.activo)) &&
-            `${chofer.nombreCompleto} ${chofer.telefono}`
+            `${chofer.nombreCompleto} ${getTelefonosChofer(chofer).map(({ numero }) => numero).join(" ")}`
               .toLowerCase()
               .includes(search.toLowerCase()),
         )
@@ -92,7 +96,7 @@ export default function Choferes() {
     setEditing(null);
     setDialogOpen(true);
   };
-  const openEdit = (chofer: Chofer) => {
+  const openEdit = (chofer: ChoferConTelefonos) => {
     setEditing(chofer);
     setDialogOpen(true);
   };
@@ -191,7 +195,7 @@ export default function Choferes() {
                             <TableCell className="font-bold">
                               {chofer.nombreCompleto}
                             </TableCell>
-                            <TableCell>{chofer.telefono}</TableCell>
+                            <TableCell>{getTelefonosChofer(chofer)[0].numero}</TableCell>
                             <TableCell className="text-right">
                               <Badge
                                 variant={
@@ -243,7 +247,7 @@ export default function Choferes() {
                           <div>
                             <p className="font-bold">{chofer.nombreCompleto}</p>
                             <p className="text-sm text-muted-foreground">
-                              {chofer.telefono}
+                              {getTelefonosChofer(chofer)[0].numero}
                             </p>
                           </div>
                           <Badge
@@ -302,15 +306,15 @@ function ChoferDialog({
   onClose,
 }: {
   open: boolean;
-  chofer: Chofer | null;
+  chofer: ChoferConTelefonos | null;
   onClose: () => void;
 }) {
   const queryClient = useQueryClient();
   const create = useCreateChofer();
   const update = useUpdateChofer();
-  const [form, setForm] = useState<ChoferInput>({
+  const [form, setForm] = useState<ChoferForm>({
     nombreCompleto: "",
-    telefono: "",
+    telefonos: [{ numero: "" }],
     activo: true,
   });
   useEffect(() => {
@@ -319,21 +323,26 @@ function ChoferDialog({
         chofer
           ? {
               nombreCompleto: chofer.nombreCompleto,
-              telefono: chofer.telefono,
+              telefonos: getTelefonosChofer(chofer),
               activo: chofer.activo,
             }
-          : { nombreCompleto: "", telefono: "", activo: true },
+          : { nombreCompleto: "", telefonos: [{ numero: "" }], activo: true },
       );
   }, [open, chofer]);
   const submit = () => {
+    const telefonos = form.telefonos.map(({ numero, etiqueta }) => ({
+      numero: numero.trim(),
+      ...(etiqueta?.trim() ? { etiqueta: etiqueta.trim() } : {}),
+    }));
     const data = {
       ...form,
       nombreCompleto: form.nombreCompleto.trim(),
-      telefono: form.telefono.trim(),
+      telefono: telefonos[0]?.numero ?? "",
+      telefonos,
     };
-    if (!data.nombreCompleto || !data.telefono) {
+    if (!data.nombreCompleto || !data.telefono || telefonos.some(({ numero }) => !numero)) {
       toast.error("Datos incompletos", {
-        description: "El nombre completo y teléfono son obligatorios.",
+        description: "El nombre completo y todos los teléfonos son obligatorios. Completa o quita las filas vacías.",
       });
       return;
     }
@@ -358,7 +367,7 @@ function ChoferDialog({
   const pending = create.isPending || update.isPending;
   return (
     <Dialog open={open} onOpenChange={(value) => !value && onClose()}>
-      <DialogContent>
+      <DialogContent className="max-h-[90dvh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{chofer ? "Editar chofer" : "Nuevo chofer"}</DialogTitle>
           <DialogDescription>
@@ -369,24 +378,21 @@ function ChoferDialog({
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
-            <Label>Nombre completo *</Label>
+            <Label htmlFor="chofer-nombre">Nombre completo *</Label>
             <Input
+              id="chofer-nombre"
+              data-testid="input-chofer-nombre"
               value={form.nombreCompleto}
               onChange={(event) =>
                 setForm({ ...form, nombreCompleto: event.target.value })
               }
             />
           </div>
-          <div className="space-y-2">
-            <Label>Teléfono *</Label>
-            <Input
-              type="tel"
-              value={form.telefono}
-              onChange={(event) =>
-                setForm({ ...form, telefono: event.target.value })
-              }
-            />
-          </div>
+          <ChoferTelefonosEditor
+            telefonos={form.telefonos}
+            onChange={(telefonos) => setForm({ ...form, telefonos })}
+            disabled={pending}
+          />
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose} disabled={pending}>

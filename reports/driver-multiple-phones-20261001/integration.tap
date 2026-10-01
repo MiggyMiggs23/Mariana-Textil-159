@@ -1,0 +1,61 @@
+TAP version 13
+# Subtest: choferes HTTP integration: persisted ordered phones, legacy rows, authorization, audit and locks
+    # Subtest: legacy list/detail synthesize phones without backfill
+    ok 1 - legacy list/detail synthesize phones without backfill
+      ---
+      duration_ms: 107.852359
+      type: 'test'
+      ...
+    # Subtest: create/edit/remove primary persists collection, updates principal and records full audit
+    ok 2 - create/edit/remove primary persists collection, updates principal and records full audit
+      ---
+      duration_ms: 84.650045
+      type: 'test'
+      ...
+    # Subtest: legacy principal-only patch preserves labels/extras; absent phones preserve collection
+    ok 3 - legacy principal-only patch preserves labels/extras; absent phones preserve collection
+      ---
+      duration_ms: 66.579226
+      type: 'test'
+      ...
+    # Subtest: invalid writes and conflicting fields cannot persist or audit
+    ok 4 - invalid writes and conflicting fields cannot persist or audit
+      ---
+      duration_ms: 98.879033
+      type: 'test'
+      ...
+    # Subtest: real session/module/role middleware rejects unauthorized writes
+    ok 5 - real session/module/role middleware rejects unauthorized writes
+      ---
+      duration_ms: 274.290976
+      type: 'test'
+      ...
+    # Subtest: legacy patch waits for row lock then preserves newly committed extras/label
+    ok 6 - legacy patch waits for row lock then preserves newly committed extras/label
+      ---
+      duration_ms: 41.094549
+      type: 'test'
+      ...
+    # Subtest: audit insertion failure rolls back phone edit
+    ok 7 - audit insertion failure rolls back phone edit
+      ---
+      duration_ms: 28.405824
+      type: 'test'
+      ...
+    1..7
+ok 1 - choferes HTTP integration: persisted ordered phones, legacy rows, authorization, audit and locks
+  ---
+  duration_ms: 758.644587
+  type: 'test'
+  ...
+# Failed query: insert into "auditoria" ("id", "usuario_id", "usuario_snapshot", "rol_snapshot", "sitio_id", "sitio_snapshot", "modulo", "accion", "entidad", "entidad_id", "datos_antes", "datos_despues", "ip", "created_at") values (default, $1, default, default, $2, default, default, $3, $4, $5, $6, $7, $8, default)\\nparams: 2,,ACTUALIZAR,choferes,2,{"id":2,"nombreCompleto":"Multiple 7299f06c15da44cdaf06a50a242995a8","telefono":"new legacy primary","telefonos":[{"numero":"new legacy primary","etiqueta":"Fresh label"},{"numero":"fresh extra"}],"activo":false,"createdAt":"2026-10-01T19:14:22.667Z","updatedAt":"2026-10-01T19:14:23.209Z"},{"id":2,"nombreCompleto":"Multiple 7299f06c15da44cdaf06a50a242995a8","telefono":"reject-audit","telefonos":[{"numero":"reject-audit","etiqueta":"Fresh label"},{"numero":"fresh extra"}],"activo":false,"createdAt":"2026-10-01T19:14:22.667Z","updatedAt":"2026-10-01T19:14:23.237Z"},127.0.0.1
+# test audit failure
+1..1
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2139.940253

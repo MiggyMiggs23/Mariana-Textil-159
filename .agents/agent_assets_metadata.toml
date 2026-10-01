@@ -2803,3 +2803,17 @@ mtime_ms = 1790878363602
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e273614f-3f17-4699-8f2d-57238c73b0c3/8493f463-e934-4ffb-b5b9-7904df3589d1"
 storage_version_token = "1790878427797048"
 content_type = "image/png"
+
+[[outputs]]
+id = "ViD1FrF5h3bqxi25nFYZB"
+uri = "file://reports/driver-multiple-phones-20261001/capturas/ficha-varios-telefonos.png"
+type = "image"
+title = "Chofer — ficha con cinco teléfonos"
+description = "Captura de la interfaz real con datos de prueba identificados: teléfono principal, etiquetas opcionales y controles para agregar, quitar y ordenar."
+logical_id = "782fbeb5-3781-4bd1-beba-a5c0ccb9e25b"
+content_hash = "sha256:b84f251d7e04e75a69326db5d0d70ff14ef7493510194d7655fd129a820a8090"
+size = 198111
+mtime_ms = 1790882578252
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/782fbeb5-3781-4bd1-beba-a5c0ccb9e25b/a475df69-2630-4901-afb8-7a1b7341ae4c"
+storage_version_token = "1790882691229206"
+content_type = "image/png"

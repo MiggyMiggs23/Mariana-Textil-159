@@ -1,0 +1,38 @@
+{
+  "approved": [
+    "artifacts/api-server/src/routes/choferes.ts",
+    "artifacts/api-server/src/routes/viajes.ts",
+    "artifacts/mariana-textil/src/pages/configuracion/choferes.tsx",
+    "lib/api-client-react/src/generated/api.schemas.ts",
+    "lib/api-spec/openapi.yaml",
+    "lib/api-zod/src/generated/api.ts",
+    "lib/api-zod/src/generated/types/chofer.ts",
+    "lib/api-zod/src/generated/types/choferInput.ts",
+    "lib/api-zod/src/generated/types/choferUpdate.ts",
+    "lib/api-zod/src/generated/types/index.ts",
+    "lib/db/src/lib/choferes-schema.ts",
+    "lib/db/src/schema/choferes.ts"
+  ],
+  "added": [
+    "artifacts/api-server/src/routes/choferes.integration.test.ts",
+    "artifacts/api-server/src/routes/choferes.test.ts",
+    "artifacts/mariana-textil/src/pages/configuracion/chofer-telefonos.tsx",
+    "artifacts/mariana-textil/src/pages/configuracion/choferes.test.tsx",
+    "artifacts/mariana-textil/vitest.choferes.config.ts",
+    "lib/api-spec/generate-choferes.mjs",
+    "lib/api-zod/src/generated/types/choferTelefono.ts",
+    "lib/db/src/lib/choferes-schema.test.ts"
+  ],
+  "patchSha256": "042286ca1c153e2c9adc6ff572b24b85f302558a7c16d7869f4cceeb6b5cbb5b",
+  "addedHashes": {
+    "artifacts/api-server/src/routes/choferes.integration.test.ts": "b3e89a1f396fb4fa43d0a8560acfef02f216db59ecbf3f13b55415e3f296aecc",
+    "artifacts/api-server/src/routes/choferes.test.ts": "bbf24782bf519a579260d4bed887a0df2974eba093765eb4228ee289cb040442",
+    "artifacts/mariana-textil/src/pages/configuracion/chofer-telefonos.tsx": "0258aa0a8801400446f50044902b6b1f6ffdfe6d33c6bd8e0684ce65945d02cf",
+    "artifacts/mariana-textil/src/pages/configuracion/choferes.test.tsx": "86c83db7b08bddbdef4e2141e850b3cb67c39a1faa4a95fe0553a3c373152be2",
+    "artifacts/mariana-textil/vitest.choferes.config.ts": "ddd217112a1c2ebe0844b316f8e94b333bcb010950377c830ff91014b8aa60af",
+    "lib/api-spec/generate-choferes.mjs": "8fbeae778693b934bb9acbcd5c22ef3b2af1a8931a1cab0da89b406ed158e2bf",
+    "lib/api-zod/src/generated/types/choferTelefono.ts": "f1663a77205535d564950308887133bdeacf20f4aa844cef87e541a6bbb3d4f0",
+    "lib/db/src/lib/choferes-schema.test.ts": "b9341a14a5fdc7f1090a19603c30000cd1253aba062f695391b40e5bfb50f29d"
+  },
+  "readyAuthorization": "MAIN source-ready followup: chofer phones, shared viajes projection, schema/initializer, contracts and tests only"
+}

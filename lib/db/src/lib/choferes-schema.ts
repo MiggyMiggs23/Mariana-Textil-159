@@ -14,10 +14,12 @@ export async function ensureChoferesSchema(
         id serial PRIMARY KEY,
         nombre_completo text NOT NULL,
         telefono text NOT NULL,
+        telefonos jsonb,
         activo boolean NOT NULL DEFAULT true,
         created_at timestamptz NOT NULL DEFAULT now(),
         updated_at timestamptz NOT NULL DEFAULT now()
       );
+      ALTER TABLE choferes ADD COLUMN IF NOT EXISTS telefonos jsonb;
       CREATE INDEX IF NOT EXISTS choferes_activo_idx ON choferes (activo);
       CREATE INDEX IF NOT EXISTS choferes_nombre_completo_idx ON choferes (nombre_completo);
     `);

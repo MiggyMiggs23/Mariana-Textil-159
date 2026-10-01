@@ -4315,10 +4315,30 @@ export interface CamionetaUpdate {
   activa?: boolean;
 }
 
+export interface ChoferTelefono {
+  /**
+     * Texto recortado; conserva prefijos, ceros y formato.
+     * @minLength 1
+     * @maxLength 32
+     */
+  numero: string;
+  /**
+     * Etiqueta opcional recortada; omitir si está vacía.
+     * @minLength 1
+     * @maxLength 40
+     */
+  etiqueta?: string;
+}
+
 export interface Chofer {
   id: number;
   nombreCompleto: string;
   telefono: string;
+  /**
+     * Teléfonos ordenados; el primero es telefono. Los registros históricos sin colección se presentan con su telefono.
+     * @minItems 1
+     */
+  telefonos: ChoferTelefono[];
   activo: boolean;
   createdAt: string;
   updatedAt: string;
@@ -4335,6 +4355,11 @@ export interface ChoferInput {
      * @maxLength 32
      */
   telefono: string;
+  /**
+     * Opcional para clientes anteriores; si se envía, el primer numero debe coincidir con telefono tras recortar espacios.
+     * @minItems 1
+     */
+  telefonos?: ChoferTelefono[];
   activo?: boolean;
 }
 
@@ -4349,6 +4374,11 @@ export interface ChoferUpdate {
      * @maxLength 32
      */
   telefono?: string;
+  /**
+     * Reemplaza la colección y su principal. Si también se envía telefono, debe coincidir con el primer numero. Solo telefono actualiza el principal conservando etiqueta y adicionales; omitir ambos conserva todo.
+     * @minItems 1
+     */
+  telefonos?: ChoferTelefono[];
   activo?: boolean;
 }
 

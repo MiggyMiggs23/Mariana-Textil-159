@@ -1,0 +1,124 @@
+{
+  "status": "BUILT_TYPECHECKED_NOT_ACTIVATED",
+  "api": "artifacts/api-server/dist-driver-phones-20261001",
+  "frontend": "artifacts/mariana-textil/dist-driver-phones-20261001",
+  "frozen": "reports/driver-multiple-phones-20261001/frozen-root",
+  "checks": [
+    {
+      "name": "combined-ui-build",
+      "status": 0,
+      "signal": null
+    },
+    {
+      "name": "combined-libs-typecheck",
+      "status": 0,
+      "signal": null
+    },
+    {
+      "name": "combined-api-typecheck",
+      "status": 0,
+      "signal": null
+    },
+    {
+      "name": "combined-ui-typecheck",
+      "status": 0,
+      "signal": null
+    },
+    {
+      "name": "syntax-index.mjs",
+      "status": 0,
+      "signal": null
+    },
+    {
+      "name": "syntax-pino-file.mjs",
+      "status": 0,
+      "signal": null
+    },
+    {
+      "name": "syntax-pino-pretty.mjs",
+      "status": 0,
+      "signal": null
+    },
+    {
+      "name": "syntax-pino-worker.mjs",
+      "status": 0,
+      "signal": null
+    },
+    {
+      "name": "syntax-thread-stream-worker.mjs",
+      "status": 0,
+      "signal": null
+    }
+  ],
+  "apiFiles": {
+    "assets/fonts/DEJAVU-LICENSE.txt": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9",
+    "assets/fonts/DejaVuSans.ttf": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+    "index.mjs": "ae72cf8da6832f1a5275a2bdba689508ac1ee69639312a246785cb57fe5b44a7",
+    "index.mjs.map": "843620f3c1c2025b5865b6f79ae2186a221d880deab23091bb9364c7e86b5202",
+    "pino-file.mjs": "962602527eea53e4ae24f1c7c440469b2d25302f13a7a7bca7a81766c269105e",
+    "pino-file.mjs.map": "59cf89c228b8e822da2203d608966b17f293b4d21faf65efd9af01c10baa76cf",
+    "pino-pretty.mjs": "1a05aa85bf5ce035c5d1f19a32e0308d6dbab00c7194e1936c7f632d10994fac",
+    "pino-pretty.mjs.map": "a7d3c3a4613f9648f8cb7e69a6abeacdbe3934792fcc24cc0af74fd6fde3eb90",
+    "pino-worker.mjs": "8ac4b4f15274e4195fa460fea1b221215400ec7931135642f82fb081b49deabc",
+    "pino-worker.mjs.map": "e61d56960b2b9f0aa0d0341f8d9c9df76b7f6b69584a6928fd814cccf54fc604",
+    "thread-stream-worker.mjs": "b490228463d2d47a57932bcbe6bb307af9c54d1b4f3953191e1077e791bb188d",
+    "thread-stream-worker.mjs.map": "e5fd66fcec3ca622f449a275bd6b14d061ed62ce34faadce8716b363a4df878a"
+  },
+  "frontendFiles": {
+    "assets/index-CJ5sQYvB.js": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c",
+    "assets/index-CjE9HUnT.js": "816a3bdcfbdc5d73a927d64dcbd027aed68ef826147e166dfbc2d3927d4fbbf2",
+    "assets/index-DM4fp8qL.css": "7bdf6dd0e278a322da6f3d9f6c51c91a1b04ad92cc34ce5bca80adc53fe49e01",
+    "assets/mariana-textil-logo-FFOiXRd3.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "assets/mariana-textil-logo-monochrome-_7AVoW2A.png": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24",
+    "favicon.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "index.html": "1fd0253335c25a19c2fc9fad9f39366ca2e23c5b531e3aae38f885e0967d9a48",
+    "robots.txt": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+    "sounds/alerta.ogg": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e",
+    "sounds/aviso.ogg": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4",
+    "sounds/solicitud.ogg": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+  },
+  "apiRuntimeSourceDeltas": [
+    {
+      "file": "lib/db/src/schema/choferes.ts",
+      "sha256": "05e8a3e0766c776ce707dcfad143d5ac7afca271ca7ef88fac948ab43474c9d4",
+      "beforeSha256": "2910f7ed7937586702cbb7e619c93fc215b89e907781fc836c561b2f5015691b"
+    },
+    {
+      "file": "lib/db/src/lib/choferes-schema.ts",
+      "sha256": "aca478e463e6523db92d9039404f8bf5efda53b18e1ea9d6ba2de789d3158225",
+      "beforeSha256": "b69c99bcd61eb05fdea9d79d33a203c50db2a288afb47440a36266c3d9e354ab"
+    },
+    {
+      "file": "lib/api-zod/src/generated/api.ts",
+      "sha256": "7f7362453ec355b9bfd79b1a9032726671099d6efc1e3af4dbe2c0512fd9e61c",
+      "beforeSha256": "0a1d1e0f1b53e80be20775723ac6351b034b9d5023f25fc9969dcf6b3e11abeb"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/choferes.ts",
+      "sha256": "c5be19d1c0ac14970dea5fe1e3a4031af4c9df7deacc55986a97048922afb2bd",
+      "beforeSha256": "df5e8c66a6681d2fd27ce1738e995479cabbc5e8083aacaee6c34dfa03776a42"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/viajes.ts",
+      "sha256": "fb78e44bedc46d13ad9502dc57ba55ad144bc06bd0fdb6448e1636a1dee1dbea",
+      "beforeSha256": "257189fa5bd5e566bb151ee4f876de0d52c3251a85eae150ba083b184b874d5d"
+    }
+  ],
+  "patchSha256": "042286ca1c153e2c9adc6ff572b24b85f302558a7c16d7869f4cceeb6b5cbb5b",
+  "recipeSha256": "8d83801766dec6f4f4a6ba162d76d568fecd3061ab5cc078ccd35e0e443975fe",
+  "sourceDeltaAuditSha256": "ffc88b815bfb689f0b8d32f52d6125be81bf06fe9c0fcb8a0120b35e14e57383",
+  "apiInventorySha256": "c47c2b4ce4ed129385059ae04874e8aace36a32dc8c3881caeaa146df495f148",
+  "uiInventorySha256": "f9ccb6e6c4cca4245521138f893a6963d7dc99e84a0f85428b2b5cbb7129db6f",
+  "baselineProvenanceSha256": "a65cf45ef483aa726f6761f9f189489a95a7915b34d9a2cf848a1f145de71038",
+  "baselineInputsUnchanged": true,
+  "dependencyException": "Only esbuild-plugin-pino generated outputDir differs; all other mapped dependency contents unchanged.",
+  "databaseAccess": false,
+  "workflowChanges": false,
+  "runtimeChanges": false,
+  "validationGaps": [
+    "No runtime or browser verification by build worker; MAIN owns browser verification.",
+    "Frozen typechecks include all retained sources plus new tests; unrelated HEAD-only API tests omitted from active runtime baseline are not imported."
+  ],
+  "typecheckSupportSha256": "836b638e40b64972cd7845e95a7ab3d89ae732dc217b28fba509ebf3d1ff7a67",
+  "typecheckSupportNote": "Retained baseline reports/e7 test-only fixtures copied into frozen root; first UI typecheck failed because these prior symlinked fixtures were excluded, final check includes them. No production output or source change."
+}
