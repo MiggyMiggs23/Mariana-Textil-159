@@ -1,0 +1,161 @@
+{
+  "csv": {
+    "status": "UNSUPPORTED",
+    "reason": "Released report route exposes XLSX and PDF only"
+  },
+  "tables": [
+    {
+      "id": "clientes",
+      "title": "Clientes",
+      "rows": 2575,
+      "totals": {
+        "ventas": 5201300,
+        "comprasRollos": 5201300,
+        "comprasMetraje": 0,
+        "utilidad": 2600650
+      }
+    },
+    {
+      "id": "publico-registrado",
+      "title": "Público vs registrado",
+      "rows": 1,
+      "totals": {
+        "ventas": 5201300
+      }
+    },
+    {
+      "id": "formas-pago",
+      "title": "Métodos de pago por modalidad",
+      "rows": 2,
+      "totals": {
+        "importe": 4763308
+      }
+    },
+    {
+      "id": "cuentas-por-cobrar-fifo",
+      "title": "Cuentas por cobrar FIFO",
+      "rows": 13687,
+      "totals": {
+        "saldo": 1587692
+      }
+    },
+    {
+      "id": "pagos-dirigidos",
+      "title": "Pagos dirigidos",
+      "rows": 0,
+      "totals": {
+        "importe": 0
+      }
+    },
+    {
+      "id": "castigos-y-reversos",
+      "title": "Castigos y reversos de crédito",
+      "rows": 0,
+      "totals": {
+        "importe": 0
+      }
+    }
+  ],
+  "xlsx": {
+    "status": 200,
+    "bytes": 526318,
+    "sha256": "afc3b47874cac6d56f2c5af0b8ee6443b70d6b35dcea5fb0350e1e7798e7d0da",
+    "sheets": [
+      {
+        "name": "Periodo",
+        "rows": 5
+      },
+      {
+        "name": "Indicadores",
+        "rows": 5
+      },
+      {
+        "name": "Clientes",
+        "rows": 2577
+      },
+      {
+        "name": "Público vs registrado",
+        "rows": 3
+      },
+      {
+        "name": "Métodos de pago por modalidad",
+        "rows": 4
+      },
+      {
+        "name": "Cuentas por cobrar FIFO",
+        "rows": 13689
+      },
+      {
+        "name": "Pagos dirigidos",
+        "rows": 2
+      },
+      {
+        "name": "Castigos y reversos de crédito",
+        "rows": 2
+      },
+      {
+        "name": "Grafico Ventas por cliente",
+        "rows": 2576
+      },
+      {
+        "name": "Avisos",
+        "rows": 4
+      }
+    ],
+    "tableChecks": [
+      {
+        "id": "clientes",
+        "sheet": "Clientes",
+        "dataRows": 2575,
+        "worksheetRows": 2577,
+        "expected": 2577
+      },
+      {
+        "id": "publico-registrado",
+        "sheet": "Público vs registrado",
+        "dataRows": 1,
+        "worksheetRows": 3,
+        "expected": 3
+      },
+      {
+        "id": "formas-pago",
+        "sheet": "Métodos de pago por modalidad",
+        "dataRows": 2,
+        "worksheetRows": 4,
+        "expected": 4
+      },
+      {
+        "id": "cuentas-por-cobrar-fifo",
+        "sheet": "Cuentas por cobrar FIFO",
+        "dataRows": 13687,
+        "worksheetRows": 13689,
+        "expected": 13689
+      },
+      {
+        "id": "pagos-dirigidos",
+        "sheet": "Pagos dirigidos",
+        "dataRows": 0,
+        "worksheetRows": 2,
+        "expected": 2
+      },
+      {
+        "id": "castigos-y-reversos",
+        "sheet": "Castigos y reversos de crédito",
+        "dataRows": 0,
+        "worksheetRows": 2,
+        "expected": 2
+      }
+    ]
+  },
+  "pdf": {
+    "status": 200,
+    "bytes": 3398968,
+    "sha256": "949279e30bf9a2e970a07627a1f845db7d6bd92068cb0861e62b01523db2b33d",
+    "customerCoverage": {
+      "expectedUnique": 2575,
+      "observedUnique": 2575,
+      "allPresent": true
+    },
+    "rowCountLimitation": "PDF validates every synthetic customer identifier, not a structural count of every non-customer table row; XLSX checks each table row count."
+  }
+}

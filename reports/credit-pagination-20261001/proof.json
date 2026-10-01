@@ -1,0 +1,97 @@
+{
+  "method": "Offline mounted React/DOM, actual pure export helpers, source AST/data-flow and SHA256; no HTTP/API/DB/app-process launches",
+  "sourceEquality": [
+    {
+      "file": "artifacts/mariana-textil/src/components/reportes/report-table.tsx",
+      "sha256": "fee6729a6c5a5da002297eec504f29bb46f7107d50e9512f128b9da3246baa59",
+      "frozen": "reports/sidebar-order-20261001/frozen-root/artifacts/mariana-textil/src/components/reportes/report-table.tsx"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/components/reportes/generic-report-renderer.tsx",
+      "sha256": "01dfeb1b41dfccab5b822b74b8f994aa7b0fca318dea53200dc7457ccbcba3b6",
+      "frozen": "reports/sidebar-order-20261001/frozen-root/artifacts/mariana-textil/src/components/reportes/generic-report-renderer.tsx"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/components/reportes/tabs/clientes-tab.tsx",
+      "sha256": "02914a8b268ba5557da5403f0ed65a3df42ba2c7168054041af562f6ad29f53a",
+      "frozen": "reports/sidebar-order-20261001/frozen-root/artifacts/mariana-textil/src/components/reportes/tabs/clientes-tab.tsx"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/reportes.tsx",
+      "sha256": "52dbaee464d66ca5b54761be97790abecfcf68a63bf646648eb9b80a6a5d9804",
+      "frozen": "reports/sidebar-order-20261001/frozen-root/artifacts/mariana-textil/src/pages/reportes.tsx"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/components/reportes/report-scope.ts",
+      "sha256": "e6a490d8bcad2c57c79f39c664f64f1451c4cd66239caedfaab11064fc49a983",
+      "frozen": "reports/sidebar-order-20261001/frozen-root/artifacts/mariana-textil/src/components/reportes/report-scope.ts"
+    }
+  ],
+  "apiEquality": [
+    {
+      "file": "artifacts/api-server/src/routes/reportes.ts",
+      "sha256": "114d64d785be8b271ffc31643a146db609c7ab02674c5f65eb335c74b3b13cd4",
+      "frozen": "reports/driver-multiple-phones-20261001/frozen-root/artifacts/api-server/src/routes/reportes.ts",
+      "inventoryMatch": true
+    },
+    {
+      "file": "artifacts/api-server/src/lib/reportes-composed-export.ts",
+      "sha256": "04406e660d7757d6c5273f52d48456b92da12eae3e0826707bfeb3688d8118b0",
+      "frozen": "reports/driver-multiple-phones-20261001/frozen-root/artifacts/api-server/src/lib/reportes-composed-export.ts",
+      "inventoryMatch": true
+    },
+    {
+      "file": "artifacts/api-server/src/lib/report-export.ts",
+      "sha256": "13ff7f6dbb45a1d857668918a307ce57066cdaf1810b355008fbaa0b279cefc4",
+      "frozen": "reports/driver-multiple-phones-20261001/frozen-root/artifacts/api-server/src/lib/report-export.ts",
+      "inventoryMatch": true
+    },
+    {
+      "file": "artifacts/api-server/src/lib/pdf.ts",
+      "sha256": "2e6201f26286e7342ab9c45cb60aaeb19d384e9694cc478425e602e550b532f8",
+      "frozen": "reports/driver-multiple-phones-20261001/frozen-root/artifacts/api-server/src/lib/pdf.ts",
+      "inventoryMatch": true
+    }
+  ],
+  "activeFrontend": {
+    "dist": "artifacts/mariana-textil/dist-sidebar-order-20261001",
+    "indexSha256": "611db3cf669c5417ca1cc3ccb4699c6047c4f261745cbb8405f8eb50b1091062",
+    "manifestVerified": true,
+    "files": 11
+  },
+  "activeApi": {
+    "entry": "artifacts/api-server/dist-driver-phones-20261001/index.mjs",
+    "entrySha256": "ae72cf8da6832f1a5275a2bdba689508ac1ee69639312a246785cb57fe5b44a7",
+    "allManifestFilesVerified": true,
+    "files": 12
+  },
+  "provenance": {
+    "introducedCommit": "6407935327ca8166b508ed0c1867c55329b7a5c9",
+    "committedAt": "2026-09-26T09:29:59Z",
+    "subject": "release: activate verified stability fixes, concurrent login and paginated credit",
+    "parentLacksPagination": true,
+    "threePaginationSourcesStillExactlyReleaseBytes": true,
+    "activeEstablishedBy": "Artifact service configuration plus verified active dist manifest and byte-equal frozen build inputs",
+    "caution": "candidate-ready/build-manifest retained NOT_ACTIVATED status; actual service configuration, not stale status label, establishes active selection"
+  },
+  "exportWorkbook": {
+    "rowsInput": 137,
+    "rowsRoundTrip": 137,
+    "originalTotal": 987654.32,
+    "bytes": 11371
+  },
+  "xlsxEndpoint": {
+    "path": "/reportes/vistas/:vista/export.xlsx",
+    "sameScopeBuilder": true,
+    "originalFullTables": true,
+    "noScreenPaginationDependency": true,
+    "verification": "Actual endpoint AST/dataflow only; no HTTP request or DB call"
+  },
+  "pdfEndpoint": {
+    "path": "/reportes/vistas/:vista/export.pdf",
+    "sameScopeBuilder": true,
+    "originalFullTables": true,
+    "noScreenPaginationDependency": true,
+    "verification": "Actual endpoint AST/dataflow only; no HTTP request or DB call"
+  }
+}

@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: 137 rows: numeric-string global sorting precedes slicing, both directions, original rows/totals immutable
+ok 1 - 137 rows: numeric-string global sorting precedes slicing, both directions, original rows/totals immutable
+  ---
+  duration_ms: 158.155585
+  type: 'test'
+  ...
+# Subtest: 25/50/100: complete coverage, last partial page and boundary buttons; page-size changes reset page
+ok 2 - 25/50/100: complete coverage, last partial page and boundary buttons; page-size changes reset page
+  ---
+  duration_ms: 152.191052
+  type: 'test'
+  ...
+# Subtest: filter-context changes and row replacements reset; each generic-renderer table has independent state; empty report
+ok 3 - filter-context changes and row replacements reset; each generic-renderer table has independent state; empty report
+  ---
+  duration_ms: 96.20827
+  type: 'test'
+  ...
+# Subtest: print button and browser events synchronously expose all sorted rows then restore exact page and footer
+ok 4 - print button and browser events synchronously expose all sorted rows then restore exact page and footer
+  ---
+  duration_ms: 98.755191
+  type: 'test'
+  ...
+# Subtest: ClientesTab opts in only credit tables; same exact filter params to hooks; comparison frames paginate independently
+ok 5 - ClientesTab opts in only credit tables; same exact filter params to hooks; comparison frames paginate independently
+  ---
+  duration_ms: 124.03729
+  type: 'test'
+  ...
+# Subtest: mounted Reportes XLSX/PDF requests identical before/after page/size/sort; complete filter/site scope and untouched payload
+ok 6 - mounted Reportes XLSX/PDF requests identical before/after page/size/sort; complete filter/site scope and untouched payload
+  ---
+  duration_ms: 61.370021
+  type: 'test'
+  ...
+# Subtest: mounted comparison exports include exactly credit stores, not header scope or pagination
+ok 7 - mounted comparison exports include exactly credit stores, not header scope or pagination
+  ---
+  duration_ms: 86.111218
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2053.999487

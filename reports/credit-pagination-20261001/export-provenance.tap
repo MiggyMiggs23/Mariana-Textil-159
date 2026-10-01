@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: active four UI targets and scope helper equal active-build frozen source byte-for-byte
+ok 1 - active four UI targets and scope helper equal active-build frozen source byte-for-byte
+  ---
+  duration_ms: 28.269226
+  type: 'test'
+  ...
+# Subtest: same exact active API artifact; report route/export sources equal frozen build inventory, untouched by pagination introduction
+ok 2 - same exact active API artifact; report route/export sources equal frozen build inventory, untouched by pagination introduction
+  ---
+  duration_ms: 146.953475
+  type: 'test'
+  ...
+# Subtest: provenance: pagination introduced in recorded release, retained in active frozen candidate; do not infer versions from dates
+ok 3 - provenance: pagination introduced in recorded release, retained in active frozen candidate; do not infer versions from dates
+  ---
+  duration_ms: 45.446934
+  type: 'test'
+  ...
+# Subtest: actual export normalization and XLSX writer retain all 137 rows and original complete totals, independent of screen page
+ok 4 - actual export normalization and XLSX writer retain all 137 rows and original complete totals, independent of screen page
+  ---
+  duration_ms: 96.259867
+  type: 'test'
+  ...
+# Subtest: XLSX and PDF endpoint source AST proves identical full-table dataflow and complete report scope, no page slicing
+ok 5 - XLSX and PDF endpoint source AST proves identical full-table dataflow and complete report scope, no page slicing
+  ---
+  duration_ms: 19.835754
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1052.480884

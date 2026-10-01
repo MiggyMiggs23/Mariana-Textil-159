@@ -94,3 +94,4 @@
 - [Reanudación con reloj controlado](controlled-clock-resume.md) — no reiniciar historias avanzadas; distinguir relojes JavaScript, autenticación y SQL nativo; fixtures SQL sólo en copia autorizada.
 - [Capturas entregables](browser-evidence-delivery.md) — comprobar archivos y contenido; un ID de observación o una pantalla de sesión no acredita el estado solicitado.
 - [Visibilidad en directorios](directory-visibility-decisions.md) — teléfono/RFC visibles; plegar análisis no autoriza simplificar Últimas ventas ni Estado de cuenta.
+- [Comparabilidad de rendimiento](report-performance-comparability.md) — comparar paginación sobre la misma carga y entorno; separar la referencia histórica de una mejora atribuible.

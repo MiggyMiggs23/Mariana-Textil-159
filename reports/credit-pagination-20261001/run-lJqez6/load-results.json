@@ -1,0 +1,71 @@
+{
+  "status": "LOADED",
+  "database": "isolated_test_ce051206d543a8870a32",
+  "before": {
+    "clientes": 2576,
+    "tickets": 0,
+    "ticket_lineas": 0,
+    "ticket_pagos": 0,
+    "movimientos_credito": 0,
+    "rollos": 0,
+    "sesiones_caja": 0
+  },
+  "after": {
+    "clientes": 2576,
+    "tickets": 54750,
+    "ticket_lineas": 54750,
+    "ticket_pagos": 41063,
+    "movimientos_credito": 13687,
+    "rollos": 54750,
+    "sesiones_caja": 3
+  },
+  "loadMs": 8441.147901,
+  "assumptions": {
+    "days": 365,
+    "stores": 3,
+    "ticketsPerStoreDay": 50,
+    "start": "2025-09-27",
+    "tickets": 54750,
+    "clientsDistributed": 2575,
+    "distribution": "Round robin over 2575 synthetic customers (canonical synthetic IDs preserved and renamed; remainder newly inserted), 4 meter products, 3 synthetic stores",
+    "credit": "every fourth ticket",
+    "unpaid": "every twentieth ticket (subset of credit)",
+    "notObservedBusinessAnnualVolume": true,
+    "notCorrectnessSimulation": true
+  },
+  "sites": [
+    {
+      "id": 10,
+      "nombre": "NOCHE PERF 1"
+    },
+    {
+      "id": 11,
+      "nombre": "NOCHE PERF 2"
+    },
+    {
+      "id": 12,
+      "nombre": "NOCHE PERF 3"
+    }
+  ],
+  "sessions": [
+    1,
+    2,
+    3
+  ],
+  "products": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "adminId": 1,
+  "customerId": 2,
+  "end": "2026-09-26",
+  "at": "2026-10-01T20:40:53.270Z",
+  "customerPreparation": {
+    "canonicalSyntheticPreserved": 6,
+    "added": 2569,
+    "totalDistributed": 2575,
+    "deleted": 0
+  }
+}

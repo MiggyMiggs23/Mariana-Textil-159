@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "directory": "reports/credit-pagination-20261001",
+  "runs": [
+    {
+      "command": "node --test --test-reporter=tap reports/credit-pagination-20261001/pagination.mounted.test.mjs",
+      "source": "actual application source",
+      "passed": 7,
+      "failed": 0,
+      "output": "active-mounted.tap"
+    },
+    {
+      "command": "SOURCE_ROOT=reports/sidebar-order-20261001/frozen-root node --test --test-reporter=tap reports/credit-pagination-20261001/pagination.mounted.test.mjs",
+      "source": "active-build frozen source",
+      "passed": 7,
+      "failed": 0,
+      "output": "frozen-mounted.tap"
+    },
+    {
+      "command": "node --test --test-reporter=tap reports/credit-pagination-20261001/export-and-provenance.test.mjs",
+      "passed": 5,
+      "failed": 0,
+      "output": "export-provenance.tap"
+    }
+  ],
+  "totalPassed": 19,
+  "productionSourceChanges": false,
+  "apiChanges": false,
+  "apiRequests": false,
+  "databaseAccess": false,
+  "workflowChanges": false,
+  "fixtures": "137 synthetic rows confined to test files; original-total sentinel intentionally differs from row sum to detect client recomputation",
+  "coverage": [
+    "Numeric-string global sorting before slicing, ascending and descending",
+    "25/50/100 page sizes, complete row coverage, final partial page, disabled page boundaries",
+    "Empty data, row replacement and filter-context reset",
+    "Per-table and comparison-site independent page state",
+    "Unpaginated resolved-request reports remain unchanged",
+    "Original totals and input arrays remain unchanged across pages and sorting",
+    "Print button and native browser events synchronously expose all sorted rows and restore original pages",
+    "Actual report page exports both formats with identical requests before/after page, size and sort changes",
+    "Complete credit filter/site scope preserved, comparison exports exclude non-credit locations",
+    "Actual export normalization and XLSX serialize/reload preserve all 137 rows and original totals",
+    "PDF/XLSX route AST traces original full table arrays through existing scope builder",
+    "Active UI source equals frozen source byte-for-byte; active frontend/API manifests verify",
+    "Commit provenance establishes introduction and exact retained pagination implementation"
+  ],
+  "limitations": [
+    "React/DOM mounting uses installed React, ReactDOM and jsdom with semantic presentation adapters and isolated query/download boundary doubles, not an authenticated browser",
+    "No live endpoint, database or PDF-generation invocation; PDF endpoint coverage is actual-source AST/dataflow proof",
+    "Initial XLSX helper harness lacked esModuleInterop; corrected test-only compiler option and reran successfully"
+  ],
+  "evidence": "proof.json"
+}

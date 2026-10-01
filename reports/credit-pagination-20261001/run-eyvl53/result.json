@@ -1,0 +1,1029 @@
+{
+  "status": "COMPLETED",
+  "liveDatabaseAccess": false,
+  "samples": [
+    {
+      "mode": "on",
+      "sample": 1,
+      "durationMs": 3981.1559559999987,
+      "reportTiming": {
+        "url": "/api/reportes/clientes?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+        "status": 200,
+        "timing": {
+          "startTime": 1790887445931.925,
+          "domainLookupStart": 0.875,
+          "domainLookupEnd": 0.893,
+          "connectStart": 0.893,
+          "secureConnectionStart": -1,
+          "connectEnd": 1.445,
+          "requestStart": 1.643,
+          "responseStart": 1148.189,
+          "responseEnd": 1233.251
+        },
+        "serverTiming": "reportes;dur=398.4"
+      },
+      "apiMs": 1233.251,
+      "postApiToReadyMs": 1883.823974609375,
+      "signature": "94a5ea28e5bd502dd2f38c72b476513a5726885fb66209a6191d6bc16227ba92",
+      "dom": [
+        {
+          "id": "clientes",
+          "payloadRows": 2575,
+          "domRows": 50,
+          "totals": {
+            "ventas": 5201300,
+            "comprasRollos": 5201300,
+            "comprasMetraje": 0,
+            "utilidad": 2600650
+          },
+          "footer": [
+            "Totales$5,201,300.00$5,201,300.00$0.00$2,600,650.00"
+          ]
+        },
+        {
+          "id": "publico-registrado",
+          "payloadRows": 1,
+          "domRows": 1,
+          "totals": {
+            "ventas": 5201300
+          },
+          "footer": [
+            "Totales$5,201,300.00"
+          ]
+        },
+        {
+          "id": "formas-pago",
+          "payloadRows": 2,
+          "domRows": 2,
+          "totals": {
+            "importe": 4763308
+          },
+          "footer": [
+            "Totales$4,763,308.00"
+          ]
+        },
+        {
+          "id": "cuentas-por-cobrar-fifo",
+          "payloadRows": 13687,
+          "domRows": 50,
+          "totals": {
+            "saldo": 1587692
+          },
+          "footer": [
+            "Totales$1,587,692.00"
+          ]
+        },
+        {
+          "id": "pagos-dirigidos",
+          "payloadRows": 0,
+          "domRows": 0,
+          "totals": {
+            "importe": 0
+          },
+          "footer": []
+        },
+        {
+          "id": "castigos-y-reversos",
+          "payloadRows": 0,
+          "domRows": 0,
+          "totals": {
+            "importe": 0
+          },
+          "footer": []
+        }
+      ],
+      "requests": [
+        {
+          "url": "/api/auth/me",
+          "status": 200
+        },
+        {
+          "url": "/api/e11/disponibilidad",
+          "status": 200
+        },
+        {
+          "url": "/api/e11/identidad",
+          "status": 200
+        },
+        {
+          "url": "/api/admin/test-reset",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/pagos-dirigidos?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+          "status": 200
+        },
+        {
+          "url": "/api/notificaciones",
+          "status": 200
+        },
+        {
+          "url": "/api/auth/me",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/ajustes/pendientes",
+          "status": 200
+        },
+        {
+          "url": "/api/notificaciones/feed",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/entradas/pendientes-costo/count",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/clientes?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/ubicaciones",
+          "status": 200
+        },
+        {
+          "url": "/api/locations",
+          "status": 200
+        },
+        {
+          "url": "/api/etiquetas/alertas/count",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/catalogos",
+          "status": 200
+        }
+      ],
+      "errors": [],
+      "renderRemainderUpperBoundMs": 2747.9049559999985
+    },
+    {
+      "mode": "on",
+      "sample": 2,
+      "durationMs": 2695.7350220000008,
+      "reportTiming": {
+        "url": "/api/reportes/clientes?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+        "status": 200,
+        "timing": {
+          "startTime": 1790887461097.4377,
+          "domainLookupStart": 0.485,
+          "domainLookupEnd": 0.501,
+          "connectStart": 0.501,
+          "secureConnectionStart": -1,
+          "connectEnd": 1.022,
+          "requestStart": 1.355,
+          "responseStart": 706.241,
+          "responseEnd": 745.652
+        },
+        "serverTiming": "reportes;dur=484.5"
+      },
+      "apiMs": 745.652,
+      "postApiToReadyMs": 1499.91015625,
+      "signature": "94a5ea28e5bd502dd2f38c72b476513a5726885fb66209a6191d6bc16227ba92",
+      "dom": [
+        {
+          "id": "clientes",
+          "payloadRows": 2575,
+          "domRows": 50,
+          "totals": {
+            "ventas": 5201300,
+            "comprasRollos": 5201300,
+            "comprasMetraje": 0,
+            "utilidad": 2600650
+          },
+          "footer": [
+            "Totales$5,201,300.00$5,201,300.00$0.00$2,600,650.00"
+          ]
+        },
+        {
+          "id": "publico-registrado",
+          "payloadRows": 1,
+          "domRows": 1,
+          "totals": {
+            "ventas": 5201300
+          },
+          "footer": [
+            "Totales$5,201,300.00"
+          ]
+        },
+        {
+          "id": "formas-pago",
+          "payloadRows": 2,
+          "domRows": 2,
+          "totals": {
+            "importe": 4763308
+          },
+          "footer": [
+            "Totales$4,763,308.00"
+          ]
+        },
+        {
+          "id": "cuentas-por-cobrar-fifo",
+          "payloadRows": 13687,
+          "domRows": 50,
+          "totals": {
+            "saldo": 1587692
+          },
+          "footer": [
+            "Totales$1,587,692.00"
+          ]
+        },
+        {
+          "id": "pagos-dirigidos",
+          "payloadRows": 0,
+          "domRows": 0,
+          "totals": {
+            "importe": 0
+          },
+          "footer": []
+        },
+        {
+          "id": "castigos-y-reversos",
+          "payloadRows": 0,
+          "domRows": 0,
+          "totals": {
+            "importe": 0
+          },
+          "footer": []
+        }
+      ],
+      "requests": [
+        {
+          "url": "/api/auth/me",
+          "status": 200
+        },
+        {
+          "url": "/api/e11/disponibilidad",
+          "status": 200
+        },
+        {
+          "url": "/api/e11/identidad",
+          "status": 200
+        },
+        {
+          "url": "/api/admin/test-reset",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/pagos-dirigidos?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+          "status": 200
+        },
+        {
+          "url": "/api/auth/me",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/ajustes/pendientes",
+          "status": 200
+        },
+        {
+          "url": "/api/notificaciones",
+          "status": 200
+        },
+        {
+          "url": "/api/notificaciones/feed",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/entradas/pendientes-costo/count",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/clientes?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+          "status": 200
+        },
+        {
+          "url": "/api/locations",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/ubicaciones",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/catalogos",
+          "status": 200
+        },
+        {
+          "url": "/api/etiquetas/alertas/count",
+          "status": 200
+        }
+      ],
+      "errors": [],
+      "renderRemainderUpperBoundMs": 1950.0830220000007
+    },
+    {
+      "mode": "on",
+      "sample": 3,
+      "durationMs": 2032.1943630000023,
+      "reportTiming": {
+        "url": "/api/reportes/clientes?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+        "status": 200,
+        "timing": {
+          "startTime": 1790887465835.335,
+          "domainLookupStart": 0.291,
+          "domainLookupEnd": 0.299,
+          "connectStart": 0.299,
+          "secureConnectionStart": -1,
+          "connectEnd": 0.499,
+          "requestStart": 0.587,
+          "responseStart": 608.609,
+          "responseEnd": 710.493
+        },
+        "serverTiming": "reportes;dur=419.8"
+      },
+      "apiMs": 710.493,
+      "postApiToReadyMs": 1014.172119140625,
+      "signature": "94a5ea28e5bd502dd2f38c72b476513a5726885fb66209a6191d6bc16227ba92",
+      "dom": [
+        {
+          "id": "clientes",
+          "payloadRows": 2575,
+          "domRows": 50,
+          "totals": {
+            "ventas": 5201300,
+            "comprasRollos": 5201300,
+            "comprasMetraje": 0,
+            "utilidad": 2600650
+          },
+          "footer": [
+            "Totales$5,201,300.00$5,201,300.00$0.00$2,600,650.00"
+          ]
+        },
+        {
+          "id": "publico-registrado",
+          "payloadRows": 1,
+          "domRows": 1,
+          "totals": {
+            "ventas": 5201300
+          },
+          "footer": [
+            "Totales$5,201,300.00"
+          ]
+        },
+        {
+          "id": "formas-pago",
+          "payloadRows": 2,
+          "domRows": 2,
+          "totals": {
+            "importe": 4763308
+          },
+          "footer": [
+            "Totales$4,763,308.00"
+          ]
+        },
+        {
+          "id": "cuentas-por-cobrar-fifo",
+          "payloadRows": 13687,
+          "domRows": 50,
+          "totals": {
+            "saldo": 1587692
+          },
+          "footer": [
+            "Totales$1,587,692.00"
+          ]
+        },
+        {
+          "id": "pagos-dirigidos",
+          "payloadRows": 0,
+          "domRows": 0,
+          "totals": {
+            "importe": 0
+          },
+          "footer": []
+        },
+        {
+          "id": "castigos-y-reversos",
+          "payloadRows": 0,
+          "domRows": 0,
+          "totals": {
+            "importe": 0
+          },
+          "footer": []
+        }
+      ],
+      "requests": [
+        {
+          "url": "/api/auth/me",
+          "status": 200
+        },
+        {
+          "url": "/api/e11/disponibilidad",
+          "status": 200
+        },
+        {
+          "url": "/api/e11/identidad",
+          "status": 200
+        },
+        {
+          "url": "/api/admin/test-reset",
+          "status": 200
+        },
+        {
+          "url": "/api/notificaciones/feed",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/pagos-dirigidos?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/ajustes/pendientes",
+          "status": 200
+        },
+        {
+          "url": "/api/auth/me",
+          "status": 200
+        },
+        {
+          "url": "/api/notificaciones",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/clientes?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/entradas/pendientes-costo/count",
+          "status": 200
+        },
+        {
+          "url": "/api/locations",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/ubicaciones",
+          "status": 200
+        },
+        {
+          "url": "/api/etiquetas/alertas/count",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/catalogos",
+          "status": 200
+        }
+      ],
+      "errors": [],
+      "renderRemainderUpperBoundMs": 1321.7013630000024
+    },
+    {
+      "mode": "off",
+      "sample": 1,
+      "durationMs": 8935.679011,
+      "reportTiming": {
+        "url": "/api/reportes/clientes?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+        "status": 200,
+        "timing": {
+          "startTime": 1790887471156.193,
+          "domainLookupStart": 0.726,
+          "domainLookupEnd": 0.732,
+          "connectStart": 0.732,
+          "secureConnectionStart": -1,
+          "connectEnd": 0.972,
+          "requestStart": 1.148,
+          "responseStart": 790.942,
+          "responseEnd": 858.41
+        },
+        "serverTiming": "reportes;dur=587.9"
+      },
+      "apiMs": 858.41,
+      "postApiToReadyMs": 7720.39697265625,
+      "signature": "94a5ea28e5bd502dd2f38c72b476513a5726885fb66209a6191d6bc16227ba92",
+      "dom": [
+        {
+          "id": "clientes",
+          "payloadRows": 2575,
+          "domRows": 2575,
+          "totals": {
+            "ventas": 5201300,
+            "comprasRollos": 5201300,
+            "comprasMetraje": 0,
+            "utilidad": 2600650
+          },
+          "footer": [
+            "Totales$5,201,300.00$5,201,300.00$0.00$2,600,650.00"
+          ]
+        },
+        {
+          "id": "publico-registrado",
+          "payloadRows": 1,
+          "domRows": 1,
+          "totals": {
+            "ventas": 5201300
+          },
+          "footer": [
+            "Totales$5,201,300.00"
+          ]
+        },
+        {
+          "id": "formas-pago",
+          "payloadRows": 2,
+          "domRows": 2,
+          "totals": {
+            "importe": 4763308
+          },
+          "footer": [
+            "Totales$4,763,308.00"
+          ]
+        },
+        {
+          "id": "cuentas-por-cobrar-fifo",
+          "payloadRows": 13687,
+          "domRows": 13687,
+          "totals": {
+            "saldo": 1587692
+          },
+          "footer": [
+            "Totales$1,587,692.00"
+          ]
+        },
+        {
+          "id": "pagos-dirigidos",
+          "payloadRows": 0,
+          "domRows": 0,
+          "totals": {
+            "importe": 0
+          },
+          "footer": []
+        },
+        {
+          "id": "castigos-y-reversos",
+          "payloadRows": 0,
+          "domRows": 0,
+          "totals": {
+            "importe": 0
+          },
+          "footer": []
+        }
+      ],
+      "requests": [
+        {
+          "url": "/api/auth/me",
+          "status": 200
+        },
+        {
+          "url": "/api/e11/disponibilidad",
+          "status": 200
+        },
+        {
+          "url": "/api/e11/identidad",
+          "status": 200
+        },
+        {
+          "url": "/api/admin/test-reset",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/pagos-dirigidos?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+          "status": 200
+        },
+        {
+          "url": "/api/auth/me",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/ajustes/pendientes",
+          "status": 200
+        },
+        {
+          "url": "/api/notificaciones/feed",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/entradas/pendientes-costo/count",
+          "status": 200
+        },
+        {
+          "url": "/api/notificaciones",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/clientes?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+          "status": 200
+        },
+        {
+          "url": "/api/locations",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/ubicaciones",
+          "status": 200
+        },
+        {
+          "url": "/api/etiquetas/alertas/count",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/catalogos",
+          "status": 200
+        },
+        {
+          "url": "/api/e11/identidad",
+          "status": 200
+        },
+        {
+          "url": "/api/notificaciones/feed",
+          "status": 200
+        }
+      ],
+      "errors": [],
+      "renderRemainderUpperBoundMs": 8077.269011
+    },
+    {
+      "mode": "off",
+      "sample": 2,
+      "durationMs": 9608.869510000004,
+      "reportTiming": {
+        "url": "/api/reportes/clientes?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+        "status": 200,
+        "timing": {
+          "startTime": 1790887503003.5798,
+          "domainLookupStart": 1.325,
+          "domainLookupEnd": 1.33,
+          "connectStart": 1.33,
+          "secureConnectionStart": -1,
+          "connectEnd": 1.791,
+          "requestStart": 2.043,
+          "responseStart": 1633.22,
+          "responseEnd": 1701.313
+        },
+        "serverTiming": "reportes;dur=1319.2"
+      },
+      "apiMs": 1701.313,
+      "postApiToReadyMs": 7363.107177734375,
+      "signature": "94a5ea28e5bd502dd2f38c72b476513a5726885fb66209a6191d6bc16227ba92",
+      "dom": [
+        {
+          "id": "clientes",
+          "payloadRows": 2575,
+          "domRows": 2575,
+          "totals": {
+            "ventas": 5201300,
+            "comprasRollos": 5201300,
+            "comprasMetraje": 0,
+            "utilidad": 2600650
+          },
+          "footer": [
+            "Totales$5,201,300.00$5,201,300.00$0.00$2,600,650.00"
+          ]
+        },
+        {
+          "id": "publico-registrado",
+          "payloadRows": 1,
+          "domRows": 1,
+          "totals": {
+            "ventas": 5201300
+          },
+          "footer": [
+            "Totales$5,201,300.00"
+          ]
+        },
+        {
+          "id": "formas-pago",
+          "payloadRows": 2,
+          "domRows": 2,
+          "totals": {
+            "importe": 4763308
+          },
+          "footer": [
+            "Totales$4,763,308.00"
+          ]
+        },
+        {
+          "id": "cuentas-por-cobrar-fifo",
+          "payloadRows": 13687,
+          "domRows": 13687,
+          "totals": {
+            "saldo": 1587692
+          },
+          "footer": [
+            "Totales$1,587,692.00"
+          ]
+        },
+        {
+          "id": "pagos-dirigidos",
+          "payloadRows": 0,
+          "domRows": 0,
+          "totals": {
+            "importe": 0
+          },
+          "footer": []
+        },
+        {
+          "id": "castigos-y-reversos",
+          "payloadRows": 0,
+          "domRows": 0,
+          "totals": {
+            "importe": 0
+          },
+          "footer": []
+        }
+      ],
+      "requests": [
+        {
+          "url": "/api/auth/me",
+          "status": 200
+        },
+        {
+          "url": "/api/e11/disponibilidad",
+          "status": 200
+        },
+        {
+          "url": "/api/e11/identidad",
+          "status": 200
+        },
+        {
+          "url": "/api/admin/test-reset",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/pagos-dirigidos?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+          "status": 200
+        },
+        {
+          "url": "/api/auth/me",
+          "status": 200
+        },
+        {
+          "url": "/api/notificaciones",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/ajustes/pendientes",
+          "status": 200
+        },
+        {
+          "url": "/api/notificaciones/feed",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/clientes?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/ubicaciones",
+          "status": 200
+        },
+        {
+          "url": "/api/locations",
+          "status": 200
+        },
+        {
+          "url": "/api/etiquetas/alertas/count",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/entradas/pendientes-costo/count",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/catalogos",
+          "status": 200
+        },
+        {
+          "url": "/api/e11/identidad",
+          "status": 200
+        },
+        {
+          "url": "/api/notificaciones/feed",
+          "status": 200
+        }
+      ],
+      "errors": [],
+      "renderRemainderUpperBoundMs": 7907.556510000004
+    },
+    {
+      "mode": "off",
+      "sample": 3,
+      "durationMs": 12141.192551,
+      "reportTiming": {
+        "url": "/api/reportes/clientes?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+        "status": 200,
+        "timing": {
+          "startTime": 1790887527253.84,
+          "domainLookupStart": 0.433,
+          "domainLookupEnd": 0.438,
+          "connectStart": 0.438,
+          "secureConnectionStart": -1,
+          "connectEnd": 0.486,
+          "requestStart": 0.61,
+          "responseStart": 870.882,
+          "responseEnd": 914.407
+        },
+        "serverTiming": "reportes;dur=682.6"
+      },
+      "apiMs": 914.407,
+      "postApiToReadyMs": 10429.7529296875,
+      "signature": "94a5ea28e5bd502dd2f38c72b476513a5726885fb66209a6191d6bc16227ba92",
+      "dom": [
+        {
+          "id": "clientes",
+          "payloadRows": 2575,
+          "domRows": 2575,
+          "totals": {
+            "ventas": 5201300,
+            "comprasRollos": 5201300,
+            "comprasMetraje": 0,
+            "utilidad": 2600650
+          },
+          "footer": [
+            "Totales$5,201,300.00$5,201,300.00$0.00$2,600,650.00"
+          ]
+        },
+        {
+          "id": "publico-registrado",
+          "payloadRows": 1,
+          "domRows": 1,
+          "totals": {
+            "ventas": 5201300
+          },
+          "footer": [
+            "Totales$5,201,300.00"
+          ]
+        },
+        {
+          "id": "formas-pago",
+          "payloadRows": 2,
+          "domRows": 2,
+          "totals": {
+            "importe": 4763308
+          },
+          "footer": [
+            "Totales$4,763,308.00"
+          ]
+        },
+        {
+          "id": "cuentas-por-cobrar-fifo",
+          "payloadRows": 13687,
+          "domRows": 13687,
+          "totals": {
+            "saldo": 1587692
+          },
+          "footer": [
+            "Totales$1,587,692.00"
+          ]
+        },
+        {
+          "id": "pagos-dirigidos",
+          "payloadRows": 0,
+          "domRows": 0,
+          "totals": {
+            "importe": 0
+          },
+          "footer": []
+        },
+        {
+          "id": "castigos-y-reversos",
+          "payloadRows": 0,
+          "domRows": 0,
+          "totals": {
+            "importe": 0
+          },
+          "footer": []
+        }
+      ],
+      "requests": [
+        {
+          "url": "/api/auth/me",
+          "status": 200
+        },
+        {
+          "url": "/api/e11/disponibilidad",
+          "status": 200
+        },
+        {
+          "url": "/api/e11/identidad",
+          "status": 200
+        },
+        {
+          "url": "/api/admin/test-reset",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/pagos-dirigidos?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+          "status": 200
+        },
+        {
+          "url": "/api/auth/me",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/ajustes/pendientes",
+          "status": 200
+        },
+        {
+          "url": "/api/notificaciones",
+          "status": 200
+        },
+        {
+          "url": "/api/notificaciones/feed",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/clientes?periodo=personalizado&modalidad=TODO&desde=2025-09-27&hasta=2026-09-26",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/ubicaciones",
+          "status": 200
+        },
+        {
+          "url": "/api/etiquetas/alertas/count",
+          "status": 200
+        },
+        {
+          "url": "/api/reportes/catalogos",
+          "status": 200
+        },
+        {
+          "url": "/api/locations",
+          "status": 200
+        },
+        {
+          "url": "/api/inventario/entradas/pendientes-costo/count",
+          "status": 200
+        },
+        {
+          "url": "/api/e11/identidad",
+          "status": 200
+        },
+        {
+          "url": "/api/notificaciones/feed",
+          "status": 200
+        }
+      ],
+      "errors": [],
+      "renderRemainderUpperBoundMs": 11226.785551
+    }
+  ],
+  "provenance": {
+    "api": "/home/runner/workspace/artifacts/api-server/dist-driver-phones-20261001/index.mjs",
+    "apiSha256": "ae72cf8da6832f1a5275a2bdba689508ac1ee69639312a246785cb57fe5b44a7",
+    "ui": "/home/runner/workspace/artifacts/mariana-textil/dist-sidebar-order-20261001",
+    "frontendFiles": {
+      "favicon.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+      "index.html": "611db3cf669c5417ca1cc3ccb4699c6047c4f261745cbb8405f8eb50b1091062",
+      "robots.txt": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+      "assets/index-CJ5sQYvB.js": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c",
+      "assets/index-DM4fp8qL.css": "7bdf6dd0e278a322da6f3d9f6c51c91a1b04ad92cc34ce5bca80adc53fe49e01",
+      "assets/index-TteXdrEC.js": "25e8b6729842adf77b25fde4e73c205b0b7b3287d8a6ff77e12575d48a00a9c0",
+      "assets/mariana-textil-logo-FFOiXRd3.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+      "assets/mariana-textil-logo-monochrome-_7AVoW2A.png": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24",
+      "sounds/alerta.ogg": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e",
+      "sounds/aviso.ogg": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4",
+      "sounds/solicitud.ogg": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+    },
+    "patchFile": "assets/index-TteXdrEC.js",
+    "patchFrom": "d=r!==void 0,[m,f]=v.useState(50)",
+    "patchTo": "d=false,[m,f]=v.useState(50)",
+    "disabledSha256": "5f124fdb6b1fa0dc9c242a0e352dc4613b42cb8728359e5b305579d5d950ef12",
+    "loaderSha256": "f7cceb69543b91f036a46e0e9f6ae51969ab3f98668f138f12304f86cffe721a"
+  },
+  "limitations": [
+    "Fresh local PostgreSQL and 2575 synthetic customers, not the old Neon snapshot or inherited customer histories; historical 11792ms/12355ms and rejected-index 11496ms are context only.",
+    "SQL historical fixtures are performance workload, not native producer correctness evidence.",
+    "OFF changes one presentation boolean in HTTP-served frozen JS; API, SQL, data, sorting, financial calculations and exports are unchanged.",
+    "Current canonical schema preparation, not a historical schema clone. No financial indexes added by this harness.",
+    "API timing is actual HTTP including PostgreSQL work; render remainder also includes browser/network overhead and is not pure CPU time."
+  ],
+  "identitySha256": "510a170f0cdd98d2f05a6c1d26a22923fe8f84f6020ef7ccea821d140d7c47e9",
+  "authSidecarSha256": "128dc64b683f5d0bd384747cc226c0067852735e3c9b8ca8b8939f70ae3dfb1d",
+  "customerPreparation": {
+    "canonicalSyntheticPreserved": 6,
+    "added": 2569,
+    "totalDistributed": 2575,
+    "deleted": 0
+  },
+  "summary": {
+    "on": {
+      "browserMs": {
+        "n": 3,
+        "min": 2032.1943630000023,
+        "median": 2695.7350220000008,
+        "max": 3981.1559559999987
+      },
+      "apiMs": {
+        "n": 3,
+        "min": 710.493,
+        "median": 745.652,
+        "max": 1233.251
+      }
+    },
+    "off": {
+      "browserMs": {
+        "n": 3,
+        "min": 8935.679011,
+        "median": 9608.869510000004,
+        "max": 12141.192551
+      },
+      "apiMs": {
+        "n": 3,
+        "min": 858.41,
+        "median": 914.407,
+        "max": 1701.313
+      }
+    }
+  },
+  "cleanupPassed": true
+}
