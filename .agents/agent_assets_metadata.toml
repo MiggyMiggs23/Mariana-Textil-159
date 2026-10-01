@@ -2817,3 +2817,17 @@ mtime_ms = 1790882578252
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/782fbeb5-3781-4bd1-beba-a5c0ccb9e25b/a475df69-2630-4901-afb8-7a1b7341ae4c"
 storage_version_token = "1790882691229206"
 content_type = "image/png"
+
+[[outputs]]
+id = "9tNnBtcUZ2-QcPd30Xmfo"
+uri = "file://reports/reset-catalog-preservation-20261001/resultado.html"
+type = "html"
+title = "Reinicio: tablas y prueba desechable"
+description = "Listas exactas del código vigente, excepciones de conservación y resultado de la prueba aislada."
+logical_id = "205d1f13-6856-430f-a7d1-d8ac74ea665b"
+content_hash = "sha256:e2f89888cf5f9af35c8c25426a3d6bae532c049924e9168a538486389da7e711"
+size = 6916
+mtime_ms = 1790890170012
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/205d1f13-6856-430f-a7d1-d8ac74ea665b/d0684d2d-6ecc-4b5c-91ae-05b5031695af"
+storage_version_token = "1790890170536380"
+content_type = "text/html"
