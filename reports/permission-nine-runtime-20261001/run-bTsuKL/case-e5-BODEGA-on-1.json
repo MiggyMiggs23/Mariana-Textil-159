@@ -1,0 +1,359 @@
+{
+  "id": "e5:BODEGA:on",
+  "attempt": 1,
+  "actorId": 15,
+  "role": "BODEGA",
+  "family": "e5",
+  "variant": "on",
+  "checks": [
+    {
+      "method": "GET",
+      "path": "/api/e5/disponibilidad?ubicacionId=1",
+      "status": 403,
+      "body": {
+        "error": {
+          "code": "E5_FORBIDDEN",
+          "message": "Este perfil no tiene acceso E5."
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/e5/cobros?ubicacionId=1&clienteId=8",
+      "status": 403,
+      "body": {
+        "error": {
+          "code": "E5_FORBIDDEN",
+          "message": "Este perfil no tiene acceso E5."
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/e5/contexto?ubicacionId=1&clienteId=8",
+      "status": 403,
+      "body": {
+        "error": {
+          "code": "E5_FORBIDDEN",
+          "message": "Este perfil no tiene acceso E5."
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/e5/cobros/719afcb5-b280-4662-a66d-6e0cff4642b8",
+      "status": 403,
+      "body": {
+        "error": {
+          "code": "E5_FORBIDDEN",
+          "message": "Este perfil no tiene acceso E5."
+        }
+      }
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "path": "/api/dashboard",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/sesiones-caja/actual?ubicacionId=1",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "effectivePermissions": [
+    {
+      "modulo": "marcar_remate",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "dashboard",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "pos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "entradas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "salidas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "movimientos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "etiquetas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "inventario",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "auditoria_inventario",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "productos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "precios",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "ajustes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_credito",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_precios",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_finanzas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "caja_abonos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_recapturas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "proveedores",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "proveedores_finanzas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "contenedores",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "ubicaciones",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "usuarios",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "permisos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "resumen_caja",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "cortes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "cobros_pagos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "reportes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "conciliacion",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "auditoria",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "camionetas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "choferes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "viajes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "salidas_venta",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "equipos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    }
+  ],
+  "classification": "OUTER_ROLE_DENIAL_NOT_INNER_PERMISSION_COVERAGE",
+  "status": "FAIL",
+  "error": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText(/Sin permiso efectivo de consulta E5/) to be visible\u001b[22m\n\n    at Module.exercise (/home/runner/workspace/reports/permission-nine-runtime-20261001/cases.mjs?retry=3fb6e796-3f05-4af9-b106-c8517b3ea3ec:91:69)\n    at async runCases (/home/runner/workspace/reports/permission-nine-runtime-20261001/run-main.mjs:97:18)\n    at async finishReadiness (/home/runner/workspace/reports/permission-nine-runtime-20261001/run-main.mjs:86:3)\n    at async file:///home/runner/workspace/reports/permission-nine-runtime-20261001/run-main.mjs:180:3"
+}

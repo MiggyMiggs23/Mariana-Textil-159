@@ -1,0 +1,355 @@
+{
+  "id": "e5:CONTADOR:or",
+  "attempt": 1,
+  "actorId": 23,
+  "role": "CONTADOR",
+  "family": "e5",
+  "variant": "or",
+  "checks": [
+    {
+      "method": "GET",
+      "path": "/api/e5/disponibilidad?ubicacionId=1",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "8a8e689a-979a-4bbe-8028-54ad9baa23a8"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/e5/cobros?ubicacionId=1&clienteId=8",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "925627f6-912f-4069-bfb5-06bc9aa0cfdb"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/e5/contexto?ubicacionId=1&clienteId=8",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "7dd7afa3-9df5-4582-9b85-5e9c35e9dc6d"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/e5/cobros/719afcb5-b280-4662-a66d-6e0cff4642b8",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "a2b4b8a7-2826-41a1-a83e-ff218031a8c9"
+      }
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/identidad",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/fiscal/ventas?desde=2026-09-01&hastaExclusivo=2026-10-01&limit=20",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/fiscal/clientes?limit=20",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/identidad",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/identidad",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "effectivePermissions": [
+    {
+      "modulo": "marcar_remate",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "dashboard",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "pos",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "entradas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "salidas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "movimientos",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "etiquetas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "inventario",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "auditoria_inventario",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "productos",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "precios",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "ajustes",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_credito",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_precios",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_finanzas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "caja_abonos",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_recapturas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "proveedores",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "proveedores_finanzas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "contenedores",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "ubicaciones",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "usuarios",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "permisos",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "resumen_caja",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "cortes",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "cobros_pagos",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "reportes",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "conciliacion",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "auditoria",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "camionetas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "choferes",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "viajes",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "salidas_venta",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "equipos",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    }
+  ],
+  "classification": "OUTER_ROLE_DENIAL_NOT_INNER_PERMISSION_COVERAGE",
+  "finalUrl": "/cobros/pendientes/719afcb5-b280-4662-a66d-6e0cff4642b8",
+  "status": "PASS"
+}

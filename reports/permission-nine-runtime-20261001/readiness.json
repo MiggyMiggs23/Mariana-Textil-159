@@ -1,0 +1,30 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "scope": "9 permission cells, 24 paired/OR actors plus fresh-session positive reset",
+  "launchMainOnly": "node reports/permission-nine-runtime-20261001/run-main.mjs --main-authorized",
+  "outputLocator": "reports/permission-nine-runtime-20261001/latest-run.txt",
+  "targetedRetry": "Write {\"retry\":[\"e5:CAJA:on\"]} to <run>/control.json. cases.mjs is reimported for retry; existing isolated PostgreSQL/API/browser retained.",
+  "terminalCleanup": "Write {\"cleanup\":true} to <run>/control.json. PASS cleans up automatically. SIGTERM also invokes owned-resource cleanup.",
+  "failurePolicy": "On bootstrap failure retain disposable process/data. Once browser/native source exist, write {\"retryReadiness\":true} to retry login/receipt readiness without rebootstrap. Earlier setup failures only allow cleanup. On case failure use targeted retry.",
+  "notExecutedByWorker": ["PostgreSQL bootstrap", "canonical schema/seed", "API/UI startup", "browser", "database access"],
+  "checksPrepared": [
+    "Frozen API driver-phones + UI sidebar-order SHA-256 identity and unmodified served bytes",
+    "Clean environment without inherited database URLs or PG variables",
+    "Disposable target/control identities before/after preparation and inside API process",
+    "Canonical schema/seed/initializers plus already-released native financial migrations",
+    "No DISABLE TRIGGER; native graph and refund guards preserved",
+    "Full E5 receipt produced by actual frozen HTTP API from native nonmonetary note/E1 source",
+    "Six roles, caja_abonos.ver true/false with clientes_finanzas.ver false; separate OR positive",
+    "Three roles, ajustes.ver-only paired difference; inventory and movement readers constant",
+    "CONTADOR E11 suppression/outer boundaries distinguished from inner-cell coverage",
+    "Actual signed-in Playwright navigation/route screenshots and HTTP evidence, no HTTP mocks",
+    "Fresh login context after negative/OR variants rechecks positive as session/query-cache reset proof"
+  ],
+  "importantInterpretation": [
+    "No actual runtime result or application gap has been proven by preparation.",
+    "Financial release scripts named candidate/not-approved were subsequently COMMITTED; provenance is apply-task1-operator-result.json and READINESS.md. They reconstruct released construction-gate retirement on fresh disposable only, not ad-hoc guard bypass.",
+    "Canonical initializers do not install E5, so the tested rehearse-producers.mjs native financial installation is required rather than inserting an orphan cobro row.",
+    "No app source edits or release activation performed.",
+    "Reset proof here means fresh authenticated browser/query-cache reset, not the application's destructive reset endpoint."
+  ]
+}

@@ -1,0 +1,216 @@
+{
+  "eventId": "owner-authorized-348A-20261001",
+  "denominators": {
+    "effectiveMatrix": 980,
+    "roles": 7,
+    "modules": 35,
+    "actions": 4,
+    "historicalGrantedOutsideNegativeAudit": 258,
+    "historicalDenied": 722,
+    "priorObservedOrBoundary": 289,
+    "residualCampaign": 433,
+    "reviewedSubset": 357
+  },
+  "counts": {
+    "newNonApplicableClosures": 348,
+    "newRuntimePasses": 0,
+    "categoryCPending": 9,
+    "residualDirectPreviouslyClosed": 56,
+    "residualCombinedPreviouslyClosed": 44,
+    "residualDirectRemaining": 29,
+    "residualCombinedRemaining": 41,
+    "otherThan357DirectRemaining": 20,
+    "otherThan357CombinedRemaining": 32,
+    "ownerBusinessDecisionsProvenRequired": 0,
+    "prior289ObservedDenialsNotRevalidatedForSelectedGuard": 225,
+    "prior289E11BoundaryOnly": 64,
+    "fullDeniedStrictCombinedEvidenceNotEstablished": 330,
+    "fullDeniedStrictDirectEvidenceNotEstablished": 318
+  },
+  "interpretation": [
+    "41 is the exact remaining combined count in the 433-cell campaign, not 9 and not a claim that all 722 denied cells have strict UI/API evidence.",
+    "Full denied partition: 722 = 348 non-applicable + 44 historical combined closures + 41 residual pending + 225 historical observed denials (inner-guard qualification) + 64 historical E11 boundary observations.",
+    "330 = 41 + 289 without strict combined proof in these authoritative ledgers; 318 = 29 + 289 without established strict selected-action API attribution. These are evidence gaps, not new failing tests, and preserve historical coverage rather than silently reclassifying it as PASS.",
+    "The other 258 historically granted cells were outside the negative audit. No complete current-live 980-cell runtime certification is claimed.",
+    "Latest final fields pendingDirectFinal/pendingCombinedFinal override stale pendingDirect/pendingCombined inside the same postrelease rows. Configured prerequisite variants close 4 API cases, not original actors or their UI.",
+    "No confirmed business-owner decision remains. Revertir UI exposure is technical/unknown; do not invent owner semantics."
+  ],
+  "chronology": [
+    {
+      "source": "reports/tanda-f/tarea-4/followup/combined-cell-classification.json",
+      "state": "722 denied = 225 observed + 64 E11 + 433 residual; residual 357/65/6/5."
+    },
+    {
+      "source": "reports/tanda-g-ampliada/task1/runtime-summary.json",
+      "directRemaining": 381,
+      "combinedRemaining": 421,
+      "directClosed": 52,
+      "combinedClosed": 12
+    },
+    {
+      "source": "reports/tanda-h/permissions/RESULTADO.txt",
+      "newClosures": 0,
+      "directRemaining": 381,
+      "combinedRemaining": 421
+    },
+    {
+      "source": "reports/trabajo-nocturno-20260925/tarea-7/ledger.json",
+      "newClosures": 0,
+      "directRemaining": 381,
+      "combinedRemaining": 421
+    },
+    {
+      "source": "reports/noche-20260926/tarea-1/final-ledger.json",
+      "newCombinedClosures": 20,
+      "directRemaining": 381,
+      "combinedRemaining": 401
+    },
+    {
+      "source": "reports/postrelease-review-20260926/tarea-3/final-ledger.json",
+      "newDirectClosures": 4,
+      "newCombinedClosures": 12,
+      "directRemaining": 377,
+      "combinedRemaining": 389
+    },
+    {
+      "source": "reports/permission-357-review-20261001/informes/cells.csv",
+      "categoryA": 348,
+      "categoryC": 9,
+      "runtimeVerified": false
+    },
+    {
+      "source": "Current explicit owner instruction",
+      "newNonApplicable": 348,
+      "newRuntimeClosures": 0,
+      "directRemaining": 29,
+      "combinedRemaining": 41
+    }
+  ],
+  "originalResidualCategoriesReconciled": {
+    "NO_OPERATION_FOUND_STATIC": {
+      "total": 357,
+      "directClosed": 0,
+      "combinedClosed": 0,
+      "nonApplicable": 348,
+      "directPending": 9,
+      "combinedPending": 9
+    },
+    "BLOCKED_SYNTHETIC_FIXTURE": {
+      "total": 65,
+      "directClosed": 52,
+      "combinedClosed": 44,
+      "nonApplicable": 0,
+      "directPending": 13,
+      "combinedPending": 21
+    },
+    "BLOCKED_LEGACY_CAPTURE_GATE": {
+      "total": 6,
+      "directClosed": 0,
+      "combinedClosed": 0,
+      "nonApplicable": 0,
+      "directPending": 6,
+      "combinedPending": 6
+    },
+    "UNTESTED_SCOPE_RESTRICTION": {
+      "total": 5,
+      "directClosed": 4,
+      "combinedClosed": 0,
+      "nonApplicable": 0,
+      "directPending": 1,
+      "combinedPending": 5
+    }
+  },
+  "pendingGroups": [
+    {
+      "reason": "NO_RELEASED_ADMIN_REVERTIR_UI_COUNTERPART",
+      "count": 3,
+      "ids": [
+        "TERMINAL:salidas:editar",
+        "CAJA:salidas:editar",
+        "BODEGA:salidas:editar"
+      ]
+    },
+    {
+      "reason": "AUDIT_ABIERTA_NOT_CONFIRM_ELIGIBLE",
+      "count": 5,
+      "ids": [
+        "TERMINAL:auditoria_inventario:autorizar",
+        "CAJA:auditoria_inventario:autorizar",
+        "SUPERVISOR:auditoria_inventario:autorizar",
+        "BODEGA:auditoria_inventario:autorizar",
+        "SISTEMAS:auditoria_inventario:autorizar"
+      ]
+    },
+    {
+      "reason": "AJUSTES_UI_GATE_PENDING_MAIN_VERIFICATION (supersedes prior unknown-operation reason)",
+      "count": 3,
+      "ids": [
+        "TERMINAL:ajustes:ver",
+        "CAJA:ajustes:ver",
+        "CONTADOR:ajustes:ver"
+      ]
+    },
+    {
+      "reason": "LEGACY_OR_OUTER_BOUNDARY_OR_MISSING_MATCHED_UI",
+      "count": 5,
+      "ids": [
+        "TERMINAL:clientes_finanzas:crear",
+        "CAJA:clientes_finanzas:crear",
+        "SUPERVISOR:clientes_finanzas:crear",
+        "BODEGA:clientes_finanzas:crear",
+        "SISTEMAS:clientes_finanzas:crear"
+      ]
+    },
+    {
+      "reason": "DYNAMIC_OR_PROFILE_BOUNDARY_NOT_EXCLUSIVE_ACTION",
+      "count": 6,
+      "ids": [
+        "TERMINAL:caja_abonos:ver",
+        "CAJA:caja_abonos:ver",
+        "SUPERVISOR:caja_abonos:ver",
+        "BODEGA:caja_abonos:ver",
+        "SISTEMAS:caja_abonos:ver",
+        "CONTADOR:caja_abonos:ver"
+      ]
+    },
+    {
+      "reason": "CONFIGURED_VARIANT_DIRECT_CLOSED_UI_NOT_PROVEN",
+      "count": 4,
+      "ids": [
+        "TERMINAL:permisos:editar",
+        "CAJA:permisos:editar",
+        "SUPERVISOR:permisos:editar",
+        "BODEGA:permisos:editar"
+      ]
+    },
+    {
+      "reason": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "count": 15,
+      "ids": [
+        "CONTADOR:entradas:editar",
+        "CONTADOR:salidas:editar",
+        "CONTADOR:salidas:autorizar",
+        "CONTADOR:etiquetas:editar",
+        "CONTADOR:auditoria_inventario:editar",
+        "CONTADOR:auditoria_inventario:autorizar",
+        "CONTADOR:clientes_finanzas:crear",
+        "CONTADOR:contenedores:editar",
+        "CONTADOR:contenedores:autorizar",
+        "CONTADOR:permisos:editar",
+        "CONTADOR:cobros_pagos:crear",
+        "CONTADOR:camionetas:editar",
+        "CONTADOR:choferes:editar",
+        "CONTADOR:salidas_venta:crear",
+        "CONTADOR:equipos:editar"
+      ]
+    }
+  ],
+  "ledger": "closure.json",
+  "verification": {
+    "uniqueFullMatrixIds": 980,
+    "uniqueClosureIds": 348,
+    "uniqueResidualPendingIds": 41,
+    "categoryAAndCAreDisjoint": true,
+    "categoryCNotClosed": true
+  }
+}

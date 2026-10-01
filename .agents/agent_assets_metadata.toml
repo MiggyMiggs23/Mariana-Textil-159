@@ -2859,3 +2859,31 @@ mtime_ms = 1790891781876
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/376b589c-491a-428f-8cb4-fef2bdb7c6ba/aff7de04-235b-438f-81c9-f2812c2f0b5a"
 storage_version_token = "1790891831360845"
 content_type = "text/csv"
+
+[[outputs]]
+id = "HXX0flVKZYljO9AuemM_u"
+uri = "file://reports/permission-357-closure-20261001/informe.html"
+type = "html"
+title = "Cierre de las 357 y pendientes de la matriz"
+description = "Resultados de las pruebas aisladas, separación entre permiso interno y bloqueo por rol, y conciliación de la matriz histórica completa."
+logical_id = "2dab5ec6-2cc8-4aab-8483-cfc9a50583d0"
+content_hash = "sha256:ede9fbeab8fad861d6279942722731100b37c03a43a8b41870a16ef06728f7de"
+size = 11926
+mtime_ms = 1790893817192
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/2dab5ec6-2cc8-4aab-8483-cfc9a50583d0/4bca4d47-c309-4ba8-a085-bb41c3766a01"
+storage_version_token = "1790893884812812"
+content_type = "text/html"
+
+[[outputs]]
+id = "Xc5a0CipIeLBy1HYuzysA"
+uri = "file://reports/permission-357-closure-20261001/matriz-980-final.csv"
+type = "table"
+title = "Matriz histórica: 980 celdas conciliadas"
+description = "Estado individual y procedencia de cada celda, sin presentar los casos no aplicables como aprobados."
+logical_id = "66b16a06-960a-43eb-8a43-a41bfb0e53ed"
+content_hash = "sha256:00531174a58afd15cdcf08aae2c5c1e6c5fc89e52e14b359b59f1334a0804ae9"
+size = 193570
+mtime_ms = 1790893768081
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/66b16a06-960a-43eb-8a43-a41bfb0e53ed/ee5c4173-63b0-4719-b2bd-5cab33749196"
+storage_version_token = "1790893885695971"
+content_type = "text/csv"

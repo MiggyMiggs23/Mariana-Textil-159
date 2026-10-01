@@ -1,0 +1,405 @@
+{
+  "id": "ajustes:TERMINAL:on",
+  "attempt": 3,
+  "actorId": 5,
+  "role": "TERMINAL",
+  "family": "ajustes",
+  "variant": "on",
+  "checks": [
+    {
+      "method": "GET",
+      "path": "/api/inventario/rollos?ubicacionId=1&page=1&pageSize=5",
+      "status": 200,
+      "body": {
+        "items": [
+          {
+            "id": 1,
+            "serie": "990000001",
+            "productoId": 1,
+            "skuProducto": "NINE-RUNTIME",
+            "telaProducto": "Disposable fabric",
+            "colorProducto": "Azul",
+            "ubicacionId": 1,
+            "nombreUbicacion": "Mariana",
+            "pisoId": null,
+            "nombrePiso": null,
+            "proveedorId": null,
+            "estado": "DISPONIBLE",
+            "cantidadInicial": "10.000",
+            "cantidadActual": "10.000",
+            "notas": null,
+            "createdAt": "2026-10-01T22:11:19.677Z",
+            "updatedAt": "2026-10-01T22:11:19.677Z"
+          }
+        ],
+        "total": 1,
+        "page": 1,
+        "pageSize": 5
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventario/movimientos/1",
+      "status": 200,
+      "body": {
+        "id": 1,
+        "rolloId": 1,
+        "serie": "990000001",
+        "productoId": 1,
+        "skuProducto": "NINE-RUNTIME",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Mariana",
+        "tipo": "ALTA",
+        "cantidad": "10.000",
+        "saldoPosterior": "10.000",
+        "documentoTipo": "FIXTURE",
+        "documentoId": "permission-nine-native",
+        "movimientoOrigenId": null,
+        "usuarioId": 1,
+        "motivoSalidaExtraordinaria": null,
+        "justificacion": null,
+        "revisado": true,
+        "createdAt": "2026-10-01T22:11:19.683Z"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "body": []
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/inventario/movimientos/1",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "effectivePermissions": [
+    {
+      "modulo": "marcar_remate",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "dashboard",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "pos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "entradas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "salidas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "movimientos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "etiquetas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "inventario",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "auditoria_inventario",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "productos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "precios",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "ajustes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": true
+    },
+    {
+      "modulo": "clientes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_credito",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_precios",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_finanzas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "caja_abonos",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_recapturas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "proveedores",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "proveedores_finanzas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "contenedores",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "ubicaciones",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "usuarios",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "permisos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "resumen_caja",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "cortes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "cobros_pagos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "reportes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "conciliacion",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "auditoria",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "camionetas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "choferes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "viajes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "salidas_venta",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "equipos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    }
+  ],
+  "classification": "UI_PERMISSION_DIFFERENTIAL_API_DEPENDENCIES_CONSTANT",
+  "navigationVisible": false,
+  "navigationBoundary": "Whole sidebar excluded for TERMINAL; do not claim inner nav permission differential",
+  "movementDialog": {
+    "movementId": "1",
+    "product": "NINE-RUNTIME",
+    "roll": "990000001",
+    "verified": true
+  },
+  "status": "FAIL",
+  "error": "locator.click: Error: strict mode violation: getByRole('dialog', { name: 'Detalle del movimiento #1', exact: true }).getByRole('button', { name: 'Cerrar', exact: true }) resolved to 2 elements:\n    1) <button class=\"inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2\">Cerrar</button> aka locator('div').filter({ hasText: /^Cerrar$/ }).getByRole('button')\n    2) <button type=\"button\" class=\"absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground\">…</button> aka getByRole('button', { name: 'Cerrar' }).nth(1)\n\nCall log:\n\u001b[2m  - waiting for getByRole('dialog', { name: 'Detalle del movimiento #1', exact: true }).getByRole('button', { name: 'Cerrar', exact: true })\u001b[22m\n\n    at Module.exercise (/home/runner/workspace/reports/permission-nine-runtime-20261001/cases.mjs?retry=7d346a83-6f2b-4430-a860-3cacbce8d595:180:69)\n    at async runCases (/home/runner/workspace/reports/permission-nine-runtime-20261001/run-main.mjs:97:18)\n    at async file:///home/runner/workspace/reports/permission-nine-runtime-20261001/run-main.mjs:202:9"
+}

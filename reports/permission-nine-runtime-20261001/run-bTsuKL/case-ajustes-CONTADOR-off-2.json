@@ -1,0 +1,398 @@
+{
+  "id": "ajustes:CONTADOR:off",
+  "attempt": 2,
+  "actorId": 25,
+  "role": "CONTADOR",
+  "family": "ajustes",
+  "variant": "off",
+  "checks": [
+    {
+      "method": "GET",
+      "path": "/api/inventario/rollos?ubicacionId=1&page=1&pageSize=5",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada."
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventario/movimientos/1",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada."
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada."
+      }
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/identidad",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/fiscal/ventas?desde=2026-09-01&hastaExclusivo=2026-10-01&limit=20",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/fiscal/clientes?limit=20",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/identidad",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/fiscal/ventas?desde=2026-09-01&hastaExclusivo=2026-10-01&limit=20",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/fiscal/clientes?limit=20",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/disponibilidad",
+      "status": 200
+    },
+    {
+      "path": "/api/e11/identidad",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "effectivePermissions": [
+    {
+      "modulo": "marcar_remate",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "dashboard",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "pos",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "entradas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "salidas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "movimientos",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "etiquetas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "inventario",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "auditoria_inventario",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "productos",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "precios",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "ajustes",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_credito",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_precios",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_finanzas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "caja_abonos",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_recapturas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "proveedores",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "proveedores_finanzas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "contenedores",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "ubicaciones",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "usuarios",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "permisos",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "resumen_caja",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "cortes",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "cobros_pagos",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "reportes",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "conciliacion",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "auditoria",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "camionetas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "choferes",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "viajes",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "salidas_venta",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "equipos",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    }
+  ],
+  "classification": "E11_OUTER_UI_BOUNDARY_NOT_INNER_PERMISSION_COVERAGE",
+  "rawDependentChecks": [
+    {
+      "method": "GET",
+      "path": "/api/inventario/rollos?ubicacionId=1&page=1&pageSize=5",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "caf70933-0ce0-4b2b-9771-ff9ecea41e02"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventario/movimientos/1",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "acc5e68a-8332-4786-8e05-31f772ef2cac"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 403,
+      "body": {
+        "code": "PERFIL_DENEGADO",
+        "message": "Utiliza la proyección E11 autorizada.",
+        "requestId": "6f2a0882-f927-43e6-955e-21288277e5b7"
+      }
+    }
+  ],
+  "requestCorrelations": [
+    {
+      "path": "/api/inventario/rollos?ubicacionId=1&page=1&pageSize=5",
+      "requestId": "caf70933-0ce0-4b2b-9771-ff9ecea41e02"
+    },
+    {
+      "path": "/api/inventario/movimientos/1",
+      "requestId": "acc5e68a-8332-4786-8e05-31f772ef2cac"
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "requestId": "6f2a0882-f927-43e6-955e-21288277e5b7"
+    }
+  ],
+  "navigationVisible": false,
+  "navigationBoundary": "E11 outer application boundary",
+  "finalUrl": "/inventario/ajustes",
+  "status": "PASS"
+}

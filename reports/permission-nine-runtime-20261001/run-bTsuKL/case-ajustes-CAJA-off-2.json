@@ -1,0 +1,397 @@
+{
+  "id": "ajustes:CAJA:off",
+  "attempt": 2,
+  "actorId": 11,
+  "role": "CAJA",
+  "family": "ajustes",
+  "variant": "off",
+  "checks": [
+    {
+      "method": "GET",
+      "path": "/api/inventario/rollos?ubicacionId=1&page=1&pageSize=5",
+      "status": 200,
+      "body": {
+        "items": [
+          {
+            "id": 1,
+            "serie": "990000001",
+            "productoId": 1,
+            "skuProducto": "NINE-RUNTIME",
+            "telaProducto": "Disposable fabric",
+            "colorProducto": "Azul",
+            "ubicacionId": 1,
+            "nombreUbicacion": "Mariana",
+            "pisoId": null,
+            "nombrePiso": null,
+            "proveedorId": null,
+            "estado": "DISPONIBLE",
+            "cantidadInicial": "10.000",
+            "cantidadActual": "10.000",
+            "costoUnitario": null,
+            "costoTotal": null,
+            "notas": null,
+            "createdAt": "2026-10-01T22:11:19.677Z",
+            "updatedAt": "2026-10-01T22:11:19.677Z"
+          }
+        ],
+        "total": 1,
+        "page": 1,
+        "pageSize": 5
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventario/movimientos/1",
+      "status": 200,
+      "body": {
+        "id": 1,
+        "rolloId": 1,
+        "serie": "990000001",
+        "productoId": 1,
+        "skuProducto": "NINE-RUNTIME",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Mariana",
+        "tipo": "ALTA",
+        "cantidad": "10.000",
+        "saldoPosterior": "10.000",
+        "documentoTipo": "FIXTURE",
+        "documentoId": "permission-nine-native",
+        "movimientoOrigenId": null,
+        "usuarioId": 1,
+        "motivoSalidaExtraordinaria": null,
+        "justificacion": null,
+        "revisado": true,
+        "createdAt": "2026-10-01T22:11:19.683Z"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200,
+      "body": []
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200
+    },
+    {
+      "path": "/api/sesiones-caja/actual?ubicacionId=1",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/sesiones-caja/actual?ubicacionId=1",
+      "status": 200
+    },
+    {
+      "path": "/api/inventario/ajustes/pendientes",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "effectivePermissions": [
+    {
+      "modulo": "marcar_remate",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "dashboard",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "pos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "entradas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "salidas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "movimientos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "etiquetas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "inventario",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "auditoria_inventario",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "productos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "precios",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "ajustes",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": true
+    },
+    {
+      "modulo": "clientes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_credito",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_precios",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_finanzas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "caja_abonos",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_recapturas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "proveedores",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "proveedores_finanzas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "contenedores",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "ubicaciones",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "usuarios",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "permisos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "resumen_caja",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "cortes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "cobros_pagos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "reportes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "conciliacion",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "auditoria",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "camionetas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "choferes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "viajes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "salidas_venta",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "equipos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    }
+  ],
+  "classification": "UI_PERMISSION_DIFFERENTIAL_API_DEPENDENCIES_CONSTANT",
+  "navigationVisible": false,
+  "navigationBoundary": "Normal desktop sidebar permission gate",
+  "finalUrl": "/inventario/ajustes",
+  "status": "PASS"
+}

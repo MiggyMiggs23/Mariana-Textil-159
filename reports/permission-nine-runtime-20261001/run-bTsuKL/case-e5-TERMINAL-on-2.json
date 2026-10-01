@@ -1,0 +1,535 @@
+{
+  "id": "e5:TERMINAL:on",
+  "attempt": 2,
+  "actorId": 2,
+  "role": "TERMINAL",
+  "family": "e5",
+  "variant": "on",
+  "checks": [
+    {
+      "method": "GET",
+      "path": "/api/e5/disponibilidad?ubicacionId=1",
+      "status": 200,
+      "body": {
+        "enabled": true,
+        "capacidades": {
+          "puedeRecibir": false,
+          "puedePreparar": false,
+          "puedeAutorizar": false,
+          "puedeRechazar": false,
+          "puedeDevolver": false,
+          "puedeVerAvisos": false,
+          "puedeImprimir": false,
+          "preparacionADisponible": false
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/e5/cobros?ubicacionId=1&clienteId=8",
+      "status": 200,
+      "body": {
+        "items": [
+          {
+            "id": "719afcb5-b280-4662-a66d-6e0cff4642b8",
+            "estado": "PENDIENTE",
+            "receptor": {
+              "id": 1,
+              "nombre": "Administrador"
+            },
+            "rechazos": [],
+            "reciboId": "89eabb15-08b5-490f-ae4a-48bd3ba11fe0",
+            "revision": 1,
+            "clienteId": 8,
+            "formaPago": "TRANSFERENCIA",
+            "avisoAdmin": false,
+            "propuestas": [],
+            "capacidades": {
+              "puedeRecibir": false,
+              "puedePreparar": false,
+              "puedeAutorizar": false,
+              "puedeRechazar": false,
+              "puedeDevolver": false,
+              "puedeVerAvisos": false,
+              "puedeImprimir": false,
+              "preparacionADisponible": false
+            },
+            "ubicacionId": 1,
+            "aplicaciones": [],
+            "clienteNombre": "Permission nine disposable",
+            "cuentaDestino": "CUENTA_FISCAL",
+            "antiguedadDias": 0,
+            "fechaRecepcion": "2026-10-01T22:11:25.870Z",
+            "notasIndicadas": [
+              {
+                "fecha": "2026-10-01T22:11:17.505Z",
+                "folio": "12000",
+                "notaId": 1,
+                "facturada": false,
+                "ubicacionId": 1,
+                "saldoPendiente": "10.00",
+                "movimientoVentaId": 1
+              }
+            ],
+            "importeAplicado": "0.00",
+            "importeDevuelto": "0.00",
+            "importeRecibido": "10.00",
+            "ubicacionNombre": "Mariana",
+            "importePendiente": "10.00",
+            "algunaVezAplicado": false,
+            "evidenciaRecepcion": {
+              "descripcion": "Recepción sintética nativa aislada",
+              "referencias": [
+                "permission-nine-runtime"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/e5/contexto?ubicacionId=1&clienteId=8",
+      "status": 200,
+      "body": {
+        "clienteId": 8,
+        "clienteNombre": "Permission nine disposable",
+        "ubicacionId": 1,
+        "versionContexto": "e5:v1:39b4110205a1ec93088a9e33232c62182d451e3b559b00e4dcc148af86ca207a",
+        "consultadoAt": "2026-10-01T22:21:54.033Z",
+        "notas": [
+          {
+            "notaId": 1,
+            "movimientoVentaId": 1,
+            "folio": "12000",
+            "ubicacionId": 1,
+            "fecha": "2026-10-01T22:11:17.505Z",
+            "saldoPendiente": "10.00",
+            "facturada": false
+          }
+        ],
+        "sesiones": [],
+        "capacidades": {
+          "puedeRecibir": false,
+          "puedePreparar": false,
+          "puedeAutorizar": false,
+          "puedeRechazar": false,
+          "puedeDevolver": false,
+          "puedeVerAvisos": false,
+          "puedeImprimir": false,
+          "preparacionADisponible": false
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/e5/cobros/719afcb5-b280-4662-a66d-6e0cff4642b8",
+      "status": 200,
+      "body": {
+        "id": "719afcb5-b280-4662-a66d-6e0cff4642b8",
+        "estado": "PENDIENTE",
+        "receptor": {
+          "id": 1,
+          "nombre": "Administrador"
+        },
+        "rechazos": [],
+        "reciboId": "89eabb15-08b5-490f-ae4a-48bd3ba11fe0",
+        "revision": 1,
+        "clienteId": 8,
+        "formaPago": "TRANSFERENCIA",
+        "avisoAdmin": false,
+        "propuestas": [],
+        "capacidades": {
+          "puedeRecibir": false,
+          "puedePreparar": false,
+          "puedeAutorizar": false,
+          "puedeRechazar": false,
+          "puedeDevolver": false,
+          "puedeVerAvisos": false,
+          "puedeImprimir": false,
+          "preparacionADisponible": false
+        },
+        "ubicacionId": 1,
+        "aplicaciones": [],
+        "clienteNombre": "Permission nine disposable",
+        "cuentaDestino": "CUENTA_FISCAL",
+        "antiguedadDias": 0,
+        "fechaRecepcion": "2026-10-01T22:11:25.870Z",
+        "notasIndicadas": [
+          {
+            "fecha": "2026-10-01T22:11:17.505Z",
+            "folio": "12000",
+            "notaId": 1,
+            "facturada": false,
+            "ubicacionId": 1,
+            "saldoPendiente": "10.00",
+            "movimientoVentaId": 1
+          }
+        ],
+        "importeAplicado": "0.00",
+        "importeDevuelto": "0.00",
+        "importeRecibido": "10.00",
+        "ubicacionNombre": "Mariana",
+        "importePendiente": "10.00",
+        "algunaVezAplicado": false,
+        "evidenciaRecepcion": {
+          "descripcion": "Recepción sintética nativa aislada",
+          "referencias": [
+            "permission-nine-runtime"
+          ]
+        }
+      }
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/auth/me",
+      "status": 401
+    },
+    {
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "path": "/api/sesiones-caja/actual?ubicacionId=1",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones",
+      "status": 200
+    },
+    {
+      "path": "/api/e5/disponibilidad?ubicacionId=1",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/e5/cobros?ubicacionId=1&limit=20",
+      "status": 200
+    },
+    {
+      "path": "/api/e5/cobros/719afcb5-b280-4662-a66d-6e0cff4642b8",
+      "status": 200
+    },
+    {
+      "path": "/api/notificaciones/feed",
+      "status": 200
+    },
+    {
+      "path": "/api/e5/disponibilidad?ubicacionId=1",
+      "status": 200
+    },
+    {
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "path": "/api/e5/contexto?clienteId=8&ubicacionId=1",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "effectivePermissions": [
+    {
+      "modulo": "marcar_remate",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "dashboard",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "pos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "entradas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "salidas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "movimientos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "etiquetas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "inventario",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "auditoria_inventario",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "productos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "precios",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "ajustes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_credito",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_precios",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_finanzas",
+      "puedeVer": false,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "caja_abonos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "clientes_recapturas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "proveedores",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "proveedores_finanzas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "contenedores",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "ubicaciones",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "usuarios",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "permisos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "resumen_caja",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "cortes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "cobros_pagos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "reportes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "conciliacion",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "auditoria",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "camionetas",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "choferes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "viajes",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "salidas_venta",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    },
+    {
+      "modulo": "equipos",
+      "puedeVer": true,
+      "puedeCrear": false,
+      "puedeEditar": false,
+      "puedeAutorizar": false
+    }
+  ],
+  "classification": "COMPOUND_PERMISSION_DIFFERENTIAL",
+  "cobrosParentGate": {
+    "financeRead": false,
+    "carteraNavigationPresent": false,
+    "meaning": "E5Entry is in CarteraContent, not default Caja operativa. Cartera has an additional clientes_finanzas.ver gate."
+  },
+  "uiSurface": "Dedicated /cobros/pendientes route; negative permission variant is ProtectedRoute denial, not a mounted E5Entry denial",
+  "finalUrl": "/cobros/pendientes/719afcb5-b280-4662-a66d-6e0cff4642b8",
+  "status": "PASS"
+}

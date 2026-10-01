@@ -1,0 +1,800 @@
+{
+  "schemaVersion": 2,
+  "eventId": "main-verified-nine-investigations-20261001",
+  "immutablePredecessor": "reports/permission-357-closure-20261001/closure.json",
+  "runtimeEvidence": "reports/permission-nine-runtime-20261001/run-bTsuKL/result.json",
+  "scope": "Reconciliación documental únicamente; no cambio aplicativo ni liberación.",
+  "counts": {
+    "fullMatrixHistorical": 980,
+    "historicalDenied": 722,
+    "historicalGrantedPositivePathsUnaudited": 258,
+    "residualCampaign": 433,
+    "reviewedSubset": 357,
+    "nonApplicableNotPass": 348,
+    "newApiAndUiCompoundDifferentials": 3,
+    "newUiOnlyDifferentialsNoExactApiGuard": 2,
+    "newVerifiedOuterExclusionsNotInnerCoverage": 4,
+    "reviewedSubsetInvestigationsRemaining": 0,
+    "residualOperationalCombinedRemaining": 32,
+    "residualOperationalDirectRemaining": 20,
+    "residualStrictApplicableCombinedRemainingIncludingFourOuter": 36,
+    "residualStrictApplicableDirectRemainingIncludingFourOuter": 24,
+    "residualHistoricalCombinedClosures": 44,
+    "residualHistoricalDirectClosures": 56,
+    "priorObservedDenialsQualified": 225,
+    "priorE11BoundaryOnly": 64,
+    "fullDeniedStrictApplicableCombinedEvidenceNotEstablished": 325,
+    "fullDeniedStrictApplicableDirectEvidenceNotEstablished": 313,
+    "confirmedBusinessOwnerDecisionsRequired": 0
+  },
+  "verification": {
+    "runtimeStatus": "PASS",
+    "latestUniqueCaseCount": 24,
+    "historicalAttemptCount": 51,
+    "latestCasesAllPass": true,
+    "resetProof": "PASS",
+    "dependentApiPairsEqual": [
+      {
+        "role": "TERMINAL",
+        "equal": true
+      },
+      {
+        "role": "CAJA",
+        "equal": true
+      },
+      {
+        "role": "CONTADOR",
+        "equal": true
+      }
+    ],
+    "cleanupPassed": true,
+    "exitCodeReportedByMain": 0,
+    "staleRuntimeField": "awaitingControl=true permanece en resultado; PASS terminal, cleanupPassed=true y confirmación MAIN establecen finalización.",
+    "apiSha256": "ae72cf8da6832f1a5275a2bdba689508ac1ee69639312a246785cb57fe5b44a7"
+  },
+  "interpretation": [
+    "357 = 348 sin operación aplicable + 3 diferenciales API/UI compuestos + 2 diferenciales UI sin guard API propio + 4 exclusiones exteriores verificadas. No son 357 aprobaciones runtime.",
+    "433 = 348 no aplicables + 44 cierres combinados históricos + 5 diferenciales aplicables + 4 exclusiones exteriores + 32 pendientes operativos.",
+    "722 = 348 no aplicables + 44 cierres combinados históricos + 5 diferenciales aplicables + 4 exclusiones exteriores + 32 pendientes operativos + 225 denegaciones observadas históricas calificadas + 64 fronteras E11 históricas.",
+    "980 = 722 denegadas históricas + 258 concedidas históricas cuyas rutas positivas no fueron auditadas. No es una afirmación de concesiones reales actuales.",
+    "32 pendientes operativos combinados; 36 pendientes de evidencia interior/combinada estrictamente aplicable al sumar las cuatro exclusiones exteriores. Directas: 20 operativas / 24 estrictas aplicables.",
+    "ajustes.ver: 2 diferenciales UI comprobados, guard API propio no aplicable; CONTADOR tiene exclusión E11, sin cobertura interior UI. No sumar tres API PASS ficticios.",
+    "Los 3 diferenciales caja_abonos.ver comprueban un OR compuesto API/UI, no exclusividad del flag.",
+    "325 = 36 + 289 celdas denegadas sin evidencia combinada interior estricta establecida; 313 = 24 + 289 para atribución directa aplicable. Las 258 rutas positivas no auditadas son adicionales.",
+    "Los 289 antecedentes conservan sus límites; no se convierten en cierres ni demuestran defecto nuevo.",
+    "Dependencias y estado elegible controlados. Fronteras de rol/E11 conservadas intencionalmente, sin bypass. No se demostró brecha real; no se justificó cambio de código ni liberación.",
+    "Cero decisiones de negocio del propietario confirmadas. Quedan tareas técnicas de evidencia/estado/mapeo."
+  ],
+  "chronology": [
+    {
+      "source": "reports/tanda-f/tarea-4/followup/combined-cell-classification.json",
+      "state": "722 denied = 225 observed + 64 E11 + 433 residual; residual 357/65/6/5."
+    },
+    {
+      "source": "reports/tanda-g-ampliada/task1/runtime-summary.json",
+      "directRemaining": 381,
+      "combinedRemaining": 421,
+      "directClosed": 52,
+      "combinedClosed": 12
+    },
+    {
+      "source": "reports/tanda-h/permissions/RESULTADO.txt",
+      "newClosures": 0,
+      "directRemaining": 381,
+      "combinedRemaining": 421
+    },
+    {
+      "source": "reports/trabajo-nocturno-20260925/tarea-7/ledger.json",
+      "newClosures": 0,
+      "directRemaining": 381,
+      "combinedRemaining": 421
+    },
+    {
+      "source": "reports/noche-20260926/tarea-1/final-ledger.json",
+      "newCombinedClosures": 20,
+      "directRemaining": 381,
+      "combinedRemaining": 401
+    },
+    {
+      "source": "reports/postrelease-review-20260926/tarea-3/final-ledger.json",
+      "newDirectClosures": 4,
+      "newCombinedClosures": 12,
+      "directRemaining": 377,
+      "combinedRemaining": 389
+    },
+    {
+      "source": "reports/permission-357-review-20261001/informes/cells.csv",
+      "categoryA": 348,
+      "categoryC": 9,
+      "runtimeVerified": false
+    },
+    {
+      "source": "Current explicit owner instruction",
+      "newNonApplicable": 348,
+      "newRuntimeClosures": 0,
+      "directRemaining": 29,
+      "combinedRemaining": 41
+    },
+    {
+      "source": "reports/permission-nine-runtime-20261001/run-bTsuKL/result.json",
+      "investigationsResolved": 9,
+      "newApplicableDifferentials": 5,
+      "outerExclusions": 4,
+      "operationalDirectRemaining": 20,
+      "operationalCombinedRemaining": 32,
+      "strictApplicableDirectRemaining": 24,
+      "strictApplicableCombinedRemaining": 36
+    }
+  ],
+  "newEvents": [
+    {
+      "id": "TERMINAL:ajustes:ver",
+      "from": "PENDING_MAIN_RUNTIME_VERIFICATION",
+      "to": "UI_PERMISSION_DIFFERENTIAL_API_DEPENDENCIES_CONSTANT",
+      "investigationResolved": true,
+      "innerPermissionCoverage": true,
+      "apiGuardApplicability": "NO_EXACT_API_GUARD_UI_ONLY",
+      "strictInnerEvidencePending": false,
+      "runtimeScenarioStatus": "PASS",
+      "blanketApiUiPass": false,
+      "evidence": "reports/permission-nine-runtime-20261001/run-bTsuKL/result.json",
+      "caseIds": [
+        "ajustes:TERMINAL:on",
+        "ajustes:TERMINAL:off"
+      ]
+    },
+    {
+      "id": "TERMINAL:caja_abonos:ver",
+      "from": "PENDING_MAIN_RUNTIME_VERIFICATION",
+      "to": "COMPOUND_PERMISSION_DIFFERENTIAL",
+      "investigationResolved": true,
+      "innerPermissionCoverage": true,
+      "apiGuardApplicability": "COMPOUND_OR_NOT_EXCLUSIVE_FLAG",
+      "strictInnerEvidencePending": false,
+      "runtimeScenarioStatus": "PASS",
+      "blanketApiUiPass": false,
+      "evidence": "reports/permission-nine-runtime-20261001/run-bTsuKL/result.json",
+      "caseIds": [
+        "e5:TERMINAL:on",
+        "e5:TERMINAL:off",
+        "e5:TERMINAL:or"
+      ]
+    },
+    {
+      "id": "CAJA:ajustes:ver",
+      "from": "PENDING_MAIN_RUNTIME_VERIFICATION",
+      "to": "UI_PERMISSION_DIFFERENTIAL_API_DEPENDENCIES_CONSTANT",
+      "investigationResolved": true,
+      "innerPermissionCoverage": true,
+      "apiGuardApplicability": "NO_EXACT_API_GUARD_UI_ONLY",
+      "strictInnerEvidencePending": false,
+      "runtimeScenarioStatus": "PASS",
+      "blanketApiUiPass": false,
+      "evidence": "reports/permission-nine-runtime-20261001/run-bTsuKL/result.json",
+      "caseIds": [
+        "ajustes:CAJA:on",
+        "ajustes:CAJA:off"
+      ]
+    },
+    {
+      "id": "CAJA:caja_abonos:ver",
+      "from": "PENDING_MAIN_RUNTIME_VERIFICATION",
+      "to": "COMPOUND_PERMISSION_DIFFERENTIAL",
+      "investigationResolved": true,
+      "innerPermissionCoverage": true,
+      "apiGuardApplicability": "COMPOUND_OR_NOT_EXCLUSIVE_FLAG",
+      "strictInnerEvidencePending": false,
+      "runtimeScenarioStatus": "PASS",
+      "blanketApiUiPass": false,
+      "evidence": "reports/permission-nine-runtime-20261001/run-bTsuKL/result.json",
+      "caseIds": [
+        "e5:CAJA:on",
+        "e5:CAJA:off",
+        "e5:CAJA:or"
+      ]
+    },
+    {
+      "id": "SUPERVISOR:caja_abonos:ver",
+      "from": "PENDING_MAIN_RUNTIME_VERIFICATION",
+      "to": "COMPOUND_PERMISSION_DIFFERENTIAL",
+      "investigationResolved": true,
+      "innerPermissionCoverage": true,
+      "apiGuardApplicability": "COMPOUND_OR_NOT_EXCLUSIVE_FLAG",
+      "strictInnerEvidencePending": false,
+      "runtimeScenarioStatus": "PASS",
+      "blanketApiUiPass": false,
+      "evidence": "reports/permission-nine-runtime-20261001/run-bTsuKL/result.json",
+      "caseIds": [
+        "e5:SUPERVISOR:on",
+        "e5:SUPERVISOR:off",
+        "e5:SUPERVISOR:or"
+      ]
+    },
+    {
+      "id": "BODEGA:caja_abonos:ver",
+      "from": "PENDING_MAIN_RUNTIME_VERIFICATION",
+      "to": "OUTER_ROLE_DENIAL_NOT_INNER_PERMISSION_COVERAGE",
+      "investigationResolved": true,
+      "innerPermissionCoverage": false,
+      "apiGuardApplicability": "COMPOUND_OR_NOT_EXCLUSIVE_FLAG",
+      "strictInnerEvidencePending": true,
+      "runtimeScenarioStatus": "PASS",
+      "blanketApiUiPass": false,
+      "evidence": "reports/permission-nine-runtime-20261001/run-bTsuKL/result.json",
+      "caseIds": [
+        "e5:BODEGA:on",
+        "e5:BODEGA:off",
+        "e5:BODEGA:or"
+      ]
+    },
+    {
+      "id": "SISTEMAS:caja_abonos:ver",
+      "from": "PENDING_MAIN_RUNTIME_VERIFICATION",
+      "to": "OUTER_ROLE_DENIAL_NOT_INNER_PERMISSION_COVERAGE",
+      "investigationResolved": true,
+      "innerPermissionCoverage": false,
+      "apiGuardApplicability": "COMPOUND_OR_NOT_EXCLUSIVE_FLAG",
+      "strictInnerEvidencePending": true,
+      "runtimeScenarioStatus": "PASS",
+      "blanketApiUiPass": false,
+      "evidence": "reports/permission-nine-runtime-20261001/run-bTsuKL/result.json",
+      "caseIds": [
+        "e5:SISTEMAS:on",
+        "e5:SISTEMAS:off",
+        "e5:SISTEMAS:or"
+      ]
+    },
+    {
+      "id": "CONTADOR:ajustes:ver",
+      "from": "PENDING_MAIN_RUNTIME_VERIFICATION",
+      "to": "E11_OUTER_UI_BOUNDARY_NOT_INNER_PERMISSION_COVERAGE",
+      "investigationResolved": true,
+      "innerPermissionCoverage": false,
+      "apiGuardApplicability": "NO_EXACT_API_GUARD_UI_ONLY",
+      "strictInnerEvidencePending": true,
+      "runtimeScenarioStatus": "PASS",
+      "blanketApiUiPass": false,
+      "evidence": "reports/permission-nine-runtime-20261001/run-bTsuKL/result.json",
+      "caseIds": [
+        "ajustes:CONTADOR:on",
+        "ajustes:CONTADOR:off"
+      ]
+    },
+    {
+      "id": "CONTADOR:caja_abonos:ver",
+      "from": "PENDING_MAIN_RUNTIME_VERIFICATION",
+      "to": "OUTER_ROLE_DENIAL_NOT_INNER_PERMISSION_COVERAGE",
+      "investigationResolved": true,
+      "innerPermissionCoverage": false,
+      "apiGuardApplicability": "COMPOUND_OR_NOT_EXCLUSIVE_FLAG",
+      "strictInnerEvidencePending": true,
+      "runtimeScenarioStatus": "PASS",
+      "blanketApiUiPass": false,
+      "evidence": "reports/permission-nine-runtime-20261001/run-bTsuKL/result.json",
+      "caseIds": [
+        "e5:CONTADOR:on",
+        "e5:CONTADOR:off",
+        "e5:CONTADOR:or"
+      ]
+    }
+  ],
+  "operationalPendingCells": [
+    {
+      "id": "TERMINAL:salidas:editar",
+      "pendingDirect": false,
+      "pendingCombined": true,
+      "blocker": "NO_RELEASED_ADMIN_REVERTIR_UI_COUNTERPART",
+      "reviewCategory": null,
+      "reason": "NO_RELEASED_ADMIN_REVERTIR_UI_COUNTERPART",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": "Technical mapping/exposure remains unknown; no proven need for business-owner decision.",
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#TERMINAL:salidas:editar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#TERMINAL:salidas:editar"
+      ]
+    },
+    {
+      "id": "TERMINAL:auditoria_inventario:autorizar",
+      "pendingDirect": false,
+      "pendingCombined": true,
+      "blocker": "AUDIT_ABIERTA_NOT_CONFIRM_ELIGIBLE",
+      "reviewCategory": null,
+      "reason": "AUDIT_ABIERTA_NOT_CONFIRM_ELIGIBLE",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#TERMINAL:auditoria_inventario:autorizar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#TERMINAL:auditoria_inventario:autorizar"
+      ]
+    },
+    {
+      "id": "TERMINAL:clientes_finanzas:crear",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "LEGACY_OR_OUTER_BOUNDARY_OR_MISSING_MATCHED_UI",
+      "reviewCategory": null,
+      "reason": "LEGACY_OR_OUTER_BOUNDARY_OR_MISSING_MATCHED_UI",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#TERMINAL:clientes_finanzas:crear",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#TERMINAL:clientes_finanzas:crear"
+      ]
+    },
+    {
+      "id": "TERMINAL:permisos:editar",
+      "pendingDirect": false,
+      "pendingCombined": true,
+      "blocker": "CONFIGURED_VARIANT_DIRECT_CLOSED_UI_NOT_PROVEN",
+      "reviewCategory": null,
+      "reason": "CONFIGURED_VARIANT_DIRECT_CLOSED_UI_NOT_PROVEN",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#TERMINAL:permisos:editar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#TERMINAL:permisos:editar"
+      ]
+    },
+    {
+      "id": "CAJA:salidas:editar",
+      "pendingDirect": false,
+      "pendingCombined": true,
+      "blocker": "NO_RELEASED_ADMIN_REVERTIR_UI_COUNTERPART",
+      "reviewCategory": null,
+      "reason": "NO_RELEASED_ADMIN_REVERTIR_UI_COUNTERPART",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": "Technical mapping/exposure remains unknown; no proven need for business-owner decision.",
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CAJA:salidas:editar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CAJA:salidas:editar"
+      ]
+    },
+    {
+      "id": "CAJA:auditoria_inventario:autorizar",
+      "pendingDirect": false,
+      "pendingCombined": true,
+      "blocker": "AUDIT_ABIERTA_NOT_CONFIRM_ELIGIBLE",
+      "reviewCategory": null,
+      "reason": "AUDIT_ABIERTA_NOT_CONFIRM_ELIGIBLE",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CAJA:auditoria_inventario:autorizar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CAJA:auditoria_inventario:autorizar"
+      ]
+    },
+    {
+      "id": "CAJA:clientes_finanzas:crear",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "LEGACY_OR_OUTER_BOUNDARY_OR_MISSING_MATCHED_UI",
+      "reviewCategory": null,
+      "reason": "LEGACY_OR_OUTER_BOUNDARY_OR_MISSING_MATCHED_UI",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CAJA:clientes_finanzas:crear",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CAJA:clientes_finanzas:crear"
+      ]
+    },
+    {
+      "id": "CAJA:permisos:editar",
+      "pendingDirect": false,
+      "pendingCombined": true,
+      "blocker": "CONFIGURED_VARIANT_DIRECT_CLOSED_UI_NOT_PROVEN",
+      "reviewCategory": null,
+      "reason": "CONFIGURED_VARIANT_DIRECT_CLOSED_UI_NOT_PROVEN",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CAJA:permisos:editar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CAJA:permisos:editar"
+      ]
+    },
+    {
+      "id": "SUPERVISOR:auditoria_inventario:autorizar",
+      "pendingDirect": false,
+      "pendingCombined": true,
+      "blocker": "AUDIT_ABIERTA_NOT_CONFIRM_ELIGIBLE",
+      "reviewCategory": null,
+      "reason": "AUDIT_ABIERTA_NOT_CONFIRM_ELIGIBLE",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#SUPERVISOR:auditoria_inventario:autorizar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#SUPERVISOR:auditoria_inventario:autorizar"
+      ]
+    },
+    {
+      "id": "SUPERVISOR:clientes_finanzas:crear",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "LEGACY_OR_OUTER_BOUNDARY_OR_MISSING_MATCHED_UI",
+      "reviewCategory": null,
+      "reason": "LEGACY_OR_OUTER_BOUNDARY_OR_MISSING_MATCHED_UI",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#SUPERVISOR:clientes_finanzas:crear",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#SUPERVISOR:clientes_finanzas:crear"
+      ]
+    },
+    {
+      "id": "SUPERVISOR:permisos:editar",
+      "pendingDirect": false,
+      "pendingCombined": true,
+      "blocker": "CONFIGURED_VARIANT_DIRECT_CLOSED_UI_NOT_PROVEN",
+      "reviewCategory": null,
+      "reason": "CONFIGURED_VARIANT_DIRECT_CLOSED_UI_NOT_PROVEN",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#SUPERVISOR:permisos:editar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#SUPERVISOR:permisos:editar"
+      ]
+    },
+    {
+      "id": "BODEGA:salidas:editar",
+      "pendingDirect": false,
+      "pendingCombined": true,
+      "blocker": "NO_RELEASED_ADMIN_REVERTIR_UI_COUNTERPART",
+      "reviewCategory": null,
+      "reason": "NO_RELEASED_ADMIN_REVERTIR_UI_COUNTERPART",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": "Technical mapping/exposure remains unknown; no proven need for business-owner decision.",
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#BODEGA:salidas:editar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#BODEGA:salidas:editar"
+      ]
+    },
+    {
+      "id": "BODEGA:auditoria_inventario:autorizar",
+      "pendingDirect": false,
+      "pendingCombined": true,
+      "blocker": "AUDIT_ABIERTA_NOT_CONFIRM_ELIGIBLE",
+      "reviewCategory": null,
+      "reason": "AUDIT_ABIERTA_NOT_CONFIRM_ELIGIBLE",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#BODEGA:auditoria_inventario:autorizar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#BODEGA:auditoria_inventario:autorizar"
+      ]
+    },
+    {
+      "id": "BODEGA:clientes_finanzas:crear",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "LEGACY_OR_OUTER_BOUNDARY_OR_MISSING_MATCHED_UI",
+      "reviewCategory": null,
+      "reason": "LEGACY_OR_OUTER_BOUNDARY_OR_MISSING_MATCHED_UI",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#BODEGA:clientes_finanzas:crear",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#BODEGA:clientes_finanzas:crear"
+      ]
+    },
+    {
+      "id": "BODEGA:permisos:editar",
+      "pendingDirect": false,
+      "pendingCombined": true,
+      "blocker": "CONFIGURED_VARIANT_DIRECT_CLOSED_UI_NOT_PROVEN",
+      "reviewCategory": null,
+      "reason": "CONFIGURED_VARIANT_DIRECT_CLOSED_UI_NOT_PROVEN",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#BODEGA:permisos:editar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#BODEGA:permisos:editar"
+      ]
+    },
+    {
+      "id": "SISTEMAS:auditoria_inventario:autorizar",
+      "pendingDirect": false,
+      "pendingCombined": true,
+      "blocker": "AUDIT_ABIERTA_NOT_CONFIRM_ELIGIBLE",
+      "reviewCategory": null,
+      "reason": "AUDIT_ABIERTA_NOT_CONFIRM_ELIGIBLE",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#SISTEMAS:auditoria_inventario:autorizar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#SISTEMAS:auditoria_inventario:autorizar"
+      ]
+    },
+    {
+      "id": "SISTEMAS:clientes_finanzas:crear",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "LEGACY_OR_OUTER_BOUNDARY_OR_MISSING_MATCHED_UI",
+      "reviewCategory": null,
+      "reason": "LEGACY_OR_OUTER_BOUNDARY_OR_MISSING_MATCHED_UI",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#SISTEMAS:clientes_finanzas:crear",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#SISTEMAS:clientes_finanzas:crear"
+      ]
+    },
+    {
+      "id": "CONTADOR:entradas:editar",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "reviewCategory": null,
+      "reason": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CONTADOR:entradas:editar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CONTADOR:entradas:editar"
+      ]
+    },
+    {
+      "id": "CONTADOR:salidas:editar",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "reviewCategory": null,
+      "reason": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CONTADOR:salidas:editar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CONTADOR:salidas:editar"
+      ]
+    },
+    {
+      "id": "CONTADOR:salidas:autorizar",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "reviewCategory": null,
+      "reason": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CONTADOR:salidas:autorizar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CONTADOR:salidas:autorizar"
+      ]
+    },
+    {
+      "id": "CONTADOR:etiquetas:editar",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "reviewCategory": null,
+      "reason": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CONTADOR:etiquetas:editar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CONTADOR:etiquetas:editar"
+      ]
+    },
+    {
+      "id": "CONTADOR:auditoria_inventario:editar",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "reviewCategory": null,
+      "reason": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CONTADOR:auditoria_inventario:editar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CONTADOR:auditoria_inventario:editar"
+      ]
+    },
+    {
+      "id": "CONTADOR:auditoria_inventario:autorizar",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "reviewCategory": null,
+      "reason": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CONTADOR:auditoria_inventario:autorizar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CONTADOR:auditoria_inventario:autorizar"
+      ]
+    },
+    {
+      "id": "CONTADOR:clientes_finanzas:crear",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "reviewCategory": null,
+      "reason": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CONTADOR:clientes_finanzas:crear",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CONTADOR:clientes_finanzas:crear"
+      ]
+    },
+    {
+      "id": "CONTADOR:contenedores:editar",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "reviewCategory": null,
+      "reason": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CONTADOR:contenedores:editar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CONTADOR:contenedores:editar"
+      ]
+    },
+    {
+      "id": "CONTADOR:contenedores:autorizar",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "reviewCategory": null,
+      "reason": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CONTADOR:contenedores:autorizar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CONTADOR:contenedores:autorizar"
+      ]
+    },
+    {
+      "id": "CONTADOR:permisos:editar",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "reviewCategory": null,
+      "reason": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CONTADOR:permisos:editar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CONTADOR:permisos:editar"
+      ]
+    },
+    {
+      "id": "CONTADOR:cobros_pagos:crear",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "reviewCategory": null,
+      "reason": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CONTADOR:cobros_pagos:crear",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CONTADOR:cobros_pagos:crear"
+      ]
+    },
+    {
+      "id": "CONTADOR:camionetas:editar",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "reviewCategory": null,
+      "reason": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CONTADOR:camionetas:editar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CONTADOR:camionetas:editar"
+      ]
+    },
+    {
+      "id": "CONTADOR:choferes:editar",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "reviewCategory": null,
+      "reason": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CONTADOR:choferes:editar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CONTADOR:choferes:editar"
+      ]
+    },
+    {
+      "id": "CONTADOR:salidas_venta:crear",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "reviewCategory": null,
+      "reason": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CONTADOR:salidas_venta:crear",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CONTADOR:salidas_venta:crear"
+      ]
+    },
+    {
+      "id": "CONTADOR:equipos:editar",
+      "pendingDirect": true,
+      "pendingCombined": true,
+      "blocker": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "reviewCategory": null,
+      "reason": "E11_BOUNDARY_NOT_SELECTED_GUARD",
+      "ownerDecisionRequired": false,
+      "ownerDecisionCaveat": null,
+      "evidence": [
+        "reports/postrelease-review-20260926/tarea-3/final-ledger.json#CONTADOR:equipos:editar",
+        "reports/postrelease-review-20260926/tarea-3/remaining-exact-cells.json#CONTADOR:equipos:editar"
+      ]
+    }
+  ],
+  "outerExclusionsStillWithoutInnerCoverage": [
+    {
+      "id": "BODEGA:caja_abonos:ver",
+      "from": "PENDING_MAIN_RUNTIME_VERIFICATION",
+      "to": "OUTER_ROLE_DENIAL_NOT_INNER_PERMISSION_COVERAGE",
+      "investigationResolved": true,
+      "innerPermissionCoverage": false,
+      "apiGuardApplicability": "COMPOUND_OR_NOT_EXCLUSIVE_FLAG",
+      "strictInnerEvidencePending": true,
+      "runtimeScenarioStatus": "PASS",
+      "blanketApiUiPass": false,
+      "evidence": "reports/permission-nine-runtime-20261001/run-bTsuKL/result.json",
+      "caseIds": [
+        "e5:BODEGA:on",
+        "e5:BODEGA:off",
+        "e5:BODEGA:or"
+      ]
+    },
+    {
+      "id": "SISTEMAS:caja_abonos:ver",
+      "from": "PENDING_MAIN_RUNTIME_VERIFICATION",
+      "to": "OUTER_ROLE_DENIAL_NOT_INNER_PERMISSION_COVERAGE",
+      "investigationResolved": true,
+      "innerPermissionCoverage": false,
+      "apiGuardApplicability": "COMPOUND_OR_NOT_EXCLUSIVE_FLAG",
+      "strictInnerEvidencePending": true,
+      "runtimeScenarioStatus": "PASS",
+      "blanketApiUiPass": false,
+      "evidence": "reports/permission-nine-runtime-20261001/run-bTsuKL/result.json",
+      "caseIds": [
+        "e5:SISTEMAS:on",
+        "e5:SISTEMAS:off",
+        "e5:SISTEMAS:or"
+      ]
+    },
+    {
+      "id": "CONTADOR:ajustes:ver",
+      "from": "PENDING_MAIN_RUNTIME_VERIFICATION",
+      "to": "E11_OUTER_UI_BOUNDARY_NOT_INNER_PERMISSION_COVERAGE",
+      "investigationResolved": true,
+      "innerPermissionCoverage": false,
+      "apiGuardApplicability": "NO_EXACT_API_GUARD_UI_ONLY",
+      "strictInnerEvidencePending": true,
+      "runtimeScenarioStatus": "PASS",
+      "blanketApiUiPass": false,
+      "evidence": "reports/permission-nine-runtime-20261001/run-bTsuKL/result.json",
+      "caseIds": [
+        "ajustes:CONTADOR:on",
+        "ajustes:CONTADOR:off"
+      ]
+    },
+    {
+      "id": "CONTADOR:caja_abonos:ver",
+      "from": "PENDING_MAIN_RUNTIME_VERIFICATION",
+      "to": "OUTER_ROLE_DENIAL_NOT_INNER_PERMISSION_COVERAGE",
+      "investigationResolved": true,
+      "innerPermissionCoverage": false,
+      "apiGuardApplicability": "COMPOUND_OR_NOT_EXCLUSIVE_FLAG",
+      "strictInnerEvidencePending": true,
+      "runtimeScenarioStatus": "PASS",
+      "blanketApiUiPass": false,
+      "evidence": "reports/permission-nine-runtime-20261001/run-bTsuKL/result.json",
+      "caseIds": [
+        "e5:CONTADOR:on",
+        "e5:CONTADOR:off",
+        "e5:CONTADOR:or"
+      ]
+    }
+  ]
+}
