@@ -1,3 +1,18 @@
+### Matriz de permisos: auditoría pausada por el propietario (01/10/2026)
+
+No continuar los 32 pendientes operativos ni ampliar la campaña de cobertura salvo solicitud explícita del propietario. La prioridad es el diagnóstico del piloto en Tienda Cruces; no hay autorización implícita para construir o modificar funcionalidades a partir de ese diagnóstico.
+
+Estado histórico conciliado (no es una lectura de los permisos actuales de producción):
+- Matriz completa: **980 celdas**, **722 denegadas** y **258 concedidas** en la matriz histórica.
+- Las **357 investigadas** se desglosan en **348 sin operación aplicable** (no aprobadas, sin borrarlas de la pantalla ni retirar módulos/columnas), **5 diferenciales comprobados** (3 API/interfaz de caja_abonos.ver; 2 sólo interfaz de ajustes.ver) y **4 exclusiones exteriores comprobadas** (no prueba del permiso interno).
+- Campaña residual de 433: **348 no aplicables + 44 cierres combinados históricos + 5 diferenciales nuevos + 4 exclusiones exteriores + 32 pendientes operativos**.
+- Los **32 pendientes operativos** son: 15 E11, 5 heredados, 4 variantes de edición de permisos por interfaz, 5 condiciones de confirmación de auditoría y 3 correspondencias de interfaz para revertir. Con las cuatro exclusiones exteriores, quedan **36** sin evidencia estricta interna/combinada en esa campaña.
+- Matriz completa: **348 no aplicables + 49 con evidencia combinada aplicable acreditada + 325 denegaciones sin cobertura estricta completa + 258 concesiones cuyos caminos positivos no se auditaron en esta campaña = 980**. Son **583 sin cobertura exhaustiva acreditada**, no 583 defectos ni una conclusión de riesgo.
+- Las nueve investigaciones finales terminaron con 24 escenarios finales aprobados, sesión nueva comprobada y limpieza del entorno desechable confirmada. No se demostró un defecto del producto en estas pruebas; no se cambió ni liberó código. No se ha certificado ausencia general de defectos.
+- **Cero decisiones de negocio del propietario identificadas como necesarias** en este cierre. Lo pendiente se conserva como cobertura/evidencia técnica, sin obligación de retomarlo ahora.
+
+Fuentes para retomar: `reports/permission-357-closure-20261001/informe.html`, `resumen-final.json`, `closure-final.json`, `matriz-980-final.csv`; evidencia aislada en `reports/permission-nine-runtime-20261001/run-bTsuKL/result.json`. Los informes anteriores son históricos; este apartado rige el estado y la pausa de la campaña.
+
 ### Versión activa: orden del menú lateral (01/10/2026)
 
 Frontend activo: `dist-sidebar-order-20261001`, guardas/evidencia en `reports/sidebar-order-20261001/`. Solo se reubicaron entradas de Directorio/Configuración/Administración Contable; se conservaron rutas, páginas, nombres, íconos y visibilidad efectiva por rol/permiso. Las restricciones heredadas del grupo original permanecen por entrada, para que moverlas no cambie acceso. API sigue `dist-driver-phones-20261001`, sin reinicio ni cambios de datos. Build/typecheck aprobados y prueba exhaustiva de equivalencia de navegación 7/7. Sin publicación externa.
