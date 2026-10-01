@@ -2831,3 +2831,31 @@ mtime_ms = 1790890170012
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/205d1f13-6856-430f-a7d1-d8ac74ea665b/d0684d2d-6ecc-4b5c-91ae-05b5031695af"
 storage_version_token = "1790890170536380"
 content_type = "text/html"
+
+[[outputs]]
+id = "59jJSjv4aU4usBqnzPDGj"
+uri = "file://reports/permission-357-review-20261001/informes/informe.html"
+type = "html"
+title = "Las 357 celdas: clasificación por tema"
+description = "Lista completa de 61 combinaciones de acción y módulo, roles concedidos y negados de la auditoría, motivos y comprobaciones pendientes."
+logical_id = "f9f19dbe-be3b-43d5-8306-793ed0027fd6"
+content_hash = "sha256:030196533d7ceae04b57a173742b87374fac5538c8e06453794a9b42ed2cdcbd"
+size = 213289
+mtime_ms = 1790891781868
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f9f19dbe-be3b-43d5-8306-793ed0027fd6/62c70fbd-cd54-4f7a-b49d-49ee268f6546"
+storage_version_token = "1790891830579027"
+content_type = "text/html"
+
+[[outputs]]
+id = "Q5gF3_cQHsLUB5PSVCO5r"
+uri = "file://reports/permission-357-review-20261001/informes/cells.csv"
+type = "table"
+title = "Detalle de las 357 celdas"
+description = "Una fila por celda original, con clasificación, rol, concesión histórica y acción. Sin datos personales."
+logical_id = "376b589c-491a-428f-8cb4-fef2bdb7c6ba"
+content_hash = "sha256:5fd2bf6b9a176226ae92878e70b05697ac3f1572d18ebdf1ed43f50fc781bee0"
+size = 117903
+mtime_ms = 1790891781876
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/376b589c-491a-428f-8cb4-fef2bdb7c6ba/aff7de04-235b-438f-81c9-f2812c2f0b5a"
+storage_version_token = "1790891831360845"
+content_type = "text/csv"

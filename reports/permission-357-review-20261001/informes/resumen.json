@@ -1,0 +1,514 @@
+{
+  "counts": {
+    "A": {
+      "groups": 59,
+      "cells": 348
+    },
+    "B": {
+      "groups": 0,
+      "cells": 0
+    },
+    "C": {
+      "groups": 2,
+      "cells": 9
+    }
+  },
+  "exactUniqueIds": 357,
+  "disjointChunks": true,
+  "onlyHistoricalMatrix": true,
+  "liveDatabaseAccess": false,
+  "runtimeVerified": false,
+  "ownerDecisionsRequired": 0,
+  "categoryMeaning": {
+    "A": "No hay operación enlazada a esa celda en el código activo; no niega existencia de función comercial.",
+    "B": "API consumidora sin UI operativa; no hay casos.",
+    "C": "Consumidor UI encontrado; caja_abonos.ver también API calculada, ajustes.ver sólo gate UI."
+  },
+  "pendingDisposition": {
+    "A": "348 salen de verificación runtime pendiente como sin operación aplicable; no es ejecución aprobada. Ocultar/retirar matriz requiere cambio técnico compatible.",
+    "C": "9 conservan verificación pendiente, respetando diferencia API+UI frente a UI sola."
+  },
+  "topics": [
+    {
+      "theme": "Inventario y productos",
+      "groups": 15,
+      "cells": 83,
+      "A": [
+        {
+          "module": "ajustes",
+          "label": "Ajustes de inventario",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 5
+        },
+        {
+          "module": "productos",
+          "label": "Catálogo de productos",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "inventario",
+          "label": "Consulta de inventario",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "inventario",
+          "label": "Consulta de inventario",
+          "action": "crear",
+          "actionLabel": "Crear",
+          "cells": 6
+        },
+        {
+          "module": "entradas",
+          "label": "Entradas de mercancía",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "etiquetas",
+          "label": "Etiquetas",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "movimientos",
+          "label": "Historial de movimientos",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "movimientos",
+          "label": "Historial de movimientos",
+          "action": "crear",
+          "actionLabel": "Crear",
+          "cells": 5
+        },
+        {
+          "module": "movimientos",
+          "label": "Historial de movimientos",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 5
+        },
+        {
+          "module": "marcar_remate",
+          "label": "Marcas de remate",
+          "action": "crear",
+          "actionLabel": "Crear",
+          "cells": 6
+        },
+        {
+          "module": "marcar_remate",
+          "label": "Marcas de remate",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 6
+        },
+        {
+          "module": "marcar_remate",
+          "label": "Marcas de remate",
+          "action": "ver",
+          "actionLabel": "Consultar",
+          "cells": 6
+        },
+        {
+          "module": "precios",
+          "label": "Precios de productos",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "precios",
+          "label": "Precios de productos",
+          "action": "crear",
+          "actionLabel": "Crear",
+          "cells": 5
+        }
+      ],
+      "C": [
+        {
+          "key": "ajustes:ver",
+          "label": "Ajustes de inventario",
+          "actionLabel": "Consultar",
+          "cells": 3
+        }
+      ]
+    },
+    {
+      "theme": "Ventas/salidas/viajes",
+      "groups": 6,
+      "cells": 35,
+      "A": [
+        {
+          "module": "pos",
+          "label": "Punto de venta",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "pos",
+          "label": "Punto de venta",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 6
+        },
+        {
+          "module": "salidas_venta",
+          "label": "Venta de mercancía en salidas",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "salidas_venta",
+          "label": "Venta de mercancía en salidas",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 6
+        },
+        {
+          "module": "viajes",
+          "label": "Viajes de reparto",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "viajes",
+          "label": "Viajes de reparto",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 5
+        }
+      ],
+      "C": []
+    },
+    {
+      "theme": "Clientes/crédito/caja",
+      "groups": 21,
+      "cells": 126,
+      "A": [
+        {
+          "module": "caja_abonos",
+          "label": "Abonos recibidos en caja",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "caja_abonos",
+          "label": "Abonos recibidos en caja",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 6
+        },
+        {
+          "module": "cobros_pagos",
+          "label": "Cobros y pagos",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "cobros_pagos",
+          "label": "Cobros y pagos",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 6
+        },
+        {
+          "module": "cortes",
+          "label": "Cortes de caja",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "cortes",
+          "label": "Cortes de caja",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 6
+        },
+        {
+          "module": "clientes_credito",
+          "label": "Crédito de clientes",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "clientes_credito",
+          "label": "Crédito de clientes",
+          "action": "crear",
+          "actionLabel": "Crear",
+          "cells": 6
+        },
+        {
+          "module": "clientes",
+          "label": "Directorio de clientes",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "clientes_finanzas",
+          "label": "Finanzas de clientes",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 6
+        },
+        {
+          "module": "proveedores_finanzas",
+          "label": "Finanzas de proveedores",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 6
+        },
+        {
+          "module": "clientes_precios",
+          "label": "Precios consultados por cliente",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "clientes_precios",
+          "label": "Precios consultados por cliente",
+          "action": "crear",
+          "actionLabel": "Crear",
+          "cells": 6
+        },
+        {
+          "module": "clientes_precios",
+          "label": "Precios consultados por cliente",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 6
+        },
+        {
+          "module": "clientes_recapturas",
+          "label": "Recapturas de cobros de clientes",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "clientes_recapturas",
+          "label": "Recapturas de cobros de clientes",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 6
+        },
+        {
+          "module": "clientes_recapturas",
+          "label": "Recapturas de cobros de clientes",
+          "action": "ver",
+          "actionLabel": "Consultar",
+          "cells": 6
+        },
+        {
+          "module": "resumen_caja",
+          "label": "Resumen de caja",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "resumen_caja",
+          "label": "Resumen de caja",
+          "action": "crear",
+          "actionLabel": "Crear",
+          "cells": 6
+        },
+        {
+          "module": "resumen_caja",
+          "label": "Resumen de caja",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 6
+        }
+      ],
+      "C": [
+        {
+          "key": "caja_abonos:ver",
+          "label": "Abonos recibidos en caja",
+          "actionLabel": "Consultar",
+          "cells": 6
+        }
+      ]
+    },
+    {
+      "theme": "Directorios",
+      "groups": 5,
+      "cells": 30,
+      "A": [
+        {
+          "module": "camionetas",
+          "label": "Directorio de camionetas",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "choferes",
+          "label": "Directorio de choferes",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "proveedores",
+          "label": "Directorio de proveedores",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "equipos",
+          "label": "Equipos de trabajo",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "ubicaciones",
+          "label": "Tiendas y bodegas",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        }
+      ],
+      "C": []
+    },
+    {
+      "theme": "Administración/reportes",
+      "groups": 14,
+      "cells": 83,
+      "A": [
+        {
+          "module": "permisos",
+          "label": "Administración de permisos",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "permisos",
+          "label": "Administración de permisos",
+          "action": "crear",
+          "actionLabel": "Crear",
+          "cells": 6
+        },
+        {
+          "module": "auditoria",
+          "label": "Bitácora de auditoría",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "auditoria",
+          "label": "Bitácora de auditoría",
+          "action": "crear",
+          "actionLabel": "Crear",
+          "cells": 6
+        },
+        {
+          "module": "auditoria",
+          "label": "Bitácora de auditoría",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 6
+        },
+        {
+          "module": "conciliacion",
+          "label": "Conciliación del inventario",
+          "action": "crear",
+          "actionLabel": "Crear",
+          "cells": 5
+        },
+        {
+          "module": "conciliacion",
+          "label": "Conciliación del inventario",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 6
+        },
+        {
+          "module": "reportes",
+          "label": "Reportes",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "reportes",
+          "label": "Reportes",
+          "action": "crear",
+          "actionLabel": "Crear",
+          "cells": 6
+        },
+        {
+          "module": "reportes",
+          "label": "Reportes",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 6
+        },
+        {
+          "module": "dashboard",
+          "label": "Tablero de consulta",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        },
+        {
+          "module": "dashboard",
+          "label": "Tablero de consulta",
+          "action": "crear",
+          "actionLabel": "Crear",
+          "cells": 6
+        },
+        {
+          "module": "dashboard",
+          "label": "Tablero de consulta",
+          "action": "editar",
+          "actionLabel": "Modificar",
+          "cells": 6
+        },
+        {
+          "module": "usuarios",
+          "label": "Usuarios",
+          "action": "autorizar",
+          "actionLabel": "Autorizar",
+          "cells": 6
+        }
+      ],
+      "C": []
+    }
+  ],
+  "files": [
+    "informe.html",
+    "informe.md",
+    "cells.csv"
+  ],
+  "validation": {
+    "expectedPopulation": "reports/trabajo-nocturno-20260925/tarea-7/owner-357.csv",
+    "matrix": "reports/tanda-f/tarea-4/effective-matrices.json",
+    "uniqueGroups": 61,
+    "uniqueCells": 357,
+    "htmlRows": 61,
+    "csvDataRows": 357,
+    "adminPopulationCells": 0
+  }
+}

@@ -1,0 +1,4225 @@
+{
+  "scope": "Sólo informe; 16 módulos delegados; matriz histórica de población owner-357, NO permisos actuales.",
+  "sourceOfTruth": {
+    "api": "artifacts/api-server/dist-driver-phones-20261001/index.mjs.map",
+    "apiFrozen": "reports/driver-multiple-phones-20261001/frozen-root",
+    "ui": "reports/sidebar-order-20261001/frozen-root",
+    "activeApiProcess": "node artifacts/api-server/dist-driver-phones-20261001/index.mjs",
+    "activeUiPreview": "vite preview --outDir dist-sidebar-order-20261001",
+    "sourceMapSha256": "843620f3c1c2025b5865b6f79ae2186a221d880deab23091bb9364c7e86b5202"
+  },
+  "citationConvention": "API rutas relativas a artifacts/api-server/src dentro del sourcesContent del sourcemap activo; UI relativas a artifacts/mariana-textil/src dentro del frozen UI indicado. Nunca HEAD como verdad activa.",
+  "coverage": {
+    "modules": [
+      "auditoria",
+      "caja_abonos",
+      "camionetas",
+      "choferes",
+      "clientes",
+      "clientes_credito",
+      "clientes_finanzas",
+      "clientes_precios",
+      "clientes_recapturas",
+      "cobros_pagos",
+      "conciliacion",
+      "cortes",
+      "dashboard",
+      "entradas",
+      "equipos",
+      "etiquetas"
+    ],
+    "exactCellCount": 179,
+    "distinctModuleActions": 30,
+    "ids": [
+      "TERMINAL:dashboard:crear",
+      "TERMINAL:dashboard:editar",
+      "TERMINAL:dashboard:autorizar",
+      "TERMINAL:entradas:autorizar",
+      "TERMINAL:etiquetas:autorizar",
+      "TERMINAL:clientes:autorizar",
+      "TERMINAL:clientes_credito:crear",
+      "TERMINAL:clientes_credito:autorizar",
+      "TERMINAL:clientes_precios:crear",
+      "TERMINAL:clientes_precios:editar",
+      "TERMINAL:clientes_precios:autorizar",
+      "TERMINAL:clientes_finanzas:editar",
+      "TERMINAL:caja_abonos:ver",
+      "TERMINAL:caja_abonos:editar",
+      "TERMINAL:caja_abonos:autorizar",
+      "TERMINAL:clientes_recapturas:ver",
+      "TERMINAL:clientes_recapturas:editar",
+      "TERMINAL:clientes_recapturas:autorizar",
+      "TERMINAL:cortes:editar",
+      "TERMINAL:cortes:autorizar",
+      "TERMINAL:cobros_pagos:editar",
+      "TERMINAL:cobros_pagos:autorizar",
+      "TERMINAL:conciliacion:crear",
+      "TERMINAL:conciliacion:editar",
+      "TERMINAL:auditoria:crear",
+      "TERMINAL:auditoria:editar",
+      "TERMINAL:auditoria:autorizar",
+      "TERMINAL:camionetas:autorizar",
+      "TERMINAL:choferes:autorizar",
+      "TERMINAL:equipos:autorizar",
+      "CAJA:dashboard:crear",
+      "CAJA:dashboard:editar",
+      "CAJA:dashboard:autorizar",
+      "CAJA:entradas:autorizar",
+      "CAJA:etiquetas:autorizar",
+      "CAJA:clientes:autorizar",
+      "CAJA:clientes_credito:crear",
+      "CAJA:clientes_credito:autorizar",
+      "CAJA:clientes_precios:crear",
+      "CAJA:clientes_precios:editar",
+      "CAJA:clientes_precios:autorizar",
+      "CAJA:clientes_finanzas:editar",
+      "CAJA:caja_abonos:ver",
+      "CAJA:caja_abonos:editar",
+      "CAJA:caja_abonos:autorizar",
+      "CAJA:clientes_recapturas:ver",
+      "CAJA:clientes_recapturas:editar",
+      "CAJA:clientes_recapturas:autorizar",
+      "CAJA:cortes:editar",
+      "CAJA:cortes:autorizar",
+      "CAJA:cobros_pagos:editar",
+      "CAJA:cobros_pagos:autorizar",
+      "CAJA:conciliacion:crear",
+      "CAJA:conciliacion:editar",
+      "CAJA:auditoria:crear",
+      "CAJA:auditoria:editar",
+      "CAJA:auditoria:autorizar",
+      "CAJA:camionetas:autorizar",
+      "CAJA:choferes:autorizar",
+      "CAJA:equipos:autorizar",
+      "SUPERVISOR:dashboard:crear",
+      "SUPERVISOR:dashboard:editar",
+      "SUPERVISOR:dashboard:autorizar",
+      "SUPERVISOR:entradas:autorizar",
+      "SUPERVISOR:etiquetas:autorizar",
+      "SUPERVISOR:clientes:autorizar",
+      "SUPERVISOR:clientes_credito:crear",
+      "SUPERVISOR:clientes_credito:autorizar",
+      "SUPERVISOR:clientes_precios:crear",
+      "SUPERVISOR:clientes_precios:editar",
+      "SUPERVISOR:clientes_precios:autorizar",
+      "SUPERVISOR:clientes_finanzas:editar",
+      "SUPERVISOR:caja_abonos:ver",
+      "SUPERVISOR:caja_abonos:editar",
+      "SUPERVISOR:caja_abonos:autorizar",
+      "SUPERVISOR:clientes_recapturas:ver",
+      "SUPERVISOR:clientes_recapturas:editar",
+      "SUPERVISOR:clientes_recapturas:autorizar",
+      "SUPERVISOR:cortes:editar",
+      "SUPERVISOR:cortes:autorizar",
+      "SUPERVISOR:cobros_pagos:editar",
+      "SUPERVISOR:cobros_pagos:autorizar",
+      "SUPERVISOR:conciliacion:crear",
+      "SUPERVISOR:conciliacion:editar",
+      "SUPERVISOR:auditoria:crear",
+      "SUPERVISOR:auditoria:editar",
+      "SUPERVISOR:auditoria:autorizar",
+      "SUPERVISOR:camionetas:autorizar",
+      "SUPERVISOR:choferes:autorizar",
+      "SUPERVISOR:equipos:autorizar",
+      "BODEGA:dashboard:crear",
+      "BODEGA:dashboard:editar",
+      "BODEGA:dashboard:autorizar",
+      "BODEGA:entradas:autorizar",
+      "BODEGA:etiquetas:autorizar",
+      "BODEGA:clientes:autorizar",
+      "BODEGA:clientes_credito:crear",
+      "BODEGA:clientes_credito:autorizar",
+      "BODEGA:clientes_precios:crear",
+      "BODEGA:clientes_precios:editar",
+      "BODEGA:clientes_precios:autorizar",
+      "BODEGA:clientes_finanzas:editar",
+      "BODEGA:caja_abonos:ver",
+      "BODEGA:caja_abonos:editar",
+      "BODEGA:caja_abonos:autorizar",
+      "BODEGA:clientes_recapturas:ver",
+      "BODEGA:clientes_recapturas:editar",
+      "BODEGA:clientes_recapturas:autorizar",
+      "BODEGA:cortes:editar",
+      "BODEGA:cortes:autorizar",
+      "BODEGA:cobros_pagos:editar",
+      "BODEGA:cobros_pagos:autorizar",
+      "BODEGA:conciliacion:crear",
+      "BODEGA:conciliacion:editar",
+      "BODEGA:auditoria:crear",
+      "BODEGA:auditoria:editar",
+      "BODEGA:auditoria:autorizar",
+      "BODEGA:camionetas:autorizar",
+      "BODEGA:choferes:autorizar",
+      "BODEGA:equipos:autorizar",
+      "SISTEMAS:dashboard:crear",
+      "SISTEMAS:dashboard:editar",
+      "SISTEMAS:dashboard:autorizar",
+      "SISTEMAS:entradas:autorizar",
+      "SISTEMAS:etiquetas:autorizar",
+      "SISTEMAS:clientes:autorizar",
+      "SISTEMAS:clientes_credito:crear",
+      "SISTEMAS:clientes_credito:autorizar",
+      "SISTEMAS:clientes_precios:crear",
+      "SISTEMAS:clientes_precios:editar",
+      "SISTEMAS:clientes_precios:autorizar",
+      "SISTEMAS:clientes_finanzas:editar",
+      "SISTEMAS:caja_abonos:ver",
+      "SISTEMAS:caja_abonos:editar",
+      "SISTEMAS:caja_abonos:autorizar",
+      "SISTEMAS:clientes_recapturas:ver",
+      "SISTEMAS:clientes_recapturas:editar",
+      "SISTEMAS:clientes_recapturas:autorizar",
+      "SISTEMAS:cortes:editar",
+      "SISTEMAS:cortes:autorizar",
+      "SISTEMAS:cobros_pagos:editar",
+      "SISTEMAS:cobros_pagos:autorizar",
+      "SISTEMAS:conciliacion:editar",
+      "SISTEMAS:auditoria:crear",
+      "SISTEMAS:auditoria:editar",
+      "SISTEMAS:auditoria:autorizar",
+      "SISTEMAS:camionetas:autorizar",
+      "SISTEMAS:choferes:autorizar",
+      "SISTEMAS:equipos:autorizar",
+      "CONTADOR:dashboard:crear",
+      "CONTADOR:dashboard:editar",
+      "CONTADOR:dashboard:autorizar",
+      "CONTADOR:entradas:autorizar",
+      "CONTADOR:etiquetas:autorizar",
+      "CONTADOR:clientes:autorizar",
+      "CONTADOR:clientes_credito:crear",
+      "CONTADOR:clientes_credito:autorizar",
+      "CONTADOR:clientes_precios:crear",
+      "CONTADOR:clientes_precios:editar",
+      "CONTADOR:clientes_precios:autorizar",
+      "CONTADOR:clientes_finanzas:editar",
+      "CONTADOR:caja_abonos:ver",
+      "CONTADOR:caja_abonos:editar",
+      "CONTADOR:caja_abonos:autorizar",
+      "CONTADOR:clientes_recapturas:ver",
+      "CONTADOR:clientes_recapturas:editar",
+      "CONTADOR:clientes_recapturas:autorizar",
+      "CONTADOR:cortes:editar",
+      "CONTADOR:cortes:autorizar",
+      "CONTADOR:cobros_pagos:editar",
+      "CONTADOR:cobros_pagos:autorizar",
+      "CONTADOR:conciliacion:crear",
+      "CONTADOR:conciliacion:editar",
+      "CONTADOR:auditoria:crear",
+      "CONTADOR:auditoria:editar",
+      "CONTADOR:auditoria:autorizar",
+      "CONTADOR:camionetas:autorizar",
+      "CONTADOR:choferes:autorizar",
+      "CONTADOR:equipos:autorizar"
+    ],
+    "categoryCells": {
+      "A": 173,
+      "B": 0,
+      "C": 6
+    },
+    "categoryModuleActions": {
+      "A": 29,
+      "B": 0,
+      "C": 1
+    }
+  },
+  "genericContractCitations": [
+    "API lib/permisos.ts:29-48,58-70,75-100,264+",
+    "UI lib/permisos.ts:4-38,53-77"
+  ],
+  "method": "Inventario completo de referencias módulo/enum en todas las fuentes propias del bundle API y todos los TS/TSX activos UI. Inventario independiente de todas las llamadas de guardas y lecturas puede*. Revisión de bucles E3, wrapper E4, actor E5, gestores de camionetas/choferes, rutas montadas y helper UI. Comparación textual/hash de archivos relevantes contra frozen, árbol de trabajo y git HEAD. No se ejecutó aplicación, API, DB, pruebas ni workflows.",
+  "evidenceFile": "chunk-business-evidence.json",
+  "comparisonsFile": "chunk-business-head-comparison.json",
+  "comparisonSummary": {
+    "relevantFiles": 206,
+    "frozenApiMismatches": [],
+    "headDifferences": [
+      {
+        "kind": "API",
+        "file": "artifacts/api-server/src/routes/index.ts"
+      },
+      {
+        "kind": "API",
+        "file": "artifacts/api-server/src/lib/inventario.ts"
+      },
+      {
+        "kind": "API",
+        "file": "artifacts/api-server/src/lib/credit-movement-detail.ts"
+      },
+      {
+        "kind": "UI",
+        "file": "artifacts/mariana-textil/src/pages/cliente-movimiento-detail.tsx"
+      },
+      {
+        "kind": "API",
+        "file": "lib/db/src/schema/pos.ts"
+      },
+      {
+        "kind": "API",
+        "file": "lib/db/src/lib/clientes-schema.ts"
+      },
+      {
+        "kind": "API",
+        "file": "artifacts/api-server/src/routes/clientes.ts"
+      },
+      {
+        "kind": "API",
+        "file": "artifacts/api-server/src/lib/e7-read-model.ts"
+      },
+      {
+        "kind": "API",
+        "file": "artifacts/api-server/src/lib/admin-analytics.ts"
+      },
+      {
+        "kind": "API",
+        "file": "artifacts/api-server/src/lib/reportes-commercial.ts"
+      },
+      {
+        "kind": "API",
+        "file": "artifacts/api-server/src/lib/reportes-sales.ts"
+      },
+      {
+        "kind": "UI",
+        "file": "artifacts/mariana-textil/src/components/client-directory.tsx"
+      },
+      {
+        "kind": "UI",
+        "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx"
+      },
+      {
+        "kind": "UI",
+        "file": "artifacts/mariana-textil/src/pages/clientes.tsx"
+      },
+      {
+        "kind": "UI",
+        "file": "artifacts/mariana-textil/src/pages/ticket-detail.tsx"
+      },
+      {
+        "kind": "UI",
+        "file": "artifacts/mariana-textil/src/pages/caja/tiempo-real.tsx"
+      }
+    ],
+    "workingTreeDifferences": [
+      {
+        "kind": "API",
+        "file": "artifacts/api-server/src/routes/index.ts"
+      },
+      {
+        "kind": "API",
+        "file": "artifacts/api-server/src/lib/inventario.ts"
+      },
+      {
+        "kind": "API",
+        "file": "artifacts/api-server/src/lib/credit-movement-detail.ts"
+      },
+      {
+        "kind": "UI",
+        "file": "artifacts/mariana-textil/src/pages/cliente-movimiento-detail.tsx"
+      },
+      {
+        "kind": "API",
+        "file": "lib/db/src/schema/pos.ts"
+      },
+      {
+        "kind": "API",
+        "file": "lib/db/src/lib/clientes-schema.ts"
+      },
+      {
+        "kind": "API",
+        "file": "artifacts/api-server/src/routes/clientes.ts"
+      },
+      {
+        "kind": "API",
+        "file": "artifacts/api-server/src/lib/e7-read-model.ts"
+      },
+      {
+        "kind": "API",
+        "file": "artifacts/api-server/src/lib/admin-analytics.ts"
+      },
+      {
+        "kind": "API",
+        "file": "artifacts/api-server/src/lib/reportes-commercial.ts"
+      },
+      {
+        "kind": "API",
+        "file": "artifacts/api-server/src/lib/reportes-sales.ts"
+      },
+      {
+        "kind": "UI",
+        "file": "artifacts/mariana-textil/src/components/client-directory.tsx"
+      },
+      {
+        "kind": "UI",
+        "file": "artifacts/mariana-textil/src/pages/cliente-detail.tsx"
+      },
+      {
+        "kind": "UI",
+        "file": "artifacts/mariana-textil/src/pages/clientes.tsx"
+      },
+      {
+        "kind": "UI",
+        "file": "artifacts/mariana-textil/src/pages/ticket-detail.tsx"
+      },
+      {
+        "kind": "UI",
+        "file": "artifacts/mariana-textil/src/pages/caja/tiempo-real.tsx"
+      }
+    ]
+  },
+  "items": [
+    {
+      "key": "dashboard:crear",
+      "module": "dashboard",
+      "action": "crear",
+      "label_es": "Crear — dashboard",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:dashboard:crear",
+        "CAJA:dashboard:crear",
+        "SUPERVISOR:dashboard:crear",
+        "BODEGA:dashboard:crear",
+        "SISTEMAS:dashboard:crear",
+        "CONTADOR:dashboard:crear"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Sólo lectura del tablero; crear, editar y autorizar no son operaciones de este módulo.",
+      "citations": [
+        "API routes/dashboard.ts:12-15",
+        "UI App.tsx:260-269"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "dashboard",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:dashboard:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:dashboard:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:dashboard:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:dashboard:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:dashboard:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:dashboard:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "dashboard:editar",
+      "module": "dashboard",
+      "action": "editar",
+      "label_es": "Modificar — dashboard",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:dashboard:editar",
+        "CAJA:dashboard:editar",
+        "SUPERVISOR:dashboard:editar",
+        "BODEGA:dashboard:editar",
+        "SISTEMAS:dashboard:editar",
+        "CONTADOR:dashboard:editar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Sólo lectura del tablero; crear, editar y autorizar no son operaciones de este módulo.",
+      "citations": [
+        "API routes/dashboard.ts:12-15",
+        "UI App.tsx:260-269"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "dashboard",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:dashboard:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:dashboard:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:dashboard:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:dashboard:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:dashboard:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:dashboard:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "dashboard:autorizar",
+      "module": "dashboard",
+      "action": "autorizar",
+      "label_es": "Autorizar — dashboard",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:dashboard:autorizar",
+        "CAJA:dashboard:autorizar",
+        "SUPERVISOR:dashboard:autorizar",
+        "BODEGA:dashboard:autorizar",
+        "SISTEMAS:dashboard:autorizar",
+        "CONTADOR:dashboard:autorizar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Sólo lectura del tablero; crear, editar y autorizar no son operaciones de este módulo.",
+      "citations": [
+        "API routes/dashboard.ts:12-15",
+        "UI App.tsx:260-269"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "dashboard",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:dashboard:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:dashboard:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:dashboard:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:dashboard:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:dashboard:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:dashboard:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "entradas:autorizar",
+      "module": "entradas",
+      "action": "autorizar",
+      "label_es": "Autorizar — entradas",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:entradas:autorizar",
+        "CAJA:entradas:autorizar",
+        "SUPERVISOR:entradas:autorizar",
+        "BODEGA:entradas:autorizar",
+        "SISTEMAS:entradas:autorizar",
+        "CONTADOR:entradas:autorizar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Las altas y modificaciones usan entradas.crear/editar. No confundir autorizar con validaciones de la entrada o autorización bajo otro módulo.",
+      "citations": [
+        "API routes/inventario.ts:770,972,1237,1331",
+        "UI pages/entradas.tsx:203"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "entradas",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:entradas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:entradas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:entradas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:entradas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:entradas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:entradas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "etiquetas:autorizar",
+      "module": "etiquetas",
+      "action": "autorizar",
+      "label_es": "Autorizar — etiquetas",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:etiquetas:autorizar",
+        "CAJA:etiquetas:autorizar",
+        "SUPERVISOR:etiquetas:autorizar",
+        "BODEGA:etiquetas:autorizar",
+        "SISTEMAS:etiquetas:autorizar",
+        "CONTADOR:etiquetas:autorizar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Imprimir usa crear; configuración usa editar; historial usa sesión/otras condiciones. Ninguna autorización consume etiquetas.autorizar.",
+      "citations": [
+        "API routes/etiquetas.ts:183,325,561,675-734",
+        "UI pages/etiquetas.tsx:60",
+        "UI components/reprint-labels-dialog.tsx:83"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "etiquetas",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:etiquetas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:etiquetas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:etiquetas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:etiquetas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:etiquetas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:etiquetas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "clientes:autorizar",
+      "module": "clientes",
+      "action": "autorizar",
+      "label_es": "Autorizar — clientes",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:clientes:autorizar",
+        "CAJA:clientes:autorizar",
+        "SUPERVISOR:clientes:autorizar",
+        "BODEGA:clientes:autorizar",
+        "SISTEMAS:clientes:autorizar",
+        "CONTADOR:clientes:autorizar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "El directorio consume ver/crear/editar. Ajustes financieros son clientes_finanzas.autorizar, no clientes.autorizar.",
+      "citations": [
+        "API routes/clientes.ts:635,683,1079,2372,2472",
+        "UI pages/cliente-detail.tsx:337-344"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "clientes",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:clientes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:clientes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:clientes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:clientes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:clientes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:clientes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "clientes_credito:crear",
+      "module": "clientes_credito",
+      "action": "crear",
+      "label_es": "Crear — clientes credito",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:clientes_credito:crear",
+        "CAJA:clientes_credito:crear",
+        "SUPERVISOR:clientes_credito:crear",
+        "BODEGA:clientes_credito:crear",
+        "SISTEMAS:clientes_credito:crear",
+        "CONTADOR:clientes_credito:crear"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Consulta usa ver y cambio de límite usa editar. Crear crédito no selecciona crear/autorizar de esta celda.",
+      "citations": [
+        "API routes/clientes.ts:1007,1017,1189,1259",
+        "UI pages/cliente-detail.tsx:337,343"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "clientes_credito",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:clientes_credito:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:clientes_credito:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:clientes_credito:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:clientes_credito:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:clientes_credito:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:clientes_credito:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "clientes_credito:autorizar",
+      "module": "clientes_credito",
+      "action": "autorizar",
+      "label_es": "Autorizar — clientes credito",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:clientes_credito:autorizar",
+        "CAJA:clientes_credito:autorizar",
+        "SUPERVISOR:clientes_credito:autorizar",
+        "BODEGA:clientes_credito:autorizar",
+        "SISTEMAS:clientes_credito:autorizar",
+        "CONTADOR:clientes_credito:autorizar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Consulta usa ver y cambio de límite usa editar. Crear crédito no selecciona crear/autorizar de esta celda.",
+      "citations": [
+        "API routes/clientes.ts:1007,1017,1189,1259",
+        "UI pages/cliente-detail.tsx:337,343"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "clientes_credito",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:clientes_credito:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:clientes_credito:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:clientes_credito:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:clientes_credito:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:clientes_credito:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:clientes_credito:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "clientes_precios:crear",
+      "module": "clientes_precios",
+      "action": "crear",
+      "label_es": "Crear — clientes precios",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:clientes_precios:crear",
+        "CAJA:clientes_precios:crear",
+        "SUPERVISOR:clientes_precios:crear",
+        "BODEGA:clientes_precios:crear",
+        "SISTEMAS:clientes_precios:crear",
+        "CONTADOR:clientes_precios:crear"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Pestaña de precios del cliente es lectura (ver). Los cambios de precios en otro módulo no consumen clientes_precios.crear/editar/autorizar.",
+      "citations": [
+        "API routes/clientes.ts:1318",
+        "UI pages/cliente-detail.tsx:338"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "clientes_precios",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:clientes_precios:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:clientes_precios:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:clientes_precios:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:clientes_precios:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:clientes_precios:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:clientes_precios:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "clientes_precios:editar",
+      "module": "clientes_precios",
+      "action": "editar",
+      "label_es": "Modificar — clientes precios",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:clientes_precios:editar",
+        "CAJA:clientes_precios:editar",
+        "SUPERVISOR:clientes_precios:editar",
+        "BODEGA:clientes_precios:editar",
+        "SISTEMAS:clientes_precios:editar",
+        "CONTADOR:clientes_precios:editar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Pestaña de precios del cliente es lectura (ver). Los cambios de precios en otro módulo no consumen clientes_precios.crear/editar/autorizar.",
+      "citations": [
+        "API routes/clientes.ts:1318",
+        "UI pages/cliente-detail.tsx:338"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "clientes_precios",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:clientes_precios:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:clientes_precios:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:clientes_precios:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:clientes_precios:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:clientes_precios:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:clientes_precios:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "clientes_precios:autorizar",
+      "module": "clientes_precios",
+      "action": "autorizar",
+      "label_es": "Autorizar — clientes precios",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:clientes_precios:autorizar",
+        "CAJA:clientes_precios:autorizar",
+        "SUPERVISOR:clientes_precios:autorizar",
+        "BODEGA:clientes_precios:autorizar",
+        "SISTEMAS:clientes_precios:autorizar",
+        "CONTADOR:clientes_precios:autorizar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Pestaña de precios del cliente es lectura (ver). Los cambios de precios en otro módulo no consumen clientes_precios.crear/editar/autorizar.",
+      "citations": [
+        "API routes/clientes.ts:1318",
+        "UI pages/cliente-detail.tsx:338"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "clientes_precios",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:clientes_precios:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:clientes_precios:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:clientes_precios:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:clientes_precios:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:clientes_precios:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:clientes_precios:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "clientes_finanzas:editar",
+      "module": "clientes_finanzas",
+      "action": "editar",
+      "label_es": "Modificar — clientes finanzas",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:clientes_finanzas:editar",
+        "CAJA:clientes_finanzas:editar",
+        "SUPERVISOR:clientes_finanzas:editar",
+        "BODEGA:clientes_finanzas:editar",
+        "SISTEMAS:clientes_finanzas:editar",
+        "CONTADOR:clientes_finanzas:editar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Las operaciones financieras consumen ver, crear o autorizar; ninguna selecciona editar. El nombre editar de una pantalla no acredita esta celda.",
+      "citations": [
+        "API routes/clientes.ts:2109,2166,2372,2472",
+        "UI pages/cliente-detail.tsx:339-342"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "clientes_finanzas",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:clientes_finanzas:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:clientes_finanzas:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:clientes_finanzas:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:clientes_finanzas:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:clientes_finanzas:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:clientes_finanzas:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "caja_abonos:ver",
+      "module": "caja_abonos",
+      "action": "ver",
+      "label_es": "Consultar cobros pendientes E5 desde Caja",
+      "category": "C",
+      "categoryMeaning": "Uso operativo API y UI que el mapeo histórico no identificó",
+      "exactOwnerCellIds": [
+        "TERMINAL:caja_abonos:ver",
+        "CAJA:caja_abonos:ver",
+        "SUPERVISOR:caja_abonos:ver",
+        "BODEGA:caja_abonos:ver",
+        "SISTEMAS:caja_abonos:ver",
+        "CONTADOR:caja_abonos:ver"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "API resolvePermiso(caja_abonos) toma puedeVer y lo combina OR con clientes_finanzas.ver. UI e5CanRead itera E5_READ_MODULES con ver y E5Entry lo aplica. Es consumo real de esta celda, no sólo registro de módulo. Persisten restricciones por rol y alcance.",
+      "citations": [
+        "API routes/index.ts:45,61",
+        "API routes/e5.ts:18-34,50-77",
+        "UI lib/e5-authorization.ts:5,19-22",
+        "UI components/e5-pendientes.tsx:48,58,281",
+        "UI pages/cobros.tsx:6,282",
+        "UI pages/cliente-detail.tsx:636",
+        "UI App.tsx:559-581",
+        "API lib/e5-feature.ts:2",
+        "UI lib/e5-feature-flags.ts:2"
+      ],
+      "negativeConsumerProof": null,
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:caja_abonos:ver",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:caja_abonos:ver",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:caja_abonos:ver",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:caja_abonos:ver",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:caja_abonos:ver",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:caja_abonos:ver",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico conserva NO_OPERATION_FOUND_STATIC/OWNER_SEMANTICS_REQUIRED sin enlace de API/UI. El acceso calculado resolvePermiso + puedeVer y E5_READ_MODULES.some no equivale a un literal requierePermiso(module,action). Es la explicación técnica del falso negativo; no consta traza histórica del parser para atribuir causalidad exacta."
+      },
+      "endpointAndFixtureNeeded": {
+        "endpoints": [
+          "GET /api/e5/disponibilidad",
+          "GET /api/e5/cobros",
+          "GET /api/e5/contexto",
+          "GET /api/e5/cobros/:id"
+        ],
+        "fixture": "Prueba futura aislada (no ejecutada): usuario activo CAJA/TERMINAL/SUPERVISOR, no ADMIN (bypass), rol permitido por E5, sitio y alcance válidos, sesión autenticada. Permisos efectivos clientes_finanzas.ver=false y caja_abonos.ver=true; para la navegación dar cobros_pagos.ver sin confundirlo con el control interno E5. Cobro E5 válido del sitio/cliente y capacidad/disponibilidad coherentes. Control negativo: cambiar sólo caja_abonos.ver=false manteniendo clientes_finanzas.ver=false, esperar 403 API y bloqueo E5Entry; positivo: true y respuesta/esquema correctos. Control OR: caja_abonos.ver=false/clientes_finanzas.ver=true debe seguir permitido. Montar /cobros, abrir listado E5, observar petición y resultado; listar/detalle deben respetar alcance. También comprobar roles excluidos CONTADOR/SISTEMAS/BODEGA. No se necesita dinero real ni DB real; repositorio fixture o DB aislada autorizada."
+      },
+      "removal": "No retirar: consumidor real API/UI.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "caja_abonos:editar",
+      "module": "caja_abonos",
+      "action": "editar",
+      "label_es": "Modificar — caja abonos",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:caja_abonos:editar",
+        "CAJA:caja_abonos:editar",
+        "SUPERVISOR:caja_abonos:editar",
+        "BODEGA:caja_abonos:editar",
+        "SISTEMAS:caja_abonos:editar",
+        "CONTADOR:caja_abonos:editar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "E3 usa crear, incluso para contexto; E5 lee ver/crear. E5 autorizar usa reglas de actor/rol, no caja_abonos.autorizar. Serializar las cuatro banderas en clave de caché no convierte editar/autorizar en permisos de operación.",
+      "citations": [
+        "API routes/e3-collections.ts:25,45-50",
+        "API routes/e5.ts:18-34",
+        "UI lib/e5-authorization.ts:5-22"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "caja_abonos",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:caja_abonos:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:caja_abonos:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:caja_abonos:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:caja_abonos:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:caja_abonos:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:caja_abonos:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "caja_abonos:autorizar",
+      "module": "caja_abonos",
+      "action": "autorizar",
+      "label_es": "Autorizar — caja abonos",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:caja_abonos:autorizar",
+        "CAJA:caja_abonos:autorizar",
+        "SUPERVISOR:caja_abonos:autorizar",
+        "BODEGA:caja_abonos:autorizar",
+        "SISTEMAS:caja_abonos:autorizar",
+        "CONTADOR:caja_abonos:autorizar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "E3 usa crear, incluso para contexto; E5 lee ver/crear. E5 autorizar usa reglas de actor/rol, no caja_abonos.autorizar. Serializar las cuatro banderas en clave de caché no convierte editar/autorizar en permisos de operación.",
+      "citations": [
+        "API routes/e3-collections.ts:25,45-50",
+        "API routes/e5.ts:18-34",
+        "UI lib/e5-authorization.ts:5-22"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "caja_abonos",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:caja_abonos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:caja_abonos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:caja_abonos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:caja_abonos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:caja_abonos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:caja_abonos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "clientes_recapturas:ver",
+      "module": "clientes_recapturas",
+      "action": "ver",
+      "label_es": "Consultar — clientes recapturas",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:clientes_recapturas:ver",
+        "CAJA:clientes_recapturas:ver",
+        "SUPERVISOR:clientes_recapturas:ver",
+        "BODEGA:clientes_recapturas:ver",
+        "SISTEMAS:clientes_recapturas:ver",
+        "CONTADOR:clientes_recapturas:ver"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "El bucle E3 enlaza module=clientes_recapturas con acción crear en ambas rutas. Recibos exigen ADMIN, no ver/editar/autorizar de recapturas.",
+      "citations": [
+        "API routes/e3-collections.ts:45-50,52-75",
+        "UI pages/cliente-detail.tsx:345"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "clientes_recapturas",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:clientes_recapturas:ver",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:clientes_recapturas:ver",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:clientes_recapturas:ver",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:clientes_recapturas:ver",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:clientes_recapturas:ver",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:clientes_recapturas:ver",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "clientes_recapturas:editar",
+      "module": "clientes_recapturas",
+      "action": "editar",
+      "label_es": "Modificar — clientes recapturas",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:clientes_recapturas:editar",
+        "CAJA:clientes_recapturas:editar",
+        "SUPERVISOR:clientes_recapturas:editar",
+        "BODEGA:clientes_recapturas:editar",
+        "SISTEMAS:clientes_recapturas:editar",
+        "CONTADOR:clientes_recapturas:editar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "El bucle E3 enlaza module=clientes_recapturas con acción crear en ambas rutas. Recibos exigen ADMIN, no ver/editar/autorizar de recapturas.",
+      "citations": [
+        "API routes/e3-collections.ts:45-50,52-75",
+        "UI pages/cliente-detail.tsx:345"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "clientes_recapturas",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:clientes_recapturas:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:clientes_recapturas:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:clientes_recapturas:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:clientes_recapturas:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:clientes_recapturas:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:clientes_recapturas:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "clientes_recapturas:autorizar",
+      "module": "clientes_recapturas",
+      "action": "autorizar",
+      "label_es": "Autorizar — clientes recapturas",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:clientes_recapturas:autorizar",
+        "CAJA:clientes_recapturas:autorizar",
+        "SUPERVISOR:clientes_recapturas:autorizar",
+        "BODEGA:clientes_recapturas:autorizar",
+        "SISTEMAS:clientes_recapturas:autorizar",
+        "CONTADOR:clientes_recapturas:autorizar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "El bucle E3 enlaza module=clientes_recapturas con acción crear en ambas rutas. Recibos exigen ADMIN, no ver/editar/autorizar de recapturas.",
+      "citations": [
+        "API routes/e3-collections.ts:45-50,52-75",
+        "UI pages/cliente-detail.tsx:345"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "clientes_recapturas",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:clientes_recapturas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:clientes_recapturas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:clientes_recapturas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:clientes_recapturas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:clientes_recapturas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:clientes_recapturas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "cortes:editar",
+      "module": "cortes",
+      "action": "editar",
+      "label_es": "Modificar — cortes",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:cortes:editar",
+        "CAJA:cortes:editar",
+        "SUPERVISOR:cortes:editar",
+        "BODEGA:cortes:editar",
+        "SISTEMAS:cortes:editar",
+        "CONTADOR:cortes:editar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Ver/crear controlan cortes. Revisiones y entregas no seleccionan editar/autorizar. El wrapper E4 sólo admite ver|crear y puede elegir otro módulo.",
+      "citations": [
+        "API routes/pos.ts:1022-1127",
+        "API lib/e4-cash-out.ts:5-12",
+        "API routes/e9.ts:18-19",
+        "UI components/e9-entregas-panel.tsx:26"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "cortes",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:cortes:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:cortes:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:cortes:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:cortes:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:cortes:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:cortes:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "cortes:autorizar",
+      "module": "cortes",
+      "action": "autorizar",
+      "label_es": "Autorizar — cortes",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:cortes:autorizar",
+        "CAJA:cortes:autorizar",
+        "SUPERVISOR:cortes:autorizar",
+        "BODEGA:cortes:autorizar",
+        "SISTEMAS:cortes:autorizar",
+        "CONTADOR:cortes:autorizar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Ver/crear controlan cortes. Revisiones y entregas no seleccionan editar/autorizar. El wrapper E4 sólo admite ver|crear y puede elegir otro módulo.",
+      "citations": [
+        "API routes/pos.ts:1022-1127",
+        "API lib/e4-cash-out.ts:5-12",
+        "API routes/e9.ts:18-19",
+        "UI components/e9-entregas-panel.tsx:26"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "cortes",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:cortes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:cortes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:cortes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:cortes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:cortes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:cortes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "cobros_pagos:editar",
+      "module": "cobros_pagos",
+      "action": "editar",
+      "label_es": "Modificar — cobros pagos",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:cobros_pagos:editar",
+        "CAJA:cobros_pagos:editar",
+        "SUPERVISOR:cobros_pagos:editar",
+        "BODEGA:cobros_pagos:editar",
+        "SISTEMAS:cobros_pagos:editar",
+        "CONTADOR:cobros_pagos:editar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Wrapper E4 elige cobros_pagos o cortes, pero sólo ver/crear. No deriva editar/autorizar del nombre de la operación. E5 decide autorizaciones por rol, no por esta celda.",
+      "citations": [
+        "API lib/e4-cash-out.ts:5-12",
+        "API routes/pos.ts:1070-1085,1127",
+        "UI App.tsx:559-581"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "cobros_pagos",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:cobros_pagos:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:cobros_pagos:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:cobros_pagos:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:cobros_pagos:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:cobros_pagos:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:cobros_pagos:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "cobros_pagos:autorizar",
+      "module": "cobros_pagos",
+      "action": "autorizar",
+      "label_es": "Autorizar — cobros pagos",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:cobros_pagos:autorizar",
+        "CAJA:cobros_pagos:autorizar",
+        "SUPERVISOR:cobros_pagos:autorizar",
+        "BODEGA:cobros_pagos:autorizar",
+        "SISTEMAS:cobros_pagos:autorizar",
+        "CONTADOR:cobros_pagos:autorizar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Wrapper E4 elige cobros_pagos o cortes, pero sólo ver/crear. No deriva editar/autorizar del nombre de la operación. E5 decide autorizaciones por rol, no por esta celda.",
+      "citations": [
+        "API lib/e4-cash-out.ts:5-12",
+        "API routes/pos.ts:1070-1085,1127",
+        "UI App.tsx:559-581"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "cobros_pagos",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:cobros_pagos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:cobros_pagos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:cobros_pagos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:cobros_pagos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:cobros_pagos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:cobros_pagos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "conciliacion:crear",
+      "module": "conciliacion",
+      "action": "crear",
+      "label_es": "Crear — conciliacion",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:conciliacion:crear",
+        "CAJA:conciliacion:crear",
+        "SUPERVISOR:conciliacion:crear",
+        "BODEGA:conciliacion:crear",
+        "CONTADOR:conciliacion:crear"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": true
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN",
+        "SISTEMAS"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Consulta consume ver y reconstrucción autorizar; no crear/editar. Conciliaciones E11 usan FISCAL_CONCILIAR, permiso distinto.",
+      "citations": [
+        "API routes/inventario.ts:2458,2484-2489",
+        "API routes/e11.ts:117-131",
+        "UI App.tsx:700"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "conciliacion",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:conciliacion:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:conciliacion:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:conciliacion:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:conciliacion:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:conciliacion:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "conciliacion:editar",
+      "module": "conciliacion",
+      "action": "editar",
+      "label_es": "Modificar — conciliacion",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:conciliacion:editar",
+        "CAJA:conciliacion:editar",
+        "SUPERVISOR:conciliacion:editar",
+        "BODEGA:conciliacion:editar",
+        "SISTEMAS:conciliacion:editar",
+        "CONTADOR:conciliacion:editar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Consulta consume ver y reconstrucción autorizar; no crear/editar. Conciliaciones E11 usan FISCAL_CONCILIAR, permiso distinto.",
+      "citations": [
+        "API routes/inventario.ts:2458,2484-2489",
+        "API routes/e11.ts:117-131",
+        "UI App.tsx:700"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "conciliacion",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:conciliacion:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:conciliacion:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:conciliacion:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:conciliacion:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:conciliacion:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:conciliacion:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "auditoria:crear",
+      "module": "auditoria",
+      "action": "crear",
+      "label_es": "Crear — auditoria",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:auditoria:crear",
+        "CAJA:auditoria:crear",
+        "SUPERVISOR:auditoria:crear",
+        "BODEGA:auditoria:crear",
+        "SISTEMAS:auditoria:crear",
+        "CONTADOR:auditoria:crear"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Bitácora sólo consume auditoria.ver. Auditorías de inventario tienen módulo auditoria_inventario; sus crear/editar/autorizar NO son estas celdas.",
+      "citations": [
+        "API routes/auditoria.ts:20-26",
+        "API routes/auditorias-inventario.ts:172,252,314-315",
+        "UI App.tsx:404,709"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "auditoria",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:auditoria:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:auditoria:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:auditoria:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:auditoria:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:auditoria:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:auditoria:crear",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "auditoria:editar",
+      "module": "auditoria",
+      "action": "editar",
+      "label_es": "Modificar — auditoria",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:auditoria:editar",
+        "CAJA:auditoria:editar",
+        "SUPERVISOR:auditoria:editar",
+        "BODEGA:auditoria:editar",
+        "SISTEMAS:auditoria:editar",
+        "CONTADOR:auditoria:editar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Bitácora sólo consume auditoria.ver. Auditorías de inventario tienen módulo auditoria_inventario; sus crear/editar/autorizar NO son estas celdas.",
+      "citations": [
+        "API routes/auditoria.ts:20-26",
+        "API routes/auditorias-inventario.ts:172,252,314-315",
+        "UI App.tsx:404,709"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "auditoria",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:auditoria:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:auditoria:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:auditoria:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:auditoria:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:auditoria:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:auditoria:editar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "auditoria:autorizar",
+      "module": "auditoria",
+      "action": "autorizar",
+      "label_es": "Autorizar — auditoria",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:auditoria:autorizar",
+        "CAJA:auditoria:autorizar",
+        "SUPERVISOR:auditoria:autorizar",
+        "BODEGA:auditoria:autorizar",
+        "SISTEMAS:auditoria:autorizar",
+        "CONTADOR:auditoria:autorizar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Bitácora sólo consume auditoria.ver. Auditorías de inventario tienen módulo auditoria_inventario; sus crear/editar/autorizar NO son estas celdas.",
+      "citations": [
+        "API routes/auditoria.ts:20-26",
+        "API routes/auditorias-inventario.ts:172,252,314-315",
+        "UI App.tsx:404,709"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "auditoria",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:auditoria:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:auditoria:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:auditoria:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:auditoria:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:auditoria:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:auditoria:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "camionetas:autorizar",
+      "module": "camionetas",
+      "action": "autorizar",
+      "label_es": "Autorizar — camionetas",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:camionetas:autorizar",
+        "CAJA:camionetas:autorizar",
+        "SUPERVISOR:camionetas:autorizar",
+        "BODEGA:camionetas:autorizar",
+        "SISTEMAS:camionetas:autorizar",
+        "CONTADOR:camionetas:autorizar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Wrapper requiereGestorCamionetas recibe crear/editar; no autorizar. Roles gestores adicionales no son consumo de autorizar.",
+      "citations": [
+        "API routes/camionetas.ts:35-38,65,111",
+        "UI pages/configuracion/camionetas.tsx:58"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "camionetas",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:camionetas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:camionetas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:camionetas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:camionetas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:camionetas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:camionetas:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "choferes:autorizar",
+      "module": "choferes",
+      "action": "autorizar",
+      "label_es": "Autorizar — choferes",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:choferes:autorizar",
+        "CAJA:choferes:autorizar",
+        "SUPERVISOR:choferes:autorizar",
+        "BODEGA:choferes:autorizar",
+        "SISTEMAS:choferes:autorizar",
+        "CONTADOR:choferes:autorizar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Wrapper de gestores consume crear/editar. No hay llamada con autorizar, aunque existan restricciones por rol.",
+      "citations": [
+        "API routes/choferes.ts:64-67,87,155",
+        "UI pages/configuracion/choferes.tsx:73-75"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "choferes",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:choferes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:choferes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:choferes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:choferes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:choferes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:choferes:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    },
+    {
+      "key": "equipos:autorizar",
+      "module": "equipos",
+      "action": "autorizar",
+      "label_es": "Autorizar — equipos",
+      "category": "A",
+      "categoryMeaning": "Celda sin consumidor operativo identificado (no aplicable/obsoleta)",
+      "exactOwnerCellIds": [
+        "TERMINAL:equipos:autorizar",
+        "CAJA:equipos:autorizar",
+        "SUPERVISOR:equipos:autorizar",
+        "BODEGA:equipos:autorizar",
+        "SISTEMAS:equipos:autorizar",
+        "CONTADOR:equipos:autorizar"
+      ],
+      "historicalMatrix": [
+        {
+          "role": "ADMIN",
+          "auditedUserId": 234,
+          "value": true
+        },
+        {
+          "role": "TERMINAL",
+          "auditedUserId": 235,
+          "value": false
+        },
+        {
+          "role": "CAJA",
+          "auditedUserId": 236,
+          "value": false
+        },
+        {
+          "role": "SUPERVISOR",
+          "auditedUserId": 237,
+          "value": false
+        },
+        {
+          "role": "BODEGA",
+          "auditedUserId": 238,
+          "value": false
+        },
+        {
+          "role": "SISTEMAS",
+          "auditedUserId": 239,
+          "value": false
+        },
+        {
+          "role": "CONTADOR",
+          "auditedUserId": 240,
+          "value": false
+        }
+      ],
+      "rolesGranted": [
+        "ADMIN"
+      ],
+      "rolesDenied": [
+        "TERMINAL",
+        "CAJA",
+        "SUPERVISOR",
+        "BODEGA",
+        "SISTEMAS",
+        "CONTADOR"
+      ],
+      "rolesUnknown": [],
+      "rationale": "Alta usa crear y cambios/desactivación editar; ninguna operación selecciona equipos.autorizar.",
+      "citations": [
+        "API routes/equipos.ts:208,242,276,352,470",
+        "UI pages/equipos/index.tsx:64-65"
+      ],
+      "negativeConsumerProof": {
+        "file": "chunk-business-evidence.json",
+        "moduleIndex": "equipos",
+        "fullGuardInventory": true,
+        "directAndComputedReviewed": true,
+        "exclusions": "Editor genérico, resolución de matrices, defaults ADMIN, contrato/tipos, cache keys y tests no son consumidores operativos de la acción. Inventario conserva estos hits para revisión; ausencia no se infiere de cero coincidencias de texto."
+      },
+      "historicalReason": {
+        "evidence": [
+          {
+            "id": "TERMINAL:equipos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CAJA:equipos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SUPERVISOR:equipos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "BODEGA:equipos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "SISTEMAS:equipos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          },
+          {
+            "id": "CONTADOR:equipos:autorizar",
+            "priorStatus": "NO_OPERATION_FOUND_STATIC",
+            "status": "OWNER_SEMANTICS_REQUIRED",
+            "directActionApiEvidence": false,
+            "combinedActionCoverage": false
+          }
+        ],
+        "explanation": "El histórico no encontró operación estática y trasladó la celda a OWNER_SEMANTICS_REQUIRED. La evidencia actual lo explica por matriz rectangular con acciones no aplicables, no por una decisión de negocio pendiente. No consta traza del parser histórico para demostrar su motivo interno."
+      },
+      "endpointAndFixtureNeeded": null,
+      "removal": "Sin consumidores operativos de la celda encontrados en los corpus activos auditados: candidata a marcar no aplicable/obsoleta, NO a borrar literalmente una columna. El contrato ModulePermission/AccionPermiso, resolución y matrices rol/usuario/ubicación comparten las cuatro acciones. Retirar representación o semántica requiere diseño de capacidades aplicables por módulo, migraciones de datos/esquema si corresponde, actualización de API/OpenAPI, tipos/clientes/editor, herencia y pruebas de compatibilidad; preservar historial. No se ha cambiado nada.",
+      "ownerDecisionNeeded": false,
+      "uncertainty": "Análisis estático de fuentes activas y matriz histórica; no prueba runtime ni lectura de permisos actuales. Los posibles consumidores externos no incluidos en los corpus no pueden descartarse."
+    }
+  ]
+}
