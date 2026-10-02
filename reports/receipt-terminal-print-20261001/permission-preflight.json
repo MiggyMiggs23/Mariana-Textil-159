@@ -1,0 +1,127 @@
+{
+  "status": "READ_ONLY_PREFLIGHT",
+  "scriptHash": "b7907b6e9de583846fef77ceff653e5217ee68ba08e89d65b00f003466c46a02",
+  "process": {
+    "pid": 169,
+    "startTicks": "31419",
+    "commandHash": "496c39d5a74a93138dc5a78871661e779766fb0b8acbecfba6c6cc9a6b034e28",
+    "connectionIdentityHash": "91c62adc16d5110cbc91dd92a40e94678e98ec4e1bc8c5f84a062a0f7511157d"
+  },
+  "identity": {
+    "database": "heliumdb",
+    "schema": "public",
+    "recovery": false,
+    "fingerprint": "d8c2fe87a55b7473227b37176e6591ff1679717ce089330f54261e58a2301daf"
+  },
+  "roles": [
+    "ADMIN",
+    "BODEGA",
+    "CAJA",
+    "CONTADOR",
+    "SISTEMAS",
+    "SUPERVISOR",
+    "TERMINAL"
+  ],
+  "snapshotHash": "9046aaf91008b62b43d1b604caee170b370efc39e481f37ad2367497c6c6e5ef",
+  "changes": [
+    {
+      "rol": "ADMIN",
+      "action": "INSERT",
+      "before": null,
+      "after": {
+        "puede_ver": true,
+        "puede_crear": false,
+        "puede_editar": false,
+        "puede_autorizar": false
+      }
+    },
+    {
+      "rol": "BODEGA",
+      "action": "INSERT",
+      "before": null,
+      "after": {
+        "puede_ver": false,
+        "puede_crear": false,
+        "puede_editar": false,
+        "puede_autorizar": false
+      }
+    },
+    {
+      "rol": "CAJA",
+      "action": "INSERT",
+      "before": null,
+      "after": {
+        "puede_ver": false,
+        "puede_crear": false,
+        "puede_editar": false,
+        "puede_autorizar": false
+      }
+    },
+    {
+      "rol": "CONTADOR",
+      "action": "INSERT",
+      "before": null,
+      "after": {
+        "puede_ver": false,
+        "puede_crear": false,
+        "puede_editar": false,
+        "puede_autorizar": false
+      }
+    },
+    {
+      "rol": "SISTEMAS",
+      "action": "INSERT",
+      "before": null,
+      "after": {
+        "puede_ver": false,
+        "puede_crear": false,
+        "puede_editar": false,
+        "puede_autorizar": false
+      }
+    },
+    {
+      "rol": "SUPERVISOR",
+      "action": "INSERT",
+      "before": null,
+      "after": {
+        "puede_ver": false,
+        "puede_crear": false,
+        "puede_editar": false,
+        "puede_autorizar": false
+      }
+    },
+    {
+      "rol": "TERMINAL",
+      "action": "INSERT",
+      "before": null,
+      "after": {
+        "puede_ver": true,
+        "puede_crear": false,
+        "puede_editar": false,
+        "puede_autorizar": false
+      }
+    }
+  ],
+  "guard": {
+    "sqlSha256": "ee12bcaace99ed9b7c6abe51b80efa3a554c44d36f9bd94f30169761a68b66a5",
+    "beforeHash": "8e5b05bc6101b1d1ddd311bc34e7e47d16247fd655b7d48dc6bfba222900b90c",
+    "afterHash": "fe3f1b3b070c48c0deac7c1f0d7c8281c7262b1cf131fa8c44f287f8fdedcbab",
+    "action": "REPLACE_PRINT_BRANCH_ONLY",
+    "functionsHash": "032e79ddbebe7651eb8a612478f771771aaf319cf19379dc659d0b79506fcfbd",
+    "triggersHash": "fdacd970a53271c28cf3029daf60a4fc222f14464b989e87bc8c6b732429b7cc"
+  },
+  "tableSnapshots": {
+    "permisos_rol": {
+      "rows": 204,
+      "sha256": "9ec412f77bb256a7aaa7dd8ea99db49c4f89a88faaf80d1b3d9c51ff70c858cb"
+    },
+    "permisos_usuario": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "permisos_ubicacion": {
+      "rows": 54,
+      "sha256": "90ccacfa891c7873fe4e97cc7b7673cf1e158807757f4e585cb95fe8847ea58e"
+    }
+  }
+}

@@ -1,0 +1,1847 @@
+{
+  "aplicaciones_credito": {
+    "count": 3,
+    "sha256": "9611e38e423ce6c6935101b27109f0e6da99402e48f783a07bbd0d78b739ac65",
+    "rows": [
+      "{\"id\":1,\"abono_movimiento_id\":11,\"venta_movimiento_id\":1,\"importe\":10.00,\"created_at\":\"2026-10-01T23:32:04.812646+00:00\"}",
+      "{\"id\":2,\"abono_movimiento_id\":12,\"venta_movimiento_id\":6,\"importe\":10.00,\"created_at\":\"2026-10-01T23:32:05.182229+00:00\"}",
+      "{\"id\":3,\"abono_movimiento_id\":13,\"venta_movimiento_id\":3,\"importe\":10.00,\"created_at\":\"2026-10-01T23:34:57.704047+00:00\"}"
+    ]
+  },
+  "aplicaciones_pago_proveedor": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "atribuciones_credito_e1": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "clientes": {
+    "count": 17,
+    "sha256": "04ca1b7a9cf86b02e74071789428b133a96974819a58197cfda805165a80a418",
+    "rows": [
+      "{\"id\":1,\"nombre\":\"Venta a Público\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":true,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":0,\"limite_credito\":0.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:52.426333+00:00\",\"updated_at\":\"2026-10-01T23:31:52.426333+00:00\"}",
+      "{\"id\":10,\"nombre\":\"Receipt 1 browser-e3\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":false,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":30,\"limite_credito\":1000.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:59.324152+00:00\",\"updated_at\":\"2026-10-01T23:31:59.324152+00:00\"}",
+      "{\"id\":11,\"nombre\":\"Receipt 1 browser-e5-directed\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":false,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":30,\"limite_credito\":1000.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:59.338161+00:00\",\"updated_at\":\"2026-10-01T23:31:59.338161+00:00\"}",
+      "{\"id\":12,\"nombre\":\"Receipt 1 browser-e5-retained\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":false,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":30,\"limite_credito\":1000.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:59.358303+00:00\",\"updated_at\":\"2026-10-01T23:31:59.358303+00:00\"}",
+      "{\"id\":13,\"nombre\":\"Receipt 2 api-e3\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":false,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":30,\"limite_credito\":1000.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:59.450934+00:00\",\"updated_at\":\"2026-10-01T23:31:59.450934+00:00\"}",
+      "{\"id\":14,\"nombre\":\"Receipt 2 api-e5\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":false,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":30,\"limite_credito\":1000.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:59.468397+00:00\",\"updated_at\":\"2026-10-01T23:31:59.468397+00:00\"}",
+      "{\"id\":15,\"nombre\":\"Receipt 2 browser-e3\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":false,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":30,\"limite_credito\":1000.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:59.484308+00:00\",\"updated_at\":\"2026-10-01T23:31:59.484308+00:00\"}",
+      "{\"id\":16,\"nombre\":\"Receipt 2 browser-e5-directed\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":false,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":30,\"limite_credito\":1000.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:59.501137+00:00\",\"updated_at\":\"2026-10-01T23:31:59.501137+00:00\"}",
+      "{\"id\":17,\"nombre\":\"Receipt 2 browser-e5-retained\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":false,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":30,\"limite_credito\":1000.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:59.516108+00:00\",\"updated_at\":\"2026-10-01T23:31:59.516108+00:00\"}",
+      "{\"id\":2,\"nombre\":\"Jesús López\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":false,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":0,\"limite_credito\":0.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:52.426333+00:00\",\"updated_at\":\"2026-10-01T23:31:52.426333+00:00\"}",
+      "{\"id\":3,\"nombre\":\"José López\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":false,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":0,\"limite_credito\":0.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:52.426333+00:00\",\"updated_at\":\"2026-10-01T23:31:52.426333+00:00\"}",
+      "{\"id\":4,\"nombre\":\"Hilario Bonifacio\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":false,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":0,\"limite_credito\":0.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:52.426333+00:00\",\"updated_at\":\"2026-10-01T23:31:52.426333+00:00\"}",
+      "{\"id\":5,\"nombre\":\"Rafael Flores\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":false,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":0,\"limite_credito\":0.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:52.426333+00:00\",\"updated_at\":\"2026-10-01T23:31:52.426333+00:00\"}",
+      "{\"id\":6,\"nombre\":\"Miguel Esteban\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":false,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":0,\"limite_credito\":0.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:52.426333+00:00\",\"updated_at\":\"2026-10-01T23:31:52.426333+00:00\"}",
+      "{\"id\":7,\"nombre\":\"Jacinta Mendoza\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":false,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":0,\"limite_credito\":0.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:52.426333+00:00\",\"updated_at\":\"2026-10-01T23:31:52.426333+00:00\"}",
+      "{\"id\":8,\"nombre\":\"Receipt 1 api-e3\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":false,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":30,\"limite_credito\":1000.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:59.280006+00:00\",\"updated_at\":\"2026-10-01T23:31:59.280006+00:00\"}",
+      "{\"id\":9,\"nombre\":\"Receipt 1 api-e5\",\"telefono\":null,\"correo\":null,\"direccion_particular\":null,\"direccion_entrega\":null,\"rfc\":null,\"notas\":null,\"activo\":true,\"es_sistema\":false,\"contacto_nombre\":null,\"recibe_nota_sin_precios\":false,\"dias_credito\":30,\"limite_credito\":1000.00,\"saldo_credito\":0.00,\"created_at\":\"2026-10-01T23:31:59.310016+00:00\",\"updated_at\":\"2026-10-01T23:31:59.310016+00:00\"}"
+    ]
+  },
+  "cobros_credito_pendientes_e1": {
+    "count": 4,
+    "sha256": "c1ef77850bd201eac99fae0836f628424f952f31f3baa73facb7e1585aa6ce1c",
+    "rows": [
+      "{\"operacion_productor\":\"COBRO_PENDIENTE\",\"operacion_clave\":\"01455046-d5fb-4c4e-8ad4-610612c19a4b\",\"naturaleza\":\"INGRESO_FISICO\",\"cliente_id\":12,\"importe\":10.00,\"fecha_real\":\"2026-10-01T23:37:55.014+00:00\",\"sitio_origen_id\":10,\"medio\":\"EFECTIVO\",\"cuenta_destino\":\"CAJA_FISICA\",\"sesion_caja_id\":1,\"motivo\":\"Prueba aislada de recepción en efectivo; fixture browser-e5-retained.\",\"referencia\":\"receipt-terminal-runtime browser-e5-retained\",\"usuario_id\":2,\"created_at\":\"2026-10-01T23:37:55.012562+00:00\",\"e2_insert_xid\":\"1920\"}",
+      "{\"operacion_productor\":\"COBRO_PENDIENTE\",\"operacion_clave\":\"3662a782-2788-4045-8cbd-efbb15382f0b\",\"naturaleza\":\"INGRESO_FISICO\",\"cliente_id\":14,\"importe\":10.00,\"fecha_real\":\"2026-10-01T23:32:05.435+00:00\",\"sitio_origen_id\":11,\"medio\":\"TRANSFERENCIA\",\"cuenta_destino\":\"CUENTA_FISCAL\",\"sesion_caja_id\":null,\"motivo\":\"Native isolated receipt fixture\",\"referencia\":\"receipt-terminal-runtime\",\"usuario_id\":1,\"created_at\":\"2026-10-01T23:32:05.434228+00:00\",\"e2_insert_xid\":\"1580\"}",
+      "{\"operacion_productor\":\"COBRO_PENDIENTE\",\"operacion_clave\":\"9c445b81-4567-45b5-80cc-700497db27d6\",\"naturaleza\":\"INGRESO_FISICO\",\"cliente_id\":11,\"importe\":10.00,\"fecha_real\":\"2026-10-01T23:36:20.266+00:00\",\"sitio_origen_id\":10,\"medio\":\"TRANSFERENCIA\",\"cuenta_destino\":\"CUENTA_FISCAL\",\"sesion_caja_id\":null,\"motivo\":\"Prueba aislada de recepción por transferencia; fixture browser-e5-directed.\",\"referencia\":\"receipt-terminal-runtime browser-e5-directed\",\"usuario_id\":2,\"created_at\":\"2026-10-01T23:36:20.265514+00:00\",\"e2_insert_xid\":\"1820\"}",
+      "{\"operacion_productor\":\"COBRO_PENDIENTE\",\"operacion_clave\":\"a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7\",\"naturaleza\":\"INGRESO_FISICO\",\"cliente_id\":9,\"importe\":10.00,\"fecha_real\":\"2026-10-01T23:32:05.002+00:00\",\"sitio_origen_id\":10,\"medio\":\"TRANSFERENCIA\",\"cuenta_destino\":\"CUENTA_FISCAL\",\"sesion_caja_id\":null,\"motivo\":\"Native isolated receipt fixture\",\"referencia\":\"receipt-terminal-runtime\",\"usuario_id\":1,\"created_at\":\"2026-10-01T23:32:05.000514+00:00\",\"e2_insert_xid\":\"1555\"}"
+    ]
+  },
+  "e11_avisos": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "e11_cambios_usuario": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "e11_conciliacion_ventas": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "e11_conciliaciones": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "e11_decisiones": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "e11_e5_definiciones": {
+    "count": 5,
+    "sha256": "6610316536af5e538e7d52f788e0d840ef237c36c08f4d4944f8b9e7d4db76be",
+    "rows": [
+      "{\"firma\":\"public.e5_closed()\",\"definicion\":\"CREATE OR REPLACE FUNCTION public.e5_closed()\\n RETURNS trigger\\n LANGUAGE plpgsql\\n SET search_path TO 'pg_catalog'\\nAS $function$\\nBEGIN RAISE EXCEPTION 'E5_DISABLED: construcción OFF; DML E5 cerrado'; END $function$\\n\",\"hash_original\":\"76bb2925cae2f65d1bffae17408fc49efc41271304e8c6778047cd3eaa5ae4c6\",\"hash_instalado\":\"76bb2925cae2f65d1bffae17408fc49efc41271304e8c6778047cd3eaa5ae4c6\"}",
+      "{\"firma\":\"public.e5_detail_guard()\",\"definicion\":\"CREATE OR REPLACE FUNCTION public.e5_detail_guard()\\n RETURNS trigger\\n LANGUAGE plpgsql\\n SET search_path TO 'pg_catalog'\\nAS $function$\\nDECLARE k text; prior jsonb; d jsonb := NEW.detail; item jsonb; n integer; row_value jsonb;\\nBEGIN\\n  IF d->>'id' IS DISTINCT FROM NEW.id::text\\n    OR (d->>'clienteId')::integer IS DISTINCT FROM NEW.cliente_id\\n    OR (d->>'ubicacionId')::integer IS DISTINCT FROM NEW.ubicacion_id\\n    OR (d->>'revision')::integer IS DISTINCT FROM NEW.revision\\n  THEN RAISE EXCEPTION 'E5: identidad/revisión del agregado'; END IF;\\n  FOREACH k IN ARRAY ARRAY['propuestas','aplicaciones','rechazos'] LOOP\\n    IF jsonb_typeof(d->k) IS DISTINCT FROM 'array' THEN RAISE EXCEPTION 'E5: historia requerida'; END IF;\\n    IF TG_OP='UPDATE' THEN\\n      prior := OLD.detail->k;\\n      IF jsonb_array_length(d->k)<jsonb_array_length(prior) OR EXISTS (\\n        SELECT 1 FROM jsonb_array_elements(prior) WITH ORDINALITY x(v,i)\\n        WHERE d->k->(x.i::integer-1) IS DISTINCT FROM x.v)\\n      THEN RAISE EXCEPTION 'E5: historia append-only'; END IF;\\n    END IF;\\n  END LOOP;\\n  n := 0;\\n  FOR item IN SELECT value FROM jsonb_array_elements(d->'propuestas') LOOP\\n    n := n+1;\\n    IF (item->>'version')::integer IS DISTINCT FROM n OR item->>'id' IS NULL\\n      OR jsonb_typeof(item->'asignaciones') IS DISTINCT FROM 'array'\\n    THEN RAISE EXCEPTION 'E5: versión de propuesta inválida'; END IF;\\n    IF (SELECT count(*) FROM jsonb_array_elements(item->'asignaciones')) <>\\n      (SELECT count(DISTINCT value->>'movimientoVentaId') FROM jsonb_array_elements(item->'asignaciones'))\\n    THEN RAISE EXCEPTION 'E5: propuesta duplica movimiento exacto'; END IF;\\n    FOR row_value IN SELECT value FROM jsonb_array_elements(item->'asignaciones') LOOP\\n      IF coalesce(row_value->>'importe','') !~ '^(0|[1-9][0-9]*)\\\\.[0-9]{2}$'\\n        OR (row_value->>'importe')::numeric<=0 OR (row_value->>'notaId')::integer IS NULL\\n        OR (row_value->>'movimientoVentaId')::integer IS NULL\\n      THEN RAISE EXCEPTION 'E5: importe/destino propuesto inválido'; END IF;\\n    END LOOP;\\n  END LOOP;\\n  IF (SELECT count(*) FROM jsonb_array_elements(d->'propuestas')) <>\\n    (SELECT count(DISTINCT value->>'id') FROM jsonb_array_elements(d->'propuestas'))\\n  THEN RAISE EXCEPTION 'E5: UUID de propuesta reciclado'; END IF;\\n  IF (SELECT count(*) FROM jsonb_array_elements(d->'aplicaciones')) <>\\n    (SELECT count(DISTINCT value->>'id') FROM jsonb_array_elements(d->'aplicaciones'))\\n  THEN RAISE EXCEPTION 'E5: aplicación repetida en historia'; END IF;\\n  IF TG_OP='INSERT' THEN\\n    IF NEW.revision<>1 THEN RAISE EXCEPTION 'E5: revisión inicial'; END IF;\\n  ELSE\\n    IF NEW.id IS DISTINCT FROM OLD.id OR NEW.cliente_id IS DISTINCT FROM OLD.cliente_id\\n      OR NEW.ubicacion_id IS DISTINCT FROM OLD.ubicacion_id OR NEW.revision<>OLD.revision+1\\n      OR (OLD.detail->>'algunaVezAplicado'='true' AND d->>'algunaVezAplicado' IS DISTINCT FROM 'true')\\n      OR (OLD.detail ? 'devolucion' AND d->'devolucion' IS DISTINCT FROM OLD.detail->'devolucion')\\n    THEN RAISE EXCEPTION 'E5: transición irreversible'; END IF;\\n    FOREACH k IN ARRAY ARRAY['id','clienteId','clienteNombre','ubicacionId','ubicacionNombre',\\n      'importeRecibido','fechaRecepcion','formaPago','cuentaDestino','sesionCajaId',\\n      'receptor','notasIndicadas','evidenciaRecepcion','reciboId'] LOOP\\n      IF d->k IS DISTINCT FROM OLD.detail->k THEN RAISE EXCEPTION 'E5: recepción inmutable (%)',k; END IF;\\n    END LOOP;\\n  END IF;\\n  RETURN NEW;\\nEND $function$\\n\",\"hash_original\":\"460b84a67964bbe42c66adf643d966f48731f030917ffcc083b1feaa9845a027\",\"hash_instalado\":\"460b84a67964bbe42c66adf643d966f48731f030917ffcc083b1feaa9845a027\"}",
+      "{\"firma\":\"public.e5_graph_guard()\",\"definicion\":\"CREATE OR REPLACE FUNCTION public.e5_graph_guard()\\n RETURNS trigger\\n LANGUAGE plpgsql\\n SET search_path TO 'pg_catalog'\\nAS $function$\\nDECLARE r record; c record; a record; p jsonb; x jsonb; m record;\\n  total numeric; returned numeric; d record; o record; prev jsonb; v record; k text;\\nBEGIN\\n  IF EXISTS (SELECT 1 FROM public.e5_operaciones o JOIN public.e5_impresiones i USING(clave))\\n  THEN RAISE EXCEPTION 'E5: clave global operación/impresión duplicada'; END IF;\\n  FOR r IN SELECT * FROM public.e5_recepciones LOOP\\n    SELECT * INTO c FROM public.e5_cobros WHERE id=r.id;\\n    IF NOT FOUND THEN RAISE EXCEPTION 'E5: recepción sin agregado'; END IF;\\n    IF c.cliente_id<>r.cliente_id OR c.ubicacion_id<>r.ubicacion_id\\n      OR (r.snapshot->>'importeRecibido')::numeric IS DISTINCT FROM r.importe\\n      OR (r.snapshot->>'fechaRecepcion')::timestamptz IS DISTINCT FROM r.fecha_recepcion\\n      OR (r.snapshot#>>'{receptor,id}')::integer IS DISTINCT FROM r.actor_id\\n      OR r.snapshot->>'formaPago' IS DISTINCT FROM r.medio\\n      OR r.snapshot->>'cuentaDestino' IS DISTINCT FROM r.cuenta_destino\\n      OR (r.snapshot->>'sesionCajaId')::integer IS DISTINCT FROM r.sesion_caja_id\\n    THEN RAISE EXCEPTION 'E5: columnas y fuente snapshot divergentes'; END IF;\\n    FOREACH k IN ARRAY ARRAY['id','clienteId','clienteNombre','ubicacionId','ubicacionNombre',\\n      'importeRecibido','fechaRecepcion','formaPago','cuentaDestino','sesionCajaId','sesionOperativaId',\\n      'receptor','notasIndicadas','evidenciaRecepcion','reciboId'] LOOP\\n      IF c.detail->k IS DISTINCT FROM r.snapshot->k\\n      THEN RAISE EXCEPTION 'E5: agregado difiere de fuente original (%)',k; END IF;\\n    END LOOP;\\n    IF NOT EXISTS (SELECT 1 FROM public.cobros_credito_pendientes_e1 s\\n      JOIN public.e5_nacimientos b ON b.tabla='cobros_credito_pendientes_e1'\\n        AND b.clave=s.operacion_clave::text AND b.birth_xid=r.birth_xid\\n      WHERE s.operacion_productor='COBRO_PENDIENTE' AND s.operacion_clave=r.id\\n        AND s.cliente_id=r.cliente_id AND s.importe=r.importe AND s.fecha_real=r.fecha_recepcion\\n        AND s.sitio_origen_id=r.ubicacion_id AND s.medio::text=r.medio\\n        AND s.cuenta_destino=r.cuenta_destino AND s.sesion_caja_id IS NOT DISTINCT FROM r.sesion_caja_id\\n        AND s.usuario_id=r.actor_id)\\n    THEN RAISE EXCEPTION 'E5: fuente E1 exacta/inserción propia requerida'; END IF;\\n    IF EXISTS (SELECT 1 FROM public.movimientos_credito\\n      WHERE operacion_productor='COBRO_PENDIENTE' AND operacion_clave=r.id)\\n    THEN RAISE EXCEPTION 'E5: recepción fuera del ledger'; END IF;\\n    SELECT coalesce(sum(importe),0) INTO total FROM public.e5_aplicaciones WHERE cobro_id=r.id;\\n    SELECT coalesce(sum(importe),0) INTO returned FROM public.e5_devoluciones WHERE cobro_id=r.id;\\n    IF total+returned>r.importe OR (total>0 AND returned>0)\\n      OR (returned>0 AND returned<>r.importe)\\n      OR (c.detail->>'importeRecibido')::numeric IS DISTINCT FROM r.importe\\n      OR (c.detail->>'importeAplicado')::numeric IS DISTINCT FROM total\\n      OR (c.detail->>'importeDevuelto')::numeric IS DISTINCT FROM returned\\n      OR (c.detail->>'importePendiente')::numeric IS DISTINCT FROM r.importe-total-returned\\n      OR (c.detail->>'algunaVezAplicado')::boolean IS DISTINCT FROM (total>0)\\n      OR c.detail->>'estado' IS DISTINCT FROM\\n        (CASE WHEN returned>0 THEN 'DEVUELTO' WHEN total=0 THEN 'PENDIENTE'\\n          WHEN total=r.importe THEN 'APLICADO' ELSE 'PARCIAL' END)\\n    THEN RAISE EXCEPTION 'E5: conservación/estado/irreversibilidad'; END IF;\\n    IF NOT EXISTS (SELECT 1 FROM public.e5_documentos doc\\n      WHERE doc.id=(c.detail->>'reciboId')::uuid AND doc.cobro_id=r.id AND doc.tipo='RECIBO'\\n        AND doc.birth_xid=r.birth_xid AND doc.snapshot->'asignaciones'='[]'::jsonb\\n        AND (doc.snapshot->>'importeDocumento')::numeric=r.importe\\n        AND (doc.snapshot->>'pendienteEnEmision')::numeric=r.importe\\n        AND (doc.snapshot->>'importeFavorGenerado')::numeric=0)\\n    THEN RAISE EXCEPTION 'E5: recibo inmediato inmutable requerido'; END IF;\\n    IF (SELECT count(*) FROM public.e5_operaciones WHERE cobro_id=r.id)<>c.revision\\n      OR NOT EXISTS (SELECT 1 FROM public.e5_operaciones\\n        WHERE cobro_id=r.id AND revision=c.revision AND response=c.detail)\\n    THEN RAISE EXCEPTION 'E5: historia/revisión completa requerida'; END IF;\\n    FOR x IN SELECT value FROM jsonb_array_elements(c.detail->'aplicaciones') LOOP\\n      IF NOT EXISTS (SELECT 1 FROM public.e5_aplicaciones WHERE cobro_id=r.id\\n        AND grupo_id=(x->>'id')::uuid AND snapshot=x)\\n      THEN RAISE EXCEPTION 'E5: aplicación JSON sin consumo'; END IF;\\n    END LOOP;\\n    IF (c.detail ? 'devolucion') IS DISTINCT FROM (returned>0)\\n    THEN RAISE EXCEPTION 'E5: devolución JSON sin efecto'; END IF;\\n  END LOOP;\\n  FOR a IN SELECT * FROM public.e5_aplicaciones LOOP\\n    SELECT * INTO c FROM public.e5_cobros WHERE id=a.cobro_id;\\n    SELECT value INTO p FROM jsonb_array_elements(c.detail->'propuestas')\\n      WHERE value->>'id'=a.propuesta_id::text;\\n    SELECT * INTO r FROM public.e5_recepciones WHERE id=a.cobro_id;\\n    IF p IS NULL OR NOT EXISTS (SELECT 1 FROM jsonb_array_elements(c.detail->'aplicaciones')\\n      WHERE value=a.snapshot) OR a.snapshot->>'id' IS DISTINCT FROM a.grupo_id::text\\n      OR a.snapshot->>'propuestaId' IS DISTINCT FROM a.propuesta_id::text\\n      OR (a.snapshot#>>'{actor,id}')::integer IS DISTINCT FROM a.actor_id\\n      OR (a.snapshot->>'fechaAplicacion')::timestamptz IS DISTINCT FROM a.fecha_aplicacion\\n      OR a.fecha_aplicacion<r.fecha_recepcion\\n      OR EXISTS (SELECT 1 FROM public.e5_aplicaciones b WHERE b.propuesta_id=a.propuesta_id\\n        AND (b.grupo_id<>a.grupo_id OR b.cobro_id<>a.cobro_id OR b.snapshot<>a.snapshot))\\n    THEN RAISE EXCEPTION 'E5: aprobación ADMIN/versión única'; END IF;\\n    SELECT coalesce(sum(importe),0) INTO total FROM public.e5_aplicaciones WHERE grupo_id=a.grupo_id;\\n    IF jsonb_typeof(a.snapshot->'asignaciones') IS DISTINCT FROM 'array'\\n      OR (SELECT count(*) FROM jsonb_array_elements(a.snapshot->'asignaciones')) <>\\n        (SELECT count(DISTINCT value->>'movimientoVentaId') FROM jsonb_array_elements(a.snapshot->'asignaciones'))\\n    THEN RAISE EXCEPTION 'E5: aprobación duplica movimiento exacto'; END IF;\\n    FOR x IN SELECT value FROM jsonb_array_elements(a.snapshot->'asignaciones') LOOP\\n      IF coalesce(x->>'importe','') !~ '^(0|[1-9][0-9]*)\\\\.[0-9]{2}$'\\n        OR (x->>'importe')::numeric<=0 OR NOT EXISTS (SELECT 1 FROM public.e5_aplicaciones b\\n          WHERE b.grupo_id=a.grupo_id AND NOT b.favor\\n            AND b.movimiento_venta_id=(x->>'movimientoVentaId')::integer AND b.importe=(x->>'importe')::numeric)\\n      THEN RAISE EXCEPTION 'E5: asignación autorizada sin consumo exacto'; END IF;\\n    END LOOP;\\n    IF total IS DISTINCT FROM (a.snapshot->>'importe')::numeric\\n      OR total IS DISTINCT FROM (SELECT coalesce(sum((value->>'importe')::numeric),0)\\n        FROM jsonb_array_elements(a.snapshot->'asignaciones'))\\n        + coalesce((a.snapshot->>'importeFavorGenerado')::numeric,0)\\n    THEN RAISE EXCEPTION 'E5: consumo exacto de aprobación'; END IF;\\n    IF a.favor THEN\\n      IF a.importe IS DISTINCT FROM (a.snapshot->>'importeFavorGenerado')::numeric\\n        OR a.importe>coalesce((p->>'importeFavorPropuesto')::numeric,0)\\n      THEN RAISE EXCEPTION 'E5: favor no autorizado'; END IF;\\n    ELSE\\n      SELECT * INTO m FROM public.movimientos_credito WHERE id=a.movimiento_venta_id;\\n      IF m.cliente_id IS DISTINCT FROM r.cliente_id OR m.tipo::text IS DISTINCT FROM 'VENTA_CREDITO'\\n        OR NOT EXISTS (SELECT 1 FROM jsonb_array_elements(a.snapshot->'asignaciones') q(value)\\n          JOIN jsonb_array_elements(p->'asignaciones') s(value)\\n            ON q.value->>'movimientoVentaId'=s.value->>'movimientoVentaId' AND q.value->>'notaId'=s.value->>'notaId'\\n          WHERE (q.value->>'movimientoVentaId')::integer=a.movimiento_venta_id\\n            AND (q.value->>'notaId')::integer=m.ticket_id AND (q.value->>'importe')::numeric=a.importe\\n            AND a.importe<=(s.value->>'importe')::numeric)\\n      THEN RAISE EXCEPTION 'E5: destino exacto/subconjunto de propuesta'; END IF;\\n    END IF;\\n    SELECT mc.* INTO m FROM public.e5_vinculos_credito v\\n      JOIN public.movimientos_credito mc ON mc.id=v.movimiento_id\\n      WHERE v.aplicacion_id=a.id AND v.birth_xid=a.birth_xid;\\n    IF NOT FOUND OR m.operacion_productor IS DISTINCT FROM 'E5_APLICACION_RETENIDA'\\n      OR m.operacion_clave IS DISTINCT FROM a.id OR m.tipo::text IS DISTINCT FROM 'ABONO'\\n      OR m.naturaleza::text IS DISTINCT FROM 'OPERACION_CREDITO_SIN_DINERO'\\n      OR m.importe IS DISTINCT FROM -a.importe OR m.cliente_id IS DISTINCT FROM r.cliente_id\\n      OR m.usuario_id IS DISTINCT FROM a.actor_id OR m.created_at IS DISTINCT FROM a.fecha_aplicacion\\n      OR m.sitio_origen_id IS DISTINCT FROM r.ubicacion_id OR m.forma_pago IS NOT NULL\\n      OR m.cuenta_destino IS NOT NULL OR m.sesion_caja_id IS NOT NULL\\n      OR NOT EXISTS (SELECT 1 FROM public.e5_nacimientos WHERE tabla='movimientos_credito'\\n        AND clave=m.id::text AND birth_xid=a.birth_xid)\\n    THEN RAISE EXCEPTION 'E5: vínculo único crédito sin segundo ingreso'; END IF;\\n    IF EXISTS (SELECT 1 FROM public.movimientos_credito WHERE movimiento_origen_id=m.id)\\n    THEN RAISE EXCEPTION 'E5: reverso independiente de crédito aplicado prohibido'; END IF;\\n    IF NOT EXISTS (SELECT 1 FROM public.operaciones_credito_e1 op\\n      JOIN public.e5_nacimientos b ON b.tabla='operaciones_credito_e1'\\n        AND b.clave=op.productor||':'||op.clave::text AND b.birth_xid=a.birth_xid\\n      WHERE op.productor='E5_APLICACION_RETENIDA' AND op.clave=a.id\\n        AND op.naturaleza::text='OPERACION_CREDITO_SIN_DINERO' AND op.usuario_id=a.actor_id)\\n    THEN RAISE EXCEPTION 'E5: operación E1 propia exacta requerida'; END IF;\\n    IF a.favor THEN\\n      -- La emisión no paga destinos; FIFO futuro sí puede consumir este abono.\\n      -- Se compara procedencia persistida de cada INSERT, no el XID actual del\\n      -- validador ni xmin: forzar IMMEDIATE y escribir después no borra prueba.\\n      IF EXISTS (SELECT 1 FROM public.aplicaciones_credito ac\\n        LEFT JOIN public.e5_nacimientos b ON b.tabla='aplicaciones_credito' AND b.clave=ac.id::text\\n        WHERE ac.abono_movimiento_id=m.id AND\\n          (b.birth_xid IS NULL OR b.birth_xid=a.birth_xid))\\n        OR EXISTS (SELECT 1 FROM public.solicitudes_pago_dirigido WHERE movimiento_id=m.id)\\n      THEN RAISE EXCEPTION 'E5: emisión de favor sin aplicación ni marcador dirigido'; END IF;\\n      IF (SELECT coalesce(sum(importe),0) FROM public.aplicaciones_credito\\n        WHERE abono_movimiento_id=m.id)>a.importe OR EXISTS (\\n        SELECT 1 FROM public.aplicaciones_credito ac\\n        JOIN public.movimientos_credito sale ON sale.id=ac.venta_movimiento_id\\n        WHERE ac.abono_movimiento_id=m.id AND\\n          (ac.importe<=0 OR ac.importe>='Infinity'::numeric\\n          OR sale.tipo::text<>'VENTA_CREDITO' OR sale.cliente_id<>m.cliente_id))\\n      THEN RAISE EXCEPTION 'E5: evidencia FIFO futura excede fuente o cambia cliente'; END IF;\\n      -- Sin SUM por destino ni saldo dinámico. No reescribir aplicaciones\\n      -- históricas si la proyección canónica cambia por fecha efectiva.\\n    ELSE\\n      IF (SELECT count(*) FROM public.aplicaciones_credito WHERE abono_movimiento_id=m.id)<>1\\n        OR NOT EXISTS (SELECT 1 FROM public.aplicaciones_credito WHERE abono_movimiento_id=m.id\\n          AND venta_movimiento_id=a.movimiento_venta_id AND importe=a.importe)\\n        OR (SELECT count(*) FROM public.solicitudes_pago_dirigido WHERE movimiento_id=m.id)<>1\\n        OR NOT EXISTS (SELECT 1 FROM public.solicitudes_pago_dirigido WHERE movimiento_id=m.id\\n          AND tipo='CLIENTE' AND entidad_id=r.cliente_id AND documento_movimiento_id=a.movimiento_venta_id\\n          AND importe=a.importe AND estado='APROBADA' AND autorizador_id=a.actor_id\\n          AND forma_pago='APLICACION_SIN_DINERO' AND cuenta_destino IS NULL)\\n      THEN RAISE EXCEPTION 'E5: asignación/marker exacto una sola vez'; END IF;\\n    END IF;\\n    IF NOT EXISTS (SELECT 1 FROM public.e5_documentos WHERE cobro_id=a.cobro_id\\n      AND id=(a.snapshot->>'constanciaId')::uuid AND tipo='CONSTANCIA' AND birth_xid=a.birth_xid\\n      AND snapshot->'asignaciones'=a.snapshot->'asignaciones'\\n      AND (snapshot->>'importeDocumento')::numeric=total)\\n    THEN RAISE EXCEPTION 'E5: constancia propia requerida'; END IF;\\n    IF NOT EXISTS (SELECT 1 FROM public.e5_operaciones op WHERE op.cobro_id=a.cobro_id\\n      AND op.accion IN ('RECIBIR','AUTORIZAR') AND op.actor_id=a.actor_id\\n      AND op.birth_xid=a.birth_xid\\n      AND EXISTS (SELECT 1 FROM jsonb_array_elements(op.response->'aplicaciones') WHERE value=a.snapshot)\\n      AND NOT EXISTS (SELECT 1 FROM public.e5_operaciones prevop,\\n        LATERAL jsonb_array_elements(prevop.response->'aplicaciones') history(value)\\n        WHERE prevop.cobro_id=op.cobro_id AND prevop.revision=op.revision-1 AND history.value=a.snapshot))\\n    THEN RAISE EXCEPTION 'E5: consumo sólo por autorización nueva/idempotente'; END IF;\\n  END LOOP;\\n  IF EXISTS (SELECT 1 FROM public.operaciones_credito_e1 op\\n    WHERE op.productor='E5_APLICACION_RETENIDA' AND NOT EXISTS (\\n      SELECT 1 FROM public.e5_aplicaciones a WHERE a.id=op.clave AND a.actor_id=op.usuario_id\\n        AND op.naturaleza::text='OPERACION_CREDITO_SIN_DINERO'))\\n  THEN RAISE EXCEPTION 'E5: operación E1 sin fuente propia'; END IF;\\n  IF EXISTS (SELECT 1 FROM public.movimientos_credito m\\n    WHERE m.operacion_productor='E5_APLICACION_RETENIDA' AND NOT EXISTS (\\n      SELECT 1 FROM public.e5_vinculos_credito v JOIN public.e5_aplicaciones a ON a.id=v.aplicacion_id\\n      WHERE v.movimiento_id=m.id AND a.id=m.operacion_clave))\\n  THEN RAISE EXCEPTION 'E5: crédito huérfano'; END IF;\\n  FOR d IN SELECT * FROM public.e5_devoluciones LOOP\\n    SELECT * INTO r FROM public.e5_recepciones WHERE id=d.cobro_id;\\n    SELECT * INTO c FROM public.e5_cobros WHERE id=d.cobro_id;\\n    IF d.importe<>r.importe OR EXISTS (SELECT 1 FROM public.e5_aplicaciones WHERE cobro_id=d.cobro_id)\\n      OR (c.detail#>>'{devolucion,importe}')::numeric IS DISTINCT FROM d.importe\\n      OR (c.detail#>>'{devolucion,actor,id}')::integer IS DISTINCT FROM d.actor_id\\n      OR (c.detail#>>'{devolucion,salidaId}')::integer IS DISTINCT FROM d.salida_id\\n      OR (c.detail#>>'{devolucion,movimientoFondoId}')::uuid IS DISTINCT FROM d.movimiento_fondo_id\\n      OR c.detail#>'{devolucion,fuente}' IS DISTINCT FROM d.fuente\\n      OR c.detail#>'{devolucion,evidencia}' IS DISTINCT FROM d.evidencia\\n      OR c.detail#>>'{devolucion,peticionCliente}' IS DISTINCT FROM d.peticion\\n    THEN RAISE EXCEPTION 'E5: devolución total ADMIN nunca aplicada'; END IF;\\n    IF d.fuente->>'tipo'='CAJA' THEN\\n      IF NOT EXISTS (SELECT 1 FROM public.salidas_dinero_caja s\\n        JOIN public.sesiones_caja sc ON sc.id=s.sesion_caja_id\\n        JOIN public.e5_nacimientos b ON b.tabla='salidas_dinero_caja' AND b.clave=s.id::text\\n        WHERE s.id=d.salida_id AND s.monto=d.importe AND s.creado_por_id=d.actor_id\\n          AND s.cuenta_origen='CAJA_FISICA' AND s.sesion_caja_id=(d.fuente->>'sesionCajaId')::integer\\n          AND sc.ubicacion_id=(d.fuente->>'ubicacionId')::integer AND b.birth_xid=d.birth_xid)\\n      THEN RAISE EXCEPTION 'E5: salida caja propia exacta requerida'; END IF;\\n    ELSIF d.fuente->>'tipo'='CUENTA' THEN\\n      IF NOT EXISTS (SELECT 1 FROM public.e5_salidas_bancarias s WHERE s.clave=d.clave\\n        AND s.cobro_id=d.cobro_id AND s.importe=d.importe AND s.actor_id=d.actor_id\\n        AND s.cuenta_origen=d.fuente->>'cuentaOrigen'\\n        AND s.ubicacion_id=(d.fuente->>'ubicacionId')::integer AND s.evidencia=d.evidencia\\n        AND jsonb_array_length(s.evidencia->'referencias')>0 AND s.birth_xid=d.birth_xid)\\n      THEN RAISE EXCEPTION 'E5: transferencia documentada propia requerida'; END IF;\\n    ELSE\\n      IF NOT EXISTS (SELECT 1 FROM public.fondo_movimientos f\\n        JOIN public.fondo_mariana fm ON fm.id=f.fondo_id\\n        JOIN public.ubicaciones u ON u.id=fm.ubicacion_id\\n        JOIN public.e5_nacimientos b ON b.tabla='fondo_movimientos' AND b.clave=f.id::text\\n        WHERE f.id=d.movimiento_fondo_id AND f.naturaleza='RETIRO' AND f.categoria='RETIRO'\\n          AND f.original_id IS NULL AND f.importe_centavos=d.importe*100 AND f.autor_id=d.actor_id\\n          AND f.idempotency_producer='FONDO_API_MOVIMIENTO_V1' AND f.conciliacion_inicial IS NULL\\n          AND upper(btrim(u.nombre))='MARIANA' AND u.tipo::text='TIENDA'\\n          AND fm.ubicacion_id=(d.fuente->>'ubicacionId')::integer AND b.birth_xid=d.birth_xid)\\n        OR EXISTS (SELECT 1 FROM public.fondo_movimientos WHERE original_id=d.movimiento_fondo_id)\\n      THEN RAISE EXCEPTION 'E5: retiro propio sin inverso ni remesa'; END IF;\\n    END IF;\\n    IF NOT EXISTS (SELECT 1 FROM public.e5_operaciones WHERE clave=d.clave AND cobro_id=d.cobro_id\\n      AND accion='DEVOLVER' AND actor_id=d.actor_id AND birth_xid=d.birth_xid)\\n    THEN RAISE EXCEPTION 'E5: devolución sin operación idempotente'; END IF;\\n  END LOOP;\\n  IF EXISTS (SELECT 1 FROM public.e5_salidas_bancarias s WHERE NOT EXISTS (\\n    SELECT 1 FROM public.e5_devoluciones d WHERE d.clave=s.clave AND d.fuente->>'tipo'='CUENTA'))\\n  THEN RAISE EXCEPTION 'E5: salida bancaria huérfana'; END IF;\\n  FOR v IN SELECT * FROM public.e5_documentos LOOP\\n    SELECT * INTO r FROM public.e5_recepciones WHERE id=v.cobro_id;\\n    FOREACH k IN ARRAY ARRAY['clienteNombre','ubicacionNombre','receptor','formaPago',\\n      'cuentaDestino','fechaRecepcion','importeRecibido','reciboId'] LOOP\\n      IF v.snapshot->k IS DISTINCT FROM r.snapshot->k\\n      THEN RAISE EXCEPTION 'E5: documento difiere de recepción (%)',k; END IF;\\n    END LOOP;\\n    IF v.tipo='CONSTANCIA' AND NOT EXISTS (SELECT 1 FROM public.e5_aplicaciones a\\n      WHERE a.cobro_id=v.cobro_id AND a.snapshot->>'constanciaId'=v.id::text\\n        AND v.snapshot->'autorizador'=a.snapshot->'actor'\\n        AND v.snapshot->'fechaAplicacion'=a.snapshot->'fechaAplicacion'\\n        AND v.snapshot->'evidencia'=a.snapshot->'evidencia'\\n        AND (v.snapshot->>'importeFavorGenerado')::numeric=\\n          coalesce((a.snapshot->>'importeFavorGenerado')::numeric,0))\\n    THEN RAISE EXCEPTION 'E5: constancia huérfana o alterada'; END IF;\\n  END LOOP;\\n  FOR o IN SELECT * FROM public.e5_operaciones ORDER BY cobro_id,revision LOOP\\n    SELECT * INTO r FROM public.e5_recepciones WHERE id=o.cobro_id;\\n    IF o.response->>'id' IS DISTINCT FROM o.cobro_id::text\\n      OR (o.response->>'revision')::integer IS DISTINCT FROM o.revision\\n    THEN RAISE EXCEPTION 'E5: respuesta idempotente no corresponde'; END IF;\\n    FOREACH k IN ARRAY ARRAY['clienteId','clienteNombre','ubicacionId','ubicacionNombre',\\n      'importeRecibido','fechaRecepcion','formaPago','cuentaDestino','sesionCajaId','sesionOperativaId',\\n      'receptor','notasIndicadas','evidenciaRecepcion','reciboId'] LOOP\\n      IF o.response->k IS DISTINCT FROM r.snapshot->k\\n      THEN RAISE EXCEPTION 'E5: respuesta histórica difiere de fuente (%)',k; END IF;\\n    END LOOP;\\n    SELECT coalesce(sum((value->>'importe')::numeric),0) INTO total\\n      FROM jsonb_array_elements(o.response->'aplicaciones');\\n    returned := coalesce((o.response#>>'{devolucion,importe}')::numeric,0);\\n    IF (o.response->>'importeAplicado')::numeric IS DISTINCT FROM total\\n      OR (o.response->>'importeDevuelto')::numeric IS DISTINCT FROM returned\\n      OR (o.response->>'importePendiente')::numeric IS DISTINCT FROM r.importe-total-returned\\n      OR (o.response->>'algunaVezAplicado')::boolean IS DISTINCT FROM (total>0)\\n      OR total+returned>r.importe OR (total>0 AND returned>0)\\n    THEN RAISE EXCEPTION 'E5: respuesta histórica viola conservación'; END IF;\\n    IF o.revision=1 THEN\\n      IF o.accion<>'RECIBIR' OR o.clave<>o.cobro_id\\n        OR o.actor_id<>r.actor_id OR o.birth_xid<>r.birth_xid\\n        OR jsonb_array_length(o.response->'rechazos')<>0 OR returned<>0\\n        OR jsonb_array_length(o.response->'propuestas')>1\\n        OR jsonb_array_length(o.response->'aplicaciones')>1\\n      THEN RAISE EXCEPTION 'E5: primera operación es recepción'; END IF;\\n    ELSE\\n      SELECT response INTO prev FROM public.e5_operaciones\\n        WHERE cobro_id=o.cobro_id AND revision=o.revision-1;\\n      IF prev IS NULL THEN RAISE EXCEPTION 'E5: historia sin predecesor'; END IF;\\n      IF (prev->>'importePendiente')::numeric<=0\\n        OR jsonb_array_length(o.response->'propuestas') <>\\n          jsonb_array_length(prev->'propuestas')+(CASE WHEN o.accion='PROPONER' THEN 1 ELSE 0 END)\\n        OR jsonb_array_length(o.response->'aplicaciones') <>\\n          jsonb_array_length(prev->'aplicaciones')+(CASE WHEN o.accion='AUTORIZAR' THEN 1 ELSE 0 END)\\n        OR jsonb_array_length(o.response->'rechazos') <>\\n          jsonb_array_length(prev->'rechazos')+(CASE WHEN o.accion='RECHAZAR' THEN 1 ELSE 0 END)\\n        OR (o.accion<>'DEVOLVER' AND o.response->'devolucion' IS DISTINCT FROM prev->'devolucion')\\n      THEN RAISE EXCEPTION 'E5: evento no corresponde a transición de historia'; END IF;\\n      FOREACH k IN ARRAY ARRAY['propuestas','aplicaciones','rechazos'] LOOP\\n        IF EXISTS (SELECT 1 FROM jsonb_array_elements(prev->k) WITH ORDINALITY h(value,i)\\n          WHERE o.response->k->(h.i::integer-1) IS DISTINCT FROM h.value)\\n        THEN RAISE EXCEPTION 'E5: operación reescribe historia'; END IF;\\n      END LOOP;\\n      IF o.accion IN ('PROPONER','RECHAZAR') AND\\n        (o.response->'importeAplicado' IS DISTINCT FROM prev->'importeAplicado'\\n        OR o.response->'importePendiente' IS DISTINCT FROM prev->'importePendiente'\\n        OR o.response->'importeDevuelto' IS DISTINCT FROM prev->'importeDevuelto')\\n      THEN RAISE EXCEPTION 'E5: proponer/rechazar no mueve dinero'; END IF;\\n      IF o.accion='PROPONER' THEN\\n        x := o.response->'propuestas'->-1;\\n        IF o.response->>'propuestaVigenteId' IS DISTINCT FROM x->>'id'\\n          OR (x#>>'{actor,id}')::integer IS DISTINCT FROM o.actor_id\\n        THEN RAISE EXCEPTION 'E5: propuesta vigente/actor'; END IF;\\n      ELSIF o.accion IN ('AUTORIZAR','RECHAZAR','DEVOLVER') THEN\\n        IF o.response ? 'propuestaVigenteId'\\n        THEN RAISE EXCEPTION 'E5: propuesta resuelta no puede reutilizarse'; END IF;\\n        IF o.accion='RECHAZAR' THEN\\n          x := o.response->'rechazos'->-1;\\n          IF x->>'propuestaId' IS DISTINCT FROM prev->>'propuestaVigenteId'\\n            OR x->>'propuestaId' IS NULL OR nullif(btrim(x->>'motivo'),'') IS NULL\\n            OR (x#>>'{actor,id}')::integer IS DISTINCT FROM o.actor_id\\n          THEN RAISE EXCEPTION 'E5: rechazo sin propuesta vigente/evidencia'; END IF;\\n        END IF;\\n      ELSE\\n        RAISE EXCEPTION 'E5: recepción no repetible';\\n      END IF;\\n      IF o.accion='AUTORIZAR' AND NOT EXISTS (\\n        SELECT 1 FROM public.e5_aplicaciones a\\n        WHERE a.cobro_id=o.cobro_id AND a.birth_xid=o.birth_xid\\n          AND a.propuesta_id::text=prev->>'propuestaVigenteId' AND a.actor_id=o.actor_id)\\n      THEN RAISE EXCEPTION 'E5: autorización de propuesta vigente requerida'; END IF;\\n    END IF;\\n  END LOOP;\\n  RETURN NULL;\\nEND $function$\\n\",\"hash_original\":\"87911ce23ea2ad1f936e2aa4a718788f7aba2a7b95f1ec9845f5d5baaa520c02\",\"hash_instalado\":\"87911ce23ea2ad1f936e2aa4a718788f7aba2a7b95f1ec9845f5d5baaa520c02\"}",
+      "{\"firma\":\"public.e5_insert_authority()\",\"definicion\":\"CREATE OR REPLACE FUNCTION public.e5_insert_authority()\\n RETURNS trigger\\n LANGUAGE plpgsql\\n SET search_path TO 'pg_catalog'\\nAS $function$\\nDECLARE j jsonb := to_jsonb(NEW); s integer; site integer;\\nBEGIN\\n  IF TG_TABLE_NAME IN ('e5_aplicaciones','e5_devoluciones','e5_salidas_bancarias','e5_impresiones')\\n    OR (TG_TABLE_NAME='e5_operaciones' AND j->>'accion'<>'RECIBIR')\\n  THEN\\n    PERFORM 1 FROM public.usuarios WHERE id=(j->>'actor_id')::integer AND activo AND rol::text='ADMIN' FOR SHARE;\\n    IF NOT FOUND THEN RAISE EXCEPTION 'E5: autoridad ADMIN actual requerida'; END IF;\\n  END IF;\\n  IF TG_TABLE_NAME='e5_recepciones' AND j->>'medio'='EFECTIVO' THEN\\n    s := (j->>'sesion_caja_id')::integer; site := (j->>'ubicacion_id')::integer;\\n  ELSIF TG_TABLE_NAME='e5_devoluciones' AND j#>>'{fuente,tipo}'='CAJA' THEN\\n    s := (j#>>'{fuente,sesionCajaId}')::integer; site := (j#>>'{fuente,ubicacionId}')::integer;\\n  END IF;\\n  IF s IS NOT NULL THEN\\n    PERFORM 1 FROM public.sesiones_caja WHERE id=s AND ubicacion_id=site\\n      AND estado='ABIERTA' AND cerrada_at IS NULL FOR UPDATE;\\n    IF NOT FOUND THEN RAISE EXCEPTION 'E5: sesión física actual abierta requerida'; END IF;\\n  END IF;\\n  RETURN NEW;\\nEND $function$\\n\",\"hash_original\":\"124271a0007f135354a031abc7ee33ec74c6e6eafb255dd8341a9525c904e6f5\",\"hash_instalado\":\"0aa8902dea1e5dbd07bc57d6d485cae6d80cf2120f4f81703f992f4c7010aaaa\"}",
+      "{\"firma\":\"public.e5_owned_credit_source(public.movimientos_credito)\",\"definicion\":\"CREATE OR REPLACE FUNCTION public.e5_owned_credit_source(m public.movimientos_credito)\\n RETURNS boolean\\n LANGUAGE sql\\n SET search_path TO 'pg_catalog'\\nAS $function$\\n  SELECT coalesce(\\n    m.operacion_productor='E5_APLICACION_RETENIDA' AND m.tipo::text='ABONO'\\n    AND m.importe<0 AND m.naturaleza::text='OPERACION_CREDITO_SIN_DINERO'\\n    AND m.forma_pago IS NULL AND m.cuenta_destino IS NULL AND m.sesion_caja_id IS NULL\\n    AND m.es_incobrable=false AND m.movimiento_origen_id IS NULL\\n    AND m.ticket_id IS NULL AND m.nota_origen_id IS NULL\\n    AND EXISTS (\\n      SELECT 1 FROM public.e5_aplicaciones a\\n      JOIN public.e5_recepciones r ON r.id=a.cobro_id\\n      JOIN public.usuarios u ON u.id=a.actor_id\\n      JOIN public.operaciones_credito_e1 op ON op.productor=m.operacion_productor AND op.clave=a.id\\n      JOIN public.e5_nacimientos b ON b.tabla='operaciones_credito_e1'\\n        AND b.clave=op.productor||':'||op.clave::text AND b.birth_xid=a.birth_xid\\n      WHERE a.id=m.operacion_clave AND a.birth_xid=pg_current_xact_id()\\n        AND a.actor_id=m.usuario_id AND u.activo AND u.rol::text='ADMIN'\\n        AND a.importe=-m.importe AND r.cliente_id=m.cliente_id AND r.ubicacion_id=m.sitio_origen_id\\n        AND m.created_at=a.fecha_aplicacion AND a.fecha_aplicacion>=r.fecha_recepcion\\n        AND op.usuario_id=a.actor_id AND op.naturaleza::text='OPERACION_CREDITO_SIN_DINERO'\\n        AND op.solicitud_canonica->>'cobroId'=r.id::text\\n        AND op.solicitud_canonica->'application'=a.snapshot\\n        AND op.solicitud_canonica#>>'{proposal,id}'=a.propuesta_id::text\\n        AND (op.solicitud_canonica#>>'{piece,importe}')::numeric=a.importe\\n        AND (op.solicitud_canonica#>>'{piece,favor}')::boolean=a.favor\\n        AND NOT EXISTS (SELECT 1 FROM public.e5_devoluciones WHERE cobro_id=a.cobro_id)\\n    ),false)\\n$function$\\n\",\"hash_original\":\"9cbe5d2eeb339394878cf1e4d41de19d1225af5cdcdb6b572a4388c172795d9c\",\"hash_instalado\":\"9cbe5d2eeb339394878cf1e4d41de19d1225af5cdcdb6b572a4388c172795d9c\"}"
+    ]
+  },
+  "e11_e5_preparaciones": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "e11_notificacion_origen": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "e11_operaciones": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "e11_perfil_eventos": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "e11_perfiles": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "e11_resoluciones": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "e5_aplicaciones": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "e5_cobros": {
+    "count": 4,
+    "sha256": "f184dd90a0e22178a8152e05b1a1d0abfbcb5dd9dbcd94ae46a0f3146bd81823",
+    "rows": [
+      "{\"id\":\"01455046-d5fb-4c4e-8ad4-610612c19a4b\",\"cliente_id\":12,\"ubicacion_id\":10,\"revision\":1,\"detail\":{\"id\": \"01455046-d5fb-4c4e-8ad4-610612c19a4b\", \"estado\": \"PENDIENTE\", \"receptor\": {\"id\": 2, \"nombre\": \"receipt_1_caja_receive\"}, \"rechazos\": [], \"reciboId\": \"657d826b-03c4-45b2-aeaa-dd58601df80b\", \"revision\": 1, \"clienteId\": 12, \"formaPago\": \"EFECTIVO\", \"avisoAdmin\": false, \"propuestas\": [], \"capacidades\": {\"puedeRecibir\": true, \"puedeDevolver\": false, \"puedeImprimir\": false, \"puedePreparar\": false, \"puedeRechazar\": false, \"puedeAutorizar\": false, \"puedeVerAvisos\": false, \"preparacionADisponible\": false}, \"ubicacionId\": 10, \"aplicaciones\": [], \"sesionCajaId\": 1, \"clienteNombre\": \"Receipt 1 browser-e5-retained\", \"cuentaDestino\": \"CAJA_FISICA\", \"antiguedadDias\": 0, \"fechaRecepcion\": \"2026-10-01T23:37:55.014Z\", \"notasIndicadas\": [{\"fecha\": \"2026-10-01T23:31:59.369Z\", \"folio\": \"13004\", \"notaId\": 5, \"facturada\": false, \"ubicacionId\": 10, \"saldoPendiente\": \"10.00\", \"movimientoVentaId\": 5}], \"importeAplicado\": \"0.00\", \"importeDevuelto\": \"0.00\", \"importeRecibido\": \"10.00\", \"ubicacionNombre\": \"Receipt isolated own\", \"importePendiente\": \"10.00\", \"algunaVezAplicado\": false, \"sesionOperativaId\": 1, \"evidenciaRecepcion\": {\"descripcion\": \"Prueba aislada de recepción en efectivo; fixture browser-e5-retained.\", \"referencias\": [\"receipt-terminal-runtime browser-e5-retained\"]}}}",
+      "{\"id\":\"3662a782-2788-4045-8cbd-efbb15382f0b\",\"cliente_id\":14,\"ubicacion_id\":11,\"revision\":1,\"detail\":{\"id\": \"3662a782-2788-4045-8cbd-efbb15382f0b\", \"estado\": \"PENDIENTE\", \"receptor\": {\"id\": 1, \"nombre\": \"Administrador\"}, \"rechazos\": [], \"reciboId\": \"1c8ef97c-2a09-4c7e-8f61-23dcc740516b\", \"revision\": 1, \"clienteId\": 14, \"formaPago\": \"TRANSFERENCIA\", \"avisoAdmin\": false, \"propuestas\": [], \"capacidades\": {\"puedeRecibir\": true, \"puedeDevolver\": false, \"puedeImprimir\": true, \"puedePreparar\": true, \"puedeRechazar\": false, \"puedeAutorizar\": true, \"puedeVerAvisos\": true, \"preparacionADisponible\": false}, \"ubicacionId\": 11, \"aplicaciones\": [], \"clienteNombre\": \"Receipt 2 api-e5\", \"cuentaDestino\": \"CUENTA_FISCAL\", \"antiguedadDias\": 0, \"fechaRecepcion\": \"2026-10-01T23:32:05.435Z\", \"notasIndicadas\": [{\"fecha\": \"2026-10-01T23:31:59.480Z\", \"folio\": \"13006\", \"notaId\": 7, \"facturada\": false, \"ubicacionId\": 11, \"saldoPendiente\": \"10.00\", \"movimientoVentaId\": 7}], \"importeAplicado\": \"0.00\", \"importeDevuelto\": \"0.00\", \"importeRecibido\": \"10.00\", \"ubicacionNombre\": \"Receipt isolated other\", \"importePendiente\": \"10.00\", \"algunaVezAplicado\": false, \"sesionOperativaId\": 2, \"evidenciaRecepcion\": {\"descripcion\": \"Native isolated receipt fixture\", \"referencias\": [\"receipt-terminal-runtime\"]}}}",
+      "{\"id\":\"9c445b81-4567-45b5-80cc-700497db27d6\",\"cliente_id\":11,\"ubicacion_id\":10,\"revision\":1,\"detail\":{\"id\": \"9c445b81-4567-45b5-80cc-700497db27d6\", \"estado\": \"PENDIENTE\", \"receptor\": {\"id\": 2, \"nombre\": \"receipt_1_caja_receive\"}, \"rechazos\": [], \"reciboId\": \"d9d81b61-b04d-4e0e-b58b-002cfddb7d47\", \"revision\": 1, \"clienteId\": 11, \"formaPago\": \"TRANSFERENCIA\", \"avisoAdmin\": false, \"propuestas\": [], \"capacidades\": {\"puedeRecibir\": true, \"puedeDevolver\": false, \"puedeImprimir\": false, \"puedePreparar\": false, \"puedeRechazar\": false, \"puedeAutorizar\": false, \"puedeVerAvisos\": false, \"preparacionADisponible\": false}, \"ubicacionId\": 10, \"aplicaciones\": [], \"clienteNombre\": \"Receipt 1 browser-e5-directed\", \"cuentaDestino\": \"CUENTA_FISCAL\", \"antiguedadDias\": 0, \"fechaRecepcion\": \"2026-10-01T23:36:20.266Z\", \"notasIndicadas\": [{\"fecha\": \"2026-10-01T23:31:59.354Z\", \"folio\": \"13003\", \"notaId\": 4, \"facturada\": false, \"ubicacionId\": 10, \"saldoPendiente\": \"10.00\", \"movimientoVentaId\": 4}], \"importeAplicado\": \"0.00\", \"importeDevuelto\": \"0.00\", \"importeRecibido\": \"10.00\", \"ubicacionNombre\": \"Receipt isolated own\", \"importePendiente\": \"10.00\", \"algunaVezAplicado\": false, \"sesionOperativaId\": 1, \"evidenciaRecepcion\": {\"descripcion\": \"Prueba aislada de recepción por transferencia; fixture browser-e5-directed.\", \"referencias\": [\"receipt-terminal-runtime browser-e5-directed\"]}}}",
+      "{\"id\":\"a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7\",\"cliente_id\":9,\"ubicacion_id\":10,\"revision\":1,\"detail\":{\"id\": \"a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7\", \"estado\": \"PENDIENTE\", \"receptor\": {\"id\": 1, \"nombre\": \"Administrador\"}, \"rechazos\": [], \"reciboId\": \"4e0c9b7e-4df1-4581-80b5-9df24b4026fb\", \"revision\": 1, \"clienteId\": 9, \"formaPago\": \"TRANSFERENCIA\", \"avisoAdmin\": false, \"propuestas\": [], \"capacidades\": {\"puedeRecibir\": true, \"puedeDevolver\": false, \"puedeImprimir\": true, \"puedePreparar\": true, \"puedeRechazar\": false, \"puedeAutorizar\": true, \"puedeVerAvisos\": true, \"preparacionADisponible\": false}, \"ubicacionId\": 10, \"aplicaciones\": [], \"clienteNombre\": \"Receipt 1 api-e5\", \"cuentaDestino\": \"CUENTA_FISCAL\", \"antiguedadDias\": 0, \"fechaRecepcion\": \"2026-10-01T23:32:05.002Z\", \"notasIndicadas\": [{\"fecha\": \"2026-10-01T23:31:59.320Z\", \"folio\": \"13001\", \"notaId\": 2, \"facturada\": false, \"ubicacionId\": 10, \"saldoPendiente\": \"10.00\", \"movimientoVentaId\": 2}], \"importeAplicado\": \"0.00\", \"importeDevuelto\": \"0.00\", \"importeRecibido\": \"10.00\", \"ubicacionNombre\": \"Receipt isolated own\", \"importePendiente\": \"10.00\", \"algunaVezAplicado\": false, \"sesionOperativaId\": 1, \"evidenciaRecepcion\": {\"descripcion\": \"Native isolated receipt fixture\", \"referencias\": [\"receipt-terminal-runtime\"]}}}"
+    ]
+  },
+  "e5_ddl_originales": {
+    "count": 4,
+    "sha256": "962d01528d6228f3ed7fbbef7a1cbe83f47c45b998839a0da5d49b0285e58db1",
+    "rows": [
+      "{\"objeto\":\"constraint_operaciones\",\"definicion\":\"CHECK ((((productor = ANY (ARRAY['VENTA_CREDITO'::text, 'CANCELACION_VENTA_CREDITO'::text])) AND (naturaleza = 'OPERACION_CREDITO_SIN_DINERO'::public.naturaleza_credito_e1)) OR ((productor = ANY (ARRAY['AJUSTE_MANUAL'::text, 'BAJA_INCOBRABLE'::text])) AND (naturaleza = 'CORRECCION_CONTABLE'::public.naturaleza_credito_e1)) OR ((productor = ANY (ARRAY['ABONO_ORDINARIO'::text, 'ABONO_DIRIGIDO'::text])) AND (naturaleza = ANY (ARRAY['INGRESO_FISICO'::public.naturaleza_credito_e1, 'CORRECCION_CONTABLE'::public.naturaleza_credito_e1]))) OR ((productor = 'REVERSO_ABONO'::text) AND (naturaleza = ANY (ARRAY['DEVOLUCION_FISICA'::public.naturaleza_credito_e1, 'CORRECCION_CONTABLE'::public.naturaleza_credito_e1]))) OR ((productor = 'COBRO_PENDIENTE'::text) AND (naturaleza = 'INGRESO_FISICO'::public.naturaleza_credito_e1))))\"}",
+      "{\"objeto\":\"funcion_movimiento\",\"definicion\":\"CREATE OR REPLACE FUNCTION public.validar_movimiento_credito_e1()\\n RETURNS trigger\\n LANGUAGE plpgsql\\n SET search_path TO 'pg_catalog', 'public'\\nAS $function$\\nDECLARE\\n  op public.operaciones_credito_e1%ROWTYPE;\\n  origen public.movimientos_credito%ROWTYPE;\\nBEGIN\\n  -- Sin corte de fecha: aplica a TODO INSERT, aunque created_at sea histórico.\\n  IF NEW.sitio_origen_id IS NULL OR NEW.naturaleza IS NULL\\n    OR NEW.operacion_productor IS NULL OR NEW.operacion_clave IS NULL THEN\\n    RAISE EXCEPTION 'E1: todo INSERT requiere sitio, naturaleza y clave/productor explícitos';\\n  END IF;\\n  SELECT * INTO op FROM public.operaciones_credito_e1\\n    WHERE productor = NEW.operacion_productor AND clave = NEW.operacion_clave;\\n  IF NOT FOUND THEN\\n    RAISE EXCEPTION 'E1: registre primero la operación en esta misma unidad transaccional';\\n  END IF;\\n  IF op.usuario_id IS DISTINCT FROM NEW.usuario_id\\n    OR op.naturaleza IS DISTINCT FROM NEW.naturaleza THEN\\n    RAISE EXCEPTION 'E1: actor/naturaleza no coinciden con la operación';\\n  END IF;\\n  IF NEW.importe IS NULL OR NEW.importe = 0\\n    OR NEW.importe IN ('NaN'::numeric, 'Infinity'::numeric, '-Infinity'::numeric) THEN\\n    RAISE EXCEPTION 'E1: importe finito distinto de cero obligatorio';\\n  END IF;\\n  IF NOT (\\n    (NEW.operacion_productor = 'VENTA_CREDITO' AND NEW.tipo = 'VENTA_CREDITO' AND NEW.importe > 0)\\n    OR (NEW.operacion_productor IN ('ABONO_ORDINARIO', 'ABONO_DIRIGIDO')\\n      AND NEW.tipo = 'ABONO' AND NEW.importe < 0)\\n    OR (NEW.operacion_productor = 'REVERSO_ABONO' AND NEW.tipo = 'REVERSO' AND NEW.importe > 0)\\n    OR (NEW.operacion_productor = 'CANCELACION_VENTA_CREDITO'\\n      AND NEW.tipo = 'REVERSO' AND NEW.importe < 0)\\n    OR (NEW.operacion_productor = 'AJUSTE_MANUAL' AND NEW.tipo = 'AJUSTE' AND NOT NEW.es_incobrable)\\n    OR (NEW.operacion_productor = 'BAJA_INCOBRABLE'\\n      AND NEW.tipo = 'AJUSTE' AND NEW.es_incobrable AND NEW.importe < 0)\\n  ) THEN\\n    RAISE EXCEPTION 'E1: productor incompatible con tipo/signo/incobrable; COBRO_PENDIENTE no entra al ledger';\\n  END IF;\\n  IF NEW.tipo = 'REVERSO' THEN\\n    SELECT * INTO origen FROM public.movimientos_credito WHERE id = NEW.movimiento_origen_id;\\n    IF NOT FOUND THEN\\n      RAISE EXCEPTION 'E1: falta movimiento de origen del reverso';\\n    END IF;\\n    IF (NEW.operacion_productor = 'REVERSO_ABONO' AND origen.tipo <> 'ABONO')\\n      OR (NEW.operacion_productor = 'CANCELACION_VENTA_CREDITO' AND origen.tipo <> 'VENTA_CREDITO') THEN\\n      RAISE EXCEPTION 'E1: productor de reverso incompatible con el origen';\\n    END IF;\\n    -- El trigger previo validate_credit_reversal conserva la comprobación\\n    -- del importe exacto, cliente y ticket. No se sustituye ni se deshabilita.\\n  END IF;\\n  PERFORM public.validar_contexto_credito_e1(\\n    NEW.usuario_id, NEW.sitio_origen_id, NEW.naturaleza,\\n    NEW.forma_pago, NEW.cuenta_destino, NEW.sesion_caja_id\\n  );\\n  IF NEW.nota_origen_id IS NOT NULL THEN\\n    PERFORM 1 FROM public.tickets\\n      WHERE id = NEW.nota_origen_id AND documento_tipo = 'NOTA'\\n        AND cliente_id = NEW.cliente_id AND ubicacion_id = NEW.sitio_origen_id FOR SHARE;\\n    IF NOT FOUND THEN\\n      RAISE EXCEPTION 'E1: nota de origen debe ser NOTA del mismo cliente y sitio atribuido';\\n    END IF;\\n  END IF;\\n  IF NEW.tipo = 'AJUSTE' AND NEW.nota_origen_id IS NULL\\n    AND NULLIF(btrim(NEW.origen_justificacion), '') IS NULL THEN\\n    RAISE EXCEPTION 'E1: ajuste sin nota identificada exige justificación de origen';\\n  END IF;\\n  IF NEW.naturaleza = 'CORRECCION_CONTABLE'\\n    AND NULLIF(btrim(NEW.origen_justificacion), '') IS NULL THEN\\n    RAISE EXCEPTION 'E1: corrección/recaptura exige justificación explícita; el medio histórico no prueba efectivo';\\n  END IF;\\n  IF NEW.operacion_productor = 'BAJA_INCOBRABLE'\\n    AND NULLIF(btrim(NEW.motivo_incobrable), '') IS NULL THEN\\n    RAISE EXCEPTION 'E1: baja incobrable exige motivo';\\n  END IF;\\n  RETURN NEW;\\nEND;\\n$function$\\n\"}",
+      "{\"objeto\":\"funcion_pending\",\"definicion\":\"CREATE OR REPLACE FUNCTION public.e1_guard_pending_receipts_closed()\\n RETURNS trigger\\n LANGUAGE plpgsql\\n SET search_path TO 'pg_catalog', 'public'\\nAS $function$\\nBEGIN\\n  RAISE EXCEPTION USING\\n    ERRCODE = 'E1P01',\\n    MESSAGE = 'E1: el cobro retenido de crédito está deshabilitado.';\\n  RETURN NULL;\\nEND;\\n$function$\\n\"}",
+      "{\"objeto\":\"trigger_pending\",\"definicion\":\"CREATE TRIGGER zz_e1_pending_receipts_closed AFTER INSERT ON public.cobros_credito_pendientes_e1 FOR EACH STATEMENT EXECUTE FUNCTION public.e1_guard_pending_receipts_closed()\"}"
+    ]
+  },
+  "e5_devoluciones": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "e5_documentos": {
+    "count": 4,
+    "sha256": "103b4213a2bf35214e713aded4b06e9d0cf4f08247866da475904e4de98b7ba5",
+    "rows": [
+      "{\"id\":\"1c8ef97c-2a09-4c7e-8f61-23dcc740516b\",\"cobro_id\":\"3662a782-2788-4045-8cbd-efbb15382f0b\",\"tipo\":\"RECIBO\",\"snapshot\":{\"id\": \"1c8ef97c-2a09-4c7e-8f61-23dcc740516b\", \"tipo\": \"RECIBO\", \"folio\": \"E5-R-1c8ef97c-2a09-4c7e-8f61-23dcc740516b\", \"notas\": [{\"fecha\": \"2026-10-01T23:31:59.480Z\", \"folio\": \"13006\", \"notaId\": 7, \"facturada\": false, \"ubicacionId\": 11, \"saldoPendiente\": \"10.00\", \"movimientoVentaId\": 7}], \"copias\": 2, \"cobroId\": \"3662a782-2788-4045-8cbd-efbb15382f0b\", \"mensaje\": \"Recibido, pendiente de aplicación. No es saldo a favor disponible.\", \"receptor\": {\"id\": 1, \"nombre\": \"Administrador\"}, \"reciboId\": \"1c8ef97c-2a09-4c7e-8f61-23dcc740516b\", \"evidencia\": {\"descripcion\": \"Native isolated receipt fixture\", \"referencias\": [\"receipt-terminal-runtime\"]}, \"formaPago\": \"TRANSFERENCIA\", \"reciboFolio\": \"E5-R-1c8ef97c-2a09-4c7e-8f61-23dcc740516b\", \"asignaciones\": [], \"fechaEmision\": \"2026-10-01T23:32:05.435Z\", \"clienteNombre\": \"Receipt 2 api-e5\", \"cuentaDestino\": \"CUENTA_FISCAL\", \"fechaRecepcion\": \"2026-10-01T23:32:05.435Z\", \"importeRecibido\": \"10.00\", \"ubicacionNombre\": \"Receipt isolated other\", \"importeDocumento\": \"10.00\", \"pendienteEnEmision\": \"10.00\", \"importeFavorGenerado\": \"0.00\"},\"birth_xid\":\"1580\"}",
+      "{\"id\":\"4e0c9b7e-4df1-4581-80b5-9df24b4026fb\",\"cobro_id\":\"a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7\",\"tipo\":\"RECIBO\",\"snapshot\":{\"id\": \"4e0c9b7e-4df1-4581-80b5-9df24b4026fb\", \"tipo\": \"RECIBO\", \"folio\": \"E5-R-4e0c9b7e-4df1-4581-80b5-9df24b4026fb\", \"notas\": [{\"fecha\": \"2026-10-01T23:31:59.320Z\", \"folio\": \"13001\", \"notaId\": 2, \"facturada\": false, \"ubicacionId\": 10, \"saldoPendiente\": \"10.00\", \"movimientoVentaId\": 2}], \"copias\": 2, \"cobroId\": \"a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7\", \"mensaje\": \"Recibido, pendiente de aplicación. No es saldo a favor disponible.\", \"receptor\": {\"id\": 1, \"nombre\": \"Administrador\"}, \"reciboId\": \"4e0c9b7e-4df1-4581-80b5-9df24b4026fb\", \"evidencia\": {\"descripcion\": \"Native isolated receipt fixture\", \"referencias\": [\"receipt-terminal-runtime\"]}, \"formaPago\": \"TRANSFERENCIA\", \"reciboFolio\": \"E5-R-4e0c9b7e-4df1-4581-80b5-9df24b4026fb\", \"asignaciones\": [], \"fechaEmision\": \"2026-10-01T23:32:05.002Z\", \"clienteNombre\": \"Receipt 1 api-e5\", \"cuentaDestino\": \"CUENTA_FISCAL\", \"fechaRecepcion\": \"2026-10-01T23:32:05.002Z\", \"importeRecibido\": \"10.00\", \"ubicacionNombre\": \"Receipt isolated own\", \"importeDocumento\": \"10.00\", \"pendienteEnEmision\": \"10.00\", \"importeFavorGenerado\": \"0.00\"},\"birth_xid\":\"1555\"}",
+      "{\"id\":\"657d826b-03c4-45b2-aeaa-dd58601df80b\",\"cobro_id\":\"01455046-d5fb-4c4e-8ad4-610612c19a4b\",\"tipo\":\"RECIBO\",\"snapshot\":{\"id\": \"657d826b-03c4-45b2-aeaa-dd58601df80b\", \"tipo\": \"RECIBO\", \"folio\": \"E5-R-657d826b-03c4-45b2-aeaa-dd58601df80b\", \"notas\": [{\"fecha\": \"2026-10-01T23:31:59.369Z\", \"folio\": \"13004\", \"notaId\": 5, \"facturada\": false, \"ubicacionId\": 10, \"saldoPendiente\": \"10.00\", \"movimientoVentaId\": 5}], \"copias\": 2, \"cobroId\": \"01455046-d5fb-4c4e-8ad4-610612c19a4b\", \"mensaje\": \"Recibido, pendiente de aplicación. No es saldo a favor disponible.\", \"receptor\": {\"id\": 2, \"nombre\": \"receipt_1_caja_receive\"}, \"reciboId\": \"657d826b-03c4-45b2-aeaa-dd58601df80b\", \"evidencia\": {\"descripcion\": \"Prueba aislada de recepción en efectivo; fixture browser-e5-retained.\", \"referencias\": [\"receipt-terminal-runtime browser-e5-retained\"]}, \"formaPago\": \"EFECTIVO\", \"reciboFolio\": \"E5-R-657d826b-03c4-45b2-aeaa-dd58601df80b\", \"asignaciones\": [], \"fechaEmision\": \"2026-10-01T23:37:55.014Z\", \"clienteNombre\": \"Receipt 1 browser-e5-retained\", \"cuentaDestino\": \"CAJA_FISICA\", \"fechaRecepcion\": \"2026-10-01T23:37:55.014Z\", \"importeRecibido\": \"10.00\", \"ubicacionNombre\": \"Receipt isolated own\", \"importeDocumento\": \"10.00\", \"pendienteEnEmision\": \"10.00\", \"importeFavorGenerado\": \"0.00\"},\"birth_xid\":\"1920\"}",
+      "{\"id\":\"d9d81b61-b04d-4e0e-b58b-002cfddb7d47\",\"cobro_id\":\"9c445b81-4567-45b5-80cc-700497db27d6\",\"tipo\":\"RECIBO\",\"snapshot\":{\"id\": \"d9d81b61-b04d-4e0e-b58b-002cfddb7d47\", \"tipo\": \"RECIBO\", \"folio\": \"E5-R-d9d81b61-b04d-4e0e-b58b-002cfddb7d47\", \"notas\": [{\"fecha\": \"2026-10-01T23:31:59.354Z\", \"folio\": \"13003\", \"notaId\": 4, \"facturada\": false, \"ubicacionId\": 10, \"saldoPendiente\": \"10.00\", \"movimientoVentaId\": 4}], \"copias\": 2, \"cobroId\": \"9c445b81-4567-45b5-80cc-700497db27d6\", \"mensaje\": \"Recibido, pendiente de aplicación. No es saldo a favor disponible.\", \"receptor\": {\"id\": 2, \"nombre\": \"receipt_1_caja_receive\"}, \"reciboId\": \"d9d81b61-b04d-4e0e-b58b-002cfddb7d47\", \"evidencia\": {\"descripcion\": \"Prueba aislada de recepción por transferencia; fixture browser-e5-directed.\", \"referencias\": [\"receipt-terminal-runtime browser-e5-directed\"]}, \"formaPago\": \"TRANSFERENCIA\", \"reciboFolio\": \"E5-R-d9d81b61-b04d-4e0e-b58b-002cfddb7d47\", \"asignaciones\": [], \"fechaEmision\": \"2026-10-01T23:36:20.266Z\", \"clienteNombre\": \"Receipt 1 browser-e5-directed\", \"cuentaDestino\": \"CUENTA_FISCAL\", \"fechaRecepcion\": \"2026-10-01T23:36:20.266Z\", \"importeRecibido\": \"10.00\", \"ubicacionNombre\": \"Receipt isolated own\", \"importeDocumento\": \"10.00\", \"pendienteEnEmision\": \"10.00\", \"importeFavorGenerado\": \"0.00\"},\"birth_xid\":\"1820\"}"
+    ]
+  },
+  "e5_nacimientos": {
+    "count": 37,
+    "sha256": "db9ff701d59254e613a32ee5bab6c3cf9f53609d3c2c0e525e96d972352ae5c8",
+    "rows": [
+      "{\"tabla\":\"aplicaciones_credito\",\"clave\":\"1\",\"birth_xid\":\"1511\"}",
+      "{\"tabla\":\"aplicaciones_credito\",\"clave\":\"2\",\"birth_xid\":\"1570\"}",
+      "{\"tabla\":\"aplicaciones_credito\",\"clave\":\"3\",\"birth_xid\":\"1738\"}",
+      "{\"tabla\":\"cobros_credito_pendientes_e1\",\"clave\":\"01455046-d5fb-4c4e-8ad4-610612c19a4b\",\"birth_xid\":\"1920\"}",
+      "{\"tabla\":\"cobros_credito_pendientes_e1\",\"clave\":\"3662a782-2788-4045-8cbd-efbb15382f0b\",\"birth_xid\":\"1580\"}",
+      "{\"tabla\":\"cobros_credito_pendientes_e1\",\"clave\":\"9c445b81-4567-45b5-80cc-700497db27d6\",\"birth_xid\":\"1820\"}",
+      "{\"tabla\":\"cobros_credito_pendientes_e1\",\"clave\":\"a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7\",\"birth_xid\":\"1555\"}",
+      "{\"tabla\":\"movimientos_credito\",\"clave\":\"1\",\"birth_xid\":\"1420\"}",
+      "{\"tabla\":\"movimientos_credito\",\"clave\":\"10\",\"birth_xid\":\"1459\"}",
+      "{\"tabla\":\"movimientos_credito\",\"clave\":\"11\",\"birth_xid\":\"1511\"}",
+      "{\"tabla\":\"movimientos_credito\",\"clave\":\"12\",\"birth_xid\":\"1570\"}",
+      "{\"tabla\":\"movimientos_credito\",\"clave\":\"13\",\"birth_xid\":\"1738\"}",
+      "{\"tabla\":\"movimientos_credito\",\"clave\":\"2\",\"birth_xid\":\"1424\"}",
+      "{\"tabla\":\"movimientos_credito\",\"clave\":\"3\",\"birth_xid\":\"1428\"}",
+      "{\"tabla\":\"movimientos_credito\",\"clave\":\"4\",\"birth_xid\":\"1432\"}",
+      "{\"tabla\":\"movimientos_credito\",\"clave\":\"5\",\"birth_xid\":\"1436\"}",
+      "{\"tabla\":\"movimientos_credito\",\"clave\":\"6\",\"birth_xid\":\"1443\"}",
+      "{\"tabla\":\"movimientos_credito\",\"clave\":\"7\",\"birth_xid\":\"1447\"}",
+      "{\"tabla\":\"movimientos_credito\",\"clave\":\"8\",\"birth_xid\":\"1451\"}",
+      "{\"tabla\":\"movimientos_credito\",\"clave\":\"9\",\"birth_xid\":\"1455\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"ABONO_ORDINARIO:46347f50-36bb-4aed-9d46-484549706c2e\",\"birth_xid\":\"1738\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"ABONO_ORDINARIO:47fbb28e-2460-427e-82b1-e1c3739c13e6\",\"birth_xid\":\"1570\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"ABONO_ORDINARIO:51a4964e-ae11-4e3e-b80a-fb342068c33e\",\"birth_xid\":\"1511\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"COBRO_PENDIENTE:01455046-d5fb-4c4e-8ad4-610612c19a4b\",\"birth_xid\":\"1920\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"COBRO_PENDIENTE:3662a782-2788-4045-8cbd-efbb15382f0b\",\"birth_xid\":\"1580\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"COBRO_PENDIENTE:9c445b81-4567-45b5-80cc-700497db27d6\",\"birth_xid\":\"1820\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"COBRO_PENDIENTE:a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7\",\"birth_xid\":\"1555\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"VENTA_CREDITO:09bdc103-c4ac-4048-95ca-ae65e6f0a7cc\",\"birth_xid\":\"1446\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"VENTA_CREDITO:3935a8f9-1640-43cf-9ccc-cdef2071f73c\",\"birth_xid\":\"1454\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"VENTA_CREDITO:3bd91b9a-80db-4fac-97fa-e69038908869\",\"birth_xid\":\"1419\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"VENTA_CREDITO:555cea62-5f3d-476c-b20b-3fcdde466f99\",\"birth_xid\":\"1458\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"VENTA_CREDITO:5d865a76-b945-4273-a779-9f5d96a6079f\",\"birth_xid\":\"1427\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"VENTA_CREDITO:7ce19ab4-c568-4675-9d10-c88628d90015\",\"birth_xid\":\"1442\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"VENTA_CREDITO:89bb704c-c6ad-42f5-98dc-edd2341a380b\",\"birth_xid\":\"1423\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"VENTA_CREDITO:8a785689-a04b-4b09-b6ed-6138b31075ee\",\"birth_xid\":\"1431\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"VENTA_CREDITO:901469dd-71c8-467b-9a93-653709fed9dc\",\"birth_xid\":\"1435\"}",
+      "{\"tabla\":\"operaciones_credito_e1\",\"clave\":\"VENTA_CREDITO:dab4a69b-b5dc-4e1f-8f0e-e62fb780f350\",\"birth_xid\":\"1450\"}"
+    ]
+  },
+  "e5_operaciones": {
+    "count": 4,
+    "sha256": "632018b6f9e84534d1f2c03def6b013599d3c5e98811417ba363e54da4cab526",
+    "rows": [
+      "{\"clave\":\"01455046-d5fb-4c4e-8ad4-610612c19a4b\",\"cobro_id\":\"01455046-d5fb-4c4e-8ad4-610612c19a4b\",\"revision\":1,\"accion\":\"RECIBIR\",\"actor_id\":2,\"content\":\"{\\\"action\\\":\\\"RECIBIR\\\",\\\"id\\\":null,\\\"input\\\":{\\\"claveOperacion\\\":\\\"01455046-d5fb-4c4e-8ad4-610612c19a4b\\\",\\\"clienteId\\\":12,\\\"cuentaDestino\\\":\\\"CAJA_FISICA\\\",\\\"entrada\\\":\\\"CAJA\\\",\\\"evidencia\\\":{\\\"descripcion\\\":\\\"Prueba aislada de recepción en efectivo; fixture browser-e5-retained.\\\",\\\"referencias\\\":[\\\"receipt-terminal-runtime browser-e5-retained\\\"]},\\\"formaPago\\\":\\\"EFECTIVO\\\",\\\"importe\\\":\\\"10.00\\\",\\\"notasIndicadas\\\":[5],\\\"sesionCajaId\\\":1,\\\"sesionOperativaId\\\":1,\\\"ubicacionId\\\":10,\\\"versionContexto\\\":\\\"e5:v1:e08e6cebd1d19b5b56a3caad0eabf28011dcbd9afc1c6dd7c718d6874cd12f99\\\"}}\",\"response\":{\"id\": \"01455046-d5fb-4c4e-8ad4-610612c19a4b\", \"estado\": \"PENDIENTE\", \"receptor\": {\"id\": 2, \"nombre\": \"receipt_1_caja_receive\"}, \"rechazos\": [], \"reciboId\": \"657d826b-03c4-45b2-aeaa-dd58601df80b\", \"revision\": 1, \"clienteId\": 12, \"formaPago\": \"EFECTIVO\", \"avisoAdmin\": false, \"propuestas\": [], \"capacidades\": {\"puedeRecibir\": true, \"puedeDevolver\": false, \"puedeImprimir\": false, \"puedePreparar\": false, \"puedeRechazar\": false, \"puedeAutorizar\": false, \"puedeVerAvisos\": false, \"preparacionADisponible\": false}, \"ubicacionId\": 10, \"aplicaciones\": [], \"sesionCajaId\": 1, \"clienteNombre\": \"Receipt 1 browser-e5-retained\", \"cuentaDestino\": \"CAJA_FISICA\", \"antiguedadDias\": 0, \"fechaRecepcion\": \"2026-10-01T23:37:55.014Z\", \"notasIndicadas\": [{\"fecha\": \"2026-10-01T23:31:59.369Z\", \"folio\": \"13004\", \"notaId\": 5, \"facturada\": false, \"ubicacionId\": 10, \"saldoPendiente\": \"10.00\", \"movimientoVentaId\": 5}], \"importeAplicado\": \"0.00\", \"importeDevuelto\": \"0.00\", \"importeRecibido\": \"10.00\", \"ubicacionNombre\": \"Receipt isolated own\", \"importePendiente\": \"10.00\", \"algunaVezAplicado\": false, \"sesionOperativaId\": 1, \"evidenciaRecepcion\": {\"descripcion\": \"Prueba aislada de recepción en efectivo; fixture browser-e5-retained.\", \"referencias\": [\"receipt-terminal-runtime browser-e5-retained\"]}},\"birth_xid\":\"1920\"}",
+      "{\"clave\":\"3662a782-2788-4045-8cbd-efbb15382f0b\",\"cobro_id\":\"3662a782-2788-4045-8cbd-efbb15382f0b\",\"revision\":1,\"accion\":\"RECIBIR\",\"actor_id\":1,\"content\":\"{\\\"action\\\":\\\"RECIBIR\\\",\\\"id\\\":null,\\\"input\\\":{\\\"claveOperacion\\\":\\\"3662a782-2788-4045-8cbd-efbb15382f0b\\\",\\\"clienteId\\\":14,\\\"cuentaDestino\\\":\\\"CUENTA_FISCAL\\\",\\\"entrada\\\":\\\"CAJA\\\",\\\"evidencia\\\":{\\\"descripcion\\\":\\\"Native isolated receipt fixture\\\",\\\"referencias\\\":[\\\"receipt-terminal-runtime\\\"]},\\\"formaPago\\\":\\\"TRANSFERENCIA\\\",\\\"importe\\\":\\\"10.00\\\",\\\"notasIndicadas\\\":[7],\\\"sesionOperativaId\\\":2,\\\"ubicacionId\\\":11,\\\"versionContexto\\\":\\\"e5:v1:28f906f100d1759426078fdd8b7e5e401c6957b71479e1b122b6b2faafc9a180\\\"}}\",\"response\":{\"id\": \"3662a782-2788-4045-8cbd-efbb15382f0b\", \"estado\": \"PENDIENTE\", \"receptor\": {\"id\": 1, \"nombre\": \"Administrador\"}, \"rechazos\": [], \"reciboId\": \"1c8ef97c-2a09-4c7e-8f61-23dcc740516b\", \"revision\": 1, \"clienteId\": 14, \"formaPago\": \"TRANSFERENCIA\", \"avisoAdmin\": false, \"propuestas\": [], \"capacidades\": {\"puedeRecibir\": true, \"puedeDevolver\": false, \"puedeImprimir\": true, \"puedePreparar\": true, \"puedeRechazar\": false, \"puedeAutorizar\": true, \"puedeVerAvisos\": true, \"preparacionADisponible\": false}, \"ubicacionId\": 11, \"aplicaciones\": [], \"clienteNombre\": \"Receipt 2 api-e5\", \"cuentaDestino\": \"CUENTA_FISCAL\", \"antiguedadDias\": 0, \"fechaRecepcion\": \"2026-10-01T23:32:05.435Z\", \"notasIndicadas\": [{\"fecha\": \"2026-10-01T23:31:59.480Z\", \"folio\": \"13006\", \"notaId\": 7, \"facturada\": false, \"ubicacionId\": 11, \"saldoPendiente\": \"10.00\", \"movimientoVentaId\": 7}], \"importeAplicado\": \"0.00\", \"importeDevuelto\": \"0.00\", \"importeRecibido\": \"10.00\", \"ubicacionNombre\": \"Receipt isolated other\", \"importePendiente\": \"10.00\", \"algunaVezAplicado\": false, \"sesionOperativaId\": 2, \"evidenciaRecepcion\": {\"descripcion\": \"Native isolated receipt fixture\", \"referencias\": [\"receipt-terminal-runtime\"]}},\"birth_xid\":\"1580\"}",
+      "{\"clave\":\"9c445b81-4567-45b5-80cc-700497db27d6\",\"cobro_id\":\"9c445b81-4567-45b5-80cc-700497db27d6\",\"revision\":1,\"accion\":\"RECIBIR\",\"actor_id\":2,\"content\":\"{\\\"action\\\":\\\"RECIBIR\\\",\\\"id\\\":null,\\\"input\\\":{\\\"claveOperacion\\\":\\\"9c445b81-4567-45b5-80cc-700497db27d6\\\",\\\"clienteId\\\":11,\\\"cuentaDestino\\\":\\\"CUENTA_FISCAL\\\",\\\"entrada\\\":\\\"CAJA\\\",\\\"evidencia\\\":{\\\"descripcion\\\":\\\"Prueba aislada de recepción por transferencia; fixture browser-e5-directed.\\\",\\\"referencias\\\":[\\\"receipt-terminal-runtime browser-e5-directed\\\"]},\\\"formaPago\\\":\\\"TRANSFERENCIA\\\",\\\"importe\\\":\\\"10.00\\\",\\\"notasIndicadas\\\":[4],\\\"sesionOperativaId\\\":1,\\\"ubicacionId\\\":10,\\\"versionContexto\\\":\\\"e5:v1:fc5932a7f3c1b4776a0a0400eb98840406b90e95fcfc4e9279c8c64d357b7273\\\"}}\",\"response\":{\"id\": \"9c445b81-4567-45b5-80cc-700497db27d6\", \"estado\": \"PENDIENTE\", \"receptor\": {\"id\": 2, \"nombre\": \"receipt_1_caja_receive\"}, \"rechazos\": [], \"reciboId\": \"d9d81b61-b04d-4e0e-b58b-002cfddb7d47\", \"revision\": 1, \"clienteId\": 11, \"formaPago\": \"TRANSFERENCIA\", \"avisoAdmin\": false, \"propuestas\": [], \"capacidades\": {\"puedeRecibir\": true, \"puedeDevolver\": false, \"puedeImprimir\": false, \"puedePreparar\": false, \"puedeRechazar\": false, \"puedeAutorizar\": false, \"puedeVerAvisos\": false, \"preparacionADisponible\": false}, \"ubicacionId\": 10, \"aplicaciones\": [], \"clienteNombre\": \"Receipt 1 browser-e5-directed\", \"cuentaDestino\": \"CUENTA_FISCAL\", \"antiguedadDias\": 0, \"fechaRecepcion\": \"2026-10-01T23:36:20.266Z\", \"notasIndicadas\": [{\"fecha\": \"2026-10-01T23:31:59.354Z\", \"folio\": \"13003\", \"notaId\": 4, \"facturada\": false, \"ubicacionId\": 10, \"saldoPendiente\": \"10.00\", \"movimientoVentaId\": 4}], \"importeAplicado\": \"0.00\", \"importeDevuelto\": \"0.00\", \"importeRecibido\": \"10.00\", \"ubicacionNombre\": \"Receipt isolated own\", \"importePendiente\": \"10.00\", \"algunaVezAplicado\": false, \"sesionOperativaId\": 1, \"evidenciaRecepcion\": {\"descripcion\": \"Prueba aislada de recepción por transferencia; fixture browser-e5-directed.\", \"referencias\": [\"receipt-terminal-runtime browser-e5-directed\"]}},\"birth_xid\":\"1820\"}",
+      "{\"clave\":\"a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7\",\"cobro_id\":\"a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7\",\"revision\":1,\"accion\":\"RECIBIR\",\"actor_id\":1,\"content\":\"{\\\"action\\\":\\\"RECIBIR\\\",\\\"id\\\":null,\\\"input\\\":{\\\"claveOperacion\\\":\\\"a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7\\\",\\\"clienteId\\\":9,\\\"cuentaDestino\\\":\\\"CUENTA_FISCAL\\\",\\\"entrada\\\":\\\"CAJA\\\",\\\"evidencia\\\":{\\\"descripcion\\\":\\\"Native isolated receipt fixture\\\",\\\"referencias\\\":[\\\"receipt-terminal-runtime\\\"]},\\\"formaPago\\\":\\\"TRANSFERENCIA\\\",\\\"importe\\\":\\\"10.00\\\",\\\"notasIndicadas\\\":[2],\\\"sesionOperativaId\\\":1,\\\"ubicacionId\\\":10,\\\"versionContexto\\\":\\\"e5:v1:7cfea4564df7e390ddc49e1b341075f3e9328ed3507ac98e2bebdce8d9bade87\\\"}}\",\"response\":{\"id\": \"a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7\", \"estado\": \"PENDIENTE\", \"receptor\": {\"id\": 1, \"nombre\": \"Administrador\"}, \"rechazos\": [], \"reciboId\": \"4e0c9b7e-4df1-4581-80b5-9df24b4026fb\", \"revision\": 1, \"clienteId\": 9, \"formaPago\": \"TRANSFERENCIA\", \"avisoAdmin\": false, \"propuestas\": [], \"capacidades\": {\"puedeRecibir\": true, \"puedeDevolver\": false, \"puedeImprimir\": true, \"puedePreparar\": true, \"puedeRechazar\": false, \"puedeAutorizar\": true, \"puedeVerAvisos\": true, \"preparacionADisponible\": false}, \"ubicacionId\": 10, \"aplicaciones\": [], \"clienteNombre\": \"Receipt 1 api-e5\", \"cuentaDestino\": \"CUENTA_FISCAL\", \"antiguedadDias\": 0, \"fechaRecepcion\": \"2026-10-01T23:32:05.002Z\", \"notasIndicadas\": [{\"fecha\": \"2026-10-01T23:31:59.320Z\", \"folio\": \"13001\", \"notaId\": 2, \"facturada\": false, \"ubicacionId\": 10, \"saldoPendiente\": \"10.00\", \"movimientoVentaId\": 2}], \"importeAplicado\": \"0.00\", \"importeDevuelto\": \"0.00\", \"importeRecibido\": \"10.00\", \"ubicacionNombre\": \"Receipt isolated own\", \"importePendiente\": \"10.00\", \"algunaVezAplicado\": false, \"sesionOperativaId\": 1, \"evidenciaRecepcion\": {\"descripcion\": \"Native isolated receipt fixture\", \"referencias\": [\"receipt-terminal-runtime\"]}},\"birth_xid\":\"1555\"}"
+    ]
+  },
+  "e5_recepciones": {
+    "count": 4,
+    "sha256": "6fad7b309d744ae183e06e17c5a74bc7752cface3fbd8b4249462704cf132002",
+    "rows": [
+      "{\"id\":\"01455046-d5fb-4c4e-8ad4-610612c19a4b\",\"cliente_id\":12,\"ubicacion_id\":10,\"importe\":10.00,\"fecha_recepcion\":\"2026-10-01T23:37:55.014+00:00\",\"medio\":\"EFECTIVO\",\"cuenta_destino\":\"CAJA_FISICA\",\"sesion_caja_id\":1,\"actor_id\":2,\"snapshot\":{\"id\": \"01455046-d5fb-4c4e-8ad4-610612c19a4b\", \"estado\": \"PENDIENTE\", \"receptor\": {\"id\": 2, \"nombre\": \"receipt_1_caja_receive\"}, \"rechazos\": [], \"reciboId\": \"657d826b-03c4-45b2-aeaa-dd58601df80b\", \"revision\": 1, \"clienteId\": 12, \"formaPago\": \"EFECTIVO\", \"avisoAdmin\": false, \"propuestas\": [], \"capacidades\": {\"puedeRecibir\": true, \"puedeDevolver\": false, \"puedeImprimir\": false, \"puedePreparar\": false, \"puedeRechazar\": false, \"puedeAutorizar\": false, \"puedeVerAvisos\": false, \"preparacionADisponible\": false}, \"ubicacionId\": 10, \"aplicaciones\": [], \"sesionCajaId\": 1, \"clienteNombre\": \"Receipt 1 browser-e5-retained\", \"cuentaDestino\": \"CAJA_FISICA\", \"antiguedadDias\": 0, \"fechaRecepcion\": \"2026-10-01T23:37:55.014Z\", \"notasIndicadas\": [{\"fecha\": \"2026-10-01T23:31:59.369Z\", \"folio\": \"13004\", \"notaId\": 5, \"facturada\": false, \"ubicacionId\": 10, \"saldoPendiente\": \"10.00\", \"movimientoVentaId\": 5}], \"importeAplicado\": \"0.00\", \"importeDevuelto\": \"0.00\", \"importeRecibido\": \"10.00\", \"ubicacionNombre\": \"Receipt isolated own\", \"importePendiente\": \"10.00\", \"algunaVezAplicado\": false, \"sesionOperativaId\": 1, \"evidenciaRecepcion\": {\"descripcion\": \"Prueba aislada de recepción en efectivo; fixture browser-e5-retained.\", \"referencias\": [\"receipt-terminal-runtime browser-e5-retained\"]}},\"birth_xid\":\"1920\"}",
+      "{\"id\":\"3662a782-2788-4045-8cbd-efbb15382f0b\",\"cliente_id\":14,\"ubicacion_id\":11,\"importe\":10.00,\"fecha_recepcion\":\"2026-10-01T23:32:05.435+00:00\",\"medio\":\"TRANSFERENCIA\",\"cuenta_destino\":\"CUENTA_FISCAL\",\"sesion_caja_id\":null,\"actor_id\":1,\"snapshot\":{\"id\": \"3662a782-2788-4045-8cbd-efbb15382f0b\", \"estado\": \"PENDIENTE\", \"receptor\": {\"id\": 1, \"nombre\": \"Administrador\"}, \"rechazos\": [], \"reciboId\": \"1c8ef97c-2a09-4c7e-8f61-23dcc740516b\", \"revision\": 1, \"clienteId\": 14, \"formaPago\": \"TRANSFERENCIA\", \"avisoAdmin\": false, \"propuestas\": [], \"capacidades\": {\"puedeRecibir\": true, \"puedeDevolver\": false, \"puedeImprimir\": true, \"puedePreparar\": true, \"puedeRechazar\": false, \"puedeAutorizar\": true, \"puedeVerAvisos\": true, \"preparacionADisponible\": false}, \"ubicacionId\": 11, \"aplicaciones\": [], \"clienteNombre\": \"Receipt 2 api-e5\", \"cuentaDestino\": \"CUENTA_FISCAL\", \"antiguedadDias\": 0, \"fechaRecepcion\": \"2026-10-01T23:32:05.435Z\", \"notasIndicadas\": [{\"fecha\": \"2026-10-01T23:31:59.480Z\", \"folio\": \"13006\", \"notaId\": 7, \"facturada\": false, \"ubicacionId\": 11, \"saldoPendiente\": \"10.00\", \"movimientoVentaId\": 7}], \"importeAplicado\": \"0.00\", \"importeDevuelto\": \"0.00\", \"importeRecibido\": \"10.00\", \"ubicacionNombre\": \"Receipt isolated other\", \"importePendiente\": \"10.00\", \"algunaVezAplicado\": false, \"sesionOperativaId\": 2, \"evidenciaRecepcion\": {\"descripcion\": \"Native isolated receipt fixture\", \"referencias\": [\"receipt-terminal-runtime\"]}},\"birth_xid\":\"1580\"}",
+      "{\"id\":\"9c445b81-4567-45b5-80cc-700497db27d6\",\"cliente_id\":11,\"ubicacion_id\":10,\"importe\":10.00,\"fecha_recepcion\":\"2026-10-01T23:36:20.266+00:00\",\"medio\":\"TRANSFERENCIA\",\"cuenta_destino\":\"CUENTA_FISCAL\",\"sesion_caja_id\":null,\"actor_id\":2,\"snapshot\":{\"id\": \"9c445b81-4567-45b5-80cc-700497db27d6\", \"estado\": \"PENDIENTE\", \"receptor\": {\"id\": 2, \"nombre\": \"receipt_1_caja_receive\"}, \"rechazos\": [], \"reciboId\": \"d9d81b61-b04d-4e0e-b58b-002cfddb7d47\", \"revision\": 1, \"clienteId\": 11, \"formaPago\": \"TRANSFERENCIA\", \"avisoAdmin\": false, \"propuestas\": [], \"capacidades\": {\"puedeRecibir\": true, \"puedeDevolver\": false, \"puedeImprimir\": false, \"puedePreparar\": false, \"puedeRechazar\": false, \"puedeAutorizar\": false, \"puedeVerAvisos\": false, \"preparacionADisponible\": false}, \"ubicacionId\": 10, \"aplicaciones\": [], \"clienteNombre\": \"Receipt 1 browser-e5-directed\", \"cuentaDestino\": \"CUENTA_FISCAL\", \"antiguedadDias\": 0, \"fechaRecepcion\": \"2026-10-01T23:36:20.266Z\", \"notasIndicadas\": [{\"fecha\": \"2026-10-01T23:31:59.354Z\", \"folio\": \"13003\", \"notaId\": 4, \"facturada\": false, \"ubicacionId\": 10, \"saldoPendiente\": \"10.00\", \"movimientoVentaId\": 4}], \"importeAplicado\": \"0.00\", \"importeDevuelto\": \"0.00\", \"importeRecibido\": \"10.00\", \"ubicacionNombre\": \"Receipt isolated own\", \"importePendiente\": \"10.00\", \"algunaVezAplicado\": false, \"sesionOperativaId\": 1, \"evidenciaRecepcion\": {\"descripcion\": \"Prueba aislada de recepción por transferencia; fixture browser-e5-directed.\", \"referencias\": [\"receipt-terminal-runtime browser-e5-directed\"]}},\"birth_xid\":\"1820\"}",
+      "{\"id\":\"a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7\",\"cliente_id\":9,\"ubicacion_id\":10,\"importe\":10.00,\"fecha_recepcion\":\"2026-10-01T23:32:05.002+00:00\",\"medio\":\"TRANSFERENCIA\",\"cuenta_destino\":\"CUENTA_FISCAL\",\"sesion_caja_id\":null,\"actor_id\":1,\"snapshot\":{\"id\": \"a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7\", \"estado\": \"PENDIENTE\", \"receptor\": {\"id\": 1, \"nombre\": \"Administrador\"}, \"rechazos\": [], \"reciboId\": \"4e0c9b7e-4df1-4581-80b5-9df24b4026fb\", \"revision\": 1, \"clienteId\": 9, \"formaPago\": \"TRANSFERENCIA\", \"avisoAdmin\": false, \"propuestas\": [], \"capacidades\": {\"puedeRecibir\": true, \"puedeDevolver\": false, \"puedeImprimir\": true, \"puedePreparar\": true, \"puedeRechazar\": false, \"puedeAutorizar\": true, \"puedeVerAvisos\": true, \"preparacionADisponible\": false}, \"ubicacionId\": 10, \"aplicaciones\": [], \"clienteNombre\": \"Receipt 1 api-e5\", \"cuentaDestino\": \"CUENTA_FISCAL\", \"antiguedadDias\": 0, \"fechaRecepcion\": \"2026-10-01T23:32:05.002Z\", \"notasIndicadas\": [{\"fecha\": \"2026-10-01T23:31:59.320Z\", \"folio\": \"13001\", \"notaId\": 2, \"facturada\": false, \"ubicacionId\": 10, \"saldoPendiente\": \"10.00\", \"movimientoVentaId\": 2}], \"importeAplicado\": \"0.00\", \"importeDevuelto\": \"0.00\", \"importeRecibido\": \"10.00\", \"ubicacionNombre\": \"Receipt isolated own\", \"importePendiente\": \"10.00\", \"algunaVezAplicado\": false, \"sesionOperativaId\": 1, \"evidenciaRecepcion\": {\"descripcion\": \"Native isolated receipt fixture\", \"referencias\": [\"receipt-terminal-runtime\"]}},\"birth_xid\":\"1555\"}"
+    ]
+  },
+  "e5_salidas_bancarias": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "e5_vinculos_credito": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "fondo_arqueos": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "fondo_mariana": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "fondo_movimientos": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "movimientos_credito": {
+    "count": 13,
+    "sha256": "11ed6aae225d9619f05d629729537ffbd856c04e825dceabdd21e6c682414366",
+    "rows": [
+      "{\"id\":1,\"cliente_id\":8,\"ticket_id\":1,\"movimiento_origen_id\":null,\"tipo\":\"VENTA_CREDITO\",\"importe\":10.00,\"usuario_id\":1,\"notas\":null,\"forma_pago\":null,\"cuenta_destino\":null,\"referencia\":null,\"metadata\":null,\"dias_plazo\":null,\"fecha_vencimiento\":null,\"es_incobrable\":false,\"motivo_incobrable\":null,\"sitio_origen_id\":10,\"sesion_caja_id\":null,\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"operacion_productor\":\"VENTA_CREDITO\",\"operacion_clave\":\"3bd91b9a-80db-4fac-97fa-e69038908869\",\"nota_origen_id\":null,\"origen_justificacion\":null,\"autorizado_por\":null,\"created_at\":\"2026-10-01T23:31:59.301086+00:00\",\"e2_insert_xid\":\"1420\"}",
+      "{\"id\":10,\"cliente_id\":17,\"ticket_id\":10,\"movimiento_origen_id\":null,\"tipo\":\"VENTA_CREDITO\",\"importe\":10.00,\"usuario_id\":1,\"notas\":null,\"forma_pago\":null,\"cuenta_destino\":null,\"referencia\":null,\"metadata\":null,\"dias_plazo\":null,\"fecha_vencimiento\":null,\"es_incobrable\":false,\"motivo_incobrable\":null,\"sitio_origen_id\":11,\"sesion_caja_id\":null,\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"operacion_productor\":\"VENTA_CREDITO\",\"operacion_clave\":\"555cea62-5f3d-476c-b20b-3fcdde466f99\",\"nota_origen_id\":null,\"origen_justificacion\":null,\"autorizado_por\":null,\"created_at\":\"2026-10-01T23:31:59.530128+00:00\",\"e2_insert_xid\":\"1459\"}",
+      "{\"id\":11,\"cliente_id\":8,\"ticket_id\":null,\"movimiento_origen_id\":null,\"tipo\":\"ABONO\",\"importe\":-10.00,\"usuario_id\":1,\"notas\":\"Abono real recibido desde Caja\",\"forma_pago\":\"TRANSFERENCIA\",\"cuenta_destino\":\"CUENTA_FISCAL\",\"referencia\":null,\"metadata\":\"{\\\"origen\\\":\\\"CAJA\\\",\\\"operacionE3\\\":\\\"51a4964e-ae11-4e3e-b80a-fb342068c33e\\\"}\",\"dias_plazo\":null,\"fecha_vencimiento\":null,\"es_incobrable\":false,\"motivo_incobrable\":null,\"sitio_origen_id\":10,\"sesion_caja_id\":null,\"naturaleza\":\"INGRESO_FISICO\",\"operacion_productor\":\"ABONO_ORDINARIO\",\"operacion_clave\":\"51a4964e-ae11-4e3e-b80a-fb342068c33e\",\"nota_origen_id\":null,\"origen_justificacion\":null,\"autorizado_por\":null,\"created_at\":\"2026-10-01T23:32:04.811+00:00\",\"e2_insert_xid\":\"1511\"}",
+      "{\"id\":12,\"cliente_id\":13,\"ticket_id\":null,\"movimiento_origen_id\":null,\"tipo\":\"ABONO\",\"importe\":-10.00,\"usuario_id\":1,\"notas\":\"Abono real recibido desde Caja\",\"forma_pago\":\"TRANSFERENCIA\",\"cuenta_destino\":\"CUENTA_FISCAL\",\"referencia\":null,\"metadata\":\"{\\\"origen\\\":\\\"CAJA\\\",\\\"operacionE3\\\":\\\"47fbb28e-2460-427e-82b1-e1c3739c13e6\\\"}\",\"dias_plazo\":null,\"fecha_vencimiento\":null,\"es_incobrable\":false,\"motivo_incobrable\":null,\"sitio_origen_id\":11,\"sesion_caja_id\":null,\"naturaleza\":\"INGRESO_FISICO\",\"operacion_productor\":\"ABONO_ORDINARIO\",\"operacion_clave\":\"47fbb28e-2460-427e-82b1-e1c3739c13e6\",\"nota_origen_id\":null,\"origen_justificacion\":null,\"autorizado_por\":null,\"created_at\":\"2026-10-01T23:32:05.181+00:00\",\"e2_insert_xid\":\"1570\"}",
+      "{\"id\":13,\"cliente_id\":10,\"ticket_id\":null,\"movimiento_origen_id\":null,\"tipo\":\"ABONO\",\"importe\":-10.00,\"usuario_id\":2,\"notas\":\"Abono real recibido desde Caja\",\"forma_pago\":\"TRANSFERENCIA\",\"cuenta_destino\":\"CUENTA_FISCAL\",\"referencia\":null,\"metadata\":\"{\\\"origen\\\":\\\"CAJA\\\",\\\"operacionE3\\\":\\\"46347f50-36bb-4aed-9d46-484549706c2e\\\"}\",\"dias_plazo\":null,\"fecha_vencimiento\":null,\"es_incobrable\":false,\"motivo_incobrable\":null,\"sitio_origen_id\":10,\"sesion_caja_id\":null,\"naturaleza\":\"INGRESO_FISICO\",\"operacion_productor\":\"ABONO_ORDINARIO\",\"operacion_clave\":\"46347f50-36bb-4aed-9d46-484549706c2e\",\"nota_origen_id\":null,\"origen_justificacion\":null,\"autorizado_por\":null,\"created_at\":\"2026-10-01T23:34:57.703+00:00\",\"e2_insert_xid\":\"1738\"}",
+      "{\"id\":2,\"cliente_id\":9,\"ticket_id\":2,\"movimiento_origen_id\":null,\"tipo\":\"VENTA_CREDITO\",\"importe\":10.00,\"usuario_id\":1,\"notas\":null,\"forma_pago\":null,\"cuenta_destino\":null,\"referencia\":null,\"metadata\":null,\"dias_plazo\":null,\"fecha_vencimiento\":null,\"es_incobrable\":false,\"motivo_incobrable\":null,\"sitio_origen_id\":10,\"sesion_caja_id\":null,\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"operacion_productor\":\"VENTA_CREDITO\",\"operacion_clave\":\"89bb704c-c6ad-42f5-98dc-edd2341a380b\",\"nota_origen_id\":null,\"origen_justificacion\":null,\"autorizado_por\":null,\"created_at\":\"2026-10-01T23:31:59.320408+00:00\",\"e2_insert_xid\":\"1424\"}",
+      "{\"id\":3,\"cliente_id\":10,\"ticket_id\":3,\"movimiento_origen_id\":null,\"tipo\":\"VENTA_CREDITO\",\"importe\":10.00,\"usuario_id\":1,\"notas\":null,\"forma_pago\":null,\"cuenta_destino\":null,\"referencia\":null,\"metadata\":null,\"dias_plazo\":null,\"fecha_vencimiento\":null,\"es_incobrable\":false,\"motivo_incobrable\":null,\"sitio_origen_id\":10,\"sesion_caja_id\":null,\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"operacion_productor\":\"VENTA_CREDITO\",\"operacion_clave\":\"5d865a76-b945-4273-a779-9f5d96a6079f\",\"nota_origen_id\":null,\"origen_justificacion\":null,\"autorizado_por\":null,\"created_at\":\"2026-10-01T23:31:59.33417+00:00\",\"e2_insert_xid\":\"1428\"}",
+      "{\"id\":4,\"cliente_id\":11,\"ticket_id\":4,\"movimiento_origen_id\":null,\"tipo\":\"VENTA_CREDITO\",\"importe\":10.00,\"usuario_id\":1,\"notas\":null,\"forma_pago\":null,\"cuenta_destino\":null,\"referencia\":null,\"metadata\":null,\"dias_plazo\":null,\"fecha_vencimiento\":null,\"es_incobrable\":false,\"motivo_incobrable\":null,\"sitio_origen_id\":10,\"sesion_caja_id\":null,\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"operacion_productor\":\"VENTA_CREDITO\",\"operacion_clave\":\"8a785689-a04b-4b09-b6ed-6138b31075ee\",\"nota_origen_id\":null,\"origen_justificacion\":null,\"autorizado_por\":null,\"created_at\":\"2026-10-01T23:31:59.354257+00:00\",\"e2_insert_xid\":\"1432\"}",
+      "{\"id\":5,\"cliente_id\":12,\"ticket_id\":5,\"movimiento_origen_id\":null,\"tipo\":\"VENTA_CREDITO\",\"importe\":10.00,\"usuario_id\":1,\"notas\":null,\"forma_pago\":null,\"cuenta_destino\":null,\"referencia\":null,\"metadata\":null,\"dias_plazo\":null,\"fecha_vencimiento\":null,\"es_incobrable\":false,\"motivo_incobrable\":null,\"sitio_origen_id\":10,\"sesion_caja_id\":null,\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"operacion_productor\":\"VENTA_CREDITO\",\"operacion_clave\":\"901469dd-71c8-467b-9a93-653709fed9dc\",\"nota_origen_id\":null,\"origen_justificacion\":null,\"autorizado_por\":null,\"created_at\":\"2026-10-01T23:31:59.369139+00:00\",\"e2_insert_xid\":\"1436\"}",
+      "{\"id\":6,\"cliente_id\":13,\"ticket_id\":6,\"movimiento_origen_id\":null,\"tipo\":\"VENTA_CREDITO\",\"importe\":10.00,\"usuario_id\":1,\"notas\":null,\"forma_pago\":null,\"cuenta_destino\":null,\"referencia\":null,\"metadata\":null,\"dias_plazo\":null,\"fecha_vencimiento\":null,\"es_incobrable\":false,\"motivo_incobrable\":null,\"sitio_origen_id\":11,\"sesion_caja_id\":null,\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"operacion_productor\":\"VENTA_CREDITO\",\"operacion_clave\":\"7ce19ab4-c568-4675-9d10-c88628d90015\",\"nota_origen_id\":null,\"origen_justificacion\":null,\"autorizado_por\":null,\"created_at\":\"2026-10-01T23:31:59.462019+00:00\",\"e2_insert_xid\":\"1443\"}",
+      "{\"id\":7,\"cliente_id\":14,\"ticket_id\":7,\"movimiento_origen_id\":null,\"tipo\":\"VENTA_CREDITO\",\"importe\":10.00,\"usuario_id\":1,\"notas\":null,\"forma_pago\":null,\"cuenta_destino\":null,\"referencia\":null,\"metadata\":null,\"dias_plazo\":null,\"fecha_vencimiento\":null,\"es_incobrable\":false,\"motivo_incobrable\":null,\"sitio_origen_id\":11,\"sesion_caja_id\":null,\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"operacion_productor\":\"VENTA_CREDITO\",\"operacion_clave\":\"09bdc103-c4ac-4048-95ca-ae65e6f0a7cc\",\"nota_origen_id\":null,\"origen_justificacion\":null,\"autorizado_por\":null,\"created_at\":\"2026-10-01T23:31:59.48083+00:00\",\"e2_insert_xid\":\"1447\"}",
+      "{\"id\":8,\"cliente_id\":15,\"ticket_id\":8,\"movimiento_origen_id\":null,\"tipo\":\"VENTA_CREDITO\",\"importe\":10.00,\"usuario_id\":1,\"notas\":null,\"forma_pago\":null,\"cuenta_destino\":null,\"referencia\":null,\"metadata\":null,\"dias_plazo\":null,\"fecha_vencimiento\":null,\"es_incobrable\":false,\"motivo_incobrable\":null,\"sitio_origen_id\":11,\"sesion_caja_id\":null,\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"operacion_productor\":\"VENTA_CREDITO\",\"operacion_clave\":\"dab4a69b-b5dc-4e1f-8f0e-e62fb780f350\",\"nota_origen_id\":null,\"origen_justificacion\":null,\"autorizado_por\":null,\"created_at\":\"2026-10-01T23:31:59.497797+00:00\",\"e2_insert_xid\":\"1451\"}",
+      "{\"id\":9,\"cliente_id\":16,\"ticket_id\":9,\"movimiento_origen_id\":null,\"tipo\":\"VENTA_CREDITO\",\"importe\":10.00,\"usuario_id\":1,\"notas\":null,\"forma_pago\":null,\"cuenta_destino\":null,\"referencia\":null,\"metadata\":null,\"dias_plazo\":null,\"fecha_vencimiento\":null,\"es_incobrable\":false,\"motivo_incobrable\":null,\"sitio_origen_id\":11,\"sesion_caja_id\":null,\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"operacion_productor\":\"VENTA_CREDITO\",\"operacion_clave\":\"3935a8f9-1640-43cf-9ccc-cdef2071f73c\",\"nota_origen_id\":null,\"origen_justificacion\":null,\"autorizado_por\":null,\"created_at\":\"2026-10-01T23:31:59.51202+00:00\",\"e2_insert_xid\":\"1455\"}"
+    ]
+  },
+  "notificaciones_credito": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "operaciones_credito_e1": {
+    "count": 17,
+    "sha256": "3f890b8b7bf5d0bafa51dd990085f2d0ebc48d3353e10841bdd0e38fe5043553",
+    "rows": [
+      "{\"productor\":\"ABONO_ORDINARIO\",\"clave\":\"46347f50-36bb-4aed-9d46-484549706c2e\",\"naturaleza\":\"INGRESO_FISICO\",\"usuario_id\":2,\"solicitud_canonica\":{\"intent\": {\"motivo\": null, \"origen\": \"CAJA\", \"importe\": \"10.00\", \"sitioId\": 10, \"clienteId\": 10, \"formaPago\": \"TRANSFERENCIA\", \"sesionCajaId\": 1, \"cuentaDestino\": \"CUENTA_FISCAL\", \"fechaRecepcion\": null}, \"actorId\": 2, \"productor\": \"ABONO_ORDINARIO\", \"naturaleza\": \"INGRESO_FISICO\"},\"created_at\":\"2026-10-01T23:34:57.704047+00:00\"}",
+      "{\"productor\":\"ABONO_ORDINARIO\",\"clave\":\"47fbb28e-2460-427e-82b1-e1c3739c13e6\",\"naturaleza\":\"INGRESO_FISICO\",\"usuario_id\":1,\"solicitud_canonica\":{\"intent\": {\"motivo\": null, \"origen\": \"CAJA\", \"importe\": \"10.00\", \"sitioId\": 11, \"clienteId\": 13, \"formaPago\": \"TRANSFERENCIA\", \"sesionCajaId\": 2, \"cuentaDestino\": \"CUENTA_FISCAL\", \"fechaRecepcion\": null}, \"actorId\": 1, \"productor\": \"ABONO_ORDINARIO\", \"naturaleza\": \"INGRESO_FISICO\"},\"created_at\":\"2026-10-01T23:32:05.182229+00:00\"}",
+      "{\"productor\":\"ABONO_ORDINARIO\",\"clave\":\"51a4964e-ae11-4e3e-b80a-fb342068c33e\",\"naturaleza\":\"INGRESO_FISICO\",\"usuario_id\":1,\"solicitud_canonica\":{\"intent\": {\"motivo\": null, \"origen\": \"CAJA\", \"importe\": \"10.00\", \"sitioId\": 10, \"clienteId\": 8, \"formaPago\": \"TRANSFERENCIA\", \"sesionCajaId\": 1, \"cuentaDestino\": \"CUENTA_FISCAL\", \"fechaRecepcion\": null}, \"actorId\": 1, \"productor\": \"ABONO_ORDINARIO\", \"naturaleza\": \"INGRESO_FISICO\"},\"created_at\":\"2026-10-01T23:32:04.812646+00:00\"}",
+      "{\"productor\":\"COBRO_PENDIENTE\",\"clave\":\"01455046-d5fb-4c4e-8ad4-610612c19a4b\",\"naturaleza\":\"INGRESO_FISICO\",\"usuario_id\":2,\"solicitud_canonica\":{\"actor\": {\"id\": 2, \"nombre\": \"receipt_1_caja_receive\"}, \"input\": {\"entrada\": \"CAJA\", \"importe\": \"10.00\", \"clienteId\": 12, \"evidencia\": {\"descripcion\": \"Prueba aislada de recepción en efectivo; fixture browser-e5-retained.\", \"referencias\": [\"receipt-terminal-runtime browser-e5-retained\"]}, \"formaPago\": \"EFECTIVO\", \"ubicacionId\": 10, \"sesionCajaId\": 1, \"cuentaDestino\": \"CAJA_FISICA\", \"claveOperacion\": \"01455046-d5fb-4c4e-8ad4-610612c19a4b\", \"notasIndicadas\": [5], \"versionContexto\": \"e5:v1:e08e6cebd1d19b5b56a3caad0eabf28011dcbd9afc1c6dd7c718d6874cd12f99\", \"sesionOperativaId\": 1}, \"productor\": \"E5\"},\"created_at\":\"2026-10-01T23:37:55.012562+00:00\"}",
+      "{\"productor\":\"COBRO_PENDIENTE\",\"clave\":\"3662a782-2788-4045-8cbd-efbb15382f0b\",\"naturaleza\":\"INGRESO_FISICO\",\"usuario_id\":1,\"solicitud_canonica\":{\"actor\": {\"id\": 1, \"nombre\": \"Administrador\"}, \"input\": {\"entrada\": \"CAJA\", \"importe\": \"10.00\", \"clienteId\": 14, \"evidencia\": {\"descripcion\": \"Native isolated receipt fixture\", \"referencias\": [\"receipt-terminal-runtime\"]}, \"formaPago\": \"TRANSFERENCIA\", \"ubicacionId\": 11, \"cuentaDestino\": \"CUENTA_FISCAL\", \"claveOperacion\": \"3662a782-2788-4045-8cbd-efbb15382f0b\", \"notasIndicadas\": [7], \"versionContexto\": \"e5:v1:28f906f100d1759426078fdd8b7e5e401c6957b71479e1b122b6b2faafc9a180\", \"sesionOperativaId\": 2}, \"productor\": \"E5\"},\"created_at\":\"2026-10-01T23:32:05.434228+00:00\"}",
+      "{\"productor\":\"COBRO_PENDIENTE\",\"clave\":\"9c445b81-4567-45b5-80cc-700497db27d6\",\"naturaleza\":\"INGRESO_FISICO\",\"usuario_id\":2,\"solicitud_canonica\":{\"actor\": {\"id\": 2, \"nombre\": \"receipt_1_caja_receive\"}, \"input\": {\"entrada\": \"CAJA\", \"importe\": \"10.00\", \"clienteId\": 11, \"evidencia\": {\"descripcion\": \"Prueba aislada de recepción por transferencia; fixture browser-e5-directed.\", \"referencias\": [\"receipt-terminal-runtime browser-e5-directed\"]}, \"formaPago\": \"TRANSFERENCIA\", \"ubicacionId\": 10, \"cuentaDestino\": \"CUENTA_FISCAL\", \"claveOperacion\": \"9c445b81-4567-45b5-80cc-700497db27d6\", \"notasIndicadas\": [4], \"versionContexto\": \"e5:v1:fc5932a7f3c1b4776a0a0400eb98840406b90e95fcfc4e9279c8c64d357b7273\", \"sesionOperativaId\": 1}, \"productor\": \"E5\"},\"created_at\":\"2026-10-01T23:36:20.265514+00:00\"}",
+      "{\"productor\":\"COBRO_PENDIENTE\",\"clave\":\"a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7\",\"naturaleza\":\"INGRESO_FISICO\",\"usuario_id\":1,\"solicitud_canonica\":{\"actor\": {\"id\": 1, \"nombre\": \"Administrador\"}, \"input\": {\"entrada\": \"CAJA\", \"importe\": \"10.00\", \"clienteId\": 9, \"evidencia\": {\"descripcion\": \"Native isolated receipt fixture\", \"referencias\": [\"receipt-terminal-runtime\"]}, \"formaPago\": \"TRANSFERENCIA\", \"ubicacionId\": 10, \"cuentaDestino\": \"CUENTA_FISCAL\", \"claveOperacion\": \"a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7\", \"notasIndicadas\": [2], \"versionContexto\": \"e5:v1:7cfea4564df7e390ddc49e1b341075f3e9328ed3507ac98e2bebdce8d9bade87\", \"sesionOperativaId\": 1}, \"productor\": \"E5\"},\"created_at\":\"2026-10-01T23:32:05.000514+00:00\"}",
+      "{\"productor\":\"VENTA_CREDITO\",\"clave\":\"09bdc103-c4ac-4048-95ca-ae65e6f0a7cc\",\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"usuario_id\":1,\"solicitud_canonica\":{\"fixture\": \"receipt-terminal-native\"},\"created_at\":\"2026-10-01T23:31:59.4768+00:00\"}",
+      "{\"productor\":\"VENTA_CREDITO\",\"clave\":\"3935a8f9-1640-43cf-9ccc-cdef2071f73c\",\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"usuario_id\":1,\"solicitud_canonica\":{\"fixture\": \"receipt-terminal-native\"},\"created_at\":\"2026-10-01T23:31:59.508025+00:00\"}",
+      "{\"productor\":\"VENTA_CREDITO\",\"clave\":\"3bd91b9a-80db-4fac-97fa-e69038908869\",\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"usuario_id\":1,\"solicitud_canonica\":{\"fixture\": \"receipt-terminal-native\"},\"created_at\":\"2026-10-01T23:31:59.292675+00:00\"}",
+      "{\"productor\":\"VENTA_CREDITO\",\"clave\":\"555cea62-5f3d-476c-b20b-3fcdde466f99\",\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"usuario_id\":1,\"solicitud_canonica\":{\"fixture\": \"receipt-terminal-native\"},\"created_at\":\"2026-10-01T23:31:59.526167+00:00\"}",
+      "{\"productor\":\"VENTA_CREDITO\",\"clave\":\"5d865a76-b945-4273-a779-9f5d96a6079f\",\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"usuario_id\":1,\"solicitud_canonica\":{\"fixture\": \"receipt-terminal-native\"},\"created_at\":\"2026-10-01T23:31:59.33086+00:00\"}",
+      "{\"productor\":\"VENTA_CREDITO\",\"clave\":\"7ce19ab4-c568-4675-9d10-c88628d90015\",\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"usuario_id\":1,\"solicitud_canonica\":{\"fixture\": \"receipt-terminal-native\"},\"created_at\":\"2026-10-01T23:31:59.458354+00:00\"}",
+      "{\"productor\":\"VENTA_CREDITO\",\"clave\":\"89bb704c-c6ad-42f5-98dc-edd2341a380b\",\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"usuario_id\":1,\"solicitud_canonica\":{\"fixture\": \"receipt-terminal-native\"},\"created_at\":\"2026-10-01T23:31:59.316894+00:00\"}",
+      "{\"productor\":\"VENTA_CREDITO\",\"clave\":\"8a785689-a04b-4b09-b6ed-6138b31075ee\",\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"usuario_id\":1,\"solicitud_canonica\":{\"fixture\": \"receipt-terminal-native\"},\"created_at\":\"2026-10-01T23:31:59.347891+00:00\"}",
+      "{\"productor\":\"VENTA_CREDITO\",\"clave\":\"901469dd-71c8-467b-9a93-653709fed9dc\",\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"usuario_id\":1,\"solicitud_canonica\":{\"fixture\": \"receipt-terminal-native\"},\"created_at\":\"2026-10-01T23:31:59.365204+00:00\"}",
+      "{\"productor\":\"VENTA_CREDITO\",\"clave\":\"dab4a69b-b5dc-4e1f-8f0e-e62fb780f350\",\"naturaleza\":\"OPERACION_CREDITO_SIN_DINERO\",\"usuario_id\":1,\"solicitud_canonica\":{\"fixture\": \"receipt-terminal-native\"},\"created_at\":\"2026-10-01T23:31:59.491967+00:00\"}"
+    ]
+  },
+  "recibo_folio_e3": {
+    "count": 2,
+    "sha256": "f35f83d61cc6f00f8f928af9519c2712f6c1c2db6a42c6fa108bef41445c890a",
+    "rows": [
+      "{\"sitio_id\":10,\"ultimo_folio\":2}",
+      "{\"sitio_id\":11,\"ultimo_folio\":1}"
+    ]
+  },
+  "recibos_abono_e3": {
+    "count": 3,
+    "sha256": "dfed7ff1c49ad1e5230e15079eaa126ef29606a6b1f3d37d86b6629a37d9aeff",
+    "rows": [
+      "{\"operacion_clave\":\"46347f50-36bb-4aed-9d46-484549706c2e\",\"intent_hash\":\"f7b4d4e60219aa4dffaaa74f6fa99f5bd5ca9d63f9aa59b3038cb5c5de0ce458\",\"folio\":\"E3-10-00000002\",\"movimiento_id\":13,\"cliente_id\":10,\"sesion_operativa_id\":1,\"origen\":\"CAJA\",\"snapshot\":{\"folio\": \"E3-10-00000002\", \"motivo\": null, \"origen\": \"CAJA\", \"actorId\": 2, \"sitioId\": 10, \"version\": 1, \"clienteId\": 10, \"formaPago\": \"TRANSFERENCIA\", \"clienteRfc\": null, \"recibidoEn\": \"2026-10-01T23:34:57.703Z\", \"actorNombre\": \"receipt_1_caja_receive\", \"sitioNombre\": \"Receipt isolated own\", \"asignaciones\": [{\"folio\": 13002, \"ticketId\": 3, \"aplicadoCentavos\": 1000, \"movimientoVentaId\": 3, \"saldoAntesCentavos\": 1000, \"saldoDespuesCentavos\": 0}], \"movimientoId\": 13, \"registradoEn\": \"2026-10-01T23:34:57.703Z\", \"sesionCajaId\": 1, \"clienteNombre\": \"Receipt 1 browser-e3\", \"cuentaDestino\": \"CUENTA_FISCAL\", \"deudaCentavos\": 0, \"clienteTelefono\": null, \"importeCentavos\": 1000, \"remanenteCentavos\": 0, \"saldoAFavorCentavos\": 0}}",
+      "{\"operacion_clave\":\"47fbb28e-2460-427e-82b1-e1c3739c13e6\",\"intent_hash\":\"13d68fdcb4d02f8ce58ead69297cbdf98e49aad785e0d94d4e3c250589ca57b2\",\"folio\":\"E3-11-00000001\",\"movimiento_id\":12,\"cliente_id\":13,\"sesion_operativa_id\":2,\"origen\":\"CAJA\",\"snapshot\":{\"folio\": \"E3-11-00000001\", \"motivo\": null, \"origen\": \"CAJA\", \"actorId\": 1, \"sitioId\": 11, \"version\": 1, \"clienteId\": 13, \"formaPago\": \"TRANSFERENCIA\", \"clienteRfc\": null, \"recibidoEn\": \"2026-10-01T23:32:05.181Z\", \"actorNombre\": \"Administrador\", \"sitioNombre\": \"Receipt isolated other\", \"asignaciones\": [{\"folio\": 13005, \"ticketId\": 6, \"aplicadoCentavos\": 1000, \"movimientoVentaId\": 6, \"saldoAntesCentavos\": 1000, \"saldoDespuesCentavos\": 0}], \"movimientoId\": 12, \"registradoEn\": \"2026-10-01T23:32:05.181Z\", \"sesionCajaId\": 2, \"clienteNombre\": \"Receipt 2 api-e3\", \"cuentaDestino\": \"CUENTA_FISCAL\", \"deudaCentavos\": 0, \"clienteTelefono\": null, \"importeCentavos\": 1000, \"remanenteCentavos\": 0, \"saldoAFavorCentavos\": 0}}",
+      "{\"operacion_clave\":\"51a4964e-ae11-4e3e-b80a-fb342068c33e\",\"intent_hash\":\"cc18b8d3b8910dc6b891ed374e09b9f7003544bb7724dee7912db542b3aa88e2\",\"folio\":\"E3-10-00000001\",\"movimiento_id\":11,\"cliente_id\":8,\"sesion_operativa_id\":1,\"origen\":\"CAJA\",\"snapshot\":{\"folio\": \"E3-10-00000001\", \"motivo\": null, \"origen\": \"CAJA\", \"actorId\": 1, \"sitioId\": 10, \"version\": 1, \"clienteId\": 8, \"formaPago\": \"TRANSFERENCIA\", \"clienteRfc\": null, \"recibidoEn\": \"2026-10-01T23:32:04.811Z\", \"actorNombre\": \"Administrador\", \"sitioNombre\": \"Receipt isolated own\", \"asignaciones\": [{\"folio\": 13000, \"ticketId\": 1, \"aplicadoCentavos\": 1000, \"movimientoVentaId\": 1, \"saldoAntesCentavos\": 1000, \"saldoDespuesCentavos\": 0}], \"movimientoId\": 11, \"registradoEn\": \"2026-10-01T23:32:04.811Z\", \"sesionCajaId\": 1, \"clienteNombre\": \"Receipt 1 api-e3\", \"cuentaDestino\": \"CUENTA_FISCAL\", \"deudaCentavos\": 0, \"clienteTelefono\": null, \"importeCentavos\": 1000, \"remanenteCentavos\": 0, \"saldoAFavorCentavos\": 0}}"
+    ]
+  },
+  "salidas_dinero_caja": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "sesiones_caja": {
+    "count": 2,
+    "sha256": "c070263b64f54c76e6f545e38e50f023457b147036c6c493c769de2bbd8935e7",
+    "rows": [
+      "{\"id\":1,\"ubicacion_id\":10,\"usuario_id\":1,\"abierta_at\":\"2026-10-01T23:32:04.697659+00:00\",\"fecha_operativa\":\"2026-10-01\",\"cerrada_at\":null,\"cerrada_por_id\":null,\"fondo_inicial\":0.00,\"efectivo_contado\":null,\"estado\":\"ABIERTA\"}",
+      "{\"id\":2,\"ubicacion_id\":11,\"usuario_id\":1,\"abierta_at\":\"2026-10-01T23:32:05.118018+00:00\",\"fecha_operativa\":\"2026-10-01\",\"cerrada_at\":null,\"cerrada_por_id\":null,\"fondo_inicial\":0.00,\"efectivo_contado\":null,\"estado\":\"ABIERTA\"}"
+    ]
+  },
+  "sesiones_caja_dias": {
+    "count": 2,
+    "sha256": "9e03a8f20d32376d0dce6b21a51a40e302bb3edee9d4e6ebc277eac43db02627",
+    "rows": [
+      "{\"ubicacion_id\":10,\"fecha_operativa\":\"2026-10-01\",\"sesion_caja_id\":1}",
+      "{\"ubicacion_id\":11,\"fecha_operativa\":\"2026-10-01\",\"sesion_caja_id\":2}"
+    ]
+  },
+  "ticket_folio": {
+    "count": 1,
+    "sha256": "fdd80d79eb2a9821211a4a855ddf388748aea4db45acb2e0f7ad6571bbc1691f",
+    "rows": [
+      "{\"id\":1,\"ultimo_folio\":999}"
+    ]
+  },
+  "ticket_linea_consumos": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "ticket_lineas": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "ticket_pagos": {
+    "count": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "rows": []
+  },
+  "tickets": {
+    "count": 10,
+    "sha256": "fdcd27c7b614789e92eb21acb0851bbcc43cadf8c401cf99136ff07d83e3fcbc",
+    "rows": [
+      "{\"id\":1,\"folio\":13000,\"ubicacion_id\":10,\"usuario_terminal_id\":1,\"cliente_id\":8,\"documento_tipo\":\"NOTA\",\"nota_sin_precios\":false,\"nombre_destinatario\":null,\"direccion_entrega_snapshot\":null,\"subtotal\":10.00,\"iva\":0.00,\"tasa_iva\":0.0000,\"total\":10.00,\"estado\":\"VENDIDO\",\"cobrado\":true,\"cobrado_at\":null,\"usuario_caja_id\":null,\"facturado\":false,\"credito\":true,\"dias_plazo\":30,\"fecha_vencimiento\":\"2026-10-31\",\"sesion_caja_id\":null,\"uuid_cliente\":\"3bd91b9a-80db-4fac-97fa-e69038908869\",\"created_at\":\"2026-10-01T23:31:59.284719+00:00\",\"cancelado_at\":null,\"cancelado_por\":null,\"motivo_cancelacion\":null,\"autorizado_por\":null,\"autorizado_at\":null,\"autorizacion_estado\":\"AUTORIZADA\"}",
+      "{\"id\":10,\"folio\":13009,\"ubicacion_id\":11,\"usuario_terminal_id\":1,\"cliente_id\":17,\"documento_tipo\":\"NOTA\",\"nota_sin_precios\":false,\"nombre_destinatario\":null,\"direccion_entrega_snapshot\":null,\"subtotal\":10.00,\"iva\":0.00,\"tasa_iva\":0.0000,\"total\":10.00,\"estado\":\"VENDIDO\",\"cobrado\":true,\"cobrado_at\":null,\"usuario_caja_id\":null,\"facturado\":false,\"credito\":true,\"dias_plazo\":30,\"fecha_vencimiento\":\"2026-10-31\",\"sesion_caja_id\":null,\"uuid_cliente\":\"555cea62-5f3d-476c-b20b-3fcdde466f99\",\"created_at\":\"2026-10-01T23:31:59.519835+00:00\",\"cancelado_at\":null,\"cancelado_por\":null,\"motivo_cancelacion\":null,\"autorizado_por\":null,\"autorizado_at\":null,\"autorizacion_estado\":\"AUTORIZADA\"}",
+      "{\"id\":2,\"folio\":13001,\"ubicacion_id\":10,\"usuario_terminal_id\":1,\"cliente_id\":9,\"documento_tipo\":\"NOTA\",\"nota_sin_precios\":false,\"nombre_destinatario\":null,\"direccion_entrega_snapshot\":null,\"subtotal\":10.00,\"iva\":0.00,\"tasa_iva\":0.0000,\"total\":10.00,\"estado\":\"VENDIDO\",\"cobrado\":true,\"cobrado_at\":null,\"usuario_caja_id\":null,\"facturado\":false,\"credito\":true,\"dias_plazo\":30,\"fecha_vencimiento\":\"2026-10-31\",\"sesion_caja_id\":null,\"uuid_cliente\":\"89bb704c-c6ad-42f5-98dc-edd2341a380b\",\"created_at\":\"2026-10-01T23:31:59.313267+00:00\",\"cancelado_at\":null,\"cancelado_por\":null,\"motivo_cancelacion\":null,\"autorizado_por\":null,\"autorizado_at\":null,\"autorizacion_estado\":\"AUTORIZADA\"}",
+      "{\"id\":3,\"folio\":13002,\"ubicacion_id\":10,\"usuario_terminal_id\":1,\"cliente_id\":10,\"documento_tipo\":\"NOTA\",\"nota_sin_precios\":false,\"nombre_destinatario\":null,\"direccion_entrega_snapshot\":null,\"subtotal\":10.00,\"iva\":0.00,\"tasa_iva\":0.0000,\"total\":10.00,\"estado\":\"VENDIDO\",\"cobrado\":true,\"cobrado_at\":null,\"usuario_caja_id\":null,\"facturado\":false,\"credito\":true,\"dias_plazo\":30,\"fecha_vencimiento\":\"2026-10-31\",\"sesion_caja_id\":null,\"uuid_cliente\":\"5d865a76-b945-4273-a779-9f5d96a6079f\",\"created_at\":\"2026-10-01T23:31:59.327029+00:00\",\"cancelado_at\":null,\"cancelado_por\":null,\"motivo_cancelacion\":null,\"autorizado_por\":null,\"autorizado_at\":null,\"autorizacion_estado\":\"AUTORIZADA\"}",
+      "{\"id\":4,\"folio\":13003,\"ubicacion_id\":10,\"usuario_terminal_id\":1,\"cliente_id\":11,\"documento_tipo\":\"NOTA\",\"nota_sin_precios\":false,\"nombre_destinatario\":null,\"direccion_entrega_snapshot\":null,\"subtotal\":10.00,\"iva\":0.00,\"tasa_iva\":0.0000,\"total\":10.00,\"estado\":\"VENDIDO\",\"cobrado\":true,\"cobrado_at\":null,\"usuario_caja_id\":null,\"facturado\":false,\"credito\":true,\"dias_plazo\":30,\"fecha_vencimiento\":\"2026-10-31\",\"sesion_caja_id\":null,\"uuid_cliente\":\"8a785689-a04b-4b09-b6ed-6138b31075ee\",\"created_at\":\"2026-10-01T23:31:59.341387+00:00\",\"cancelado_at\":null,\"cancelado_por\":null,\"motivo_cancelacion\":null,\"autorizado_por\":null,\"autorizado_at\":null,\"autorizacion_estado\":\"AUTORIZADA\"}",
+      "{\"id\":5,\"folio\":13004,\"ubicacion_id\":10,\"usuario_terminal_id\":1,\"cliente_id\":12,\"documento_tipo\":\"NOTA\",\"nota_sin_precios\":false,\"nombre_destinatario\":null,\"direccion_entrega_snapshot\":null,\"subtotal\":10.00,\"iva\":0.00,\"tasa_iva\":0.0000,\"total\":10.00,\"estado\":\"VENDIDO\",\"cobrado\":true,\"cobrado_at\":null,\"usuario_caja_id\":null,\"facturado\":false,\"credito\":true,\"dias_plazo\":30,\"fecha_vencimiento\":\"2026-10-31\",\"sesion_caja_id\":null,\"uuid_cliente\":\"901469dd-71c8-467b-9a93-653709fed9dc\",\"created_at\":\"2026-10-01T23:31:59.361369+00:00\",\"cancelado_at\":null,\"cancelado_por\":null,\"motivo_cancelacion\":null,\"autorizado_por\":null,\"autorizado_at\":null,\"autorizacion_estado\":\"AUTORIZADA\"}",
+      "{\"id\":6,\"folio\":13005,\"ubicacion_id\":11,\"usuario_terminal_id\":1,\"cliente_id\":13,\"documento_tipo\":\"NOTA\",\"nota_sin_precios\":false,\"nombre_destinatario\":null,\"direccion_entrega_snapshot\":null,\"subtotal\":10.00,\"iva\":0.00,\"tasa_iva\":0.0000,\"total\":10.00,\"estado\":\"VENDIDO\",\"cobrado\":true,\"cobrado_at\":null,\"usuario_caja_id\":null,\"facturado\":false,\"credito\":true,\"dias_plazo\":30,\"fecha_vencimiento\":\"2026-10-31\",\"sesion_caja_id\":null,\"uuid_cliente\":\"7ce19ab4-c568-4675-9d10-c88628d90015\",\"created_at\":\"2026-10-01T23:31:59.454358+00:00\",\"cancelado_at\":null,\"cancelado_por\":null,\"motivo_cancelacion\":null,\"autorizado_por\":null,\"autorizado_at\":null,\"autorizacion_estado\":\"AUTORIZADA\"}",
+      "{\"id\":7,\"folio\":13006,\"ubicacion_id\":11,\"usuario_terminal_id\":1,\"cliente_id\":14,\"documento_tipo\":\"NOTA\",\"nota_sin_precios\":false,\"nombre_destinatario\":null,\"direccion_entrega_snapshot\":null,\"subtotal\":10.00,\"iva\":0.00,\"tasa_iva\":0.0000,\"total\":10.00,\"estado\":\"VENDIDO\",\"cobrado\":true,\"cobrado_at\":null,\"usuario_caja_id\":null,\"facturado\":false,\"credito\":true,\"dias_plazo\":30,\"fecha_vencimiento\":\"2026-10-31\",\"sesion_caja_id\":null,\"uuid_cliente\":\"09bdc103-c4ac-4048-95ca-ae65e6f0a7cc\",\"created_at\":\"2026-10-01T23:31:59.471793+00:00\",\"cancelado_at\":null,\"cancelado_por\":null,\"motivo_cancelacion\":null,\"autorizado_por\":null,\"autorizado_at\":null,\"autorizacion_estado\":\"AUTORIZADA\"}",
+      "{\"id\":8,\"folio\":13007,\"ubicacion_id\":11,\"usuario_terminal_id\":1,\"cliente_id\":15,\"documento_tipo\":\"NOTA\",\"nota_sin_precios\":false,\"nombre_destinatario\":null,\"direccion_entrega_snapshot\":null,\"subtotal\":10.00,\"iva\":0.00,\"tasa_iva\":0.0000,\"total\":10.00,\"estado\":\"VENDIDO\",\"cobrado\":true,\"cobrado_at\":null,\"usuario_caja_id\":null,\"facturado\":false,\"credito\":true,\"dias_plazo\":30,\"fecha_vencimiento\":\"2026-10-31\",\"sesion_caja_id\":null,\"uuid_cliente\":\"dab4a69b-b5dc-4e1f-8f0e-e62fb780f350\",\"created_at\":\"2026-10-01T23:31:59.487804+00:00\",\"cancelado_at\":null,\"cancelado_por\":null,\"motivo_cancelacion\":null,\"autorizado_por\":null,\"autorizado_at\":null,\"autorizacion_estado\":\"AUTORIZADA\"}",
+      "{\"id\":9,\"folio\":13008,\"ubicacion_id\":11,\"usuario_terminal_id\":1,\"cliente_id\":16,\"documento_tipo\":\"NOTA\",\"nota_sin_precios\":false,\"nombre_destinatario\":null,\"direccion_entrega_snapshot\":null,\"subtotal\":10.00,\"iva\":0.00,\"tasa_iva\":0.0000,\"total\":10.00,\"estado\":\"VENDIDO\",\"cobrado\":true,\"cobrado_at\":null,\"usuario_caja_id\":null,\"facturado\":false,\"credito\":true,\"dias_plazo\":30,\"fecha_vencimiento\":\"2026-10-31\",\"sesion_caja_id\":null,\"uuid_cliente\":\"3935a8f9-1640-43cf-9ccc-cdef2071f73c\",\"created_at\":\"2026-10-01T23:31:59.504358+00:00\",\"cancelado_at\":null,\"cancelado_por\":null,\"motivo_cancelacion\":null,\"autorizado_por\":null,\"autorizado_at\":null,\"autorizacion_estado\":\"AUTORIZADA\"}"
+    ]
+  },
+  "nativeGuards": {
+    "count": 245,
+    "sha256": "42fd71ac694a83862838afe06f44e3a1b6490b1971f31f2ce47cf20d6eba58b2",
+    "rows": [
+      {
+        "table_name": "aplicaciones_credito",
+        "tgname": "aplicaciones_credito_inmutables",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER aplicaciones_credito_inmutables BEFORE DELETE OR UPDATE ON public.aplicaciones_credito FOR EACH ROW EXECUTE FUNCTION prevent_financial_record_mutation()"
+      },
+      {
+        "table_name": "aplicaciones_credito",
+        "tgname": "aplicaciones_credito_validas",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER aplicaciones_credito_validas BEFORE INSERT ON public.aplicaciones_credito FOR EACH ROW EXECUTE FUNCTION validate_credit_application()"
+      },
+      {
+        "table_name": "aplicaciones_credito",
+        "tgname": "e2_capture_application_order",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e2_capture_application_order BEFORE INSERT ON public.aplicaciones_credito FOR EACH ROW EXECUTE FUNCTION e2_guard_finalized_capture_application()"
+      },
+      {
+        "table_name": "aplicaciones_credito",
+        "tgname": "e5_capture_birth",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_capture_birth AFTER INSERT ON public.aplicaciones_credito FOR EACH ROW EXECUTE FUNCTION e5_capture_birth()"
+      },
+      {
+        "table_name": "aplicaciones_credito",
+        "tgname": "e5_external_guard",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_external_guard BEFORE DELETE OR UPDATE ON public.aplicaciones_credito FOR EACH ROW EXECUTE FUNCTION e5_external_guard()"
+      },
+      {
+        "table_name": "aplicaciones_credito",
+        "tgname": "e5_favor_initial_guard",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_favor_initial_guard BEFORE INSERT ON public.aplicaciones_credito FOR EACH ROW EXECUTE FUNCTION e5_favor_initial_guard()"
+      },
+      {
+        "table_name": "aplicaciones_credito",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.aplicaciones_credito DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "aplicaciones_credito",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.aplicaciones_credito FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "aplicaciones_credito",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.aplicaciones_credito FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "aplicaciones_pago_proveedor",
+        "tgname": "aplicaciones_pago_proveedor_append_only",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER aplicaciones_pago_proveedor_append_only BEFORE DELETE OR UPDATE ON public.aplicaciones_pago_proveedor FOR EACH ROW EXECUTE FUNCTION proteger_aplicaciones_pago_proveedor()"
+      },
+      {
+        "table_name": "aplicaciones_pago_proveedor",
+        "tgname": "aplicaciones_pago_proveedor_validar_insert",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER aplicaciones_pago_proveedor_validar_insert BEFORE INSERT ON public.aplicaciones_pago_proveedor FOR EACH ROW EXECUTE FUNCTION validar_aplicacion_pago_proveedor()"
+      },
+      {
+        "table_name": "atribuciones_credito_e1",
+        "tgname": "atribuciones_inmutables_e1",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER atribuciones_inmutables_e1 BEFORE DELETE OR UPDATE OR TRUNCATE ON public.atribuciones_credito_e1 FOR EACH STATEMENT EXECUTE FUNCTION impedir_mutacion_credito_e1()"
+      },
+      {
+        "table_name": "atribuciones_credito_e1",
+        "tgname": "atribuciones_validas_e1",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER atribuciones_validas_e1 BEFORE INSERT ON public.atribuciones_credito_e1 FOR EACH ROW EXECUTE FUNCTION validar_atribucion_credito_e1()"
+      },
+      {
+        "table_name": "atribuciones_credito_e1",
+        "tgname": "zz_e1_historical_attribution_closed",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER zz_e1_historical_attribution_closed AFTER INSERT ON public.atribuciones_credito_e1 FOR EACH STATEMENT EXECUTE FUNCTION e1_guard_historical_attribution_closed()"
+      },
+      {
+        "table_name": "auditoria",
+        "tgname": "auditoria_append_only",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER auditoria_append_only BEFORE DELETE OR UPDATE ON public.auditoria FOR EACH ROW EXECUTE FUNCTION proteger_auditoria_append_only()"
+      },
+      {
+        "table_name": "auditoria",
+        "tgname": "auditoria_enriquecer_insert",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER auditoria_enriquecer_insert BEFORE INSERT ON public.auditoria FOR EACH ROW EXECUTE FUNCTION enriquecer_auditoria()"
+      },
+      {
+        "table_name": "auditoria_faltante_reactivaciones",
+        "tgname": "auditoria_faltante_reactivaciones_append_only",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER auditoria_faltante_reactivaciones_append_only BEFORE DELETE OR UPDATE ON public.auditoria_faltante_reactivaciones FOR EACH ROW EXECUTE FUNCTION proteger_auditoria_resolucion_append_only()"
+      },
+      {
+        "table_name": "auditoria_sobrante_contextos",
+        "tgname": "auditoria_sobrante_contextos_append_only",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER auditoria_sobrante_contextos_append_only BEFORE DELETE OR UPDATE ON public.auditoria_sobrante_contextos FOR EACH ROW EXECUTE FUNCTION proteger_auditoria_resolucion_append_only()"
+      },
+      {
+        "table_name": "auditoria_sobrante_decisiones",
+        "tgname": "auditoria_sobrante_decisiones_append_only",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER auditoria_sobrante_decisiones_append_only BEFORE DELETE OR UPDATE ON public.auditoria_sobrante_decisiones FOR EACH ROW EXECUTE FUNCTION proteger_auditoria_resolucion_append_only()"
+      },
+      {
+        "table_name": "caja_desbloqueos_e12",
+        "tgname": "caja_desbloqueos_e12_actor",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER caja_desbloqueos_e12_actor BEFORE INSERT ON public.caja_desbloqueos_e12 FOR EACH ROW EXECUTE FUNCTION e12_override_guard()"
+      },
+      {
+        "table_name": "caja_desbloqueos_e12",
+        "tgname": "caja_desbloqueos_e12_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER caja_desbloqueos_e12_immutable BEFORE DELETE OR UPDATE ON public.caja_desbloqueos_e12 FOR EACH ROW EXECUTE FUNCTION e12_immutable()"
+      },
+      {
+        "table_name": "caja_desbloqueos_e12",
+        "tgname": "caja_desbloqueos_e12_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER caja_desbloqueos_e12_no_truncate BEFORE TRUNCATE ON public.caja_desbloqueos_e12 FOR EACH STATEMENT EXECUTE FUNCTION e12_immutable()"
+      },
+      {
+        "table_name": "caja_retornos_proveedor_e12",
+        "tgname": "caja_retornos_proveedor_e12_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER caja_retornos_proveedor_e12_immutable BEFORE DELETE OR UPDATE ON public.caja_retornos_proveedor_e12 FOR EACH ROW EXECUTE FUNCTION e12_immutable()"
+      },
+      {
+        "table_name": "caja_retornos_proveedor_e12",
+        "tgname": "caja_retornos_proveedor_e12_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER caja_retornos_proveedor_e12_no_truncate BEFORE TRUNCATE ON public.caja_retornos_proveedor_e12 FOR EACH STATEMENT EXECUTE FUNCTION e12_immutable()"
+      },
+      {
+        "table_name": "caja_retornos_proveedor_e12",
+        "tgname": "e12_cash_return",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e12_cash_return AFTER INSERT ON public.caja_retornos_proveedor_e12 DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e12_cash_return_guard()"
+      },
+      {
+        "table_name": "caja_salidas_e4",
+        "tgname": "caja_salidas_e4_guard_trg",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER caja_salidas_e4_guard_trg BEFORE INSERT OR DELETE OR UPDATE ON public.caja_salidas_e4 FOR EACH ROW EXECUTE FUNCTION caja_salidas_e4_guard()"
+      },
+      {
+        "table_name": "caja_salidas_e4_operaciones",
+        "tgname": "caja_salidas_e4_operaciones_immutable_trg",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER caja_salidas_e4_operaciones_immutable_trg BEFORE DELETE OR UPDATE ON public.caja_salidas_e4_operaciones FOR EACH ROW EXECUTE FUNCTION caja_salidas_e4_immutable()"
+      },
+      {
+        "table_name": "clientes",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.clientes DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "clientes",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.clientes FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "cobros_credito_pendientes_e1",
+        "tgname": "cobros_inmutables_e1",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER cobros_inmutables_e1 BEFORE DELETE OR UPDATE OR TRUNCATE ON public.cobros_credito_pendientes_e1 FOR EACH STATEMENT EXECUTE FUNCTION impedir_mutacion_credito_e1()"
+      },
+      {
+        "table_name": "cobros_credito_pendientes_e1",
+        "tgname": "cobros_validos_e1",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER cobros_validos_e1 AFTER INSERT ON public.cobros_credito_pendientes_e1 FOR EACH ROW EXECUTE FUNCTION validar_cobro_pendiente_e1()"
+      },
+      {
+        "table_name": "cobros_credito_pendientes_e1",
+        "tgname": "e2_retained_insert_transaction",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e2_retained_insert_transaction BEFORE INSERT OR UPDATE ON public.cobros_credito_pendientes_e1 FOR EACH ROW EXECUTE FUNCTION e2_stamp_insert_transaction()"
+      },
+      {
+        "table_name": "cobros_credito_pendientes_e1",
+        "tgname": "e5_capture_birth",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_capture_birth AFTER INSERT ON public.cobros_credito_pendientes_e1 FOR EACH ROW EXECUTE FUNCTION e5_capture_birth()"
+      },
+      {
+        "table_name": "cobros_credito_pendientes_e1",
+        "tgname": "e5_external_guard",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_external_guard BEFORE DELETE OR UPDATE ON public.cobros_credito_pendientes_e1 FOR EACH ROW EXECUTE FUNCTION e5_external_guard()"
+      },
+      {
+        "table_name": "cobros_credito_pendientes_e1",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.cobros_credito_pendientes_e1 DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "cobros_credito_pendientes_e1",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.cobros_credito_pendientes_e1 FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "cobros_credito_pendientes_e1",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.cobros_credito_pendientes_e1 FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "cobros_credito_pendientes_e1",
+        "tgname": "zz_e1_pending_receipts_closed",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER zz_e1_pending_receipts_closed AFTER INSERT ON public.cobros_credito_pendientes_e1 REFERENCING NEW TABLE AS e5_pending_rows FOR EACH STATEMENT EXECUTE FUNCTION e1_guard_pending_receipts_closed()"
+      },
+      {
+        "table_name": "e11_avisos",
+        "tgname": "e11_before",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_before BEFORE INSERT OR UPDATE ON public.e11_avisos FOR EACH ROW EXECUTE FUNCTION e11_before()"
+      },
+      {
+        "table_name": "e11_avisos",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.e11_avisos DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "e11_avisos",
+        "tgname": "e11_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_immutable BEFORE DELETE OR UPDATE ON public.e11_avisos FOR EACH ROW EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_avisos",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.e11_avisos FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_cambios_usuario",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.e11_cambios_usuario DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "e11_cambios_usuario",
+        "tgname": "e11_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_immutable BEFORE DELETE OR UPDATE ON public.e11_cambios_usuario FOR EACH ROW EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_cambios_usuario",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.e11_cambios_usuario FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_cambios_usuario",
+        "tgname": "e11_technical_insert",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_technical_insert BEFORE INSERT ON public.e11_cambios_usuario FOR EACH ROW EXECUTE FUNCTION e11_technical_insert()"
+      },
+      {
+        "table_name": "e11_conciliacion_ventas",
+        "tgname": "e11_before",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_before BEFORE INSERT OR UPDATE ON public.e11_conciliacion_ventas FOR EACH ROW EXECUTE FUNCTION e11_before()"
+      },
+      {
+        "table_name": "e11_conciliacion_ventas",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.e11_conciliacion_ventas DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "e11_conciliacion_ventas",
+        "tgname": "e11_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_immutable BEFORE DELETE OR UPDATE ON public.e11_conciliacion_ventas FOR EACH ROW EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_conciliacion_ventas",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.e11_conciliacion_ventas FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_conciliaciones",
+        "tgname": "e11_before",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_before BEFORE INSERT OR UPDATE ON public.e11_conciliaciones FOR EACH ROW EXECUTE FUNCTION e11_before()"
+      },
+      {
+        "table_name": "e11_conciliaciones",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.e11_conciliaciones DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "e11_conciliaciones",
+        "tgname": "e11_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_immutable BEFORE DELETE OR UPDATE ON public.e11_conciliaciones FOR EACH ROW EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_conciliaciones",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.e11_conciliaciones FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_conciliaciones",
+        "tgname": "e11_recovery_before",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_recovery_before BEFORE INSERT ON public.e11_conciliaciones FOR EACH ROW EXECUTE FUNCTION e11_recovery_before()"
+      },
+      {
+        "table_name": "e11_decisiones",
+        "tgname": "e11_before",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_before BEFORE INSERT OR UPDATE ON public.e11_decisiones FOR EACH ROW EXECUTE FUNCTION e11_before()"
+      },
+      {
+        "table_name": "e11_decisiones",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.e11_decisiones DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "e11_decisiones",
+        "tgname": "e11_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_immutable BEFORE DELETE OR UPDATE ON public.e11_decisiones FOR EACH ROW EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_decisiones",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.e11_decisiones FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_decisiones",
+        "tgname": "e11_recovery_before",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_recovery_before BEFORE INSERT ON public.e11_decisiones FOR EACH ROW EXECUTE FUNCTION e11_recovery_before()"
+      },
+      {
+        "table_name": "e11_e5_definiciones",
+        "tgname": "e11_ddl_no_insert",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_ddl_no_insert BEFORE INSERT ON public.e11_e5_definiciones FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_e5_definiciones",
+        "tgname": "e11_ddl_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_ddl_no_truncate BEFORE TRUNCATE ON public.e11_e5_definiciones FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_e5_definiciones",
+        "tgname": "e11_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_immutable BEFORE DELETE OR UPDATE ON public.e11_e5_definiciones FOR EACH ROW EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_e5_preparaciones",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.e11_e5_preparaciones DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "e11_e5_preparaciones",
+        "tgname": "e11_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_immutable BEFORE DELETE OR UPDATE ON public.e11_e5_preparaciones FOR EACH ROW EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_e5_preparaciones",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.e11_e5_preparaciones FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_e5_preparaciones",
+        "tgname": "e11_technical_insert",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_technical_insert BEFORE INSERT ON public.e11_e5_preparaciones FOR EACH ROW EXECUTE FUNCTION e11_technical_insert()"
+      },
+      {
+        "table_name": "e11_notificacion_origen",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.e11_notificacion_origen DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "e11_notificacion_origen",
+        "tgname": "e11_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_immutable BEFORE DELETE OR UPDATE ON public.e11_notificacion_origen FOR EACH ROW EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_notificacion_origen",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.e11_notificacion_origen FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_notificacion_origen",
+        "tgname": "e11_technical_insert",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_technical_insert BEFORE INSERT ON public.e11_notificacion_origen FOR EACH ROW EXECUTE FUNCTION e11_technical_insert()"
+      },
+      {
+        "table_name": "e11_operaciones",
+        "tgname": "e11_before",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_before BEFORE INSERT OR UPDATE ON public.e11_operaciones FOR EACH ROW EXECUTE FUNCTION e11_before()"
+      },
+      {
+        "table_name": "e11_operaciones",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.e11_operaciones DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "e11_operaciones",
+        "tgname": "e11_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_immutable BEFORE DELETE OR UPDATE ON public.e11_operaciones FOR EACH ROW EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_operaciones",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.e11_operaciones FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_operaciones",
+        "tgname": "e11_recovery_before",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_recovery_before BEFORE INSERT ON public.e11_operaciones FOR EACH ROW EXECUTE FUNCTION e11_recovery_before()"
+      },
+      {
+        "table_name": "e11_perfil_eventos",
+        "tgname": "e11_before",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_before BEFORE INSERT OR UPDATE ON public.e11_perfil_eventos FOR EACH ROW EXECUTE FUNCTION e11_before()"
+      },
+      {
+        "table_name": "e11_perfil_eventos",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.e11_perfil_eventos DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "e11_perfil_eventos",
+        "tgname": "e11_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_immutable BEFORE DELETE OR UPDATE ON public.e11_perfil_eventos FOR EACH ROW EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_perfil_eventos",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.e11_perfil_eventos FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_perfil_eventos",
+        "tgname": "e11_recovery_before",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_recovery_before BEFORE INSERT ON public.e11_perfil_eventos FOR EACH ROW EXECUTE FUNCTION e11_recovery_before()"
+      },
+      {
+        "table_name": "e11_perfiles",
+        "tgname": "e11_before",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_before BEFORE INSERT OR UPDATE ON public.e11_perfiles FOR EACH ROW EXECUTE FUNCTION e11_before()"
+      },
+      {
+        "table_name": "e11_perfiles",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.e11_perfiles DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "e11_perfiles",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.e11_perfiles FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_perfiles",
+        "tgname": "e11_profile_no_delete",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_profile_no_delete BEFORE DELETE ON public.e11_perfiles FOR EACH ROW EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_resoluciones",
+        "tgname": "e11_before",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_before BEFORE INSERT OR UPDATE ON public.e11_resoluciones FOR EACH ROW EXECUTE FUNCTION e11_before()"
+      },
+      {
+        "table_name": "e11_resoluciones",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.e11_resoluciones DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "e11_resoluciones",
+        "tgname": "e11_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_immutable BEFORE DELETE OR UPDATE ON public.e11_resoluciones FOR EACH ROW EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_resoluciones",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.e11_resoluciones FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e11_resoluciones",
+        "tgname": "e11_recovery_before",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_recovery_before BEFORE INSERT ON public.e11_resoluciones FOR EACH ROW EXECUTE FUNCTION e11_recovery_before()"
+      },
+      {
+        "table_name": "e5_aplicaciones",
+        "tgname": "e5_birth",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_birth BEFORE INSERT ON public.e5_aplicaciones FOR EACH ROW EXECUTE FUNCTION e5_birth()"
+      },
+      {
+        "table_name": "e5_aplicaciones",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.e5_aplicaciones DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "e5_aplicaciones",
+        "tgname": "e5_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_immutable BEFORE DELETE OR UPDATE ON public.e5_aplicaciones FOR EACH ROW EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_aplicaciones",
+        "tgname": "e5_insert_authority",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_insert_authority BEFORE INSERT ON public.e5_aplicaciones FOR EACH ROW EXECUTE FUNCTION e5_insert_authority()"
+      },
+      {
+        "table_name": "e5_aplicaciones",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.e5_aplicaciones FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_aplicaciones",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.e5_aplicaciones FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "e5_cobros",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.e5_cobros DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "e5_cobros",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.e5_cobros FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e5_cobros",
+        "tgname": "e5_detail_guard",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_detail_guard BEFORE INSERT OR UPDATE ON public.e5_cobros FOR EACH ROW EXECUTE FUNCTION e5_detail_guard()"
+      },
+      {
+        "table_name": "e5_cobros",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.e5_cobros DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "e5_cobros",
+        "tgname": "e5_no_delete",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_delete BEFORE DELETE ON public.e5_cobros FOR EACH ROW EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_cobros",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.e5_cobros FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_cobros",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.e5_cobros FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "e5_ddl_originales",
+        "tgname": "e5_ddl_no_change",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_ddl_no_change BEFORE DELETE OR UPDATE ON public.e5_ddl_originales FOR EACH ROW EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_ddl_originales",
+        "tgname": "e5_ddl_no_insert",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_ddl_no_insert BEFORE INSERT ON public.e5_ddl_originales FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_ddl_originales",
+        "tgname": "e5_ddl_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_ddl_no_truncate BEFORE TRUNCATE ON public.e5_ddl_originales FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_devoluciones",
+        "tgname": "e5_birth",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_birth BEFORE INSERT ON public.e5_devoluciones FOR EACH ROW EXECUTE FUNCTION e5_birth()"
+      },
+      {
+        "table_name": "e5_devoluciones",
+        "tgname": "e5_closed",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_closed BEFORE INSERT OR DELETE OR UPDATE ON public.e5_devoluciones FOR EACH STATEMENT EXECUTE FUNCTION e5_closed()"
+      },
+      {
+        "table_name": "e5_devoluciones",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.e5_devoluciones DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "e5_devoluciones",
+        "tgname": "e5_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_immutable BEFORE DELETE OR UPDATE ON public.e5_devoluciones FOR EACH ROW EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_devoluciones",
+        "tgname": "e5_insert_authority",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_insert_authority BEFORE INSERT ON public.e5_devoluciones FOR EACH ROW EXECUTE FUNCTION e5_insert_authority()"
+      },
+      {
+        "table_name": "e5_devoluciones",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.e5_devoluciones FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_devoluciones",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.e5_devoluciones FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "e5_documentos",
+        "tgname": "e5_birth",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_birth BEFORE INSERT ON public.e5_documentos FOR EACH ROW EXECUTE FUNCTION e5_birth()"
+      },
+      {
+        "table_name": "e5_documentos",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.e5_documentos DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "e5_documentos",
+        "tgname": "e5_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_immutable BEFORE DELETE OR UPDATE ON public.e5_documentos FOR EACH ROW EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_documentos",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.e5_documentos FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_documentos",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.e5_documentos FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "e5_impresiones",
+        "tgname": "e5_birth",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_birth BEFORE INSERT ON public.e5_impresiones FOR EACH ROW EXECUTE FUNCTION e5_birth()"
+      },
+      {
+        "table_name": "e5_impresiones",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.e5_impresiones DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "e5_impresiones",
+        "tgname": "e5_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_immutable BEFORE DELETE OR UPDATE ON public.e5_impresiones FOR EACH ROW EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_impresiones",
+        "tgname": "e5_insert_authority",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_insert_authority BEFORE INSERT ON public.e5_impresiones FOR EACH ROW EXECUTE FUNCTION e5_insert_authority()"
+      },
+      {
+        "table_name": "e5_impresiones",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.e5_impresiones FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_impresiones",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.e5_impresiones FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "e5_nacimientos",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.e5_nacimientos DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "e5_nacimientos",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.e5_nacimientos FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e5_nacimientos",
+        "tgname": "e5_birth_private",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_birth_private BEFORE INSERT ON public.e5_nacimientos FOR EACH ROW EXECUTE FUNCTION e5_birth_private()"
+      },
+      {
+        "table_name": "e5_nacimientos",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.e5_nacimientos DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "e5_nacimientos",
+        "tgname": "e5_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_immutable BEFORE DELETE OR UPDATE ON public.e5_nacimientos FOR EACH ROW EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_nacimientos",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.e5_nacimientos FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_nacimientos",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.e5_nacimientos FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "e5_operaciones",
+        "tgname": "e11_e5_capture",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_e5_capture AFTER INSERT ON public.e5_operaciones FOR EACH ROW EXECUTE FUNCTION e11_e5_capture()"
+      },
+      {
+        "table_name": "e5_operaciones",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.e5_operaciones DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "e5_operaciones",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.e5_operaciones FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "e5_operaciones",
+        "tgname": "e5_birth",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_birth BEFORE INSERT ON public.e5_operaciones FOR EACH ROW EXECUTE FUNCTION e5_birth()"
+      },
+      {
+        "table_name": "e5_operaciones",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.e5_operaciones DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "e5_operaciones",
+        "tgname": "e5_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_immutable BEFORE DELETE OR UPDATE ON public.e5_operaciones FOR EACH ROW EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_operaciones",
+        "tgname": "e5_insert_authority",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_insert_authority BEFORE INSERT ON public.e5_operaciones FOR EACH ROW EXECUTE FUNCTION e5_insert_authority()"
+      },
+      {
+        "table_name": "e5_operaciones",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.e5_operaciones FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_operaciones",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.e5_operaciones FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "e5_recepciones",
+        "tgname": "e5_birth",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_birth BEFORE INSERT ON public.e5_recepciones FOR EACH ROW EXECUTE FUNCTION e5_birth()"
+      },
+      {
+        "table_name": "e5_recepciones",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.e5_recepciones DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "e5_recepciones",
+        "tgname": "e5_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_immutable BEFORE DELETE OR UPDATE ON public.e5_recepciones FOR EACH ROW EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_recepciones",
+        "tgname": "e5_insert_authority",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_insert_authority BEFORE INSERT ON public.e5_recepciones FOR EACH ROW EXECUTE FUNCTION e5_insert_authority()"
+      },
+      {
+        "table_name": "e5_recepciones",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.e5_recepciones FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_recepciones",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.e5_recepciones FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "e5_salidas_bancarias",
+        "tgname": "e5_birth",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_birth BEFORE INSERT ON public.e5_salidas_bancarias FOR EACH ROW EXECUTE FUNCTION e5_birth()"
+      },
+      {
+        "table_name": "e5_salidas_bancarias",
+        "tgname": "e5_closed",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_closed BEFORE INSERT OR DELETE OR UPDATE ON public.e5_salidas_bancarias FOR EACH STATEMENT EXECUTE FUNCTION e5_closed()"
+      },
+      {
+        "table_name": "e5_salidas_bancarias",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.e5_salidas_bancarias DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "e5_salidas_bancarias",
+        "tgname": "e5_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_immutable BEFORE DELETE OR UPDATE ON public.e5_salidas_bancarias FOR EACH ROW EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_salidas_bancarias",
+        "tgname": "e5_insert_authority",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_insert_authority BEFORE INSERT ON public.e5_salidas_bancarias FOR EACH ROW EXECUTE FUNCTION e5_insert_authority()"
+      },
+      {
+        "table_name": "e5_salidas_bancarias",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.e5_salidas_bancarias FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_salidas_bancarias",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.e5_salidas_bancarias FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "e5_vinculos_credito",
+        "tgname": "e5_birth",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_birth BEFORE INSERT ON public.e5_vinculos_credito FOR EACH ROW EXECUTE FUNCTION e5_birth()"
+      },
+      {
+        "table_name": "e5_vinculos_credito",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.e5_vinculos_credito DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "e5_vinculos_credito",
+        "tgname": "e5_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_immutable BEFORE DELETE OR UPDATE ON public.e5_vinculos_credito FOR EACH ROW EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_vinculos_credito",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.e5_vinculos_credito FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "e5_vinculos_credito",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.e5_vinculos_credito FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "e9_entregas",
+        "tgname": "e9_detail_guard",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e9_detail_guard BEFORE INSERT OR UPDATE ON public.e9_entregas FOR EACH ROW EXECUTE FUNCTION e9_validate_detail()"
+      },
+      {
+        "table_name": "e9_entregas",
+        "tgname": "e9_event_required",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e9_event_required AFTER INSERT OR UPDATE ON public.e9_entregas DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e9_event_guard()"
+      },
+      {
+        "table_name": "e9_entregas",
+        "tgname": "e9_no_delete",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e9_no_delete BEFORE DELETE ON public.e9_entregas FOR EACH ROW EXECUTE FUNCTION e9_immutable()"
+      },
+      {
+        "table_name": "e9_entregas",
+        "tgname": "e9_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e9_no_truncate BEFORE TRUNCATE ON public.e9_entregas FOR EACH STATEMENT EXECUTE FUNCTION e9_immutable()"
+      },
+      {
+        "table_name": "e9_operaciones",
+        "tgname": "e9_operation_valid",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e9_operation_valid BEFORE INSERT ON public.e9_operaciones FOR EACH ROW EXECUTE FUNCTION e9_operation_guard()"
+      },
+      {
+        "table_name": "e9_operaciones",
+        "tgname": "e9_operations_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e9_operations_immutable BEFORE DELETE OR UPDATE ON public.e9_operaciones FOR EACH ROW EXECUTE FUNCTION e9_immutable()"
+      },
+      {
+        "table_name": "e9_operaciones",
+        "tgname": "e9_operations_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e9_operations_no_truncate BEFORE TRUNCATE ON public.e9_operaciones FOR EACH STATEMENT EXECUTE FUNCTION e9_immutable()"
+      },
+      {
+        "table_name": "evidencia_no_aplicada_e2",
+        "tgname": "e2_proof_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e2_proof_immutable BEFORE DELETE OR UPDATE OR TRUNCATE ON public.evidencia_no_aplicada_e2 FOR EACH STATEMENT EXECUTE FUNCTION e2_reject_evidence_mutation()"
+      },
+      {
+        "table_name": "evidencia_no_aplicada_e2",
+        "tgname": "e2_validate_unused_proof",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e2_validate_unused_proof BEFORE INSERT ON public.evidencia_no_aplicada_e2 FOR EACH ROW EXECUTE FUNCTION e2_validate_unused_proof()"
+      },
+      {
+        "table_name": "finalizaciones_abono_e2",
+        "tgname": "e2_finalization_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e2_finalization_immutable BEFORE DELETE OR UPDATE OR TRUNCATE ON public.finalizaciones_abono_e2 FOR EACH STATEMENT EXECUTE FUNCTION e2_reject_evidence_mutation()"
+      },
+      {
+        "table_name": "finalizaciones_abono_e2",
+        "tgname": "e2_validate_abono_finalization",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e2_validate_abono_finalization BEFORE INSERT ON public.finalizaciones_abono_e2 FOR EACH ROW EXECUTE FUNCTION e2_validate_abono_finalization()"
+      },
+      {
+        "table_name": "fondo_mariana",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.fondo_mariana DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "fondo_mariana",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.fondo_mariana FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "fondo_mariana",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.fondo_mariana FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "fondo_movimientos",
+        "tgname": "e12_fund_inverse",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e12_fund_inverse AFTER INSERT ON public.fondo_movimientos DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e12_inverse_guard()"
+      },
+      {
+        "table_name": "fondo_movimientos",
+        "tgname": "e5_capture_birth",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_capture_birth AFTER INSERT ON public.fondo_movimientos FOR EACH ROW EXECUTE FUNCTION e5_capture_birth()"
+      },
+      {
+        "table_name": "fondo_movimientos",
+        "tgname": "e5_external_guard",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_external_guard BEFORE DELETE OR UPDATE ON public.fondo_movimientos FOR EACH ROW EXECUTE FUNCTION e5_external_guard()"
+      },
+      {
+        "table_name": "fondo_movimientos",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.fondo_movimientos DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "fondo_movimientos",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.fondo_movimientos FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "fondo_movimientos",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.fondo_movimientos FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "fondo_movimientos",
+        "tgname": "e9_fondo_receipt",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e9_fondo_receipt AFTER INSERT ON public.fondo_movimientos DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e9_fondo_guard()"
+      },
+      {
+        "table_name": "movimientos_credito",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.movimientos_credito DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "movimientos_credito",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.movimientos_credito FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "movimientos_credito",
+        "tgname": "e2_abono_finalization_complete",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e2_abono_finalization_complete AFTER INSERT ON public.movimientos_credito DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e2_require_abono_finalization()"
+      },
+      {
+        "table_name": "movimientos_credito",
+        "tgname": "e2_source_insert_transaction",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e2_source_insert_transaction BEFORE INSERT OR UPDATE ON public.movimientos_credito FOR EACH ROW EXECUTE FUNCTION e2_stamp_insert_transaction()"
+      },
+      {
+        "table_name": "movimientos_credito",
+        "tgname": "e5_capture_birth",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_capture_birth AFTER INSERT ON public.movimientos_credito FOR EACH ROW EXECUTE FUNCTION e5_capture_birth()"
+      },
+      {
+        "table_name": "movimientos_credito",
+        "tgname": "e5_external_guard",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_external_guard BEFORE DELETE OR UPDATE ON public.movimientos_credito FOR EACH ROW EXECUTE FUNCTION e5_external_guard()"
+      },
+      {
+        "table_name": "movimientos_credito",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.movimientos_credito DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "movimientos_credito",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.movimientos_credito FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "movimientos_credito",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.movimientos_credito FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "movimientos_credito",
+        "tgname": "movimientos_credito_inmutables",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER movimientos_credito_inmutables BEFORE DELETE OR UPDATE ON public.movimientos_credito FOR EACH ROW EXECUTE FUNCTION prevent_financial_record_mutation()"
+      },
+      {
+        "table_name": "movimientos_credito",
+        "tgname": "movimientos_credito_reversos_validos",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER movimientos_credito_reversos_validos BEFORE INSERT ON public.movimientos_credito FOR EACH ROW EXECUTE FUNCTION validate_credit_reversal()"
+      },
+      {
+        "table_name": "movimientos_credito",
+        "tgname": "movimientos_validos_e1",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER movimientos_validos_e1 AFTER INSERT ON public.movimientos_credito FOR EACH ROW EXECUTE FUNCTION validar_movimiento_credito_e1()"
+      },
+      {
+        "table_name": "movimientos_credito",
+        "tgname": "zz_e1_cash_capture_closed",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER zz_e1_cash_capture_closed AFTER INSERT ON public.movimientos_credito FOR EACH ROW EXECUTE FUNCTION e1_guard_cash_capture_closed()"
+      },
+      {
+        "table_name": "notificaciones_sistema",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.notificaciones_sistema DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "notificaciones_sistema",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.notificaciones_sistema FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "notificaciones_sistema",
+        "tgname": "e11_notification_birth",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_notification_birth AFTER INSERT ON public.notificaciones_sistema FOR EACH ROW EXECUTE FUNCTION e11_notification()"
+      },
+      {
+        "table_name": "notificaciones_sistema",
+        "tgname": "e11_notification_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_notification_immutable BEFORE DELETE OR UPDATE ON public.notificaciones_sistema FOR EACH ROW EXECUTE FUNCTION e11_notification()"
+      },
+      {
+        "table_name": "operaciones_credito_e1",
+        "tgname": "e5_capture_birth",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_capture_birth AFTER INSERT ON public.operaciones_credito_e1 FOR EACH ROW EXECUTE FUNCTION e5_capture_birth()"
+      },
+      {
+        "table_name": "operaciones_credito_e1",
+        "tgname": "e5_external_guard",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_external_guard BEFORE DELETE OR UPDATE ON public.operaciones_credito_e1 FOR EACH ROW EXECUTE FUNCTION e5_external_guard()"
+      },
+      {
+        "table_name": "operaciones_credito_e1",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.operaciones_credito_e1 DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "operaciones_credito_e1",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.operaciones_credito_e1 FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "operaciones_credito_e1",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.operaciones_credito_e1 FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "operaciones_credito_e1",
+        "tgname": "operaciones_inmutables_e1",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER operaciones_inmutables_e1 BEFORE DELETE OR UPDATE OR TRUNCATE ON public.operaciones_credito_e1 FOR EACH STATEMENT EXECUTE FUNCTION impedir_mutacion_credito_e1()"
+      },
+      {
+        "table_name": "pagos_proveedor",
+        "tgname": "e12_supplier_inverse",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e12_supplier_inverse AFTER INSERT ON public.pagos_proveedor DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e12_inverse_guard()"
+      },
+      {
+        "table_name": "pagos_proveedor",
+        "tgname": "pagos_proveedor_inmutables",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER pagos_proveedor_inmutables BEFORE DELETE OR UPDATE ON public.pagos_proveedor FOR EACH ROW EXECUTE FUNCTION prevent_pago_proveedor_mutation()"
+      },
+      {
+        "table_name": "proveedor_efectivo_e12",
+        "tgname": "proveedor_efectivo_e12_guard",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER proveedor_efectivo_e12_guard BEFORE INSERT OR DELETE OR UPDATE ON public.proveedor_efectivo_e12 FOR EACH ROW EXECUTE FUNCTION e12_pago_guard()"
+      },
+      {
+        "table_name": "proveedor_efectivo_e12",
+        "tgname": "proveedor_efectivo_e12_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER proveedor_efectivo_e12_no_truncate BEFORE TRUNCATE ON public.proveedor_efectivo_e12 FOR EACH STATEMENT EXECUTE FUNCTION e12_immutable()"
+      },
+      {
+        "table_name": "proveedor_operaciones_e12",
+        "tgname": "proveedor_operaciones_e12_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER proveedor_operaciones_e12_immutable BEFORE DELETE OR UPDATE ON public.proveedor_operaciones_e12 FOR EACH ROW EXECUTE FUNCTION e12_immutable()"
+      },
+      {
+        "table_name": "proveedor_operaciones_e12",
+        "tgname": "proveedor_operaciones_e12_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER proveedor_operaciones_e12_no_truncate BEFORE TRUNCATE ON public.proveedor_operaciones_e12 FOR EACH STATEMENT EXECUTE FUNCTION e12_immutable()"
+      },
+      {
+        "table_name": "proveedor_solicitudes_e12",
+        "tgname": "proveedor_solicitudes_e12_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER proveedor_solicitudes_e12_immutable BEFORE DELETE OR UPDATE ON public.proveedor_solicitudes_e12 FOR EACH ROW EXECUTE FUNCTION e12_immutable()"
+      },
+      {
+        "table_name": "proveedor_solicitudes_e12",
+        "tgname": "proveedor_solicitudes_e12_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER proveedor_solicitudes_e12_no_truncate BEFORE TRUNCATE ON public.proveedor_solicitudes_e12 FOR EACH STATEMENT EXECUTE FUNCTION e12_immutable()"
+      },
+      {
+        "table_name": "recibos_abono_e3",
+        "tgname": "e3_receipt_immutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e3_receipt_immutable BEFORE DELETE OR UPDATE ON public.recibos_abono_e3 FOR EACH ROW EXECUTE FUNCTION e3_receipt_immutable()"
+      },
+      {
+        "table_name": "recibos_abono_e3",
+        "tgname": "e3_receipt_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e3_receipt_no_truncate BEFORE TRUNCATE ON public.recibos_abono_e3 FOR EACH STATEMENT EXECUTE FUNCTION e3_receipt_immutable()"
+      },
+      {
+        "table_name": "reimpresiones_etiqueta",
+        "tgname": "reimpresiones_etiqueta_inmutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER reimpresiones_etiqueta_inmutable BEFORE DELETE OR UPDATE ON public.reimpresiones_etiqueta FOR EACH ROW EXECUTE FUNCTION bloquear_mutacion_reimpresion_etiqueta()"
+      },
+      {
+        "table_name": "revisiones_etiqueta",
+        "tgname": "revisiones_etiqueta_inmutable",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER revisiones_etiqueta_inmutable BEFORE DELETE OR UPDATE ON public.revisiones_etiqueta FOR EACH ROW EXECUTE FUNCTION bloquear_mutacion_revision_etiqueta()"
+      },
+      {
+        "table_name": "revisiones_etiqueta",
+        "tgname": "revisiones_etiqueta_reimpresion_fk_check",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER revisiones_etiqueta_reimpresion_fk_check BEFORE INSERT OR UPDATE ON public.revisiones_etiqueta FOR EACH ROW EXECUTE FUNCTION validar_revision_etiqueta_reimpresion()"
+      },
+      {
+        "table_name": "salidas_dinero_caja",
+        "tgname": "caja_salidas_e4_expense_guard_trg",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER caja_salidas_e4_expense_guard_trg BEFORE DELETE OR UPDATE ON public.salidas_dinero_caja FOR EACH ROW EXECUTE FUNCTION caja_salidas_e4_expense_guard()"
+      },
+      {
+        "table_name": "salidas_dinero_caja",
+        "tgname": "e5_capture_birth",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_capture_birth AFTER INSERT ON public.salidas_dinero_caja FOR EACH ROW EXECUTE FUNCTION e5_capture_birth()"
+      },
+      {
+        "table_name": "salidas_dinero_caja",
+        "tgname": "e5_external_guard",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_external_guard BEFORE DELETE OR UPDATE ON public.salidas_dinero_caja FOR EACH ROW EXECUTE FUNCTION e5_external_guard()"
+      },
+      {
+        "table_name": "salidas_dinero_caja",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.salidas_dinero_caja DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "salidas_dinero_caja",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.salidas_dinero_caja FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "salidas_dinero_caja",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.salidas_dinero_caja FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "sesiones_caja",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.sesiones_caja DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "sesiones_caja",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.sesiones_caja FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "sesiones_caja",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.sesiones_caja FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "solicitudes_pago_dirigido",
+        "tgname": "e5_external_guard",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_external_guard BEFORE DELETE OR UPDATE ON public.solicitudes_pago_dirigido FOR EACH ROW EXECUTE FUNCTION e5_external_guard()"
+      },
+      {
+        "table_name": "solicitudes_pago_dirigido",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.solicitudes_pago_dirigido DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "solicitudes_pago_dirigido",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.solicitudes_pago_dirigido FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "solicitudes_pago_dirigido",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.solicitudes_pago_dirigido FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "ticket_pagos",
+        "tgname": "ticket_pagos_inmutables",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER ticket_pagos_inmutables BEFORE DELETE OR UPDATE ON public.ticket_pagos FOR EACH ROW EXECUTE FUNCTION prevent_financial_record_mutation()"
+      },
+      {
+        "table_name": "tickets",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.tickets DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "tickets",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.tickets FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "tickets",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.tickets DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "tickets",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.tickets FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "tickets",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.tickets FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "ubicaciones",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.ubicaciones DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "ubicaciones",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.ubicaciones FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "ubicaciones",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.ubicaciones DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "ubicaciones",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.ubicaciones FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "ubicaciones",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.ubicaciones FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      },
+      {
+        "table_name": "usuarios",
+        "tgname": "e11_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e11_graph AFTER INSERT OR DELETE OR UPDATE ON public.usuarios DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e11_graph()"
+      },
+      {
+        "table_name": "usuarios",
+        "tgname": "e11_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_no_truncate BEFORE TRUNCATE ON public.usuarios FOR EACH STATEMENT EXECUTE FUNCTION e11_immutable()"
+      },
+      {
+        "table_name": "usuarios",
+        "tgname": "e11_user_change",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e11_user_change AFTER UPDATE OF rol, activo ON public.usuarios FOR EACH ROW EXECUTE FUNCTION e11_user_change()"
+      },
+      {
+        "table_name": "usuarios",
+        "tgname": "e5_graph",
+        "tgenabled": "O",
+        "definition": "CREATE CONSTRAINT TRIGGER e5_graph AFTER INSERT OR DELETE OR UPDATE ON public.usuarios DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION e5_graph_guard()"
+      },
+      {
+        "table_name": "usuarios",
+        "tgname": "e5_no_truncate",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_no_truncate BEFORE TRUNCATE ON public.usuarios FOR EACH STATEMENT EXECUTE FUNCTION e5_immutable()"
+      },
+      {
+        "table_name": "usuarios",
+        "tgname": "e5_serialize",
+        "tgenabled": "O",
+        "definition": "CREATE TRIGGER e5_serialize BEFORE INSERT OR DELETE OR UPDATE ON public.usuarios FOR EACH STATEMENT EXECUTE FUNCTION e5_serialize()"
+      }
+    ]
+  }
+}

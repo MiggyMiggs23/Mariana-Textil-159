@@ -15,6 +15,7 @@ import {
   useListClienteRecibosE3,
   useListCajaRecibosE3,
   useRecordReciboE3Print,
+  useGetCurrentUser,
   E3CollectionInput,
   E3CollectionResult,
   E3PrintInput
@@ -68,9 +69,10 @@ export function useE3RecapturasConfirm(clienteId: number) {
 }
 
 export function useE3GetRecibo(folio: string, enabled: boolean = true) {
+  const user = useGetCurrentUser();
   return useGetReciboAbonoE3(folio, {
     query: {
-      queryKey: getGetReciboAbonoE3QueryKey(folio),
+      queryKey: [...getGetReciboAbonoE3QueryKey(folio), user.data?.id, user.data?.rol, user.data?.ubicacion?.id, enabled],
       enabled: enabled && !!folio && E3_ENABLED,
       staleTime: 0,
       refetchOnMount: "always",

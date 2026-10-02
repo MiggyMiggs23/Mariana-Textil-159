@@ -1,0 +1,10 @@
+{
+  "id": "b75e03e1-3532-4ea7-871c-673efe2de436",
+  "at": "2026-10-02T00:25:04.328Z",
+  "command": {
+    "id": "b75e03e1-3532-4ea7-871c-673efe2de436",
+    "action": "compare"
+  },
+  "status": "FINANCIAL_UNCHANGED",
+  "ok": true
+}

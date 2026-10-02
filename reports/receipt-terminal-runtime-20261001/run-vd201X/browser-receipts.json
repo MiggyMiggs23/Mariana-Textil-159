@@ -1,0 +1,179 @@
+[
+  {
+    "family": "e3",
+    "site": 10,
+    "client": 10,
+    "folio": "E3-10-00000002",
+    "body": {
+      "clienteId": 10,
+      "importeCentavos": 1000,
+      "asignaciones": [
+        {
+          "movimientoVentaId": 3,
+          "ticketId": 3,
+          "folio": 13002,
+          "aplicadoCentavos": 1000,
+          "saldoAntesCentavos": 1000,
+          "saldoDespuesCentavos": 0
+        }
+      ],
+      "remanenteCentavos": 0,
+      "saldoAFavorCentavos": 0,
+      "deudaCentavos": 0,
+      "origen": "CAJA",
+      "version": 1,
+      "folio": "E3-10-00000002",
+      "movimientoId": 13,
+      "clienteNombre": "Receipt 1 browser-e3",
+      "formaPago": "TRANSFERENCIA",
+      "cuentaDestino": "CUENTA_FISCAL",
+      "clienteTelefono": null,
+      "clienteRfc": null,
+      "sitioNombre": "Receipt isolated own",
+      "actorNombre": "receipt_1_caja_receive",
+      "sitioId": 10,
+      "sesionCajaId": 1,
+      "recibidoEn": "2026-10-01T23:34:57.703Z",
+      "registradoEn": "2026-10-01T23:34:57.703Z",
+      "actorId": 2,
+      "motivo": null
+    },
+    "actorId": 2,
+    "source": "browser-e3",
+    "screenshot": "caja-e3-after-confirm.png",
+    "network": "caja-e3-network.json"
+  },
+  {
+    "family": "e5",
+    "site": 10,
+    "client": 11,
+    "id": "9c445b81-4567-45b5-80cc-700497db27d6",
+    "documentId": "d9d81b61-b04d-4e0e-b58b-002cfddb7d47",
+    "body": {
+      "id": "9c445b81-4567-45b5-80cc-700497db27d6",
+      "revision": 1,
+      "clienteId": 11,
+      "clienteNombre": "Receipt 1 browser-e5-directed",
+      "ubicacionId": 10,
+      "ubicacionNombre": "Receipt isolated own",
+      "importeRecibido": "10.00",
+      "importeAplicado": "0.00",
+      "importePendiente": "10.00",
+      "importeDevuelto": "0.00",
+      "fechaRecepcion": "2026-10-01T23:36:20.266Z",
+      "formaPago": "TRANSFERENCIA",
+      "cuentaDestino": "CUENTA_FISCAL",
+      "sesionOperativaId": 1,
+      "estado": "PENDIENTE",
+      "algunaVezAplicado": false,
+      "receptor": {
+        "id": 2,
+        "nombre": "receipt_1_caja_receive"
+      },
+      "evidenciaRecepcion": {
+        "descripcion": "Prueba aislada de recepción por transferencia; fixture browser-e5-directed.",
+        "referencias": [
+          "receipt-terminal-runtime browser-e5-directed"
+        ]
+      },
+      "notasIndicadas": [
+        {
+          "notaId": 4,
+          "movimientoVentaId": 4,
+          "folio": "13003",
+          "ubicacionId": 10,
+          "fecha": "2026-10-01T23:31:59.354Z",
+          "saldoPendiente": "10.00",
+          "facturada": false
+        }
+      ],
+      "propuestas": [],
+      "aplicaciones": [],
+      "rechazos": [],
+      "reciboId": "d9d81b61-b04d-4e0e-b58b-002cfddb7d47",
+      "antiguedadDias": 0,
+      "avisoAdmin": false,
+      "capacidades": {
+        "puedeRecibir": true,
+        "puedePreparar": false,
+        "puedeAutorizar": false,
+        "puedeRechazar": false,
+        "puedeDevolver": false,
+        "puedeVerAvisos": false,
+        "puedeImprimir": false,
+        "preparacionADisponible": false
+      }
+    },
+    "actorId": 2,
+    "source": "browser-e5-directed",
+    "screenshot": "caja-e5-directed-after-confirm.png",
+    "network": "caja-e5-directed-network.json"
+  },
+  {
+    "family": "e5",
+    "site": 10,
+    "client": 12,
+    "id": "01455046-d5fb-4c4e-8ad4-610612c19a4b",
+    "documentId": "657d826b-03c4-45b2-aeaa-dd58601df80b",
+    "body": {
+      "id": "01455046-d5fb-4c4e-8ad4-610612c19a4b",
+      "revision": 1,
+      "clienteId": 12,
+      "clienteNombre": "Receipt 1 browser-e5-retained",
+      "ubicacionId": 10,
+      "ubicacionNombre": "Receipt isolated own",
+      "importeRecibido": "10.00",
+      "importeAplicado": "0.00",
+      "importePendiente": "10.00",
+      "importeDevuelto": "0.00",
+      "fechaRecepcion": "2026-10-01T23:37:55.014Z",
+      "formaPago": "EFECTIVO",
+      "cuentaDestino": "CAJA_FISICA",
+      "sesionCajaId": 1,
+      "sesionOperativaId": 1,
+      "estado": "PENDIENTE",
+      "algunaVezAplicado": false,
+      "receptor": {
+        "id": 2,
+        "nombre": "receipt_1_caja_receive"
+      },
+      "evidenciaRecepcion": {
+        "descripcion": "Prueba aislada de recepción en efectivo; fixture browser-e5-retained.",
+        "referencias": [
+          "receipt-terminal-runtime browser-e5-retained"
+        ]
+      },
+      "notasIndicadas": [
+        {
+          "notaId": 5,
+          "movimientoVentaId": 5,
+          "folio": "13004",
+          "ubicacionId": 10,
+          "fecha": "2026-10-01T23:31:59.369Z",
+          "saldoPendiente": "10.00",
+          "facturada": false
+        }
+      ],
+      "propuestas": [],
+      "aplicaciones": [],
+      "rechazos": [],
+      "reciboId": "657d826b-03c4-45b2-aeaa-dd58601df80b",
+      "antiguedadDias": 0,
+      "avisoAdmin": false,
+      "capacidades": {
+        "puedeRecibir": true,
+        "puedePreparar": false,
+        "puedeAutorizar": false,
+        "puedeRechazar": false,
+        "puedeDevolver": false,
+        "puedeVerAvisos": false,
+        "puedeImprimir": false,
+        "preparacionADisponible": false
+      }
+    },
+    "actorId": 2,
+    "source": "browser-e5-retained",
+    "screenshot": "caja-e5-retained-after-confirm.png",
+    "network": "caja-e5-retained-network.json"
+  }
+]

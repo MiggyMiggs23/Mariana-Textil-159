@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import { ReceiptDiscovery } from "@/components/receipt-discovery";
 import { useLocation } from "wouter";
 import { useHistoryEntryState } from "@/lib/internal-navigation";
 import { useForm } from "react-hook-form";
@@ -1391,6 +1392,7 @@ export default function PosPage() {
           </div>
         </div>
 
+        <ReceiptDiscovery />
         <Tabs
           value={tipoTicket}
           onValueChange={(v) => setTipoTicket(v as TipoTicket)}

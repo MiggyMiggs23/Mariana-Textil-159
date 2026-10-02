@@ -1,0 +1,52 @@
+Mariana Textil · Recibo de recepción                                                                                                      Copia Cliente · Página 1 / 1
+E5-R-657d826b-03c4-45b2-aeaa-dd58601df80b                                                                                                                     $10.00
+Recibo vinculado: E5-R-657d826b-03c4-45b2-aeaa-dd58601df80b
+Cliente: Receipt 1 browser-e5-retained · Sitio: Receipt isolated own
+Recibió: receipt_1_caja_receive
+Recepción: 1/10/2026, 5:37:55 p.m. · Emisión: 1/10/2026, 5:37:55 p.m.
+Medio: EFECTIVO · Cuenta: CAJA_FISICA
+Recibido, pendiente de aplicación. No es saldo a favor disponible.
+Evidencia: Prueba aislada de recepción en efectivo; fixture browser-e5-retained.
+Referencia: receipt-terminal-runtime browser-e5-retained
+Nota (snapshot)                                                                           Saldo en evidencia                                      Importe asignado
+
+13004 · cargo 5                                                                                      $10.00                        Sin aplicación en este documento
+
+
+
+
+Total recibido original: $10.00 · Pendiente al emitir: $10.00
+Favor autorizado generado en esta constancia: $0.00
+Documento inmutable. No recalculado con saldos actuales. Reimprimir no recibe ni aplica dinero.
+
+
+
+
+                            Firma de quien entrega / cliente                                               Firma de quien recibe / autoriza
+Mariana Textil · Recibo de recepción                                                                                                      Copia Tienda · Página 1 / 1
+E5-R-657d826b-03c4-45b2-aeaa-dd58601df80b                                                                                                                    $10.00
+Recibo vinculado: E5-R-657d826b-03c4-45b2-aeaa-dd58601df80b
+Cliente: Receipt 1 browser-e5-retained · Sitio: Receipt isolated own
+Recibió: receipt_1_caja_receive
+Recepción: 1/10/2026, 5:37:55 p.m. · Emisión: 1/10/2026, 5:37:55 p.m.
+Medio: EFECTIVO · Cuenta: CAJA_FISICA
+Recibido, pendiente de aplicación. No es saldo a favor disponible.
+Evidencia: Prueba aislada de recepción en efectivo; fixture browser-e5-retained.
+Referencia: receipt-terminal-runtime browser-e5-retained
+
+Nota (snapshot)                                                                           Saldo en evidencia                                     Importe asignado
+
+13004 · cargo 5                                                                                      $10.00                        Sin aplicación en este documento
+
+
+
+
+Total recibido original: $10.00 · Pendiente al emitir: $10.00
+Favor autorizado generado en esta constancia: $0.00
+Documento inmutable. No recalculado con saldos actuales. Reimprimir no recibe ni aplica dinero.
+
+
+
+
+                            Firma de quien entrega / cliente                                               Firma de quien recibe / autoriza
+

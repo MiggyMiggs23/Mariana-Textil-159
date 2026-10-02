@@ -201,7 +201,7 @@ export default function Permisos() {
                           const current = rolesData?.find(r => r.rol === selectedRole && r.modulo === modulo);
                           return (
                             <tr key={modulo} className="hover:bg-muted/10 transition-colors">
-                              <td className="p-4 font-medium font-mono text-xs">{modulo}</td>
+                              <td className="p-4 font-medium font-mono text-xs">{modulo === "recibos_abonos" ? "Recibos de abonos · Ver = consultar / imprimir (sin operaciones financieras)" : modulo}</td>
                               <td className="p-4 text-center">
                                 <Checkbox
                                   checked={current?.puedeVer ?? false}
@@ -307,7 +307,7 @@ export default function Permisos() {
                             return (
                               <tr key={modulo} className={`hover:bg-muted/10 transition-colors ${isOverridden ? 'bg-blue-50/30' : ''}`}>
                                 <td className="p-4 font-medium font-mono text-xs flex items-center gap-2">
-                                  {modulo}
+                                  {modulo === "recibos_abonos" ? "Recibos de abonos · Ver = consultar / imprimir (sin operaciones financieras)" : modulo}
                                   {isOverridden && <span className="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider">Modificado</span>}
                                 </td>
 

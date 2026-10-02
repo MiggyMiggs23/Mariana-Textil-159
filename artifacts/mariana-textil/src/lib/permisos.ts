@@ -34,6 +34,7 @@ export const Modules = {
   VIAJES: "viajes",
   SALIDAS_VENTA: "salidas_venta",
   EQUIPOS: "equipos",
+  RECIBOS_ABONOS: "recibos_abonos",
   CAJA_ABONOS: "caja_abonos",
   CLIENTES_RECAPTURAS: "clientes_recapturas",
 } as const;

@@ -1,0 +1,38 @@
+{
+  "status": "STAGED_NOT_ACTIVATED",
+  "manifestSha256": "889ac50564e5cff92129df60d467e864748105079d07dfb742b0c3ce7b262a09",
+  "externalResolution": {
+    "nodeModules": "/home/runner/workspace/artifacts/api-server/node_modules",
+    "imports": [
+      "@google-cloud/storage",
+      "crypto",
+      "fs",
+      "module",
+      "node:async_hooks",
+      "node:crypto",
+      "node:fs",
+      "node:module",
+      "node:path",
+      "node:url",
+      "stream",
+      "zlib"
+    ]
+  },
+  "api": {
+    "source": "/home/runner/workspace/reports/receipt-terminal-print-20261001/revision-2/api",
+    "destination": "/home/runner/workspace/artifacts/api-server/dist-receipt-terminal-print-20261001",
+    "files": 12,
+    "exactCandidateBytes": true,
+    "guardSha256": "0ba25edefd45bf56f39a793b06109ab55ca7594f0dae4911edfe1da5be7cbf7f"
+  },
+  "web": {
+    "source": "/home/runner/workspace/reports/receipt-terminal-print-20261001/revision-2/web",
+    "destination": "/home/runner/workspace/artifacts/mariana-textil/dist-receipt-terminal-print-20261001",
+    "files": 11,
+    "exactCandidateBytes": true,
+    "guardSha256": "1079b1fc2ab4a524be17a3560636c2a93415d161675f5c039992a7b1d21c086c"
+  },
+  "noBuild": true,
+  "noDatabaseAccess": true,
+  "noWorkflowChanges": true
+}

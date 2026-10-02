@@ -1,19 +1,18 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, useParams } from "wouter";
 import {
-  useGetE5Cobro, useGetE5Documento, useRecordE5Impresion,
+  useGetE5Documento, useRecordE5Impresion,
   useGetCurrentUser,
-  getGetE5CobroQueryKey, getGetE5DocumentoQueryKey,
+  getGetE5DocumentoQueryKey,
   type E5Documento, type E5ImpresionInput,
 } from "@workspace/api-client-react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { E5Boundary, E5Problem, e5Date, e5Money } from "@/components/e5-pendientes";
+import { E5Problem, e5Date, e5Money } from "@/components/e5-pendientes";
 import { e5Error } from "@/hooks/use-e5-actions";
 import { waitForPrintableAssets } from "@/lib/print";
-import { e5AuthorizationContext, e5CanRead, assertE5Detail } from "@/lib/e5-authorization";
-import { useE11Session } from "@/lib/e11-session";
+import { hasPermission } from "@/lib/permisos";
 
 type Row = { key: number; folio: string; saldo: string; importe?: string };
 
@@ -115,30 +114,27 @@ function SnapshotPages({ document: doc, onReady }: { document: E5Documento; onRe
 
 export default function E5DocumentoPage() {
   const { id, documentoId } = useParams();
-  return <AppLayout><E5Boundary>{scope =>
-    scope.admin && scope.capabilities.puedeImprimir && id && documentoId
-      ? <DocumentAccess key={`${scope.scope}:${id}:${documentoId}`} id={id} documentId={documentoId} site={scope.site} scope={scope.scope} />
-      : <E5Problem error="Documentos completos e impresión exclusivos de ADMIN autorizado." />
-  }</E5Boundary></AppLayout>;
-}
-function DocumentAccess({ id, documentId, site, scope }: { id: string; documentId: string; site: number; scope: string }) {
-  const e11 = useE11Session();
   const user = useGetCurrentUser();
-  const receipt = useGetE5Cobro(id, { query: { queryKey: [...getGetE5CobroQueryKey(id), scope], staleTime: 0, refetchOnMount: "always" } });
-  if (receipt.error) return <E5Problem error={receipt.error} />;
-  if (!receipt.data) return <p>Verificando acceso a documento…</p>;
-  if (receipt.data.id !== id || receipt.data.ubicacionId !== site || !receipt.data.capacidades.puedeImprimir) return <E5Problem error="Documento fuera de la recepción, sitio o capacidad seleccionados." />;
-  const known = receipt.data.reciboId === documentId || receipt.data.aplicaciones.some(a => a.constanciaId === documentId);
-  if (!known) return <E5Problem error="El documento no pertenece a esta recepción." />;
-  return <DocumentBody id={id} documentId={documentId} receiptId={receipt.data.reciboId} receiverId={receipt.data.receptor.id} scope={scope} verify={async () => {
-    const actor = await user.refetch();
-    const e11Identity = e11 ? await e11.check() : undefined;
-    if (actor.error || !actor.data || actor.data.rol !== "ADMIN" || String(actor.data.id) !== scope.split(":")[0]
-      || !e5CanRead(actor.data) || e5AuthorizationContext(actor.data, e11Identity) !== scope.split(":")[2]) throw new Error("Identidad/permisos ADMIN cambiaron. No se solicitó impresión.");
-    const fresh = await receipt.refetch();
-    if (fresh.error || !fresh.data || fresh.data.ubicacionId !== site || !fresh.data.capacidades.puedeImprimir) throw new Error("No se pudo confirmar acceso vigente a la impresión.");
-    assertE5Detail(fresh.data, id, site, receipt.data?.clienteId);
-  }} />;
+  const allowed = hasPermission(user.data, "recibos_abonos");
+  const scope = `${user.data?.id}:${user.data?.rol}:${user.data?.ubicacion?.id}:${allowed}`;
+  return <AppLayout>{allowed && id && documentoId
+    ? <ReceiptAccess key={`${scope}:${id}:${documentoId}`} id={id} documentId={documentoId} scope={scope} />
+    : <E5Problem error="Sin permiso para consultar/imprimir recibos." />}</AppLayout>;
+}
+function ReceiptAccess({ id, documentId, scope }: { id: string; documentId: string; scope: string }) {
+  const user = useGetCurrentUser();
+  const document = useGetE5Documento(id, documentId, { query: { queryKey: [...getGetE5DocumentoQueryKey(id, documentId), scope], staleTime: 0, refetchOnMount: "always" } });
+  if (document.error) return <E5Problem error={document.error} />;
+  if (!document.data) return <p>Verificando evidencia del recibo…</p>;
+  return <DocumentBody id={id} documentId={documentId} receiptId={document.data.reciboId}
+    receiverId={document.data.receptor.id} scope={scope} verify={async () => {
+      const fresh = await user.refetch();
+      if (fresh.error || !hasPermission(fresh.data, "recibos_abonos")
+        || `${fresh.data?.id}:${fresh.data?.rol}:${fresh.data?.ubicacion?.id}:true` !== scope)
+        throw new Error("Cambió la identidad o el permiso para imprimir recibos.");
+      const evidence = await document.refetch();
+      if (evidence.error || !evidence.data) throw new Error("No se pudo confirmar acceso a la evidencia.");
+    }} />;
 }
 function DocumentBody({ id, documentId, receiptId, receiverId, scope, verify }: { id: string; documentId: string; receiptId: string; receiverId: number; scope: string; verify: () => Promise<void> }) {
   const snapshot = useGetE5Documento(id, documentId, { query: { queryKey: [...getGetE5DocumentoQueryKey(id, documentId), scope], staleTime: 0, refetchOnMount: "always" } });
@@ -196,7 +192,7 @@ function DocumentBody({ id, documentId, receiptId, receiverId, scope, verify }: 
     || snapshot.data.receptor.id !== receiverId || snapshot.data.copias !== 2) return <E5Problem error="Documento inconsistente. No se reconstruirá ni imprimirá." />;
   return <div className="space-y-4">
     <div className="e5-doc-controls space-y-3">
-      <Link className="underline" href={`/cobros/pendientes/${id}`}>Volver a recepción</Link>
+      <Link className="underline" href="/recibos-abonos">Volver a recibos</Link>
       <h1 className="text-2xl font-bold">{snapshot.data.tipo} · {snapshot.data.folio}</h1>
       <p>Dos copias A5 horizontal. Solicitud auditada; no acredita impresión física. Cancelar o fallar la impresora no modifica dinero.</p>
       <label>Motivo de impresión / reimpresión<Input maxLength={500} disabled={busy || recovery} value={motivo} onChange={e => setMotivo(e.target.value)} /></label>

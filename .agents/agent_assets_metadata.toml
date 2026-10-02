@@ -2887,3 +2887,31 @@ mtime_ms = 1790893768081
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/66b16a06-960a-43eb-8a43-a41bfb0e53ed/ee5c4173-63b0-4719-b2bd-5cab33749196"
 storage_version_token = "1790893885695971"
 content_type = "text/csv"
+
+[[outputs]]
+id = "rMGI1UoROUIgL1rcRWchj"
+uri = "file://reports/receipt-terminal-runtime-20261001/run-vd201X/remainder-Acdx0k/terminal-browser-e3-1.pdf"
+type = "pdf"
+title = "Recibo de abono E3 — impresión desde TERMINAL"
+description = "PDF de prueba generado desde el botón auditado, con copias para cliente y tienda. Datos sintéticos."
+logical_id = "31671427-09d3-4d42-9730-61a55ffd2a23"
+content_hash = "sha256:b6da47119aadb6843d5515d0a533d79c3df5ad8fb257718f84b1ac6eb8ead5e5"
+size = 24860
+mtime_ms = 1790900102112
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/31671427-09d3-4d42-9730-61a55ffd2a23/16b507ad-504e-49b7-b739-53f0616e2dd4"
+storage_version_token = "1790901017790274"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "6r4TjSyXctp-tx_6vKsNs"
+uri = "file://reports/receipt-terminal-runtime-20261001/run-vd201X/remainder-rjBxgw/terminal-browser-e5-directed-1.pdf"
+type = "pdf"
+title = "Recibo E5 — impresión desde TERMINAL"
+description = "Recepción dirigida pendiente de aplicación. Copias para cliente y tienda; imprimir no aplica el dinero. Datos sintéticos."
+logical_id = "e016cbd5-8d4d-43a4-9c55-089104fe7cf2"
+content_hash = "sha256:036a99780955769e9c6bb4ac000a63d60cb1695d73f15d85ec3b38ad5dde79f8"
+size = 27177
+mtime_ms = 1790900677089
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e016cbd5-8d4d-43a4-9c55-089104fe7cf2/5141cbf2-9a23-43d7-86a8-1f4d668a45b3"
+storage_version_token = "1790901018348836"
+content_type = "application/pdf"

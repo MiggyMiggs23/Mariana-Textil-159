@@ -1,0 +1,15 @@
+{
+  "status": "ISOLATED_GUARD_APPLIED",
+  "sqlSha256": "ee12bcaace99ed9b7c6abe51b80efa3a554c44d36f9bd94f30169761a68b66a5",
+  "scriptSha256": "b2baa050f56f6b34726ddc3742dc745d217c345dfabb3b75c85e7bd028dd6eb4",
+  "database": "isolated_test_09b1b52704f49435936d",
+  "apiPid": 13005,
+  "onlyFunction": "public.e5_insert_authority()",
+  "beforeHash": "8e5b05bc6101b1d1ddd311bc34e7e47d16247fd655b7d48dc6bfba222900b90c",
+  "afterHash": "fe3f1b3b070c48c0deac7c1f0d7c8281c7262b1cf131fa8c44f287f8fdedcbab",
+  "financialRowsUnchanged": true,
+  "auditRowsUnchanged": true,
+  "otherFunctionsUnchanged": true,
+  "noApiRestart": true,
+  "noLiveDatabaseAccess": true
+}

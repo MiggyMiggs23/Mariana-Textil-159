@@ -1,0 +1,12 @@
+{
+  "id": "0b6981e1-9406-4172-823f-6c7e6b5071fc",
+  "at": "2026-10-02T00:24:55.228Z",
+  "command": {
+    "id": "0b6981e1-9406-4172-823f-6c7e6b5071fc",
+    "action": "terminal-permission",
+    "allowed": false
+  },
+  "actorId": 3,
+  "freshLoginRequired": true,
+  "ok": true
+}

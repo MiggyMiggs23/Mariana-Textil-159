@@ -1,0 +1,294 @@
+{
+  "status": "FAIL",
+  "out": "/home/runner/workspace/reports/receipt-terminal-runtime-20261001/run-vd201X/remainder-hYWx0F",
+  "started": "2026-10-02T00:16:45.438Z",
+  "ownerPid": 15545,
+  "continuation": "--skip-terminal-e3",
+  "origin": "https://127.0.0.1:33497",
+  "newReceiptsCreated": false,
+  "checks": [
+    {
+      "name": "fresh-context-permission",
+      "actorId": 3,
+      "role": "TERMINAL",
+      "permission": {
+        "modulo": "recibos_abonos",
+        "puedeVer": true,
+        "puedeCrear": false,
+        "puedeEditar": false,
+        "puedeAutorizar": false
+      }
+    },
+    {
+      "name": "receipt-list",
+      "actorId": 3,
+      "method": "GET",
+      "path": "/api/caja/recibos-e3",
+      "status": 200,
+      "body": [
+        {
+          "version": 1,
+          "folio": "E3-10-00000002",
+          "movimientoId": 13,
+          "clienteId": 10,
+          "clienteNombre": "Receipt 1 browser-e3",
+          "importeCentavos": 1000,
+          "clienteTelefono": null,
+          "clienteRfc": null,
+          "sitioNombre": "Receipt isolated own",
+          "actorNombre": "receipt_1_caja_receive",
+          "formaPago": "TRANSFERENCIA",
+          "cuentaDestino": "CUENTA_FISCAL",
+          "sitioId": 10,
+          "sesionCajaId": 1,
+          "recibidoEn": "2026-10-01T23:34:57.703Z",
+          "registradoEn": "2026-10-01T23:34:57.703Z",
+          "actorId": 2,
+          "origen": "CAJA",
+          "motivo": null,
+          "asignaciones": [
+            {
+              "movimientoVentaId": 3,
+              "ticketId": 3,
+              "folio": 13002,
+              "aplicadoCentavos": 1000,
+              "saldoAntesCentavos": 1000,
+              "saldoDespuesCentavos": 0
+            }
+          ],
+          "remanenteCentavos": 0,
+          "saldoAFavorCentavos": 0,
+          "deudaCentavos": 0
+        },
+        {
+          "version": 1,
+          "folio": "E3-10-00000001",
+          "movimientoId": 11,
+          "clienteId": 8,
+          "clienteNombre": "Receipt 1 api-e3",
+          "importeCentavos": 1000,
+          "clienteTelefono": null,
+          "clienteRfc": null,
+          "sitioNombre": "Receipt isolated own",
+          "actorNombre": "Administrador",
+          "formaPago": "TRANSFERENCIA",
+          "cuentaDestino": "CUENTA_FISCAL",
+          "sitioId": 10,
+          "sesionCajaId": 1,
+          "recibidoEn": "2026-10-01T23:32:04.811Z",
+          "registradoEn": "2026-10-01T23:32:04.811Z",
+          "actorId": 1,
+          "origen": "CAJA",
+          "motivo": null,
+          "asignaciones": [
+            {
+              "movimientoVentaId": 1,
+              "ticketId": 1,
+              "folio": 13000,
+              "aplicadoCentavos": 1000,
+              "saldoAntesCentavos": 1000,
+              "saldoDespuesCentavos": 0
+            }
+          ],
+          "remanenteCentavos": 0,
+          "saldoAFavorCentavos": 0,
+          "deudaCentavos": 0
+        }
+      ]
+    },
+    {
+      "name": "receipt-list",
+      "actorId": 3,
+      "method": "GET",
+      "path": "/api/e5/recibos",
+      "status": 200,
+      "body": [
+        {
+          "id": "657d826b-03c4-45b2-aeaa-dd58601df80b",
+          "tipo": "RECIBO",
+          "folio": "E5-R-657d826b-03c4-45b2-aeaa-dd58601df80b",
+          "notas": [
+            {
+              "fecha": "2026-10-01T23:31:59.369Z",
+              "folio": "13004",
+              "notaId": 5,
+              "facturada": false,
+              "ubicacionId": 10,
+              "saldoPendiente": "10.00",
+              "movimientoVentaId": 5
+            }
+          ],
+          "copias": 2,
+          "cobroId": "01455046-d5fb-4c4e-8ad4-610612c19a4b",
+          "mensaje": "Recibido, pendiente de aplicación. No es saldo a favor disponible.",
+          "receptor": {
+            "id": 2,
+            "nombre": "receipt_1_caja_receive"
+          },
+          "reciboId": "657d826b-03c4-45b2-aeaa-dd58601df80b",
+          "evidencia": {
+            "descripcion": "Prueba aislada de recepción en efectivo; fixture browser-e5-retained.",
+            "referencias": [
+              "receipt-terminal-runtime browser-e5-retained"
+            ]
+          },
+          "formaPago": "EFECTIVO",
+          "reciboFolio": "E5-R-657d826b-03c4-45b2-aeaa-dd58601df80b",
+          "asignaciones": [],
+          "fechaEmision": "2026-10-01T23:37:55.014Z",
+          "clienteNombre": "Receipt 1 browser-e5-retained",
+          "cuentaDestino": "CAJA_FISICA",
+          "fechaRecepcion": "2026-10-01T23:37:55.014Z",
+          "importeRecibido": "10.00",
+          "ubicacionNombre": "Receipt isolated own",
+          "importeDocumento": "10.00",
+          "pendienteEnEmision": "10.00",
+          "importeFavorGenerado": "0.00"
+        },
+        {
+          "id": "d9d81b61-b04d-4e0e-b58b-002cfddb7d47",
+          "tipo": "RECIBO",
+          "folio": "E5-R-d9d81b61-b04d-4e0e-b58b-002cfddb7d47",
+          "notas": [
+            {
+              "fecha": "2026-10-01T23:31:59.354Z",
+              "folio": "13003",
+              "notaId": 4,
+              "facturada": false,
+              "ubicacionId": 10,
+              "saldoPendiente": "10.00",
+              "movimientoVentaId": 4
+            }
+          ],
+          "copias": 2,
+          "cobroId": "9c445b81-4567-45b5-80cc-700497db27d6",
+          "mensaje": "Recibido, pendiente de aplicación. No es saldo a favor disponible.",
+          "receptor": {
+            "id": 2,
+            "nombre": "receipt_1_caja_receive"
+          },
+          "reciboId": "d9d81b61-b04d-4e0e-b58b-002cfddb7d47",
+          "evidencia": {
+            "descripcion": "Prueba aislada de recepción por transferencia; fixture browser-e5-directed.",
+            "referencias": [
+              "receipt-terminal-runtime browser-e5-directed"
+            ]
+          },
+          "formaPago": "TRANSFERENCIA",
+          "reciboFolio": "E5-R-d9d81b61-b04d-4e0e-b58b-002cfddb7d47",
+          "asignaciones": [],
+          "fechaEmision": "2026-10-01T23:36:20.266Z",
+          "clienteNombre": "Receipt 1 browser-e5-directed",
+          "cuentaDestino": "CUENTA_FISCAL",
+          "fechaRecepcion": "2026-10-01T23:36:20.266Z",
+          "importeRecibido": "10.00",
+          "ubicacionNombre": "Receipt isolated own",
+          "importeDocumento": "10.00",
+          "pendienteEnEmision": "10.00",
+          "importeFavorGenerado": "0.00"
+        },
+        {
+          "id": "4e0c9b7e-4df1-4581-80b5-9df24b4026fb",
+          "tipo": "RECIBO",
+          "folio": "E5-R-4e0c9b7e-4df1-4581-80b5-9df24b4026fb",
+          "notas": [
+            {
+              "fecha": "2026-10-01T23:31:59.320Z",
+              "folio": "13001",
+              "notaId": 2,
+              "facturada": false,
+              "ubicacionId": 10,
+              "saldoPendiente": "10.00",
+              "movimientoVentaId": 2
+            }
+          ],
+          "copias": 2,
+          "cobroId": "a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7",
+          "mensaje": "Recibido, pendiente de aplicación. No es saldo a favor disponible.",
+          "receptor": {
+            "id": 1,
+            "nombre": "Administrador"
+          },
+          "reciboId": "4e0c9b7e-4df1-4581-80b5-9df24b4026fb",
+          "evidencia": {
+            "descripcion": "Native isolated receipt fixture",
+            "referencias": [
+              "receipt-terminal-runtime"
+            ]
+          },
+          "formaPago": "TRANSFERENCIA",
+          "reciboFolio": "E5-R-4e0c9b7e-4df1-4581-80b5-9df24b4026fb",
+          "asignaciones": [],
+          "fechaEmision": "2026-10-01T23:32:05.002Z",
+          "clienteNombre": "Receipt 1 api-e5",
+          "cuentaDestino": "CUENTA_FISCAL",
+          "fechaRecepcion": "2026-10-01T23:32:05.002Z",
+          "importeRecibido": "10.00",
+          "ubicacionNombre": "Receipt isolated own",
+          "importeDocumento": "10.00",
+          "pendienteEnEmision": "10.00",
+          "importeFavorGenerado": "0.00"
+        }
+      ]
+    }
+  ],
+  "prints": [],
+  "expected": [],
+  "instrumentation": "Fresh native Playwright browser. Only window.print stub and deferred removal of already-present app e5-print; no debugger, CSS or class injection.",
+  "browserPid": 15558,
+  "preexistingAuditCount": 4,
+  "preexistingSinceFinancialBaseline": [
+    {
+      "id": "13",
+      "usuario_id": 3,
+      "accion": "E3_RECIBO_IMPRESION_SOLICITADA",
+      "entidad": "recibos_abono_e3",
+      "entidad_id": "E3-10-00000002",
+      "datos_despues": {
+        "folio": "E3-10-00000002",
+        "motivo": "Solicitud de reimpresión desde otro equipo; no acredita impresión física",
+        "evidencia": "SOLICITUD_NO_CONFIRMACION_FISICA"
+      }
+    },
+    {
+      "id": "15",
+      "usuario_id": 3,
+      "accion": "E3_RECIBO_IMPRESION_SOLICITADA",
+      "entidad": "recibos_abono_e3",
+      "entidad_id": "E3-10-00000002",
+      "datos_despues": {
+        "folio": "E3-10-00000002",
+        "motivo": "Solicitud de reimpresión desde otro equipo; no acredita impresión física",
+        "evidencia": "SOLICITUD_NO_CONFIRMACION_FISICA"
+      }
+    },
+    {
+      "id": "17",
+      "usuario_id": 3,
+      "accion": "E3_RECIBO_IMPRESION_SOLICITADA",
+      "entidad": "recibos_abono_e3",
+      "entidad_id": "E3-10-00000002",
+      "datos_despues": {
+        "folio": "E3-10-00000002",
+        "motivo": "Solicitud de reimpresión desde otro equipo; no acredita impresión física",
+        "evidencia": "SOLICITUD_NO_CONFIRMACION_FISICA"
+      }
+    },
+    {
+      "id": "18",
+      "usuario_id": 3,
+      "accion": "E3_RECIBO_IMPRESION_SOLICITADA",
+      "entidad": "recibos_abono_e3",
+      "entidad_id": "E3-10-00000002",
+      "datos_despues": {
+        "folio": "E3-10-00000002",
+        "motivo": "Solicitud de reimpresión desde otro equipo; no acredita impresión física",
+        "evidencia": "SOLICITUD_NO_CONFIRMACION_FISICA"
+      }
+    }
+  ],
+  "error": "AssertionError [ERR_ASSERTION]: {\"error\":{\"code\":\"E5_STATE_CONFLICT\",\"message\":\"La operación no pudo conservar su integridad; recarga y confirma otra vez.\"}}\n\n409 !== 200\n\n    at print (file:///home/runner/workspace/reports/receipt-terminal-runtime-20261001/remainder-run.mjs:151:49)\n    at async file:///home/runner/workspace/reports/receipt-terminal-runtime-20261001/remainder-run.mjs:203:5",
+  "financialUnchanged": true,
+  "finished": "2026-10-02T00:16:52.940Z",
+  "existingHarnessPreserved": true
+}

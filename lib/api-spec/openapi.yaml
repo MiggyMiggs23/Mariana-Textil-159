@@ -804,6 +804,23 @@ paths:
           description: Avisos calculados desde recepción original; no cambia crédito
           content: { application/json: { schema: { $ref: "#/components/schemas/E5Pagina" } } }
         default: { $ref: "#/components/responses/E5ErrorResponse" }
+  /e5/recibos:
+    get:
+      operationId: listE5Recibos
+      tags: [e5]
+      description: "recibos_abonos.ver: consultar/imprimir. No ADMIN: sólo recibos recibidos en CAJA del sitio asignado, aunque alcanceConsulta sea TODAS. No concede lectura financiera."
+      parameters:
+        - { name: buscar, in: query, schema: { type: string, maxLength: 100 } }
+      responses:
+        "200":
+          description: Hasta 100 snapshots inmutables de recibos; sin reconstrucción histórica.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/E5Documento" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /e5/cobros/{id}/documentos/{documentoId}:
     parameters:
       - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
@@ -811,7 +828,8 @@ paths:
     get:
       operationId: getE5Documento
       tags: [e5]
-      summary: ADMIN consulta recibo o constancia inmutable desde otro equipo
+      summary: Consultar recibo con recibos_abonos.ver; constancias sólo ADMIN
+      description: "No ADMIN sólo recibos recibidos en CAJA del sitio asignado; TODAS no amplía alcance. La autorización/aplicación financiera permanece exclusiva de ADMIN."
       responses:
         "200":
           description: Evidencia imprimible A5 dos copias, no reconstruida desde saldos actuales
@@ -824,6 +842,7 @@ paths:
     post:
       operationId: recordE5Impresion
       tags: [e5]
+      description: "Operación documental auditada bajo recibos_abonos.ver; no crea cobro, aplicación ni autorización. Mismo alcance que el GET."
       requestBody:
         required: true
         content: { application/json: { schema: { $ref: "#/components/schemas/E5ImpresionInput" } } }
@@ -1026,7 +1045,7 @@ paths:
         - { name: folio, in: path, required: true, schema: { type: string } }
       responses:
         "200":
-          description: Snapshot ADMIN sin reconstrucción histórica.
+          description: "Snapshot con recibos_abonos.ver; no ADMIN sólo CAJA y sitio asignado. Sin reconstrucción histórica."
           content:
             application/json:
               schema: { $ref: "#/components/schemas/E3Receipt" }
@@ -1042,7 +1061,7 @@ paths:
         - { name: sesionCajaId, in: query, schema: { type: integer } }
       responses:
         "200":
-          description: ADMIN desde abono o estado de cuenta.
+          description: "recibos_abonos.ver; no ADMIN sólo CAJA y sitio asignado, independientemente de TODAS."
           content:
             application/json:
               schema:
@@ -1054,10 +1073,11 @@ paths:
       operationId: listCajaRecibosE3
       tags: [caja]
       parameters:
-        - { name: sesionCajaId, in: query, required: true, schema: { type: integer } }
+        - { name: sesionCajaId, in: query, schema: { type: integer } }
+        - { name: buscar, in: query, schema: { type: string, maxLength: 100 } }
       responses:
         "200":
-          description: ADMIN desde corte; incluye transferencia sin sumarla a efectivo.
+          description: "recibos_abonos.ver; listado y búsqueda de evidencia. No ADMIN sólo CAJA y sitio asignado. Incluye transferencia sin sumarla a efectivo."
           content:
             application/json:
               schema:

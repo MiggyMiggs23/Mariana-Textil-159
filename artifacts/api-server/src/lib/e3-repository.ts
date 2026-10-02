@@ -115,12 +115,15 @@ export function e3Repository(req: Request): E3Repository {
     }),
   };
 }
-export async function readE3Receipts(filter: { folio?: string; clienteId?: number; movimientoId?: number; sesionCajaId?: number }): Promise<E3Receipt[]> {
+export async function readE3Receipts(filter: { folio?: string; clienteId?: number; movimientoId?: number; sesionCajaId?: number; sitioId?: number; soloCaja?: boolean; buscar?: string }): Promise<E3Receipt[]> {
   const rows = await db.execute(sql`SELECT snapshot FROM recibos_abono_e3 WHERE
     (${filter.folio ?? null}::text IS NULL OR folio=${filter.folio ?? null})
     AND (${filter.clienteId ?? null}::int IS NULL OR cliente_id=${filter.clienteId ?? null})
     AND (${filter.movimientoId ?? null}::int IS NULL OR movimiento_id=${filter.movimientoId ?? null})
     AND (${filter.sesionCajaId ?? null}::int IS NULL OR sesion_operativa_id=${filter.sesionCajaId ?? null})
+    AND (${filter.sitioId ?? null}::int IS NULL OR (snapshot->>'sitioId')::int=${filter.sitioId ?? null})
+    AND (${!filter.soloCaja} OR snapshot->>'origen'='CAJA')
+    AND (${filter.buscar ?? ""}='' OR strpos(lower(folio || ' ' || (snapshot->>'clienteNombre')),lower(${filter.buscar ?? ""}))>0)
     ORDER BY movimiento_id DESC`);
   return rows.rows.map(row => validateE3Receipt(row.snapshot));
 }

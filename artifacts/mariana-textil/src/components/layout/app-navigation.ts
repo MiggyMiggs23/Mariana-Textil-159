@@ -74,6 +74,7 @@ export const NAV_GROUPS: NavGroup[] = [
     title: "OPERACIÓN",
     items: [
       { name: "Ventas / POS", path: "/pos", icon: ShoppingCart, module: Modules.POS, isClickable: true },
+      { name: "Recibos de abonos", path: "/recibos-abonos", icon: FileBarChart, module: Modules.RECIBOS_ABONOS, isClickable: true },
       { name: "Entradas", path: "/entradas", icon: ArrowDownToLine, module: Modules.ENTRADAS, isClickable: true },
       { name: "Salidas", path: "/salidas", icon: ArrowUpFromLine, module: Modules.SALIDAS, isClickable: true },
       { name: "Viajes", path: "/viajes", icon: Truck, module: Modules.VIAJES, isClickable: true },

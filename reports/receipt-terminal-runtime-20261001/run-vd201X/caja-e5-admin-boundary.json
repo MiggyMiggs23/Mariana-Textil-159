@@ -1,0 +1,152 @@
+{
+  "authorizeAttempt": {
+    "method": "POST",
+    "path": "/api/e5/cobros/9c445b81-4567-45b5-80cc-700497db27d6/autorizar",
+    "status": 403,
+    "body": {
+      "error": {
+        "code": "E5_FORBIDDEN",
+        "message": "Acción no autorizada."
+      }
+    }
+  },
+  "applyNowAttempt": {
+    "method": "POST",
+    "path": "/api/e5/cobros",
+    "status": 403,
+    "body": {
+      "error": {
+        "code": "E5_FORBIDDEN",
+        "message": "Solo ADMIN aplica."
+      }
+    }
+  },
+  "listBefore": {
+    "method": "GET",
+    "path": "/api/e5/cobros?ubicacionId=10&clienteId=11",
+    "status": 200,
+    "body": {
+      "items": [
+        {
+          "id": "9c445b81-4567-45b5-80cc-700497db27d6",
+          "estado": "PENDIENTE",
+          "receptor": {
+            "id": 2,
+            "nombre": "receipt_1_caja_receive"
+          },
+          "rechazos": [],
+          "reciboId": "d9d81b61-b04d-4e0e-b58b-002cfddb7d47",
+          "revision": 1,
+          "clienteId": 11,
+          "formaPago": "TRANSFERENCIA",
+          "avisoAdmin": false,
+          "propuestas": [],
+          "capacidades": {
+            "puedeRecibir": true,
+            "puedePreparar": false,
+            "puedeAutorizar": false,
+            "puedeRechazar": false,
+            "puedeDevolver": false,
+            "puedeVerAvisos": false,
+            "puedeImprimir": false,
+            "preparacionADisponible": false
+          },
+          "ubicacionId": 10,
+          "aplicaciones": [],
+          "clienteNombre": "Receipt 1 browser-e5-directed",
+          "cuentaDestino": "CUENTA_FISCAL",
+          "antiguedadDias": 0,
+          "fechaRecepcion": "2026-10-01T23:36:20.266Z",
+          "notasIndicadas": [
+            {
+              "fecha": "2026-10-01T23:31:59.354Z",
+              "folio": "13003",
+              "notaId": 4,
+              "facturada": false,
+              "ubicacionId": 10,
+              "saldoPendiente": "10.00",
+              "movimientoVentaId": 4
+            }
+          ],
+          "importeAplicado": "0.00",
+          "importeDevuelto": "0.00",
+          "importeRecibido": "10.00",
+          "ubicacionNombre": "Receipt isolated own",
+          "importePendiente": "10.00",
+          "algunaVezAplicado": false,
+          "sesionOperativaId": 1,
+          "evidenciaRecepcion": {
+            "descripcion": "Prueba aislada de recepción por transferencia; fixture browser-e5-directed.",
+            "referencias": [
+              "receipt-terminal-runtime browser-e5-directed"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "listAfter": {
+    "method": "GET",
+    "path": "/api/e5/cobros?ubicacionId=10&clienteId=11",
+    "status": 200,
+    "body": {
+      "items": [
+        {
+          "id": "9c445b81-4567-45b5-80cc-700497db27d6",
+          "estado": "PENDIENTE",
+          "receptor": {
+            "id": 2,
+            "nombre": "receipt_1_caja_receive"
+          },
+          "rechazos": [],
+          "reciboId": "d9d81b61-b04d-4e0e-b58b-002cfddb7d47",
+          "revision": 1,
+          "clienteId": 11,
+          "formaPago": "TRANSFERENCIA",
+          "avisoAdmin": false,
+          "propuestas": [],
+          "capacidades": {
+            "puedeRecibir": true,
+            "puedePreparar": false,
+            "puedeAutorizar": false,
+            "puedeRechazar": false,
+            "puedeDevolver": false,
+            "puedeVerAvisos": false,
+            "puedeImprimir": false,
+            "preparacionADisponible": false
+          },
+          "ubicacionId": 10,
+          "aplicaciones": [],
+          "clienteNombre": "Receipt 1 browser-e5-directed",
+          "cuentaDestino": "CUENTA_FISCAL",
+          "antiguedadDias": 0,
+          "fechaRecepcion": "2026-10-01T23:36:20.266Z",
+          "notasIndicadas": [
+            {
+              "fecha": "2026-10-01T23:31:59.354Z",
+              "folio": "13003",
+              "notaId": 4,
+              "facturada": false,
+              "ubicacionId": 10,
+              "saldoPendiente": "10.00",
+              "movimientoVentaId": 4
+            }
+          ],
+          "importeAplicado": "0.00",
+          "importeDevuelto": "0.00",
+          "importeRecibido": "10.00",
+          "ubicacionNombre": "Receipt isolated own",
+          "importePendiente": "10.00",
+          "algunaVezAplicado": false,
+          "sesionOperativaId": 1,
+          "evidenciaRecepcion": {
+            "descripcion": "Prueba aislada de recepción por transferencia; fixture browser-e5-directed.",
+            "referencias": [
+              "receipt-terminal-runtime browser-e5-directed"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

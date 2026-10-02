@@ -7,6 +7,7 @@ import { getApiErrorMessage } from "@/lib/api-error";
 import { E3_ENABLED } from "@/lib/e3-feature-flags";
 import { useGetCurrentUser, type E3Receipt } from "@workspace/api-client-react";
 import { formatNumber } from "@workspace/number-format";
+import { hasPermission } from "@/lib/permisos";
 
 const money = (cents: number) => formatNumber(cents / 100, { kind: "money" });
 const date = (value: string | Date) => new Date(value).toLocaleString("es-MX", { timeZone: "America/Mexico_City" });
@@ -121,7 +122,7 @@ export function ReceiptPages({ recibo, printedAt, onReady }: {
 export default function ReciboE3() {
   const { folio } = useParams();
   const { data: user } = useGetCurrentUser();
-  const allowed = E3_ENABLED && user?.rol === "ADMIN";
+  const allowed = E3_ENABLED && hasPermission(user, "recibos_abonos");
   const { data: recibo, isLoading, error } = useE3GetRecibo(folio ?? "", allowed);
   const audit = useE3RegistrarImpresion();
   const [ready, setReady] = useState(false);
@@ -142,12 +143,13 @@ export default function ReciboE3() {
     } finally { printing.current = false; }
   };
   return <AppLayout>
-    {!allowed ? <p>E3 cerrado o acceso exclusivo de ADMIN.</p> :
+    {!allowed ? <p>E3 cerrado o sin permiso para consultar/imprimir recibos.</p> :
       isLoading ? <p>Cargando evidencia…</p> :
       error || !recibo ? <p role="alert">{getApiErrorMessage(error, "No hay evidencia íntegra del recibo. No se reconstruirá con saldos actuales.")}</p> :
       <>
         <div className="e3-no-print"><h1>Recibo {recibo.folio}</h1><p>Dos copias A5. La solicitud se audita; cancelar la impresora no vuelve a cobrar.</p>
-          <p><Link className="font-semibold text-primary underline" href={`/clientes/${recibo.clienteId}/movimientos/${recibo.movimientoId}`}>Ver detalle del movimiento #{recibo.movimientoId}</Link></p>
+          <p><Link className="font-semibold text-primary underline" href="/recibos-abonos">Volver a recibos</Link></p>
+          {hasPermission(user, "clientes") && hasPermission(user, "clientes_credito") && <p><Link className="font-semibold text-primary underline" href={`/clientes/${recibo.clienteId}/movimientos/${recibo.movimientoId}`}>Ver detalle del movimiento #{recibo.movimientoId}</Link></p>}
           <Button disabled={!ready || audit.isPending} onClick={handlePrint} data-testid="button-print-receipt">Solicitar impresión / reimpresión</Button>
           {printError && <p role="alert">{printError}</p>}
         </div>

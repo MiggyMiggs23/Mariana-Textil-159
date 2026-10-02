@@ -3357,7 +3357,103 @@ export const ListE5AvisosResponse = zod.object({
 
 
 /**
- * @summary ADMIN consulta recibo o constancia inmutable desde otro equipo
+ * recibos_abonos.ver: consultar/imprimir. No ADMIN: sólo recibos recibidos en CAJA del sitio asignado, aunque alcanceConsulta sea TODAS. No concede lectura financiera.
+ */
+export const listE5RecibosQueryBuscarMax = 100;
+
+
+
+export const ListE5RecibosQueryParams = zod.object({
+  "buscar": zod.coerce.string().max(listE5RecibosQueryBuscarMax).optional()
+})
+
+export const listE5RecibosResponseImporteRecibidoMax = 13;
+
+
+export const listE5RecibosResponseImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5RecibosResponseImporteDocumentoMax = 13;
+
+
+export const listE5RecibosResponseImporteDocumentoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5RecibosResponseImporteFavorGeneradoMax = 13;
+
+
+export const listE5RecibosResponseImporteFavorGeneradoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5RecibosResponsePendienteEnEmisionMax = 13;
+
+
+export const listE5RecibosResponsePendienteEnEmisionRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const listE5RecibosResponseAsignacionesItemImporteMax = 13;
+
+
+export const listE5RecibosResponseAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5RecibosResponseNotasItemSaldoPendienteMax = 13;
+
+
+export const listE5RecibosResponseNotasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5RecibosResponseEvidenciaDescripcionMax = 2000;
+
+export const listE5RecibosResponseEvidenciaReferenciasItemMax = 500;
+
+export const listE5RecibosResponseEvidenciaReferenciasMax = 20;
+
+
+
+export const ListE5RecibosResponseItem = zod.object({
+  "id": zod.string().uuid(),
+  "tipo": zod.enum(['RECIBO', 'CONSTANCIA']),
+  "folio": zod.string(),
+  "cobroId": zod.string().uuid(),
+  "reciboId": zod.string().uuid(),
+  "reciboFolio": zod.string(),
+  "clienteNombre": zod.string(),
+  "ubicacionNombre": zod.string(),
+  "receptor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "autorizador": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}).optional(),
+  "fechaRecepcion": zod.coerce.date(),
+  "fechaEmision": zod.coerce.date(),
+  "fechaAplicacion": zod.coerce.date().optional(),
+  "importeRecibido": zod.string().max(listE5RecibosResponseImporteRecibidoMax).regex(listE5RecibosResponseImporteRecibidoRegExp),
+  "importeDocumento": zod.string().max(listE5RecibosResponseImporteDocumentoMax).regex(listE5RecibosResponseImporteDocumentoRegExp),
+  "importeFavorGenerado": zod.string().max(listE5RecibosResponseImporteFavorGeneradoMax).regex(listE5RecibosResponseImporteFavorGeneradoRegExp).optional(),
+  "pendienteEnEmision": zod.string().max(listE5RecibosResponsePendienteEnEmisionMax).regex(listE5RecibosResponsePendienteEnEmisionRegExp),
+  "mensaje": zod.string(),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(listE5RecibosResponseAsignacionesItemImporteMax).regex(listE5RecibosResponseAsignacionesItemImporteRegExp)
+})),
+  "notas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(listE5RecibosResponseNotasItemSaldoPendienteMax).regex(listE5RecibosResponseNotasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(listE5RecibosResponseEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(listE5RecibosResponseEvidenciaReferenciasItemMax)).max(listE5RecibosResponseEvidenciaReferenciasMax)
+}),
+  "copias": zod.literal(2)
+})
+export const ListE5RecibosResponse = zod.array(ListE5RecibosResponseItem)
+
+
+/**
+ * No ADMIN sólo recibos recibidos en CAJA del sitio asignado; TODAS no amplía alcance. La autorización/aplicación financiera permanece exclusiva de ADMIN.
+ * @summary Consultar recibo con recibos_abonos.ver; constancias sólo ADMIN
  */
 export const GetE5DocumentoParams = zod.object({
   "id": zod.coerce.string().uuid(),
@@ -3447,6 +3543,9 @@ export const GetE5DocumentoResponse = zod.object({
 })
 
 
+/**
+ * Operación documental auditada bajo recibos_abonos.ver; no crea cobro, aplicación ni autorización. Mismo alcance que el GET.
+ */
 export const RecordE5ImpresionParams = zod.object({
   "id": zod.coerce.string().uuid(),
   "documentoId": zod.coerce.string().uuid()
@@ -4645,8 +4744,13 @@ export const ListClienteRecibosE3ResponseItem = zod.object({
 export const ListClienteRecibosE3Response = zod.array(ListClienteRecibosE3ResponseItem)
 
 
+export const listCajaRecibosE3QueryBuscarMax = 100;
+
+
+
 export const ListCajaRecibosE3QueryParams = zod.object({
-  "sesionCajaId": zod.coerce.number().int()
+  "sesionCajaId": zod.coerce.number().int().optional(),
+  "buscar": zod.coerce.string().max(listCajaRecibosE3QueryBuscarMax).optional()
 })
 
 export const ListCajaRecibosE3ResponseItem = zod.object({

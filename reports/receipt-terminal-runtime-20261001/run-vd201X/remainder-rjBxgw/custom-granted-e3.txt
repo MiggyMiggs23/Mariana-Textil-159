@@ -1,0 +1,44 @@
+Mariana Textil · Recibo de abono                                                                                 Copia Cliente · Página 1 / 1
+E3-10-00000002                                                                                                                       $10.00
+Cliente: Receipt 1 browser-e3
+Sitio receptor: Receipt isolated own · Recibió / registró: receipt_1_caja_receive
+Recepción: 1/10/2026, 5:34:57 p.m. · Registro: 1/10/2026, 5:34:57 p.m.
+Medio: Transferencia · Cuenta: CUENTA FISCAL
+Nota                                                                   Saldo anterior    Aplicado                          Saldo posterior
+
+13002                                                                          $10.00       $10.00                                    $0.00
+
+
+
+
+Remanente del abono: $0.00 · Saldo a favor total: $0.00 · Deuda total posterior: $0.00
+
+
+
+
+                                Firma de quien entrega                                   Firma de quien recibe
+
+REIMPRESIÓN / copia de evidencia emitida · 1/10/2026, 6:24:50 p.m. · Movimiento 13
+Mariana Textil · Recibo de abono                                                                                 Copia Tienda · Página 1 / 1
+E3-10-00000002                                                                                                                      $10.00
+Cliente: Receipt 1 browser-e3
+Sitio receptor: Receipt isolated own · Recibió / registró: receipt_1_caja_receive
+Recepción: 1/10/2026, 5:34:57 p.m. · Registro: 1/10/2026, 5:34:57 p.m.
+Medio: Transferencia · Cuenta: CUENTA FISCAL
+
+Nota                                                                   Saldo anterior    Aplicado                         Saldo posterior
+
+13002                                                                          $10.00       $10.00                                   $0.00
+
+
+
+
+Remanente del abono: $0.00 · Saldo a favor total: $0.00 · Deuda total posterior: $0.00
+
+
+
+
+                                Firma de quien entrega                                   Firma de quien recibe
+
+REIMPRESIÓN / copia de evidencia emitida · 1/10/2026, 6:24:50 p.m. · Movimiento 13
+

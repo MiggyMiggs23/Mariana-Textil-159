@@ -1,0 +1,10 @@
+{
+  "id": "0aec6368-8e73-4e68-a953-6a2e98eaeb85",
+  "at": "2026-10-02T00:15:18.901Z",
+  "command": {
+    "id": "0aec6368-8e73-4e68-a953-6a2e98eaeb85",
+    "action": "compare"
+  },
+  "status": "FINANCIAL_UNCHANGED",
+  "ok": true
+}

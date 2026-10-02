@@ -10192,6 +10192,13 @@ cursor?: string;
 limit?: number;
 };
 
+export type ListE5RecibosParams = {
+/**
+ * @maxLength 100
+ */
+buscar?: string;
+};
+
 export type RecordE5Impresion200 = {
   registrado: boolean;
 };
@@ -10234,7 +10241,11 @@ sesionCajaId?: number;
 };
 
 export type ListCajaRecibosE3Params = {
-sesionCajaId: number;
+sesionCajaId?: number;
+/**
+ * @maxLength 100
+ */
+buscar?: string;
 };
 
 export type RecordReciboE3Print200 = {

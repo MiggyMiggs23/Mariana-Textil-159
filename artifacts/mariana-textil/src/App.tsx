@@ -40,6 +40,7 @@ import StockMinimos from "@/pages/stock-minimos";
 import RolloDetail from "@/pages/rollo-detail";
 import RolloEtiqueta from "@/pages/rollo-etiqueta";
 import Pos from "@/pages/pos";
+import RecibosAbonos from "@/pages/recibos-abonos";
 import Cobros from "@/pages/cobros";
 import { E11ApplicationBoundary, E11RoutePage } from "@/pages/e11";
 import { e11On } from "@/lib/e11-session";
@@ -535,7 +536,7 @@ function Router() {
         {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Route path="/fondo/arqueos" component={() => <ProtectedRoute component={FondoArqueos} allowedRoles={["ADMIN"]} requiredRoles={["ADMIN"]} />} />}
         {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Route path="/fondo/arqueos/:id" component={() => <ProtectedRoute component={FondoArqueoDetail} allowedRoles={["ADMIN"]} requiredRoles={["ADMIN"]} />} />}
 
-        {E5_ENABLED && <Route path="/cobros/pendientes/:id/documentos/:documentoId" component={() => <ProtectedRoute component={E5DocumentoPage} requiredRoles={["ADMIN"]} allowedAnyModules={E5_READ_MODULES} />} />}
+        {E5_ENABLED && <Route path="/cobros/pendientes/:id/documentos/:documentoId" component={() => <ProtectedRoute component={E5DocumentoPage} allowedModule={Modules.RECIBOS_ABONOS} />} />}
         {E5_ENABLED && <Route path="/cobros/pendientes/:id" component={() => <ProtectedRoute component={E5DetallePage} allowedAnyModules={E5_READ_MODULES} allowedRoles={["CONTADOR"]} />} />}
         {E5_ENABLED && <Route path="/cobros/pendientes" component={() => <ProtectedRoute component={E5PendientesPage} allowedAnyModules={E5_READ_MODULES} allowedRoles={["CONTADOR"]} />} />}
         <Route
@@ -584,13 +585,13 @@ function Router() {
             />
           )}
         />
+        <Route path="/recibos-abonos" component={() => <ProtectedRoute component={RecibosAbonos} allowedModule={Modules.RECIBOS_ABONOS} />} />
         {E3_ENABLED && <Route
           path="/recibos-e3/:folio"
           component={() => (
             <ProtectedRoute
               component={ReciboE3}
-              allowedModule={Modules.CLIENTES}
-              requiredRoles={["ADMIN"]}
+              allowedModule={Modules.RECIBOS_ABONOS}
             />
           )}
         />}

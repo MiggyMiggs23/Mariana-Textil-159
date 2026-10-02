@@ -1,0 +1,44 @@
+{
+  "path": "/api/caja/abonos-e3",
+  "method": "POST",
+  "status": 201,
+  "response": {
+    "recibo": {
+      "clienteId": 10,
+      "importeCentavos": 1000,
+      "asignaciones": [
+        {
+          "movimientoVentaId": 3,
+          "ticketId": 3,
+          "folio": 13002,
+          "aplicadoCentavos": 1000,
+          "saldoAntesCentavos": 1000,
+          "saldoDespuesCentavos": 0
+        }
+      ],
+      "remanenteCentavos": 0,
+      "saldoAFavorCentavos": 0,
+      "deudaCentavos": 0,
+      "origen": "CAJA",
+      "version": 1,
+      "folio": "E3-10-00000002",
+      "movimientoId": 13,
+      "clienteNombre": "Receipt 1 browser-e3",
+      "formaPago": "TRANSFERENCIA",
+      "cuentaDestino": "CUENTA_FISCAL",
+      "clienteTelefono": null,
+      "clienteRfc": null,
+      "sitioNombre": "Receipt isolated own",
+      "actorNombre": "receipt_1_caja_receive",
+      "sitioId": 10,
+      "sesionCajaId": 1,
+      "recibidoEn": "2026-10-01T23:34:57.703Z",
+      "registradoEn": "2026-10-01T23:34:57.703Z",
+      "actorId": 2,
+      "motivo": null
+    },
+    "replay": false
+  },
+  "source": "actual browser confirmation button",
+  "screenshot": "caja-e3-after-confirm.png"
+}

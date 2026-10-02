@@ -14,9 +14,11 @@ test("startup repairs only inherited CAJA role rows", async () => {
   await ensureCajaPermissions(pool as never);
   await ensureCajaPermissions(pool as never);
 
-  assert.equal(calls.length, 2, "initialization is idempotent");
-  assert.match(calls[0].text, /modulo = 'cobros_pagos'/);
+  assert.equal(calls.length, 4, "initialization is idempotent");
+  assert.match(calls[0].text, /'recibos_abonos'/);
+  assert.match(calls[0].text, /rol IN \('ADMIN','TERMINAL'\)/);
+  assert.match(calls[1].text, /modulo = 'cobros_pagos'/);
   assert.match(calls[0].text, /WHERE permisos_rol\.updated_por IS NULL/);
   assert.doesNotMatch(calls[0].text, /permisos_usuario/);
-  assert.equal((calls[0].values?.[0] as string[]).length, 31);
+  assert.equal((calls[1].values?.[0] as string[]).length, 32);
 });

@@ -74,6 +74,7 @@ export function mergePermissionValues(
 const REMATE_MATRIX_RELEASED: boolean = true;
 const E3_MATRIX_RELEASED: boolean = true;
 export const MODULOS = [
+  "recibos_abonos",
   ...(REMATE_MATRIX_RELEASED ? ["marcar_remate"] : []),
   "dashboard",
   "pos",

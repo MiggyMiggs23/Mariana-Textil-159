@@ -7,5 +7,9 @@
  */
 
 export type ListCajaRecibosE3Params = {
-sesionCajaId: number;
+sesionCajaId?: number;
+/**
+ * @maxLength 100
+ */
+buscar?: string;
 };

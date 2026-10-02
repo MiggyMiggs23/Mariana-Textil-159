@@ -18,6 +18,18 @@ router.use("/e5", e5OffBoundary);
 router.use("/e5", requireSession, async (req, res, next) => {
   try {
     const user = req.auth!.user;
+    // Narrow documentary lane: no context, balances, proposals or applications.
+    const receiptRoute = /^\/cobros\/[^/]+\/documentos\/[^/]+(?:\/impresiones)?\/?$/.test(req.path)
+      || req.path === "/recibos";
+    if (receiptRoute) {
+      const permission = await resolvePermiso(user.id, user.rol, "recibos_abonos");
+      if (!permission?.puedeVer) throw new E5Error("E5_FORBIDDEN", "Sin permiso para consultar/imprimir recibos.", 403);
+      if (user.rol !== "ADMIN" && !user.ubicacionId) throw new E5Error("E5_NOT_FOUND", "Sin sitio asignado.", 404);
+      res.locals.e5Actor = { id: user.id, nombre: user.nombre, rol: user.rol, ubicacionId: user.ubicacionId,
+        ip: getRequestIp(req), ver: true, recibos: true, recibirCaja: false, recibirCliente: false,
+        todas: user.rol === "ADMIN", capacidadAE11: false } satisfies E5Actor;
+      next(); return;
+    }
     const [cash, client] = await Promise.all([
       resolvePermiso(user.id, user.rol, "caja_abonos"), resolvePermiso(user.id, user.rol, "clientes_finanzas"),
     ]);
@@ -35,6 +47,21 @@ router.use("/e5", requireSession, async (req, res, next) => {
   } catch (error) { next(error); }
 });
 const actor = (req: Request): E5Actor => req.res!.locals.e5Actor;
+router.get("/e5/recibos", async (req, res, next) => {
+  try {
+    const buscar = z.string().trim().max(100).parse(req.query.buscar ?? "");
+    const a = actor(req);
+    const result = await db.execute(sql`SELECT d.snapshot FROM e5_documentos d
+      JOIN e5_cobros c ON c.id=d.cobro_id
+      WHERE d.snapshot->>'tipo'='RECIBO'
+        AND (${a.rol === "ADMIN"} OR (c.ubicacion_id=${a.ubicacionId} AND EXISTS
+          (SELECT 1 FROM e5_operaciones o WHERE o.cobro_id=c.id AND o.accion='RECIBIR'
+           AND o.content::jsonb->'input'->>'entrada'='CAJA')))
+        AND (${buscar}='' OR strpos(lower((d.snapshot->>'folio') || ' ' || (d.snapshot->>'clienteNombre')),lower(${buscar}))>0)
+      ORDER BY d.snapshot->>'fechaRecepcion' DESC LIMIT 100`);
+    res.json(result.rows.map(r => r.snapshot));
+  } catch (error) { next(error); }
+});
 const id = (req: Request) => z.string().uuid().transform(v => v.toLowerCase()).parse(req.params.id);
 const documentId = (req: Request) => z.string().uuid().transform(v => v.toLowerCase()).parse(req.params.documentoId);
 const dependencies: E5Dependencies = {

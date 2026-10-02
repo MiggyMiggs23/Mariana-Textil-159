@@ -1,0 +1,52 @@
+Mariana Textil · Recibo de recepción                                                                                                      Copia Cliente · Página 1 / 1
+E5-R-d9d81b61-b04d-4e0e-b58b-002cfddb7d47                                                                                                                     $10.00
+Recibo vinculado: E5-R-d9d81b61-b04d-4e0e-b58b-002cfddb7d47
+Cliente: Receipt 1 browser-e5-directed · Sitio: Receipt isolated own
+Recibió: receipt_1_caja_receive
+Recepción: 1/10/2026, 5:36:20 p.m. · Emisión: 1/10/2026, 5:36:20 p.m.
+Medio: TRANSFERENCIA · Cuenta: CUENTA_FISCAL
+Recibido, pendiente de aplicación. No es saldo a favor disponible.
+Evidencia: Prueba aislada de recepción por transferencia; fixture browser-e5-directed.
+Referencia: receipt-terminal-runtime browser-e5-directed
+Nota (snapshot)                                                                           Saldo en evidencia                                      Importe asignado
+
+13003 · cargo 4                                                                                      $10.00                        Sin aplicación en este documento
+
+
+
+
+Total recibido original: $10.00 · Pendiente al emitir: $10.00
+Favor autorizado generado en esta constancia: $0.00
+Documento inmutable. No recalculado con saldos actuales. Reimprimir no recibe ni aplica dinero.
+
+
+
+
+                            Firma de quien entrega / cliente                                               Firma de quien recibe / autoriza
+Mariana Textil · Recibo de recepción                                                                                                      Copia Tienda · Página 1 / 1
+E5-R-d9d81b61-b04d-4e0e-b58b-002cfddb7d47                                                                                                                    $10.00
+Recibo vinculado: E5-R-d9d81b61-b04d-4e0e-b58b-002cfddb7d47
+Cliente: Receipt 1 browser-e5-directed · Sitio: Receipt isolated own
+Recibió: receipt_1_caja_receive
+Recepción: 1/10/2026, 5:36:20 p.m. · Emisión: 1/10/2026, 5:36:20 p.m.
+Medio: TRANSFERENCIA · Cuenta: CUENTA_FISCAL
+Recibido, pendiente de aplicación. No es saldo a favor disponible.
+Evidencia: Prueba aislada de recepción por transferencia; fixture browser-e5-directed.
+Referencia: receipt-terminal-runtime browser-e5-directed
+
+Nota (snapshot)                                                                           Saldo en evidencia                                     Importe asignado
+
+13003 · cargo 4                                                                                      $10.00                        Sin aplicación en este documento
+
+
+
+
+Total recibido original: $10.00 · Pendiente al emitir: $10.00
+Favor autorizado generado en esta constancia: $0.00
+Documento inmutable. No recalculado con saldos actuales. Reimprimir no recibe ni aplica dinero.
+
+
+
+
+                            Firma de quien entrega / cliente                                               Firma de quien recibe / autoriza
+

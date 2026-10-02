@@ -300,8 +300,16 @@ export async function listE5Cobros(tx: E5Sql, actor: E5Actor, query: {
 }
 export async function readE5Document(tx: E5Sql, id: string, document: string, actor: E5Actor, enabled = E5_ENABLED): Promise<E5Documento> {
   if (!enabled) throw new E5Error("E5_DISABLED", "E5 no está habilitado.", 403);
-  if (actor.rol !== "ADMIN") throw new E5Error("E5_FORBIDDEN", "Impresión exclusivamente ADMIN desde otro equipo.", 403);
-  await readE5Cobro(tx, id, actor, enabled);
+  if (actor.rol !== "ADMIN" && !actor.recibos) throw new E5Error("E5_FORBIDDEN", "Sin permiso para consultar/imprimir recibos.", 403);
+  // Receipt access never inherits TODAS and never grants access to the financial reader.
+  const detail = await readE5Cobro(tx, id, { ...actor, todas: actor.rol === "ADMIN" }, enabled);
+  if (actor.rol !== "ADMIN") {
+    const reception = await tx.execute(sql`SELECT 1 FROM e5_operaciones
+      WHERE cobro_id=${id}::uuid AND accion='RECIBIR'
+        AND content::jsonb->'input'->>'entrada'='CAJA' LIMIT 1`);
+    if (detail.reciboId !== document || !reception.rows.length)
+      throw new E5Error("E5_NOT_FOUND", "Recibo no encontrado.", 404);
+  }
   const result = await tx.execute(sql`SELECT snapshot FROM e5_documentos WHERE id=${document}::uuid AND cobro_id=${id}::uuid`);
   if (!result.rows[0]) throw new E5Error("E5_NOT_FOUND", "Documento no encontrado.", 404);
   return result.rows[0].snapshot as E5Documento;

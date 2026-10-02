@@ -1,0 +1,36 @@
+kind = "api"
+previewPath = "/api"
+title = "API Server"
+version = "1.0.0"
+id = "3B4_FFSkEVBkAeYMFRJ2e"
+
+[[services]]
+localPort = 8080
+name = "API Server"
+paths = ["/api"]
+
+[services.development]
+run = "cd /home/runner/workspace && sha256sum -c reports/receipt-terminal-print-20261001/release-api.sha256 && API_STARTUP_MODE=NORMAL API_INSPECTION_BOOT=1 NODE_ENV=development exec node artifacts/api-server/dist-receipt-terminal-print-20261001/index.mjs"
+
+[services.development.env]
+API_STARTUP_MODE = "NORMAL"
+API_INSPECTION_BOOT = "1"
+NODE_ENV = "development"
+
+[services.production]
+
+[services.production.build]
+args = ["pnpm", "--filter", "@workspace/api-server", "run", "build"]
+
+[services.production.build.env]
+NODE_ENV = "production"
+
+[services.production.run]
+args = ["node", "--enable-source-maps", "artifacts/api-server/dist/index.mjs"]
+
+[services.production.run.env]
+PORT = "8080"
+NODE_ENV = "production"
+
+[services.production.health.startup]
+path = "/api/healthz"

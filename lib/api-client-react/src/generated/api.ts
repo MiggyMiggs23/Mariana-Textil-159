@@ -295,6 +295,7 @@ import type {
   ListE11PreparacionesParams,
   ListE5AvisosParams,
   ListE5CobrosParams,
+  ListE5RecibosParams,
   ListE9EntregasParams,
   ListEntradasParams,
   ListEntradasPendientesCostoParams,
@@ -3850,6 +3851,87 @@ export function useListE5Avisos<TData = Awaited<ReturnType<typeof listE5Avisos>>
 
 
 
+export const getListE5RecibosUrl = (params?: ListE5RecibosParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e5/recibos?${stringifiedParams}` : `/api/e5/recibos`
+}
+
+/**
+ * recibos_abonos.ver: consultar/imprimir. No ADMIN: sólo recibos recibidos en CAJA del sitio asignado, aunque alcanceConsulta sea TODAS. No concede lectura financiera.
+ */
+export const listE5Recibos = async (params?: ListE5RecibosParams, options?: Parameters<typeof customFetch>[1]): Promise<E5Documento[]> => {
+
+  return customFetch<E5Documento[]>(getListE5RecibosUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListE5RecibosQueryKey = (params?: ListE5RecibosParams,) => {
+    return [
+    `/api/e5/recibos`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListE5RecibosQueryOptions = <TData = Awaited<ReturnType<typeof listE5Recibos>>, TError = ErrorType<ForbiddenResponse | NotFoundResponse>>(params?: ListE5RecibosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE5Recibos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListE5RecibosQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listE5Recibos>>> = ({ signal }) => listE5Recibos(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listE5Recibos>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListE5RecibosQueryResult = NonNullable<Awaited<ReturnType<typeof listE5Recibos>>>
+export type ListE5RecibosQueryError = ErrorType<ForbiddenResponse | NotFoundResponse>
+
+
+
+export function useListE5Recibos<TData = Awaited<ReturnType<typeof listE5Recibos>>, TError = ErrorType<ForbiddenResponse | NotFoundResponse>>(
+ params?: ListE5RecibosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE5Recibos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListE5RecibosQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
 export const getGetE5DocumentoUrl = (id: string,
     documentoId: string,) => {
 
@@ -3860,7 +3942,8 @@ export const getGetE5DocumentoUrl = (id: string,
 }
 
 /**
- * @summary ADMIN consulta recibo o constancia inmutable desde otro equipo
+ * No ADMIN sólo recibos recibidos en CAJA del sitio asignado; TODAS no amplía alcance. La autorización/aplicación financiera permanece exclusiva de ADMIN.
+ * @summary Consultar recibo con recibos_abonos.ver; constancias sólo ADMIN
  */
 export const getE5Documento = async (id: string,
     documentoId: string, options?: Parameters<typeof customFetch>[1]): Promise<E5Documento> => {
@@ -3910,7 +3993,7 @@ export type GetE5DocumentoQueryError = ErrorType<E5ErrorResponseResponse>
 
 
 /**
- * @summary ADMIN consulta recibo o constancia inmutable desde otro equipo
+ * @summary Consultar recibo con recibos_abonos.ver; constancias sólo ADMIN
  */
 
 export function useGetE5Documento<TData = Awaited<ReturnType<typeof getE5Documento>>, TError = ErrorType<E5ErrorResponseResponse>>(
@@ -3941,6 +4024,9 @@ export const getRecordE5ImpresionUrl = (id: string,
   return `/api/e5/cobros/${id}/documentos/${documentoId}/impresiones`
 }
 
+/**
+ * Operación documental auditada bajo recibos_abonos.ver; no crea cobro, aplicación ni autorización. Mismo alcance que el GET.
+ */
 export const recordE5Impresion = async (id: string,
     documentoId: string,
     e5ImpresionInput: E5ImpresionInput, options?: Parameters<typeof customFetch>[1]): Promise<RecordE5Impresion200> => {
@@ -5026,7 +5112,7 @@ export function useListClienteRecibosE3<TData = Awaited<ReturnType<typeof listCl
 
 
 
-export const getListCajaRecibosE3Url = (params: ListCajaRecibosE3Params,) => {
+export const getListCajaRecibosE3Url = (params?: ListCajaRecibosE3Params,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -5041,7 +5127,7 @@ export const getListCajaRecibosE3Url = (params: ListCajaRecibosE3Params,) => {
   return stringifiedParams.length > 0 ? `/api/caja/recibos-e3?${stringifiedParams}` : `/api/caja/recibos-e3`
 }
 
-export const listCajaRecibosE3 = async (params: ListCajaRecibosE3Params, options?: Parameters<typeof customFetch>[1]): Promise<E3Receipt[]> => {
+export const listCajaRecibosE3 = async (params?: ListCajaRecibosE3Params, options?: Parameters<typeof customFetch>[1]): Promise<E3Receipt[]> => {
 
   return customFetch<E3Receipt[]>(getListCajaRecibosE3Url(params),
   {
@@ -5063,7 +5149,7 @@ export const getListCajaRecibosE3QueryKey = (params?: ListCajaRecibosE3Params,) 
     }
 
 
-export const getListCajaRecibosE3QueryOptions = <TData = Awaited<ReturnType<typeof listCajaRecibosE3>>, TError = ErrorType<void>>(params: ListCajaRecibosE3Params, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listCajaRecibosE3>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getListCajaRecibosE3QueryOptions = <TData = Awaited<ReturnType<typeof listCajaRecibosE3>>, TError = ErrorType<void>>(params?: ListCajaRecibosE3Params, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listCajaRecibosE3>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -5087,7 +5173,7 @@ export type ListCajaRecibosE3QueryError = ErrorType<void>
 
 
 export function useListCajaRecibosE3<TData = Awaited<ReturnType<typeof listCajaRecibosE3>>, TError = ErrorType<void>>(
- params: ListCajaRecibosE3Params, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listCajaRecibosE3>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+ params?: ListCajaRecibosE3Params, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listCajaRecibosE3>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 

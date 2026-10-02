@@ -1,0 +1,21 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "launcher": "run-main.mjs --main-authorized --api FILE --ui DIRECTORY --playwright INDEX_MJS --candidate-ready JSON",
+  "candidatePathsHardcoded": false,
+  "permissionContract": "recibos_abonos.ver",
+  "proposedDiscoveryRoute": "/recibos-abonos",
+  "coordinateFinalRouteWithImplementationWorker": true,
+  "workerDidNotExecute": ["server startup", "PostgreSQL bootstrap", "DB reads/writes", "login", "browser", "tests"],
+  "handoff": "JOURNEY.md",
+  "lifecycle": "MAIN persistent launch; protected credentials; READY_FOR_TESTING_AGENT; control actions; explicit MAIN cleanup",
+  "controlActions": ["retry-fixtures", "snapshot", "compare", "audit", "terminal-permission", "cleanup"],
+  "browserReception": "Testing-agent real UI submissions required; API fixture receipts do not substitute for CAJA browser receipt evidence",
+  "pdfEvidence": "Real audited button, native print CDP pause before temporary class cleanup, complete PDF, per-page text assertion and rasterization",
+  "knownPreparationLimits": [
+    "Runtime not launched or proven by preparation worker",
+    "Final candidate route and startup permission defaults must be confirmed",
+    "Testing agent must execute and record the JOURNEY matrix; launcher intentionally only bootstraps and stays alive",
+    "Native synthetic nonmonetary note/E1 sources, not app/customer data",
+    "Directed CAJA E5 receipt is retained pending ADMIN; no invented separate financial mode"
+  ]
+}

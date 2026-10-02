@@ -1,0 +1,24 @@
+{
+  "status": "SQL_CORRECTION_PREPARED_AWAITING_MAIN_ISOLATED_APPLICATION",
+  "reason": "Native e5_insert_authority still required ADMIN for e5_impresiones, rejecting newly matrix-authorized TERMINAL print INSERT with E5_STATE_CONFLICT.",
+  "javascriptAndFrontend": "UNCHANGED: exact revision-2 bytes; no rebuild or new runtime process required",
+  "apiIndexSha256": "f29032a0b172fb6a53d86be1cd80da3b27faf91ceb5a500d262b20e2b79aff0a",
+  "binaryManifest": "reports/receipt-terminal-print-20261001/revision-2/build-manifest.json",
+  "binaryManifestSha256": "889ac50564e5cff92129df60d467e864748105079d07dfb742b0c3ce7b262a09",
+  "sql": "lib/db/src/lib/receipt-print-authority.sql",
+  "sqlSha256": "ee12bcaace99ed9b7c6abe51b80efa3a554c44d36f9bd94f30169761a68b66a5",
+  "onlyChangedDatabaseObject": "public.e5_insert_authority()",
+  "isolatedApply": "node reports/receipt-terminal-print-20261001/apply-print-guard-isolated.mjs reports/receipt-terminal-runtime-20261001/run-vd201X --main-authorized",
+  "preserves": [
+    "Original financial guard body including E11 preparation extension byte-for-byte",
+    "All triggers enabled and unchanged",
+    "No new monetary action, no history rewrite, no backfill",
+    "ADMIN financial authorization/application checks",
+    "User > customized role > site > inherited role > deny permission precedence",
+    "Assigned site regardless of TODAS, original CAJA receipt only for non-ADMIN",
+    "Typed IMPRIMIR intent with matching cobro, document, UUID and reason"
+  ],
+  "execution": "NOT EXECUTED by worker",
+  "liveDatabase": "NOT ACCESSED",
+  "releaseBlockedUntil": "Isolated native-SQL positive/negative print tests and browser pass, then MAIN identity-guarded live function migration plus defaults"
+}

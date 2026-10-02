@@ -1,0 +1,12 @@
+{
+  "id": "530a1a10-d9de-450c-89c5-19c214e72c5f",
+  "at": "2026-10-02T00:24:59.276Z",
+  "command": {
+    "id": "530a1a10-d9de-450c-89c5-19c214e72c5f",
+    "action": "terminal-permission",
+    "allowed": true
+  },
+  "actorId": 3,
+  "freshLoginRequired": true,
+  "ok": true
+}

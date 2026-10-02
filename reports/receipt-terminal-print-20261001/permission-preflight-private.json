@@ -1,0 +1,3931 @@
+{
+  "permisos_rol": [
+    {
+      "value": {
+        "id": 10,
+        "rol": "CAJA",
+        "modulo": "entradas",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,111)"
+    },
+    {
+      "value": {
+        "id": 100,
+        "rol": "BODEGA",
+        "modulo": "auditoria",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,87)"
+    },
+    {
+      "value": {
+        "id": 1021,
+        "rol": "SUPERVISOR",
+        "modulo": "etiquetas",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.842903+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95651",
+      "ctid": "(4,104)"
+    },
+    {
+      "value": {
+        "id": 1022,
+        "rol": "BODEGA",
+        "modulo": "etiquetas",
+        "puede_ver": true,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95651",
+      "ctid": "(4,105)"
+    },
+    {
+      "value": {
+        "id": 1023,
+        "rol": "TERMINAL",
+        "modulo": "etiquetas",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:56.826427+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95651",
+      "ctid": "(4,106)"
+    },
+    {
+      "value": {
+        "id": 1024,
+        "rol": "CAJA",
+        "modulo": "etiquetas",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,114)"
+    },
+    {
+      "value": {
+        "id": 11,
+        "rol": "SUPERVISOR",
+        "modulo": "entradas",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.694555+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31027",
+      "ctid": "(0,44)"
+    },
+    {
+      "value": {
+        "id": 12,
+        "rol": "BODEGA",
+        "modulo": "entradas",
+        "puede_ver": true,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,76)"
+    },
+    {
+      "value": {
+        "id": 14,
+        "rol": "CAJA",
+        "modulo": "salidas",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,112)"
+    },
+    {
+      "value": {
+        "id": 15,
+        "rol": "SUPERVISOR",
+        "modulo": "salidas",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.744716+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "95647",
+      "ctid": "(4,24)"
+    },
+    {
+      "value": {
+        "id": 16,
+        "rol": "BODEGA",
+        "modulo": "salidas",
+        "puede_ver": true,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,77)"
+    },
+    {
+      "value": {
+        "id": 18247,
+        "rol": "CAJA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,23)"
+    },
+    {
+      "value": {
+        "id": 18248,
+        "rol": "TERMINAL",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,9)"
+    },
+    {
+      "value": {
+        "id": 18250,
+        "rol": "SUPERVISOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,47)"
+    },
+    {
+      "value": {
+        "id": 18251,
+        "rol": "BODEGA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(1,68)"
+    },
+    {
+      "value": {
+        "id": 18252,
+        "rol": "SISTEMAS",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,67)"
+    },
+    {
+      "value": {
+        "id": 18253,
+        "rol": "CONTADOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,117)"
+    },
+    {
+      "value": {
+        "id": 18254,
+        "rol": "TERMINAL",
+        "modulo": "equipos",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.062642+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95629",
+      "ctid": "(0,5)"
+    },
+    {
+      "value": {
+        "id": 18255,
+        "rol": "CAJA",
+        "modulo": "equipos",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(0,21)"
+    },
+    {
+      "value": {
+        "id": 18256,
+        "rol": "SUPERVISOR",
+        "modulo": "equipos",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.062642+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95629",
+      "ctid": "(0,76)"
+    },
+    {
+      "value": {
+        "id": 18257,
+        "rol": "BODEGA",
+        "modulo": "equipos",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(1,66)"
+    },
+    {
+      "value": {
+        "id": 18258,
+        "rol": "SISTEMAS",
+        "modulo": "equipos",
+        "puede_ver": true,
+        "updated_at": "2026-09-18T22:10:45.062642+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "95629",
+      "ctid": "(0,91)"
+    },
+    {
+      "value": {
+        "id": 18259,
+        "rol": "CONTADOR",
+        "modulo": "equipos",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.062642+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95629",
+      "ctid": "(1,49)"
+    },
+    {
+      "value": {
+        "id": 2,
+        "rol": "CAJA",
+        "modulo": "dashboard",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,109)"
+    },
+    {
+      "value": {
+        "id": 22,
+        "rol": "CAJA",
+        "modulo": "movimientos",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,113)"
+    },
+    {
+      "value": {
+        "id": 23,
+        "rol": "SUPERVISOR",
+        "modulo": "movimientos",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.793649+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31039",
+      "ctid": "(0,88)"
+    },
+    {
+      "value": {
+        "id": 24,
+        "rol": "BODEGA",
+        "modulo": "movimientos",
+        "puede_ver": true,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,78)"
+    },
+    {
+      "value": {
+        "id": 26,
+        "rol": "CAJA",
+        "modulo": "inventario",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,115)"
+    },
+    {
+      "value": {
+        "id": 27,
+        "rol": "SUPERVISOR",
+        "modulo": "inventario",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.894078+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31051",
+      "ctid": "(0,18)"
+    },
+    {
+      "value": {
+        "id": 28,
+        "rol": "BODEGA",
+        "modulo": "inventario",
+        "puede_ver": true,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,75)"
+    },
+    {
+      "value": {
+        "id": 3,
+        "rol": "SUPERVISOR",
+        "modulo": "dashboard",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.59478+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31015",
+      "ctid": "(0,35)"
+    },
+    {
+      "value": {
+        "id": 30,
+        "rol": "CAJA",
+        "modulo": "productos",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,117)"
+    },
+    {
+      "value": {
+        "id": 31,
+        "rol": "SUPERVISOR",
+        "modulo": "productos",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.942771+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31057",
+      "ctid": "(0,33)"
+    },
+    {
+      "value": {
+        "id": 32,
+        "rol": "BODEGA",
+        "modulo": "productos",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,100)"
+    },
+    {
+      "value": {
+        "id": 34,
+        "rol": "CAJA",
+        "modulo": "ajustes",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,119)"
+    },
+    {
+      "value": {
+        "id": 34005,
+        "rol": "TERMINAL",
+        "modulo": "caja_abonos",
+        "puede_ver": false,
+        "updated_at": "2026-09-23T16:38:00.829918+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "97613",
+      "ctid": "(0,16)"
+    },
+    {
+      "value": {
+        "id": 34006,
+        "rol": "TERMINAL",
+        "modulo": "clientes_recapturas",
+        "puede_ver": false,
+        "updated_at": "2026-09-23T16:38:00.829918+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "97613",
+      "ctid": "(0,19)"
+    },
+    {
+      "value": {
+        "id": 34007,
+        "rol": "CAJA",
+        "modulo": "caja_abonos",
+        "puede_ver": false,
+        "updated_at": "2026-09-23T16:38:00.829918+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "97613",
+      "ctid": "(0,57)"
+    },
+    {
+      "value": {
+        "id": 34008,
+        "rol": "CAJA",
+        "modulo": "clientes_recapturas",
+        "puede_ver": false,
+        "updated_at": "2026-09-23T16:38:00.829918+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "97613",
+      "ctid": "(0,61)"
+    },
+    {
+      "value": {
+        "id": 34009,
+        "rol": "SUPERVISOR",
+        "modulo": "caja_abonos",
+        "puede_ver": false,
+        "updated_at": "2026-09-23T16:38:00.829918+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "97613",
+      "ctid": "(0,122)"
+    },
+    {
+      "value": {
+        "id": 34010,
+        "rol": "SUPERVISOR",
+        "modulo": "clientes_recapturas",
+        "puede_ver": false,
+        "updated_at": "2026-09-23T16:38:00.829918+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "97613",
+      "ctid": "(0,126)"
+    },
+    {
+      "value": {
+        "id": 34011,
+        "rol": "BODEGA",
+        "modulo": "caja_abonos",
+        "puede_ver": false,
+        "updated_at": "2026-09-23T16:38:00.829918+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "97613",
+      "ctid": "(0,129)"
+    },
+    {
+      "value": {
+        "id": 34012,
+        "rol": "BODEGA",
+        "modulo": "clientes_recapturas",
+        "puede_ver": false,
+        "updated_at": "2026-09-23T16:38:00.829918+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "97613",
+      "ctid": "(1,19)"
+    },
+    {
+      "value": {
+        "id": 34013,
+        "rol": "SISTEMAS",
+        "modulo": "caja_abonos",
+        "puede_ver": false,
+        "updated_at": "2026-09-23T16:38:00.829918+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "97613",
+      "ctid": "(1,21)"
+    },
+    {
+      "value": {
+        "id": 34014,
+        "rol": "SISTEMAS",
+        "modulo": "clientes_recapturas",
+        "puede_ver": false,
+        "updated_at": "2026-09-23T16:38:00.829918+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "97613",
+      "ctid": "(1,27)"
+    },
+    {
+      "value": {
+        "id": 34015,
+        "rol": "CONTADOR",
+        "modulo": "caja_abonos",
+        "puede_ver": false,
+        "updated_at": "2026-09-23T16:38:00.829918+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "97613",
+      "ctid": "(1,31)"
+    },
+    {
+      "value": {
+        "id": 34016,
+        "rol": "CONTADOR",
+        "modulo": "clientes_recapturas",
+        "puede_ver": false,
+        "updated_at": "2026-09-23T16:38:00.829918+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "97613",
+      "ctid": "(1,33)"
+    },
+    {
+      "value": {
+        "id": 35,
+        "rol": "SUPERVISOR",
+        "modulo": "ajustes",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.100902+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31069",
+      "ctid": "(0,27)"
+    },
+    {
+      "value": {
+        "id": 36,
+        "rol": "BODEGA",
+        "modulo": "ajustes",
+        "puede_ver": true,
+        "updated_at": "2026-09-17T18:06:13.831+00:00",
+        "puede_crear": true,
+        "updated_por": 1,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "91588",
+      "ctid": "(4,19)"
+    },
+    {
+      "value": {
+        "id": 38,
+        "rol": "CAJA",
+        "modulo": "clientes",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,120)"
+    },
+    {
+      "value": {
+        "id": 39,
+        "rol": "SUPERVISOR",
+        "modulo": "clientes",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.266844+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31075",
+      "ctid": "(0,106)"
+    },
+    {
+      "value": {
+        "id": 4,
+        "rol": "BODEGA",
+        "modulo": "dashboard",
+        "puede_ver": true,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,74)"
+    },
+    {
+      "value": {
+        "id": 40,
+        "rol": "BODEGA",
+        "modulo": "clientes",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,101)"
+    },
+    {
+      "value": {
+        "id": 42,
+        "rol": "CAJA",
+        "modulo": "clientes_credito",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,121)"
+    },
+    {
+      "value": {
+        "id": 43,
+        "rol": "SUPERVISOR",
+        "modulo": "clientes_credito",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.316477+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31081",
+      "ctid": "(0,28)"
+    },
+    {
+      "value": {
+        "id": 44,
+        "rol": "BODEGA",
+        "modulo": "clientes_credito",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,102)"
+    },
+    {
+      "value": {
+        "id": 4462,
+        "rol": "TERMINAL",
+        "modulo": "precios",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.036838+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31061",
+      "ctid": "(0,118)"
+    },
+    {
+      "value": {
+        "id": 4463,
+        "rol": "CAJA",
+        "modulo": "precios",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,118)"
+    },
+    {
+      "value": {
+        "id": 4464,
+        "rol": "SUPERVISOR",
+        "modulo": "precios",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.05341+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31063",
+      "ctid": "(0,102)"
+    },
+    {
+      "value": {
+        "id": 4465,
+        "rol": "BODEGA",
+        "modulo": "precios",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,98)"
+    },
+    {
+      "value": {
+        "id": 46,
+        "rol": "CAJA",
+        "modulo": "clientes_precios",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,122)"
+    },
+    {
+      "value": {
+        "id": 47,
+        "rol": "SUPERVISOR",
+        "modulo": "clientes_precios",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.368394+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31087",
+      "ctid": "(0,64)"
+    },
+    {
+      "value": {
+        "id": 4716,
+        "rol": "SISTEMAS",
+        "modulo": "dashboard",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.610958+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31017",
+      "ctid": "(0,68)"
+    },
+    {
+      "value": {
+        "id": 4721,
+        "rol": "SISTEMAS",
+        "modulo": "pos",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:56.6603+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31023",
+      "ctid": "(0,36)"
+    },
+    {
+      "value": {
+        "id": 4726,
+        "rol": "SISTEMAS",
+        "modulo": "entradas",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.712078+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31029",
+      "ctid": "(0,2)"
+    },
+    {
+      "value": {
+        "id": 4731,
+        "rol": "SISTEMAS",
+        "modulo": "salidas",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.761464+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31035",
+      "ctid": "(0,48)"
+    },
+    {
+      "value": {
+        "id": 4736,
+        "rol": "SISTEMAS",
+        "modulo": "movimientos",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.809224+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31041",
+      "ctid": "(0,11)"
+    },
+    {
+      "value": {
+        "id": 4741,
+        "rol": "SISTEMAS",
+        "modulo": "etiquetas",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.860336+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31047",
+      "ctid": "(0,41)"
+    },
+    {
+      "value": {
+        "id": 4746,
+        "rol": "SISTEMAS",
+        "modulo": "inventario",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.91061+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31053",
+      "ctid": "(0,1)"
+    },
+    {
+      "value": {
+        "id": 475,
+        "rol": "TERMINAL",
+        "modulo": "dashboard",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.578026+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31013",
+      "ctid": "(0,32)"
+    },
+    {
+      "value": {
+        "id": 4751,
+        "rol": "SISTEMAS",
+        "modulo": "productos",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.959603+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31059",
+      "ctid": "(0,3)"
+    },
+    {
+      "value": {
+        "id": 4756,
+        "rol": "SISTEMAS",
+        "modulo": "precios",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.069428+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31065",
+      "ctid": "(0,49)"
+    },
+    {
+      "value": {
+        "id": 4761,
+        "rol": "SISTEMAS",
+        "modulo": "ajustes",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.118898+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31071",
+      "ctid": "(0,43)"
+    },
+    {
+      "value": {
+        "id": 4766,
+        "rol": "SISTEMAS",
+        "modulo": "clientes",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.283446+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31077",
+      "ctid": "(0,56)"
+    },
+    {
+      "value": {
+        "id": 4771,
+        "rol": "SISTEMAS",
+        "modulo": "clientes_credito",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.3357+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31083",
+      "ctid": "(0,63)"
+    },
+    {
+      "value": {
+        "id": 4776,
+        "rol": "SISTEMAS",
+        "modulo": "clientes_precios",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.383047+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31089",
+      "ctid": "(0,69)"
+    },
+    {
+      "value": {
+        "id": 4781,
+        "rol": "SISTEMAS",
+        "modulo": "clientes_finanzas",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.434392+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31095",
+      "ctid": "(0,80)"
+    },
+    {
+      "value": {
+        "id": 4786,
+        "rol": "SISTEMAS",
+        "modulo": "proveedores",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.483062+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31101",
+      "ctid": "(0,89)"
+    },
+    {
+      "value": {
+        "id": 479,
+        "rol": "TERMINAL",
+        "modulo": "pos",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.627974+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31019",
+      "ctid": "(0,6)"
+    },
+    {
+      "value": {
+        "id": 4791,
+        "rol": "SISTEMAS",
+        "modulo": "proveedores_finanzas",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.531583+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31107",
+      "ctid": "(0,113)"
+    },
+    {
+      "value": {
+        "id": 4796,
+        "rol": "SISTEMAS",
+        "modulo": "contenedores",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.579413+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31113",
+      "ctid": "(0,165)"
+    },
+    {
+      "value": {
+        "id": 48,
+        "rol": "BODEGA",
+        "modulo": "clientes_precios",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,103)"
+    },
+    {
+      "value": {
+        "id": 4801,
+        "rol": "SISTEMAS",
+        "modulo": "ubicaciones",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.629301+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31119",
+      "ctid": "(0,174)"
+    },
+    {
+      "value": {
+        "id": 4806,
+        "rol": "SISTEMAS",
+        "modulo": "usuarios",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.677549+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31125",
+      "ctid": "(0,185)"
+    },
+    {
+      "value": {
+        "id": 4811,
+        "rol": "SISTEMAS",
+        "modulo": "permisos",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.726582+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31131",
+      "ctid": "(0,173)"
+    },
+    {
+      "value": {
+        "id": 4816,
+        "rol": "SISTEMAS",
+        "modulo": "resumen_caja",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.774811+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31137",
+      "ctid": "(0,20)"
+    },
+    {
+      "value": {
+        "id": 4821,
+        "rol": "SISTEMAS",
+        "modulo": "cortes",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.823081+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31143",
+      "ctid": "(0,60)"
+    },
+    {
+      "value": {
+        "id": 4826,
+        "rol": "SISTEMAS",
+        "modulo": "cobros_pagos",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.870662+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31149",
+      "ctid": "(0,81)"
+    },
+    {
+      "value": {
+        "id": 483,
+        "rol": "TERMINAL",
+        "modulo": "entradas",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:56.677318+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31025",
+      "ctid": "(0,40)"
+    },
+    {
+      "value": {
+        "id": 4831,
+        "rol": "SISTEMAS",
+        "modulo": "reportes",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.923375+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31155",
+      "ctid": "(1,22)"
+    },
+    {
+      "value": {
+        "id": 4836,
+        "rol": "SISTEMAS",
+        "modulo": "conciliacion",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.977375+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31161",
+      "ctid": "(1,25)"
+    },
+    {
+      "value": {
+        "id": 4841,
+        "rol": "SISTEMAS",
+        "modulo": "auditoria",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:58.026179+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31167",
+      "ctid": "(1,28)"
+    },
+    {
+      "value": {
+        "id": 4842,
+        "rol": "TERMINAL",
+        "modulo": "camionetas",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:58.042988+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31169",
+      "ctid": "(1,30)"
+    },
+    {
+      "value": {
+        "id": 4843,
+        "rol": "CAJA",
+        "modulo": "camionetas",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,127)"
+    },
+    {
+      "value": {
+        "id": 4844,
+        "rol": "SUPERVISOR",
+        "modulo": "camionetas",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:58.059969+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31171",
+      "ctid": "(1,32)"
+    },
+    {
+      "value": {
+        "id": 4845,
+        "rol": "BODEGA",
+        "modulo": "camionetas",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(1,55)"
+    },
+    {
+      "value": {
+        "id": 4846,
+        "rol": "SISTEMAS",
+        "modulo": "camionetas",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:58.075532+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31173",
+      "ctid": "(1,34)"
+    },
+    {
+      "value": {
+        "id": 4847,
+        "rol": "TERMINAL",
+        "modulo": "choferes",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:58.091499+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31175",
+      "ctid": "(1,36)"
+    },
+    {
+      "value": {
+        "id": 4848,
+        "rol": "CAJA",
+        "modulo": "choferes",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,139)"
+    },
+    {
+      "value": {
+        "id": 4849,
+        "rol": "SUPERVISOR",
+        "modulo": "choferes",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:58.108417+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31177",
+      "ctid": "(1,38)"
+    },
+    {
+      "value": {
+        "id": 4850,
+        "rol": "BODEGA",
+        "modulo": "choferes",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(1,56)"
+    },
+    {
+      "value": {
+        "id": 4851,
+        "rol": "SISTEMAS",
+        "modulo": "choferes",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:58.124068+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31179",
+      "ctid": "(1,41)"
+    },
+    {
+      "value": {
+        "id": 4852,
+        "rol": "TERMINAL",
+        "modulo": "viajes",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:58.140217+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31181",
+      "ctid": "(1,43)"
+    },
+    {
+      "value": {
+        "id": 4853,
+        "rol": "CAJA",
+        "modulo": "viajes",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,149)"
+    },
+    {
+      "value": {
+        "id": 4854,
+        "rol": "SUPERVISOR",
+        "modulo": "viajes",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:58.155285+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31183",
+      "ctid": "(1,45)"
+    },
+    {
+      "value": {
+        "id": 4855,
+        "rol": "BODEGA",
+        "modulo": "viajes",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(1,57)"
+    },
+    {
+      "value": {
+        "id": 4856,
+        "rol": "SISTEMAS",
+        "modulo": "viajes",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:58.17066+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31185",
+      "ctid": "(1,53)"
+    },
+    {
+      "value": {
+        "id": 487,
+        "rol": "TERMINAL",
+        "modulo": "salidas",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.729144+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95647",
+      "ctid": "(4,21)"
+    },
+    {
+      "value": {
+        "id": 495,
+        "rol": "TERMINAL",
+        "modulo": "movimientos",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:56.777819+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31037",
+      "ctid": "(0,85)"
+    },
+    {
+      "value": {
+        "id": 499,
+        "rol": "TERMINAL",
+        "modulo": "inventario",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.877989+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31049",
+      "ctid": "(0,10)"
+    },
+    {
+      "value": {
+        "id": 50,
+        "rol": "CAJA",
+        "modulo": "clientes_finanzas",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,123)"
+    },
+    {
+      "value": {
+        "id": 503,
+        "rol": "TERMINAL",
+        "modulo": "productos",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.927515+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31055",
+      "ctid": "(0,17)"
+    },
+    {
+      "value": {
+        "id": 507,
+        "rol": "TERMINAL",
+        "modulo": "ajustes",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.085657+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31067",
+      "ctid": "(0,127)"
+    },
+    {
+      "value": {
+        "id": 51,
+        "rol": "SUPERVISOR",
+        "modulo": "clientes_finanzas",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.417465+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31093",
+      "ctid": "(0,73)"
+    },
+    {
+      "value": {
+        "id": 511,
+        "rol": "TERMINAL",
+        "modulo": "clientes",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.137971+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31073",
+      "ctid": "(0,133)"
+    },
+    {
+      "value": {
+        "id": 5121,
+        "rol": "CONTADOR",
+        "modulo": "dashboard",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.619235+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31018",
+      "ctid": "(0,72)"
+    },
+    {
+      "value": {
+        "id": 5127,
+        "rol": "CONTADOR",
+        "modulo": "pos",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:56.668867+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31024",
+      "ctid": "(0,39)"
+    },
+    {
+      "value": {
+        "id": 5133,
+        "rol": "CONTADOR",
+        "modulo": "entradas",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.720118+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31030",
+      "ctid": "(0,13)"
+    },
+    {
+      "value": {
+        "id": 5139,
+        "rol": "CONTADOR",
+        "modulo": "salidas",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.768556+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31036",
+      "ctid": "(0,51)"
+    },
+    {
+      "value": {
+        "id": 5145,
+        "rol": "CONTADOR",
+        "modulo": "movimientos",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.817496+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31042",
+      "ctid": "(0,84)"
+    },
+    {
+      "value": {
+        "id": 515,
+        "rol": "TERMINAL",
+        "modulo": "clientes_credito",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.300615+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31079",
+      "ctid": "(0,135)"
+    },
+    {
+      "value": {
+        "id": 5151,
+        "rol": "CONTADOR",
+        "modulo": "etiquetas",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:56.870359+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31048",
+      "ctid": "(0,96)"
+    },
+    {
+      "value": {
+        "id": 5157,
+        "rol": "CONTADOR",
+        "modulo": "inventario",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:56.91857+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31054",
+      "ctid": "(0,15)"
+    },
+    {
+      "value": {
+        "id": 5163,
+        "rol": "CONTADOR",
+        "modulo": "productos",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.028707+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31060",
+      "ctid": "(0,53)"
+    },
+    {
+      "value": {
+        "id": 5169,
+        "rol": "CONTADOR",
+        "modulo": "precios",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.077409+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31066",
+      "ctid": "(0,123)"
+    },
+    {
+      "value": {
+        "id": 5175,
+        "rol": "CONTADOR",
+        "modulo": "ajustes",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.129114+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31072",
+      "ctid": "(0,130)"
+    },
+    {
+      "value": {
+        "id": 5181,
+        "rol": "CONTADOR",
+        "modulo": "clientes",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.291784+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31078",
+      "ctid": "(0,134)"
+    },
+    {
+      "value": {
+        "id": 5187,
+        "rol": "CONTADOR",
+        "modulo": "clientes_credito",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.343766+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31084",
+      "ctid": "(0,136)"
+    },
+    {
+      "value": {
+        "id": 519,
+        "rol": "TERMINAL",
+        "modulo": "clientes_precios",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.351251+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31085",
+      "ctid": "(0,138)"
+    },
+    {
+      "value": {
+        "id": 5193,
+        "rol": "CONTADOR",
+        "modulo": "clientes_precios",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.393114+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31090",
+      "ctid": "(0,139)"
+    },
+    {
+      "value": {
+        "id": 5199,
+        "rol": "CONTADOR",
+        "modulo": "clientes_finanzas",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.442123+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31096",
+      "ctid": "(0,145)"
+    },
+    {
+      "value": {
+        "id": 52,
+        "rol": "BODEGA",
+        "modulo": "clientes_finanzas",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(1,58)"
+    },
+    {
+      "value": {
+        "id": 5205,
+        "rol": "CONTADOR",
+        "modulo": "proveedores",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.490595+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31102",
+      "ctid": "(0,151)"
+    },
+    {
+      "value": {
+        "id": 5211,
+        "rol": "CONTADOR",
+        "modulo": "proveedores_finanzas",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.539172+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31108",
+      "ctid": "(0,159)"
+    },
+    {
+      "value": {
+        "id": 5217,
+        "rol": "CONTADOR",
+        "modulo": "contenedores",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.587864+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31114",
+      "ctid": "(0,168)"
+    },
+    {
+      "value": {
+        "id": 5223,
+        "rol": "CONTADOR",
+        "modulo": "ubicaciones",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.637151+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31120",
+      "ctid": "(0,180)"
+    },
+    {
+      "value": {
+        "id": 5229,
+        "rol": "CONTADOR",
+        "modulo": "usuarios",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.685475+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31126",
+      "ctid": "(0,188)"
+    },
+    {
+      "value": {
+        "id": 523,
+        "rol": "TERMINAL",
+        "modulo": "clientes_finanzas",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.401319+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31091",
+      "ctid": "(0,142)"
+    },
+    {
+      "value": {
+        "id": 5235,
+        "rol": "CONTADOR",
+        "modulo": "permisos",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.735021+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31132",
+      "ctid": "(1,13)"
+    },
+    {
+      "value": {
+        "id": 5241,
+        "rol": "CONTADOR",
+        "modulo": "resumen_caja",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.782789+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31138",
+      "ctid": "(1,15)"
+    },
+    {
+      "value": {
+        "id": 5247,
+        "rol": "CONTADOR",
+        "modulo": "cortes",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.830769+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31144",
+      "ctid": "(1,17)"
+    },
+    {
+      "value": {
+        "id": 5253,
+        "rol": "CONTADOR",
+        "modulo": "cobros_pagos",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.878817+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31150",
+      "ctid": "(1,20)"
+    },
+    {
+      "value": {
+        "id": 5259,
+        "rol": "CONTADOR",
+        "modulo": "reportes",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.93222+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31156",
+      "ctid": "(1,23)"
+    },
+    {
+      "value": {
+        "id": 5265,
+        "rol": "CONTADOR",
+        "modulo": "conciliacion",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.984894+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31162",
+      "ctid": "(1,26)"
+    },
+    {
+      "value": {
+        "id": 527,
+        "rol": "TERMINAL",
+        "modulo": "proveedores",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.450023+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31097",
+      "ctid": "(0,148)"
+    },
+    {
+      "value": {
+        "id": 5271,
+        "rol": "CONTADOR",
+        "modulo": "auditoria",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:58.034659+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31168",
+      "ctid": "(1,29)"
+    },
+    {
+      "value": {
+        "id": 5277,
+        "rol": "CONTADOR",
+        "modulo": "camionetas",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:58.083404+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31174",
+      "ctid": "(1,35)"
+    },
+    {
+      "value": {
+        "id": 5283,
+        "rol": "CONTADOR",
+        "modulo": "choferes",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:58.13288+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31180",
+      "ctid": "(1,42)"
+    },
+    {
+      "value": {
+        "id": 5289,
+        "rol": "CONTADOR",
+        "modulo": "viajes",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:58.178392+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31186",
+      "ctid": "(1,54)"
+    },
+    {
+      "value": {
+        "id": 531,
+        "rol": "TERMINAL",
+        "modulo": "proveedores_finanzas",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.497991+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31103",
+      "ctid": "(0,153)"
+    },
+    {
+      "value": {
+        "id": 535,
+        "rol": "TERMINAL",
+        "modulo": "contenedores",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.547168+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31109",
+      "ctid": "(0,162)"
+    },
+    {
+      "value": {
+        "id": 539,
+        "rol": "TERMINAL",
+        "modulo": "ubicaciones",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.596099+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31115",
+      "ctid": "(0,171)"
+    },
+    {
+      "value": {
+        "id": 54,
+        "rol": "CAJA",
+        "modulo": "proveedores",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,124)"
+    },
+    {
+      "value": {
+        "id": 543,
+        "rol": "TERMINAL",
+        "modulo": "usuarios",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.645072+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31121",
+      "ctid": "(0,182)"
+    },
+    {
+      "value": {
+        "id": 547,
+        "rol": "TERMINAL",
+        "modulo": "permisos",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.695156+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31127",
+      "ctid": "(0,191)"
+    },
+    {
+      "value": {
+        "id": 55,
+        "rol": "SUPERVISOR",
+        "modulo": "proveedores",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.466972+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31099",
+      "ctid": "(0,75)"
+    },
+    {
+      "value": {
+        "id": 551,
+        "rol": "TERMINAL",
+        "modulo": "resumen_caja",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.742102+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31133",
+      "ctid": "(0,199)"
+    },
+    {
+      "value": {
+        "id": 5512,
+        "rol": "TERMINAL",
+        "modulo": "auditoria_inventario",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T12:14:06.040726+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31598",
+      "ctid": "(0,71)"
+    },
+    {
+      "value": {
+        "id": 5513,
+        "rol": "CAJA",
+        "modulo": "auditoria_inventario",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,116)"
+    },
+    {
+      "value": {
+        "id": 5514,
+        "rol": "SUPERVISOR",
+        "modulo": "auditoria_inventario",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T12:14:06.040726+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31598",
+      "ctid": "(0,86)"
+    },
+    {
+      "value": {
+        "id": 5515,
+        "rol": "BODEGA",
+        "modulo": "auditoria_inventario",
+        "puede_ver": true,
+        "updated_at": "2026-09-17T18:06:12.496+00:00",
+        "puede_crear": true,
+        "updated_por": 1,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "91584",
+      "ctid": "(1,24)"
+    },
+    {
+      "value": {
+        "id": 5516,
+        "rol": "SISTEMAS",
+        "modulo": "auditoria_inventario",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T12:14:06.040726+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31598",
+      "ctid": "(0,93)"
+    },
+    {
+      "value": {
+        "id": 5517,
+        "rol": "CONTADOR",
+        "modulo": "auditoria_inventario",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T12:14:06.040726+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31598",
+      "ctid": "(0,103)"
+    },
+    {
+      "value": {
+        "id": 555,
+        "rol": "TERMINAL",
+        "modulo": "cortes",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.790853+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31139",
+      "ctid": "(0,200)"
+    },
+    {
+      "value": {
+        "id": 559,
+        "rol": "TERMINAL",
+        "modulo": "cobros_pagos",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.838609+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31145",
+      "ctid": "(1,18)"
+    },
+    {
+      "value": {
+        "id": 56,
+        "rol": "BODEGA",
+        "modulo": "proveedores",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(1,59)"
+    },
+    {
+      "value": {
+        "id": 563,
+        "rol": "TERMINAL",
+        "modulo": "reportes",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.886779+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31151",
+      "ctid": "(0,201)"
+    },
+    {
+      "value": {
+        "id": 567,
+        "rol": "TERMINAL",
+        "modulo": "conciliacion",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.940312+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31157",
+      "ctid": "(0,97)"
+    },
+    {
+      "value": {
+        "id": 571,
+        "rol": "TERMINAL",
+        "modulo": "auditoria",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.99378+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31163",
+      "ctid": "(0,116)"
+    },
+    {
+      "value": {
+        "id": 578,
+        "rol": "BODEGA",
+        "modulo": "reportes",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,88)"
+    },
+    {
+      "value": {
+        "id": 58,
+        "rol": "CAJA",
+        "modulo": "proveedores_finanzas",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,125)"
+    },
+    {
+      "value": {
+        "id": 59,
+        "rol": "SUPERVISOR",
+        "modulo": "proveedores_finanzas",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.513912+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31105",
+      "ctid": "(0,99)"
+    },
+    {
+      "value": {
+        "id": 6,
+        "rol": "CAJA",
+        "modulo": "pos",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,110)"
+    },
+    {
+      "value": {
+        "id": 60,
+        "rol": "BODEGA",
+        "modulo": "proveedores_finanzas",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(1,60)"
+    },
+    {
+      "value": {
+        "id": 62,
+        "rol": "CAJA",
+        "modulo": "contenedores",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(4,126)"
+    },
+    {
+      "value": {
+        "id": 63,
+        "rol": "SUPERVISOR",
+        "modulo": "contenedores",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.563192+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": true,
+        "puede_autorizar": false
+      },
+      "xmin": "31111",
+      "ctid": "(0,105)"
+    },
+    {
+      "value": {
+        "id": 64,
+        "rol": "BODEGA",
+        "modulo": "contenedores",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(1,61)"
+    },
+    {
+      "value": {
+        "id": 66,
+        "rol": "CAJA",
+        "modulo": "ubicaciones",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(5,28)"
+    },
+    {
+      "value": {
+        "id": 67,
+        "rol": "SUPERVISOR",
+        "modulo": "ubicaciones",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.613521+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31117",
+      "ctid": "(0,65)"
+    },
+    {
+      "value": {
+        "id": 68,
+        "rol": "BODEGA",
+        "modulo": "ubicaciones",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(1,50)"
+    },
+    {
+      "value": {
+        "id": 7,
+        "rol": "SUPERVISOR",
+        "modulo": "pos",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:56.643148+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31021",
+      "ctid": "(0,7)"
+    },
+    {
+      "value": {
+        "id": 70,
+        "rol": "CAJA",
+        "modulo": "usuarios",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(5,29)"
+    },
+    {
+      "value": {
+        "id": 71,
+        "rol": "SUPERVISOR",
+        "modulo": "usuarios",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.661656+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31123",
+      "ctid": "(0,77)"
+    },
+    {
+      "value": {
+        "id": 72,
+        "rol": "BODEGA",
+        "modulo": "usuarios",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(1,51)"
+    },
+    {
+      "value": {
+        "id": 74,
+        "rol": "CAJA",
+        "modulo": "permisos",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(5,30)"
+    },
+    {
+      "value": {
+        "id": 75,
+        "rol": "SUPERVISOR",
+        "modulo": "permisos",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.711244+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31129",
+      "ctid": "(0,170)"
+    },
+    {
+      "value": {
+        "id": 76,
+        "rol": "BODEGA",
+        "modulo": "permisos",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(1,52)"
+    },
+    {
+      "value": {
+        "id": 78,
+        "rol": "CAJA",
+        "modulo": "resumen_caja",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(5,31)"
+    },
+    {
+      "value": {
+        "id": 79,
+        "rol": "SUPERVISOR",
+        "modulo": "resumen_caja",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.757946+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31135",
+      "ctid": "(0,176)"
+    },
+    {
+      "value": {
+        "id": 8,
+        "rol": "BODEGA",
+        "modulo": "pos",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,99)"
+    },
+    {
+      "value": {
+        "id": 80,
+        "rol": "BODEGA",
+        "modulo": "resumen_caja",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,79)"
+    },
+    {
+      "value": {
+        "id": 82,
+        "rol": "CAJA",
+        "modulo": "cortes",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(5,32)"
+    },
+    {
+      "value": {
+        "id": 83,
+        "rol": "SUPERVISOR",
+        "modulo": "cortes",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.807095+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31141",
+      "ctid": "(0,25)"
+    },
+    {
+      "value": {
+        "id": 84,
+        "rol": "BODEGA",
+        "modulo": "cortes",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,84)"
+    },
+    {
+      "value": {
+        "id": 86,
+        "rol": "CAJA",
+        "modulo": "cobros_pagos",
+        "puede_ver": true,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(5,33)"
+    },
+    {
+      "value": {
+        "id": 87,
+        "rol": "SUPERVISOR",
+        "modulo": "cobros_pagos",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.853881+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31147",
+      "ctid": "(0,79)"
+    },
+    {
+      "value": {
+        "id": 88,
+        "rol": "BODEGA",
+        "modulo": "cobros_pagos",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,85)"
+    },
+    {
+      "value": {
+        "id": 90,
+        "rol": "CAJA",
+        "modulo": "reportes",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(5,34)"
+    },
+    {
+      "value": {
+        "id": 91,
+        "rol": "SUPERVISOR",
+        "modulo": "reportes",
+        "puede_ver": true,
+        "updated_at": "2026-08-28T03:31:57.907881+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31153",
+      "ctid": "(0,95)"
+    },
+    {
+      "value": {
+        "id": 94,
+        "rol": "CAJA",
+        "modulo": "conciliacion",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(5,35)"
+    },
+    {
+      "value": {
+        "id": 95,
+        "rol": "SUPERVISOR",
+        "modulo": "conciliacion",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:57.960153+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31159",
+      "ctid": "(0,115)"
+    },
+    {
+      "value": {
+        "id": 96,
+        "rol": "BODEGA",
+        "modulo": "conciliacion",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.855311+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95650",
+      "ctid": "(4,86)"
+    },
+    {
+      "value": {
+        "id": 98,
+        "rol": "CAJA",
+        "modulo": "auditoria",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.93647+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "95652",
+      "ctid": "(5,36)"
+    },
+    {
+      "value": {
+        "id": 99,
+        "rol": "SUPERVISOR",
+        "modulo": "auditoria",
+        "puede_ver": false,
+        "updated_at": "2026-08-28T03:31:58.010475+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "puede_autorizar": false
+      },
+      "xmin": "31165",
+      "ctid": "(0,177)"
+    }
+  ],
+  "permisos_usuario": [],
+  "permisos_ubicacion": [
+    {
+      "value": {
+        "id": 1,
+        "rol": "TERMINAL",
+        "modulo": "salidas_venta",
+        "puede_ver": true,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": true,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 1,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,52)"
+    },
+    {
+      "value": {
+        "id": 10,
+        "rol": "CAJA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 1,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,61)"
+    },
+    {
+      "value": {
+        "id": 11,
+        "rol": "CAJA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 2,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,67)"
+    },
+    {
+      "value": {
+        "id": 12,
+        "rol": "CAJA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 3,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,62)"
+    },
+    {
+      "value": {
+        "id": 13,
+        "rol": "CAJA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 4,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,63)"
+    },
+    {
+      "value": {
+        "id": 14,
+        "rol": "CAJA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 5,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,64)"
+    },
+    {
+      "value": {
+        "id": 15,
+        "rol": "CAJA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 6,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,65)"
+    },
+    {
+      "value": {
+        "id": 16,
+        "rol": "CAJA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 7,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,66)"
+    },
+    {
+      "value": {
+        "id": 17,
+        "rol": "CAJA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 458,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,68)"
+    },
+    {
+      "value": {
+        "id": 18,
+        "rol": "CAJA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 531,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,69)"
+    },
+    {
+      "value": {
+        "id": 19,
+        "rol": "SUPERVISOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 1,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,70)"
+    },
+    {
+      "value": {
+        "id": 2,
+        "rol": "TERMINAL",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 2,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,58)"
+    },
+    {
+      "value": {
+        "id": 20,
+        "rol": "SUPERVISOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 2,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,76)"
+    },
+    {
+      "value": {
+        "id": 21,
+        "rol": "SUPERVISOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 3,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,71)"
+    },
+    {
+      "value": {
+        "id": 22,
+        "rol": "SUPERVISOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 4,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,72)"
+    },
+    {
+      "value": {
+        "id": 23,
+        "rol": "SUPERVISOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 5,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,73)"
+    },
+    {
+      "value": {
+        "id": 24,
+        "rol": "SUPERVISOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 6,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,74)"
+    },
+    {
+      "value": {
+        "id": 25,
+        "rol": "SUPERVISOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 7,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,75)"
+    },
+    {
+      "value": {
+        "id": 26,
+        "rol": "SUPERVISOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 458,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,77)"
+    },
+    {
+      "value": {
+        "id": 27,
+        "rol": "SUPERVISOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 531,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,78)"
+    },
+    {
+      "value": {
+        "id": 28,
+        "rol": "BODEGA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 1,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,79)"
+    },
+    {
+      "value": {
+        "id": 29,
+        "rol": "BODEGA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 2,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,85)"
+    },
+    {
+      "value": {
+        "id": 3,
+        "rol": "TERMINAL",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 3,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,53)"
+    },
+    {
+      "value": {
+        "id": 30,
+        "rol": "BODEGA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 3,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,80)"
+    },
+    {
+      "value": {
+        "id": 31,
+        "rol": "BODEGA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 4,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,81)"
+    },
+    {
+      "value": {
+        "id": 32,
+        "rol": "BODEGA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 5,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,82)"
+    },
+    {
+      "value": {
+        "id": 33,
+        "rol": "BODEGA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 6,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,83)"
+    },
+    {
+      "value": {
+        "id": 34,
+        "rol": "BODEGA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 7,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,84)"
+    },
+    {
+      "value": {
+        "id": 35,
+        "rol": "BODEGA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 458,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,86)"
+    },
+    {
+      "value": {
+        "id": 36,
+        "rol": "BODEGA",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 531,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,87)"
+    },
+    {
+      "value": {
+        "id": 37,
+        "rol": "SISTEMAS",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 1,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,88)"
+    },
+    {
+      "value": {
+        "id": 38,
+        "rol": "SISTEMAS",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 2,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,94)"
+    },
+    {
+      "value": {
+        "id": 39,
+        "rol": "SISTEMAS",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 3,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,89)"
+    },
+    {
+      "value": {
+        "id": 4,
+        "rol": "TERMINAL",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 4,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,54)"
+    },
+    {
+      "value": {
+        "id": 40,
+        "rol": "SISTEMAS",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 4,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,90)"
+    },
+    {
+      "value": {
+        "id": 41,
+        "rol": "SISTEMAS",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 5,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,91)"
+    },
+    {
+      "value": {
+        "id": 42,
+        "rol": "SISTEMAS",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 6,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,92)"
+    },
+    {
+      "value": {
+        "id": 43,
+        "rol": "SISTEMAS",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 7,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,93)"
+    },
+    {
+      "value": {
+        "id": 44,
+        "rol": "SISTEMAS",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 458,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,95)"
+    },
+    {
+      "value": {
+        "id": 45,
+        "rol": "SISTEMAS",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 531,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,96)"
+    },
+    {
+      "value": {
+        "id": 46,
+        "rol": "CONTADOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 1,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,97)"
+    },
+    {
+      "value": {
+        "id": 47,
+        "rol": "CONTADOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 2,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,102)"
+    },
+    {
+      "value": {
+        "id": 48,
+        "rol": "CONTADOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 3,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,98)"
+    },
+    {
+      "value": {
+        "id": 49,
+        "rol": "CONTADOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 4,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,99)"
+    },
+    {
+      "value": {
+        "id": 5,
+        "rol": "TERMINAL",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 5,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,55)"
+    },
+    {
+      "value": {
+        "id": 50,
+        "rol": "CONTADOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 5,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,100)"
+    },
+    {
+      "value": {
+        "id": 51,
+        "rol": "CONTADOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 6,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,101)"
+    },
+    {
+      "value": {
+        "id": 52,
+        "rol": "CONTADOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 7,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(1,19)"
+    },
+    {
+      "value": {
+        "id": 53,
+        "rol": "CONTADOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 458,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(1,20)"
+    },
+    {
+      "value": {
+        "id": 54,
+        "rol": "CONTADOR",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 531,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(1,21)"
+    },
+    {
+      "value": {
+        "id": 6,
+        "rol": "TERMINAL",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 6,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,56)"
+    },
+    {
+      "value": {
+        "id": 7,
+        "rol": "TERMINAL",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 7,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,57)"
+    },
+    {
+      "value": {
+        "id": 8,
+        "rol": "TERMINAL",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 458,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,59)"
+    },
+    {
+      "value": {
+        "id": 9,
+        "rol": "TERMINAL",
+        "modulo": "salidas_venta",
+        "puede_ver": false,
+        "updated_at": "2026-09-18T22:10:45.940034+00:00",
+        "puede_crear": false,
+        "updated_por": null,
+        "puede_editar": false,
+        "ubicacion_id": 531,
+        "puede_autorizar": false
+      },
+      "xmin": "95653",
+      "ctid": "(0,60)"
+    }
+  ]
+}

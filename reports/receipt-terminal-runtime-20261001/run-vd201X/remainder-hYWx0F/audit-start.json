@@ -1,0 +1,190 @@
+{
+  "audit": [
+    {
+      "id": "13",
+      "usuario_id": 3,
+      "accion": "E3_RECIBO_IMPRESION_SOLICITADA",
+      "entidad": "recibos_abono_e3",
+      "entidad_id": "E3-10-00000002",
+      "datos_despues": {
+        "folio": "E3-10-00000002",
+        "motivo": "Solicitud de reimpresión desde otro equipo; no acredita impresión física",
+        "evidencia": "SOLICITUD_NO_CONFIRMACION_FISICA"
+      }
+    },
+    {
+      "id": "15",
+      "usuario_id": 3,
+      "accion": "E3_RECIBO_IMPRESION_SOLICITADA",
+      "entidad": "recibos_abono_e3",
+      "entidad_id": "E3-10-00000002",
+      "datos_despues": {
+        "folio": "E3-10-00000002",
+        "motivo": "Solicitud de reimpresión desde otro equipo; no acredita impresión física",
+        "evidencia": "SOLICITUD_NO_CONFIRMACION_FISICA"
+      }
+    },
+    {
+      "id": "17",
+      "usuario_id": 3,
+      "accion": "E3_RECIBO_IMPRESION_SOLICITADA",
+      "entidad": "recibos_abono_e3",
+      "entidad_id": "E3-10-00000002",
+      "datos_despues": {
+        "folio": "E3-10-00000002",
+        "motivo": "Solicitud de reimpresión desde otro equipo; no acredita impresión física",
+        "evidencia": "SOLICITUD_NO_CONFIRMACION_FISICA"
+      }
+    },
+    {
+      "id": "18",
+      "usuario_id": 3,
+      "accion": "E3_RECIBO_IMPRESION_SOLICITADA",
+      "entidad": "recibos_abono_e3",
+      "entidad_id": "E3-10-00000002",
+      "datos_despues": {
+        "folio": "E3-10-00000002",
+        "motivo": "Solicitud de reimpresión desde otro equipo; no acredita impresión física",
+        "evidencia": "SOLICITUD_NO_CONFIRMACION_FISICA"
+      }
+    }
+  ],
+  "e5": [],
+  "receipts": [
+    {
+      "folio": "E3-10-00000001",
+      "cliente_id": 8,
+      "movimiento_id": 11,
+      "snapshot": {
+        "folio": "E3-10-00000001",
+        "motivo": null,
+        "origen": "CAJA",
+        "actorId": 1,
+        "sitioId": 10,
+        "version": 1,
+        "clienteId": 8,
+        "formaPago": "TRANSFERENCIA",
+        "clienteRfc": null,
+        "recibidoEn": "2026-10-01T23:32:04.811Z",
+        "actorNombre": "Administrador",
+        "sitioNombre": "Receipt isolated own",
+        "asignaciones": [
+          {
+            "folio": 13000,
+            "ticketId": 1,
+            "aplicadoCentavos": 1000,
+            "movimientoVentaId": 1,
+            "saldoAntesCentavos": 1000,
+            "saldoDespuesCentavos": 0
+          }
+        ],
+        "movimientoId": 11,
+        "registradoEn": "2026-10-01T23:32:04.811Z",
+        "sesionCajaId": 1,
+        "clienteNombre": "Receipt 1 api-e3",
+        "cuentaDestino": "CUENTA_FISCAL",
+        "deudaCentavos": 0,
+        "clienteTelefono": null,
+        "importeCentavos": 1000,
+        "remanenteCentavos": 0,
+        "saldoAFavorCentavos": 0
+      }
+    },
+    {
+      "folio": "E3-10-00000002",
+      "cliente_id": 10,
+      "movimiento_id": 13,
+      "snapshot": {
+        "folio": "E3-10-00000002",
+        "motivo": null,
+        "origen": "CAJA",
+        "actorId": 2,
+        "sitioId": 10,
+        "version": 1,
+        "clienteId": 10,
+        "formaPago": "TRANSFERENCIA",
+        "clienteRfc": null,
+        "recibidoEn": "2026-10-01T23:34:57.703Z",
+        "actorNombre": "receipt_1_caja_receive",
+        "sitioNombre": "Receipt isolated own",
+        "asignaciones": [
+          {
+            "folio": 13002,
+            "ticketId": 3,
+            "aplicadoCentavos": 1000,
+            "movimientoVentaId": 3,
+            "saldoAntesCentavos": 1000,
+            "saldoDespuesCentavos": 0
+          }
+        ],
+        "movimientoId": 13,
+        "registradoEn": "2026-10-01T23:34:57.703Z",
+        "sesionCajaId": 1,
+        "clienteNombre": "Receipt 1 browser-e3",
+        "cuentaDestino": "CUENTA_FISCAL",
+        "deudaCentavos": 0,
+        "clienteTelefono": null,
+        "importeCentavos": 1000,
+        "remanenteCentavos": 0,
+        "saldoAFavorCentavos": 0
+      }
+    },
+    {
+      "folio": "E3-11-00000001",
+      "cliente_id": 13,
+      "movimiento_id": 12,
+      "snapshot": {
+        "folio": "E3-11-00000001",
+        "motivo": null,
+        "origen": "CAJA",
+        "actorId": 1,
+        "sitioId": 11,
+        "version": 1,
+        "clienteId": 13,
+        "formaPago": "TRANSFERENCIA",
+        "clienteRfc": null,
+        "recibidoEn": "2026-10-01T23:32:05.181Z",
+        "actorNombre": "Administrador",
+        "sitioNombre": "Receipt isolated other",
+        "asignaciones": [
+          {
+            "folio": 13005,
+            "ticketId": 6,
+            "aplicadoCentavos": 1000,
+            "movimientoVentaId": 6,
+            "saldoAntesCentavos": 1000,
+            "saldoDespuesCentavos": 0
+          }
+        ],
+        "movimientoId": 12,
+        "registradoEn": "2026-10-01T23:32:05.181Z",
+        "sesionCajaId": 2,
+        "clienteNombre": "Receipt 2 api-e3",
+        "cuentaDestino": "CUENTA_FISCAL",
+        "deudaCentavos": 0,
+        "clienteTelefono": null,
+        "importeCentavos": 1000,
+        "remanenteCentavos": 0,
+        "saldoAFavorCentavos": 0
+      }
+    }
+  ],
+  "e5Documents": [
+    {
+      "id": "1c8ef97c-2a09-4c7e-8f61-23dcc740516b",
+      "cobro_id": "3662a782-2788-4045-8cbd-efbb15382f0b"
+    },
+    {
+      "id": "4e0c9b7e-4df1-4581-80b5-9df24b4026fb",
+      "cobro_id": "a5a0a103-8fa7-4f7f-ba34-2e991fc39ab7"
+    },
+    {
+      "id": "657d826b-03c4-45b2-aeaa-dd58601df80b",
+      "cobro_id": "01455046-d5fb-4c4e-8ad4-610612c19a4b"
+    },
+    {
+      "id": "d9d81b61-b04d-4e0e-b58b-002cfddb7d47",
+      "cobro_id": "9c445b81-4567-45b5-80cc-700497db27d6"
+    }
+  ]
+}

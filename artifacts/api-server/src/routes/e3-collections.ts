@@ -7,10 +7,10 @@ import { CreditEvidenceError } from "../lib/credit-evidence-contract";
 
 export interface E3RouterDependencies {
   authenticate: RequestHandler;
-  permission(module: string, action: "crear"): RequestHandler;
+  permission(module: string, action: "crear" | "ver"): RequestHandler;
   admin: RequestHandler;
   repository(req: Request): E3Repository;
-  receipts(filter: { folio?: string; clienteId?: number; movimientoId?: number; sesionCajaId?: number }): Promise<E3Receipt[]>;
+  receipts(filter: { folio?: string; clienteId?: number; movimientoId?: number; sesionCajaId?: number; sitioId?: number; soloCaja?: boolean; buscar?: string }): Promise<E3Receipt[]>;
   print(folio: string, motivo: string, actorId: number, ip: string): Promise<void>;
   context(req: Request, buscar: string, sitioId?: number): Promise<E3Context>;
 }
@@ -22,6 +22,12 @@ export function createE3Router(deps: E3RouterDependencies) {
     next();
   };
   const id = z.coerce.number().int().positive().max(2147483647);
+  const receiptScope = (req: Request) => {
+    const user = req.auth!.user;
+    if (user.rol === "ADMIN") return {};
+    if (!user.ubicacionId) throw new E3Error("RECEIPT_NOT_FOUND", "No hay sitio asignado para consultar recibos.", 404);
+    return { sitioId: user.ubicacionId, soloCaja: true };
+  };
   router.get("/caja/abonos-e3/contexto", gate, deps.authenticate, deps.permission("caja_abonos", "crear"), async (req, res, next) => {
     try {
       const buscar = z.string().max(100).parse(req.query.buscar ?? "");
@@ -49,9 +55,9 @@ export function createE3Router(deps: E3RouterDependencies) {
     router.post(`${base}/vista-previa`, gate, deps.authenticate, deps.permission(module, "crear"), action(origin, false));
     router.post(base, gate, deps.authenticate, deps.permission(module, "crear"), action(origin, true));
   }
-  router.get("/recibos-e3/:folio", gate, deps.authenticate, deps.admin, async (req, res, next) => {
+  router.get("/recibos-e3/:folio", gate, deps.authenticate, deps.permission("recibos_abonos", "ver"), async (req, res, next) => {
     try {
-      const rows = await deps.receipts({ folio: z.string().regex(/^E3-[1-9][0-9]*-[0-9]{8,10}$/).parse(req.params.folio) });
+      const rows = await deps.receipts({ folio: z.string().regex(/^E3-[1-9][0-9]*-[0-9]{8,10}$/).parse(req.params.folio), ...receiptScope(req) });
       if (!rows.length) throw new E3Error("RECEIPT_NOT_FOUND", "Sin snapshot E3: no se reconstruye con saldos actuales.", 404);
       res.json(rows[0]);
     } catch (error) { next(error); }
@@ -59,19 +65,23 @@ export function createE3Router(deps: E3RouterDependencies) {
   const list: RequestHandler = async (req, res, next) => {
     try {
       const filter = {
+        ...receiptScope(req),
+        buscar: z.string().trim().max(100).parse(req.query.buscar ?? ""),
         clienteId: req.params.id ? id.parse(req.params.id) : undefined,
         movimientoId: req.query.movimientoId ? id.parse(req.query.movimientoId) : undefined,
         sesionCajaId: req.query.sesionCajaId ? id.parse(req.query.sesionCajaId) : undefined,
       };
-      if (!filter.clienteId && !filter.sesionCajaId) throw new E3Error("SESSION_REQUIRED", "Indica sesión del corte.", 400);
       res.json(await deps.receipts(filter));
     } catch (error) { next(error); }
   };
-  router.get("/clientes/:id/recibos-e3", gate, deps.authenticate, deps.admin, list);
-  router.get("/caja/recibos-e3", gate, deps.authenticate, deps.admin, list);
-  router.post("/recibos-e3/:folio/impresiones", gate, deps.authenticate, deps.admin, async (req, res, next) => {
+  router.get("/clientes/:id/recibos-e3", gate, deps.authenticate, deps.permission("recibos_abonos", "ver"), list);
+  router.get("/caja/recibos-e3", gate, deps.authenticate, deps.permission("recibos_abonos", "ver"), list);
+  router.post("/recibos-e3/:folio/impresiones", gate, deps.authenticate, deps.permission("recibos_abonos", "ver"), async (req, res, next) => {
     try {
       const { motivo } = z.object({ motivo: z.string().trim().min(1).max(2000) }).strict().parse(req.body);
+      const folio = z.string().regex(/^E3-[1-9][0-9]*-[0-9]{8,10}$/).parse(req.params.folio);
+      if (!(await deps.receipts({ folio, ...receiptScope(req) })).length)
+        throw new E3Error("RECEIPT_NOT_FOUND", "Recibo no encontrado.", 404);
       await deps.print(z.string().regex(/^E3-[1-9][0-9]*-[0-9]{8,10}$/).parse(req.params.folio), motivo, req.auth!.user.id, getRequestIp(req));
       res.json({ registrado: true });
     } catch (error) { next(error); }

@@ -47,7 +47,7 @@ export const e5Return = z.object({ ...commandBase, peticionCliente: text, eviden
 export const e5Print = z.object({ claveOperacion: uuid, motivo: z.string().trim().min(1).max(500) }).strict();
 export type E5Actor = { id: number; nombre: string; rol: string; ubicacionId: number | null; ip: string;
   ver: boolean; recibirCaja: boolean; recibirCliente: boolean; todas: boolean; capacidadAE11: boolean;
-  e11PerfilVersion?: number };
+  e11PerfilVersion?: number; recibos?: boolean };
 export type E5Action = "RECIBIR" | "PROPONER" | "AUTORIZAR" | "RECHAZAR" | "DEVOLVER";
 export type E5Operation = { actorId: number; content: string; response: E5Cobro };
 export type E5Context = E5Contexto & { deudaGlobal: string; ubicacionNombre: string };

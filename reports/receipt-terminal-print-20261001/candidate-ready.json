@@ -1,0 +1,48 @@
+{
+  "status": "BUILT_NOT_ACTIVATED_SQL_GUARD_CORRECTION_REQUIRED",
+  "databasePrerequisite": "reports/receipt-terminal-print-20261001/revision-3/manifest.json",
+  "candidate": "reports/receipt-terminal-print-20261001/revision-2",
+  "frozen": "reports/receipt-terminal-print-20261001/revision-2/frozen-root",
+  "api": "reports/receipt-terminal-print-20261001/revision-2/api",
+  "frontend": "reports/receipt-terminal-print-20261001/revision-2/web",
+  "manifestSha256": "889ac50564e5cff92129df60d467e864748105079d07dfb742b0c3ce7b262a09",
+  "sourceDeltaAuditSha256": "2c9997cbc261acc12bba50d5fdad19b76f7dd6f136ed7cfaf1eb7beb7a6e9a7c",
+  "apiIndexSha256": "f29032a0b172fb6a53d86be1cd80da3b27faf91ceb5a500d262b20e2b79aff0a",
+  "buildCommand": "node reports/receipt-terminal-print-20261001/build-candidate.mjs --revision-2",
+  "buildCommandNote": "Completed successfully. Immutable successful candidate intentionally rejects rerun; do not replace it for runtime testing.",
+  "permissionsSql": "reports/receipt-terminal-print-20261001/permission-defaults.sql",
+  "sqlExecuted": false,
+  "module": "recibos_abonos",
+  "action": "ver",
+  "defaults": ["ADMIN", "TERMINAL"],
+  "preservedOverrides": ["permisos_rol.updated_por IS NOT NULL", "permisos_usuario", "permisos_ubicacion"],
+  "cheapVerification": {
+    "backendReceiptTestsPassed": 4,
+    "permissionDefaultsTestsPassed": 1,
+    "mountedUiTestsPassed": 4,
+    "libraryTypecheck": 0,
+    "apiTypecheck": 0,
+    "frontendTypecheck": 0,
+    "apiBuild": 0,
+    "frontendBuild": 0
+  },
+  "boundaries": {
+    "databaseAccess": false,
+    "httpServersStarted": false,
+    "workflowChanges": false,
+    "release": false,
+    "runtimeBrowserVerification": false,
+    "physicalPrintVerification": false,
+    "activeAndOldFrozenInputsPreserved": true
+  },
+  "testerTargets": [
+    "TERMINAL default and explicit denial; custom grants on other non-ADMIN roles",
+    "Assigned-site list/detail/print privacy despite TODAS and forged query site",
+    "Unassigned-site denial, foreign E3 folio, foreign E5 receipt/document, non-CAJA and constancia denial for non-ADMIN",
+    "E3 and E5 list/search from POS and /recibos-abonos; error and empty states",
+    "Actual audited print/reprint handlers and historical evidence failures; no financial ledger mutations",
+    "Existing financial APIs remain independently guarded; directed/retained ADMIN authorization/application unchanged"
+  ],
+  "inheritedBoundary": "The existing global E11 closed-world CONTADOR policy is unchanged; this receipt module does not bypass it.",
+  "supersedes": "The successful root candidate predates role-aware receipt query-cache scoping. Use revision-2 only."
+}

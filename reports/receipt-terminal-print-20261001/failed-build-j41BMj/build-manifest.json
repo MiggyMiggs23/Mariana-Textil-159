@@ -1,0 +1,240 @@
+{
+  "status": "VALIDATION_FAILED_NOT_ACTIVATED",
+  "checks": [
+    {
+      "name": "libs-typecheck",
+      "command": [
+        "/home/runner/workspace/node_modules/.bin/tsc",
+        "--build",
+        "/home/runner/workspace/reports/receipt-terminal-print-20261001/frozen-root/lib/api-client-react",
+        "/home/runner/workspace/reports/receipt-terminal-print-20261001/frozen-root/lib/api-zod",
+        "/home/runner/workspace/reports/receipt-terminal-print-20261001/frozen-root/lib/db",
+        "/home/runner/workspace/reports/receipt-terminal-print-20261001/frozen-root/lib/metered-pricing",
+        "/home/runner/workspace/reports/receipt-terminal-print-20261001/frozen-root/lib/number-format",
+        "/home/runner/workspace/reports/receipt-terminal-print-20261001/frozen-root/lib/scanned-code"
+      ],
+      "status": 0,
+      "signal": null
+    },
+    {
+      "name": "api-typecheck",
+      "command": [
+        "/home/runner/workspace/node_modules/.bin/tsc",
+        "--noEmit",
+        "--incremental",
+        "false",
+        "-p",
+        "/home/runner/workspace/reports/receipt-terminal-print-20261001/frozen-root/artifacts/api-server"
+      ],
+      "status": 0,
+      "signal": null
+    },
+    {
+      "name": "ui-typecheck",
+      "command": [
+        "/home/runner/workspace/node_modules/.bin/tsc",
+        "--noEmit",
+        "--incremental",
+        "false",
+        "-p",
+        "/home/runner/workspace/reports/receipt-terminal-print-20261001/frozen-root/artifacts/mariana-textil"
+      ],
+      "status": 0,
+      "signal": null
+    },
+    {
+      "name": "receipt-mounted-tests",
+      "command": [
+        "/home/runner/workspace/artifacts/api-server/node_modules/.bin/tsx",
+        "--test",
+        "src/lib/receipt-permissions.test.ts"
+      ],
+      "status": 0,
+      "signal": null
+    },
+    {
+      "name": "permission-default-tests",
+      "command": [
+        "/home/runner/workspace/artifacts/api-server/node_modules/.bin/tsx",
+        "--test",
+        "lib/db/src/lib/caja-permissions-schema.test.ts"
+      ],
+      "status": 1,
+      "signal": null
+    },
+    {
+      "name": "api-build",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "build.mjs"
+      ],
+      "status": 1,
+      "signal": null
+    },
+    {
+      "name": "ui-build",
+      "command": [
+        "/home/runner/workspace/artifacts/mariana-textil/node_modules/.bin/vite",
+        "build",
+        "--config",
+        "vite.config.ts",
+        "--outDir",
+        "/home/runner/workspace/reports/receipt-terminal-print-20261001/web"
+      ],
+      "status": 0,
+      "signal": null
+    }
+  ],
+  "frozen": "/home/runner/workspace/reports/receipt-terminal-print-20261001/frozen-root",
+  "sourceDeltas": [
+    {
+      "file": "artifacts/api-server/src/lib/e3-repository.ts",
+      "before": "88adc7b119166f3865e4a9d0107e1f86f9ceb90e3a6096b50c0740702a1c0062",
+      "after": "7f773dabc92b0b066b1c53b1937d2e578def72d7f286eaedc019dfc64c9c5a86"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/e5-repository.ts",
+      "before": "159e2922ac1e853f1e761250553971ccd68321d2b7bfa4207615b663e60585ba",
+      "after": "3e3f905392b649f02dc50d3dceda0de6dce4b2a1a501fcb19079ac3b4af93c52"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/e5.ts",
+      "before": "acabafad8dc01df41716bf0f81d69c2eafcb007ce30246badb49624d197caf5b",
+      "after": "a2fa4a7cc88cb8904752aaca5b3a0261cccbf6ff232df3c7e252c05bb7288e26"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/permisos.ts",
+      "before": "297d36aea580be029a4183bcf96c1a350fd0bf011925bd1c9a4845ef0c59156a",
+      "after": "8107428448b2821b48eeb64cba805e1ea473152b979edb16797c858bbc49232f"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/e3-collections.ts",
+      "before": "1e6f0f4aa6946dab0ad0a4d3e5e48f9288603bff5eed577af571686a0987e898",
+      "after": "46618b481b9f659d4f67e52eba26b1d76b810e69ab64622cbb9647e81780a283"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/e5.ts",
+      "before": "cda4a24731c8256f609202d9052d6d3e41e2d73a01452fe8ab9d6fa1aa56b10e",
+      "after": "aed8d595e8ddb63f3a6dd88b4385166170754c55c3b28da587c5ac61edfe8a2f"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/App.tsx",
+      "before": "cafbcb8d9bc4a6bf30a443c4639f7c73decc66977f5feba83337977b5cc2cc8e",
+      "after": "19e3a63783dd00c72d420e06c5227bab10dcaf427af26d70b8605e5538a4ad9d"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/hooks/use-e3.ts",
+      "before": "14c223743d39c928571d3f85db07c46a6f1b13b358abf87e2f28d00ffe881df2",
+      "after": "3df262e27222637e6df197908c12991afb149a39a5d97848ad5477a35700615f"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/lib/permisos.ts",
+      "before": "fe114a81529e8c6b45d08f581cc8dcde837938a6a78f2e02de06a8bc52b80e4e",
+      "after": "9db392837e88ea64858782e7e9df83fa4bfe8fbd3a6638a66bda2a30ae8cc55f"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/caja/recibo-e3.tsx",
+      "before": "0bf02953f41f6f8f83a48d8d246a193660528bcfa2e6852ccff1bb72f35a464c",
+      "after": "7cf282ade8e42d6583df8218aee405f31289c7b13e19df34bddfed9fdc5dcecf"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/e5-documento.tsx",
+      "before": "df49f3ee70a4c28be352d3ff3a8321829fe830c786a2e9872d4a7e844b6d513d",
+      "after": "6a0c7faf845cb397f1e075da22b167799ae76182bc2532bbee80832855584655"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/permisos.tsx",
+      "before": "3e50984eb8ecbffa6614424d41ab66460e2661ac49e10a7fa8a26064eca3203c",
+      "after": "4b8b9609a2b318ab90f2ad948d39769f9ba304867fd39672e6bc71af21bd28f2"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/pos.tsx",
+      "before": "b14e7376dcd770c3b20ff9a71ab59da5299536a1918c10ade38ddf4c3bbc961d",
+      "after": "fba276434acf0c32f3e773a75a9ba4d7a8e10f49ade08f0f1bf04e87163f3a5e"
+    },
+    {
+      "file": "lib/api-client-react/src/generated/api.schemas.ts",
+      "before": "a395ab94c75ea811fc165158e825b03748ad1405ff5c6ce285b7a2766f279fb8",
+      "after": "5f3f63c1c662864c49fd42642cc0b4b20019ef68595e2b7dacd0fbd551e50033"
+    },
+    {
+      "file": "lib/api-client-react/src/generated/api.ts",
+      "before": "28f643f05f75cfd2f6f41274808df497ccddc2f4dc06c4de171a175fccc9867f",
+      "after": "d24a096c30746044533c4d2ab8b000f368de7b86ec35b1ff90e5756a44334bf0"
+    },
+    {
+      "file": "lib/api-spec/openapi.yaml",
+      "before": "e9a64c4e096b210070de748907622a18b886f8d678945ac9f7ae24e4c627d550",
+      "after": "3e13ae967fff1260277f079e524bb0a6de0e7c6056ed91bd8a1bc8b395394d12"
+    },
+    {
+      "file": "lib/api-zod/src/generated/api.ts",
+      "before": "7f7362453ec355b9bfd79b1a9032726671099d6efc1e3af4dbe2c0512fd9e61c",
+      "after": "86c99c358ad19e8628ceeaa0641b67ea9eca96a24a1fd16baef0084bae50b4f1"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/index.ts",
+      "before": "6318fd48ef87f29ffdc6202ca74a8c687e45cc9e3fa3d5837e23234e56fde895",
+      "after": "27e8e0c21c2b6b03305d6b410cb0ad45cd24ac9cb17513b8fb7a8c0ce4d495fc"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/listCajaRecibosE3Params.ts",
+      "before": "18d8063da2c05f4eaf10d422ec57cb875150b92cbe8f8f97fcd36f3e72f0f7f2",
+      "after": "87a22e1025cdf0b551f8d5c8c4589f3b0f87adfaacf4f5b42d25326d70d38803"
+    },
+    {
+      "file": "lib/api-zod/src/index.ts",
+      "before": "6ee28cc2e4a298ac485e8738bbdd413615c794e943d532fcf5c544042077f1e0",
+      "after": "cc68f3bcc56fe7aaa968b2b300d70a73b154cb3e350b565fd8712bd38ccdefb1"
+    },
+    {
+      "file": "lib/db/src/lib/caja-permissions-schema.ts",
+      "before": "7e39d06aa3eb3a4757eb0843a90e116709a4dd47bfd2b13a8b5c4e2bc16e6a09",
+      "after": "cb4a73b84027c7afe253ca29e76ac1fb3099c36f430c45e26452ce574b091f0f"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/receipt-permissions.test.ts",
+      "before": null,
+      "after": "18f29c298cbc34ab5c0ec6bd7b48cc5e3a360f171b560929c80bc72aa88803e4"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/components/receipt-discovery.tsx",
+      "before": null,
+      "after": "d2e2a7ae261cc150c02a550a3b0f99e5f1bef624773f2aa4bbaa66f744f002f4"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/listE5RecibosParams.ts",
+      "before": null,
+      "after": "707a40e74033edff49e883a1648706d7bec4c65e257393a3ed632374fe9df72c"
+    },
+    {
+      "file": "lib/db/src/lib/caja-permissions-schema.test.ts",
+      "before": null,
+      "after": "f55410965317bde2ccc34daa38836a95a391d7586f4d0a9ead335e0164146f14"
+    },
+    {
+      "file": "lib/db/src/lib/seed-permissions.mjs",
+      "before": null,
+      "after": "8745bb7a8e791e6c1f451d344f7e5a76c4a7414a30b621357ad20b5deb56849b"
+    }
+  ],
+  "api": {},
+  "web": {
+    "assets/index-CJ5sQYvB.js": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c",
+    "assets/index-DEpsWzZM.css": "ba9441c9b3ff37db05dccdf93ffa657767289c7941056e6dac91c2418bceabc1",
+    "assets/index-DyyrWOW2.js": "b09957a11bbd3a564c0b37e901bbfa7cac07bb9e541247aa9da24edcb87b76f3",
+    "assets/mariana-textil-logo-FFOiXRd3.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "assets/mariana-textil-logo-monochrome-_7AVoW2A.png": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24",
+    "favicon.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "index.html": "861f4e4ea001ce6d679b6f4732df89ca267cc1409948e78c9741f5c6dae94b38",
+    "robots.txt": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+    "sounds/alerta.ogg": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e",
+    "sounds/aviso.ogg": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4",
+    "sounds/solicitud.ogg": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+  },
+  "noDatabaseAccess": true,
+  "noServerStarted": true,
+  "noActivation": true,
+  "baselinePreserved": true,
+  "recipeSha256": "d8df7cf4dc0ed8259b633d5bef3774ebea33348cb310aadec93c20e623d11463"
+}
