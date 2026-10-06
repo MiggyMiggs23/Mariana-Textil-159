@@ -57,7 +57,7 @@ async function collectTsxFiles(directory: string): Promise<string[]> {
     const fullPath = `${directory}/${entry.name}`;
     if (entry.isDirectory()) {
       files.push(...(await collectTsxFiles(fullPath)));
-    } else if (entry.isFile() && entry.name.endsWith(".tsx")) {
+    } else if (entry.isFile() && entry.name.endsWith(".tsx") && !/\.(test|spec)\.tsx$/.test(entry.name)) {
       files.push(fullPath);
     }
   }
@@ -149,12 +149,13 @@ test("CampoEscaneo keeps keyboard and camera scans on the same delivery path", a
   assert.match(source, /scanMode\?: ModoEscaneo/);
   assert.match(source, /interpretRollCode = true/);
   assert.match(source, /scanMode \?\? \(interpretRollCode \? "serie" : "raw"\)/);
-  assert.match(source, /await onScan\(scannedValue, codigo, source\)/);
-  assert.match(source, /const submit = \(\) => \{[\s\S]*deliver\(value, source\)/);
+  assert.match(source, /await onScan\(scannedValue, codigo, item.source\)/);
+  assert.match(source, /const rawValue = input.value/);
+  assert.match(source, /deliver\(rawValue, source\)/);
   assert.match(source, /void deliver\(rawValue, "camera"\)/);
-  assert.match(source, /typedCharactersRef\.current >= 7[\s\S]*elapsed <= 350[\s\S]*largestTypingGapRef\.current <= 50/);
+  assert.match(source, /typedCharactersRef\.current >= 7[\s\S]*elapsed <= Math.max\(2000, typedCharactersRef.current \* 100\)[\s\S]*largestTypingGapRef\.current <= 150/);
   assert.match(source, /\? "scanner"[\s\S]*: "manual"/);
-  assert.match(source, /clearOnScan\) onChange\(""\)/);
+  assert.match(source, /input.value = ""/);
   assert.match(source, /inputRef\.current\?\.focus\(\)/);
 
   assert.match(source, /BarcodeDetector/);

@@ -1,0 +1,13 @@
+Arregla el escaneo corrido en POS: hoy no se puede escanear rollo tras rollo con la pistola. Hay que parar y agregar a mano, y a veces sale el aviso de que la etiqueta no corresponde al rollo, con un texto que mezcla dos etiquetas.
+
+Causa, en artifacts/mariana-textil/src/components/campo-escaneo.tsx:
+1. submit() toma el valor del estado de React (línea 297), no el valor real del campo. Con escaneos seguidos, los caracteres del siguiente código entran antes de que el campo se limpie y se concatenan con el sobrante del anterior. Eso produce textos como 10000015GABMET170-BLA, que son el final de una etiqueta pegado al inicio de otra, y disparan la advertencia de SKU.
+2. La detección de pistola exige menos de 350 ms totales y pausas menores a 50 ms (líneas 287-290), medidas sobre onChange de React. Al escanear seguido eso falla, el escaneo se clasifica como manual y POS ya no agrega el rollo automáticamente.
+
+Cómo debe quedar:
+- Al recibir Enter, lee el valor directamente del elemento input y limpia el campo de inmediato, antes de procesar. Nunca dependas del estado de React para saber qué se escaneó.
+- Si llega otro escaneo mientras el anterior se está procesando, ponlo en cola y procésalo en orden. No se pierde ninguno ni se mezclan.
+- Corrige la detección de pistola para que aguante escaneos seguidos: mide sobre los eventos de tecla, no sobre el estado, y usa una ventana realista. Un código de 7 o más caracteres que termina en Enter y llegó sin pausas largas es escaneo, aunque venga pegado al anterior.
+- Conserva la advertencia de etiqueta contra rollo: sirve cuando de verdad no coinciden. Solo debe dejar de salir por mezcla de escaneos.
+
+Prueba con la pistola real escaneando cinco rollos seguidos sin pausa, en ticket y en nota: los cinco deben entrar solos, en orden, sin advertencias y sin tocar el teclado. Prueba también un rollo que de verdad no corresponda, para confirmar que la advertencia sigue saliendo. Revisa si el mismo defecto está en los otros campos de escaneo, como auditoría y salidas, y corrígelo ahí también.

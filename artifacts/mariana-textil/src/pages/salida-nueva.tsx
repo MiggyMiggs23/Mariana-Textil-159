@@ -422,6 +422,7 @@ function SalidaTransferenciaNueva() {
                     <Barcode className="w-5 h-5 text-primary" />
                   </div>
                   <CampoEscaneo
+                    key={`${origenId}:${destinoId}`}
                     ref={scannerInputRef}
                     value={serieInput}
                     onChange={setSerieInput}
@@ -430,7 +431,7 @@ function SalidaTransferenciaNueva() {
                     className="h-16 pl-16 text-xl font-bold bg-white border-0 focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:font-normal placeholder:text-base placeholder:text-slate-400"
                     containerClassName="min-w-0 flex-1"
                     autoFocus
-                     disabled={draftQuery.isFetching || isScanning || addRollMutation.isPending || removeRollMutation.isPending || sendMutation.isPending || !origenId || !destinoId}
+                     disabled={draftQuery.isFetching || removeRollMutation.isPending || sendMutation.isPending || !origenId || !destinoId}
                   />
                   <div>
                     <Button type="button" onClick={() => void handleScan(serieInput)} disabled={!serieInput.trim() || draftQuery.isFetching || isScanning} size="sm" className="h-10 px-4">

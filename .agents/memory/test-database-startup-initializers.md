@@ -19,7 +19,7 @@ El arranque normal después de esquema y seed no demuestra que una copia tenga t
 
 **Why:** Una copia permitió healthz pero falló al iniciar sesión por E11 ausente; instalar solo el SQL base dejó colisiones de alias ya corregidas en la aplicación. El POS falló después por faltar el esquema de remate. Eran defectos de preparación de la copia, no evidencia de una regresión en producción.
 
-**How to apply:** Inventariar dependencias desde las capacidades habilitadas, cotejar funciones corregidas y probar una operación con restricciones diferidas antes del recorrido. No exigir solo tablas existentes o healthz ni reejecutar SQL base sobre una instalación parcialmente preparada.
+**How to apply:** Inventariar dependencias desde las capacidades habilitadas, cotejar funciones corregidas y probar una operación con restricciones diferidas antes del recorrido. Al reutilizar un harness de otro módulo, comprobar también los lectores secundarios de la pantalla objetivo (por ejemplo, validación automática de precios tras añadir al carrito); que funcionen los recibos no acredita preparación completa de POS. No exigir solo tablas existentes o healthz ni reejecutar SQL base sobre una instalación parcialmente preparada.
 
 ### Restricción de solo lectura
 

@@ -3,6 +3,7 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -96,12 +97,37 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
     const lastTypingAtRef = useRef<number | null>(null);
     const largestTypingGapRef = useRef(0);
     const typedCharactersRef = useRef(0);
+    const scanQueueRef = useRef<Array<{
+      rawValue: string;
+      source: "scanner" | "manual" | "camera";
+    }>>([]);
+    const processingRef = useRef(false);
+    const mountedRef = useRef(true);
+    const latestRef = useRef({ onScan, disabled, scanMode, interpretRollCode });
+    latestRef.current = { onScan, disabled, scanMode, interpretRollCode };
+    const [scanError, setScanError] = useState("");
     const [cameraCapable, setCameraCapable] = useState(false);
     const [cameraOpen, setCameraOpen] = useState(false);
     const [cameraError, setCameraError] = useState("");
     const [startingCamera, setStartingCamera] = useState(false);
 
     useImperativeHandle(forwardedRef, () => inputRef.current as HTMLInputElement);
+
+    useEffect(() => {
+      mountedRef.current = true;
+      return () => {
+        mountedRef.current = false;
+        scanQueueRef.current = [];
+      };
+    }, []);
+
+    // The physical input owns the in-flight burst. Async search responses and
+    // React renders must never replace characters that the scanner is typing.
+    useLayoutEffect(() => {
+      if (!processingRef.current && typedCharactersRef.current === 0 && inputRef.current) {
+        inputRef.current.value = value;
+      }
+    }, [value]);
 
     useEffect(() => {
       let active = true;
@@ -148,21 +174,37 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
         rawValue: string,
         source: "scanner" | "manual" | "camera",
       ) => {
-        const modo: ModoEscaneo =
-          scanMode ?? (interpretRollCode ? "serie" : "raw");
-        const { codigo, valor: scannedValue } = despacharCodigoEscaneado(
-          rawValue,
-          modo,
-        );
-        if (!codigo.textoOriginal.trim()) return;
-        if (clearOnScan) onChange("");
+        if (!rawValue.trim()) return;
+        scanQueueRef.current.push({ rawValue, source });
+        if (processingRef.current) return;
+        processingRef.current = true;
         try {
-          await onScan(scannedValue, codigo, source);
+          while (mountedRef.current && scanQueueRef.current.length) {
+            const item = scanQueueRef.current.shift()!;
+            const { onScan, disabled, scanMode, interpretRollCode } = latestRef.current;
+            if (disabled) {
+              setScanError("El contexto cambió. Vuelve a escanear: " + item.rawValue);
+              continue;
+            }
+            const modo: ModoEscaneo = scanMode ?? (interpretRollCode ? "serie" : "raw");
+            const { codigo, valor: scannedValue } = despacharCodigoEscaneado(item.rawValue, modo);
+            try {
+              await onScan(scannedValue, codigo, item.source);
+            } catch (error) {
+              if (mountedRef.current) setScanError(
+                `No se pudo procesar ${item.rawValue}: ${error instanceof Error ? error.message : "error de escaneo"}`,
+              );
+            }
+            // Allow the consumer to commit its state before the next callback:
+            // draft IDs, accumulated rolls and mutation guards must be fresh.
+            await new Promise<void>((resolve) => window.setTimeout(resolve, 0));
+          }
         } finally {
-          window.setTimeout(() => inputRef.current?.focus(), 0);
+          processingRef.current = false;
+          if (mountedRef.current) inputRef.current?.focus();
         }
       },
-      [clearOnScan, interpretRollCode, onChange, onScan, scanMode],
+      [],
     );
 
     useEffect(() => {
@@ -179,6 +221,10 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
         if (session !== sessionRef.current) return;
         stopCamera();
         setCameraOpen(false);
+        if (clearOnScan) {
+          if (inputRef.current) inputRef.current.value = "";
+          onChange("");
+        }
         void deliver(rawValue, "camera");
       };
 
@@ -278,23 +324,29 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
 
       void start();
       return stopCamera;
-    }, [cameraOpen, deliver, stopCamera]);
+    }, [cameraOpen, deliver, stopCamera, clearOnScan, onChange]);
 
-    const submit = () => {
+    const submit = (input: HTMLInputElement, now: number) => {
       if (disabled) return;
+      const rawValue = input.value;
       const startedAt = typingStartedAtRef.current;
-      const elapsed = startedAt == null ? Number.POSITIVE_INFINITY : performance.now() - startedAt;
+      const elapsed = startedAt == null ? Number.POSITIVE_INFINITY : now - startedAt;
       const source =
+        rawValue.trim().length >= 7 &&
         typedCharactersRef.current >= 7 &&
-        elapsed <= 350 &&
-        largestTypingGapRef.current <= 50
+        elapsed <= Math.max(2000, typedCharactersRef.current * 100) &&
+        largestTypingGapRef.current <= 150 &&
+        lastTypingAtRef.current != null && now - lastTypingAtRef.current <= 150
           ? "scanner"
           : "manual";
       typingStartedAtRef.current = null;
       lastTypingAtRef.current = null;
       largestTypingGapRef.current = 0;
       typedCharactersRef.current = 0;
-      void deliver(value, source);
+      // Clear synchronously, before scheduling ANY processing or React update.
+      input.value = "";
+      onChange("");
+      void deliver(rawValue, source);
     };
 
     return (
@@ -309,30 +361,28 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
           <Input
             {...inputProps}
             ref={inputRef}
-            value={value}
+            defaultValue={value}
             disabled={disabled}
             onChange={(event) => {
-              const now = performance.now();
-              if (typingStartedAtRef.current == null) {
-                typingStartedAtRef.current = now;
-                lastTypingAtRef.current = now;
-                largestTypingGapRef.current = 0;
-                typedCharactersRef.current = 0;
-              } else if (lastTypingAtRef.current != null) {
-                largestTypingGapRef.current = Math.max(
-                  largestTypingGapRef.current,
-                  now - lastTypingAtRef.current,
-                );
-              }
-              lastTypingAtRef.current = now;
-              typedCharactersRef.current += 1;
               onChange(event.target.value);
             }}
             onKeyDown={(event) => {
               inputProps.onKeyDown?.(event);
-              if (event.defaultPrevented || event.key !== "Enter") return;
+              if (event.defaultPrevented || event.nativeEvent.isComposing) return;
+              const now = performance.now();
+              if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+                if (typingStartedAtRef.current == null) typingStartedAtRef.current = now;
+                if (lastTypingAtRef.current != null) {
+                  largestTypingGapRef.current = Math.max(largestTypingGapRef.current, now - lastTypingAtRef.current);
+                }
+                lastTypingAtRef.current = now;
+                typedCharactersRef.current += 1;
+              } else if (["Backspace", "Delete", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+                largestTypingGapRef.current = Number.POSITIVE_INFINITY;
+              }
+              if (event.key !== "Enter") return;
               event.preventDefault();
-              submit();
+              submit(event.currentTarget, now);
             }}
             className={cn(trailingContent && "min-w-0 flex-1", className)}
           />
@@ -352,6 +402,7 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
             </Button>
           )}
         </div>
+        {scanError && <p role="alert" className="text-sm text-destructive">{scanError}</p>}
 
         <Dialog
           open={cameraOpen}

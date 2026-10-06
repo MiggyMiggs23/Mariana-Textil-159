@@ -626,11 +626,12 @@ export default function AuditoriasInventario() {
                         )}
                       </div>
                       <CampoEscaneo
+                        key={`${selectedId}:${floorForScan?.id ?? ""}`}
                         id="audit-scan"
                         ref={scanRef}
                         value={scan}
                         onChange={setScan}
-                         disabled={!participation.active || !floorForScan || scanMutation.isPending}
+                         disabled={!participation.active || !floorForScan}
                         data-testid="input-audit-scan"
                          placeholder={!floorForScan ? "Selecciona un piso activo antes de escanear" : "Serie o SKU-SERIE; Enter para registrar"}
                         className="h-16 font-mono text-2xl shadow-inner bg-background/50 focus-visible:bg-background border-primary/30 focus-visible:border-primary transition-colors"

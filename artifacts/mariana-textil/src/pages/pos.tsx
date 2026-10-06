@@ -1371,6 +1371,9 @@ export default function PosPage() {
             size="icon"
             onClick={() => {
               setDocumentoTipo(null);
+              setSearch("");
+              setSkuWarning(null);
+              setLastScannedCode(null);
               setNotaSinPrecios(false);
               commitCart(() => []);
             }}
@@ -1413,6 +1416,7 @@ export default function PosPage() {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <CampoEscaneo
+                key={`${selectedLocationId}:${documentoTipo}:${tipoTicket}`}
                 value={search}
                 onChange={handleSearchChange}
                 onScan={handleSearchScan}

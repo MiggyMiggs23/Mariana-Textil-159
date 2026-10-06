@@ -1,0 +1,22 @@
+[
+  {
+    "file": "src/components/campo-escaneo.tsx",
+    "before": "5f434a5c43d37cc5a90f5b5a4a0eaedc564d6c39a078e91af62f46eb6e15ec32",
+    "after": "4d9f3e2f1c941254b04e66cc0c3ad2c91ca18014bd28450df97f6cb933dfc7b3"
+  },
+  {
+    "file": "src/pages/pos.tsx",
+    "before": "fba276434acf0c32f3e773a75a9ba4d7a8e10f49ade08f0f1bf04e87163f3a5e",
+    "after": "8c3bef4b0888c4d1b47e3fad905daa7fe2bfe49c3fed4b1555986a825cf7ce7f"
+  },
+  {
+    "file": "src/pages/auditorias-inventario.tsx",
+    "before": "b2cc4d40948917b4a997058129e3043ac237104c0829139f783c835525b84858",
+    "after": "5c79a77c9d1a8f9c63e9b90fc4233acf9464bb019b6613de490da08429d44cb5"
+  },
+  {
+    "file": "src/pages/salida-nueva.tsx",
+    "before": "bebaec1f535d9e255f364aa9be934153337fb99bdb9845477d4b7abde7c9822d",
+    "after": "21927dc8068bacd9be637208b871bfd611c2e3e3e45f43b0467778f2bd57d03f"
+  }
+]
