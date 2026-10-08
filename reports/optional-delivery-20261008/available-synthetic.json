@@ -1,0 +1,28 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "serie": "10000001",
+      "productoId": 1,
+      "skuProducto": "QAOPTDEL-AZU",
+      "telaProducto": "QA Optional Delivery",
+      "colorProducto": "Azul de prueba",
+      "ubicacionId": 10,
+      "nombreUbicacion": "Receipt isolated own",
+      "pisoId": null,
+      "nombrePiso": null,
+      "proveedorId": null,
+      "estado": "DISPONIBLE",
+      "cantidadInicial": "10.000",
+      "cantidadActual": "10.000",
+      "costoUnitario": "40.00",
+      "costoTotal": "400.00",
+      "notas": null,
+      "createdAt": "2026-10-08T20:51:59.888Z",
+      "updatedAt": "2026-10-08T20:51:59.888Z"
+    }
+  ],
+  "total": 1,
+  "page": 1,
+  "pageSize": 20
+}

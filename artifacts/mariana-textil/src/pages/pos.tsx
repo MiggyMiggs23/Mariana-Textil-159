@@ -1078,9 +1078,6 @@ export default function PosPage() {
   const confirmDisabled =
     cart.length === 0 ||
     !clientId ||
-    (documentoTipo === "NOTA" &&
-      clientId === "1" &&
-      (!nombreDestinatario.trim() || !direccionEntregaSnapshot.trim())) ||
     crearTicket.isPending ||
     hasInvalidValues ||
     validatingPrices ||
@@ -1154,17 +1151,6 @@ export default function PosPage() {
         variant: "destructive",
       });
       return;
-    }
-
-    if (documentoTipo === "NOTA" && clientId === "1") {
-      if (!nombreDestinatario.trim() || !direccionEntregaSnapshot.trim()) {
-        toast({
-          title: "Faltan datos de entrega",
-          description: "Para Notas de público en general, el nombre del destinatario y la dirección de entrega son obligatorios.",
-          variant: "destructive",
-        });
-        return;
-      }
     }
 
     const uuid = crypto.randomUUID();
@@ -1753,7 +1739,7 @@ export default function PosPage() {
                   <>
                     <div className="space-y-2">
                       <Label htmlFor="nombreDestinatario" className="text-sm font-bold text-sidebar">
-                        Nombre del Destinatario <span className="text-destructive">*</span>
+                        Nombre del Destinatario
                       </Label>
                       <Input
                         id="nombreDestinatario"
@@ -1764,7 +1750,7 @@ export default function PosPage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="direccionEntrega" className="text-sm font-bold text-sidebar">
-                        Dirección de Entrega <span className="text-destructive">*</span>
+                        Dirección de Entrega
                       </Label>
                       <Input
                         id="direccionEntrega"

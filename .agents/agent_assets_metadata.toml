@@ -2915,3 +2915,45 @@ mtime_ms = 1790900677089
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e016cbd5-8d4d-43a4-9c55-089104fe7cf2/5141cbf2-9a23-43d7-86a8-1f4d668a45b3"
 storage_version_token = "1790901018348836"
 content_type = "application/pdf"
+
+[[outputs]]
+id = "ym8HWv5HDne9MnLdedGXE"
+uri = "file://reports/optional-delivery-20261008/screenshots/29-empty-note-print-verified.png"
+type = "image"
+title = "Nota sin datos de entrega"
+description = "Documento de prueba creado desde POS. Destinatario y dirección vacíos: el formato de impresión omite ambos y reacomoda el encabezado."
+logical_id = "30cf7202-1ce9-448b-8e7c-3c680130a107"
+content_hash = "sha256:6a879e84b311ab6ba75926ee7963179eb99802bec5cccce9b48898968f68d09b"
+size = 63808
+mtime_ms = 1791496204725
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/30cf7202-1ce9-448b-8e7c-3c680130a107/be891bdb-0f69-46d9-9751-c50a2f82f07c"
+storage_version_token = "1791496335970064"
+content_type = "image/png"
+
+[[outputs]]
+id = "GxOwoxNJ-_oN0Q8oMOKLH"
+uri = "file://reports/optional-delivery-20261008/screenshots/30-filled-note-print-verified.png"
+type = "image"
+title = "Nota con destinatario y dirección"
+description = "Documento de prueba creado por API con cliente de crédito válido. Ambos datos persistidos aparecen en el formato de impresión."
+logical_id = "654644ae-38f4-426f-a7cd-47320ae92f9e"
+content_hash = "sha256:3b454ae564940bdc88f82228a070744ce9fe1362f334bcde098ec2dbe36c953b"
+size = 68577
+mtime_ms = 1791496207988
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/654644ae-38f4-426f-a7cd-47320ae92f9e/bc680015-329c-4db1-9204-d7c607b370de"
+storage_version_token = "1791496336978914"
+content_type = "image/png"
+
+[[outputs]]
+id = "aClfo4vHmMwsREJCH574L"
+uri = "file://reports/optional-delivery-20261008/screenshots/31-trip-without-recipient.png"
+type = "image"
+title = "Viaje con Nota sin destinatario"
+description = "Viaje creado en la base desechable con la Nota sin destinatario, localizada por folio y cliente."
+logical_id = "918f0cb5-4af9-4307-9b06-b1d9ce72a10b"
+content_hash = "sha256:0999b837f0548bc05aa56b3db8074966727a11fb91cd921231c69295700c5c59"
+size = 85588
+mtime_ms = 1791496210312
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/918f0cb5-4af9-4307-9b06-b1d9ce72a10b/0b0c3e75-26f1-4451-a9eb-67be7cc2598a"
+storage_version_token = "1791496337959841"
+content_type = "image/png"

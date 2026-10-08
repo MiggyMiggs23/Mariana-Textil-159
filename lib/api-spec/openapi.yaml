@@ -15757,10 +15757,10 @@ components:
           description: Solo aplica a NOTA; la copia CLIENTE omite estructuralmente los importes.
         nombreDestinatario:
           type: ["string", "null"]
-          description: Instantánea opcional del destinatario; obligatoria junto con dirección para NOTA de Venta a Público.
+          description: Instantánea opcional del destinatario. Si está vacía, no se imprime en la Nota.
         direccionEntregaSnapshot:
           type: ["string", "null"]
-          description: Instantánea opcional de la dirección de entrega; obligatoria junto con destinatario para NOTA de Venta a Público.
+          description: Instantánea opcional de la dirección de entrega. Si está vacía, no se imprime en la Nota.
         tipo:
           $ref: "#/components/schemas/TipoTicket"
           description: Valor temporal heredado por líneas que no incluyan tipo; los clientes nuevos deben indicar tipo por línea.

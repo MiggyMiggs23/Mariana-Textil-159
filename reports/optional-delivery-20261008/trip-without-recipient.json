@@ -1,0 +1,42 @@
+{
+  "byFolio": {
+    "tickets": [
+      {
+        "id": 12,
+        "folio": 1000,
+        "destinatario": null,
+        "cliente": "QA Optional Credit Client"
+      }
+    ],
+    "salidas": []
+  },
+  "byClient": {
+    "tickets": [
+      {
+        "id": 13,
+        "folio": 1001,
+        "destinatario": "Destinatario de prueba",
+        "cliente": "QA Optional Credit Client"
+      },
+      {
+        "id": 12,
+        "folio": 1000,
+        "destinatario": null,
+        "cliente": "QA Optional Credit Client"
+      }
+    ],
+    "salidas": []
+  },
+  "trip": {
+    "id": 1,
+    "folio": 1,
+    "origenId": 10,
+    "camionetaId": 1,
+    "choferId": 1,
+    "salidaAt": "2026-10-08T21:50:08.093Z",
+    "observaciones": null,
+    "creadoPorId": 1,
+    "createdAt": "2026-10-08T21:50:08.116Z",
+    "updatedAt": "2026-10-08T21:50:08.116Z"
+  }
+}

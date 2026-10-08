@@ -8537,12 +8537,12 @@ export interface TicketInput {
   /** Solo aplica a NOTA; la copia CLIENTE omite estructuralmente los importes. */
   notaSinPrecios?: boolean;
   /**
-     * Instantánea opcional del destinatario; obligatoria junto con dirección para NOTA de Venta a Público.
+     * Instantánea opcional del destinatario. Si está vacía, no se imprime en la Nota.
      * @nullable
      */
   nombreDestinatario?: string | null;
   /**
-     * Instantánea opcional de la dirección de entrega; obligatoria junto con destinatario para NOTA de Venta a Público.
+     * Instantánea opcional de la dirección de entrega. Si está vacía, no se imprime en la Nota.
      * @nullable
      */
   direccionEntregaSnapshot?: string | null;

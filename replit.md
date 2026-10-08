@@ -1,6 +1,14 @@
-### Versión activa: escaneo corrido — activada por MAIN (06/10/2026)
+### Versión activa: datos de entrega opcionales — activada por MAIN (08/10/2026)
 
-Frontend servido: `dist-scanner-burst-20261006`, copia byte-exacta de `reports/scanner-burst-20261006/revision-2/web`, con guarda `release-web.sha256` de ese informe. Deriva exclusivamente del frontend de recibos más cuatro archivos fuente del escaneo; no libera HEAD ajeno. API conservada: `dist-receipt-terminal-print-20261001`, sin reinicio, DDL ni operaciones de prueba contra datos reales. No hubo publicación externa.
+Frontend: `dist-optional-delivery-20261008`, derivado del candidato de escaneo corrido más la eliminación de dos bloqueos y dos asteriscos en POS. Contrato OpenAPI corregido y clientes/Zod regenerados. API de recibos conservada, sin reinicio ni migraciones sobre datos reales. Guarda: `reports/optional-delivery-20261008/release-web.sha256`; informe: `ESTADO.md` en el mismo directorio. Solo se reinició web; sin publicación externa.
+
+El propietario confirmó **solo hacer opcionales los campos**, conservando la prohibición de crédito a Venta a Público. No se cambió la visibilidad de esos campos ni la regla de que toda Nota es a crédito. Por ello una Nota a Venta a Público sigue bloqueada por crédito, no por destinatario/dirección. Vacíos se conservan como ausencia (`null`) y se omiten al imprimir; llenos se conservan e imprimen. No se encontró otra obligatoriedad equivalente en Salidas/Venta a cliente.
+
+Prueba con API y base desechables: Nota vacía creada desde POS y recuperada tras bloqueo del navegador de prueba; Nota con ambos datos y Ticket vacío creados por API. No equivalen a autorización de crédito o cobro en Caja. Impresión CSS real comprobada y capturada con los datos persistidos. Nota sin destinatario encontrada por folio/cliente y añadida a un viaje. Capturas entregables verificadas; clúster desechable destruido.
+
+### Versión anterior: escaneo corrido — activada por MAIN (06/10/2026)
+
+Frontend servido en esa etapa: `dist-scanner-burst-20261006`, copia byte-exacta de `reports/scanner-burst-20261006/revision-2/web`, con guarda `release-web.sha256` de ese informe. Deriva exclusivamente del frontend de recibos más cuatro archivos fuente del escaneo; no libera HEAD ajeno. Conservado dentro de la versión de datos de entrega opcionales. API conservada: `dist-receipt-terminal-print-20261001`, sin reinicio, DDL ni operaciones de prueba contra datos reales. No hubo publicación externa.
 
 Enter captura el valor del elemento y lo vacía antes del procesamiento; cola ordenada para el consumidor compartido. Detección por teclas con tolerancia mayor; se conserva la advertencia real de SKU. Auditoría y armado de Salida admiten capturas durante el procesamiento anterior. Cambiar de Ticket a Nota limpia búsqueda y advertencia.
 

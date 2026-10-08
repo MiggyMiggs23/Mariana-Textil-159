@@ -3,6 +3,12 @@ name: Verificación de impresión
 description: Evita falsos positivos al comprobar vistas PDF basadas en CSS de impresión.
 ---
 
+En pruebas automatizadas de pantallas que autoimprimen al crear documentos, sustituir `window.print` antes de navegar y acotar el proceso con un watchdog externo. Un bloqueo de impresión puede ocurrir después de un POST exitoso: recuperar el documento persistido antes de repetir la venta.
+
+**Why:** Un navegador quedó bloqueado después de crear correctamente una Nota; esperar indefinidamente no produjo más evidencia y repetir el envío habría creado otra operación.
+
+**How to apply:** Separar creación persistida, autorización/cobro y captura de impresión. Tras detener una prueba colgada, consultar el resultado existente y completar solo la comprobación faltante; no afirmar aprobación global del agente detenido.
+
 Para exportaciones descargadas, comparar el archivo con otro generado por el mismo exportador no basta: contrastar sus fuentes con las de pantalla y verificar texto visible y geometría del PDF.
 
 **Why:** Dos archivos idénticos pueden compartir una fuente omitida o columnas fuera de la página. Los bytes correctos no demuestran que los datos sean visibles.
