@@ -1,4 +1,26 @@
-### Versión activa: datos de entrega opcionales — activada por MAIN (08/10/2026)
+### Versión activa: CONFIGURACIÓN unificada — activada por MAIN (09/10/2026)
+
+Frontend: `dist-configuration-menu-20261009`, copia exacta del candidato probado sobre orden de OPERACIÓN. ADMINISTRACIÓN CONTABLE deja de existir en el lateral; CONFIGURACIÓN queda: Sitios, Usuarios, Permisos, Camionetas, Choferes, Equipos, Conciliación de Kardex, Conciliaciones documentales, Administrar perfiles A/F, Bitácora. Cada enlace conserva su predicado de visibilidad y su ruta. “Borrar datos de prueba” sigue después de todo el menú, sin cambios de autoridad ni comportamiento.
+
+El catálogo estático mantiene íntegros sus objetos/permisos; Kardex se mueve de grupo. Los enlaces ya autorizados por E11 se componen dentro de CONFIGURACIÓN antes de Bitácora, incluso si el rol no tiene opciones estáticas de CONFIGURACIÓN. No se reautoriza E11 mediante permisos de configuración. Usuarios y Administrar perfiles A/F siguen siendo enlaces distintos con la misma ruta existente. No se alteraron pantallas, rutas de App, predicados E11 ni permisos.
+
+Guarda: `reports/configuration-menu-20261009/release-web.sha256`; evidencia: `ESTADO.md` del mismo directorio. Doce pruebas focalizadas, typecheck/build y captura autenticada MAIN de escritorio/móvil aprobados; orden, hrefs, ausencia del encabezado eliminado y posición final del botón comprobados. Solo reinicio web, HTML servido idéntico al probado; API intacta, sin publicación externa. Entorno desechable destruido y credenciales eliminadas.
+
+### Versión anterior: orden de OPERACIÓN — activada por MAIN (09/10/2026)
+
+Frontend: `dist-operation-menu-order-20261009`, copia exacta del candidato con menú plegable más únicamente el orden **Movimientos, POS, Entradas, Salidas, Recibos de abonos, Viajes** y el cambio del rótulo “Ventas / POS” a “POS” en navegación. Rutas, permisos, iconos, pantallas y títulos internos sin cambios. Guarda: `reports/operation-menu-order-20261009/release-web.sha256`; informe: `ESTADO.md` del mismo directorio. Solo reinicio web; API intacta, sin publicación externa.
+
+Verificación: comparación de cada objeto de navegación antes/después, cuatro contratos de permisos, typecheck/build y captura autenticada de escritorio/móvil en entorno desechable aprobados. Capturas inspeccionadas, orden y hrefs comprobados. HTML servido idéntico al probado. Entorno desechable destruido y credenciales eliminadas; sin pruebas sobre datos reales. No se encontró el texto “Ventas / POS” dentro del código de pantallas o formatos documentales; evidencias históricas no se reescribieron.
+
+### Versión anterior: menú lateral plegable — activada por MAIN (09/10/2026)
+
+Frontend: `dist-sidebar-collapse-20261009`, copia exacta del candidato probado, derivado de datos de entrega opcionales más exclusivamente el comportamiento plegable del menú. Guarda: `reports/sidebar-collapse-20261009/release-web.sha256`; evidencia y límites: `reports/sidebar-collapse-20261009/ESTADO.md`. Reinicio únicamente web, API sin cambios ni reinicio solicitado; sin publicación externa.
+
+Alcance solicitado: solo INVENTARIO, OPERACIÓN, CAJA, DIRECTORIO, CONFIGURACIÓN y ADMINISTRACIÓN CONTABLE. Conservar opciones, orden, permisos y ocultamiento de secciones vacías; FONDO MARIANA y enlaces sin encabezado quedan intactos. Preferencia persistente **por usuario en cada navegador**, no sincronizada entre dispositivos, conservada al cerrar sesión. Entrar a una ruta abre temporalmente su sección sin sobrescribir la preferencia; el título puede plegarse manualmente hasta la siguiente navegación/recarga. Escritorio y móvil comparten estado.
+
+Prueba autenticada aislada PASS: seis secciones, 34 enlaces con orden idéntico, recarga, logout/login, aislamiento ADMIN/CAJA, apertura por ruta, móvil 390×844 sin desbordamiento. Cuatro pruebas montadas y typecheck/build aprobados. Catálogo, permisos, rutas y E11 idénticos al candidato anterior. La suite histórica de navegación tiene una aserción de rutas preexistente que también falla sobre la versión anterior, documentada sin modificarla. Entorno desechable destruido; sin operaciones de prueba sobre datos reales.
+
+### Versión anterior: datos de entrega opcionales — activada por MAIN (08/10/2026)
 
 Frontend: `dist-optional-delivery-20261008`, derivado del candidato de escaneo corrido más la eliminación de dos bloqueos y dos asteriscos en POS. Contrato OpenAPI corregido y clientes/Zod regenerados. API de recibos conservada, sin reinicio ni migraciones sobre datos reales. Guarda: `reports/optional-delivery-20261008/release-web.sha256`; informe: `ESTADO.md` en el mismo directorio. Solo se reinició web; sin publicación externa.
 

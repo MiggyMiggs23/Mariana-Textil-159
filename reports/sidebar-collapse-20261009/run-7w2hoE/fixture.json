@@ -1,0 +1,487 @@
+{
+  "admin": {
+    "id": 1,
+    "username": "admin",
+    "role": "ADMIN"
+  },
+  "defaults": [
+    {
+      "id": 248,
+      "rol": "ADMIN",
+      "modulo": "recibos_abonos",
+      "puede_ver": true,
+      "puede_crear": false,
+      "puede_editar": false,
+      "puede_autorizar": false,
+      "updated_at": "2026-10-09T18:27:53.049Z",
+      "updated_por": null
+    },
+    {
+      "id": 1,
+      "rol": "TERMINAL",
+      "modulo": "recibos_abonos",
+      "puede_ver": true,
+      "puede_crear": false,
+      "puede_editar": false,
+      "puede_autorizar": false,
+      "updated_at": "2026-10-09T18:27:53.049Z",
+      "updated_por": null
+    },
+    {
+      "id": 2,
+      "rol": "CAJA",
+      "modulo": "recibos_abonos",
+      "puede_ver": false,
+      "puede_crear": false,
+      "puede_editar": false,
+      "puede_autorizar": false,
+      "updated_at": "2026-10-09T18:27:53.049Z",
+      "updated_por": null
+    },
+    {
+      "id": 3,
+      "rol": "SUPERVISOR",
+      "modulo": "recibos_abonos",
+      "puede_ver": false,
+      "puede_crear": false,
+      "puede_editar": false,
+      "puede_autorizar": false,
+      "updated_at": "2026-10-09T18:27:53.049Z",
+      "updated_por": null
+    },
+    {
+      "id": 4,
+      "rol": "BODEGA",
+      "modulo": "recibos_abonos",
+      "puede_ver": false,
+      "puede_crear": false,
+      "puede_editar": false,
+      "puede_autorizar": false,
+      "updated_at": "2026-10-09T18:27:53.049Z",
+      "updated_por": null
+    },
+    {
+      "id": 5,
+      "rol": "SISTEMAS",
+      "modulo": "recibos_abonos",
+      "puede_ver": false,
+      "puede_crear": false,
+      "puede_editar": false,
+      "puede_autorizar": false,
+      "updated_at": "2026-10-09T18:27:53.049Z",
+      "updated_por": null
+    },
+    {
+      "id": 6,
+      "rol": "CONTADOR",
+      "modulo": "recibos_abonos",
+      "puede_ver": false,
+      "puede_crear": false,
+      "puede_editar": false,
+      "puede_autorizar": false,
+      "updated_at": "2026-10-09T18:27:53.049Z",
+      "updated_por": null
+    }
+  ],
+  "sites": [
+    {
+      "id": 10,
+      "nombre": "Receipt isolated own",
+      "session": 1
+    },
+    {
+      "id": 11,
+      "nombre": "Receipt isolated other",
+      "session": 2
+    }
+  ],
+  "actors": [
+    {
+      "id": 2,
+      "username": "receipt_1_caja_receive",
+      "role": "CAJA",
+      "variant": "receive",
+      "site": 10
+    },
+    {
+      "id": 3,
+      "username": "receipt_1_terminal_default",
+      "role": "TERMINAL",
+      "variant": "default",
+      "site": 10
+    },
+    {
+      "id": 4,
+      "username": "receipt_1_caja_custom_granted",
+      "role": "CAJA",
+      "variant": "custom-granted",
+      "site": 10
+    },
+    {
+      "id": 5,
+      "username": "receipt_1_caja_custom_denied",
+      "role": "CAJA",
+      "variant": "custom-denied",
+      "site": 10
+    },
+    {
+      "id": 6,
+      "username": "receipt_2_caja_receive",
+      "role": "CAJA",
+      "variant": "receive",
+      "site": 11
+    }
+  ],
+  "sources": [
+    {
+      "kind": "api-e3",
+      "site": 10,
+      "client": 8,
+      "clientName": "Receipt 1 api-e3",
+      "ticket": 1,
+      "folio": 13000,
+      "movement": 1,
+      "key": "c2c69248-01d0-405d-a684-760a90df45ce"
+    },
+    {
+      "kind": "api-e5",
+      "site": 10,
+      "client": 9,
+      "clientName": "Receipt 1 api-e5",
+      "ticket": 2,
+      "folio": 13001,
+      "movement": 2,
+      "key": "37ca2c51-912f-4765-bb14-d45a047698ea",
+      "input": {
+        "claveOperacion": "37ca2c51-912f-4765-bb14-d45a047698ea",
+        "clienteId": 9,
+        "ubicacionId": 10,
+        "versionContexto": "e5:v1:251502d5cba4350ce9514af38684789b4c30c7385ccf8e42407e5a894f2b10ce",
+        "entrada": "CAJA",
+        "sesionOperativaId": 1,
+        "importe": "10.00",
+        "formaPago": "TRANSFERENCIA",
+        "cuentaDestino": "CUENTA_FISCAL",
+        "notasIndicadas": [
+          2
+        ],
+        "evidencia": {
+          "descripcion": "Native isolated receipt fixture",
+          "referencias": [
+            "receipt-terminal-runtime"
+          ]
+        }
+      }
+    },
+    {
+      "kind": "browser-e3",
+      "site": 10,
+      "client": 10,
+      "clientName": "Receipt 1 browser-e3",
+      "ticket": 3,
+      "folio": 13002,
+      "movement": 3
+    },
+    {
+      "kind": "browser-e5-directed",
+      "site": 10,
+      "client": 11,
+      "clientName": "Receipt 1 browser-e5-directed",
+      "ticket": 4,
+      "folio": 13003,
+      "movement": 4
+    },
+    {
+      "kind": "browser-e5-retained",
+      "site": 10,
+      "client": 12,
+      "clientName": "Receipt 1 browser-e5-retained",
+      "ticket": 5,
+      "folio": 13004,
+      "movement": 5
+    },
+    {
+      "kind": "api-e3",
+      "site": 11,
+      "client": 13,
+      "clientName": "Receipt 2 api-e3",
+      "ticket": 6,
+      "folio": 13005,
+      "movement": 6,
+      "key": "995b1c62-fdbb-4377-ae99-9a382e7dbbd0"
+    },
+    {
+      "kind": "api-e5",
+      "site": 11,
+      "client": 14,
+      "clientName": "Receipt 2 api-e5",
+      "ticket": 7,
+      "folio": 13006,
+      "movement": 7,
+      "key": "fff3c195-4e67-43ea-86e3-0cbfbb3df22c",
+      "input": {
+        "claveOperacion": "fff3c195-4e67-43ea-86e3-0cbfbb3df22c",
+        "clienteId": 14,
+        "ubicacionId": 11,
+        "versionContexto": "e5:v1:1d6682ccb5890c8ce572d3ca25ec3e02314b43bb6488ac447c7b88b111d75a0b",
+        "entrada": "CAJA",
+        "sesionOperativaId": 2,
+        "importe": "10.00",
+        "formaPago": "TRANSFERENCIA",
+        "cuentaDestino": "CUENTA_FISCAL",
+        "notasIndicadas": [
+          7
+        ],
+        "evidencia": {
+          "descripcion": "Native isolated receipt fixture",
+          "referencias": [
+            "receipt-terminal-runtime"
+          ]
+        }
+      }
+    },
+    {
+      "kind": "browser-e3",
+      "site": 11,
+      "client": 15,
+      "clientName": "Receipt 2 browser-e3",
+      "ticket": 8,
+      "folio": 13007,
+      "movement": 8
+    },
+    {
+      "kind": "browser-e5-directed",
+      "site": 11,
+      "client": 16,
+      "clientName": "Receipt 2 browser-e5-directed",
+      "ticket": 9,
+      "folio": 13008,
+      "movement": 9
+    },
+    {
+      "kind": "browser-e5-retained",
+      "site": 11,
+      "client": 17,
+      "clientName": "Receipt 2 browser-e5-retained",
+      "ticket": 10,
+      "folio": 13009,
+      "movement": 10
+    }
+  ],
+  "receipts": [
+    {
+      "family": "e3",
+      "source": "api-e3",
+      "site": 10,
+      "client": 8,
+      "folio": "E3-10-00000001",
+      "body": {
+        "recibo": {
+          "clienteId": 8,
+          "importeCentavos": 1000,
+          "asignaciones": [
+            {
+              "movimientoVentaId": 1,
+              "ticketId": 1,
+              "folio": 13000,
+              "aplicadoCentavos": 1000,
+              "saldoAntesCentavos": 1000,
+              "saldoDespuesCentavos": 0
+            }
+          ],
+          "remanenteCentavos": 0,
+          "saldoAFavorCentavos": 0,
+          "deudaCentavos": 0,
+          "origen": "CAJA",
+          "version": 1,
+          "folio": "E3-10-00000001",
+          "movimientoId": 11,
+          "clienteNombre": "Receipt 1 api-e3",
+          "formaPago": "TRANSFERENCIA",
+          "cuentaDestino": "CUENTA_FISCAL",
+          "clienteTelefono": null,
+          "clienteRfc": null,
+          "sitioNombre": "Receipt isolated own",
+          "actorNombre": "Administrador",
+          "sitioId": 10,
+          "sesionCajaId": 1,
+          "recibidoEn": "2026-10-09T18:28:01.137Z",
+          "registradoEn": "2026-10-09T18:28:01.137Z",
+          "actorId": 1,
+          "motivo": null
+        },
+        "replay": false
+      }
+    },
+    {
+      "family": "e5",
+      "source": "api-e5",
+      "site": 10,
+      "client": 9,
+      "id": "37ca2c51-912f-4765-bb14-d45a047698ea",
+      "documentId": "d469f80f-16f7-4406-97bd-d6128117083d",
+      "body": {
+        "id": "37ca2c51-912f-4765-bb14-d45a047698ea",
+        "revision": 1,
+        "clienteId": 9,
+        "clienteNombre": "Receipt 1 api-e5",
+        "ubicacionId": 10,
+        "ubicacionNombre": "Receipt isolated own",
+        "importeRecibido": "10.00",
+        "importeAplicado": "0.00",
+        "importePendiente": "10.00",
+        "importeDevuelto": "0.00",
+        "fechaRecepcion": "2026-10-09T18:28:01.307Z",
+        "formaPago": "TRANSFERENCIA",
+        "cuentaDestino": "CUENTA_FISCAL",
+        "sesionOperativaId": 1,
+        "estado": "PENDIENTE",
+        "algunaVezAplicado": false,
+        "receptor": {
+          "id": 1,
+          "nombre": "Administrador"
+        },
+        "evidenciaRecepcion": {
+          "descripcion": "Native isolated receipt fixture",
+          "referencias": [
+            "receipt-terminal-runtime"
+          ]
+        },
+        "notasIndicadas": [
+          {
+            "notaId": 2,
+            "movimientoVentaId": 2,
+            "folio": "13001",
+            "ubicacionId": 10,
+            "fecha": "2026-10-09T18:27:55.974Z",
+            "saldoPendiente": "10.00",
+            "facturada": false
+          }
+        ],
+        "propuestas": [],
+        "aplicaciones": [],
+        "rechazos": [],
+        "reciboId": "d469f80f-16f7-4406-97bd-d6128117083d",
+        "antiguedadDias": 0,
+        "avisoAdmin": false,
+        "capacidades": {
+          "puedeRecibir": true,
+          "puedePreparar": true,
+          "puedeAutorizar": false,
+          "puedeRechazar": false,
+          "puedeDevolver": false,
+          "puedeVerAvisos": true,
+          "puedeImprimir": true,
+          "preparacionADisponible": false
+        }
+      }
+    },
+    {
+      "family": "e3",
+      "source": "api-e3",
+      "site": 11,
+      "client": 13,
+      "folio": "E3-11-00000001",
+      "body": {
+        "recibo": {
+          "clienteId": 13,
+          "importeCentavos": 1000,
+          "asignaciones": [
+            {
+              "movimientoVentaId": 6,
+              "ticketId": 6,
+              "folio": 13005,
+              "aplicadoCentavos": 1000,
+              "saldoAntesCentavos": 1000,
+              "saldoDespuesCentavos": 0
+            }
+          ],
+          "remanenteCentavos": 0,
+          "saldoAFavorCentavos": 0,
+          "deudaCentavos": 0,
+          "origen": "CAJA",
+          "version": 1,
+          "folio": "E3-11-00000001",
+          "movimientoId": 12,
+          "clienteNombre": "Receipt 2 api-e3",
+          "formaPago": "TRANSFERENCIA",
+          "cuentaDestino": "CUENTA_FISCAL",
+          "clienteTelefono": null,
+          "clienteRfc": null,
+          "sitioNombre": "Receipt isolated other",
+          "actorNombre": "Administrador",
+          "sitioId": 11,
+          "sesionCajaId": 2,
+          "recibidoEn": "2026-10-09T18:28:01.512Z",
+          "registradoEn": "2026-10-09T18:28:01.512Z",
+          "actorId": 1,
+          "motivo": null
+        },
+        "replay": false
+      }
+    },
+    {
+      "family": "e5",
+      "source": "api-e5",
+      "site": 11,
+      "client": 14,
+      "id": "fff3c195-4e67-43ea-86e3-0cbfbb3df22c",
+      "documentId": "f71bc164-3389-4eda-a793-b7bf4a5ddd31",
+      "body": {
+        "id": "fff3c195-4e67-43ea-86e3-0cbfbb3df22c",
+        "revision": 1,
+        "clienteId": 14,
+        "clienteNombre": "Receipt 2 api-e5",
+        "ubicacionId": 11,
+        "ubicacionNombre": "Receipt isolated other",
+        "importeRecibido": "10.00",
+        "importeAplicado": "0.00",
+        "importePendiente": "10.00",
+        "importeDevuelto": "0.00",
+        "fechaRecepcion": "2026-10-09T18:28:01.717Z",
+        "formaPago": "TRANSFERENCIA",
+        "cuentaDestino": "CUENTA_FISCAL",
+        "sesionOperativaId": 2,
+        "estado": "PENDIENTE",
+        "algunaVezAplicado": false,
+        "receptor": {
+          "id": 1,
+          "nombre": "Administrador"
+        },
+        "evidenciaRecepcion": {
+          "descripcion": "Native isolated receipt fixture",
+          "referencias": [
+            "receipt-terminal-runtime"
+          ]
+        },
+        "notasIndicadas": [
+          {
+            "notaId": 7,
+            "movimientoVentaId": 7,
+            "folio": "13006",
+            "ubicacionId": 11,
+            "fecha": "2026-10-09T18:27:56.205Z",
+            "saldoPendiente": "10.00",
+            "facturada": false
+          }
+        ],
+        "propuestas": [],
+        "aplicaciones": [],
+        "rechazos": [],
+        "reciboId": "f71bc164-3389-4eda-a793-b7bf4a5ddd31",
+        "antiguedadDias": 0,
+        "avisoAdmin": false,
+        "capacidades": {
+          "puedeRecibir": true,
+          "puedePreparar": true,
+          "puedeAutorizar": false,
+          "puedeRechazar": false,
+          "puedeDevolver": false,
+          "puedeVerAvisos": true,
+          "puedeImprimir": true,
+          "preparacionADisponible": false
+        }
+      }
+    }
+  ]
+}

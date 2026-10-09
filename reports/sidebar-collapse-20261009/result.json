@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS",
+  "runtime": "disposable runtime only",
+  "cases": {
+    "desktop_sections": "PASS — all six native headers collapsed/opened; aria-expanded and arrow/icon changed; collapsed Products link was not visible; 34 navigation links retained identical order after reopening.",
+    "admin_preference_routes": "PASS — Inventory stayed closed on Tiempo Real after reload, auto-opened on /productos, and returned closed on /clientes.",
+    "logout_relogin": "PASS — inspected confirmation labels, logged out and re-logged admin in the same browser context; Inventory preference persisted.",
+    "role_isolation": "PASS — CAJA actor saw only CAJA and DIRECTORIO groups (restricted accounting absent), defaults were open, CAJA preference was stored separately; admin Inventory preference remained closed after admin relogin.",
+    "mobile": "PASS — hamburger opened the overlay; Inventory collapse persisted after reload; /productos auto-opened Inventory; no horizontal overflow at 390x844."
+  },
+  "screenshots": [
+    "reports/sidebar-collapse-20261009/screenshots/desktop-open.png",
+    "reports/sidebar-collapse-20261009/screenshots/desktop-closed.png",
+    "reports/sidebar-collapse-20261009/screenshots/after-relogin.png",
+    "reports/sidebar-collapse-20261009/screenshots/mobile-open.png",
+    "reports/sidebar-collapse-20261009/screenshots/mobile-closed.png"
+  ]
+}

@@ -1,0 +1,126 @@
+import { db } from "@workspace/db";
+import { sql } from "drizzle-orm";
+
+export type HistorialCompraSort =
+  | "fecha"
+  | "producto"
+  | "proveedor"
+  | "color"
+  | "sitio"
+  | "cantidad";
+
+export type HistorialCompraDirection = "asc" | "desc";
+
+export async function listarHistorialComprasProveedores(options: {
+  ubicacionIds?: number[];
+  proveedorIds?: number[];
+  telas?: string[];
+  colores?: string[];
+  desde?: Date;
+  hasta?: Date;
+  sort: HistorialCompraSort;
+  direction: HistorialCompraDirection;
+  page: number;
+  pageSize: number;
+}) {
+  const sortExpressions: Record<HistorialCompraSort, string> = {
+    fecha: "fecha",
+    producto: "producto",
+    proveedor: "proveedor",
+    color: "color",
+    sitio: "sitio",
+    cantidad: "cantidad",
+  };
+  const orderBy = sql.raw(
+    `${sortExpressions[options.sort]} ${options.direction.toUpperCase()}, entrada_id DESC, producto_id ASC`,
+  );
+  const offset = (options.page - 1) * options.pageSize;
+
+  const siteIds = options.ubicacionIds?.length ? options.ubicacionIds : null;
+  const providerIds = options.proveedorIds?.length ? options.proveedorIds : null;
+  const fabrics = options.telas?.length ? options.telas : null;
+  const colors = options.colores?.length ? options.colores : null;
+  const [rows, sites, catalogs] = await Promise.all([db.execute<{
+    entrada_id: number;
+    fecha: Date | string;
+    producto_id: number;
+    producto: string;
+    color: string;
+    unidad: "METRO" | "KILO" | "BOLSA" | "PIEZA";
+    proveedor_id: number;
+    proveedor: string;
+    ubicacion_id: number;
+    sitio: string;
+    cantidad: string;
+    total: string;
+  }>(sql`
+    WITH lineas AS (
+      SELECT
+        e.id AS entrada_id,
+        e.fecha,
+        pr.id AS producto_id,
+        pr.tela AS producto,
+        pr.color,
+        pr.unidad,
+        pv.id AS proveedor_id,
+        pv.nombre AS proveedor,
+        u.id AS ubicacion_id,
+        u.nombre AS sitio,
+        SUM(ro.cantidad_inicial) AS cantidad
+      FROM entradas e
+      JOIN proveedores pv ON pv.id = e.proveedor_id
+      JOIN ubicaciones u ON u.id = e.ubicacion_id
+      JOIN rollos ro ON ro.recepcion_id = e.id
+      JOIN productos pr ON pr.id = ro.producto_id
+      WHERE (${siteIds}::int[] IS NULL OR e.ubicacion_id = ANY(${siteIds}))
+        AND (${providerIds}::int[] IS NULL OR e.proveedor_id = ANY(${providerIds}))
+        AND (${fabrics}::text[] IS NULL OR pr.tela = ANY(${fabrics}))
+        AND (${colors}::text[] IS NULL OR pr.color = ANY(${colors}))
+        AND (${options.desde ?? null}::timestamptz IS NULL OR e.fecha >= ${options.desde ?? null})
+        AND (${options.hasta ?? null}::timestamptz IS NULL OR e.fecha <= ${options.hasta ?? null})
+      GROUP BY e.id, e.fecha, pr.id, pr.tela, pr.color, pr.unidad,
+        pv.id, pv.nombre, u.id, u.nombre
+    )
+    SELECT lineas.*, COUNT(*) OVER()::text AS total
+    FROM lineas
+    ORDER BY ${orderBy}
+    LIMIT ${options.pageSize}
+    OFFSET ${offset}
+  `), db.execute<{ id: number; nombre: string }>(sql`
+    SELECT DISTINCT u.id, u.nombre
+    FROM entradas e
+    JOIN ubicaciones u ON u.id = e.ubicacion_id
+    WHERE e.proveedor_id IS NOT NULL
+      AND (${siteIds}::int[] IS NULL OR e.ubicacion_id = ANY(${siteIds}))
+    ORDER BY u.nombre
+  `), db.execute<{ tela: string; color: string }>(sql`
+    SELECT DISTINCT tela, color
+    FROM productos
+    ORDER BY tela, color
+  `)]);
+
+  return {
+    items: rows.rows.map((row) => ({
+      entradaId: Number(row.entrada_id),
+      fecha: new Date(row.fecha).toISOString(),
+      productoId: Number(row.producto_id),
+      producto: row.producto,
+      color: row.color,
+      unidad: row.unidad,
+      proveedorId: Number(row.proveedor_id),
+      proveedor: row.proveedor,
+      ubicacionId: Number(row.ubicacion_id),
+      sitio: row.sitio,
+      cantidad: String(row.cantidad),
+    })),
+    total: Number(rows.rows[0]?.total ?? 0),
+    page: options.page,
+    pageSize: options.pageSize,
+    sitios: sites.rows.map((site) => ({
+      id: Number(site.id),
+      nombre: site.nombre,
+    })),
+    telas: [...new Set(catalogs.rows.map((item) => item.tela))],
+    colores: [...new Set(catalogs.rows.map((item) => item.color))],
+  };
+}

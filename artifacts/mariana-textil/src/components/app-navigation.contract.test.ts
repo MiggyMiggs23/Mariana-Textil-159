@@ -63,7 +63,7 @@ test("SISTEMAS navigation follows its matrix without POS and with its account-de
     group.items.map((item) => item.name),
   );
 
-  assert.ok(!names.includes("Ventas / POS"));
+  assert.ok(!names.includes("POS"));
   assert.deepEqual(
     groups.find((group) => group.title === "CAJA")?.items.map((item) => item.name),
     ["Cuentas", "Atribución E7"],
@@ -72,7 +72,7 @@ test("SISTEMAS navigation follows its matrix without POS and with its account-de
     names.filter((name) =>
       ["Entradas", "Salidas", "Viajes", "Movimientos"].includes(name),
     ),
-    ["Entradas", "Salidas", "Viajes", "Movimientos"],
+    ["Movimientos", "Entradas", "Salidas", "Viajes"],
   );
   assert.deepEqual(
     groups
@@ -85,6 +85,7 @@ test("SISTEMAS navigation follows its matrix without POS and with its account-de
       "Camionetas",
       "Choferes",
       "Equipos",
+      "Conciliación de Kardex",
       "Bitácora",
     ],
   );
@@ -115,7 +116,7 @@ test("CONTADOR gets complete CAJA and read-only destinations, without forbidden 
   ]) {
     assert.ok(names.includes(expected));
   }
-  for (const forbidden of ["Ventas / POS", "Ajustes", "Etiquetas"]) {
+  for (const forbidden of ["POS", "Ajustes", "Etiquetas"]) {
     assert.ok(!names.includes(forbidden));
   }
   assert.ok(!groups.some((group) => group.title === "CONFIGURACIÓN"));

@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "file": "src/components/layout/app-navigation.ts",
+  "before": "fc35130ec957adddcce19a6df308a291cb56a9e083cfc11ff8bf6f73aca6c1cd",
+  "after": "edf3505926b7834f53c9b86122e85bd24defdc28e053512a7f750ce0ec37abc8"
+}

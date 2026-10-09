@@ -73,12 +73,12 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     title: "OPERACIÓN",
     items: [
-      { name: "Ventas / POS", path: "/pos", icon: ShoppingCart, module: Modules.POS, isClickable: true },
-      { name: "Recibos de abonos", path: "/recibos-abonos", icon: FileBarChart, module: Modules.RECIBOS_ABONOS, isClickable: true },
+      { name: "Movimientos", path: "/movimientos", icon: Activity, module: Modules.MOVIMIENTOS, isClickable: true },
+      { name: "POS", path: "/pos", icon: ShoppingCart, module: Modules.POS, isClickable: true },
       { name: "Entradas", path: "/entradas", icon: ArrowDownToLine, module: Modules.ENTRADAS, isClickable: true },
       { name: "Salidas", path: "/salidas", icon: ArrowUpFromLine, module: Modules.SALIDAS, isClickable: true },
+      { name: "Recibos de abonos", path: "/recibos-abonos", icon: FileBarChart, module: Modules.RECIBOS_ABONOS, isClickable: true },
       { name: "Viajes", path: "/viajes", icon: Truck, module: Modules.VIAJES, isClickable: true },
-      { name: "Movimientos", path: "/movimientos", icon: Activity, module: Modules.MOVIMIENTOS, isClickable: true },
     ],
   },
   {
@@ -117,16 +117,36 @@ export const NAV_GROUPS: NavGroup[] = [
       { name: "Camionetas", path: "/directorio/camionetas", icon: Truck, module: Modules.CAMIONETAS, isClickable: true },
       { name: "Choferes", path: "/directorio/choferes", icon: UserSquare2, module: Modules.CHOFERES, isClickable: true },
       { name: "Equipos", path: "/equipos", icon: LayoutDashboard, module: Modules.EQUIPOS, isClickable: true },
+      { name: "Conciliación de Kardex", path: "/administracion/conciliacion", icon: Settings, module: Modules.CONCILIACION, hiddenForRoles: ["CONTADOR"], isClickable: true },
       { name: "Bitácora", path: "/auditoria", icon: Activity, module: Modules.AUDITORIA, hiddenForRoles: ["CONTADOR"], isClickable: true },
     ],
   },
-  {
-    title: "ADMINISTRACIÓN CONTABLE",
-    items: [
-      { name: "Conciliación de Kardex", path: "/administracion/conciliacion", icon: Settings, module: Modules.CONCILIACION, hiddenForRoles: ["CONTADOR"], isClickable: true },
-    ],
-  },
 ];
+
+type DisplayNavItem = Pick<NavItem, "name" | "path" | "icon" | "isClickable"> & { testId?: string };
+type DisplayNavGroup = Omit<NavGroup, "items"> & { items: DisplayNavItem[] };
+
+/** Compose already-authorized links only; E11 retains its own independent gates. */
+export function withConfigurationLinks(
+  groups: NavGroup[],
+  authorizedLinks: { name: string; path: string }[],
+): DisplayNavGroup[] {
+  if (!authorizedLinks.length) return groups;
+  const additional = authorizedLinks.map(item => ({
+    ...item,
+    icon: Settings,
+    isClickable: true,
+    testId: `nav-item-${item.path.replace(/[^a-z0-9]+/g, "-")}`,
+  }));
+  const configuration = groups.find(group => group.title === "CONFIGURACIÓN");
+  if (!configuration) return [...groups, { title: "CONFIGURACIÓN", items: additional }];
+  return groups.map(group => {
+    if (group !== configuration) return group;
+    const auditIndex = group.items.findIndex(item => item.path === "/auditoria");
+    const index = auditIndex < 0 ? group.items.length : auditIndex;
+    return { ...group, items: [...group.items.slice(0, index), ...additional, ...group.items.slice(index)] };
+  });
+}
 
 export function getVisibleNavGroups(user: CurrentUser): NavGroup[] {
   return NAV_GROUPS.flatMap((group) => {

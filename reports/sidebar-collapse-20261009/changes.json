@@ -1,0 +1,12 @@
+[
+  {
+    "file": "src/components/layout/app-layout.tsx",
+    "before": "1429fd7f9a170bbd07d3d5ddfbf5a1eec75e9754d439af8af6fd973c79c0b76d",
+    "after": "6968dd94a90f0760da5505cb5f815f666ea160351a98f3e49577786404030dd5"
+  },
+  {
+    "file": "src/components/layout/sidebar-sections.tsx",
+    "before": null,
+    "after": "04a76482ec9cffa4c073f91a81df28988d014181a8757e57fd89faaf6ba9795d"
+  }
+]

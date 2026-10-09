@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "order": [
+    "Movimientos",
+    "POS",
+    "Entradas",
+    "Salidas",
+    "Recibos de abonos",
+    "Viajes"
+  ],
+  "desktop": true,
+  "mobile": true,
+  "errors": []
+}

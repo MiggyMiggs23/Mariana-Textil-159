@@ -2957,3 +2957,115 @@ mtime_ms = 1791496210312
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/918f0cb5-4af9-4307-9b06-b1d9ce72a10b/0b0c3e75-26f1-4451-a9eb-67be7cc2598a"
 storage_version_token = "1791496337959841"
 content_type = "image/png"
+
+[[outputs]]
+id = "QUZuN8R9Xf8LES0_wCKhA"
+uri = "file://reports/sidebar-collapse-20261009/screenshots/desktop-open.png"
+type = "image"
+title = "Computadora: secciones abiertas"
+description = "Menú autenticado con flechas de apertura y las mismas opciones."
+logical_id = "1303ea83-ca13-4592-b8d8-d0ec5d4674e4"
+content_hash = "sha256:a522f14bbf2ca78d74ee0f1ceb0311bbbb418c32b44bb8fbb8401449a284ccbe"
+size = 72899
+mtime_ms = 1791570657584
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/1303ea83-ca13-4592-b8d8-d0ec5d4674e4/072c6de0-2b76-4832-9f60-dfd07b981392"
+storage_version_token = "1791570930529158"
+content_type = "image/png"
+
+[[outputs]]
+id = "rzwG1CevKck1SF2uMDtGq"
+uri = "file://reports/sidebar-collapse-20261009/screenshots/desktop-closed.png"
+type = "image"
+title = "Computadora: seis secciones cerradas"
+description = "Las seis secciones plegadas; sus títulos permanecen disponibles para reabrirlas."
+logical_id = "60af1214-f32b-4064-a1bd-c99b519f5fe4"
+content_hash = "sha256:da97bec853991b4cf9c4b829e2157253c104551be6daf85fd71b6ac0f7cfb16f"
+size = 139571
+mtime_ms = 1791570658300
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/60af1214-f32b-4064-a1bd-c99b519f5fe4/97c159c1-0f91-457f-bc7a-493dc3420d4d"
+storage_version_token = "1791570931197330"
+content_type = "image/png"
+
+[[outputs]]
+id = "fuQ0p2LN9dhAB0NuY1DOU"
+uri = "file://reports/sidebar-collapse-20261009/screenshots/mobile-open.png"
+type = "image"
+title = "Celular: sección abierta"
+description = "Menú móvil a 390 × 844, con Inventario desplegado."
+logical_id = "c4ed8e6d-9704-4ce4-8db0-c6a4a520b257"
+content_hash = "sha256:f7a0b99807605f424bcd308c0d46df5058fc412bfebb8145a8340dbaf3184f64"
+size = 44699
+mtime_ms = 1791570701488
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c4ed8e6d-9704-4ce4-8db0-c6a4a520b257/adf9a56a-2418-48ca-8174-4762f5b21229"
+storage_version_token = "1791570931789909"
+content_type = "image/png"
+
+[[outputs]]
+id = "DYhTv6cdRIaMflSagm8sv"
+uri = "file://reports/sidebar-collapse-20261009/screenshots/mobile-closed.png"
+type = "image"
+title = "Celular: sección cerrada"
+description = "Inventario plegado en el mismo menú móvil, sin desbordamiento horizontal."
+logical_id = "60c04312-60bb-44eb-a5d1-f875acd1a89f"
+content_hash = "sha256:9fb3b41f23ec2c778e811bb5d4e71c449469593f50aa0191e3d0c29b66a1bf7b"
+size = 44528
+mtime_ms = 1791570701640
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/60c04312-60bb-44eb-a5d1-f875acd1a89f/5d5fcd65-8314-4d7a-827f-530df48d7562"
+storage_version_token = "1791570933079022"
+content_type = "image/png"
+
+[[outputs]]
+id = "jvjeOFcrPffOkBEgckdiN"
+uri = "file://reports/operation-menu-order-20261009/screenshots/operation-order-desktop.png"
+type = "image"
+title = "OPERACIÓN: nuevo orden"
+description = "Captura real del menú en computadora: Movimientos, POS, Entradas, Salidas, Recibos de abonos y Viajes."
+logical_id = "cd01f84e-1190-42c0-957e-35304622e1a1"
+content_hash = "sha256:e2615925c015f04e6ab684efa49705e881830ff65d38bc4d2271b1d17e14ade5"
+size = 29710
+mtime_ms = 1791571194368
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/cd01f84e-1190-42c0-957e-35304622e1a1/d36d8020-4529-47ae-8190-b72b807b12e5"
+storage_version_token = "1791571277639686"
+content_type = "image/png"
+
+[[outputs]]
+id = "ojZhsUoBM97rjdKAuvFZ8"
+uri = "file://reports/operation-menu-order-20261009/screenshots/operation-order-mobile.png"
+type = "image"
+title = "OPERACIÓN en celular"
+description = "El mismo orden y el nombre POS en el menú móvil."
+logical_id = "75190bda-2767-479f-ad79-2fd761c0aef7"
+content_hash = "sha256:2395d884e3b443323db5a6b8bf0981ea9f2a5316b3144d9a63bf209c37b55920"
+size = 49232
+mtime_ms = 1791571194756
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/75190bda-2767-479f-ad79-2fd761c0aef7/86e171f6-20a4-408c-b626-91b88bc9a329"
+storage_version_token = "1791571278172586"
+content_type = "image/png"
+
+[[outputs]]
+id = "u_Z0ESgJWGTuFpHdVshBA"
+uri = "file://reports/configuration-menu-20261009/screenshots/configuration-desktop.png"
+type = "image"
+title = "CONFIGURACIÓN con las diez opciones"
+description = "Menú en computadora: sección ADMINISTRACIÓN CONTABLE eliminada y botón de borrar datos de prueba al final."
+logical_id = "0f037b6f-9e9d-4345-a55c-91e23e4b27c9"
+content_hash = "sha256:2f4d3accc1f378be1f8a8907520169a438bbe8031215f9ef9b30bb5d9efad35a"
+size = 37440
+mtime_ms = 1791571593812
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/0f037b6f-9e9d-4345-a55c-91e23e4b27c9/2840b4d5-5c81-40db-9d2c-6de85bbf43ec"
+storage_version_token = "1791571694288020"
+content_type = "image/png"
+
+[[outputs]]
+id = "dEZAs49m3KHjzAdKt6Ilj"
+uri = "file://reports/configuration-menu-20261009/screenshots/configuration-mobile.png"
+type = "image"
+title = "Menú actualizado en celular"
+description = "Las mismas diez opciones en el orden solicitado, conservando sus rutas y permisos."
+logical_id = "83665a63-3074-4dab-9f29-f4d9adfc8280"
+content_hash = "sha256:623a67ce6e3bd84c3f7c2517410fdac8f3c3754dcc19e6eb6d78f1acaf6baa0c"
+size = 56646
+mtime_ms = 1791571594308
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/83665a63-3074-4dab-9f29-f4d9adfc8280/fecfe076-fabf-42b5-b3c8-f7d8ee3dd6f2"
+storage_version_token = "1791571694821090"
+content_type = "image/png"

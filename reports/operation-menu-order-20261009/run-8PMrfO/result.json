@@ -1,0 +1,100 @@
+{
+  "status": "CLEANED",
+  "ownerPid": 3340,
+  "apiFile": "/home/runner/workspace/artifacts/api-server/dist-receipt-terminal-print-20261001/index.mjs",
+  "ui": "/home/runner/workspace/reports/operation-menu-order-20261009/web",
+  "apiSha256": "f29032a0b172fb6a53d86be1cd80da3b27faf91ceb5a500d262b20e2b79aff0a",
+  "frontendFiles": {
+    "favicon.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "index.html": "dc5bb60aef7abd1e673733cf5739a41ffb5adbf74977bb1c8ce954bf09084df1",
+    "robots.txt": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+    "assets/index-CJ5sQYvB.js": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c",
+    "assets/index-CwLnORKx.js": "5c854b351070b7745d77fde1cc04fc56ee91607691bfae46d8286b994bb504d2",
+    "assets/index-DEpsWzZM.css": "ba9441c9b3ff37db05dccdf93ffa657767289c7941056e6dac91c2418bceabc1",
+    "assets/mariana-textil-logo-FFOiXRd3.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "assets/mariana-textil-logo-monochrome-_7AVoW2A.png": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24",
+    "sounds/alerta.ogg": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e",
+    "sounds/aviso.ogg": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4",
+    "sounds/solicitud.ogg": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+  },
+  "appDatabaseAccess": false,
+  "sqlProvenance": [
+    {
+      "file": "reports/e3-apertura-preparada-20260922/sql/01-install-prepared.sql",
+      "sha256": "de54f523c87e567e3b2126c98f1709e417ea3668773816d55d3f356aead70f4e"
+    },
+    {
+      "file": "reports/e3-apertura-preparada-20260922/sql/03-prepare-ordinary-cash-gate-retirement.REHEARSAL-ONLY.sql",
+      "sha256": "d4d071313afd019a358e06a253193663a2ca3601bd7e122806d5607542efdd21"
+    },
+    {
+      "file": "reports/tanda-b-b0-b1-20260923/r5/sql/1.sql",
+      "sha256": "046c8dcdd02310b5590c3182f26c5dd7a653454021596caeaa96ef0ff2d27d60"
+    },
+    {
+      "file": "reports/tanda-b-b0-b1-20260923/r5/sql/2.sql",
+      "sha256": "85993f89f7304ccb975998602b3d17217656781dcc0d48206e73838824bed85a"
+    },
+    {
+      "file": "reports/tanda-b-b0-b1-20260923/r5/sql/3.sql",
+      "sha256": "232fb182ee8394a0c0a72a852ef5815e5a56d5451f7c8e00ba1662745751bba4"
+    },
+    {
+      "file": "reports/tanda-b-b0-b1-20260923/r5/sql/4.sql",
+      "sha256": "d9194959d2343d4e4786535d5acdea945139f392c3ee21ad55b73a69c1c017fa"
+    },
+    {
+      "file": "reports/trabajo-nocturno-20260925/tarea-2/historical-pre-e11-graph.sql",
+      "sha256": "b2078da89b306d088da4c908b5d19121e3729d1954914954e4b1c12eb4753369"
+    },
+    {
+      "file": "reports/e11/01-preparado.sql",
+      "sha256": "f9addc0577334a1a218444cd904297d2d7fd38da52f10ba11474d5dc45ea914f"
+    },
+    {
+      "file": "reports/trabajo-nocturno-20260925/tarea-1/installed-graph-readonly.sql",
+      "sha256": "d9a1a41f6675ecb42ea74168ef01eef432707cd7635040e07ce1402e9f703c49"
+    },
+    {
+      "file": "reports/trabajo-nocturno-20260925/tarea-1/01-candidate-not-approved.sql",
+      "sha256": "57118a49d73124728a875e927dfd9862499bcb19d0ec2083f74aff6ef945b890"
+    },
+    {
+      "file": "reports/trabajo-nocturno-20260925/tarea-2/00-graph-correction-candidate.sql",
+      "sha256": "c05e92d5256e6a7ec805c2143fe0def07a80dc640d899da982e244d80e993fef"
+    },
+    {
+      "file": "reports/trabajo-nocturno-20260925/tarea-2/00b-fiscal-folio-correction-candidate.sql",
+      "sha256": "541d36983bee294a00a0bcc3c8256c7a23ea7871997767dadd7eb2da7ba584d8"
+    },
+    {
+      "file": "reports/trabajo-nocturno-20260925/tarea-2/01-candidate-not-approved.sql",
+      "sha256": "d65edee0ab2b392f861a645e98e087a7def7112e75665a7cce938ba7c81a5281"
+    },
+    {
+      "file": "lib/db/src/lib/receipt-print-authority.sql",
+      "sha256": "ee12bcaace99ed9b7c6abe51b80efa3a554c44d36f9bd94f30169761a68b66a5",
+      "onlyFunction": "public.e5_insert_authority()"
+    }
+  ],
+  "commands": [
+    {
+      "id": "3ef26f92-44e2-43cb-8da4-dcfcd9933c27",
+      "at": "2026-10-09T18:40:18.790Z",
+      "command": {
+        "action": "cleanup"
+      },
+      "ok": true
+    }
+  ],
+  "candidateReadyFile": "/home/runner/workspace/reports/operation-menu-order-20261009/ready.json",
+  "identitySha256": "96adb007f896646715503b7c0dc06a3f2249632e8b33c0163ba0b0943f81e8d5",
+  "origin": "https://127.0.0.1:33997",
+  "apiPid": 3509,
+  "heartbeat": "2026-10-09T18:40:17.503Z",
+  "cleanup": {
+    "passed": true,
+    "apiExited": true,
+    "at": "2026-10-09T18:40:21.871Z"
+  }
+}

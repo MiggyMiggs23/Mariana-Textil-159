@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "changes": [
+    {
+      "file": "src/components/layout/app-navigation.ts",
+      "before": "edf3505926b7834f53c9b86122e85bd24defdc28e053512a7f750ce0ec37abc8",
+      "after": "b7c79940a5a64cdb1e048d45a97df44b27661da111c039c25c1e8d75a99e47dd"
+    },
+    {
+      "file": "src/components/layout/app-layout.tsx",
+      "before": "6968dd94a90f0760da5505cb5f815f666ea160351a98f3e49577786404030dd5",
+      "after": "2cff9bc634b5bc311ccc6404f51741aafeb20268bad8b85bebf70e56e0f5bad1"
+    },
+    {
+      "file": "src/components/layout/sidebar-sections.tsx",
+      "before": "04a76482ec9cffa4c073f91a81df28988d014181a8757e57fd89faaf6ba9795d",
+      "after": "f792176e2038ddbe4cc799e3dc70619a551bfbe1ca49d1a15939e8fbe5645972"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "order": [
+    "Sitios",
+    "Usuarios",
+    "Permisos",
+    "Camionetas",
+    "Choferes",
+    "Equipos",
+    "Conciliación de Kardex",
+    "Conciliaciones documentales",
+    "Administrar perfiles A/F",
+    "Bitácora"
+  ],
+  "hrefs": [
+    "/ubicaciones",
+    "/usuarios",
+    "/permisos",
+    "/directorio/camionetas",
+    "/directorio/choferes",
+    "/equipos",
+    "/administracion/conciliacion",
+    "/contabilidad/conciliaciones",
+    "/usuarios",
+    "/auditoria"
+  ],
+  "desktop": true,
+  "mobile": true,
+  "removedSection": true,
+  "resetLast": true,
+  "errors": []
+}
